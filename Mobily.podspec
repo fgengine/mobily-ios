@@ -19,6 +19,9 @@ Pod::Spec.new do |spec|
 	spec.requires_arc = true
 
 	spec.subspec 'All' do |all|
+		all.dependency 'Mobily/NS'
+		all.dependency 'Mobily/NS/RegExpParser'
+		all.dependency 'Mobily/CG'
 		all.dependency 'Mobily/UI'
 		all.dependency 'Mobily/UI/ControllerDynamicsDrawer'
 		all.dependency 'Mobily/UI/ViewFieldText'
@@ -38,6 +41,12 @@ Pod::Spec.new do |spec|
 		ns.public_header_files = 'Classes/NS/Core/*.h'
 		ns.source_files = 'Classes/NS/Core/*.{h,m}'
 		ns.dependency 'Mobily/Core'
+        
+        ns.subspec 'RegExpParser' do |reg_exp_parser|
+            reg_exp_parser.public_header_files = 'Classes/NS/RegExpParser/*.h'
+            reg_exp_parser.source_files = 'Classes/NS/RegExpParser/*.{h,m}'
+            reg_exp_parser.frameworks = 'CoreText'
+        end
 	end
 
 	spec.subspec 'CG' do |cg|
@@ -55,42 +64,35 @@ Pod::Spec.new do |spec|
 		ui.dependency 'Mobily/NS'
 		ui.dependency 'Mobily/CG'
         
-        spec.subspec 'ControllerDynamicsDrawer' do |controller_dynamics_drawer|
+        ui.subspec 'ControllerDynamicsDrawer' do |controller_dynamics_drawer|
             controller_dynamics_drawer.public_header_files = 'Classes/UI/ControllerDynamicsDrawer/*.h'
             controller_dynamics_drawer.source_files = 'Classes/UI/ControllerDynamicsDrawer/*.{h,m}'
             controller_dynamics_drawer.dependency 'MSDynamicsDrawerViewController'
-            controller_dynamics_drawer.dependency 'Mobily/UI'
-            controller_dynamics_drawer.requires_arc = true
         end
         
-        spec.subspec 'ViewFieldText' do |view_field_text|
+        ui.subspec 'ViewFieldText' do |view_field_text|
             view_field_text.public_header_files = 'Classes/UI/ViewFieldText/*.h'
             view_field_text.source_files = 'Classes/UI/ViewFieldText/*.{h,m}'
-            view_field_text.dependency 'Mobily/UI'
         end
         
-        spec.subspec 'ViewFieldDate' do |view_field_date|
+        ui.subspec 'ViewFieldDate' do |view_field_date|
             view_field_date.public_header_files = 'Classes/UI/ViewFieldDate/*.h'
             view_field_date.source_files = 'Classes/UI/ViewFieldDate/*.{h,m}'
-            view_field_date.dependency 'Mobily/UI'
         end
         
-        spec.subspec 'ViewFieldList' do |view_field_list|
+        ui.subspec 'ViewFieldList' do |view_field_list|
             view_field_list.public_header_files = 'Classes/UI/ViewFieldList/*.h'
             view_field_list.source_files = 'Classes/UI/ViewFieldList/*.{h,m}'
-            view_field_list.dependency 'Mobily/UI'
         end
         
-        spec.subspec 'ViewImage' do |view_image|
+        ui.subspec 'ViewImage' do |view_image|
             view_image.public_header_files = 'Classes/UI/ViewImage/*.h'
             view_image.source_files = 'Classes/UI/ViewImage/*.{h,m}'
-            view_image.dependency 'Mobily/UI'
         end
         
-        spec.subspec 'ViewImage' do |view_elements|
-            view_elements.public_header_files = 'Classes/UI/ViewImage/*.h'
-            view_elements.source_files = 'Classes/UI/ViewImage/*.{h,m}'
-            view_elements.dependency 'Mobily/UI'
+        ui.subspec 'ViewElements' do |view_elements|
+            view_elements.public_header_files = 'Classes/UI/ViewElements/*.h'
+            view_elements.source_files = 'Classes/UI/ViewElements/*.{h,m}'
         end
 	end
 end
