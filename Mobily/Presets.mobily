@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<Presets>
+    <!-- Controllers -->
+    
+    <Preset name="controller" orientation="portrait-down"/>
+    
+    <!-- Navigations -->
+
+    <Preset name="navigation-controller" barTintColor="#00ff00"/>
+        
+</Presets>

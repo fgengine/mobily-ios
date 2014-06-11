@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>610DC57D-4A5F-40E4-9BB5-C9B9D17E5763</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Mobily</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>00590A42-36BF-4684-AAF7-A4F86D6B26BB</key>
+		<string>https://github.com/fgengine/mobily-ios.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Mobily.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>00590A42-36BF-4684-AAF7-A4F86D6B26BB</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/fgengine/mobily-ios.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>00590A42-36BF-4684-AAF7-A4F86D6B26BB</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>00590A42-36BF-4684-AAF7-A4F86D6B26BB</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Mobily-iOS</string>
+		</dict>
+	</array>
+</dict>
+</plist>

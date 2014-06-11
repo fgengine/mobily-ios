@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ExampleApplication>
+    <Window>
+        <ControllerDynamicsDrawer name="mainSlide">
+            <ControllerNavigation name="mainNavigation" preset="navigation-controller" transition:navigation="cross-fade">
+                <ExampleControllerMain name="mainView" preset="controller" title="CONTEXT"/>
+            </ControllerNavigation>
+            <ExampleControllerMain name="mainMenuLeft" preset="controller" title="MENU"/>
+            <ExampleControllerMain name="mainMenuRight" preset="controller" title="MENU"/>
+        </ControllerDynamicsDrawer>
+    </Window>
+</ExampleApplication>
