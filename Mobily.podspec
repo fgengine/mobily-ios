@@ -1,98 +1,105 @@
-Pod::Spec.new do |spec|
-	spec.name = 'Mobily'
-	spec.version = '0.1.2'
-	spec.summary = 'Mobily framework for iOS'
-	spec.homepage = 'https://github.com/fgengine/mobily-ios'
-	spec.license = {
+Pod::Spec.new do |s|
+	s.name = 'Mobily'
+	s.version = '0.1.2'
+	s.summary = 'Mobily framework for iOS'
+	s.homepage = 'https://github.com/fgengine/mobily-ios'
+	s.license = {
 		:type => 'MIT',
 		:file => 'LICENSE'
 	}
-	spec.author = {
+	s.author = {
 		'Username' => 'fgengine@gmail.com'
 	}
-	spec.platform = :ios, 7.0
-	spec.source = {
+	s.platform = :ios, 7.0
+	s.source = {
 		:git => 'https://github.com/fgengine/mobily-ios.git',
-		:tag => spec.version.to_s
+		:tag => s.version.to_s
 	}
-	spec.default_subspec = 'All'
-	spec.requires_arc = true
+	s.default_subspec = 'All'
+	s.requires_arc = true
 
-	spec.subspec 'All' do |all|
-		all.dependency 'Mobily/NS'
-		all.dependency 'Mobily/NS/RegExpParser'
-		all.dependency 'Mobily/CG'
-		all.dependency 'Mobily/UI'
-		all.dependency 'Mobily/UI/ControllerDynamicsDrawer'
-		all.dependency 'Mobily/UI/ViewFieldText'
-		all.dependency 'Mobily/UI/ViewFieldDate'
-		all.dependency 'Mobily/UI/ViewFieldList'
-		all.dependency 'Mobily/UI/ViewImage'
-		all.dependency 'Mobily/UI/ViewElements'
+	s.subspec 'All' do |ss|
+		ss.dependency 'Mobily/NS'
+		ss.dependency 'Mobily/NSRegExpParser'
+		ss.dependency 'Mobily/CG'
+		ss.dependency 'Mobily/UI'
+		ss.dependency 'Mobily/UIControllerDynamicsDrawer'
+		ss.dependency 'Mobily/UIViewFieldText'
+		ss.dependency 'Mobily/UIViewFieldDate'
+		ss.dependency 'Mobily/UIViewFieldList'
+		ss.dependency 'Mobily/UIViewImage'
+		ss.dependency 'Mobily/UIViewElements'
 	end
   
-	spec.subspec 'Core' do |core|
-		core.public_header_files = 'Classes/Core/*.h'
-		core.source_files = 'Classes/Core/*.{h,m}'
-		core.frameworks = 'Foundation'
+	s.subspec 'Core' do |ss|
+		ss.public_header_files = 'Classes/Core/*.h'
+		ss.source_files = 'Classes/Core/*.{h,m}'
+		ss.frameworks = 'Foundation'
 	end
 
-	spec.subspec 'NS' do |ns|
-		ns.public_header_files = 'Classes/NS/Core/*.h'
-		ns.source_files = 'Classes/NS/Core/*.{h,m}'
-		ns.dependency 'Mobily/Core'
+	s.subspec 'NS' do |ss|
+		ss.public_header_files = 'Classes/NS/Core/*.h'
+		ss.source_files = 'Classes/NS/Core/*.{h,m}'
+		ss.dependency 'Mobily/Core'
+	end
         
-        ns.subspec 'RegExpParser' do |reg_exp_parser|
-            reg_exp_parser.public_header_files = 'Classes/NS/RegExpParser/*.h'
-            reg_exp_parser.source_files = 'Classes/NS/RegExpParser/*.{h,m}'
-            reg_exp_parser.frameworks = 'CoreText'
-        end
+    s.subspec 'NSRegExpParser' do |ss|
+        ss.public_header_files = 'Classes/NS/RegExpParser/*.h'
+        ss.source_files = 'Classes/NS/RegExpParser/*.{h,m}'
+        ss.frameworks = 'CoreText'
+        ss.dependency 'Mobily/NS'
+    end
+
+	s.subspec 'CG' do |ss|
+		ss.public_header_files = 'Classes/CG/Core/*.h'
+		ss.source_files = 'Classes/CG/Core/*.{h,m}'
+		ss.frameworks = 'CoreGraphics'
+		ss.dependency 'Mobily/Core'
 	end
 
-	spec.subspec 'CG' do |cg|
-		cg.public_header_files = 'Classes/CG/Core/*.h'
-		cg.source_files = 'Classes/CG/Core/*.{h,m}'
-		cg.frameworks = 'CoreGraphics'
-		cg.dependency 'Mobily/Core'
+	s.subspec 'UI' do |ss|
+		ss.public_header_files = 'Classes/UI/Core/*.h'
+		ss.source_files = 'Classes/UI/Core/*.{h,m}'
+		ss.frameworks = 'UIKit'
+		ss.dependency 'Mobily/Core'
+		ss.dependency 'Mobily/NS'
+		ss.dependency 'Mobily/CG'
 	end
-
-	spec.subspec 'UI' do |ui|
-		ui.public_header_files = 'Classes/UI/Core/*.h'
-		ui.source_files = 'Classes/UI/Core/*.{h,m}'
-		ui.frameworks = 'UIKit'
-		ui.dependency 'Mobily/Core'
-		ui.dependency 'Mobily/NS'
-		ui.dependency 'Mobily/CG'
         
-        ui.subspec 'ControllerDynamicsDrawer' do |controller_dynamics_drawer|
-            controller_dynamics_drawer.public_header_files = 'Classes/UI/ControllerDynamicsDrawer/*.h'
-            controller_dynamics_drawer.source_files = 'Classes/UI/ControllerDynamicsDrawer/*.{h,m}'
-            controller_dynamics_drawer.dependency 'MSDynamicsDrawerViewController'
-        end
-        
-        ui.subspec 'ViewFieldText' do |view_field_text|
-            view_field_text.public_header_files = 'Classes/UI/ViewFieldText/*.h'
-            view_field_text.source_files = 'Classes/UI/ViewFieldText/*.{h,m}'
-        end
-        
-        ui.subspec 'ViewFieldDate' do |view_field_date|
-            view_field_date.public_header_files = 'Classes/UI/ViewFieldDate/*.h'
-            view_field_date.source_files = 'Classes/UI/ViewFieldDate/*.{h,m}'
-        end
-        
-        ui.subspec 'ViewFieldList' do |view_field_list|
-            view_field_list.public_header_files = 'Classes/UI/ViewFieldList/*.h'
-            view_field_list.source_files = 'Classes/UI/ViewFieldList/*.{h,m}'
-        end
-        
-        ui.subspec 'ViewImage' do |view_image|
-            view_image.public_header_files = 'Classes/UI/ViewImage/*.h'
-            view_image.source_files = 'Classes/UI/ViewImage/*.{h,m}'
-        end
-        
-        ui.subspec 'ViewElements' do |view_elements|
-            view_elements.public_header_files = 'Classes/UI/ViewElements/*.h'
-            view_elements.source_files = 'Classes/UI/ViewElements/*.{h,m}'
-        end
-	end
+    s.subspec 'UIControllerDynamicsDrawer' do |ss|
+        ss.public_header_files = 'Classes/UI/ControllerDynamicsDrawer/*.h'
+        ss.source_files = 'Classes/UI/ControllerDynamicsDrawer/*.{h,m}'
+        ss.dependency 'MSDynamicsDrawerViewController'
+        ss.dependency 'Mobily/UI'
+    end
+    
+    s.subspec 'UIViewFieldText' do |ss|
+        ss.public_header_files = 'Classes/UI/ViewFieldText/*.h'
+        ss.source_files = 'Classes/UI/ViewFieldText/*.{h,m}'
+        ss.dependency 'Mobily/UI'
+    end
+    
+    s.subspec 'UIViewFieldDate' do |ss|
+        ss.public_header_files = 'Classes/UI/ViewFieldDate/*.h'
+        ss.source_files = 'Classes/UI/ViewFieldDate/*.{h,m}'
+        ss.dependency 'Mobily/UIViewFieldText'
+    end
+    
+    s.subspec 'UIViewFieldList' do |ss|
+        ss.public_header_files = 'Classes/UI/ViewFieldList/*.h'
+        ss.source_files = 'Classes/UI/ViewFieldList/*.{h,m}'
+        ss.dependency 'Mobily/UIViewFieldText'
+    end
+    
+    s.subspec 'UIViewImage' do |ss|
+        ss.public_header_files = 'Classes/UI/ViewImage/*.h'
+        ss.source_files = 'Classes/UI/ViewImage/*.{h,m}'
+        ss.dependency 'Mobily/UI'
+    end
+    
+    s.subspec 'UIViewElements' do |ss|
+        ss.public_header_files = 'Classes/UI/ViewElements/*.h'
+        ss.source_files = 'Classes/UI/ViewElements/*.{h,m}'
+        ss.dependency 'Mobily/UI'
+    end
 end
