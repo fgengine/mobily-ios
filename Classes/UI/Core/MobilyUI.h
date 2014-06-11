@@ -210,6 +210,8 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 @property(nonatomic, readonly, assign) CGFloat shadowRadius;
 @property(nonatomic, readonly, strong) UIBezierPath* shadowPath;
 
+- (void)removeSubview:(UIView*)subview;
+
 - (void)setSubviews:(NSArray*)subviews;
 - (void)removeAllSubviews;
 

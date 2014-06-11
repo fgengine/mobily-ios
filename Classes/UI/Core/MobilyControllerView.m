@@ -78,7 +78,7 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
     return result;
 }
 
-#pragma mark MobilyControllerView
+#pragma mark UIViewController
 
 - (BOOL)shouldAutorotate {
     return YES;

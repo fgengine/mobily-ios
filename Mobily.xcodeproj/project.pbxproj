@@ -37,6 +37,13 @@
 		407989E7194788EE00A04686 /* MobilyTransitionControllerCards.m in Sources */ = {isa = PBXBuildFile; fileRef = 407989E5194788EE00A04686 /* MobilyTransitionControllerCards.m */; };
 		407989E8194788EE00A04686 /* MobilyTransitionControllerCrossFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 407989E6194788EE00A04686 /* MobilyTransitionControllerCrossFade.m */; };
 		407989EC19484C9700A04686 /* MobilyControllerDynamicsDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = 407989EB19484C9700A04686 /* MobilyControllerDynamicsDrawer.m */; };
+		40798A2B1948ABAF00A04686 /* MobilyRegExpParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798A2A1948ABAF00A04686 /* MobilyRegExpParser.m */; };
+		40798A351948AC0600A04686 /* MobilyViewFieldDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798A2E1948AC0600A04686 /* MobilyViewFieldDate.m */; };
+		40798A361948AC0600A04686 /* MobilyViewFieldList.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798A311948AC0600A04686 /* MobilyViewFieldList.m */; };
+		40798A371948AC0600A04686 /* MobilyViewFieldText.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798A341948AC0600A04686 /* MobilyViewFieldText.m */; };
+		40798A3B1948AFC400A04686 /* MobilyViewImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798A3A1948AFC400A04686 /* MobilyViewImage.m */; };
+		40798A411948C0F700A04686 /* MobilyViewElementsLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798A3E1948C0F700A04686 /* MobilyViewElementsLayout.m */; };
+		40798A421948C0F700A04686 /* MobilyViewElementsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798A401948C0F700A04686 /* MobilyViewElementsView.m */; };
 		C13E78B87D644CF2A6696DA8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F16AA68F9FE04603B1D99102 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -94,6 +101,20 @@
 		407989E6194788EE00A04686 /* MobilyTransitionControllerCrossFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyTransitionControllerCrossFade.m; sourceTree = "<group>"; };
 		407989EA19484C9700A04686 /* MobilyControllerDynamicsDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyControllerDynamicsDrawer.h; sourceTree = "<group>"; };
 		407989EB19484C9700A04686 /* MobilyControllerDynamicsDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyControllerDynamicsDrawer.m; sourceTree = "<group>"; };
+		40798A291948ABAF00A04686 /* MobilyRegExpParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyRegExpParser.h; sourceTree = "<group>"; };
+		40798A2A1948ABAF00A04686 /* MobilyRegExpParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyRegExpParser.m; sourceTree = "<group>"; };
+		40798A2D1948AC0600A04686 /* MobilyViewFieldDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyViewFieldDate.h; sourceTree = "<group>"; };
+		40798A2E1948AC0600A04686 /* MobilyViewFieldDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewFieldDate.m; sourceTree = "<group>"; };
+		40798A301948AC0600A04686 /* MobilyViewFieldList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyViewFieldList.h; sourceTree = "<group>"; };
+		40798A311948AC0600A04686 /* MobilyViewFieldList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewFieldList.m; sourceTree = "<group>"; };
+		40798A331948AC0600A04686 /* MobilyViewFieldText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyViewFieldText.h; sourceTree = "<group>"; };
+		40798A341948AC0600A04686 /* MobilyViewFieldText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewFieldText.m; sourceTree = "<group>"; };
+		40798A391948AFC400A04686 /* MobilyViewImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyViewImage.h; sourceTree = "<group>"; };
+		40798A3A1948AFC400A04686 /* MobilyViewImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewImage.m; sourceTree = "<group>"; };
+		40798A3D1948C0F700A04686 /* MobilyViewElementsLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyViewElementsLayout.h; sourceTree = "<group>"; };
+		40798A3E1948C0F700A04686 /* MobilyViewElementsLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewElementsLayout.m; sourceTree = "<group>"; };
+		40798A3F1948C0F700A04686 /* MobilyViewElementsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyViewElementsView.h; sourceTree = "<group>"; };
+		40798A401948C0F700A04686 /* MobilyViewElementsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewElementsView.m; sourceTree = "<group>"; };
 		A954984946BD47F69F5CBC67 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		F16AA68F9FE04603B1D99102 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -197,6 +218,7 @@
 			isa = PBXGroup;
 			children = (
 				401FEE9518A3FAF100B445EB /* Core */,
+				40798A281948ABAF00A04686 /* RegExpParser */,
 			);
 			path = NS;
 			sourceTree = "<group>";
@@ -225,6 +247,11 @@
 			children = (
 				401FEEB418A3FAF100B445EB /* Core */,
 				407989E919484C7000A04686 /* ControllerDynamicsDrawer */,
+				40798A321948AC0600A04686 /* ViewFieldText */,
+				40798A2C1948AC0600A04686 /* ViewFieldDate */,
+				40798A2F1948AC0600A04686 /* ViewFieldList */,
+				40798A381948AFC400A04686 /* ViewImage */,
+				40798A3C1948C0F700A04686 /* ViewElements */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -276,6 +303,62 @@
 				407989EB19484C9700A04686 /* MobilyControllerDynamicsDrawer.m */,
 			);
 			path = ControllerDynamicsDrawer;
+			sourceTree = "<group>";
+		};
+		40798A281948ABAF00A04686 /* RegExpParser */ = {
+			isa = PBXGroup;
+			children = (
+				40798A291948ABAF00A04686 /* MobilyRegExpParser.h */,
+				40798A2A1948ABAF00A04686 /* MobilyRegExpParser.m */,
+			);
+			path = RegExpParser;
+			sourceTree = "<group>";
+		};
+		40798A2C1948AC0600A04686 /* ViewFieldDate */ = {
+			isa = PBXGroup;
+			children = (
+				40798A2D1948AC0600A04686 /* MobilyViewFieldDate.h */,
+				40798A2E1948AC0600A04686 /* MobilyViewFieldDate.m */,
+			);
+			path = ViewFieldDate;
+			sourceTree = "<group>";
+		};
+		40798A2F1948AC0600A04686 /* ViewFieldList */ = {
+			isa = PBXGroup;
+			children = (
+				40798A301948AC0600A04686 /* MobilyViewFieldList.h */,
+				40798A311948AC0600A04686 /* MobilyViewFieldList.m */,
+			);
+			path = ViewFieldList;
+			sourceTree = "<group>";
+		};
+		40798A321948AC0600A04686 /* ViewFieldText */ = {
+			isa = PBXGroup;
+			children = (
+				40798A331948AC0600A04686 /* MobilyViewFieldText.h */,
+				40798A341948AC0600A04686 /* MobilyViewFieldText.m */,
+			);
+			path = ViewFieldText;
+			sourceTree = "<group>";
+		};
+		40798A381948AFC400A04686 /* ViewImage */ = {
+			isa = PBXGroup;
+			children = (
+				40798A391948AFC400A04686 /* MobilyViewImage.h */,
+				40798A3A1948AFC400A04686 /* MobilyViewImage.m */,
+			);
+			path = ViewImage;
+			sourceTree = "<group>";
+		};
+		40798A3C1948C0F700A04686 /* ViewElements */ = {
+			isa = PBXGroup;
+			children = (
+				40798A3F1948C0F700A04686 /* MobilyViewElementsView.h */,
+				40798A401948C0F700A04686 /* MobilyViewElementsView.m */,
+				40798A3D1948C0F700A04686 /* MobilyViewElementsLayout.h */,
+				40798A3E1948C0F700A04686 /* MobilyViewElementsLayout.m */,
+			);
+			path = ViewElements;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -380,14 +463,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				401FEEF618A3FAF100B445EB /* MobilyStorage.m in Sources */,
+				40798A361948AC0600A04686 /* MobilyViewFieldList.m in Sources */,
 				401FEEFE18A3FAF100B445EB /* MobilyContext.m in Sources */,
 				401FEEF118A3FAF100B445EB /* MobilyEvent.m in Sources */,
 				401FEF0018A3FAF100B445EB /* MobilyControllerNavigation.m in Sources */,
+				40798A411948C0F700A04686 /* MobilyViewElementsLayout.m in Sources */,
 				401FEF1218A3FAF100B445EB /* MobilyWindow.m in Sources */,
 				401FEEF518A3FAF100B445EB /* MobilyNS.m in Sources */,
 				407989E41947834F00A04686 /* MobilyTransitionController.m in Sources */,
 				401FEF0718A3FAF100B445EB /* MobilyUI.m in Sources */,
+				40798A351948AC0600A04686 /* MobilyViewFieldDate.m in Sources */,
 				407903D219464A1E00EC8855 /* MobilyBuilderPreset.m in Sources */,
+				40798A421948C0F700A04686 /* MobilyViewElementsView.m in Sources */,
 				407989E7194788EE00A04686 /* MobilyTransitionControllerCards.m in Sources */,
 				401FEE8B18A3FAE600B445EB /* main.m in Sources */,
 				407989E8194788EE00A04686 /* MobilyTransitionControllerCrossFade.m in Sources */,
@@ -398,9 +485,12 @@
 				401FEEF718A3FAF100B445EB /* MobilyTaskManager.m in Sources */,
 				401FEEF318A3FAF100B445EB /* MobilyHttpQuery.m in Sources */,
 				401FEF0618A3FAF100B445EB /* MobilyBuilderForm.m in Sources */,
+				40798A2B1948ABAF00A04686 /* MobilyRegExpParser.m in Sources */,
+				40798A3B1948AFC400A04686 /* MobilyViewImage.m in Sources */,
 				401FEE8A18A3FAE600B445EB /* ExampleApplication.m in Sources */,
 				407989EC19484C9700A04686 /* MobilyControllerDynamicsDrawer.m in Sources */,
 				401FEEFD18A3FAF100B445EB /* MobilyApplication.m in Sources */,
+				40798A371948AC0600A04686 /* MobilyViewFieldText.m in Sources */,
 				401FEEF418A3FAF100B445EB /* MobilyKVO.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

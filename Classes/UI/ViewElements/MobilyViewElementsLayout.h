@@ -33,88 +33,47 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyKVO.h"
+#import "MobilyViewElementsView.h"
 
 /*--------------------------------------------------*/
 
-static void* MobilyKVOContext = &MobilyKVOContext;
+@interface MobilyViewElementsLayoutList : NSObject < MobilyViewElementsViewLayout >
 
-/*--------------------------------------------------*/
-
-@interface MobilyKVO ()
-
-@property(nonatomic, readwrite, weak) id subject;
-@property(nonatomic, readwrite, strong) NSString* keyPath;
+@property(nonatomic, readwrite, assign) CGFloat margin;
+@property(nonatomic, readwrite, assign) CGFloat spacing;
 
 @end
 
 /*--------------------------------------------------*/
 
-@implementation MobilyKVO
-
-#pragma mark Standart
-
-- (id)initWithSubject:(id)subject keyPath:(NSString*)keyPath block:(MobilyKVOBlock)block {
-	self = [super init];
-	if(self != nil) {
-        [self setSubject:subject];
-        [self setKeyPath:keyPath];
-        [self setBlock:block];
-        
-		[subject addObserver:self forKeyPath:keyPath options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:MobilyKVOContext];
-	}
-    return self;
-}
-
-- (void)dealloc {
-	[self stopObservation];
-    
-    [self setKeyPath:nil];
-    [self setBlock:nil];
-    
-    MOBILY_SAFE_DEALLOC;
-}
-
-#pragma mark Public
-
-- (void)stopObservation {
-	[_subject removeObserver:self forKeyPath:_keyPath context:MobilyKVOContext];
-    [self setSubject:nil];
-}
-
-#pragma mark Private
-
-- (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
-	if(context == MobilyKVOContext) {
-		if(_block != nil) {
-			id oldValue = [change objectForKey:NSKeyValueChangeOldKey];
-			if(oldValue == [NSNull null]) {
-				oldValue = nil;
-            }
-			id newValue = [change objectForKey:NSKeyValueChangeNewKey];
-			if(newValue == [NSNull null]) {
-				newValue = nil;
-            }
-			_block(self, oldValue, newValue);
-		}
-	}
-}
+@interface MobilyViewElementsLayoutListVertical : MobilyViewElementsLayoutList
 
 @end
 
 /*--------------------------------------------------*/
-#pragma mark -
+
+@interface MobilyViewElementsLayoutListHorizontal : MobilyViewElementsLayoutList
+
+@end
+
 /*--------------------------------------------------*/
 
-@implementation NSObject (MobilyKVO)
+@interface MobilyViewElementsLayoutGrid : NSObject < MobilyViewElementsViewLayout >
 
-- (MobilyKVO*)observeKeyPath:(NSString*)keyPath withBlock:(MobilyKVOBlock)block {
-	return [[MobilyKVO alloc] initWithSubject:self keyPath:keyPath block:block];
-}
+@property(nonatomic, readwrite, assign) CGSize margin;
+@property(nonatomic, readwrite, assign) CGSize spacing;
 
-- (MobilyKVO*)observeSelector:(SEL)selector withBlock:(MobilyKVOBlock)block {
-	return [[MobilyKVO alloc] initWithSubject:self keyPath:NSStringFromSelector(selector) block:block];
-}
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyViewElementsLayoutGridVertical : MobilyViewElementsLayoutGrid
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyViewElementsLayoutGridHorizontal : MobilyViewElementsLayoutGrid
 
 @end
 

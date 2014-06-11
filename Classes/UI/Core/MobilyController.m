@@ -129,13 +129,15 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     return [MobilyBuilderForm object:self forSelector:selector];
 }
 
-#pragma mark MobilyController
+#pragma mark Public
 
 - (void)setupController {
     if([UIDevice systemVersion] >= 7.0f) {
         [self setEdgesForExtendedLayout:UIRectEdgeNone];
     }
 }
+
+#pragma mark UIViewController
 
 - (BOOL)prefersStatusBarHidden {
     return NO;

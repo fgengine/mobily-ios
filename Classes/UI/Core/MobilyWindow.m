@@ -129,7 +129,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
     return [MobilyBuilderForm object:self forSelector:selector];
 }
 
-#pragma mark MobilyWindow
+#pragma mark UIWindow
 
 - (void)becomeKeyWindow {
     [super becomeKeyWindow];
@@ -207,7 +207,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
     return result;
 }
 
-#pragma mark MobilyWindow
+#pragma mark Public
 
 - (void)setupWindow {
 }

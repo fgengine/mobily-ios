@@ -124,13 +124,49 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     return [MobilyBuilderForm object:self forSelector:selector];
 }
 
-#pragma mark MobilyController
+#pragma mark Public
 
 - (void)setupController {
     if([UIDevice systemVersion] >= 7.0f) {
         [self setEdgesForExtendedLayout:UIRectEdgeNone];
     }
 }
+
+- (void)showLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
+    [self setPaneState:MSDynamicsDrawerPaneStateOpen inDirection:MSDynamicsDrawerDirectionLeft animated:animated allowUserInterruption:YES completion:completion];
+}
+
+- (void)hideLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
+    [self setPaneState:MSDynamicsDrawerPaneStateClosed inDirection:MSDynamicsDrawerDirectionLeft animated:animated allowUserInterruption:YES completion:completion];
+}
+
+- (void)showRightDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
+    [self setPaneState:MSDynamicsDrawerPaneStateOpen inDirection:MSDynamicsDrawerDirectionRight animated:animated allowUserInterruption:YES completion:completion];
+}
+
+- (void)hideRightDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
+    [self setPaneState:MSDynamicsDrawerPaneStateClosed inDirection:MSDynamicsDrawerDirectionRight animated:animated allowUserInterruption:YES completion:completion];
+}
+
+#pragma mark Property
+
+- (void)setLeftDrawerViewController:(UIViewController*)leftDrawerViewController {
+    [self setDrawerViewController:leftDrawerViewController forDirection:MSDynamicsDrawerDirectionLeft];
+}
+
+- (UIViewController*)leftDrawerViewController {
+    return [self drawerViewControllerForDirection:MSDynamicsDrawerDirectionLeft];
+}
+
+- (void)setRightDrawerViewController:(UIViewController*)rightDrawerViewController {
+    [self setDrawerViewController:rightDrawerViewController forDirection:MSDynamicsDrawerDirectionRight];
+}
+
+- (UIViewController*)rightDrawerViewController {
+    return [self drawerViewControllerForDirection:MSDynamicsDrawerDirectionRight];
+}
+
+#pragma mark UIViewController
 
 - (BOOL)prefersStatusBarHidden {
     if([self paneViewController] != nil) {
@@ -179,7 +215,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-
+    
     [_eventDidAppear fireSender:self object:nil];
 }
 
@@ -206,42 +242,6 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
             [self setView:nil];
         }
     }
-}
-
-#pragma mark Property
-
-- (void)setLeftDrawerViewController:(UIViewController*)leftDrawerViewController {
-    [self setDrawerViewController:leftDrawerViewController forDirection:MSDynamicsDrawerDirectionLeft];
-}
-
-- (UIViewController*)leftDrawerViewController {
-    return [self drawerViewControllerForDirection:MSDynamicsDrawerDirectionLeft];
-}
-
-- (void)setRightDrawerViewController:(UIViewController*)rightDrawerViewController {
-    [self setDrawerViewController:rightDrawerViewController forDirection:MSDynamicsDrawerDirectionRight];
-}
-
-- (UIViewController*)rightDrawerViewController {
-    return [self drawerViewControllerForDirection:MSDynamicsDrawerDirectionRight];
-}
-
-#pragma mark Public
-
-- (void)showLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
-    [self setPaneState:MSDynamicsDrawerPaneStateOpen inDirection:MSDynamicsDrawerDirectionLeft animated:animated allowUserInterruption:YES completion:completion];
-}
-
-- (void)hideLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
-    [self setPaneState:MSDynamicsDrawerPaneStateClosed inDirection:MSDynamicsDrawerDirectionLeft animated:animated allowUserInterruption:YES completion:completion];
-}
-
-- (void)showRightDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
-    [self setPaneState:MSDynamicsDrawerPaneStateOpen inDirection:MSDynamicsDrawerDirectionRight animated:animated allowUserInterruption:YES completion:completion];
-}
-
-- (void)hideRightDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
-    [self setPaneState:MSDynamicsDrawerPaneStateClosed inDirection:MSDynamicsDrawerDirectionRight animated:animated allowUserInterruption:YES completion:completion];
 }
 
 #pragma mark UIViewControllerTransitioningDelegate

@@ -101,13 +101,7 @@
     return [MobilyBuilderForm object:self forSelector:selector];
 }
 
-#pragma mark Property
-
-- (UIApplicationState)applicationState {
-    return [[UIApplication sharedApplication] applicationState];
-}
-
-#pragma mark MobilyApplication
+#pragma mark Public
 
 - (void)setupApplication {
 }
@@ -164,6 +158,12 @@
 
 - (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation {
     return NO;
+}
+
+#pragma mark Property
+
+- (UIApplicationState)applicationState {
+    return [[UIApplication sharedApplication] applicationState];
 }
 
 @end

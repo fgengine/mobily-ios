@@ -127,7 +127,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     return [MobilyBuilderForm object:self forSelector:selector];
 }
 
-#pragma mark MobilyControllerNavigation
+#pragma mark Public
 
 - (void)setupController {
     [self setDelegate:self];
@@ -136,6 +136,8 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
         [self setEdgesForExtendedLayout:UIRectEdgeNone];
     }
 }
+
+#pragma mark UIViewController
 
 - (BOOL)shouldAutorotate {
     return [[self topViewController] shouldAutorotate];

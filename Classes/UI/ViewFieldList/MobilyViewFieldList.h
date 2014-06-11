@@ -33,88 +33,31 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyKVO.h"
+#import "MobilyViewFieldText.h"
 
 /*--------------------------------------------------*/
 
-static void* MobilyKVOContext = &MobilyKVOContext;
+@class MobilyViewFieldListItem;
 
 /*--------------------------------------------------*/
 
-@interface MobilyKVO ()
+@interface MobilyViewFieldList : MobilyViewFieldText< MobilyBuilderObject >
 
-@property(nonatomic, readwrite, weak) id subject;
-@property(nonatomic, readwrite, strong) NSString* keyPath;
+@property(nonatomic, readwrite, strong) NSArray* items;
+@property(nonatomic, readwrite, strong) MobilyViewFieldListItem* selectedItem;
+
+- (void)setSelectedItem:(MobilyViewFieldListItem*)selectedItem animated:(BOOL)animated;
 
 @end
 
 /*--------------------------------------------------*/
 
-@implementation MobilyKVO
+@interface MobilyViewFieldListItem : NSObject
 
-#pragma mark Standart
+@property(nonatomic, readwrite, strong) NSString* title;
+@property(nonatomic, readwrite, strong) id value;
 
-- (id)initWithSubject:(id)subject keyPath:(NSString*)keyPath block:(MobilyKVOBlock)block {
-	self = [super init];
-	if(self != nil) {
-        [self setSubject:subject];
-        [self setKeyPath:keyPath];
-        [self setBlock:block];
-        
-		[subject addObserver:self forKeyPath:keyPath options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:MobilyKVOContext];
-	}
-    return self;
-}
-
-- (void)dealloc {
-	[self stopObservation];
-    
-    [self setKeyPath:nil];
-    [self setBlock:nil];
-    
-    MOBILY_SAFE_DEALLOC;
-}
-
-#pragma mark Public
-
-- (void)stopObservation {
-	[_subject removeObserver:self forKeyPath:_keyPath context:MobilyKVOContext];
-    [self setSubject:nil];
-}
-
-#pragma mark Private
-
-- (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
-	if(context == MobilyKVOContext) {
-		if(_block != nil) {
-			id oldValue = [change objectForKey:NSKeyValueChangeOldKey];
-			if(oldValue == [NSNull null]) {
-				oldValue = nil;
-            }
-			id newValue = [change objectForKey:NSKeyValueChangeNewKey];
-			if(newValue == [NSNull null]) {
-				newValue = nil;
-            }
-			_block(self, oldValue, newValue);
-		}
-	}
-}
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@implementation NSObject (MobilyKVO)
-
-- (MobilyKVO*)observeKeyPath:(NSString*)keyPath withBlock:(MobilyKVOBlock)block {
-	return [[MobilyKVO alloc] initWithSubject:self keyPath:keyPath block:block];
-}
-
-- (MobilyKVO*)observeSelector:(SEL)selector withBlock:(MobilyKVOBlock)block {
-	return [[MobilyKVO alloc] initWithSubject:self keyPath:NSStringFromSelector(selector) block:block];
-}
+- (id)initWithTitle:(NSString*)title value:(id)value;
 
 @end
 

@@ -178,7 +178,7 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 - (id)init {
     self = [super init];
     if(self != nil) {
-        [self setup];
+        [self setupItem];
     }
     return self;
 }
@@ -192,7 +192,7 @@ static NSMutableDictionary* MobilyStorageItemProperties;
                 [self setValue:value forKey:field];
             }
         }];
-        [self setup];
+        [self setupItem];
     }
     return self;
 }
@@ -206,7 +206,7 @@ static NSMutableDictionary* MobilyStorageItemProperties;
                 [self setValue:value forKey:field];
             }
         }];
-        [self setup];
+        [self setupItem];
     }
     return self;
 }
@@ -215,13 +215,10 @@ static NSMutableDictionary* MobilyStorageItemProperties;
     self = [super init];
     if(self != nil) {
         [self setUserDefaultsKey:userDefaultsKey];
-        [self setup];
+        [self setupItem];
         [self loadItem];
     }
     return self;
-}
-
-- (void)setup {
 }
 
 - (void)dealloc {
@@ -252,8 +249,6 @@ static NSMutableDictionary* MobilyStorageItemProperties;
     return result;
 }
 
-#pragma mark MobilyStorageItem
-
 - (void)encodeWithCoder:(NSCoder*)coder {
     [[self propertyMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
         id value = [self valueForKey:field];
@@ -264,6 +259,9 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 }
 
 #pragma mark Property
+
+- (void)setupItem {
+}
 
 - (NSArray*)propertyMap {
     if(_propertyMap == nil) {
@@ -865,26 +863,6 @@ static NSMutableDictionary* MobilyStorageItemProperties;
     MOBILY_SAFE_DEALLOC;
 }
 
-#pragma mark Property
-
-- (void)setReloadBlock:(MobilyStorageQueryReloadBlock)block {
-    _reloadBlock = MOBILY_SAFE_RETAIN([block copy]);
-    _flagReload = YES;
-    _flagResort = YES;
-}
-
-- (void)setResortBlock:(MobilyStorageQueryResortBlock)block {
-    _resortBlock = MOBILY_SAFE_RETAIN([block copy]);
-    _flagResort = YES;
-}
-
-- (void)setResortInvert:(BOOL)resortInvert {
-    if(_resortInvert != resortInvert) {
-        _resortInvert = resortInvert;
-        _flagResort = YES;
-    }
-}
-
 #pragma mark Public
 
 - (void)setNeedReload {
@@ -914,6 +892,26 @@ static NSMutableDictionary* MobilyStorageItemProperties;
         _flagResort = NO;
     }
     return _unsafeItems;
+}
+
+#pragma mark Property
+
+- (void)setReloadBlock:(MobilyStorageQueryReloadBlock)block {
+    _reloadBlock = MOBILY_SAFE_RETAIN([block copy]);
+    _flagReload = YES;
+    _flagResort = YES;
+}
+
+- (void)setResortBlock:(MobilyStorageQueryResortBlock)block {
+    _resortBlock = MOBILY_SAFE_RETAIN([block copy]);
+    _flagResort = YES;
+}
+
+- (void)setResortInvert:(BOOL)resortInvert {
+    if(_resortInvert != resortInvert) {
+        _resortInvert = resortInvert;
+        _flagResort = YES;
+    }
 }
 
 #pragma mark Private

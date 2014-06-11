@@ -33,88 +33,41 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyKVO.h"
+#import "MobilyBuilder.h"
 
 /*--------------------------------------------------*/
 
-static void* MobilyKVOContext = &MobilyKVOContext;
+typedef void (^MobilyImageLoaderCompleteBlock)(UIImage* image);
+typedef void (^MobilyImageLoaderFailureBlock)();
 
 /*--------------------------------------------------*/
 
-@interface MobilyKVO ()
+@interface MobilyViewImage : UIImageView< MobilyBuilderObject >
 
-@property(nonatomic, readwrite, weak) id subject;
-@property(nonatomic, readwrite, strong) NSString* keyPath;
+@property(nonatomic, readwrite, assign) BOOL thumbnail;
+@property(nonatomic, readwrite, strong) UIImage* defaultImage;
+@property(nonatomic, readwrite, strong) NSString* imageUrl;
+
+- (void)setupView;
+
+- (void)setImageUrl:(NSString*)imageUrl complete:(MobilyImageLoaderCompleteBlock)complete failure:(MobilyImageLoaderFailureBlock)failure;
 
 @end
 
 /*--------------------------------------------------*/
 
-@implementation MobilyKVO
+@interface MobilyImageLoader : NSObject
 
-#pragma mark Standart
++ (BOOL)isExistImageWithImageUrl:(NSString*)imageUrl;
++ (UIImage*)imageWithImageUrl:(NSString*)imageUrl;
++ (void)removeByImageUrl:(NSString*)imageUrl;
++ (void)cleanup;
 
-- (id)initWithSubject:(id)subject keyPath:(NSString*)keyPath block:(MobilyKVOBlock)block {
-	self = [super init];
-	if(self != nil) {
-        [self setSubject:subject];
-        [self setKeyPath:keyPath];
-        [self setBlock:block];
-        
-		[subject addObserver:self forKeyPath:keyPath options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:MobilyKVOContext];
-	}
-    return self;
-}
-
-- (void)dealloc {
-	[self stopObservation];
-    
-    [self setKeyPath:nil];
-    [self setBlock:nil];
-    
-    MOBILY_SAFE_DEALLOC;
-}
-
-#pragma mark Public
-
-- (void)stopObservation {
-	[_subject removeObserver:self forKeyPath:_keyPath context:MobilyKVOContext];
-    [self setSubject:nil];
-}
-
-#pragma mark Private
-
-- (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
-	if(context == MobilyKVOContext) {
-		if(_block != nil) {
-			id oldValue = [change objectForKey:NSKeyValueChangeOldKey];
-			if(oldValue == [NSNull null]) {
-				oldValue = nil;
-            }
-			id newValue = [change objectForKey:NSKeyValueChangeNewKey];
-			if(newValue == [NSNull null]) {
-				newValue = nil;
-            }
-			_block(self, oldValue, newValue);
-		}
-	}
-}
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@implementation NSObject (MobilyKVO)
-
-- (MobilyKVO*)observeKeyPath:(NSString*)keyPath withBlock:(MobilyKVOBlock)block {
-	return [[MobilyKVO alloc] initWithSubject:self keyPath:keyPath block:block];
-}
-
-- (MobilyKVO*)observeSelector:(SEL)selector withBlock:(MobilyKVOBlock)block {
-	return [[MobilyKVO alloc] initWithSubject:self keyPath:NSStringFromSelector(selector) block:block];
-}
++ (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target complete:(SEL)complete failure:(SEL)failure;
++ (void)loadWithImageUrl:(NSString*)imageUrl size:(CGSize)size target:(id)target complete:(SEL)complete failure:(SEL)failure;
++ (void)loadWithImageUrl:(NSString*)imageUrl complete:(MobilyImageLoaderCompleteBlock)complete failure:(MobilyImageLoaderFailureBlock)failure;
++ (void)loadWithImageUrl:(NSString*)imageUrl size:(CGSize)size complete:(MobilyImageLoaderCompleteBlock)complete failure:(MobilyImageLoaderFailureBlock)failure;
++ (NSString*)saveImage:(UIImage*)image;
 
 @end
 

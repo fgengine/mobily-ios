@@ -158,6 +158,59 @@
     MOBILY_SAFE_DEALLOC;
 }
 
+#pragma mark Public
+
+- (void)addRequestHeader:(NSString*)header value:(NSString*)value {
+    [_request setValue:value forHTTPHeaderField:header];
+}
+
+- (void)removeRequestHeader:(NSString*)header {
+    NSMutableDictionary* headers = [NSMutableDictionary dictionaryWithDictionary:[_request allHTTPHeaderFields]];
+    if(headers != nil) {
+        [headers removeObjectForKey:header];
+        [_request setAllHTTPHeaderFields:headers];
+    }
+}
+
+- (void)start {
+    if(_connection == nil) {
+        [self setResponse:nil];
+        [self setMutableResponseData:nil];
+        [self setLastError:nil];
+        
+        _connection = MOBILY_SAFE_RETAIN([[NSURLConnection alloc] initWithRequest:_request delegate:self startImmediately:NO]);
+        if(_connection != nil) {
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+            
+            [_connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+            [_connection start];
+            
+            if(_startCallback != nil) {
+                _startCallback(self);
+            }
+            
+            [[NSRunLoop currentRunLoop] run];
+        }
+    }
+}
+
+- (void)cancel {
+    if(_connection != nil) {
+        [_connection cancel];
+        
+        [self setConnection:nil];
+        [self setResponse:nil];
+        [self setMutableResponseData:nil];
+        [self setLastError:nil];
+        
+        if(_cancelCallback != nil) {
+            _cancelCallback(self);
+        }
+        
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    }
+}
+
 #pragma mark Property
 
 - (void)setRequestUrl:(NSString*)requestUrl {
@@ -250,59 +303,6 @@
         [self setLastError:error];
     }
     return result;
-}
-
-#pragma mark Public
-
-- (void)addRequestHeader:(NSString*)header value:(NSString*)value {
-    [_request setValue:value forHTTPHeaderField:header];
-}
-
-- (void)removeRequestHeader:(NSString*)header {
-    NSMutableDictionary* headers = [NSMutableDictionary dictionaryWithDictionary:[_request allHTTPHeaderFields]];
-    if(headers != nil) {
-        [headers removeObjectForKey:header];
-        [_request setAllHTTPHeaderFields:headers];
-    }
-}
-
-- (void)start {
-    if(_connection == nil) {
-        [self setResponse:nil];
-        [self setMutableResponseData:nil];
-        [self setLastError:nil];
-        
-        _connection = MOBILY_SAFE_RETAIN([[NSURLConnection alloc] initWithRequest:_request delegate:self startImmediately:NO]);
-        if(_connection != nil) {
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-            
-            [_connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-            [_connection start];
-            
-            if(_startCallback != nil) {
-                _startCallback(self);
-            }
-            
-            [[NSRunLoop currentRunLoop] run];
-        }
-    }
-}
-
-- (void)cancel {
-    if(_connection != nil) {
-        [_connection cancel];
-        
-        [self setConnection:nil];
-        [self setResponse:nil];
-        [self setMutableResponseData:nil];
-        [self setLastError:nil];
-        
-        if(_cancelCallback != nil) {
-            _cancelCallback(self);
-        }
-        
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    }
 }
 
 #pragma mark Private
@@ -438,6 +438,8 @@
 
 @end
 
+/*--------------------------------------------------*/
+#pragma mark -
 /*--------------------------------------------------*/
 
 @implementation MobilyTaskHttpQuery

@@ -1160,6 +1160,10 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
     return [UIBezierPath bezierPathWithCGPath:[[self layer] shadowPath]];
 }
 
+- (void)removeSubview:(UIView*)subview {
+    [subview removeFromSuperview];
+}
+
 - (void)setSubviews:(NSArray*)subviews {
     [[self subviews] enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
         [view removeFromSuperview];
@@ -1534,6 +1538,14 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 
 MOBILY_DEFINE_VALIDATE_STRING(Title)
 
+#pragma mark Public
+
+- (void)loadViewIfNeed {
+    if([self isViewLoaded] == NO) {
+        [self loadView];
+    }
+}
+
 #pragma mark Property
 
 - (UIView*)topView {
@@ -1542,14 +1554,6 @@ MOBILY_DEFINE_VALIDATE_STRING(Title)
         viewController = [viewController parentViewController];
     }
     return [viewController view];
-}
-
-#pragma mark Public
-
-- (void)loadViewIfNeed {
-    if([self isViewLoaded] == NO) {
-        [self loadView];
-    }
 }
 
 @end

@@ -44,7 +44,7 @@
 - (id)initWithUserDefaultsKey:(NSString*)userDefaultsKey;
 - (id)initWithJson:(id)json;
 
-- (void)setup;
+- (void)setupItem;
 
 + (NSArray*)propertyMap;
 + (NSDictionary*)jsonMap;
