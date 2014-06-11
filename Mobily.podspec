@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
 	spec.name = 'Mobily'
-	spec.version = '0.1'
+	spec.version = '0.1.1'
 	spec.summary = 'Mobily framework for iOS'
 	spec.homepage = 'https://github.com/fgengine/mobily-ios'
 	spec.license = {
