@@ -267,8 +267,10 @@
         return UIStatusBarStyleDefault;
     } else if([temp isEqualToString:@"light-content"] == YES) {
         return UIStatusBarStyleLightContent;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
     } else if([temp isEqualToString:@"black-opaque"] == YES) {
         return UIStatusBarStyleBlackTranslucent;
+#endif
     } else if([temp isEqualToString:@"black-opaque"] == YES) {
         return UIStatusBarStyleBlackOpaque;
     }
