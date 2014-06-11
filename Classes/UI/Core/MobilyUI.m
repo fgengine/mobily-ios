@@ -722,17 +722,17 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     NSFileManager* fileManager = [NSFileManager defaultManager];
     if([UIDevice isIPhone] == YES) {
         NSString* iPhoneName = [NSString stringWithFormat:@"%@%@", baseName, @"-iPhone"];
-        if([fileManager fileExistsAtPath:[bundle pathForResource:iPhoneName ofType:nil]] == YES) {
+        if([fileManager fileExistsAtPath:[bundle pathForResource:iPhoneName ofType:@"nib"]] == YES) {
             nib = iPhoneName;
         }
     } else if([UIDevice isIPad] == YES) {
         NSString* iPadName = [NSString stringWithFormat:@"%@%@", baseName, @"-iPad"];
-        if([fileManager fileExistsAtPath:[bundle pathForResource:iPadName ofType:nil]] == YES) {
+        if([fileManager fileExistsAtPath:[bundle pathForResource:iPadName ofType:@"nib"]] == YES) {
             nib = iPadName;
         }
     }
     if(nib == nil) {
-        if([fileManager fileExistsAtPath:[bundle pathForResource:baseName ofType:nil]] == YES) {
+        if([fileManager fileExistsAtPath:[bundle pathForResource:baseName ofType:@"nib"]] == YES) {
             nib = baseName;
         }
     }
