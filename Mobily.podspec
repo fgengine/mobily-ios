@@ -13,6 +13,7 @@ Pod::Spec.new do |spec|
 	spec.platform = :ios, 7.0
 	spec.source = {
 		:git => 'https://github.com/fgengine/mobily-ios.git'
+		:tag => spec.version.to_s
 	}
 	spec.default_subspec = 'UI'
 	spec.requires_arc = true
