@@ -267,12 +267,16 @@
         return UIStatusBarStyleDefault;
     } else if([temp isEqualToString:@"light-content"] == YES) {
         return UIStatusBarStyleLightContent;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_7_0
-    } else if([temp isEqualToString:@"black-opaque"] == YES) {
+    } else if([temp isEqualToString:@"black-translucent"] == YES) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         return UIStatusBarStyleBlackTranslucent;
-#endif
+#pragma clang diagnostic pop
     } else if([temp isEqualToString:@"black-opaque"] == YES) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         return UIStatusBarStyleBlackOpaque;
+#pragma clang diagnostic pop
     }
     return UIStatusBarStyleDefault;
 }
