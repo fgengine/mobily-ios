@@ -33,11 +33,11 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyViewElementsView.h"
+#import "MobilyViewElements.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyViewElementsView ()
+@interface MobilyViewElements ()
 
 // Protocol access
 @property(nonatomic, readwrite, assign) BOOL elementsDelegateShowCellAtIndex;
@@ -94,7 +94,7 @@
 
 @interface MobilyViewElementsCell ()
 
-@property(nonatomic, readwrite, weak) MobilyViewElementsView* elementsView;
+@property(nonatomic, readwrite, weak) MobilyViewElements* elementsView;
 @property(nonatomic, readwrite, weak) MobilyViewElementsItem* elementsItem;
 
 @end
@@ -105,14 +105,14 @@
 
 @interface MobilyViewElementsItem ()
 
-@property(nonatomic, readwrite, weak) MobilyViewElementsView* elementsView;
+@property(nonatomic, readwrite, weak) MobilyViewElements* elementsView;
 @property(nonatomic, readwrite, weak) MobilyViewElementsCell* elementsCell;
 
 @property(nonatomic, readwrite, assign) NSUInteger index;
 @property(nonatomic, readwrite, strong) NSString* identifier;
 @property(nonatomic, readwrite, assign, getter = isSelected) BOOL selected;
 
-- (id)initWithElementsView:(MobilyViewElementsView*)elementsView;
+- (id)initWithElementsView:(MobilyViewElements*)elementsView;
 
 @end
 
@@ -134,7 +134,7 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation MobilyViewElementsView
+@implementation MobilyViewElements
 
 @synthesize objectName = _objectName;
 @synthesize objectParent = _objectParent;
@@ -444,53 +444,53 @@
     }];
 }
 
-- (void)scrollToItem:(MobilyViewElementsItem*)item scrollPosition:(MobilyViewElementsViewScrollPosition)scrollPosition animated:(BOOL)animated {
+- (void)scrollToItem:(MobilyViewElementsItem*)item scrollPosition:(MobilyViewElementsScrollPosition)scrollPosition animated:(BOOL)animated {
     [self scrollToItemAtIndex:[self indexAtItem:item] scrollPosition:scrollPosition animated:animated];
 }
 
-- (void)scrollToItemAtIndex:(NSUInteger)index scrollPosition:(MobilyViewElementsViewScrollPosition)scrollPosition animated:(BOOL)animated {
+- (void)scrollToItemAtIndex:(NSUInteger)index scrollPosition:(MobilyViewElementsScrollPosition)scrollPosition animated:(BOOL)animated {
     if(index >= [_items count]) {
         return;
     }
     NSUInteger vPosition = scrollPosition & 0x07;
     NSUInteger hPosition = scrollPosition & 0x38;
-    if((vPosition != MobilyViewElementsViewScrollPositionNone) && (vPosition != MobilyViewElementsViewScrollPositionTop) && (vPosition != MobilyViewElementsViewScrollPositionCenteredVertically) && (vPosition != MobilyViewElementsViewScrollPositionBottom)) {
-        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"MobilyViewElementsViewScrollPosition: attempt to use a scroll position with multiple vertical positioning styles" userInfo:nil];
+    if((vPosition != MobilyViewElementsScrollPositionNone) && (vPosition != MobilyViewElementsScrollPositionTop) && (vPosition != MobilyViewElementsScrollPositionCenteredVertically) && (vPosition != MobilyViewElementsScrollPositionBottom)) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"MobilyViewElementsScrollPosition: attempt to use a scroll position with multiple vertical positioning styles" userInfo:nil];
     }
-    if((hPosition != MobilyViewElementsViewScrollPositionNone) && (hPosition != MobilyViewElementsViewScrollPositionLeft) && (hPosition != MobilyViewElementsViewScrollPositionCenteredHorizontally) && (hPosition != MobilyViewElementsViewScrollPositionRight)) {
-        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"MobilyViewElementsViewScrollPosition: attempt to use a scroll position with multiple horizontal positioning styles" userInfo:nil];
+    if((hPosition != MobilyViewElementsScrollPositionNone) && (hPosition != MobilyViewElementsScrollPositionLeft) && (hPosition != MobilyViewElementsScrollPositionCenteredHorizontally) && (hPosition != MobilyViewElementsScrollPositionRight)) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"MobilyViewElementsScrollPosition: attempt to use a scroll position with multiple horizontal positioning styles" userInfo:nil];
     }
     CGRect visibleRect = [self bounds];
     UIEdgeInsets contentInset = [self contentInset];
     MobilyViewElementsItem* item = [_items objectAtIndex:index];
     CGRect itemFrame = [item frame];
     switch(vPosition) {
-        case MobilyViewElementsViewScrollPositionCenteredVertically: {
+        case MobilyViewElementsScrollPositionCenteredVertically: {
             CGFloat offset = fmax(itemFrame.origin.y - ((visibleRect.size.height * 0.5f) - (itemFrame.size.height * 0.5f)), -contentInset.top);
             itemFrame = CGRectMake(itemFrame.origin.x, offset, itemFrame.size.width, visibleRect.size.height);
             break;
         }
-        case MobilyViewElementsViewScrollPositionTop: {
+        case MobilyViewElementsScrollPositionTop: {
             itemFrame = CGRectMake(itemFrame.origin.x, itemFrame.origin.y, itemFrame.size.width, visibleRect.size.height);
             break;
         }
-        case MobilyViewElementsViewScrollPositionBottom: {
+        case MobilyViewElementsScrollPositionBottom: {
             CGFloat offset = fmax(itemFrame.origin.y - (visibleRect.size.height - itemFrame.size.height), -contentInset.top);
             itemFrame = CGRectMake(itemFrame.origin.x, offset, itemFrame.size.width, visibleRect.size.height);
             break;
         }
     }
     switch(hPosition) {
-        case MobilyViewElementsViewScrollPositionLeft: {
+        case MobilyViewElementsScrollPositionLeft: {
             itemFrame = CGRectMake(itemFrame.origin.x, itemFrame.origin.y, visibleRect.size.width, itemFrame.size.height);
             break;
         }
-        case MobilyViewElementsViewScrollPositionCenteredHorizontally: {
+        case MobilyViewElementsScrollPositionCenteredHorizontally: {
             CGFloat offset = itemFrame.origin.x - ((visibleRect.size.width * 0.5f) - (itemFrame.size.width * 0.5f));
             itemFrame = CGRectMake(offset, itemFrame.origin.y, visibleRect.size.width, itemFrame.size.height);
             break;
         }
-        case MobilyViewElementsViewScrollPositionRight: {
+        case MobilyViewElementsScrollPositionRight: {
             CGFloat offset = itemFrame.origin.x - (visibleRect.size.width - itemFrame.size.width);
             itemFrame = CGRectMake(offset, itemFrame.origin.y, visibleRect.size.width, itemFrame.size.height);
             break;
@@ -788,13 +788,13 @@
 
 #pragma mark Property
 
-- (void)setElementsDataSource:(id< MobilyViewElementsViewDataSource >)elementsDataSource {
+- (void)setElementsDataSource:(id< MobilyViewElementsDataSource >)elementsDataSource {
     if(_elementsDataSource != elementsDataSource) {
         _elementsDataSource = elementsDataSource;
     }
 }
 
-- (void)setElementsDelegate:(id< MobilyViewElementsViewDelegate >)elementsDelegate {
+- (void)setElementsDelegate:(id< MobilyViewElementsDelegate >)elementsDelegate {
     if(_elementsDelegate != elementsDelegate) {
         _elementsDelegate = elementsDelegate;
         
@@ -811,7 +811,7 @@
     }
 }
 
-- (void)setElementsLayout:(id< MobilyViewElementsViewLayout >)elementsLayout {
+- (void)setElementsLayout:(id< MobilyViewElementsLayout >)elementsLayout {
     if(_elementsLayout != elementsLayout) {
         _elementsLayout = elementsLayout;
         
@@ -1164,7 +1164,7 @@
 
 #pragma mark Standart
 
-- (id)initWithElementsView:(MobilyViewElementsView*)elementsView {
+- (id)initWithElementsView:(MobilyViewElements*)elementsView {
     self = [super init];
     if(self != nil) {
         [self setElementsView:elementsView];

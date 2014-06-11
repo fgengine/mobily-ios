@@ -33,11 +33,11 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyViewElementsView.h"
+#import "MobilyViewElements.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyViewElementsLayoutList : NSObject < MobilyViewElementsViewLayout >
+@interface MobilyViewElementsLayoutList : NSObject < MobilyViewElementsLayout >
 
 @property(nonatomic, readwrite, assign) CGFloat margin;
 @property(nonatomic, readwrite, assign) CGFloat spacing;
@@ -58,7 +58,7 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyViewElementsLayoutGrid : NSObject < MobilyViewElementsViewLayout >
+@interface MobilyViewElementsLayoutGrid : NSObject < MobilyViewElementsLayout >
 
 @property(nonatomic, readwrite, assign) CGSize margin;
 @property(nonatomic, readwrite, assign) CGSize spacing;
