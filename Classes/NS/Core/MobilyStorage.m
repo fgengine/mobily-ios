@@ -477,18 +477,20 @@
     MOBILY_SAFE_DEALLOC;
 }
 
-- (id)parseJson:(NSDictionary*)json {
+- (id)parseJson:(id)json {
     __block id value = json;
-    [_paths enumerateObjectsUsingBlock:^(NSString* path, NSUInteger index, BOOL* stop) {
-        if([value isKindOfClass:[NSDictionary class]] == YES) {
-            value = [value objectForKey:path];
-        } else {
-            if(index != ([_paths count] - 1)) {
-                value = nil;
+    if([value isKindOfClass:[NSDictionary class]] == YES) {
+        [_paths enumerateObjectsUsingBlock:^(NSString* path, NSUInteger index, BOOL* stop) {
+            if([value isKindOfClass:[NSDictionary class]] == YES) {
+                value = [value objectForKey:path];
+            } else {
+                if(index != ([_paths count] - 1)) {
+                    value = nil;
+                }
+                *stop = YES;
             }
-            *stop = YES;
-        }
-    }];
+        }];
+    }
     return [self convertValue:value];
 }
 
@@ -503,6 +505,14 @@
 /*--------------------------------------------------*/
 
 @implementation MobilyStorageJsonConverterArray
+
+- (id)initWithJsonConverter:(MobilyStorageJsonConverter*)jsonConverter {
+    self = [super init];
+    if(self != nil) {
+        [self setJsonConverter:jsonConverter];
+    }
+    return self;
+}
 
 - (id)initWithPath:(NSString*)path jsonConverter:(MobilyStorageJsonConverter*)jsonConverter {
     self = [super initWithPath:path];
@@ -535,6 +545,14 @@
 /*--------------------------------------------------*/
 
 @implementation MobilyStorageJsonConverterDictionary
+
+- (id)initWithJsonConverter:(MobilyStorageJsonConverter*)jsonConverter {
+    self = [super init];
+    if(self != nil) {
+        [self setJsonConverter:jsonConverter];
+    }
+    return self;
+}
 
 - (id)initWithPath:(NSString*)path jsonConverter:(MobilyStorageJsonConverter*)jsonConverter {
     self = [super initWithPath:path];
@@ -629,6 +647,14 @@
 
 @implementation MobilyStorageJsonConverterDate
 
+- (id)initWithFormat:(NSString*)format {
+    self = [super init];
+    if(self != nil) {
+        [self setFormat:format];
+    }
+    return self;
+}
+
 - (id)initWithPath:(NSString*)path format:(NSString*)format {
     self = [super initWithPath:path];
     if(self != nil) {
@@ -664,6 +690,14 @@
 
 @implementation MobilyStorageJsonConverterEnum
 
+- (id)initWithEnums:(NSDictionary*)enums {
+    self = [super init];
+    if(self != nil) {
+        [self setEnums:enums];
+    }
+    return self;
+}
+
 - (id)initWithPath:(NSString*)path enums:(NSDictionary*)enums {
     self = [super initWithPath:path];
     if(self != nil) {
@@ -694,6 +728,14 @@
 /*--------------------------------------------------*/
 
 @implementation MobilyStorageJsonConverterCustomClass
+
+- (id)initWithCustomClass:(Class)customClass {
+    self = [super init];
+    if(self != nil) {
+        [self setCustomClass:customClass];
+    }
+    return self;
+}
 
 - (id)initWithPath:(NSString*)path customClass:(Class)customClass {
     self = [super initWithPath:path];

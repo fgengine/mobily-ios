@@ -65,7 +65,7 @@
 
 - (id)initWithPath:(NSString*)path;
 
-- (id)parseJson:(NSDictionary*)json;
+- (id)parseJson:(id)json;
 
 - (id)convertValue:(id)value;
 
@@ -77,6 +77,7 @@
 
 @property(nonatomic, readonly, strong) MobilyStorageJsonConverter* jsonConverter;
 
+- (id)initWithJsonConverter:(MobilyStorageJsonConverter*)jsonConverter;
 - (id)initWithPath:(NSString*)path jsonConverter:(MobilyStorageJsonConverter*)jsonConverter;
 
 @end
@@ -87,6 +88,7 @@
 
 @property(nonatomic, readonly, strong) MobilyStorageJsonConverter* jsonConverter;
 
+- (id)initWithJsonConverter:(MobilyStorageJsonConverter*)jsonConverter;
 - (id)initWithPath:(NSString*)path jsonConverter:(MobilyStorageJsonConverter*)jsonConverter;
 
 @end
@@ -115,6 +117,7 @@
 
 @property(nonatomic, readonly, strong) NSString* format;
 
+- (id)initWithFormat:(NSString*)format;
 - (id)initWithPath:(NSString*)path format:(NSString*)format;
 
 @end
@@ -125,6 +128,7 @@
 
 @property(nonatomic, readonly, strong) NSDictionary* enums;
 
+- (id)initWithEnums:(NSDictionary*)enums;
 - (id)initWithPath:(NSString*)path enums:(NSDictionary*)enums;
 
 @end
@@ -135,6 +139,7 @@
 
 @property(nonatomic, readonly, assign) Class customClass;
 
+- (id)initWithCustomClass:(Class)customClass;
 - (id)initWithPath:(NSString*)path customClass:(Class)customClass;
 
 @end
