@@ -620,6 +620,19 @@ static NSMutableDictionary* MobilyStorageItemProperties;
     id result = [super parseJson:json];
     if([result isKindOfClass:[NSDictionary class]] == YES) {
         return [[_modelClass alloc] initWithJson:result];
+    } else if([result isKindOfClass:[NSArray class]] == YES) {
+        NSMutableArray* resultArray = [NSMutableArray array];
+        if(resultArray != nil) {
+            [result enumerateObjectsUsingBlock:^(id jsonItem, NSUInteger index, BOOL* stop) {
+                if([jsonItem isKindOfClass:[NSDictionary class]] == YES) {
+                    id model = [[_modelClass alloc] initWithJson:jsonItem];
+                    if(model != nil) {
+                        [resultArray addObject:model];
+                    }
+                }
+            }];
+            return [NSArray arrayWithArray:resultArray];
+        }
     }
     return nil;
 }
