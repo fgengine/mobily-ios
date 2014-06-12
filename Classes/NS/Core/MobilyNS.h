@@ -114,6 +114,8 @@
 + (instancetype)arrayWithArray:(NSArray*)array andAddingObject:(id)object;
 + (instancetype)arrayWithArray:(NSArray*)array andRemovedObject:(id)object;
 
+- (NSArray*)arrayByReplaceObject:(id)object atIndex:(NSUInteger)index;
+
 - (NSArray*)arrayByRemovedObject:(id)object;
 - (NSArray*)arrayByRemovedObjectsFromArray:(NSArray*)array;
 

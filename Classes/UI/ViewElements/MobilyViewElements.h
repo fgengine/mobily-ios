@@ -39,7 +39,6 @@
 
 @class MobilyViewElements;
 @class MobilyViewElementsCell;
-@class MobilyViewElementsLayout;
 @class MobilyViewElementsItem;
 
 /*--------------------------------------------------*/

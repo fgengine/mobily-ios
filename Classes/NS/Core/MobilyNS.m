@@ -438,6 +438,12 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
     return [NSArray arrayWithArray:result];
 }
 
+- (NSArray*)arrayByReplaceObject:(id)object atIndex:(NSUInteger)index {
+    NSMutableArray* result = [NSMutableArray arrayWithArray:self];
+    [result replaceObjectAtIndex:index withObject:object];
+    return [NSArray arrayWithArray:result];
+}
+
 - (NSArray*)arrayByRemovedObject:(id)object {
     NSMutableArray* result = [NSMutableArray arrayWithArray:self];
     [result removeObject:object];
