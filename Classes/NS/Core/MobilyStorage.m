@@ -37,10 +37,6 @@
 
 /*--------------------------------------------------*/
 
-static NSMutableDictionary* MobilyStorageItemProperties;
-
-/*--------------------------------------------------*/
-
 @interface MobilyStorage : NSObject
 
 + (NSString*)fileSystemDirectory;
@@ -65,7 +61,7 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilyStorageJsonValue ()
+@interface MobilyStorageJsonConverter ()
 
 @property(nonatomic, readwrite, strong) NSString* path;
 @property(nonatomic, readwrite, strong) NSArray* paths;
@@ -76,7 +72,9 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilyStorageJsonString ()
+@interface MobilyStorageJsonConverterArray ()
+
+@property(nonatomic, readwrite, strong) MobilyStorageJsonConverter* jsonConverter;
 
 @end
 
@@ -84,7 +82,9 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilyStorageJsonNumber ()
+@interface MobilyStorageJsonConverterDictionary ()
+
+@property(nonatomic, readwrite, strong) MobilyStorageJsonConverter* jsonConverter;
 
 @end
 
@@ -92,7 +92,23 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilyStorageJsonDate ()
+@interface MobilyStorageJsonConverterString ()
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@interface MobilyStorageJsonConverterNumber ()
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@interface MobilyStorageJsonConverterDate ()
 
 @property(nonatomic, readwrite, strong) NSString* format;
 
@@ -102,7 +118,7 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilyStorageJsonEnum ()
+@interface MobilyStorageJsonConverterEnum ()
 
 @property(nonatomic, readwrite, strong) NSDictionary* enums;
 
@@ -112,9 +128,9 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilyStorageJsonModel ()
+@interface MobilyStorageJsonConverterCustomClass ()
 
-@property(nonatomic, readwrite, assign) Class modelClass;
+@property(nonatomic, readwrite, assign) Class customClass;
 
 @end
 
@@ -200,12 +216,7 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 - (id)initWithJson:(id)json {
     self = [super init];
     if(self != nil) {
-        [[self jsonMap] enumerateKeysAndObjectsUsingBlock:^(NSString* field, MobilyStorageJsonValue* jsonValue, BOOL* stop) {
-            id value = [jsonValue parseJson:json];
-            if(value != nil) {
-                [self setValue:value forKey:field];
-            }
-        }];
+        [self convertFromJson:json];
         [self setupItem];
     }
     return self;
@@ -258,6 +269,16 @@ static NSMutableDictionary* MobilyStorageItemProperties;
     }];
 }
 
+- (id)copyWithZone:(NSZone*)zone {
+    id result = [[[self class] allocWithZone:zone] init];
+    if(result != nil) {
+        [result setPropertyMap:[self propertyMap]];
+        [result setJsonMap:[self jsonMap]];
+        [result setUserDefaultsKey:_userDefaultsKey];
+    }
+    return result;
+}
+
 #pragma mark Property
 
 - (void)setupItem {
@@ -285,6 +306,15 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 
 + (NSDictionary*)jsonMap {
     return nil;
+}
+
+- (void)convertFromJson:(id)json {
+    [[self jsonMap] enumerateKeysAndObjectsUsingBlock:^(NSString* field, MobilyStorageJsonConverter* converter, BOOL* stop) {
+        id value = [converter parseJson:json];
+        if(value != nil) {
+            [self setValue:value forKey:field];
+        }
+    }];
 }
 
 - (void)clearItem {
@@ -429,7 +459,7 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation MobilyStorageJsonValue
+@implementation MobilyStorageJsonConverter
 
 - (id)initWithPath:(NSString*)path {
     self = [super init];
@@ -448,18 +478,22 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 }
 
 - (id)parseJson:(NSDictionary*)json {
-    __block id result = json;
+    __block id value = json;
     [_paths enumerateObjectsUsingBlock:^(NSString* path, NSUInteger index, BOOL* stop) {
-        if([result isKindOfClass:[NSDictionary class]] == YES) {
-            result = [result objectForKey:path];
+        if([value isKindOfClass:[NSDictionary class]] == YES) {
+            value = [value objectForKey:path];
         } else {
             if(index != ([_paths count] - 1)) {
-                result = nil;
+                value = nil;
             }
             *stop = YES;
         }
     }];
-    return result;
+    return [self convertValue:value];
+}
+
+- (id)convertValue:(id)value {
+    return value;
 }
 
 @end
@@ -468,18 +502,81 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation MobilyStorageJsonBool
+@implementation MobilyStorageJsonConverterArray
 
-- (id)parseJson:(NSDictionary*)json {
-    id result = [super parseJson:json];
-    if([result isKindOfClass:[NSString class]] == YES) {
-        NSString* string = [result lowercaseString];
-        if(([string isEqualToString:@"true"] == YES) || ([string isEqualToString:@"yes"] == YES) || ([string isEqualToString:@"on"] == YES)) {
+- (id)initWithPath:(NSString*)path jsonConverter:(MobilyStorageJsonConverter*)jsonConverter {
+    self = [super initWithPath:path];
+    if(self != nil) {
+        [self setJsonConverter:jsonConverter];
+    }
+    return self;
+}
+
+- (id)convertValue:(id)value {
+    if([value isKindOfClass:[NSArray class]] == YES) {
+        NSMutableArray* result = [NSMutableArray array];
+        if(result != nil) {
+            [value enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL* stop) {
+                id convertedValue = [_jsonConverter convertValue:object];
+                if(convertedValue != nil) {
+                    [result addObject:convertedValue];
+                }
+            }];
+            return result;
+        }
+    }
+    return nil;
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation MobilyStorageJsonConverterDictionary
+
+- (id)initWithPath:(NSString*)path jsonConverter:(MobilyStorageJsonConverter*)jsonConverter {
+    self = [super initWithPath:path];
+    if(self != nil) {
+        [self setJsonConverter:jsonConverter];
+    }
+    return self;
+}
+
+- (id)convertValue:(id)value {
+    if([value isKindOfClass:[NSDictionary class]] == YES) {
+        NSMutableDictionary* result = [NSMutableDictionary dictionary];
+        if(result != nil) {
+            [value enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL* stop) {
+                id convertedValue = [_jsonConverter convertValue:object];
+                if(convertedValue != nil) {
+                    [result setObject:convertedValue forKey:key];
+                }
+            }];
+            return result;
+        }
+    }
+    return nil;
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation MobilyStorageJsonConverterBool
+
+- (id)convertValue:(id)value {
+    if([value isKindOfClass:[NSString class]] == YES) {
+        NSString* lowercaseString = [value lowercaseString];
+        if(([lowercaseString isEqualToString:@"true"] == YES) || ([lowercaseString isEqualToString:@"yes"] == YES) || ([lowercaseString isEqualToString:@"on"] == YES)) {
             return @YES;
         }
         return @NO;
-    } else if([result isKindOfClass:[NSNumber class]] == YES) {
-        return result;
+    } else if([value isKindOfClass:[NSNumber class]] == YES) {
+        return value;
     }
     return nil;
 }
@@ -490,16 +587,15 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation MobilyStorageJsonString
+@implementation MobilyStorageJsonConverterString
 
-- (id)parseJson:(NSDictionary*)json {
-    id result = [super parseJson:json];
-    if([result isKindOfClass:[NSString class]] == YES) {
-        return result;
-    } else if([result isKindOfClass:[NSNumber class]] == YES) {
+- (id)convertValue:(id)value {
+    if([value isKindOfClass:[NSString class]] == YES) {
+        return value;
+    } else if([value isKindOfClass:[NSNumber class]] == YES) {
         NSNumberFormatter* numberFormat = [NSNumberFormatter alloc];
         if(numberFormat != nil) {
-            return [numberFormat stringFromNumber:result];
+            return [numberFormat stringFromNumber:value];
         }
     }
     return nil;
@@ -511,16 +607,15 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation MobilyStorageJsonNumber
+@implementation MobilyStorageJsonConverterNumber
 
-- (id)parseJson:(NSDictionary*)json {
-    id result = [super parseJson:json];
-    if([result isKindOfClass:[NSNumber class]] == YES) {
-        return result;
-    } else if([result isKindOfClass:[NSString class]] == YES) {
+- (id)convertValue:(id)value {
+    if([value isKindOfClass:[NSNumber class]] == YES) {
+        return value;
+    } else if([value isKindOfClass:[NSString class]] == YES) {
         NSNumberFormatter* numberFormat = [NSNumberFormatter alloc];
         if(numberFormat != nil) {
-            return [numberFormat numberFromString:result];
+            return [numberFormat numberFromString:value];
         }
     }
     return nil;
@@ -532,7 +627,7 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation MobilyStorageJsonDate
+@implementation MobilyStorageJsonConverterDate
 
 - (id)initWithPath:(NSString*)path format:(NSString*)format {
     self = [super initWithPath:path];
@@ -548,16 +643,15 @@ static NSMutableDictionary* MobilyStorageItemProperties;
     MOBILY_SAFE_DEALLOC;
 }
 
-- (id)parseJson:(NSDictionary*)json {
-    id result = [super parseJson:json];
-    if([result isKindOfClass:[NSString class]] == YES) {
+- (id)convertValue:(id)value {
+    if([value isKindOfClass:[NSString class]] == YES) {
         NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
         if(dateFormatter != nil) {
             [dateFormatter setDateFormat:_format];
-            return [dateFormatter dateFromString:result];
+            return [dateFormatter dateFromString:value];
         }
-    } else if([result isKindOfClass:[NSNumber class]] == YES) {
-        return [NSDate dateWithTimeIntervalSince1970:[result floatValue] / 1000.0f];
+    } else if([value isKindOfClass:[NSNumber class]] == YES) {
+        return [NSDate dateWithTimeIntervalSince1970:[value floatValue] / 1000.0f];
     }
     return nil;
 }
@@ -568,7 +662,7 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation MobilyStorageJsonEnum : MobilyStorageJsonValue
+@implementation MobilyStorageJsonConverterEnum
 
 - (id)initWithPath:(NSString*)path enums:(NSDictionary*)enums {
     self = [super initWithPath:path];
@@ -584,12 +678,11 @@ static NSMutableDictionary* MobilyStorageItemProperties;
     MOBILY_SAFE_DEALLOC;
 }
 
-- (id)parseJson:(NSDictionary*)json {
-    id result = [super parseJson:json];
-    if([result isKindOfClass:[NSString class]] == YES) {
-        return [_enums objectForKey:result];
-    } else if([result isKindOfClass:[NSNumber class]] == YES) {
-        return [_enums objectForKey:result];
+- (id)convertValue:(id)value {
+    if([value isKindOfClass:[NSString class]] == YES) {
+        return [_enums objectForKey:value];
+    } else if([value isKindOfClass:[NSNumber class]] == YES) {
+        return [_enums objectForKey:value];
     }
     return nil;
 }
@@ -600,39 +693,25 @@ static NSMutableDictionary* MobilyStorageItemProperties;
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation MobilyStorageJsonModel
+@implementation MobilyStorageJsonConverterCustomClass
 
-- (id)initWithPath:(NSString*)path modelClass:(Class)modelClass {
+- (id)initWithPath:(NSString*)path customClass:(Class)customClass {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setModelClass:modelClass];
+        [self setCustomClass:customClass];
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setModelClass:nil];
+    [self setCustomClass:nil];
     
     MOBILY_SAFE_DEALLOC;
 }
 
-- (id)parseJson:(NSDictionary*)json {
-    id result = [super parseJson:json];
-    if([result isKindOfClass:[NSDictionary class]] == YES) {
-        return [[_modelClass alloc] initWithJson:result];
-    } else if([result isKindOfClass:[NSArray class]] == YES) {
-        NSMutableArray* resultArray = [NSMutableArray array];
-        if(resultArray != nil) {
-            [result enumerateObjectsUsingBlock:^(id jsonItem, NSUInteger index, BOOL* stop) {
-                if([jsonItem isKindOfClass:[NSDictionary class]] == YES) {
-                    id model = [[_modelClass alloc] initWithJson:jsonItem];
-                    if(model != nil) {
-                        [resultArray addObject:model];
-                    }
-                }
-            }];
-            return [NSArray arrayWithArray:resultArray];
-        }
+- (id)convertValue:(id)value {
+    if([value isKindOfClass:[NSDictionary class]] == YES) {
+        return [[_customClass alloc] initWithJson:value];
     }
     return nil;
 }

@@ -37,7 +37,7 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyStorageItem : NSObject < NSCoding, NSCoding >
+@interface MobilyStorageItem : NSObject < NSCoding, NSCopying >
 
 @property(nonatomic, readwrite, strong) NSString* userDefaultsKey;
 
@@ -49,6 +49,8 @@
 + (NSArray*)propertyMap;
 + (NSDictionary*)jsonMap;
 
+- (void)convertFromJson:(id)json;
+
 - (void)clearItem;
 - (BOOL)saveItem;
 - (void)loadItem;
@@ -57,7 +59,7 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyStorageJsonValue : NSObject
+@interface MobilyStorageJsonConverter : NSObject
 
 @property(nonatomic, readonly, strong) NSString* path;
 
@@ -65,29 +67,51 @@
 
 - (id)parseJson:(NSDictionary*)json;
 
-@end
-
-/*--------------------------------------------------*/
-
-@interface MobilyStorageJsonBool : MobilyStorageJsonValue
+- (id)convertValue:(id)value;
 
 @end
 
 /*--------------------------------------------------*/
 
-@interface MobilyStorageJsonString : MobilyStorageJsonValue
+@interface MobilyStorageJsonConverterArray : MobilyStorageJsonConverter
+
+@property(nonatomic, readonly, strong) MobilyStorageJsonConverter* jsonConverter;
+
+- (id)initWithPath:(NSString*)path jsonConverter:(MobilyStorageJsonConverter*)jsonConverter;
 
 @end
 
 /*--------------------------------------------------*/
 
-@interface MobilyStorageJsonNumber : MobilyStorageJsonValue
+@interface MobilyStorageJsonConverterDictionary : MobilyStorageJsonConverter
+
+@property(nonatomic, readonly, strong) MobilyStorageJsonConverter* jsonConverter;
+
+- (id)initWithPath:(NSString*)path jsonConverter:(MobilyStorageJsonConverter*)jsonConverter;
 
 @end
 
 /*--------------------------------------------------*/
 
-@interface MobilyStorageJsonDate : MobilyStorageJsonValue
+@interface MobilyStorageJsonConverterBool : MobilyStorageJsonConverter
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyStorageJsonConverterString : MobilyStorageJsonConverter
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyStorageJsonConverterNumber : MobilyStorageJsonConverter
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyStorageJsonConverterDate : MobilyStorageJsonConverter
 
 @property(nonatomic, readonly, strong) NSString* format;
 
@@ -97,7 +121,7 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyStorageJsonEnum : MobilyStorageJsonValue
+@interface MobilyStorageJsonConverterEnum : MobilyStorageJsonConverter
 
 @property(nonatomic, readonly, strong) NSDictionary* enums;
 
@@ -107,11 +131,11 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyStorageJsonModel : MobilyStorageJsonValue
+@interface MobilyStorageJsonConverterCustomClass : MobilyStorageJsonConverter
 
-@property(nonatomic, readonly, assign) Class modelClass;
+@property(nonatomic, readonly, assign) Class customClass;
 
-- (id)initWithPath:(NSString*)path modelClass:(Class)modelClass;
+- (id)initWithPath:(NSString*)path customClass:(Class)customClass;
 
 @end
 
