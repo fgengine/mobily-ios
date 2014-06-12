@@ -94,7 +94,7 @@
 
 @interface MobilyViewElementsCell ()
 
-@property(nonatomic, readwrite, weak) MobilyViewElements* elementsView;
+@property(nonatomic, readwrite, weak) MobilyViewElements* elements;
 @property(nonatomic, readwrite, weak) MobilyViewElementsItem* elementsItem;
 
 @end
@@ -105,14 +105,14 @@
 
 @interface MobilyViewElementsItem ()
 
-@property(nonatomic, readwrite, weak) MobilyViewElements* elementsView;
+@property(nonatomic, readwrite, weak) MobilyViewElements* elements;
 @property(nonatomic, readwrite, weak) MobilyViewElementsCell* elementsCell;
 
 @property(nonatomic, readwrite, assign) NSUInteger index;
 @property(nonatomic, readwrite, strong) NSString* identifier;
 @property(nonatomic, readwrite, assign, getter = isSelected) BOOL selected;
 
-- (id)initWithElementsView:(MobilyViewElements*)elementsView;
+- (id)initWithElements:(MobilyViewElements*)elements;
 
 @end
 
@@ -346,7 +346,7 @@
         return NO;
     }
     if(_elementsDelegateShouldSelectItemAtIndex == YES) {
-        return [_elementsDelegate elementsView:self shouldSelectItemAtIndex:index];
+        return [_elementsDelegate elements:self shouldSelectItemAtIndex:index];
     }
     return YES;
 }
@@ -360,7 +360,7 @@
         return NO;
     }
     if(_elementsDelegateShouldDeselectItemAtIndex == YES) {
-        return [_elementsDelegate elementsView:self shouldDeselectItemAtIndex:index];
+        return [_elementsDelegate elements:self shouldDeselectItemAtIndex:index];
     }
     return YES;
 }
@@ -384,7 +384,7 @@
                     [cell setSelected:YES animated:animated];
                 }
                 if(_elementsDelegateDidSelectItemAtIndex == YES) {
-                    [_elementsDelegate elementsView:self didSelectItemAtIndex:index];
+                    [_elementsDelegate elements:self didSelectItemAtIndex:index];
                 }
             }
         } else {
@@ -407,7 +407,7 @@
                     [cell setSelected:YES animated:animated];
                 }
                 if(_elementsDelegateDidSelectItemAtIndex == YES) {
-                    [_elementsDelegate elementsView:self didSelectItemAtIndex:index];
+                    [_elementsDelegate elements:self didSelectItemAtIndex:index];
                 }
             }
         }
@@ -432,7 +432,7 @@
                 [cell setSelected:NO animated:animated];
             }
             if(_elementsDelegateDidDeselectItemAtIndex == YES) {
-                [_elementsDelegate elementsView:self didDeselectItemAtIndex:index];
+                [_elementsDelegate elements:self didDeselectItemAtIndex:index];
             }
         }
     }
@@ -508,7 +508,7 @@
             [_mutableVisibleIndexSet removeAllIndexes];
             
             NSUInteger itemsCount = [_items count];
-            NSUInteger count = [_elementsDataSource numberOfItemsInElementsView:self];
+            NSUInteger count = [_elementsDataSource numberOfItemsInElements:self];
             if(itemsCount > count) {
                 NSUInteger removeCount = itemsCount - count;
                 NSRange removeRange = NSMakeRange(itemsCount - removeCount, removeCount);
@@ -518,18 +518,18 @@
             }
             if([_items count] > 0) {
                 [_items enumerateObjectsUsingBlock:^(MobilyViewElementsItem* item, NSUInteger elementsIndex, BOOL* stop) {
-                    [item setIdentifier:[_elementsDataSource elementsView:self itemIdentifierAtIndex:elementsIndex]];
-                    [item setInitialFrameSize:[_elementsDataSource elementsView:self itemSizeAtIndex:elementsIndex]];
+                    [item setIdentifier:[_elementsDataSource elements:self itemIdentifierAtIndex:elementsIndex]];
+                    [item setInitialFrameSize:[_elementsDataSource elements:self itemSizeAtIndex:elementsIndex]];
                     [item setFrame:[item initialFrame]];
                 }];
             }
             if(count > 0) {
                 for(NSUInteger index = itemsCount; index < count; index++) {
-                    MobilyViewElementsItem* item = [[MobilyViewElementsItem alloc] initWithElementsView:self];
+                    MobilyViewElementsItem* item = [[MobilyViewElementsItem alloc] initWithElements:self];
                     if(item != nil) {
                         [item setIndex:index];
-                        [item setIdentifier:[_elementsDataSource elementsView:self itemIdentifierAtIndex:index]];
-                        [item setInitialFrameSize:[_elementsDataSource elementsView:self itemSizeAtIndex:index]];
+                        [item setIdentifier:[_elementsDataSource elements:self itemIdentifierAtIndex:index]];
+                        [item setInitialFrameSize:[_elementsDataSource elements:self itemSizeAtIndex:index]];
                         [item setFrame:[item initialFrame]];
                         
                         [_items addObject:item];
@@ -559,12 +559,12 @@
                     [_reloadedBeforeItems addObjectsFromArray:reloadBeforeItems];
                 }
                 for(NSUInteger index = reloadRange.location; index < (reloadRange.location + reloadRange.length); index++) {
-                    MobilyViewElementsItem* item = [[MobilyViewElementsItem alloc] initWithElementsView:self];
+                    MobilyViewElementsItem* item = [[MobilyViewElementsItem alloc] initWithElements:self];
                     if(item != nil) {
                         [item setIndex:index];
                         [item setSelected:[_mutableSelectedIndexSet containsIndex:index]];
-                        [item setIdentifier:[_elementsDataSource elementsView:self itemIdentifierAtIndex:index]];
-                        [item setInitialFrameSize:[_elementsDataSource elementsView:self itemSizeAtIndex:index]];
+                        [item setIdentifier:[_elementsDataSource elements:self itemIdentifierAtIndex:index]];
+                        [item setInitialFrameSize:[_elementsDataSource elements:self itemSizeAtIndex:index]];
                         [item setFrame:[item initialFrame]];
                         
                         [_items replaceObjectAtIndex:index withObject:item];
@@ -575,14 +575,14 @@
                     [_reloadedAfterItems addObjectsFromArray:reloadAfterItems];
                 }
                 if(_elementsLayoutItemsItemsSizeReloadRangeBeloadBeforeItemsReloadAfterItems == YES) {
-                    [self setUpdatingContentSize:[_elementsLayout elementsView:self layoutItems:_items itemsSize:_updatingContentSize reloadRange:reloadRange reloadBeforeItems:reloadBeforeItems reloadAfterItems:reloadAfterItems]];
+                    [self setUpdatingContentSize:[_elementsLayout elements:self layoutItems:_items itemsSize:_updatingContentSize reloadRange:reloadRange reloadBeforeItems:reloadBeforeItems reloadAfterItems:reloadAfterItems]];
                 }
             }];
             if(_elementsLayoutItemsItemsSizeReloadRangeBeloadBeforeItemsReloadAfterItems == NO) {
                 if(_elementsLayoutItemsItemsSizeReloadIndexSet == YES) {
-                    [self setUpdatingContentSize:[_elementsLayout elementsView:self layoutItems:_items itemsSize:_updatingContentSize reloadIndexSet:indexSet]];
+                    [self setUpdatingContentSize:[_elementsLayout elements:self layoutItems:_items itemsSize:_updatingContentSize reloadIndexSet:indexSet]];
                 } else {
-                    [self setUpdatingContentSize:[_elementsLayout elementsView:self layoutItems:_items]];
+                    [self setUpdatingContentSize:[_elementsLayout elements:self layoutItems:_items]];
                 }
             }
         }
@@ -603,11 +603,11 @@
                 
                 NSMutableArray* insertItems = [NSMutableArray arrayWithCapacity:insertRange.length];
                 for(NSUInteger index = insertRange.location; index < (insertRange.location + insertRange.length); index++) {
-                    MobilyViewElementsItem* item = [[MobilyViewElementsItem alloc] initWithElementsView:self];
+                    MobilyViewElementsItem* item = [[MobilyViewElementsItem alloc] initWithElements:self];
                     if(item != nil) {
                         [item setSelected:[_mutableSelectedIndexSet containsIndex:index]];
-                        [item setIdentifier:[_elementsDataSource elementsView:self itemIdentifierAtIndex:index]];
-                        [item setInitialFrameSize:[_elementsDataSource elementsView:self itemSizeAtIndex:index]];
+                        [item setIdentifier:[_elementsDataSource elements:self itemIdentifierAtIndex:index]];
+                        [item setInitialFrameSize:[_elementsDataSource elements:self itemSizeAtIndex:index]];
                         [item setFrame:[item initialFrame]];
                         
                         [_items insertObject:item atIndex:index];
@@ -619,14 +619,14 @@
                 }];
                 [_insertedItems addObjectsFromArray:insertItems];
                 if(_elementsLayoutItemsItemsSizeInsertRangeInsertItems == YES) {
-                    [self setUpdatingContentSize:[_elementsLayout elementsView:self layoutItems:_items itemsSize:_updatingContentSize insertRange:insertRange insertItems:insertItems]];
+                    [self setUpdatingContentSize:[_elementsLayout elements:self layoutItems:_items itemsSize:_updatingContentSize insertRange:insertRange insertItems:insertItems]];
                 }
             }];
             if(_elementsLayoutItemsItemsSizeInsertRangeInsertItems == NO) {
                 if(_elementsLayoutItemsItemsSizeInsertIndexSet == YES) {
-                    [self setUpdatingContentSize:[_elementsLayout elementsView:self layoutItems:_items itemsSize:_updatingContentSize insertIndexSet:indexSet]];
+                    [self setUpdatingContentSize:[_elementsLayout elements:self layoutItems:_items itemsSize:_updatingContentSize insertIndexSet:indexSet]];
                 } else {
-                    [self setUpdatingContentSize:[_elementsLayout elementsView:self layoutItems:_items]];
+                    [self setUpdatingContentSize:[_elementsLayout elements:self layoutItems:_items]];
                 }
             }
         }
@@ -645,7 +645,7 @@
                 NSArray* deletedItems = [_items subarrayWithRange:deleteRange];
                 if(deletedItems != nil) {
                     if(_elementsLayoutItemsItemsSizeDeleteRangeDeleteItems == YES) {
-                        [self setUpdatingContentSize:[_elementsLayout elementsView:self layoutItems:_items itemsSize:_updatingContentSize deleteRange:deleteRange deleteItems:deletedItems]];
+                        [self setUpdatingContentSize:[_elementsLayout elements:self layoutItems:_items itemsSize:_updatingContentSize deleteRange:deleteRange deleteItems:deletedItems]];
                     }
                     [_mutableVisibleIndexSet removeIndexesInRange:deleteRange];
                     [_mutableSelectedIndexSet removeIndexesInRange:deleteRange];
@@ -659,9 +659,9 @@
             }];
             if(_elementsLayoutItemsItemsSizeDeleteRangeDeleteItems == NO) {
                 if(_elementsLayoutItemsItemsSizeDeleteIndexSet == YES) {
-                    [self setUpdatingContentSize:[_elementsLayout elementsView:self layoutItems:_items itemsSize:_updatingContentSize deleteIndexSet:indexSet]];
+                    [self setUpdatingContentSize:[_elementsLayout elements:self layoutItems:_items itemsSize:_updatingContentSize deleteIndexSet:indexSet]];
                 } else {
-                    [self setUpdatingContentSize:[_elementsLayout elementsView:self layoutItems:_items]];
+                    [self setUpdatingContentSize:[_elementsLayout elements:self layoutItems:_items]];
                 }
             }
         }
@@ -698,7 +698,7 @@
                                  MobilyViewElementsCell* cell = [item elementsCell];
                                  if(cell != nil) {
                                      if(_elementsDelegateAnimationReloadBeforeElementsCell == YES) {
-                                         [_elementsDelegate elementsView:self animationReloadBeforeElementsCell:cell];
+                                         [_elementsDelegate elements:self animationReloadBeforeElementsCell:cell];
                                      } else {
                                          [[cell layer] setZPosition:-1.0f];
                                          [cell setAlpha:0.0f];
@@ -709,7 +709,7 @@
                                  MobilyViewElementsCell* cell = [item elementsCell];
                                  if(cell != nil) {
                                      if(_elementsDelegateAnimationReloadAfterElementsCell == YES) {
-                                         [_elementsDelegate elementsView:self animationReloadAfterElementsCell:cell];
+                                         [_elementsDelegate elements:self animationReloadAfterElementsCell:cell];
                                      } else {
                                          [UIView performWithoutAnimation:^{
                                              [cell setAlpha:0.0f];
@@ -723,7 +723,7 @@
                                  MobilyViewElementsCell* cell = [item elementsCell];
                                  if(cell != nil) {
                                      if(_elementsDelegateAnimationInsertElementsCell == YES) {
-                                         [_elementsDelegate elementsView:self animationInsertElementsCell:cell];
+                                         [_elementsDelegate elements:self animationInsertElementsCell:cell];
                                      } else {
                                          [UIView performWithoutAnimation:^{
                                              [cell setAlpha:0.0f];
@@ -737,7 +737,7 @@
                                  MobilyViewElementsCell* cell = [item elementsCell];
                                  if(cell != nil) {
                                      if(_elementsDelegateAnimationDeleteElementsCell == YES) {
-                                         [_elementsDelegate elementsView:self animationDeleteElementsCell:cell];
+                                         [_elementsDelegate elements:self animationDeleteElementsCell:cell];
                                      } else {
                                          [[cell layer] setZPosition:-1.0f];
                                          [cell setAlpha:0.0f];
@@ -798,16 +798,16 @@
     if(_elementsDelegate != elementsDelegate) {
         _elementsDelegate = elementsDelegate;
         
-        [self setElementsDelegateShowCellAtIndex:[_elementsDelegate respondsToSelector:@selector(elementsView:showCell:atIndex:)]];
-        [self setElementsDelegateHideCellAtIndex:[_elementsDelegate respondsToSelector:@selector(elementsView:hideCell:atIndex:)]];
-        [self setElementsDelegateShouldSelectItemAtIndex:[_elementsDelegate respondsToSelector:@selector(elementsView:shouldSelectItemAtIndex:)]];
-        [self setElementsDelegateShouldDeselectItemAtIndex:[_elementsDelegate respondsToSelector:@selector(elementsView:shouldDeselectItemAtIndex:)]];
-        [self setElementsDelegateDidSelectItemAtIndex:[_elementsDelegate respondsToSelector:@selector(elementsView:didSelectItemAtIndex:)]];
-        [self setElementsDelegateDidDeselectItemAtIndex:[_elementsDelegate respondsToSelector:@selector(elementsView:didDeselectItemAtIndex:)]];
-        [self setElementsDelegateAnimationReloadBeforeElementsCell:[_elementsDelegate respondsToSelector:@selector(elementsView:animationReloadBeforeElementsCell:)]];
-        [self setElementsDelegateAnimationReloadAfterElementsCell:[_elementsDelegate respondsToSelector:@selector(elementsView:animationReloadAfterElementsCell:)]];
-        [self setElementsDelegateAnimationInsertElementsCell:[_elementsDelegate respondsToSelector:@selector(elementsView:animationInsertElementsCell:)]];
-        [self setElementsDelegateAnimationDeleteElementsCell:[_elementsDelegate respondsToSelector:@selector(elementsView:animationDeleteElementsCell:)]];
+        [self setElementsDelegateShowCellAtIndex:[_elementsDelegate respondsToSelector:@selector(elements:showCell:atIndex:)]];
+        [self setElementsDelegateHideCellAtIndex:[_elementsDelegate respondsToSelector:@selector(elements:hideCell:atIndex:)]];
+        [self setElementsDelegateShouldSelectItemAtIndex:[_elementsDelegate respondsToSelector:@selector(elements:shouldSelectItemAtIndex:)]];
+        [self setElementsDelegateShouldDeselectItemAtIndex:[_elementsDelegate respondsToSelector:@selector(elements:shouldDeselectItemAtIndex:)]];
+        [self setElementsDelegateDidSelectItemAtIndex:[_elementsDelegate respondsToSelector:@selector(elements:didSelectItemAtIndex:)]];
+        [self setElementsDelegateDidDeselectItemAtIndex:[_elementsDelegate respondsToSelector:@selector(elements:didDeselectItemAtIndex:)]];
+        [self setElementsDelegateAnimationReloadBeforeElementsCell:[_elementsDelegate respondsToSelector:@selector(elements:animationReloadBeforeElementsCell:)]];
+        [self setElementsDelegateAnimationReloadAfterElementsCell:[_elementsDelegate respondsToSelector:@selector(elements:animationReloadAfterElementsCell:)]];
+        [self setElementsDelegateAnimationInsertElementsCell:[_elementsDelegate respondsToSelector:@selector(elements:animationInsertElementsCell:)]];
+        [self setElementsDelegateAnimationDeleteElementsCell:[_elementsDelegate respondsToSelector:@selector(elements:animationDeleteElementsCell:)]];
     }
 }
 
@@ -815,12 +815,12 @@
     if(_elementsLayout != elementsLayout) {
         _elementsLayout = elementsLayout;
         
-        [self setElementsLayoutItemsItemsSizeReloadRangeBeloadBeforeItemsReloadAfterItems:[_elementsLayout respondsToSelector:@selector(elementsView:layoutItems:itemsSize:reloadRange:reloadBeforeItems:reloadAfterItems:)]];
-        [self setElementsLayoutItemsItemsSizeReloadIndexSet:[_elementsLayout respondsToSelector:@selector(elementsView:layoutItems:itemsSize:reloadIndexSet:)]];
-        [self setElementsLayoutItemsItemsSizeInsertRangeInsertItems:[_elementsLayout respondsToSelector:@selector(elementsView:layoutItems:itemsSize:insertRange:insertItems:)]];
-        [self setElementsLayoutItemsItemsSizeInsertIndexSet:[_elementsLayout respondsToSelector:@selector(elementsView:layoutItems:itemsSize:insertIndexSet:)]];
-        [self setElementsLayoutItemsItemsSizeDeleteRangeDeleteItems:[_elementsLayout respondsToSelector:@selector(elementsView:layoutItems:itemsSize:deleteRange:deleteItems:)]];
-        [self setElementsLayoutItemsItemsSizeDeleteIndexSet:[_elementsLayout respondsToSelector:@selector(elementsView:layoutItems:itemsSize:deleteIndexSet:)]];
+        [self setElementsLayoutItemsItemsSizeReloadRangeBeloadBeforeItemsReloadAfterItems:[_elementsLayout respondsToSelector:@selector(elements:layoutItems:itemsSize:reloadRange:reloadBeforeItems:reloadAfterItems:)]];
+        [self setElementsLayoutItemsItemsSizeReloadIndexSet:[_elementsLayout respondsToSelector:@selector(elements:layoutItems:itemsSize:reloadIndexSet:)]];
+        [self setElementsLayoutItemsItemsSizeInsertRangeInsertItems:[_elementsLayout respondsToSelector:@selector(elements:layoutItems:itemsSize:insertRange:insertItems:)]];
+        [self setElementsLayoutItemsItemsSizeInsertIndexSet:[_elementsLayout respondsToSelector:@selector(elements:layoutItems:itemsSize:insertIndexSet:)]];
+        [self setElementsLayoutItemsItemsSizeDeleteRangeDeleteItems:[_elementsLayout respondsToSelector:@selector(elements:layoutItems:itemsSize:deleteRange:deleteItems:)]];
+        [self setElementsLayoutItemsItemsSizeDeleteIndexSet:[_elementsLayout respondsToSelector:@selector(elements:layoutItems:itemsSize:deleteIndexSet:)]];
     }
 }
 
@@ -925,7 +925,7 @@
                     NSArray* nibObjects = [cellNib instantiateWithOwner:self options:nil];
                     [nibObjects enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL* stop) {
                         if([object isKindOfClass:cellClass] == YES) {
-                            [object setElementsView:self];
+                            [object setElements:self];
                             cell = object;
                             *stop = YES;
                         }
@@ -933,7 +933,7 @@
                 } else {
                     cell = [[cellClass alloc] initWithFrame:[item initialFrame]];
                     if(cell != nil) {
-                        [cell setElementsView:self];
+                        [cell setElements:self];
                     }
                 }
             }
@@ -943,7 +943,7 @@
         [self insertSubview:cell atIndex:0];
         [cell setElementsItem:item];
         if(_elementsDelegateShowCellAtIndex == YES) {
-            [_elementsDelegate elementsView:self showCell:cell atIndex:[item index]];
+            [_elementsDelegate elements:self showCell:cell atIndex:[item index]];
         }
     }
     return cell;
@@ -959,7 +959,7 @@
             [queue addObject:cell];
         }
         if(_elementsDelegateHideCellAtIndex == YES) {
-            [_elementsDelegate elementsView:self hideCell:cell atIndex:[item index]];
+            [_elementsDelegate elements:self hideCell:cell atIndex:[item index]];
         }
         [cell setElementsItem:nil];
         [cell removeFromSuperview];
@@ -968,7 +968,7 @@
 
 - (void)layoutItems {
     if(_elementsLayout != nil) {
-        [self setContentSize:[_elementsLayout elementsView:self layoutItems:_items]];
+        [self setContentSize:[_elementsLayout elements:self layoutItems:_items]];
     } else {
         @throw [NSException exceptionWithName:NSStringFromClass([self class]) reason:@"Not assigned layout" userInfo:nil];
     }
@@ -1150,7 +1150,7 @@
 
 - (IBAction)actionTouchUpInside:(id)sender {
     if(self == sender) {
-        [_elementsView selectItemAtElementsCell:self animated:YES];
+        [_elements selectItemAtElementsCell:self animated:YES];
     }
 }
 
@@ -1164,17 +1164,17 @@
 
 #pragma mark Standart
 
-- (id)initWithElementsView:(MobilyViewElements*)elementsView {
+- (id)initWithElements:(MobilyViewElements*)elements {
     self = [super init];
     if(self != nil) {
-        [self setElementsView:elementsView];
+        [self setElements:elements];
     }
     return self;
 }
 
 - (void)dealloc {
     [self setElementsCell:nil];
-    [self setElementsView:nil];
+    [self setElements:nil];
     [self setIdentifier:nil];
 }
 

@@ -52,7 +52,7 @@
     MOBILY_SAFE_DEALLOC;
 }
 
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems {
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems {
     return CGSizeZero;
 }
 
@@ -62,8 +62,8 @@
 
 @implementation MobilyViewElementsLayoutListVertical
 
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems {
-    CGRect bounds = [elementsView bounds];
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems {
+    CGRect bounds = [elements bounds];
     CGFloat margin = [self margin];
     CGFloat spacing = [self spacing];
     
@@ -81,8 +81,8 @@
     return CGSizeMake(bounds.size.width, offset);
 }
 
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize insertRange:(NSRange)insertRange insertItems:(NSArray*)insertItems {
-    CGRect bounds = [elementsView bounds];
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize insertRange:(NSRange)insertRange insertItems:(NSArray*)insertItems {
+    CGRect bounds = [elements bounds];
     CGFloat margin = [self margin];
     CGFloat spacing = [self spacing];
     
@@ -107,7 +107,7 @@
     return CGSizeMake(itemsSize.width, itemsSize.height + insertItemsSize);
 }
 
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize deleteRange:(NSRange)deleteRange deleteItems:(NSArray*)deleteItems {
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize deleteRange:(NSRange)deleteRange deleteItems:(NSArray*)deleteItems {
     CGFloat spacing = [self spacing];
 
     __block CGFloat deleteItemsSize = 0.0f;
@@ -130,8 +130,8 @@
 
 @implementation MobilyViewElementsLayoutListHorizontal
 
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems {
-    CGRect bounds = [elementsView bounds];
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems {
+    CGRect bounds = [elements bounds];
     CGFloat margin = [self margin];
     CGFloat margin2 = margin + margin;
     CGFloat spacing = [self spacing];
@@ -150,8 +150,8 @@
     return CGSizeMake(offset, bounds.size.height);
 }
 
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize insertRange:(NSRange)insertRange insertItems:(NSArray*)insertItems {
-    CGRect bounds = [elementsView bounds];
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize insertRange:(NSRange)insertRange insertItems:(NSArray*)insertItems {
+    CGRect bounds = [elements bounds];
     CGFloat margin = [self margin];
     CGFloat spacing = [self spacing];
     
@@ -176,7 +176,7 @@
     return CGSizeMake(itemsSize.width + insertItemsSize, itemsSize.height);
 }
 
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize deleteRange:(NSRange)deleteRange deleteItems:(NSArray*)deleteItems {
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize deleteRange:(NSRange)deleteRange deleteItems:(NSArray*)deleteItems {
     CGFloat spacing = [self spacing];
     
     __block CGFloat deleteItemsSize = 0.0f;
@@ -212,7 +212,7 @@
     MOBILY_SAFE_DEALLOC;
 }
 
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems {
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems {
     return CGSizeZero;
 }
 
@@ -222,8 +222,8 @@
 
 @implementation MobilyViewElementsLayoutGridVertical
 
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems {
-    CGRect bounds = [elementsView bounds];
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems {
+    CGRect bounds = [elements bounds];
     CGSize margin = [self margin];
     CGSize spacing = [self spacing];
     
@@ -258,8 +258,8 @@
     return size;
 }
 
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize deleteRange:(NSRange)deleteRange deleteItems:(NSArray*)deleteItems {
-    CGRect bounds = [elementsView bounds];
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize deleteRange:(NSRange)deleteRange deleteItems:(NSArray*)deleteItems {
+    CGRect bounds = [elements bounds];
     CGSize margin = [self margin];
     CGSize spacing = [self spacing];
     
@@ -301,8 +301,8 @@
 
 @implementation MobilyViewElementsLayoutGridHorizontal
 
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems {
-    CGRect bounds = [elementsView bounds];
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems {
+    CGRect bounds = [elements bounds];
     CGSize margin = [self margin];
     CGSize spacing = [self spacing];
     

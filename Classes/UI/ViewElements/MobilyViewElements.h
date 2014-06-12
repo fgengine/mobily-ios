@@ -47,9 +47,9 @@
 @protocol MobilyViewElementsDataSource < NSObject >
 
 @required
-- (NSInteger)numberOfItemsInElementsView:(MobilyViewElements*)elementsView;
-- (NSString*)elementsView:(MobilyViewElements*)elementsView itemIdentifierAtIndex:(NSUInteger)index;
-- (CGSize)elementsView:(MobilyViewElements*)elementsView itemSizeAtIndex:(NSUInteger)index;
+- (NSInteger)numberOfItemsInElements:(MobilyViewElements*)elements;
+- (NSString*)elements:(MobilyViewElements*)elements itemIdentifierAtIndex:(NSUInteger)index;
+- (CGSize)elements:(MobilyViewElements*)elements itemSizeAtIndex:(NSUInteger)index;
 
 @end
 
@@ -58,20 +58,20 @@
 @protocol MobilyViewElementsDelegate < NSObject >
 
 @optional
-- (void)elementsView:(MobilyViewElements*)elementsView showCell:(MobilyViewElementsCell*)elementsCell atIndex:(NSUInteger)index;
-- (void)elementsView:(MobilyViewElements*)elementsView hideCell:(MobilyViewElementsCell*)elementsCell atIndex:(NSUInteger)index;
+- (void)elements:(MobilyViewElements*)elements showCell:(MobilyViewElementsCell*)elementsCell atIndex:(NSUInteger)index;
+- (void)elements:(MobilyViewElements*)elements hideCell:(MobilyViewElementsCell*)elementsCell atIndex:(NSUInteger)index;
 
 @optional
-- (BOOL)elementsView:(MobilyViewElements*)elementsView shouldSelectItemAtIndex:(NSUInteger)index;
-- (BOOL)elementsView:(MobilyViewElements*)elementsView shouldDeselectItemAtIndex:(NSUInteger)index;
-- (void)elementsView:(MobilyViewElements*)elementsView didSelectItemAtIndex:(NSUInteger)index;
-- (void)elementsView:(MobilyViewElements*)elementsView didDeselectItemAtIndex:(NSUInteger)index;
+- (BOOL)elements:(MobilyViewElements*)elements shouldSelectItemAtIndex:(NSUInteger)index;
+- (BOOL)elements:(MobilyViewElements*)elements shouldDeselectItemAtIndex:(NSUInteger)index;
+- (void)elements:(MobilyViewElements*)elements didSelectItemAtIndex:(NSUInteger)index;
+- (void)elements:(MobilyViewElements*)elements didDeselectItemAtIndex:(NSUInteger)index;
 
 @optional
-- (void)elementsView:(MobilyViewElements*)elementsView animationReloadBeforeElementsCell:(MobilyViewElementsCell*)elementsCell;
-- (void)elementsView:(MobilyViewElements*)elementsView animationReloadAfterElementsCell:(MobilyViewElementsCell*)elementsCell;
-- (void)elementsView:(MobilyViewElements*)elementsView animationInsertElementsCell:(MobilyViewElementsCell*)elementsCell;
-- (void)elementsView:(MobilyViewElements*)elementsView animationDeleteElementsCell:(MobilyViewElementsCell*)elementsCell;
+- (void)elements:(MobilyViewElements*)elements animationReloadBeforeElementsCell:(MobilyViewElementsCell*)elementsCell;
+- (void)elements:(MobilyViewElements*)elements animationReloadAfterElementsCell:(MobilyViewElementsCell*)elementsCell;
+- (void)elements:(MobilyViewElements*)elements animationInsertElementsCell:(MobilyViewElementsCell*)elementsCell;
+- (void)elements:(MobilyViewElements*)elements animationDeleteElementsCell:(MobilyViewElementsCell*)elementsCell;
 
 @end
 
@@ -80,19 +80,19 @@
 @protocol MobilyViewElementsLayout < NSObject >
 
 @required
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems;
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems;
 
 @optional
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize reloadRange:(NSRange)reloadRange reloadBeforeItems:(NSArray*)reloadBeforeItems reloadAfterItems:(NSArray*)reloadAfterItems;
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize reloadIndexSet:(NSIndexSet*)reloadIndexSet;
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize reloadRange:(NSRange)reloadRange reloadBeforeItems:(NSArray*)reloadBeforeItems reloadAfterItems:(NSArray*)reloadAfterItems;
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize reloadIndexSet:(NSIndexSet*)reloadIndexSet;
 
 @optional
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize insertRange:(NSRange)insertRange insertItems:(NSArray*)insertItems;
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize insertIndexSet:(NSIndexSet*)insertIndexSet;
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize insertRange:(NSRange)insertRange insertItems:(NSArray*)insertItems;
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize insertIndexSet:(NSIndexSet*)insertIndexSet;
 
 @optional
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize deleteRange:(NSRange)deleteRange deleteItems:(NSArray*)deleteItems;
-- (CGSize)elementsView:(MobilyViewElements*)elementsView layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize deleteIndexSet:(NSIndexSet*)deleteIndexSet;
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize deleteRange:(NSRange)deleteRange deleteItems:(NSArray*)deleteItems;
+- (CGSize)elements:(MobilyViewElements*)elements layoutItems:(NSArray*)layoutItems itemsSize:(CGSize)itemsSize deleteIndexSet:(NSIndexSet*)deleteIndexSet;
 
 @end
 
@@ -177,7 +177,7 @@ typedef NS_OPTIONS(NSUInteger, MobilyViewElementsScrollPosition) {
 
 @interface MobilyViewElementsCell : UIControl< MobilyBuilderObject >
 
-@property(nonatomic, readonly, weak) MobilyViewElements* elementsView;
+@property(nonatomic, readonly, weak) MobilyViewElements* elements;
 @property(nonatomic, readonly, weak) MobilyViewElementsItem* elementsItem;
 
 - (void)setup;
@@ -195,7 +195,7 @@ typedef NS_OPTIONS(NSUInteger, MobilyViewElementsScrollPosition) {
 
 @interface MobilyViewElementsItem : NSObject
 
-@property(nonatomic, readonly, weak) MobilyViewElements* elementsView;
+@property(nonatomic, readonly, weak) MobilyViewElements* elements;
 @property(nonatomic, readonly, weak) MobilyViewElementsCell* elementsCell;
 
 @property(nonatomic, readonly, assign) NSUInteger index;
