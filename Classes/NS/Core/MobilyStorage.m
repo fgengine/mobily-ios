@@ -215,8 +215,8 @@ static NSMutableDictionary* MobilyStorageItemProperties;
     self = [super init];
     if(self != nil) {
         [self setUserDefaultsKey:userDefaultsKey];
-        [self setupItem];
         [self loadItem];
+        [self setupItem];
     }
     return self;
 }
