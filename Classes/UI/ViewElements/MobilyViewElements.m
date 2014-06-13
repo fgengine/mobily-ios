@@ -414,6 +414,14 @@
     }
 }
 
+- (void)selectItemAtIndexSet:(NSIndexSet*)indexSet animated:(BOOL)animated {
+    NSUInteger index = [indexSet firstIndex];
+    while(index != NSNotFound) {
+        [self selectItemAtIndex:index animated:animated];
+        index = [indexSet indexGreaterThanIndex:index];
+    }
+}
+
 - (void)deselectItem:(MobilyViewElementsItem*)item animated:(BOOL)animated {
     [self deselectItemAtIndex:[self indexAtItem:item] animated:animated];
 }
@@ -435,6 +443,14 @@
                 [_elementsDelegate elements:self didDeselectItemAtIndex:index];
             }
         }
+    }
+}
+
+- (void)deselectItemAtIndexSet:(NSIndexSet*)indexSet animated:(BOOL)animated {
+    NSUInteger index = [indexSet firstIndex];
+    while(index != NSNotFound) {
+        [self selectItemAtIndex:index animated:animated];
+        index = [indexSet indexGreaterThanIndex:index];
     }
 }
 
@@ -1148,7 +1164,7 @@
 
 #pragma mark Action
 
-- (IBAction)actionTouchUpInside:(id)sender {
+- (void)actionTouchUpInside:(id)sender {
     if(self == sender) {
         [_elements selectItemAtElementsCell:self animated:YES];
     }

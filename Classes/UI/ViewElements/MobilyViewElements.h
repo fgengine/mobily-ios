@@ -154,8 +154,11 @@ typedef NS_OPTIONS(NSUInteger, MobilyViewElementsScrollPosition) {
 
 - (void)selectItem:(MobilyViewElementsItem*)item animated:(BOOL)animated;
 - (void)selectItemAtIndex:(NSUInteger)index animated:(BOOL)animated;
+- (void)selectItemAtIndexSet:(NSIndexSet*)indexSet animated:(BOOL)animated;
+
 - (void)deselectItem:(MobilyViewElementsItem*)item animated:(BOOL)animated;
 - (void)deselectItemAtIndex:(NSUInteger)index animated:(BOOL)animated;
+- (void)deselectItemAtIndexSet:(NSIndexSet*)indexSet animated:(BOOL)animated;
 - (void)deselectAllSelectedItemsAnimated:(BOOL)animated;
 
 - (void)scrollToItem:(MobilyViewElementsItem*)item scrollPosition:(MobilyViewElementsScrollPosition)scrollPosition animated:(BOOL)animated;
