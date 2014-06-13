@@ -1037,9 +1037,9 @@
     if(_allowsSelection == YES) {
         NSUInteger elementIndex = [[cell elementsItem] index];
         if([_mutableSelectedIndexSet containsIndex:elementIndex] == NO) {
-            [self selectItemAtIndex:elementIndex animated:animated];
+            [self selectItemAtIndex:elementIndex animated:animated user:YES];
         } else {
-            [self deselectItemAtIndex:elementIndex animated:animated];
+            [self deselectItemAtIndex:elementIndex animated:animated user:YES];
         }
     }
 }
