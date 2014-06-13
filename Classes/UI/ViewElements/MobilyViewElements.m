@@ -84,6 +84,9 @@
 - (void)applyLayoutItems;
 - (void)updateVisibleItems;
 
+- (void)selectItemAtIndex:(NSUInteger)index animated:(BOOL)animated user:(BOOL)user;
+- (void)deselectItemAtIndex:(NSUInteger)index animated:(BOOL)animated user:(BOOL)user;
+
 - (void)selectItemAtElementsCell:(MobilyViewElementsCell*)cell animated:(BOOL)animated;
 
 @end
@@ -370,48 +373,7 @@
 }
 
 - (void)selectItemAtIndex:(NSUInteger)index animated:(BOOL)animated {
-    if(index >= [_items count]) {
-        return;
-    }
-    if([_mutableSelectedIndexSet containsIndex:index] == NO) {
-        if(_allowsMultipleSelection == YES) {
-            if([self shouldSelectItemAtIndex:index] == YES) {
-                [_mutableSelectedIndexSet addIndex:index];
-                MobilyViewElementsItem* item = [_items objectAtIndex:index];
-                [item setSelected:YES];
-                MobilyViewElementsCell* cell = [item elementsCell];
-                if(cell != nil) {
-                    [cell setSelected:YES animated:animated];
-                }
-                if(_elementsDelegateDidSelectItemAtIndex == YES) {
-                    [_elementsDelegate elements:self didSelectItemAtIndex:index];
-                }
-            }
-        } else {
-            if([self shouldSelectItemAtIndex:index] == YES) {
-                if([_mutableSelectedIndexSet count] > 0) {
-                    [_items enumerateObjectsAtIndexes:_mutableSelectedIndexSet options:0 usingBlock:^(MobilyViewElementsItem* item, NSUInteger elementsIndex, BOOL* stop) {
-                        [item setSelected:NO];
-                        MobilyViewElementsCell* cell = [item elementsCell];
-                        if(cell != nil) {
-                            [cell setSelected:NO animated:animated];
-                        }
-                    }];
-                    [_mutableSelectedIndexSet removeAllIndexes];
-                }
-                [_mutableSelectedIndexSet addIndex:index];
-                MobilyViewElementsItem* item = [_items objectAtIndex:index];
-                [item setSelected:YES];
-                MobilyViewElementsCell* cell = [item elementsCell];
-                if(cell != nil) {
-                    [cell setSelected:YES animated:animated];
-                }
-                if(_elementsDelegateDidSelectItemAtIndex == YES) {
-                    [_elementsDelegate elements:self didSelectItemAtIndex:index];
-                }
-            }
-        }
-    }
+    [self selectItemAtIndex:index animated:animated user:NO];
 }
 
 - (void)selectItemAtIndexSet:(NSIndexSet*)indexSet animated:(BOOL)animated {
@@ -427,23 +389,7 @@
 }
 
 - (void)deselectItemAtIndex:(NSUInteger)index animated:(BOOL)animated {
-    if(index >= [_items count]) {
-        return;
-    }
-    if([_mutableSelectedIndexSet containsIndex:index] == YES) {
-        if([self shouldDeselectItemAtIndex:index] == YES) {
-            [_mutableSelectedIndexSet removeIndex:index];
-            MobilyViewElementsItem* item = [_items objectAtIndex:index];
-            [item setSelected:NO];
-            MobilyViewElementsCell* cell = [item elementsCell];
-            if(cell != nil) {
-                [cell setSelected:NO animated:animated];
-            }
-            if(_elementsDelegateDidDeselectItemAtIndex == YES) {
-                [_elementsDelegate elements:self didDeselectItemAtIndex:index];
-            }
-        }
-    }
+    [self deselectItemAtIndex:index animated:animated user:NO];
 }
 
 - (void)deselectItemAtIndexSet:(NSIndexSet*)indexSet animated:(BOOL)animated {
@@ -1020,6 +966,71 @@
             }
         }
     }];
+}
+
+- (void)selectItemAtIndex:(NSUInteger)index animated:(BOOL)animated user:(BOOL)user {
+    if(index >= [_items count]) {
+        return;
+    }
+    if([_mutableSelectedIndexSet containsIndex:index] == NO) {
+        if(_allowsMultipleSelection == YES) {
+            if([self shouldSelectItemAtIndex:index] == YES) {
+                [_mutableSelectedIndexSet addIndex:index];
+                MobilyViewElementsItem* item = [_items objectAtIndex:index];
+                [item setSelected:YES];
+                MobilyViewElementsCell* cell = [item elementsCell];
+                if(cell != nil) {
+                    [cell setSelected:YES animated:animated];
+                }
+                if((user == YES) && (_elementsDelegateDidSelectItemAtIndex == YES)) {
+                    [_elementsDelegate elements:self didSelectItemAtIndex:index];
+                }
+            }
+        } else {
+            if([self shouldSelectItemAtIndex:index] == YES) {
+                if([_mutableSelectedIndexSet count] > 0) {
+                    [_items enumerateObjectsAtIndexes:_mutableSelectedIndexSet options:0 usingBlock:^(MobilyViewElementsItem* item, NSUInteger elementsIndex, BOOL* stop) {
+                        [item setSelected:NO];
+                        MobilyViewElementsCell* cell = [item elementsCell];
+                        if(cell != nil) {
+                            [cell setSelected:NO animated:animated];
+                        }
+                    }];
+                    [_mutableSelectedIndexSet removeAllIndexes];
+                }
+                [_mutableSelectedIndexSet addIndex:index];
+                MobilyViewElementsItem* item = [_items objectAtIndex:index];
+                [item setSelected:YES];
+                MobilyViewElementsCell* cell = [item elementsCell];
+                if(cell != nil) {
+                    [cell setSelected:YES animated:animated];
+                }
+                if((user == YES) && (_elementsDelegateDidSelectItemAtIndex == YES)) {
+                    [_elementsDelegate elements:self didSelectItemAtIndex:index];
+                }
+            }
+        }
+    }
+}
+
+- (void)deselectItemAtIndex:(NSUInteger)index animated:(BOOL)animated user:(BOOL)user {
+    if(index >= [_items count]) {
+        return;
+    }
+    if([_mutableSelectedIndexSet containsIndex:index] == YES) {
+        if([self shouldDeselectItemAtIndex:index] == YES) {
+            [_mutableSelectedIndexSet removeIndex:index];
+            MobilyViewElementsItem* item = [_items objectAtIndex:index];
+            [item setSelected:NO];
+            MobilyViewElementsCell* cell = [item elementsCell];
+            if(cell != nil) {
+                [cell setSelected:NO animated:animated];
+            }
+            if((user == YES) && (_elementsDelegateDidDeselectItemAtIndex == YES)) {
+                [_elementsDelegate elements:self didDeselectItemAtIndex:index];
+            }
+        }
+    }
 }
 
 - (void)selectItemAtElementsCell:(MobilyViewElementsCell*)cell animated:(BOOL)animated {
