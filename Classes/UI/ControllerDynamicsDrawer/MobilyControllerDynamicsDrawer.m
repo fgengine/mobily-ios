@@ -132,12 +132,20 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     }
 }
 
+- (void)showWideLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
+    [self setPaneState:MSDynamicsDrawerPaneStateOpenWide inDirection:MSDynamicsDrawerDirectionLeft animated:animated allowUserInterruption:YES completion:completion];
+}
+
 - (void)showLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
     [self setPaneState:MSDynamicsDrawerPaneStateOpen inDirection:MSDynamicsDrawerDirectionLeft animated:animated allowUserInterruption:YES completion:completion];
 }
 
 - (void)hideLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
     [self setPaneState:MSDynamicsDrawerPaneStateClosed inDirection:MSDynamicsDrawerDirectionLeft animated:animated allowUserInterruption:YES completion:completion];
+}
+
+- (void)showWideRightDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
+    [self setPaneState:MSDynamicsDrawerPaneStateOpenWide inDirection:MSDynamicsDrawerDirectionRight animated:animated allowUserInterruption:YES completion:completion];
 }
 
 - (void)showRightDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {

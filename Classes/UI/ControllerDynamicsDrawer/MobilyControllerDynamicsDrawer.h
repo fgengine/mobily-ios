@@ -57,9 +57,11 @@
 @property(nonatomic, readwrite, strong) UIViewController* leftDrawerViewController;
 @property(nonatomic, readwrite, strong) UIViewController* rightDrawerViewController;
 
+- (void)showWideLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion;
 - (void)showLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion;
 - (void)hideLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion;
 
+- (void)showWideRightDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion;
 - (void)showRightDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion;
 - (void)hideRightDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion;
 
