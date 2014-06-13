@@ -83,7 +83,7 @@
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:[UIWindow class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andRemovedObject:objectChild]];
+        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild]];
     }
 }
 

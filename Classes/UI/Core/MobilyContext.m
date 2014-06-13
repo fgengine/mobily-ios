@@ -111,7 +111,7 @@ static NSString* MOBILY_ACCESS_KEY = nil;
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:[UIViewController class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andRemovedObject:objectChild]];
+        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild]];
     }
 }
 

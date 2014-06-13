@@ -112,7 +112,9 @@
 @interface NSArray (MobilyNS)
 
 + (instancetype)arrayWithArray:(NSArray*)array andAddingObject:(id)object;
-+ (instancetype)arrayWithArray:(NSArray*)array andRemovedObject:(id)object;
++ (instancetype)arrayWithArray:(NSArray*)array andAddingObjectsFromArray:(NSArray*)addingObjects;
++ (instancetype)arrayWithArray:(NSArray*)array andRemovingObject:(id)object;
++ (instancetype)arrayWithArray:(NSArray*)array andRemovingObjectsInArray:(NSArray*)removingObjects;
 
 - (NSArray*)arrayByReplaceObject:(id)object atIndex:(NSUInteger)index;
 

@@ -432,9 +432,21 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
     return [NSArray arrayWithArray:result];
 }
 
-+ (instancetype)arrayWithArray:(NSArray*)array andRemovedObject:(id)object {
++ (instancetype)arrayWithArray:(NSArray*)array andAddingObjectsFromArray:(NSArray*)addingObjects {
+    NSMutableArray* result = [NSMutableArray arrayWithArray:array];
+    [result addObjectsFromArray:addingObjects];
+    return [NSArray arrayWithArray:result];
+}
+
++ (instancetype)arrayWithArray:(NSArray*)array andRemovingObject:(id)object {
     NSMutableArray* result = [NSMutableArray arrayWithArray:array];
     [result removeObject:object];
+    return [NSArray arrayWithArray:result];
+}
+
++ (instancetype)arrayWithArray:(NSArray*)array andRemovingObjectsInArray:(NSArray*)removingObjects {
+    NSMutableArray* result = [NSMutableArray arrayWithArray:array];
+    [result removeObjectsInArray:removingObjects];
     return [NSArray arrayWithArray:result];
 }
 

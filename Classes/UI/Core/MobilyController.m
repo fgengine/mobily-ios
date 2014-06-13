@@ -111,7 +111,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:[UIViewController class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andRemovedObject:objectChild]];
+        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild]];
     }
 }
 
