@@ -1160,6 +1160,8 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
     return [UIBezierPath bezierPathWithCGPath:[[self layer] shadowPath]];
 }
 
+#pragma mark Public
+
 - (void)removeSubview:(UIView*)subview {
     [subview removeFromSuperview];
 }
@@ -1227,7 +1229,97 @@ MOBILY_DEFINE_VALIDATE_NUMBER(ZoomScale)
 MOBILY_DEFINE_VALIDATE_NUMBER(BouncesZoom)
 MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 
+#pragma mark Property
+
+- (void)setContentOffsetX:(CGFloat)contentOffsetX {
+    [self setContentOffsetX:contentOffsetX animated:NO];
+}
+
+- (CGFloat)contentOffsetX {
+    CGPoint contentOffset = [self contentOffset];
+    return contentOffset.x;
+}
+
+- (void)setContentOffsetY:(CGFloat)contentOffsetY {
+    [self setContentOffsetY:contentOffsetY animated:NO];
+}
+
+- (CGFloat)contentOffsetY {
+    CGPoint contentOffset = [self contentOffset];
+    return contentOffset.y;
+}
+
+- (void)setContentSizeWidth:(CGFloat)contentSizeWidth {
+    CGSize contentSize = [self contentSize];
+    [self setContentSize:CGSizeMake(contentSizeWidth, contentSize.height)];
+}
+
+- (CGFloat)contentSizeWidth {
+    CGSize contentSize = [self contentSize];
+    return contentSize.width;
+}
+
+- (void)setContentSizeHeight:(CGFloat)contentSizeHeight {
+    CGSize contentSize = [self contentSize];
+    [self setContentSize:CGSizeMake(contentSize.width, contentSizeHeight)];
+}
+
+- (CGFloat)contentSizeHeight {
+    CGSize contentSize = [self contentSize];
+    return contentSize.height;
+}
+
+- (void)setContentInsetTop:(CGFloat)contentInsetTop {
+    UIEdgeInsets contentInset = [self contentInset];
+    [self setContentInset:UIEdgeInsetsMake(contentInsetTop, contentInset.left, contentInset.bottom, contentInset.right)];
+}
+
+- (CGFloat)contentInsetTop {
+    UIEdgeInsets contentInset = [self contentInset];
+    return contentInset.top;
+}
+
+- (void)setContentInsetRight:(CGFloat)contentInsetRight {
+    UIEdgeInsets contentInset = [self contentInset];
+    [self setContentInset:UIEdgeInsetsMake(contentInset.top, contentInset.left, contentInset.bottom, contentInsetRight)];
+}
+
+- (CGFloat)contentInsetRight {
+    UIEdgeInsets contentInset = [self contentInset];
+    return contentInset.right;
+}
+
+- (void)setContentInsetBottom:(CGFloat)contentInsetBottom {
+    UIEdgeInsets contentInset = [self contentInset];
+    [self setContentInset:UIEdgeInsetsMake(contentInset.top, contentInset.left, contentInsetBottom, contentInset.right)];
+}
+
+- (CGFloat)contentInsetBottom {
+    UIEdgeInsets contentInset = [self contentInset];
+    return contentInset.bottom;
+}
+
+- (void)setContentInsetLeft:(CGFloat)contentInsetLeft {
+    UIEdgeInsets contentInset = [self contentInset];
+    [self setContentInset:UIEdgeInsetsMake(contentInset.top, contentInsetLeft, contentInset.bottom, contentInset.right)];
+}
+
+- (CGFloat)contentInsetLeft {
+    UIEdgeInsets contentInset = [self contentInset];
+    return contentInset.left;
+}
+
 #pragma mark Public
+
+- (void)setContentOffsetX:(CGFloat)contentOffsetX animated:(BOOL)animated {
+    CGPoint contentOffset = [self contentOffset];
+    [self setContentOffset:CGPointMake(contentOffsetX, contentOffset.y) animated:animated];
+}
+
+- (void)setContentOffsetY:(CGFloat)contentOffsetY animated:(BOOL)animated {
+    CGPoint contentOffset = [self contentOffset];
+    [self setContentOffset:CGPointMake(contentOffset.x, contentOffsetY) animated:animated];
+}
 
 - (CGSize)contentSizeFromSubviews {
     CGRect rect = CGRectZero;

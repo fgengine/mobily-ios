@@ -223,6 +223,18 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 @interface UIScrollView (MobilyUI)
 
+@property(nonatomic, readwrite, assign) CGFloat contentOffsetX;
+@property(nonatomic, readwrite, assign) CGFloat contentOffsetY;
+@property(nonatomic, readwrite, assign) CGFloat contentSizeWidth;
+@property(nonatomic, readwrite, assign) CGFloat contentSizeHeight;
+@property(nonatomic, readwrite, assign) CGFloat contentInsetTop;
+@property(nonatomic, readwrite, assign) CGFloat contentInsetRight;
+@property(nonatomic, readwrite, assign) CGFloat contentInsetBottom;
+@property(nonatomic, readwrite, assign) CGFloat contentInsetLeft;
+
+- (void)setContentOffsetX:(CGFloat)contentOffsetX animated:(BOOL)animated;
+- (void)setContentOffsetY:(CGFloat)contentOffsetY animated:(BOOL)animated;
+
 - (CGSize)contentSizeFromSubviews;
 
 @end

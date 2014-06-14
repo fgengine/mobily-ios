@@ -274,7 +274,11 @@
     if(result != nil) {
         [result setPropertyMap:[self propertyMap]];
         [result setJsonMap:[self jsonMap]];
-        [result setUserDefaultsKey:_userDefaultsKey];
+        [result setUserDefaultsKey:[_userDefaultsKey copyWithZone:zone]];
+        
+        [[self propertyMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
+            [result setValue:[[self valueForKey:field] copyWithZone:zone] forKey:field];
+        }];
     }
     return result;
 }
