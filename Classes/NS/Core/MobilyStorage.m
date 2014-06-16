@@ -331,6 +331,17 @@
     }];
 }
 
+- (void)clearItemComplete:(MobilyStorageItemBlock)complete {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [self clearItem];
+        if(complete != nil) {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                complete();
+            });
+        }
+    });
+}
+
 - (BOOL)saveItem {
     @try {
         NSMutableDictionary* dict = [NSMutableDictionary dictionary];
@@ -359,6 +370,24 @@
     return NO;
 }
 
+- (void)saveItemSuccess:(MobilyStorageItemBlock)success failure:(MobilyStorageItemBlock)failure {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        if([self saveItem] == YES) {
+            if(success != nil) {
+                dispatch_sync(dispatch_get_main_queue(), ^{
+                    success();
+                });
+            }
+        } else {
+            if(failure != nil) {
+                dispatch_sync(dispatch_get_main_queue(), ^{
+                    failure();
+                });
+            }
+        }
+    });
+}
+
 - (void)loadItem {
     @try {
         NSDictionary* dict = [[NSUserDefaults standardUserDefaults] objectForKey:_userDefaultsKey];
@@ -383,6 +412,17 @@
     @catch(NSException* exception) {
         NSLog(@"MobilyStorageItem::loadItem:%@ Exception = %@", _userDefaultsKey, exception);
     }
+}
+
+- (void)loadItemComplete:(MobilyStorageItemBlock)complete {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [self loadItem];
+        if(complete != nil) {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                complete();
+            });
+        }
+    });
 }
 
 #pragma mark Private

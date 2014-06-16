@@ -37,6 +37,10 @@
 
 /*--------------------------------------------------*/
 
+typedef void (^MobilyStorageItemBlock)();
+
+/*--------------------------------------------------*/
+
 @interface MobilyStorageItem : NSObject < NSCoding, NSCopying >
 
 @property(nonatomic, readwrite, strong) NSString* userDefaultsKey;
@@ -52,8 +56,13 @@
 - (void)convertFromJson:(id)json;
 
 - (void)clearItem;
+- (void)clearItemComplete:(MobilyStorageItemBlock)complete;
+
 - (BOOL)saveItem;
+- (void)saveItemSuccess:(MobilyStorageItemBlock)success failure:(MobilyStorageItemBlock)failure;
+
 - (void)loadItem;
+- (void)loadItemComplete:(MobilyStorageItemBlock)complete;
 
 @end
 
