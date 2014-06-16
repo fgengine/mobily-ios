@@ -681,7 +681,7 @@
             return [dateFormatter dateFromString:value];
         }
     } else if([value isKindOfClass:[NSNumber class]] == YES) {
-        return [NSDate dateWithTimeIntervalSince1970:[value floatValue] / 1000.0f];
+        return [NSDate dateWithTimeIntervalSince1970:[value floatValue]];
     }
     return nil;
 }
