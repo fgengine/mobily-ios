@@ -131,10 +131,6 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (void)setupController {
     [self setDelegate:self];
-    
-    if([UIDevice systemVersion] >= 7.0f) {
-        [self setEdgesForExtendedLayout:UIRectEdgeNone];
-    }
 }
 
 #pragma mark UIViewController
