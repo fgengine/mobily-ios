@@ -201,14 +201,14 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 @property(nonatomic, readonly, assign) CGFloat boundsWidth;
 @property(nonatomic, readonly, assign) CGFloat boundsHeight;
 
-@property(nonatomic, readonly, assign) CGFloat cornerRadius;
-@property(nonatomic, readonly, assign) CGFloat borderWidth;
-@property(nonatomic, readonly, strong) UIColor* borderColor;
-@property(nonatomic, readonly, strong) UIColor* shadowColor;
-@property(nonatomic, readonly, assign) CGFloat shadowOpacity;
-@property(nonatomic, readonly, assign) CGSize shadowOffset;
-@property(nonatomic, readonly, assign) CGFloat shadowRadius;
-@property(nonatomic, readonly, strong) UIBezierPath* shadowPath;
+@property(nonatomic, readwrite, assign) CGFloat cornerRadius;
+@property(nonatomic, readwrite, assign) CGFloat borderWidth;
+@property(nonatomic, readwrite, strong) UIColor* borderColor;
+@property(nonatomic, readwrite, strong) UIColor* shadowColor;
+@property(nonatomic, readwrite, assign) CGFloat shadowOpacity;
+@property(nonatomic, readwrite, assign) CGSize shadowOffset;
+@property(nonatomic, readwrite, assign) CGFloat shadowRadius;
+@property(nonatomic, readwrite, strong) UIBezierPath* shadowPath;
 
 - (void)removeSubview:(UIView*)subview;
 
