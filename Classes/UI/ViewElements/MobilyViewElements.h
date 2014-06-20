@@ -133,6 +133,7 @@ typedef NS_OPTIONS(NSUInteger, MobilyViewElementsScrollPosition) {
 @property(nonatomic, readonly, strong) NSArray* selectedCells;
 
 @property(nonatomic, readonly, assign, getter = isUpdating) BOOL updating;
+@property(nonatomic, readwrite, assign, getter = isAutoScrollingRespondent) BOOL autoScrollingRespondent;
 
 - (void)setupView;
 
