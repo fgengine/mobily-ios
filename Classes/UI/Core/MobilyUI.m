@@ -1309,6 +1309,46 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
     return contentInset.left;
 }
 
+- (void)setScrollIndicatorInsetTop:(CGFloat)scrollIndicatorInsetTop {
+    UIEdgeInsets scrollIndicatorInset = [self scrollIndicatorInsets];
+    [self setScrollIndicatorInsets:UIEdgeInsetsMake(scrollIndicatorInsetTop, scrollIndicatorInset.left, scrollIndicatorInset.bottom, scrollIndicatorInset.right)];
+}
+
+- (CGFloat)scrollIndicatorInsetTop {
+    UIEdgeInsets scrollIndicatorInset = [self scrollIndicatorInsets];
+    return scrollIndicatorInset.top;
+}
+
+- (void)setScrollIndicatorInsetRight:(CGFloat)scrollIndicatorInsetRight {
+    UIEdgeInsets scrollIndicatorInset = [self scrollIndicatorInsets];
+    [self setScrollIndicatorInsets:UIEdgeInsetsMake(scrollIndicatorInset.top, scrollIndicatorInset.left, scrollIndicatorInset.bottom, scrollIndicatorInsetRight)];
+}
+
+- (CGFloat)scrollIndicatorInsetRight {
+    UIEdgeInsets scrollIndicatorInset = [self scrollIndicatorInsets];
+    return scrollIndicatorInset.right;
+}
+
+- (void)setScrollIndicatorInsetBottom:(CGFloat)scrollIndicatorInsetBottom {
+    UIEdgeInsets scrollIndicatorInset = [self scrollIndicatorInsets];
+    [self setScrollIndicatorInsets:UIEdgeInsetsMake(scrollIndicatorInset.top, scrollIndicatorInset.left, scrollIndicatorInsetBottom, scrollIndicatorInset.right)];
+}
+
+- (CGFloat)scrollIndicatorInsetBottom {
+    UIEdgeInsets scrollIndicatorInset = [self scrollIndicatorInsets];
+    return scrollIndicatorInset.bottom;
+}
+
+- (void)setScrollIndicatorInsetLeft:(CGFloat)scrollIndicatorInsetLeft {
+    UIEdgeInsets scrollIndicatorInset = [self scrollIndicatorInsets];
+    [self setScrollIndicatorInsets:UIEdgeInsetsMake(scrollIndicatorInset.top, scrollIndicatorInsetLeft, scrollIndicatorInset.bottom, scrollIndicatorInset.right)];
+}
+
+- (CGFloat)scrollIndicatorInsetLeft {
+    UIEdgeInsets scrollIndicatorInset = [self scrollIndicatorInsets];
+    return scrollIndicatorInset.left;
+}
+
 #pragma mark Public
 
 - (void)setContentOffsetX:(CGFloat)contentOffsetX animated:(BOOL)animated {
