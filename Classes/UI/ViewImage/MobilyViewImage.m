@@ -179,6 +179,10 @@ typedef void (^MobilyImageLoaderBlock)();
                                        failure();
                                    }
                                }];
+    } else {
+        if(complete != nil) {
+            complete([self image]);
+        }
     }
 }
 
