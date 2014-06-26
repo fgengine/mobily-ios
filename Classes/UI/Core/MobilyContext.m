@@ -131,6 +131,14 @@ static NSString* MOBILY_ACCESS_KEY = nil;
 
 #pragma mark UIApplicationDelegate
 
+- (void)setWindow:(UIWindow*)window {
+    [window makeKeyWindow];
+}
+
+- (UIWindow*)window {
+    return [[UIApplication sharedApplication] keyWindow];
+}
+
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)options {
     [MobilyBuilderPreset loadFromFilename:MOBILY_FILE_PRESETS];
     
