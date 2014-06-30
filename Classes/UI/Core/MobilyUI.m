@@ -770,6 +770,16 @@ static UIResponder* MOBILY_CURRENT_FIRST_RESPONDER = nil;
 
 @implementation UIResponder (MobilyUI)
 
++ (id)currentFirstResponderInView:(UIView*)view {
+    id currentFirstResponder = [self currentFirstResponder];
+    if([currentFirstResponder isKindOfClass:[UIView class]] == YES) {
+        if([view isContainsSubview:currentFirstResponder] == YES) {
+            return currentFirstResponder;
+        }
+    }
+    return nil;
+}
+
 + (id)currentFirstResponder {
     MOBILY_CURRENT_FIRST_RESPONDER = nil;
     [[UIApplication sharedApplication] sendAction:@selector(findFirstResponder:) to:nil from:nil forEvent:nil];
@@ -1161,6 +1171,19 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 }
 
 #pragma mark Public
+
+- (BOOL)isContainsSubview:(UIView*)subview {
+    __block BOOL result = [[self subviews] containsObject:subview];
+    if(result == NO) {
+        [[self subviews] enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
+            if([view isContainsSubview:subview] == YES) {
+                result = YES;
+                *stop = YES;
+            }
+        }];
+    }
+    return result;
+}
 
 - (void)removeSubview:(UIView*)subview {
     [subview removeFromSuperview];

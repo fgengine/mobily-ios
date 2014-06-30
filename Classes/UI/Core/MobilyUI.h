@@ -149,6 +149,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 @interface UIResponder (MobilyUI)
 
++ (id)currentFirstResponderInView:(UIView*)view;
 + (id)currentFirstResponder;
 
 + (UIResponder*)prevResponderFromView:(UIView*)view withSuperview:(UIView*)superview;
@@ -209,6 +210,8 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 @property(nonatomic, readwrite, assign) CGSize shadowOffset;
 @property(nonatomic, readwrite, assign) CGFloat shadowRadius;
 @property(nonatomic, readwrite, strong) UIBezierPath* shadowPath;
+
+- (BOOL)isContainsSubview:(UIView*)subview;
 
 - (void)removeSubview:(UIView*)subview;
 

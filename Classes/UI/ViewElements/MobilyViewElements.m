@@ -230,10 +230,7 @@
 #pragma mark UIKeyboarNotification
 
 - (void)notificationKeyboardShow:(NSNotification*)notification {
-    if(_autoScrollingRespondent == NO) {
-        return;
-    }
-    UIResponder* currentResponder = [UIResponder currentFirstResponder];
+    UIResponder* currentResponder = [UIResponder currentFirstResponderInView:self];
     if(currentResponder != nil) {
         if([currentResponder isKindOfClass:[UIView class]] == YES) {
             UIView* view = (UIView*)currentResponder;
@@ -277,9 +274,6 @@
 }
 
 - (void)notificationKeyboardHide:(NSNotification*)notification {
-    if(_autoScrollingRespondent == NO) {
-        return;
-    }
     NSDictionary* info = [notification userInfo];
     if(info != nil) {
         NSTimeInterval duration = [[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
@@ -296,7 +290,6 @@
 - (void)setupView {
     [self setAllowsSelection:YES];
     [self setAllowsMultipleSelection:NO];
-    [self setAutoScrollingRespondent:YES];
     
     [self setItems:[NSMutableArray array]];
     [self setMutableVisibleIndexSet:[NSMutableIndexSet indexSet]];
@@ -505,6 +498,8 @@
                     }
                 }
                 [self layoutItems];
+            } else {
+                [self setContentSize:CGSizeZero];
             }
             [self updateVisibleItems];
             [self applyLayoutItems];
