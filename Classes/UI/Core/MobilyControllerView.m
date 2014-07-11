@@ -122,12 +122,6 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    [[self view] layoutIfNeeded];
-}
-
 @end
 
 /*--------------------------------------------------*/

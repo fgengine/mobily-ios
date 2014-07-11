@@ -64,7 +64,7 @@
 @interface MobilyStorageJsonConverter ()
 
 @property(nonatomic, readwrite, strong) NSString* path;
-@property(nonatomic, readwrite, strong) NSArray* paths;
+@property(nonatomic, readwrite, strong) NSArray* subPaths;
 
 @end
 
@@ -509,13 +509,18 @@
     self = [super init];
     if(self != nil) {
         [self setPath:path];
-        [self setPaths:[path componentsSeparatedByString:@"."]];
+        
+        NSMutableArray* subPaths = [NSMutableArray arrayWithArray:[path componentsSeparatedByString:@"|"]];
+        [subPaths enumerateObjectsUsingBlock:^(NSString* subPath, NSUInteger subPathIndex, BOOL* subPathStop) {
+            [subPaths replaceObjectAtIndex:subPathIndex withObject:[subPath componentsSeparatedByString:@"."]];
+        }];
+        [self setSubPaths:subPaths];
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setPaths:nil];
+    [self setSubPaths:nil];
     [self setPath:nil];
     
     MOBILY_SAFE_DEALLOC;
@@ -524,15 +529,21 @@
 - (id)parseJson:(id)json {
     __block id value = json;
     if([value isKindOfClass:[NSDictionary class]] == YES) {
-        [_paths enumerateObjectsUsingBlock:^(NSString* path, NSUInteger index, BOOL* stop) {
-            if([value isKindOfClass:[NSDictionary class]] == YES) {
-                value = [value objectForKey:path];
-            } else {
-                if(index != ([_paths count] - 1)) {
-                    value = nil;
+        [_subPaths enumerateObjectsUsingBlock:^(NSArray* subPath, NSUInteger subPathIndex, BOOL* subPathStop) {
+            value = json;
+            [subPath enumerateObjectsUsingBlock:^(NSString* path, NSUInteger pathIndex, BOOL* pathStop) {
+                if([value isKindOfClass:[NSDictionary class]] == YES) {
+                    value = [value objectForKey:path];
+                    if(value == nil) {
+                        *pathStop = YES;
+                    }
+                } else {
+                    if(pathIndex != ([subPath count] - 1)) {
+                        value = nil;
+                    }
+                    *pathStop = YES;
                 }
-                *stop = YES;
-            }
+            }];
         }];
     }
     return [self convertValue:value];

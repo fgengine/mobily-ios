@@ -127,9 +127,6 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 #pragma mark Public
 
 - (void)setupController {
-    if([UIDevice systemVersion] >= 7.0f) {
-        [self setEdgesForExtendedLayout:UIRectEdgeNone];
-    }
 }
 
 - (void)showWideLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
