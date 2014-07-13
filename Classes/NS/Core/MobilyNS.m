@@ -210,11 +210,11 @@
 }
 
 + (NSDate*)dateWithUnixTimestamp:(NSUInteger)timestamp {
-    return [NSDate dateWithTimeIntervalSinceNow:timestamp / 1000.0f];
+    return [NSDate dateWithTimeIntervalSince1970:timestamp];
 }
 
 - (NSUInteger)unixTimestamp {
-    return (NSUInteger)([self timeIntervalSinceNow] * 1000.0f);
+    return (NSUInteger)[self timeIntervalSince1970];
 }
 
 @end
