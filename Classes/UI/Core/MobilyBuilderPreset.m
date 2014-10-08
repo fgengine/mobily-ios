@@ -100,10 +100,34 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
 }
 
 + (void)registerByName:(NSString*)name attributes:(NSDictionary*)attributes {
+    NSMutableDictionary* finalAttributes = [NSMutableDictionary dictionary];
+    [attributes enumerateKeysAndObjectsUsingBlock:^(NSString* key, NSString* value, BOOL* stop) {
+        if(([value hasPrefix:@"${"] == YES) && ([value hasSuffix:@"}"] == YES)) {
+            NSString* path = [value substringWithRange:NSMakeRange(2, [value length] - 3)];
+            NSArray* partPath = [path componentsSeparatedByString:@"."];
+            if([partPath count] == 2) {
+                if(MOBILY_BUILDER_PRESET != nil) {
+                    NSDictionary* preset = [MOBILY_BUILDER_PRESET objectForKey:[partPath objectAtIndex:0]];
+                    NSString* presetValue = [preset objectForKey:[partPath objectAtIndex:1]];
+                    if(presetValue != nil) {
+                        [finalAttributes setObject:presetValue forKey:key];
+                    } else {
+                        [finalAttributes setObject:value forKey:key];
+                    }
+                } else {
+                    [finalAttributes setObject:value forKey:key];
+                }
+            } else {
+                [finalAttributes setObject:value forKey:key];
+            }
+        } else {
+            [finalAttributes setObject:value forKey:key];
+        }
+    }];
     if(MOBILY_BUILDER_PRESET == nil) {
-        MOBILY_BUILDER_PRESET = MOBILY_SAFE_RETAIN([NSMutableDictionary dictionaryWithObject:attributes forKey:name]);
+        MOBILY_BUILDER_PRESET = MOBILY_SAFE_RETAIN([NSMutableDictionary dictionaryWithObject:finalAttributes forKey:name]);
     } else {
-        [MOBILY_BUILDER_PRESET setObject:attributes forKey:name];
+        [MOBILY_BUILDER_PRESET setObject:finalAttributes forKey:name];
     }
 }
 

@@ -134,6 +134,22 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 - (void)setupController {
 }
 
+#pragma mark Property
+
+- (void)setNavigationBarHidden:(BOOL)navigationBarHidden {
+    [self setNavigationBarHidden:navigationBarHidden animated:NO];
+}
+
+- (void)setNavigationBarHidden:(BOOL)navigationBarHidden animated:(BOOL)animated {
+    if(_navigationBarHidden != navigationBarHidden) {
+        _navigationBarHidden = navigationBarHidden;
+        
+        if([self isViewLoaded] == YES) {
+            [[self navigationController] setNavigationBarHidden:_navigationBarHidden animated:animated];
+        }
+    }
+}
+
 #pragma mark UIViewController
 
 - (BOOL)prefersStatusBarHidden {
@@ -162,10 +178,6 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    if(_navigationBarHidden == YES) {
-        [[self navigationController] setNavigationBarHidden:YES animated:animated];
-    }
     [_eventWillAppear fireSender:self object:nil];
 }
 
@@ -177,10 +189,6 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    
-    if(_navigationBarHidden == YES) {
-        [[self navigationController] setNavigationBarHidden:NO animated:animated];
-    }
     [_eventWillDisappear fireSender:self object:nil];
 }
 

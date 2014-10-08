@@ -79,6 +79,9 @@
 
 - (void)notificationReceiveMemoryWarning:(NSNotification*)notification;
 
+- (void)notificationKeyboardShow:(NSNotification*)notification;
+- (void)notificationKeyboardHide:(NSNotification*)notification;
+
 - (MobilyViewElementsCell*)dequeueCellWithElementsItem:(MobilyViewElementsItem*)item;
 - (void)enqueueCellWithElementsItem:(MobilyViewElementsItem*)item;
 
@@ -253,6 +256,8 @@
                 case UIInterfaceOrientationLandscapeLeft:
                 case UIInterfaceOrientationLandscapeRight:
                     overallSize = ABS((screenRect.size.width - keyboardRect.size.width) - (scrollRect.origin.y + scrollRect.size.height));
+                    break;
+                case UIInterfaceOrientationUnknown:
                     break;
             }
             scrollInsets = UIEdgeInsetsMake(scrollInsets.top, scrollInsets.left, overallSize, scrollInsets.right);

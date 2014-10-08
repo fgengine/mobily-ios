@@ -219,6 +219,13 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 #pragma mark UINavigationControllerDelegate
 
+- (void)navigationController:(UINavigationController*)navigationController willShowViewController:(UIViewController*)viewController animated:(BOOL)animated {
+    if([viewController isKindOfClass:[MobilyController class]] == YES) {
+        MobilyController* mobilyController = (MobilyController*)viewController;
+        [navigationController setNavigationBarHidden:[mobilyController isNavigationBarHidden] animated:animated];
+    }
+}
+
 - (id< UIViewControllerAnimatedTransitioning >)navigationController:(UINavigationController*)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController*)fromViewController toViewController:(UIViewController*)toViewController {
     switch(operation) {
         case UINavigationControllerOperationPush:

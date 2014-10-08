@@ -2,7 +2,7 @@
 <ExampleApplication>
     <Window>
         <ControllerDynamicsDrawer name="mainSlide">
-            <ControllerNavigation name="mainNavigation" preset="navigation-controller" transition:navigation="cross-fade">
+            <ControllerNavigation name="mainNavigation" preset="navigation-controller">
                 <ExampleControllerMain name="mainView" preset="controller" title="CONTEXT"/>
             </ControllerNavigation>
             <ExampleControllerMain name="mainMenuLeft" preset="controller" title="MENU"/>

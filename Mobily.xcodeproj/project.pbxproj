@@ -44,6 +44,7 @@
 		40798A3B1948AFC400A04686 /* MobilyViewImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798A3A1948AFC400A04686 /* MobilyViewImage.m */; };
 		40798A411948C0F700A04686 /* MobilyViewElementsLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798A3E1948C0F700A04686 /* MobilyViewElementsLayout.m */; };
 		40798A421948C0F700A04686 /* MobilyViewElements.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798A401948C0F700A04686 /* MobilyViewElements.m */; };
+		9AA83B7B19E536FF009F6C5F /* ExampleControllerMain.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9AA83B7A19E536FE009F6C5F /* ExampleControllerMain.xib */; };
 		C13E78B87D644CF2A6696DA8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F16AA68F9FE04603B1D99102 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -115,6 +116,7 @@
 		40798A3E1948C0F700A04686 /* MobilyViewElementsLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewElementsLayout.m; sourceTree = "<group>"; };
 		40798A3F1948C0F700A04686 /* MobilyViewElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyViewElements.h; sourceTree = "<group>"; };
 		40798A401948C0F700A04686 /* MobilyViewElements.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewElements.m; sourceTree = "<group>"; };
+		9AA83B7A19E536FE009F6C5F /* ExampleControllerMain.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExampleControllerMain.xib; sourceTree = "<group>"; };
 		A954984946BD47F69F5CBC67 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		F16AA68F9FE04603B1D99102 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -172,6 +174,7 @@
 				401FEE8618A3FAE600B445EB /* main.m */,
 				401FEE8418A3FAE600B445EB /* ExampleApplication.h */,
 				401FEE8518A3FAE600B445EB /* ExampleApplication.m */,
+				9AA83B7A19E536FE009F6C5F /* ExampleControllerMain.xib */,
 				401FEF1818A3FE3200B445EB /* Application.mobily */,
 				401FEF1918A3FE3200B445EB /* Presets.mobily */,
 			);
@@ -418,6 +421,7 @@
 				401FEF1A18A3FE3200B445EB /* Application.mobily in Resources */,
 				401FEF1B18A3FE3200B445EB /* Presets.mobily in Resources */,
 				407903D01943079600EC8855 /* Mobily.podspec in Resources */,
+				9AA83B7B19E536FF009F6C5F /* ExampleControllerMain.xib in Resources */,
 				401FEE8918A3FAE600B445EB /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -541,7 +545,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -574,7 +578,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

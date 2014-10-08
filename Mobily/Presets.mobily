@@ -1,11 +1,17 @@
 <?xml version="1.0"?>
 <Presets>
+    <!-- Core -->
+    
+    <Preset name="base" color="#00ff00"/>
+    
     <!-- Controllers -->
     
     <Preset name="controller" orientation="portrait-down"/>
+    <Preset name="controller-without-navbar" preset="controller" navigationBarHidden="true"/>
     
     <!-- Navigations -->
-
-    <Preset name="navigation-controller" barTintColor="#00ff00"/>
+    
+    <Preset name="navigation-controller" barTintColor="${base.color}"/>
+    <Preset name="navigation-controller-without-navbar" preset="navigation-controller" navigationBarHidden="true"/>
         
 </Presets>

@@ -68,6 +68,8 @@
 
 - (void)setupController {
     [super setupController];
+    
+    [self setEdgesForExtendedLayout:UIRectEdgeNone];
 }
 
 - (void)dealloc {
@@ -77,19 +79,32 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [[self navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"MENU" style:UIBarButtonItemStylePlain target:self action:@selector(pressedMenu)]];
+    if([[self navigationController] rootViewController] == self) {
+        [[self navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"MENU" style:UIBarButtonItemStylePlain target:self action:@selector(pressedMenu)]];
+    }
     [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"PUSH" style:UIBarButtonItemStylePlain target:self action:@selector(pressedPush)]];
     
     [[self view] setBackgroundColor:[[UIColor redColor] colorWithAlphaComponent:0.5f]];
 }
 
-- (void)pressedMenu {
+- (IBAction)pressedMenu {
     [[[MobilyContext application] mainSlide] showLeftDrawerAnimated:YES completion:nil];
 }
 
-- (void)pressedPush {
+- (IBAction)pressedBack {
+    [[self navigationController] popViewControllerAnimated:YES];
+}
+
+- (IBAction)pressedPush {
     ExampleControllerMain* controller = [[ExampleControllerMain alloc] init];
+    if(([[[self navigationController] viewControllers] count] % 2) == 0) {
+        [controller setNavigationBarHidden:YES];
+    }
     [[self navigationController] pushViewController:controller animated:YES];
+}
+
+- (IBAction)pressedToggle {
+    [self setNavigationBarHidden:![self isNavigationBarHidden] animated:YES];
 }
 
 @end
