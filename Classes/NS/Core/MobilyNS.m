@@ -469,7 +469,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 }
 
 - (NSArray*)arrayByObjectClass:(Class)objectClass {
-    NSMutableArray* result = [NSMutableArray arrayWithArray:self];
+    NSMutableArray* result = [NSMutableArray array];
     [self enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
         if([object isKindOfClass:objectClass] == YES) {
             [result addObject:object];
@@ -479,7 +479,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 }
 
 - (NSArray*)arrayByObjectProtocol:(Protocol*)objectProtocol {
-    NSMutableArray* result = [NSMutableArray arrayWithArray:self];
+    NSMutableArray* result = [NSMutableArray array];
     [self enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
         if([object conformsToProtocol:objectProtocol] == YES) {
             [result addObject:object];
