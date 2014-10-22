@@ -52,8 +52,12 @@
 - (BOOL)launchingWithOptions:(NSDictionary *)options {
     BOOL result = [super launchingWithOptions:options];
     if(result == YES) {
+        /*
+        [_window setRootViewController:_mainSlide];
+        */
         [_mainSlide setLeftDrawerViewController:_mainMenuLeft];
         [_mainSlide setRightDrawerViewController:_mainMenuRight];
+        [_mainSlide setPaneViewController:_mainNavigation];
     }
     return result;
 }
@@ -69,6 +73,7 @@
 - (void)setupController {
     [super setupController];
     
+    [self setTitle:@"TITLE"];
     [self setEdgesForExtendedLayout:UIRectEdgeNone];
 }
 

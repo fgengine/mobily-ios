@@ -118,6 +118,12 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)didLoadObjectChilds {
+    if([UIDevice systemVersion] >= 7.0f) {
+        if([[self viewControllers] count] < 1) {
+            [self setViewControllers:[_objectChilds arrayByObjectClass:[UIViewController class]]];
+        }
+        [_eventDidLoad fireSender:self object:nil];
+    }
 }
 
 - (id< MobilyBuilderObject >)objectForName:(NSString*)name {
@@ -163,10 +169,12 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if([[self viewControllers] count] < 1) {
-        [self setViewControllers:[_objectChilds arrayByObjectClass:[UIViewController class]]];
+    if([UIDevice systemVersion] < 7.0f) {
+        if([[self viewControllers] count] < 1) {
+            [self setViewControllers:[_objectChilds arrayByObjectClass:[UIViewController class]]];
+        }
+        [_eventDidLoad fireSender:self object:nil];
     }
-    [_eventDidLoad fireSender:self object:nil];
 }
 
 - (void)viewDidUnload {

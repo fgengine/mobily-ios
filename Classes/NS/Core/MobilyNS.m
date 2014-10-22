@@ -532,6 +532,70 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
     return result;
 }
 
+- (NSUInteger)nextIndexOfObject:(id)object {
+    NSUInteger index = [self indexOfObject:object];
+    if(index != NSNotFound) {
+        if(index == [self count] - 1) {
+            index = NSNotFound;
+        } else {
+            index++;
+        }
+    }
+    return index;
+}
+
+- (NSUInteger)prevIndexOfObject:(id)object {
+    NSUInteger index = [self indexOfObject:object];
+    if(index != NSNotFound) {
+        if(index == 0) {
+            index = NSNotFound;
+        } else {
+            index--;
+        }
+    }
+    return index;
+}
+
+- (id)nextObjectOfObject:(id)object {
+    NSUInteger index = [self indexOfObject:object];
+    if(index != NSNotFound) {
+        if(index < [self count] - 1) {
+            return [self objectAtIndex:index + 1];
+        }
+    }
+    return nil;
+}
+
+- (id)prevObjectOfObject:(id)object {
+    NSUInteger index = [self indexOfObject:object];
+    if(index != NSNotFound) {
+        if(index != 0) {
+            return [self objectAtIndex:index - 1];
+        }
+    }
+    return nil;
+}
+
+- (void)enumerateObjectsAtRange:(NSRange)range options:(NSEnumerationOptions)options usingBlock:(void (^)(id obj, NSUInteger idx, BOOL *stop))block {
+    [self enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:options usingBlock:block];
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation NSMutableArray (MobilyNS)
+
+- (void)removeFirstObjectsByCount:(NSUInteger)count {
+    [self removeObjectsInRange:NSMakeRange(0, count)];
+}
+
+- (void)removeLastObjectsByCount:(NSUInteger)count {
+    [self removeObjectsInRange:NSMakeRange(([self count] - 1) - count, count)];
+}
+
 @end
 
 /*--------------------------------------------------*/

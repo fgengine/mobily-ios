@@ -7,4 +7,4 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   MSDynamicsDrawerViewController: 0002059480a4b5ddde7eafbafb958a79a9b0ffaf
 
-COCOAPODS: 0.32.1
+COCOAPODS: 0.34.4

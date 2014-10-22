@@ -1,12 +1,15 @@
 <?xml version="1.0"?>
 <ExampleApplication>
-    <Window>
-        <ControllerDynamicsDrawer name="mainSlide">
-            <ControllerNavigation name="mainNavigation" preset="navigation-controller">
-                <ExampleControllerMain name="mainView" preset="controller" title="CONTEXT"/>
-            </ControllerNavigation>
-            <ExampleControllerMain name="mainMenuLeft" preset="controller" title="MENU"/>
-            <ExampleControllerMain name="mainMenuRight" preset="controller" title="MENU"/>
-        </ControllerDynamicsDrawer>
+    <Window name="window">
+        <ControllerTabBar>
+            <ControllerDynamicsDrawer name="mainSlide">
+                <ControllerNavigation name="mainNavigation" preset="navigation-controller" transition:navigation="cards">
+                    <ExampleControllerMain name="mainView" preset="controller" title="CONTEXT"/>
+                </ControllerNavigation>
+                <ExampleControllerMain name="mainMenuLeft" preset="controller" title="MENU"/>
+                <ExampleControllerMain name="mainMenuRight" preset="controller" title="MENU"/>
+            </ControllerDynamicsDrawer>
+            <ExampleControllerMain name="secondary" preset="controller" title="MENU"/>
+        </ControllerTabBar>
     </Window>
 </ExampleApplication>

@@ -35,6 +35,7 @@
 
 #import "MobilyContext.h"
 #import "MobilyApplication.h"
+#import "MobilyWindow.h"
 #import "MobilyController.h"
 #import "MobilyControllerNavigation.h"
 #import "MobilyControllerView.h"
@@ -44,6 +45,7 @@
 
 @interface ExampleApplication : MobilyApplication
 
+@property(nonatomic, readwrite, weak) MobilyWindow* window;
 @property(nonatomic, readwrite, weak) MobilyControllerDynamicsDrawer* mainSlide;
 @property(nonatomic, readwrite, weak) MobilyControllerNavigation* mainNavigation;
 @property(nonatomic, readwrite, weak) MobilyControllerView* mainMenuLeft;

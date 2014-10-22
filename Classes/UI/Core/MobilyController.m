@@ -178,6 +178,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     [_eventWillAppear fireSender:self object:nil];
 }
 
@@ -189,6 +190,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    
     [_eventWillDisappear fireSender:self object:nil];
 }
 

@@ -2,7 +2,7 @@
 <Presets>
     <!-- Core -->
     
-    <Preset name="base" color="#00ff00"/>
+    <Preset name="base" color="#ffffff"/>
     
     <!-- Controllers -->
     

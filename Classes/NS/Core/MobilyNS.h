@@ -130,6 +130,23 @@
 - (id)firstObjectIsProtocol:(Protocol*)objectProtocol;
 - (id)lastObjectIsProtocol:(Protocol*)objectProtocol;
 
+- (NSUInteger)nextIndexOfObject:(id)object;
+- (NSUInteger)prevIndexOfObject:(id)object;
+
+- (id)nextObjectOfObject:(id)object;
+- (id)prevObjectOfObject:(id)object;
+
+- (void)enumerateObjectsAtRange:(NSRange)range options:(NSEnumerationOptions)options usingBlock:(void (^)(id obj, NSUInteger idx, BOOL *stop))block NS_AVAILABLE(10_6, 4_0);
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface NSMutableArray (MobilyNS)
+
+- (void)removeFirstObjectsByCount:(NSUInteger)count;
+- (void)removeLastObjectsByCount:(NSUInteger)count;
+
 @end
 
 /*--------------------------------------------------*/
