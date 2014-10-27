@@ -666,8 +666,12 @@
     if([value isKindOfClass:[NSString class]] == YES) {
         return value;
     } else if([value isKindOfClass:[NSNumber class]] == YES) {
-        NSNumberFormatter* numberFormat = [NSNumberFormatter alloc];
+        NSNumberFormatter* numberFormat = [[NSNumberFormatter alloc] init];
         if(numberFormat != nil) {
+            [numberFormat setLocale:[NSLocale currentLocale]];
+            [numberFormat setFormatterBehavior:NSNumberFormatterBehavior10_4];
+            [numberFormat setNumberStyle:NSNumberFormatterDecimalStyle];
+            
             return [numberFormat stringFromNumber:value];
         }
     }
@@ -686,9 +690,22 @@
     if([value isKindOfClass:[NSNumber class]] == YES) {
         return value;
     } else if([value isKindOfClass:[NSString class]] == YES) {
-        NSNumberFormatter* numberFormat = [NSNumberFormatter alloc];
+        NSNumberFormatter* numberFormat = [[NSNumberFormatter alloc] init];
         if(numberFormat != nil) {
-            return [numberFormat numberFromString:value];
+            [numberFormat setLocale:[NSLocale currentLocale]];
+            [numberFormat setFormatterBehavior:NSNumberFormatterBehavior10_4];
+            [numberFormat setNumberStyle:NSNumberFormatterDecimalStyle];
+            
+            NSNumber* number = [numberFormat numberFromString:value];
+            if(number == nil) {
+                if([[numberFormat decimalSeparator] isEqualToString:@"."] == YES) {
+                    [numberFormat setDecimalSeparator:@","];
+                }
+                number = [numberFormat numberFromString:value];
+            }
+            if(number != nil) {
+                return number;
+            }
         }
     }
     return nil;
