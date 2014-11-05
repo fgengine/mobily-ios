@@ -106,11 +106,19 @@ typedef void (^MobilyStorageItemBlock)();
 
 @interface MobilyStorageJsonConverterBool : MobilyStorageJsonConverter
 
+@property(nonatomic, readonly, assign) BOOL defaultValue;
+
+- (id)initWithPath:(NSString*)path defaultValue:(BOOL)defaultValue;
+
 @end
 
 /*--------------------------------------------------*/
 
 @interface MobilyStorageJsonConverterString : MobilyStorageJsonConverter
+
+@property(nonatomic, readonly, strong) NSString* defaultValue;
+
+- (id)initWithPath:(NSString*)path defaultValue:(NSString*)defaultValue;
 
 @end
 
@@ -118,16 +126,24 @@ typedef void (^MobilyStorageItemBlock)();
 
 @interface MobilyStorageJsonConverterNumber : MobilyStorageJsonConverter
 
+@property(nonatomic, readonly, strong) NSNumber* defaultValue;
+
+- (id)initWithPath:(NSString*)path defaultValue:(NSNumber*)defaultValue;
+
 @end
 
 /*--------------------------------------------------*/
 
 @interface MobilyStorageJsonConverterDate : MobilyStorageJsonConverter
 
+@property(nonatomic, readonly, strong) NSDate* defaultValue;
 @property(nonatomic, readonly, strong) NSString* format;
 
 - (id)initWithFormat:(NSString*)format;
+- (id)initWithFormat:(NSString*)format defaultValue:(NSDate*)defaultValue;
 - (id)initWithPath:(NSString*)path format:(NSString*)format;
+- (id)initWithPath:(NSString*)path format:(NSString*)format defaultValue:(NSDate*)defaultValue;
+- (id)initWithPath:(NSString*)path defaultValue:(NSDate*)defaultValue;
 
 @end
 
@@ -135,10 +151,13 @@ typedef void (^MobilyStorageItemBlock)();
 
 @interface MobilyStorageJsonConverterEnum : MobilyStorageJsonConverter
 
+@property(nonatomic, readonly, strong) NSNumber* defaultValue;
 @property(nonatomic, readonly, strong) NSDictionary* enums;
 
 - (id)initWithEnums:(NSDictionary*)enums;
+- (id)initWithEnums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue;
 - (id)initWithPath:(NSString*)path enums:(NSDictionary*)enums;
+- (id)initWithPath:(NSString*)path enums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue;
 
 @end
 

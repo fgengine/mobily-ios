@@ -92,7 +92,19 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
+@interface MobilyStorageJsonConverterBool ()
+
+@property(nonatomic, readwrite, assign) BOOL defaultValue;
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
 @interface MobilyStorageJsonConverterString ()
+
+@property(nonatomic, readwrite, strong) NSString* defaultValue;
 
 @end
 
@@ -102,6 +114,8 @@
 
 @interface MobilyStorageJsonConverterNumber ()
 
+@property(nonatomic, readwrite, strong) NSNumber* defaultValue;
+
 @end
 
 /*--------------------------------------------------*/
@@ -110,6 +124,7 @@
 
 @interface MobilyStorageJsonConverterDate ()
 
+@property(nonatomic, readwrite, strong) NSDate* defaultValue;
 @property(nonatomic, readwrite, strong) NSString* format;
 
 @end
@@ -120,6 +135,7 @@
 
 @interface MobilyStorageJsonConverterEnum ()
 
+@property(nonatomic, readwrite, strong) NSNumber* defaultValue;
 @property(nonatomic, readwrite, strong) NSDictionary* enums;
 
 @end
@@ -641,6 +657,14 @@
 
 @implementation MobilyStorageJsonConverterBool
 
+- (id)initWithPath:(NSString*)path defaultValue:(BOOL)defaultValue {
+    self = [super initWithPath:path];
+    if(self != nil) {
+        [self setDefaultValue:defaultValue];
+    }
+    return self;
+}
+
 - (id)convertValue:(id)value {
     if([value isKindOfClass:[NSString class]] == YES) {
         NSString* lowercaseString = [value lowercaseString];
@@ -651,7 +675,7 @@
     } else if([value isKindOfClass:[NSNumber class]] == YES) {
         return value;
     }
-    return nil;
+    return @(_defaultValue);
 }
 
 @end
@@ -661,6 +685,20 @@
 /*--------------------------------------------------*/
 
 @implementation MobilyStorageJsonConverterString
+
+- (id)initWithPath:(NSString*)path defaultValue:(NSString*)defaultValue {
+    self = [super initWithPath:path];
+    if(self != nil) {
+        [self setDefaultValue:defaultValue];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [self setDefaultValue:nil];
+    
+    MOBILY_SAFE_DEALLOC;
+}
 
 - (id)convertValue:(id)value {
     if([value isKindOfClass:[NSString class]] == YES) {
@@ -675,7 +713,7 @@
             return [numberFormat stringFromNumber:value];
         }
     }
-    return nil;
+    return _defaultValue;
 }
 
 @end
@@ -685,6 +723,20 @@
 /*--------------------------------------------------*/
 
 @implementation MobilyStorageJsonConverterNumber
+
+- (id)initWithPath:(NSString*)path defaultValue:(NSNumber*)defaultValue {
+    self = [super initWithPath:path];
+    if(self != nil) {
+        [self setDefaultValue:defaultValue];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [self setDefaultValue:nil];
+    
+    MOBILY_SAFE_DEALLOC;
+}
 
 - (id)convertValue:(id)value {
     if([value isKindOfClass:[NSNumber class]] == YES) {
@@ -708,7 +760,7 @@
             }
         }
     }
-    return nil;
+    return _defaultValue;
 }
 
 @end
@@ -727,6 +779,15 @@
     return self;
 }
 
+- (id)initWithFormat:(NSString*)format defaultValue:(NSDate*)defaultValue {
+    self = [super init];
+    if(self != nil) {
+        [self setFormat:format];
+        [self setDefaultValue:defaultValue];
+    }
+    return self;
+}
+
 - (id)initWithPath:(NSString*)path format:(NSString*)format {
     self = [super initWithPath:path];
     if(self != nil) {
@@ -735,8 +796,26 @@
     return self;
 }
 
+- (id)initWithPath:(NSString*)path format:(NSString*)format defaultValue:(NSDate*)defaultValue {
+    self = [super initWithPath:path];
+    if(self != nil) {
+        [self setFormat:format];
+        [self setDefaultValue:defaultValue];
+    }
+    return self;
+}
+
+- (id)initWithPath:(NSString*)path defaultValue:(NSDate*)defaultValue {
+    self = [super initWithPath:path];
+    if(self != nil) {
+        [self setDefaultValue:defaultValue];
+    }
+    return self;
+}
+
 - (void)dealloc {
     [self setFormat:nil];
+    [self setDefaultValue:nil];
     
     MOBILY_SAFE_DEALLOC;
 }
@@ -745,13 +824,15 @@
     if([value isKindOfClass:[NSString class]] == YES) {
         NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
         if(dateFormatter != nil) {
-            [dateFormatter setDateFormat:_format];
+            if(_format != nil) {
+                [dateFormatter setDateFormat:_format];
+            }
             return [dateFormatter dateFromString:value];
         }
     } else if([value isKindOfClass:[NSNumber class]] == YES) {
         return [NSDate dateWithTimeIntervalSince1970:[value floatValue]];
     }
-    return nil;
+    return _defaultValue;
 }
 
 @end
@@ -770,6 +851,15 @@
     return self;
 }
 
+- (id)initWithEnums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue {
+    self = [super init];
+    if(self != nil) {
+        [self setEnums:enums];
+        [self setDefaultValue:defaultValue];
+    }
+    return self;
+}
+
 - (id)initWithPath:(NSString*)path enums:(NSDictionary*)enums {
     self = [super initWithPath:path];
     if(self != nil) {
@@ -778,8 +868,18 @@
     return self;
 }
 
+- (id)initWithPath:(NSString*)path enums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue {
+    self = [super initWithPath:path];
+    if(self != nil) {
+        [self setEnums:enums];
+        [self setDefaultValue:defaultValue];
+    }
+    return self;
+}
+
 - (void)dealloc {
     [self setEnums:nil];
+    [self setDefaultValue:nil];
     
     MOBILY_SAFE_DEALLOC;
 }
