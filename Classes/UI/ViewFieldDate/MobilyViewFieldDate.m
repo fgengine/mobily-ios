@@ -65,6 +65,8 @@
 - (void)setupView {
     [super setupView];
     
+    [self setLocale:[NSLocale currentLocale]];
+    [self setCalendar:[NSCalendar currentCalendar]];
     [self setDate:[NSDate date]];
 }
 
@@ -80,9 +82,12 @@
         [self setInputView:_pickerView];
     }
     if(_pickerView != nil) {
-        if(_date != nil) {
-            [_pickerView setDate:_date];
-        }
+        [_pickerView setLocale:_locale];
+        [_pickerView setCalendar:_calendar];
+        [_pickerView setTimeZone:_timeZone];
+        [_pickerView setMinimumDate:_minimumDate];
+        [_pickerView setMaximumDate:_maximumDate];
+        [_pickerView setDate:_date];
     }
 }
 
@@ -114,6 +119,66 @@
             }
         } else {
             [self setText:@""];
+        }
+    }
+}
+
+- (void)setLocale:(NSLocale*)locale {
+    if([_locale isEqual:locale] == NO) {
+        _locale = locale;
+        
+        if([self isEditing] == YES) {
+            if(_date != nil) {
+                [_pickerView setLocale:_locale];
+            }
+        }
+    }
+}
+
+- (void)setCalendar:(NSCalendar*)calendar {
+    if([_calendar isEqual:calendar] == NO) {
+        _calendar = [calendar copy];
+        
+        if([self isEditing] == YES) {
+            if(_date != nil) {
+                [_pickerView setCalendar:_calendar];
+            }
+        }
+    }
+}
+
+- (void)setTimeZone:(NSTimeZone*)timeZone {
+    if([_timeZone isEqual:timeZone] == NO) {
+        _timeZone = timeZone;
+        
+        if([self isEditing] == YES) {
+            if(_date != nil) {
+                [_pickerView setTimeZone:_timeZone];
+            }
+        }
+    }
+}
+
+- (void)setMinimumDate:(NSDate*)minimumDate {
+    if([_minimumDate isEqualToDate:minimumDate] == NO) {
+        _minimumDate = minimumDate;
+
+        if([self isEditing] == YES) {
+            if(_date != nil) {
+                [_pickerView setMinimumDate:_minimumDate];
+            }
+        }
+    }
+}
+
+- (void)setMaximumDate:(NSDate*)maximumDate {
+    if([_maximumDate isEqualToDate:maximumDate] == NO) {
+        _maximumDate = maximumDate;
+        
+        if([self isEditing] == YES) {
+            if(_date != nil) {
+                [_pickerView setMaximumDate:_maximumDate];
+            }
         }
     }
 }

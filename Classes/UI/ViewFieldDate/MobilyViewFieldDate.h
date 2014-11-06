@@ -40,8 +40,12 @@
 @interface MobilyViewFieldDate : MobilyViewFieldText< MobilyBuilderObject >
 
 @property(nonatomic, readwrite, assign) UIDatePickerMode datePickerMode;
-
 @property(nonatomic, readwrite, strong) NSDateFormatter* dateFormatter;
+@property(nonatomic, readwrite, strong) NSLocale* locale;
+@property(nonatomic, readwrite, copy)   NSCalendar* calendar;
+@property(nonatomic, readwrite, strong) NSTimeZone* timeZone;
+@property(nonatomic, readwrite, strong) NSDate* minimumDate;
+@property(nonatomic, readwrite, strong) NSDate* maximumDate;
 @property(nonatomic, readwrite, strong) NSDate* date;
 
 - (void)setDate:(NSDate*)date animated:(BOOL)animated;

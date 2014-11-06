@@ -40,6 +40,7 @@
 #import "MobilyControllerNavigation.h"
 #import "MobilyControllerView.h"
 #import "MobilyControllerDynamicsDrawer.h"
+#import "MobilyViewImage.h"
 
 /*--------------------------------------------------*/
 
@@ -57,6 +58,8 @@
 /*--------------------------------------------------*/
 
 @interface ExampleControllerMain : MobilyControllerView
+
+@property(nonatomic, readwrite, weak) IBOutlet MobilyViewImage* imageView;
 
 @end
 

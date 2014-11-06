@@ -37,14 +37,13 @@
 
 /*--------------------------------------------------*/
 
-typedef void (^MobilyImageLoaderCompleteBlock)(UIImage* image);
-typedef void (^MobilyImageLoaderFailureBlock)();
+typedef void (^MobilyImageLoaderCompleteBlock)(UIImage* image, NSString* imageUrl);
+typedef void (^MobilyImageLoaderFailureBlock)(NSString* imageUrl);
 
 /*--------------------------------------------------*/
 
 @interface MobilyViewImage : UIImageView< MobilyBuilderObject >
 
-@property(nonatomic, readwrite, assign) BOOL thumbnail;
 @property(nonatomic, readwrite, strong) UIImage* defaultImage;
 @property(nonatomic, readwrite, strong) NSString* imageUrl;
 
@@ -60,14 +59,14 @@ typedef void (^MobilyImageLoaderFailureBlock)();
 
 + (BOOL)isExistImageWithImageUrl:(NSString*)imageUrl;
 + (UIImage*)imageWithImageUrl:(NSString*)imageUrl;
++ (void)addImage:(UIImage*)image byImageUrl:(NSString*)imageUrl;
 + (void)removeByImageUrl:(NSString*)imageUrl;
 + (void)cleanup;
 
-+ (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target complete:(SEL)complete failure:(SEL)failure;
-+ (void)loadWithImageUrl:(NSString*)imageUrl size:(CGSize)size target:(id)target complete:(SEL)complete failure:(SEL)failure;
-+ (void)loadWithImageUrl:(NSString*)imageUrl complete:(MobilyImageLoaderCompleteBlock)complete failure:(MobilyImageLoaderFailureBlock)failure;
-+ (void)loadWithImageUrl:(NSString*)imageUrl size:(CGSize)size complete:(MobilyImageLoaderCompleteBlock)complete failure:(MobilyImageLoaderFailureBlock)failure;
-+ (NSString*)saveImage:(UIImage*)image;
++ (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
++ (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target completeBlock:(MobilyImageLoaderCompleteBlock)completeBlock failureBlock:(MobilyImageLoaderFailureBlock)failureBlock;
++ (void)cancelByImageUrl:(NSString*)imageUrl;
++ (void)cancelByTarget:(id)target;
 
 @end
 

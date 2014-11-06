@@ -216,13 +216,25 @@
 - (void)dealloc {
     [self setTaskManager:nil];
     [self setTaskOperation:nil];
-    [self setObject:nil];
-    [self setStartCallback:nil];
-    [self setWorkingCallback:nil];
-    [self setCompleteCallback:nil];
-    [self setCancelCallback:nil];
 
     MOBILY_SAFE_DEALLOC;
+}
+
+- (BOOL)isCanceled {
+    return [_taskOperation isCancelled];
+}
+
+- (BOOL)willStart {
+    return YES;
+}
+
+- (void)working {
+}
+
+- (void)didComplete {
+}
+
+- (void)didCancel {
 }
 
 - (void)cancel {
@@ -247,21 +259,14 @@
         
         [_task setTaskOperation:self];
         
-        MOBILY_WEAK MobilyTaskOperation* weakSelf = self;
         [self setCompletionBlock:^{
-            if([weakSelf isCancelled] == YES) {
-                MobilyTaskCancelBlock cancelCallback = [task cancelCallback];
-                if(cancelCallback != nil) {
-                    @autoreleasepool {
-                        cancelCallback(task);
-                    }
+            if([task isCanceled] == YES) {
+                @autoreleasepool {
+                    [task didCancel];
                 }
             } else {
-                MobilyTaskCompleteBlock completeCallback = [task completeCallback];
-                if(completeCallback != nil) {
-                    @autoreleasepool {
-                        completeCallback(task);
-                    }
+                @autoreleasepool {
+                    [task didComplete];
                 }
             }
             [task setTaskOperation:nil];
@@ -279,24 +284,17 @@
 
 - (void)main {
     if(_task != nil) {
-        MobilyTaskWokingBlock workingCallback = [_task workingCallback];
-        if(workingCallback != nil) {
-            MobilyTaskStartBlock startCallback = [_task startCallback];
-            if(startCallback != nil) {
-                if(startCallback(_task) == NO) {
-                    [self cancel];
-                    return;
-                }
+        if([_task willStart] == NO) {
+            [self cancel];
+            return;
+        }
+        while([self isCancelled] == NO) {
+            @autoreleasepool {
+                [_task working];
             }
-            while([self isCancelled] == NO) {
-                BOOL work = NO;
-                @autoreleasepool {
-                    work = workingCallback(_task);
-                }
-                if(work == NO) {
-                    [NSThread sleepForTimeInterval:0.01];
-                    continue;
-                }
+            if([_task isNeedRework] == YES) {
+                [NSThread sleepForTimeInterval:0.01];
+            } else {
                 break;
             }
         }

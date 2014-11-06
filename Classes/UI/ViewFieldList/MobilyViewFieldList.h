@@ -55,9 +55,13 @@
 @interface MobilyViewFieldListItem : NSObject
 
 @property(nonatomic, readwrite, strong) NSString* title;
+@property(nonatomic, readwrite, strong) UIFont* font;
+@property(nonatomic, readwrite, strong) UIColor* color;
 @property(nonatomic, readwrite, strong) id value;
 
 - (id)initWithTitle:(NSString*)title value:(id)value;
+- (id)initWithTitle:(NSString*)title color:(UIColor*)color value:(id)value;
+- (id)initWithTitle:(NSString*)title font:(UIFont*)font color:(UIColor*)color value:(id)value;
 
 @end
 

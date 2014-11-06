@@ -49,19 +49,42 @@ typedef void (^MobilyImageLoaderBlock)();
 @interface MobilyImageLoader ()
 
 @property(nonatomic, readwrite, strong) MobilyTaskManager* taskManager;
-@property(nonatomic, readwrite, strong) NSString* directory;
+@property(nonatomic, readwrite, strong) NSCache* cache;
 
 + (MobilyImageLoader*)shared;
 
-- (void)sync:(MobilyImageLoaderBlock)block;
+- (NSString*)cacheKeyByImageUrl:(NSString*)imageUrl;
 
 - (BOOL)isExistImageWithImageUrl:(NSString*)imageUrl;
 - (UIImage*)imageWithImageUrl:(NSString*)imageUrl;
+- (void)addImage:(UIImage*)image byImageUrl:(NSString*)imageUrl;
 - (void)removeByImageUrl:(NSString*)imageUrl;
 - (void)cleanup;
 
-- (void)loadWithImageUrl:(NSString*)imageUrl size:(CGSize)size complete:(MobilyImageLoaderCompleteBlock)complete failure:(MobilyImageLoaderFailureBlock)failure;
-- (NSString*)saveImage:(UIImage*)image;
+- (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
+- (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target completeBlock:(MobilyImageLoaderCompleteBlock)completeBlock failureBlock:(MobilyImageLoaderFailureBlock)failureBlock;
+- (void)cancelByImageUrl:(NSString*)imageUrl;
+- (void)cancelByTarget:(id)target;
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@interface MobilyTaskImageLoader : MobilyTask
+
+@property(nonatomic, readwrite, weak) MobilyImageLoader* imageLoader;
+@property(nonatomic, readwrite, strong) id target;
+@property(nonatomic, readwrite, strong) NSString* imageUrl;
+@property(nonatomic, readwrite, strong) NSString* cacheKey;
+@property(nonatomic, readwrite, strong) UIImage* image;
+@property(nonatomic, readwrite, strong) id< MobilyEvent > completeEvent;
+@property(nonatomic, readwrite, strong) id< MobilyEvent > failureEvent;
+
+- (id)initWithImageUrl:(NSString*)imageUrl target:(id)target;
+- (id)initWithImageUrl:(NSString*)imageUrl target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
+- (id)initWithImageUrl:(NSString*)imageUrl target:(id)target completeBlock:(MobilyImageLoaderCompleteBlock)completeBlock failureBlock:(MobilyImageLoaderFailureBlock)failureBlock;
 
 @end
 
@@ -157,31 +180,22 @@ typedef void (^MobilyImageLoaderBlock)();
 
 - (void)setImageUrl:(NSString*)imageUrl complete:(MobilyImageLoaderCompleteBlock)complete failure:(MobilyImageLoaderFailureBlock)failure {
     if([_imageUrl isEqualToString:imageUrl] == NO) {
-        _imageUrl = imageUrl;
-        [super setImage:_defaultImage];
-        
-        CGSize size = CGSizeZero;
-        if(_thumbnail == YES) {
-            CGFloat scale = [[UIScreen mainScreen] scale];
-            CGRect bounds = [self bounds];
-            size.width = bounds.size.width * scale;
-            size.height = bounds.size.height * scale;
+        if(_imageUrl != nil) {
+            [MobilyImageLoader cancelByTarget:self];
         }
-        [MobilyImageLoader loadWithImageUrl:_imageUrl
-                                   size:size
-                               complete:^(UIImage* image) {
-                                   [self setImage:image];
-                                   if(complete != nil) {
-                                       complete(image);
-                                   }
-                               } failure:^{
-                                   if(failure != nil) {
-                                       failure();
-                                   }
-                               }];
+        _imageUrl = imageUrl;
+        if(_defaultImage != nil) {
+        }
+        [super setImage:_defaultImage];
+        [MobilyImageLoader loadWithImageUrl:_imageUrl target:self completeBlock:^(UIImage* image, NSString* imageUrl) {
+            [self setImage:image];
+            if(complete != nil) {
+                complete(image, imageUrl);
+            }
+        } failureBlock:failure];
     } else {
         if(complete != nil) {
-            complete([self image]);
+            complete([self image], imageUrl);
         }
     }
 }
@@ -197,7 +211,8 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
 /*--------------------------------------------------*/
 
 #define FG_IMAGE_LOADER_FOLDER                      @"MobilyImageLoaderCache"
-#define FG_IMAGE_LOADER_STEP                        64
+#define FG_IMAGE_LOADER_MAX_CONCURRENT_TASK         5
+#define FG_IMAGE_LOADER_COUNT_LIMIT                 512
 
 /*--------------------------------------------------*/
 
@@ -210,12 +225,12 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
     if(self != nil) {
         [self setTaskManager:[[MobilyTaskManager alloc] init]];
         if(_taskManager != nil) {
-            [_taskManager setMaxConcurrentTask:5];
+            [_taskManager setMaxConcurrentTask:FG_IMAGE_LOADER_MAX_CONCURRENT_TASK];
         }
-        
-        [self setDirectory:[[NSFileManager cachesDirectory] stringByAppendingPathComponent:FG_IMAGE_LOADER_FOLDER]];
-        if([[NSFileManager defaultManager] fileExistsAtPath:_directory] == NO) {
-            [[NSFileManager defaultManager] createDirectoryAtPath:_directory withIntermediateDirectories:YES attributes:nil error:NULL];
+        [self setCache:[[NSCache alloc] init]];
+        if(_cache != nil) {
+            [_cache setName:FG_IMAGE_LOADER_FOLDER];
+            [_cache setCountLimit:FG_IMAGE_LOADER_COUNT_LIMIT];
         }
     }
     return self;
@@ -223,7 +238,7 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
 
 - (void)dealloc {
     [self setTaskManager:nil];
-    [self setDirectory:nil];
+    [self setCache:nil];
     
     MOBILY_SAFE_DEALLOC;
 }
@@ -238,6 +253,10 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
     return [[self shared] imageWithImageUrl:imageUrl];
 }
 
++ (void)addImage:(UIImage*)image byImageUrl:(NSString*)imageUrl {
+    [[self shared] addImage:image byImageUrl:imageUrl];
+}
+
 + (void)removeByImageUrl:(NSString*)imageUrl {
     [[self shared] removeByImageUrl:imageUrl];
 }
@@ -246,42 +265,20 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
     [[self shared] cleanup];
 }
 
-+ (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target complete:(SEL)complete failure:(SEL)failure {
-    [self loadWithImageUrl:imageUrl size:CGSizeZero target:target complete:complete failure:failure];
++ (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector {
+    [[self shared] loadWithImageUrl:imageUrl target:target completeSelector:completeSelector failureSelector:failureSelector];
 }
 
-+ (void)loadWithImageUrl:(NSString*)imageUrl size:(CGSize)size target:(id)target complete:(SEL)complete failure:(SEL)failure {
-    if([target respondsToSelector:complete] == YES) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [[self shared] sync:^{
-            [[self shared] loadWithImageUrl:imageUrl
-                                       size:size
-                                   complete:^(UIImage* image) {
-                                       [target performSelector:complete withObject:image];
-                                   }
-                                    failure:^{
-                                        if([target respondsToSelector:failure] == YES) {
-                                            [target performSelector:failure];
-                                        }
-                                    }];
-        }];
-#pragma clang diagnostic pop
-    }
++ (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target completeBlock:(MobilyImageLoaderCompleteBlock)completeBlock failureBlock:(MobilyImageLoaderFailureBlock)failureBlock {
+    [[self shared] loadWithImageUrl:imageUrl target:target completeBlock:completeBlock failureBlock:failureBlock];
 }
 
-+ (void)loadWithImageUrl:(NSString*)imageUrl complete:(MobilyImageLoaderCompleteBlock)complete failure:(MobilyImageLoaderFailureBlock)failure {
-    [self loadWithImageUrl:imageUrl size:CGSizeZero complete:complete failure:nil];
++ (void)cancelByImageUrl:(NSString*)imageUrl {
+    [[self shared] cancelByImageUrl:imageUrl];
 }
 
-+ (void)loadWithImageUrl:(NSString*)imageUrl size:(CGSize)size complete:(MobilyImageLoaderCompleteBlock)complete failure:(MobilyImageLoaderFailureBlock)failure {
-    [[self shared] sync:^{
-        [[self shared] loadWithImageUrl:imageUrl size:size complete:complete failure:nil];
-    }];
-}
-
-+ (NSString*)saveImage:(UIImage*)image {
-    return [[self shared] saveImage:image];
++ (void)cancelByTarget:(id)target {
+    [[self shared] cancelByTarget:target];
 }
 
 #pragma mark Private
@@ -297,246 +294,171 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
     return MOBILY_IMAGE_LOADER;
 }
 
-- (void)sync:(MobilyImageLoaderBlock)block {
-    NSThread* currentThread = [NSThread currentThread];
-    NSThread* mainThread = [NSThread mainThread];
-    if(currentThread != mainThread) {
-        dispatch_sync(dispatch_get_main_queue(), block);
-    } else {
-        block();
-    }
+- (NSString*)cacheKeyByImageUrl:(NSString*)imageUrl {
+    NSString* lowercaseImageUrl = [[imageUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
+    return [[[lowercaseImageUrl lastPathComponent] stringByMD5] stringByAppendingPathExtension:[lowercaseImageUrl pathExtension]];
 }
 
 - (BOOL)isExistImageWithImageUrl:(NSString*)imageUrl {
-    BOOL result = NO;
-    
-    imageUrl = [imageUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if([imageUrl length] > 0) {
-        NSString* fileExt = [imageUrl pathExtension];
-        NSString* fileName = [[imageUrl lowercaseString] stringByMD5];
-        NSString* filePath = [[_directory stringByAppendingPathComponent:fileName] stringByAppendingPathExtension:fileExt];
-        result = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
-    }
-    return result;
+    return ([_cache objectForKey:[self cacheKeyByImageUrl:imageUrl]] != nil);
 }
 
 - (UIImage*)imageWithImageUrl:(NSString*)imageUrl {
-    UIImage* image = nil;
-    
-    imageUrl = [imageUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if([imageUrl length] > 0) {
-        NSString* fileExt = [imageUrl pathExtension];
-        NSString* fileName = [[imageUrl lowercaseString] stringByMD5];
-        NSString* filePath = [[_directory stringByAppendingPathComponent:fileName] stringByAppendingPathExtension:fileExt];
-        if([[NSFileManager defaultManager] fileExistsAtPath:filePath] == YES) {
-            NSData* imageData = [NSData dataWithContentsOfFile:filePath];
-            if(imageData != nil) {
-                image = [UIImage imageWithData:imageData];
-            }
-        }
-
+    NSData* imageData = [NSData dataWithContentsOfFile:[_cache objectForKey:[self cacheKeyByImageUrl:imageUrl]]];
+    if(imageData != nil) {
+        return [UIImage imageWithData:imageData];
     }
-    return image;
+    return nil;
+}
+
+- (void)addImage:(UIImage*)image byImageUrl:(NSString*)imageUrl {
+    NSData* imageData = UIImagePNGRepresentation(image);
+    if(imageData != nil) {
+        [_cache setObject:imageData forKey:[self cacheKeyByImageUrl:imageUrl]];
+    }
 }
 
 - (void)removeByImageUrl:(NSString*)imageUrl {
-    imageUrl = [imageUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if([imageUrl length] > 0) {
-        NSString* fileExt = [imageUrl pathExtension];
-        NSString* fileName = [[imageUrl lowercaseString] stringByMD5];
-        NSString* filePath = [[_directory stringByAppendingPathComponent:fileName] stringByAppendingPathExtension:fileExt];
-        if([[NSFileManager defaultManager] fileExistsAtPath:filePath] == YES) {
-            [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
-        }
-        NSString* thumbnailDirectory = [_directory stringByAppendingPathComponent:fileName];
-        if([[NSFileManager defaultManager] fileExistsAtPath:thumbnailDirectory] == YES) {
-            [[NSFileManager defaultManager] removeItemAtPath:thumbnailDirectory error:nil];
-        }
-    }
+    [_cache removeObjectForKey:[self cacheKeyByImageUrl:imageUrl]];
 }
 
 - (void)cleanup {
-    if([[NSFileManager defaultManager] fileExistsAtPath:_directory] == YES) {
-        [[NSFileManager defaultManager] removeItemAtPath:_directory error:nil];
-    }
-    if([[NSFileManager defaultManager] fileExistsAtPath:_directory] == NO) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:_directory withIntermediateDirectories:YES attributes:nil error:NULL];
-    }
+    [_cache removeAllObjects];
 }
 
-- (void)loadWithImageUrl:(NSString*)imageUrl size:(CGSize)size complete:(MobilyImageLoaderCompleteBlock)complete failure:(MobilyImageLoaderFailureBlock)failure {
-    imageUrl = [imageUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if([imageUrl length] > 0) {
-        UIImage* existsImage = nil;
-        if([[NSFileManager defaultManager] fileExistsAtPath:imageUrl] == YES) {
-            NSData* data = [NSData dataWithContentsOfFile:imageUrl];
-            if(data != nil) {
-                existsImage = [UIImage imageWithData:data];
-            }
-        }
-        if(existsImage == nil) {
-            CGFloat nearestWidth = FG_IMAGE_LOADER_STEP;
-            while(nearestWidth < size.width) {
-                nearestWidth += FG_IMAGE_LOADER_STEP;
-            }
-            CGFloat nearestHeight = FG_IMAGE_LOADER_STEP;
-            while(nearestHeight < size.height) {
-                nearestHeight += FG_IMAGE_LOADER_STEP;
-            }
-            CGSize nearestSize = CGSizeMake(nearestWidth, nearestHeight);
-            NSString* fileExt = [imageUrl pathExtension];
-            NSString* thumbnailName = [NSString stringWithFormat:@"%lux%lu", (unsigned long)nearestSize.width, (unsigned long)nearestSize.height];
-            NSString* fileName = [[imageUrl lowercaseString] stringByMD5];
-            NSString* filePath = [[_directory stringByAppendingPathComponent:fileName] stringByAppendingPathExtension:fileExt];
-            NSString* thumbnailDirectory = [_directory stringByAppendingPathComponent:fileName];
-            NSString* thumbnailPath = [[thumbnailDirectory stringByAppendingPathComponent:thumbnailName] stringByAppendingPathExtension:fileExt];
-            if([[NSFileManager defaultManager] fileExistsAtPath:filePath] == YES) {
-                if(CGSizeEqualToSize(size, CGSizeZero) == NO) {
-                    if([[NSFileManager defaultManager] fileExistsAtPath:thumbnailPath] == YES) {
-                        NSData* data = [NSData dataWithContentsOfFile:thumbnailPath];
-                        if(data != nil) {
-                            existsImage = [UIImage imageWithData:data];
-                        }
-                    }
-                } else {
-                    NSData* data = [NSData dataWithContentsOfFile:filePath];
-                    if(data != nil) {
-                        existsImage = [UIImage imageWithData:data];
-                    }
-                }
-            }
-            if(existsImage == nil) {
-                MobilyTask* task = [MobilyTask new];
-                if(task != nil) {
-                    [task setWorkingCallback:^BOOL(MobilyTask* task) {
-                        BOOL result = NO;
-                        UIImage* loadImage = nil;
-                        if([[NSFileManager defaultManager] fileExistsAtPath:filePath] == NO) {
-                            NSData* data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]];
-                            if(data != nil) {
-                                loadImage = [UIImage imageWithData:data];
-                                if(loadImage != nil) {
-                                    if([data writeToFile:filePath atomically:YES] == YES) {
-                                        [task setObject:loadImage];
-                                        result = YES;
-                                    }
-                                }
-                            } else {
-                                NSLog(@"Failure load image:%@", imageUrl);
-                                result = YES;
-                            }
-                        } else {
-                            loadImage = [UIImage imageWithContentsOfFile:filePath];
-                            if(loadImage != nil) {
-                                [task setObject:loadImage];
-                                result = YES;
-                            }
-                        }
-                        return result;
-                    }];
-                    [task setCompleteCallback:^(MobilyTask* task) {
-                        UIImage* resultImage = nil;
-                        UIImage* loadImage = [task object];
-                        if(CGSizeEqualToSize(size, CGSizeZero) == NO) {
-                            if([[NSFileManager defaultManager] fileExistsAtPath:thumbnailPath] == YES) {
-                                NSData* data = [NSData dataWithContentsOfFile:thumbnailPath];
-                                if(data != nil) {
-                                    resultImage = [UIImage imageWithData:data];
-                                }
-                            } else {
-                                BOOL folderExists = [[NSFileManager defaultManager] fileExistsAtPath:thumbnailDirectory];
-                                if(folderExists == NO) {
-                                    folderExists = [[NSFileManager defaultManager] createDirectoryAtPath:thumbnailDirectory withIntermediateDirectories:YES attributes:nil error:NULL];
-                                }
-                                if(folderExists == YES) {
-                                    resultImage = [self scaleImage:loadImage toSize:nearestSize];
-                                    if(resultImage != nil) {
-                                        NSData* data = UIImagePNGRepresentation(resultImage);
-                                        if([data writeToFile:thumbnailPath atomically:YES] == NO) {
-                                            resultImage = nil;
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            resultImage = loadImage;
-                        }
-                        dispatch_sync(dispatch_get_main_queue(), ^{
-                            if(resultImage != nil) {
-                                if(complete != nil) {
-                                    complete(resultImage);
-                                }
-                            } else {
-                                if(failure != nil) {
-                                    failure();
-                                }
-                            }
-                        });
-                    }];
-                    [_taskManager updating];
-                    [_taskManager addTask:task];
-                    [_taskManager updated];
-                } else {
-                    if(failure != nil) {
-                        failure();
-                    }
-                }
-            } else {
-                if(complete != nil) {
-                    complete(existsImage);
-                }
-            }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+- (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector {
+    UIImage* image = [self imageWithImageUrl:imageUrl];
+    if(image == nil) {
+        MobilyTaskImageLoader* task = [[MobilyTaskImageLoader alloc] initWithImageUrl:imageUrl target:target completeSelector:completeSelector failureSelector:failureSelector];
+        if(task != nil) {
+            [_taskManager updating];
+            [_taskManager addTask:task];
+            [_taskManager updated];
         } else {
-            if(complete != nil) {
-                complete(existsImage);
+            if([target respondsToSelector:failureSelector] == YES) {
+                [target performSelector:failureSelector withObject:imageUrl];
             }
         }
     } else {
-        if(failure != nil) {
-            failure();
+        if([target respondsToSelector:completeSelector] == YES) {
+            [target performSelector:completeSelector withObject:image withObject:imageUrl];
+        }
+    }
+}
+#pragma clang diagnostic pop
+
+- (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target completeBlock:(MobilyImageLoaderCompleteBlock)completeBlock failureBlock:(MobilyImageLoaderFailureBlock)failureBlock {
+    UIImage* image = [self imageWithImageUrl:imageUrl];
+    if(image == nil) {
+        MobilyTaskImageLoader* task = [[MobilyTaskImageLoader alloc] initWithImageUrl:imageUrl target:target completeBlock:completeBlock failureBlock:failureBlock];
+        if(task != nil) {
+            [_taskManager updating];
+            [_taskManager addTask:task];
+            [_taskManager updated];
+        } else {
+            if(failureBlock != nil) {
+                failureBlock(imageUrl);
+            }
+        }
+    } else {
+        if(completeBlock != nil) {
+            completeBlock(image, imageUrl);
         }
     }
 }
 
-- (UIImage*)scaleImage:(UIImage*)image toSize:(CGSize)size {
-    UIImage* result = nil;
-    
-    CGColorSpaceRef colourSpace = CGColorSpaceCreateDeviceRGB();
-    if(colourSpace != NULL) {
-        CGRect drawRect = CGRectAspectFitFromBoundsAndSize(CGRectMake(0.0f, 0.0f, size.width, size.height), [image size]);
-        drawRect.size.width = floorf(drawRect.size.width);
-        drawRect.size.height = floorf(drawRect.size.height);
-        
-        CGContextRef context = CGBitmapContextCreate(NULL, drawRect.size.width, drawRect.size.height, 8, drawRect.size.width * 4, colourSpace, kCGBitmapByteOrder32Big | kCGImageAlphaPremultipliedLast);
-        if(context != NULL) {
-            CGContextClearRect(context, CGRectMake(0.0f, 0.0f, drawRect.size.width, drawRect.size.height));
-            CGContextDrawImage(context, CGRectMake(0.0f, 0.0f, drawRect.size.width, drawRect.size.height), [image CGImage]);
-            
-            CGImageRef imageRef = CGBitmapContextCreateImage(context);
-            if(imageRef != NULL) {
-                result = [UIImage imageWithCGImage:imageRef scale:[image scale] orientation:[image imageOrientation]];
-                CGImageRelease(imageRef);
-            }
-            CGContextRelease(context);
+- (void)cancelByImageUrl:(NSString*)imageUrl {
+    [_taskManager enumirateTasksUsingBlock:^(MobilyTaskImageLoader* task, BOOL* stop) {
+        if([[task imageUrl] isEqualToString:imageUrl] == YES) {
+            [task cancel];
         }
-        CGColorSpaceRelease(colourSpace);
-    }
-    return result;
+    }];
 }
 
-- (NSString*)saveImage:(UIImage*)image {
-    NSString* filePath = nil;
-    while(true) {
-        NSString* fileName = [NSString stringWithFormat:@"%lu-%lu", (unsigned long)arc4random(), (unsigned long)[[NSDate date] timeIntervalSinceNow]];
-        filePath = [_directory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [fileName stringByMD5]]];
-        if([[NSFileManager defaultManager] fileExistsAtPath:filePath] == NO) {
-            NSData* data = UIImagePNGRepresentation(image);
-            if([data writeToFile:filePath atomically:YES] == YES) {
-                break;
-            }
+- (void)cancelByTarget:(id)target {
+    [_taskManager enumirateTasksUsingBlock:^(MobilyTaskImageLoader* task, BOOL* stop) {
+        if([task target] == target) {
+            [task cancel];
         }
+    }];
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation MobilyTaskImageLoader
+
+- (id)initWithImageUrl:(NSString*)imageUrl target:(id)target {
+    self = [super init];
+    if(self != nil) {
+        [self setImageLoader:[MobilyImageLoader shared]];
+        [self setTarget:target];
+        [self setImageUrl:imageUrl];
+        [self setCacheKey:[_imageLoader cacheKeyByImageUrl:_imageUrl]];
     }
-    return filePath;
+    return self;
+}
+
+- (id)initWithImageUrl:(NSString*)imageUrl target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector {
+    self = [self initWithImageUrl:imageUrl target:target];
+    if(self != nil) {
+        [self setCompleteEvent:[MobilyEventSelector callbackWithTarget:target action:completeSelector inMainThread:YES]];
+        [self setFailureEvent:[MobilyEventSelector callbackWithTarget:target action:failureSelector inMainThread:YES]];
+    }
+    return self;
+}
+
+- (id)initWithImageUrl:(NSString*)imageUrl target:(id)target completeBlock:(MobilyImageLoaderCompleteBlock)completeBlock failureBlock:(MobilyImageLoaderFailureBlock)failureBlock {
+    self = [self initWithImageUrl:imageUrl target:target];
+    if(self != nil) {
+        [self setCompleteEvent:[MobilyEventBlock callbackWithBlock:^id(id sender, id object) {
+            if(completeBlock != nil) {
+                completeBlock(_image, _imageUrl);
+            }
+            return nil;
+        } inMainQueue:YES]];
+        [self setFailureEvent:[MobilyEventBlock callbackWithBlock:^id(id sender, id object) {
+            if(failureBlock != nil) {
+                failureBlock(_imageUrl);
+            }
+            return nil;
+        } inMainQueue:YES]];
+    }
+    return self;
+}
+
+- (void)working {
+    UIImage* image = [_imageLoader imageWithImageUrl:_imageUrl];
+    if(image == nil) {
+        NSData* data = [NSData dataWithContentsOfURL:[NSURL URLWithString:_imageUrl]];
+        if(data != nil) {
+            image = [UIImage imageWithData:data];
+            if(image != nil) {
+                [_imageLoader addImage:image byImageUrl:_cacheKey];
+                [self setImage:image];
+            }
+        } else {
+#if defined(MOBILY_DEBUG)
+            NSLog(@"Failure load image:%@", _imageUrl);
+#endif
+            [self setNeedRework:YES];
+        }
+    } else {
+        [self setImage:image];
+    }
+}
+
+- (void)didComplete {
+    if(_image != nil) {
+        [_completeEvent fireSender:_image object:_imageUrl];
+    } else {
+        [_failureEvent fireSender:_imageUrl object:nil];
+    }
 }
 
 @end

@@ -140,6 +140,14 @@
     return [[_items objectAtIndex:row] title];
 }
 
+- (NSAttributedString*)pickerView:(UIPickerView*)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    MobilyViewFieldListItem* listItem = [_items objectAtIndex:row];
+    return [[NSAttributedString alloc] initWithString:[listItem title] attributes:@{
+        NSFontAttributeName : [listItem font],
+        NSForegroundColorAttributeName: [listItem color]
+    }];
+}
+
 - (void)pickerView:(UIPickerView*)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     MobilyViewFieldListItem* listItem = [_items objectAtIndex:row];
     if(_selectedItem != listItem) {
@@ -169,6 +177,30 @@
     self = [super init];
     if(self != nil) {
         [self setTitle:title];
+        [self setFont:[UIFont systemFontOfSize:[UIFont systemFontSize]]];
+        [self setColor:[UIColor blackColor]];
+        [self setValue:value];
+    }
+    return self;
+}
+
+- (id)initWithTitle:(NSString*)title color:(UIColor*)color value:(id)value {
+    self = [super init];
+    if(self != nil) {
+        [self setTitle:title];
+        [self setFont:[UIFont systemFontOfSize:[UIFont systemFontSize]]];
+        [self setColor:color];
+        [self setValue:value];
+    }
+    return self;
+}
+
+- (id)initWithTitle:(NSString*)title font:(UIFont*)font color:(UIColor*)color value:(id)value {
+    self = [super init];
+    if(self != nil) {
+        [self setTitle:title];
+        [self setFont:font];
+        [self setColor:color];
         [self setValue:value];
     }
     return self;
@@ -176,6 +208,8 @@
 
 - (void)dealloc {
     [self setTitle:nil];
+    [self setFont:nil];
+    [self setColor:nil];
     [self setValue:nil];
     
     MOBILY_SAFE_DEALLOC;

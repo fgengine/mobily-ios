@@ -78,20 +78,15 @@ typedef void (^MobilyTaskManagerEnumBlock)(id task, BOOL* stop);
 
 /*--------------------------------------------------*/
 
-typedef BOOL (^MobilyTaskStartBlock)(MobilyTask* task);
-typedef BOOL (^MobilyTaskWokingBlock)(MobilyTask* task);
-typedef void (^MobilyTaskCompleteBlock)(MobilyTask* task);
-typedef void (^MobilyTaskCancelBlock)(MobilyTask* task);
-
-/*--------------------------------------------------*/
-
 @interface MobilyTask : NSObject
 
-@property(nonatomic, readwrite, strong) id object;
-@property(nonatomic, readwrite, copy) MobilyTaskStartBlock startCallback;
-@property(nonatomic, readwrite, copy) MobilyTaskWokingBlock workingCallback;
-@property(nonatomic, readwrite, copy) MobilyTaskCompleteBlock completeCallback;
-@property(nonatomic, readwrite, copy) MobilyTaskCancelBlock cancelCallback;
+@property(nonatomic, readwrite, assign, getter=isNeedRework) BOOL needRework;
+@property(nonatomic, readonly, assign, getter=isCanceled) BOOL cancel;
+
+- (BOOL)willStart;
+- (void)working;
+- (void)didComplete;
+- (void)didCancel;
 
 - (void)cancel;
 

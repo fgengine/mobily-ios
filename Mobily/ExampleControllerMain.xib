@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ExampleControllerMain">
             <connections>
+                <outlet property="imageView" destination="Bq5-t4-qaf" id="48y-on-a5R"/>
                 <outlet property="view" destination="iN0-l3-epB" id="dih-gg-VNH"/>
             </connections>
         </placeholder>
@@ -41,12 +43,21 @@
                         <action selector="pressedToggle" destination="-1" eventType="touchUpInside" id="TBS-Uz-MDs"/>
                     </connections>
                 </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Bq5-t4-qaf" customClass="MobilyViewImage">
+                    <rect key="frame" x="180" y="180" width="240" height="240"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="240" id="DwF-gh-Dnc"/>
+                        <constraint firstAttribute="height" constant="240" id="INI-D8-wcj"/>
+                    </constraints>
+                </imageView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="8tQ-1W-oWx" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="3dx-0q-UIw"/>
                 <constraint firstItem="9OP-fh-o0t" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="6Sy-PC-qXp"/>
                 <constraint firstItem="8tQ-1W-oWx" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="6zX-Am-ZAn"/>
+                <constraint firstAttribute="centerY" secondItem="Bq5-t4-qaf" secondAttribute="centerY" id="AEc-Z7-lUw"/>
+                <constraint firstAttribute="centerX" secondItem="Bq5-t4-qaf" secondAttribute="centerX" id="CbF-as-GYd"/>
                 <constraint firstItem="cSJ-G2-baS" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="Gou-BK-2uu"/>
                 <constraint firstAttribute="trailing" secondItem="9OP-fh-o0t" secondAttribute="trailing" constant="8" id="cdX-7j-feO"/>
                 <constraint firstAttribute="centerX" secondItem="cSJ-G2-baS" secondAttribute="centerX" id="dkA-cd-xFK"/>
