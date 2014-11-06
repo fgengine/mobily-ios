@@ -99,8 +99,8 @@ Pod::Spec.new do |s|
     end
 
     s.subspec 'UIViewScroll' do |ss|
-        ss.public_header_files = 'Classes/UI/UIViewScroll/*.h'
-        ss.source_files = 'Classes/UI/UIViewScroll/*.{h,m}'
+        ss.public_header_files = 'Classes/UI/ViewScroll/*.h'
+        ss.source_files = 'Classes/UI/ViewScroll/*.{h,m}'
         ss.dependency 'Mobily/UI'
     end
 
