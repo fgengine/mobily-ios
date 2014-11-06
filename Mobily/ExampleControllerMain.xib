@@ -65,35 +65,46 @@
             </constraints>
             <point key="canvasLocation" x="-675" y="-34"/>
         </view>
-        <view contentMode="scaleToFill" id="Vwx-2V-uYS">
-            <rect key="frame" x="0.0" y="0.0" width="238" height="399"/>
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="Vwx-2V-uYS">
+            <rect key="frame" x="0.0" y="0.0" width="411" height="513"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="249" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cQH-sQ-jDc">
-                    <rect key="frame" x="8" y="8" width="222" height="363"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="751" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cQH-sQ-jDc">
+                    <rect key="frame" x="8" y="8" width="395" height="447"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <string key="text">Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label</string>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gz-T5-LKy">
+                <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gz-T5-LKy">
+                    <rect key="frame" x="183" y="475" width="46" height="30"/>
+                    <color key="backgroundColor" red="0.21960784310000001" green="0.22352941179999999" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
                     <state key="normal" title="Button">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="H7n-GC-qNG">
+                    <rect key="frame" x="8" y="475" width="97" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
             </subviews>
             <color key="backgroundColor" red="0.43137254899999999" green="0.74509803919999995" blue="0.27450980390000002" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
+                <constraint firstItem="5gz-T5-LKy" firstAttribute="leading" secondItem="H7n-GC-qNG" secondAttribute="trailing" constant="78" id="Dsh-h3-w9I"/>
                 <constraint firstAttribute="trailing" secondItem="cQH-sQ-jDc" secondAttribute="trailing" constant="8" id="Mjf-nx-XHH"/>
+                <constraint firstAttribute="bottom" secondItem="H7n-GC-qNG" secondAttribute="bottom" constant="8" id="OTV-9k-LPd"/>
                 <constraint firstAttribute="bottom" secondItem="5gz-T5-LKy" secondAttribute="bottom" constant="8" id="abj-xr-W5W"/>
+                <constraint firstItem="H7n-GC-qNG" firstAttribute="top" secondItem="cQH-sQ-jDc" secondAttribute="bottom" constant="20" id="hkD-jG-inq"/>
+                <constraint firstItem="H7n-GC-qNG" firstAttribute="leading" secondItem="Vwx-2V-uYS" secondAttribute="leading" constant="8" id="n7j-Q5-AVv"/>
                 <constraint firstItem="5gz-T5-LKy" firstAttribute="top" secondItem="cQH-sQ-jDc" secondAttribute="bottom" constant="20" id="swx-sw-Kbe"/>
                 <constraint firstAttribute="centerX" secondItem="5gz-T5-LKy" secondAttribute="centerX" id="uCe-cU-rJP"/>
                 <constraint firstItem="cQH-sQ-jDc" firstAttribute="leading" secondItem="Vwx-2V-uYS" secondAttribute="leading" constant="8" id="yEB-Tu-ghF"/>
                 <constraint firstItem="cQH-sQ-jDc" firstAttribute="top" secondItem="Vwx-2V-uYS" secondAttribute="top" constant="8" id="yo4-zN-Mxc"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-1592" y="-587.5"/>
+            <point key="canvasLocation" x="-1505.5" y="-530.5"/>
         </view>
     </objects>
 </document>

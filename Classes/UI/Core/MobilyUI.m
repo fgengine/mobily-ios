@@ -1228,8 +1228,6 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 
 @implementation UIScrollView (MobilyUI)
 
-@dynamic keyboardResponder;
-
 #pragma mark NSKeyValueCoding
 
 MOBILY_DEFINE_VALIDATE_POINT(СontentOffset)
@@ -1255,6 +1253,14 @@ MOBILY_DEFINE_VALIDATE_NUMBER(BouncesZoom)
 MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 
 #pragma mark Property
+
+- (void)setKeyboardResponder:(UIResponder*)keyboardResponder {
+    objc_setAssociatedObject(self, @selector(keyboardResponder), keyboardResponder, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIResponder*)keyboardResponder {
+    return objc_getAssociatedObject(self, @selector(keyboardResponder));
+}
 
 - (void)setContentOffsetX:(CGFloat)contentOffsetX {
     [self setContentOffsetX:contentOffsetX animated:NO];

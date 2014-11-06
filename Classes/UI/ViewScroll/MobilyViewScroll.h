@@ -38,6 +38,7 @@
 /*--------------------------------------------------*/
 
 typedef NS_ENUM(NSInteger, MobilyViewScrollDirection) {
+    MobilyViewScrollDirectionStretch,
     MobilyViewScrollDirectionHorizontal,
     MobilyViewScrollDirectionVertical
 };

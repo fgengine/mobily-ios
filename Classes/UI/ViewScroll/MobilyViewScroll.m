@@ -86,7 +86,7 @@
 #pragma mark Public
 
 - (void)setupView {
-    [self setDirection:MobilyViewScrollDirectionVertical];
+    [self setDirection:MobilyViewScrollDirectionStretch];
     
     [self registerAdjustmentResponder];
 }
@@ -188,6 +188,14 @@
             [_rootView setTranslatesAutoresizingMaskIntoConstraints:NO];
             [self addSubview:_rootView];
             switch(_direction) {
+                case MobilyViewScrollDirectionStretch:
+                    [self setContrainRootViewT:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f]];
+                    [self setContrainRootViewB:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f]];
+                    [self setContrainRootViewL:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f]];
+                    [self setContrainRootViewR:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f]];
+                    [self setContrainRootViewW:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0f constant:0.0f]];
+                    [self setContrainRootViewH:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:1.0f constant:0.0f]];
+                    break;
                 case MobilyViewScrollDirectionVertical:
                     [self setContrainRootViewT:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f]];
                     [self setContrainRootViewB:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f]];
@@ -207,6 +215,12 @@
         }
         [self setNeedsLayout];
     }
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    NSLog(@"%@ - %@", NSStringFromCGRect([_rootView frame]), NSStringFromCGSize([self contentSize]));
 }
 
 @end
