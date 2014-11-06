@@ -86,7 +86,7 @@
 #pragma mark Public
 
 - (void)setupView {
-    [self setDirection:MobilyViewScrollDirectionStretch];
+    [self setDirection:MobilyViewScrollDirectionVertical];
     
     [self registerAdjustmentResponder];
 }
@@ -215,12 +215,6 @@
         }
         [self setNeedsLayout];
     }
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    NSLog(@"%@ - %@", NSStringFromCGRect([_rootView frame]), NSStringFromCGSize([self contentSize]));
 }
 
 @end

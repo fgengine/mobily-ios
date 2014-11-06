@@ -151,8 +151,8 @@
         }
     }
     if(_toolbar != nil) {
-        _prevInputResponder = [UIResponder prevResponderFromView:self withSuperview:[self superview]];
-        _nextInputResponder = [UIResponder nextResponderFromView:self withSuperview:[self superview]];
+        _prevInputResponder = [UIResponder prevResponderFromView:self];
+        _nextInputResponder = [UIResponder nextResponderFromView:self];
         [_prevButton setEnabled:(_prevInputResponder != nil)];
         [_nextButton setEnabled:(_nextInputResponder != nil)];
         

@@ -790,46 +790,30 @@ static UIResponder* MOBILY_CURRENT_FIRST_RESPONDER = nil;
     MOBILY_CURRENT_FIRST_RESPONDER = self;
 }
 
-+ (UIResponder*)prevResponderFromView:(UIView*)view withSuperview:(UIView*)superview {
-    if(superview == nil) {
-        return nil;
-    }
-    NSArray* subviews = [superview subviews];
-    NSInteger viewIndex = [subviews indexOfObject:view];
-    NSInteger beginIndex = [subviews count] - 1;
-    NSInteger endIndex = -1;
-    if(viewIndex > 0) {
-        if(viewIndex != NSNotFound) {
-            beginIndex = viewIndex - 1;
-        }
-        for(NSInteger i = beginIndex; i > endIndex; i--) {
-            UIView* subview = [subviews objectAtIndex:i];
-            if([subview canBecomeFirstResponder] == YES) {
-                return subview;
++ (UIResponder*)prevResponderFromView:(UIView*)view {
+    NSArray* responders = [[view window] responders];
+    if([responders count] > 1) {
+        NSInteger index = [responders indexOfObject:view];
+        if(index != NSNotFound) {
+            if(index > 0) {
+                return [responders objectAtIndex:index - 1];
             }
         }
     }
-    return [self prevResponderFromView:view withSuperview:[superview superview]];
+    return nil;
 }
 
-+ (UIResponder*)nextResponderFromView:(UIView*)view withSuperview:(UIView*)superview {
-    if(superview == nil) {
-        return nil;
-    }
-    NSArray* subviews = [superview subviews];
-    NSInteger viewIndex = [subviews indexOfObject:view];
-    NSInteger beginIndex = 0;
-    NSInteger endIndex = [subviews count];
-    if(viewIndex != NSNotFound) {
-        beginIndex = viewIndex + 1;
-    }
-    for(NSInteger i = beginIndex; i < endIndex; i++) {
-        UIView* subview = [subviews objectAtIndex:i];
-        if([subview canBecomeFirstResponder] == YES) {
-            return subview;
++ (UIResponder*)nextResponderFromView:(UIView*)view {
+    NSArray* responders = [[view window] responders];
+    if([responders count] > 1) {
+        NSInteger index = [responders indexOfObject:view];
+        if(index != NSNotFound) {
+            if(index < [responders count] - 1) {
+                return [responders objectAtIndex:index + 1];
+            }
         }
     }
-    return [self nextResponderFromView:view withSuperview:[superview superview]];
+    return nil;
 }
 
 @end
@@ -1171,6 +1155,18 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 }
 
 #pragma mark Public
+
+- (NSArray*)responders {
+    
+    NSMutableArray* result = [NSMutableArray array];
+    if([self canBecomeFirstResponder] == YES) {
+        [result addObject:self];
+    }
+    [[self subviews] enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
+        [result addObjectsFromArray:[view responders]];
+    }];
+    return result;
+}
 
 - (BOOL)isContainsSubview:(UIView*)subview {
     __block BOOL result = [[self subviews] containsObject:subview];
