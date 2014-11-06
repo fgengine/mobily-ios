@@ -80,8 +80,7 @@
 - (void)dealloc {
     MOBILY_SAFE_DEALLOC;
 }
-// http://freetopwallpaper.com/wp-content/gallery/under-water/under-water-wallpaper-hd-81.jpg
-// http://im3-tub-ru.yandex.net/i?id=3ce04aa48359c5ec2c3655945ea85137-35-144&n=21
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -91,33 +90,6 @@
     [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"PUSH" style:UIBarButtonItemStylePlain target:self action:@selector(pressedPush)]];
     
     [[self view] setBackgroundColor:[[UIColor redColor] colorWithAlphaComponent:0.5f]];
-
-    [_imageView setImageUrl:@"http://freetopwallpaper.com/wp-content/gallery/under-water/under-water-wallpaper-hd-81.jpg"];
-    [_imageView setImageUrl:@"http://im3-tub-ru.yandex.net/i?id=3ce04aa48359c5ec2c3655945ea85137-35-144&n=21"];
-    [_imageView setImageUrl:@"http://freetopwallpaper.com/wp-content/gallery/under-water/under-water-wallpaper-hd-81.jpg"];
-    [_imageView setImageUrl:@"http://im3-tub-ru.yandex.net/i?id=3ce04aa48359c5ec2c3655945ea85137-35-144&n=21"];
-    [_imageView setImageUrl:@"http://freetopwallpaper.com/wp-content/gallery/under-water/under-water-wallpaper-hd-81.jpg"];
-    [_imageView setImageUrl:@"http://im3-tub-ru.yandex.net/i?id=3ce04aa48359c5ec2c3655945ea85137-35-144&n=21"];
-    [_imageView setImageUrl:@"http://freetopwallpaper.com/wp-content/gallery/under-water/under-water-wallpaper-hd-81.jpg"];
-    [_imageView setImageUrl:@"http://im3-tub-ru.yandex.net/i?id=3ce04aa48359c5ec2c3655945ea85137-35-144&n=21"];
-    [_imageView setImageUrl:@"http://freetopwallpaper.com/wp-content/gallery/under-water/under-water-wallpaper-hd-81.jpg"];
-    [_imageView setImageUrl:@"http://im3-tub-ru.yandex.net/i?id=3ce04aa48359c5ec2c3655945ea85137-35-144&n=21"];
-    [_imageView setImageUrl:@"http://freetopwallpaper.com/wp-content/gallery/under-water/under-water-wallpaper-hd-81.jpg"];
-    [_imageView setImageUrl:@"http://im3-tub-ru.yandex.net/i?id=3ce04aa48359c5ec2c3655945ea85137-35-144&n=21"];
-    [_imageView setImageUrl:@"http://freetopwallpaper.com/wp-content/gallery/under-water/under-water-wallpaper-hd-81.jpg"];
-    [_imageView setImageUrl:@"http://im3-tub-ru.yandex.net/i?id=3ce04aa48359c5ec2c3655945ea85137-35-144&n=21"];
-    [_imageView setImageUrl:@"http://freetopwallpaper.com/wp-content/gallery/under-water/under-water-wallpaper-hd-81.jpg"];
-    [_imageView setImageUrl:@"http://im3-tub-ru.yandex.net/i?id=3ce04aa48359c5ec2c3655945ea85137-35-144&n=21"];
-    [_imageView setImageUrl:@"http://freetopwallpaper.com/wp-content/gallery/under-water/under-water-wallpaper-hd-81.jpg"];
-    [_imageView setImageUrl:@"http://im3-tub-ru.yandex.net/i?id=3ce04aa48359c5ec2c3655945ea85137-35-144&n=21"];
-    [_imageView setImageUrl:@"http://freetopwallpaper.com/wp-content/gallery/under-water/under-water-wallpaper-hd-81.jpg"];
-    [_imageView setImageUrl:@"http://im3-tub-ru.yandex.net/i?id=3ce04aa48359c5ec2c3655945ea85137-35-144&n=21"];
-    [_imageView setImageUrl:@"http://freetopwallpaper.com/wp-content/gallery/under-water/under-water-wallpaper-hd-81.jpg"];
-    [_imageView setImageUrl:@"http://im3-tub-ru.yandex.net/i?id=3ce04aa48359c5ec2c3655945ea85137-35-144&n=21"];
-    [_imageView setImageUrl:@"http://freetopwallpaper.com/wp-content/gallery/under-water/under-water-wallpaper-hd-81.jpg"];
-    [_imageView setImageUrl:@"http://im3-tub-ru.yandex.net/i?id=3ce04aa48359c5ec2c3655945ea85137-35-144&n=21"];
-    [_imageView setImageUrl:@"http://freetopwallpaper.com/wp-content/gallery/under-water/under-water-wallpaper-hd-81.jpg"];
-    [_imageView setImageUrl:@"http://im3-tub-ru.yandex.net/i?id=3ce04aa48359c5ec2c3655945ea85137-35-144&n=21"];
 }
 
 - (IBAction)pressedMenu {

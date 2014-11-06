@@ -97,8 +97,8 @@
 
 /*--------------------------------------------------*/
 
-typedef void (^FGElementsUpdateBlock)();
-typedef void (^FGElementsCompleteBlock)(BOOL finished);
+typedef void (^MobilyViewElementsUpdateBlock)();
+typedef void (^MobilyViewElementsCompleteBlock)(BOOL finished);
 
 /*--------------------------------------------------*/
 
@@ -170,8 +170,8 @@ typedef NS_OPTIONS(NSUInteger, MobilyViewElementsScrollPosition) {
 - (void)insertItemAtIndexSet:(NSIndexSet*)indexSet;
 - (void)deleteItemAtIndexSet:(NSIndexSet*)indexSet;
 
-- (void)performBatchUpdate:(FGElementsUpdateBlock)update complete:(FGElementsCompleteBlock)complete;
-- (void)performBatchDuration:(NSTimeInterval)duration update:(FGElementsUpdateBlock)update complete:(FGElementsCompleteBlock)complete;
+- (void)performBatchUpdate:(MobilyViewElementsUpdateBlock)update complete:(MobilyViewElementsCompleteBlock)complete;
+- (void)performBatchDuration:(NSTimeInterval)duration update:(MobilyViewElementsUpdateBlock)update complete:(MobilyViewElementsCompleteBlock)complete;
 
 @end
 

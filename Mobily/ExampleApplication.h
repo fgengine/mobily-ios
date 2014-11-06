@@ -59,8 +59,6 @@
 
 @interface ExampleControllerMain : MobilyControllerView
 
-@property(nonatomic, readwrite, weak) IBOutlet MobilyViewImage* imageView;
-
 @end
 
 /*--------------------------------------------------*/

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name = 'Mobily'
-	s.version = '0.1.34'
+	s.version = '0.1.35'
 	s.summary = 'Mobily framework for iOS'
 	s.homepage = 'https://github.com/fgengine/mobily-ios'
 	s.license = {
@@ -28,7 +28,8 @@ Pod::Spec.new do |s|
 		ss.dependency 'Mobily/UIViewFieldDate'
 		ss.dependency 'Mobily/UIViewFieldList'
 		ss.dependency 'Mobily/UIViewImage'
-		ss.dependency 'Mobily/UIViewElements'
+        ss.dependency 'Mobily/UIViewScroll'
+        ss.dependency 'Mobily/UIViewElements'
 	end
   
 	s.subspec 'Core' do |ss|
@@ -96,7 +97,13 @@ Pod::Spec.new do |s|
         ss.source_files = 'Classes/UI/ViewImage/*.{h,m}'
         ss.dependency 'Mobily/UI'
     end
-    
+
+    s.subspec 'UIViewScroll' do |ss|
+        ss.public_header_files = 'Classes/UI/UIViewScroll/*.h'
+        ss.source_files = 'Classes/UI/UIViewScroll/*.{h,m}'
+        ss.dependency 'Mobily/UI'
+    end
+
     s.subspec 'UIViewElements' do |ss|
         ss.public_header_files = 'Classes/UI/ViewElements/*.h'
         ss.source_files = 'Classes/UI/ViewElements/*.{h,m}'

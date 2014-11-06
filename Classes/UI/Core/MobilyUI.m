@@ -1228,6 +1228,8 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 
 @implementation UIScrollView (MobilyUI)
 
+@dynamic keyboardResponder;
+
 #pragma mark NSKeyValueCoding
 
 MOBILY_DEFINE_VALIDATE_POINT(СontentOffset)
@@ -1390,6 +1392,76 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
         rect = CGRectUnion(rect, [view frame]);
     }
     return rect.size;
+}
+
+- (void)registerAdjustmentResponder {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustmentNotificationKeyboardShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustmentNotificationKeyboardHide:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)unregisterAdjustmentResponder {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark UIKeyboarNotification
+
+- (void)adjustmentNotificationKeyboardShow:(NSNotification*)notification {
+    [self setKeyboardResponder:[UIResponder currentFirstResponderInView:self]];
+    if([[self keyboardResponder] isKindOfClass:[UIView class]] == YES) {
+        UIView* view = (UIView*)[self keyboardResponder];
+        NSDictionary* info = [notification userInfo];
+        if(info != nil) {
+            CGRect screenRect = [[self window] bounds];
+            CGRect scrollRect = [self convertRect:[self bounds] toView:[[[self window] rootViewController] view]];
+            CGRect keyboardRect = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+            UIEdgeInsets scrollInsets = [self contentInset];
+            CGPoint scrollOffset = [self contentOffset];
+            CGSize scrollSize = [self contentSize];
+            
+            CGFloat overallSize = 0.0f;
+            switch([[UIApplication sharedApplication] statusBarOrientation]) {
+                case UIInterfaceOrientationPortrait:
+                case UIInterfaceOrientationPortraitUpsideDown:
+                    overallSize = ABS((screenRect.size.height - keyboardRect.size.height) - (scrollRect.origin.y + scrollRect.size.height));
+                    break;
+                case UIInterfaceOrientationLandscapeLeft:
+                case UIInterfaceOrientationLandscapeRight:
+                    overallSize = ABS((screenRect.size.width - keyboardRect.size.width) - (scrollRect.origin.y + scrollRect.size.height));
+                    break;
+                case UIInterfaceOrientationUnknown:
+                    break;
+            }
+            scrollInsets = UIEdgeInsetsMake(scrollInsets.top, scrollInsets.left, overallSize, scrollInsets.right);
+            [self setScrollIndicatorInsets:scrollInsets];
+            [self setContentInset:scrollInsets];
+            
+            scrollRect = UIEdgeInsetsInsetRect(scrollRect, scrollInsets);
+            
+            CGRect rect = [view convertRect:[view bounds] toView:self];
+            scrollOffset.y = (rect.origin.y + (rect.size.height * 0.5f)) - (scrollRect.size.height * 0.5f);
+            if(scrollOffset.y < 0.0f) {
+                scrollOffset.y = 0.0f;
+            } else if(scrollOffset.y > scrollSize.height - scrollRect.size.height) {
+                scrollOffset.y = scrollSize.height - scrollRect.size.height;
+            }
+            [self setContentOffset:scrollOffset animated:YES];
+        }
+    }
+}
+
+- (void)adjustmentNotificationKeyboardHide:(NSNotification*)notification {
+    if([self keyboardResponder] != nil) {
+        NSDictionary* info = [notification userInfo];
+        if(info != nil) {
+            NSTimeInterval duration = [[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+            [UIView animateWithDuration:duration
+                             animations:^{
+                                 [self setScrollIndicatorInsets:UIEdgeInsetsZero];
+                                 [self setContentInset:UIEdgeInsetsZero];
+                             }];
+        }
+        [self setKeyboardResponder:nil];
+    }
 }
 
 @end
