@@ -57,7 +57,7 @@ typedef void (^MobilyImageLoaderBlock)();
 
 - (BOOL)isExistImageWithImageUrl:(NSString*)imageUrl;
 - (UIImage*)imageWithImageUrl:(NSString*)imageUrl;
-- (void)addImage:(UIImage*)image byImageUrl:(NSString*)imageUrl;
+- (void)addImageData:(NSData*)imageData byImageUrl:(NSString*)imageUrl;
 - (void)removeByImageUrl:(NSString*)imageUrl;
 - (void)cleanup;
 
@@ -77,7 +77,6 @@ typedef void (^MobilyImageLoaderBlock)();
 @property(nonatomic, readwrite, weak) MobilyImageLoader* imageLoader;
 @property(nonatomic, readwrite, strong) id target;
 @property(nonatomic, readwrite, strong) NSString* imageUrl;
-@property(nonatomic, readwrite, strong) NSString* cacheKey;
 @property(nonatomic, readwrite, strong) UIImage* image;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > completeEvent;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > failureEvent;
@@ -185,8 +184,8 @@ typedef void (^MobilyImageLoaderBlock)();
         }
         _imageUrl = imageUrl;
         if(_defaultImage != nil) {
+            [super setImage:_defaultImage];
         }
-        [super setImage:_defaultImage];
         [MobilyImageLoader loadWithImageUrl:_imageUrl target:self completeBlock:^(UIImage* image, NSString* imageUrl) {
             [self setImage:image];
             if(complete != nil) {
@@ -253,10 +252,6 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
     return [[self shared] imageWithImageUrl:imageUrl];
 }
 
-+ (void)addImage:(UIImage*)image byImageUrl:(NSString*)imageUrl {
-    [[self shared] addImage:image byImageUrl:imageUrl];
-}
-
 + (void)removeByImageUrl:(NSString*)imageUrl {
     [[self shared] removeByImageUrl:imageUrl];
 }
@@ -295,8 +290,7 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
 }
 
 - (NSString*)cacheKeyByImageUrl:(NSString*)imageUrl {
-    NSString* lowercaseImageUrl = [[imageUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
-    return [[[lowercaseImageUrl lastPathComponent] stringByMD5] stringByAppendingPathExtension:[lowercaseImageUrl pathExtension]];
+    return [[[imageUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString] stringByMD5];
 }
 
 - (BOOL)isExistImageWithImageUrl:(NSString*)imageUrl {
@@ -304,18 +298,15 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
 }
 
 - (UIImage*)imageWithImageUrl:(NSString*)imageUrl {
-    NSData* imageData = [NSData dataWithContentsOfFile:[_cache objectForKey:[self cacheKeyByImageUrl:imageUrl]]];
+    NSData* imageData = [_cache objectForKey:[self cacheKeyByImageUrl:imageUrl]];
     if(imageData != nil) {
         return [UIImage imageWithData:imageData];
     }
     return nil;
 }
 
-- (void)addImage:(UIImage*)image byImageUrl:(NSString*)imageUrl {
-    NSData* imageData = UIImagePNGRepresentation(image);
-    if(imageData != nil) {
-        [_cache setObject:imageData forKey:[self cacheKeyByImageUrl:imageUrl]];
-    }
+- (void)addImageData:(NSData*)imageData byImageUrl:(NSString*)imageUrl {
+    [_cache setObject:imageData forKey:[self cacheKeyByImageUrl:imageUrl]];
 }
 
 - (void)removeByImageUrl:(NSString*)imageUrl {
@@ -399,7 +390,6 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
         [self setImageLoader:[MobilyImageLoader shared]];
         [self setTarget:target];
         [self setImageUrl:imageUrl];
-        [self setCacheKey:[_imageLoader cacheKeyByImageUrl:_imageUrl]];
     }
     return self;
 }
@@ -435,11 +425,12 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
 - (void)working {
     UIImage* image = [_imageLoader imageWithImageUrl:_imageUrl];
     if(image == nil) {
+        [NSThread sleepForTimeInterval:1.0f];
         NSData* data = [NSData dataWithContentsOfURL:[NSURL URLWithString:_imageUrl]];
         if(data != nil) {
             image = [UIImage imageWithData:data];
             if(image != nil) {
-                [_imageLoader addImage:image byImageUrl:_cacheKey];
+                [_imageLoader addImageData:data byImageUrl:_imageUrl];
                 [self setImage:image];
             }
         } else {
@@ -459,6 +450,12 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
     } else {
         [_failureEvent fireSender:_imageUrl object:nil];
     }
+}
+
+- (void)cancel {
+    [super cancel];
+    [self setCompleteEvent:nil];
+    [self setFailureEvent:nil];
 }
 
 @end

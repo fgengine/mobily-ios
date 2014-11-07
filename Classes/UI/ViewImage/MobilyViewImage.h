@@ -59,7 +59,6 @@ typedef void (^MobilyImageLoaderFailureBlock)(NSString* imageUrl);
 
 + (BOOL)isExistImageWithImageUrl:(NSString*)imageUrl;
 + (UIImage*)imageWithImageUrl:(NSString*)imageUrl;
-+ (void)addImage:(UIImage*)image byImageUrl:(NSString*)imageUrl;
 + (void)removeByImageUrl:(NSString*)imageUrl;
 + (void)cleanup;
 
