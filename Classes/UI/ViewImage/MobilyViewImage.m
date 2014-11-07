@@ -56,9 +56,13 @@ typedef void (^MobilyImageLoaderBlock)();
 - (NSString*)cacheKeyByImageUrl:(NSString*)imageUrl;
 
 - (BOOL)isExistImageWithImageUrl:(NSString*)imageUrl;
+- (BOOL)isExistImageWithCacheKey:(NSString*)cacheKey;
 - (UIImage*)imageWithImageUrl:(NSString*)imageUrl;
+- (UIImage*)imageWithCacheKey:(NSString*)cacheKey;
 - (void)addImageData:(NSData*)imageData byImageUrl:(NSString*)imageUrl;
+- (void)addImageData:(NSData*)imageData byCacheKey:(NSString*)cacheKey;
 - (void)removeByImageUrl:(NSString*)imageUrl;
+- (void)removeByCacheKey:(NSString*)cacheKey;
 - (void)cleanup;
 
 - (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
@@ -77,13 +81,14 @@ typedef void (^MobilyImageLoaderBlock)();
 @property(nonatomic, readwrite, weak) MobilyImageLoader* imageLoader;
 @property(nonatomic, readwrite, strong) id target;
 @property(nonatomic, readwrite, strong) NSString* imageUrl;
+@property(nonatomic, readwrite, strong) NSString* cacheKey;
 @property(nonatomic, readwrite, strong) UIImage* image;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > completeEvent;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > failureEvent;
 
-- (id)initWithImageUrl:(NSString*)imageUrl target:(id)target;
-- (id)initWithImageUrl:(NSString*)imageUrl target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
-- (id)initWithImageUrl:(NSString*)imageUrl target:(id)target completeBlock:(MobilyImageLoaderCompleteBlock)completeBlock failureBlock:(MobilyImageLoaderFailureBlock)failureBlock;
+- (id)initWithImageUrl:(NSString*)imageUrl cacheKey:(NSString*)cacheKey target:(id)target;
+- (id)initWithImageUrl:(NSString*)imageUrl cacheKey:(NSString*)cacheKey target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
+- (id)initWithImageUrl:(NSString*)imageUrl cacheKey:(NSString*)cacheKey target:(id)target completeBlock:(MobilyImageLoaderCompleteBlock)completeBlock failureBlock:(MobilyImageLoaderFailureBlock)failureBlock;
 
 @end
 
@@ -294,11 +299,19 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
 }
 
 - (BOOL)isExistImageWithImageUrl:(NSString*)imageUrl {
-    return ([_cache objectForKey:[self cacheKeyByImageUrl:imageUrl]] != nil);
+    return [self isExistImageWithCacheKey:[self cacheKeyByImageUrl:imageUrl]];
+}
+
+- (BOOL)isExistImageWithCacheKey:(NSString*)cacheKey {
+    return ([_cache objectForKey:cacheKey] != nil);
 }
 
 - (UIImage*)imageWithImageUrl:(NSString*)imageUrl {
-    NSData* imageData = [_cache objectForKey:[self cacheKeyByImageUrl:imageUrl]];
+    return [self imageWithCacheKey:[self cacheKeyByImageUrl:imageUrl]];
+}
+
+- (UIImage*)imageWithCacheKey:(NSString*)cacheKey {
+    NSData* imageData = [_cache objectForKey:cacheKey];
     if(imageData != nil) {
         return [UIImage imageWithData:imageData];
     }
@@ -306,11 +319,19 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
 }
 
 - (void)addImageData:(NSData*)imageData byImageUrl:(NSString*)imageUrl {
-    [_cache setObject:imageData forKey:[self cacheKeyByImageUrl:imageUrl]];
+    [self addImageData:imageData byCacheKey:[self cacheKeyByImageUrl:imageUrl]];
+}
+
+- (void)addImageData:(NSData*)imageData byCacheKey:(NSString*)cacheKey {
+    [_cache setObject:imageData forKey:cacheKey];
 }
 
 - (void)removeByImageUrl:(NSString*)imageUrl {
     [_cache removeObjectForKey:[self cacheKeyByImageUrl:imageUrl]];
+}
+
+- (void)removeByCacheKey:(NSString*)cacheKey {
+    [self removeByImageUrl:cacheKey];
 }
 
 - (void)cleanup {
@@ -320,42 +341,64 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 - (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector {
-    UIImage* image = [self imageWithImageUrl:imageUrl];
-    if(image == nil) {
-        MobilyTaskImageLoader* task = [[MobilyTaskImageLoader alloc] initWithImageUrl:imageUrl target:target completeSelector:completeSelector failureSelector:failureSelector];
-        if(task != nil) {
-            [_taskManager updating];
-            [_taskManager addTask:task];
-            [_taskManager updated];
+    NSString* cacheKey = [self cacheKeyByImageUrl:imageUrl];
+    if([cacheKey length] > 0) {
+        UIImage* image = nil;
+        NSData* imageData = [_cache objectForKey:cacheKey];
+        if(imageData != nil) {
+            image = [UIImage imageWithData:imageData];
+        }
+        if(image == nil) {
+            MobilyTaskImageLoader* task = [[MobilyTaskImageLoader alloc] initWithImageUrl:imageUrl cacheKey:cacheKey target:target completeSelector:completeSelector failureSelector:failureSelector];
+            if(task != nil) {
+                [_taskManager updating];
+                [_taskManager addTask:task];
+                [_taskManager updated];
+            } else {
+                if([target respondsToSelector:failureSelector] == YES) {
+                    [target performSelector:failureSelector withObject:imageUrl];
+                }
+            }
         } else {
-            if([target respondsToSelector:failureSelector] == YES) {
-                [target performSelector:failureSelector withObject:imageUrl];
+            if([target respondsToSelector:completeSelector] == YES) {
+                [target performSelector:completeSelector withObject:image withObject:imageUrl];
             }
         }
     } else {
-        if([target respondsToSelector:completeSelector] == YES) {
-            [target performSelector:completeSelector withObject:image withObject:imageUrl];
+        if([target respondsToSelector:failureSelector] == YES) {
+            [target performSelector:failureSelector withObject:imageUrl];
         }
     }
 }
 #pragma clang diagnostic pop
 
 - (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target completeBlock:(MobilyImageLoaderCompleteBlock)completeBlock failureBlock:(MobilyImageLoaderFailureBlock)failureBlock {
-    UIImage* image = [self imageWithImageUrl:imageUrl];
-    if(image == nil) {
-        MobilyTaskImageLoader* task = [[MobilyTaskImageLoader alloc] initWithImageUrl:imageUrl target:target completeBlock:completeBlock failureBlock:failureBlock];
-        if(task != nil) {
-            [_taskManager updating];
-            [_taskManager addTask:task];
-            [_taskManager updated];
+    NSString* cacheKey = [self cacheKeyByImageUrl:imageUrl];
+    if([cacheKey length] > 0) {
+        UIImage* image = nil;
+        NSData* imageData = [_cache objectForKey:cacheKey];
+        if(imageData != nil) {
+            image = [UIImage imageWithData:imageData];
+        }
+        if(image == nil) {
+            MobilyTaskImageLoader* task = [[MobilyTaskImageLoader alloc] initWithImageUrl:imageUrl cacheKey:cacheKey target:target completeBlock:completeBlock failureBlock:failureBlock];
+            if(task != nil) {
+                [_taskManager updating];
+                [_taskManager addTask:task];
+                [_taskManager updated];
+            } else {
+                if(failureBlock != nil) {
+                    failureBlock(imageUrl);
+                }
+            }
         } else {
-            if(failureBlock != nil) {
-                failureBlock(imageUrl);
+            if(completeBlock != nil) {
+                completeBlock(image, imageUrl);
             }
         }
     } else {
-        if(completeBlock != nil) {
-            completeBlock(image, imageUrl);
+        if(failureBlock != nil) {
+            failureBlock(imageUrl);
         }
     }
 }
@@ -386,18 +429,19 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
 
 #pragma mark Standart
 
-- (id)initWithImageUrl:(NSString*)imageUrl target:(id)target {
+- (id)initWithImageUrl:(NSString*)imageUrl cacheKey:(NSString*)cacheKey target:(id)target {
     self = [super init];
     if(self != nil) {
         [self setImageLoader:[MobilyImageLoader shared]];
         [self setTarget:target];
         [self setImageUrl:imageUrl];
+        [self setCacheKey:cacheKey];
     }
     return self;
 }
 
-- (id)initWithImageUrl:(NSString*)imageUrl target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector {
-    self = [self initWithImageUrl:imageUrl target:target];
+- (id)initWithImageUrl:(NSString*)imageUrl cacheKey:(NSString*)cacheKey target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector {
+    self = [self initWithImageUrl:imageUrl cacheKey:cacheKey target:target];
     if(self != nil) {
         [self setCompleteEvent:[MobilyEventSelector callbackWithTarget:target action:completeSelector inMainThread:YES]];
         [self setFailureEvent:[MobilyEventSelector callbackWithTarget:target action:failureSelector inMainThread:YES]];
@@ -405,8 +449,8 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
     return self;
 }
 
-- (id)initWithImageUrl:(NSString*)imageUrl target:(id)target completeBlock:(MobilyImageLoaderCompleteBlock)completeBlock failureBlock:(MobilyImageLoaderFailureBlock)failureBlock {
-    self = [self initWithImageUrl:imageUrl target:target];
+- (id)initWithImageUrl:(NSString*)imageUrl cacheKey:(NSString*)cacheKey target:(id)target completeBlock:(MobilyImageLoaderCompleteBlock)completeBlock failureBlock:(MobilyImageLoaderFailureBlock)failureBlock {
+    self = [self initWithImageUrl:imageUrl cacheKey:cacheKey target:target];
     if(self != nil) {
         [self setCompleteEvent:[MobilyEventBlock callbackWithBlock:^id(id sender, id object) {
             if(completeBlock != nil) {
@@ -428,6 +472,7 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
     [self setImageLoader:nil];
     [self setTarget:nil];
     [self setImageUrl:nil];
+    [self setCacheKey:nil];
     [self setImage:nil];
     [self setCompleteEvent:nil];
     [self setFailureEvent:nil];
@@ -445,7 +490,7 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
         if(data != nil) {
             image = [UIImage imageWithData:data];
             if(image != nil) {
-                [_imageLoader addImageData:data byImageUrl:_imageUrl];
+                [_imageLoader addImageData:data byCacheKey:_cacheKey];
                 [self setImage:image];
             }
         } else {
