@@ -51,6 +51,10 @@
 - (void)dealloc {
     [self unregisterAdjustmentResponder];
     
+    [self setObjectName:nil];
+    [self setObjectParent:nil];
+    [self setObjectChilds:nil];
+    
     [self setRootView:nil];
     
     MOBILY_SAFE_DEALLOC;

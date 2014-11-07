@@ -384,6 +384,8 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
 
 @implementation MobilyTaskImageLoader
 
+#pragma mark Standart
+
 - (id)initWithImageUrl:(NSString*)imageUrl target:(id)target {
     self = [super init];
     if(self != nil) {
@@ -422,6 +424,19 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
     return self;
 }
 
+- (void)dealloc {
+    [self setImageLoader:nil];
+    [self setTarget:nil];
+    [self setImageUrl:nil];
+    [self setImage:nil];
+    [self setCompleteEvent:nil];
+    [self setFailureEvent:nil];
+
+    MOBILY_SAFE_DEALLOC;
+}
+
+#pragma mark MobilyTask
+
 - (void)working {
     UIImage* image = [_imageLoader imageWithImageUrl:_imageUrl];
     if(image == nil) {
@@ -453,9 +468,9 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
 }
 
 - (void)cancel {
-    [super cancel];
     [self setCompleteEvent:nil];
     [self setFailureEvent:nil];
+    [super cancel];
 }
 
 @end

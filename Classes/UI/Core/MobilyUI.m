@@ -1162,7 +1162,7 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
     if([self canBecomeFirstResponder] == YES) {
         [result addObject:self];
     }
-    [[self subviews] enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
+    [[self subviews] enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
         [result addObjectsFromArray:[view responders]];
     }];
     return result;
