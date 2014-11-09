@@ -38,10 +38,6 @@
 
 /*--------------------------------------------------*/
 
-#include "MobilyCG.h"
-
-/*--------------------------------------------------*/
-
 typedef void (^MobilyImageLoaderBlock)();
 
 /*--------------------------------------------------*/
@@ -214,9 +210,9 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
 
 /*--------------------------------------------------*/
 
-#define FG_IMAGE_LOADER_FOLDER                      @"MobilyImageLoaderCache"
-#define FG_IMAGE_LOADER_MAX_CONCURRENT_TASK         5
-#define FG_IMAGE_LOADER_COUNT_LIMIT                 512
+#define MOBILY_IMAGE_LOADER_FOLDER                  @"MobilyImageLoaderCache"
+#define MOBILY_IMAGE_LOADER_MAX_CONCURRENT_TASK     5
+#define MOBILY_IMAGE_LOADER_COUNT_LIMIT             512
 
 /*--------------------------------------------------*/
 
@@ -229,12 +225,12 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
     if(self != nil) {
         [self setTaskManager:[[MobilyTaskManager alloc] init]];
         if(_taskManager != nil) {
-            [_taskManager setMaxConcurrentTask:FG_IMAGE_LOADER_MAX_CONCURRENT_TASK];
+            [_taskManager setMaxConcurrentTask:MOBILY_IMAGE_LOADER_MAX_CONCURRENT_TASK];
         }
         [self setCache:[[NSCache alloc] init]];
         if(_cache != nil) {
-            [_cache setName:FG_IMAGE_LOADER_FOLDER];
-            [_cache setCountLimit:FG_IMAGE_LOADER_COUNT_LIMIT];
+            [_cache setName:MOBILY_IMAGE_LOADER_FOLDER];
+            [_cache setCountLimit:MOBILY_IMAGE_LOADER_COUNT_LIMIT];
         }
     }
     return self;
@@ -485,7 +481,6 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
 - (void)working {
     UIImage* image = [_imageLoader imageWithImageUrl:_imageUrl];
     if(image == nil) {
-        [NSThread sleepForTimeInterval:1.0f];
         NSData* data = [NSData dataWithContentsOfURL:[NSURL URLWithString:_imageUrl]];
         if(data != nil) {
             image = [UIImage imageWithData:data];
