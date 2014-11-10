@@ -1157,13 +1157,34 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 #pragma mark Public
 
 - (NSArray*)responders {
-    
     NSMutableArray* result = [NSMutableArray array];
     if([self canBecomeFirstResponder] == YES) {
         [result addObject:self];
     }
     [[self subviews] enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
         [result addObjectsFromArray:[view responders]];
+    }];
+    [result sortWithOptions:0 usingComparator:^NSComparisonResult(UIView* viewA, UIView* viewB) {
+        CGFloat aOrder = [[viewA layer] zPosition], bOrder = [[viewB layer] zPosition];
+        CGRect aFrame = [viewA frame], bFrame = [viewB frame];
+        if(aOrder < bOrder) {
+            return NSOrderedAscending;
+        } else if(aOrder > bOrder) {
+            return NSOrderedDescending;
+        } else {
+            if(aFrame.origin.y < bFrame.origin.y) {
+                return NSOrderedAscending;
+            } else if(aFrame.origin.y > bFrame.origin.y) {
+                return NSOrderedDescending;
+            } else {
+                if(aFrame.origin.x < bFrame.origin.x) {
+                    return NSOrderedAscending;
+                } else if(aFrame.origin.x > bFrame.origin.x) {
+                    return NSOrderedDescending;
+                }
+            }
+        }
+        return NSOrderedSame;
     }];
     return result;
 }

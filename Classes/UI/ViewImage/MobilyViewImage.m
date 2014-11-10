@@ -184,11 +184,9 @@ typedef void (^MobilyImageLoaderBlock)();
             [MobilyImageLoader cancelByTarget:self];
         }
         _imageUrl = imageUrl;
-        if(_defaultImage != nil) {
-            [super setImage:_defaultImage];
-        }
+        [super setImage:_defaultImage];
         [MobilyImageLoader loadWithImageUrl:_imageUrl target:self completeBlock:^(UIImage* image, NSString* imageUrl) {
-            [self setImage:image];
+            [super setImage:image];
             if(complete != nil) {
                 complete(image, imageUrl);
             }
