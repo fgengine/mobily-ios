@@ -82,6 +82,8 @@
 
 - (void)didEndEditing {
     [super didEndEditing];
+    
+    [self setSelectedItem:[_items objectAtIndex:[_pickerView selectedRowInComponent:0]] animated:YES emitted:YES];
 }
 
 #pragma mark Property
@@ -106,10 +108,16 @@
 }
 
 - (void)setSelectedItem:(MobilyViewFieldListItem*)selectedItem {
-    [self setSelectedItem:selectedItem animated:NO];
+    [self setSelectedItem:selectedItem animated:NO emitted:NO];
 }
 
 - (void)setSelectedItem:(MobilyViewFieldListItem*)selectedItem animated:(BOOL)animated {
+    [self setSelectedItem:selectedItem animated:animated emitted:NO];
+}
+
+#pragma mark Private
+
+- (void)setSelectedItem:(MobilyViewFieldListItem*)selectedItem animated:(BOOL)animated emitted:(BOOL)emitted {
     if(_selectedItem != selectedItem) {
         _selectedItem = selectedItem;
         
@@ -120,6 +128,9 @@
         }
         if([self isEditing] == YES) {
             [_pickerView selectRow:[_items indexOfObject:_selectedItem] inComponent:0 animated:animated];
+        }
+        if(emitted == YES) {
+            [self sendActionsForControlEvents:UIControlEventValueChanged];
         }
     }
 }
@@ -149,18 +160,7 @@
 }
 
 - (void)pickerView:(UIPickerView*)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    MobilyViewFieldListItem* listItem = [_items objectAtIndex:row];
-    if(_selectedItem != listItem) {
-        _selectedItem = listItem;
-        
-        if(_selectedItem != nil) {
-            [self setText:[_selectedItem title]];
-        } else {
-            [self setText:@""];
-        }
-        
-        [self sendActionsForControlEvents:UIControlEventValueChanged];
-    }
+    [self setSelectedItem:[_items objectAtIndex:row] animated:YES emitted:YES];
 }
 
 @end

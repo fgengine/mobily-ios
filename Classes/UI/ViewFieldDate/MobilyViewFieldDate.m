@@ -41,6 +41,8 @@
 
 @property(nonatomic, readwrite, strong) UIDatePicker* pickerView;
 
+- (void)setDate:(NSDate*)date animated:(BOOL)animated emitted:(BOOL)emitted;
+
 @end
 
 /*--------------------------------------------------*/
@@ -87,12 +89,16 @@
         [_pickerView setTimeZone:_timeZone];
         [_pickerView setMinimumDate:_minimumDate];
         [_pickerView setMaximumDate:_maximumDate];
-        [_pickerView setDate:_date];
+        if(_date != nil) {
+            [_pickerView setDate:_date];
+        }
     }
 }
 
 - (void)didEndEditing {
     [super didEndEditing];
+    
+    [self setDate:[_pickerView date] animated:YES emitted:YES];
 }
 
 #pragma mark Property
@@ -188,6 +194,12 @@
 }
 
 - (void)setDate:(NSDate*)date animated:(BOOL)animated {
+    [self setDate:date animated:YES emitted:NO];
+}
+
+#pragma mark Private
+
+- (void)setDate:(NSDate*)date animated:(BOOL)animated emitted:(BOOL)emitted {
     if([_date isEqualToDate:date] == NO) {
         _date = date;
         
@@ -205,14 +217,14 @@
                 [_pickerView setDate:_date animated:animated];
             }
         }
+        if(emitted != YES) {
+            [self sendActionsForControlEvents:UIControlEventValueChanged];
+        }
     }
 }
 
-#pragma mark Private
-
 - (void)changedDate:(id)sender {
-    [self setDate:[_pickerView date] animated:YES];
-    [self sendActionsForControlEvents:UIControlEventValueChanged];
+    [self setDate:[_pickerView date] animated:YES emitted:YES];
 }
 
 @end
