@@ -290,7 +290,7 @@
     if(result != nil) {
         [result setPropertyMap:[self propertyMap]];
         [result setJsonMap:[self jsonMap]];
-        [result setUserDefaultsKey:[_userDefaultsKey copyWithZone:zone]];
+        [result setUserDefaultsKey:[self userDefaultsKey]];
         
         [[self propertyMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
             [result setValue:[[self valueForKey:field] copyWithZone:zone] forKey:field];
@@ -944,26 +944,53 @@
 
 #pragma mark Standart
 
+- (id)init {
+    self = [super init];
+    if(self != nil) {
+        [self setUnsafeItems:[NSMutableArray array]];
+        [self setFlagLoad:NO];
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder*)coder {
+    self = [super init];
+    if(self != nil) {
+        id items = [coder decodeObjectForKey:@"items"];
+        if(items != nil) {
+            [self setUnsafeItems:items];
+        } else {
+            [self setUnsafeItems:[NSMutableArray array]];
+        }
+        [self setFlagLoad:NO];
+        [self setupCollection];
+    }
+    return self;
+}
+
 - (id)initWithUserDefaultsKey:(NSString*)userDefaultsKey {
     self = [super init];
     if(self != nil) {
         [self setUserDefaultsKey:userDefaultsKey];
         [self setUnsafeItems:[NSMutableArray array]];
         [self setFlagLoad:YES];
+        [self setupCollection];
     }
     return self;
 }
 
-- (id)initWithName:(NSString*)name {
+- (id)initWithFileName:(NSString*)fileName {
     self = [super init];
     if(self != nil) {
         NSString* fileGroup = [MobilyStorage fileSystemDirectory];
         if(fileGroup != nil) {
-            NSString* filePath = [fileGroup stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", name, MOBILY_STORAGE_COLLECTION_EXTENSION]];
+            NSString* filePath = [fileGroup stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", fileName, MOBILY_STORAGE_COLLECTION_EXTENSION]];
             if(filePath != nil) {
+                [self setFileName:fileName];
                 [self setFilePath:filePath];
                 [self setUnsafeItems:[NSMutableArray array]];
                 [self setFlagLoad:YES];
+                [self setupCollection];
             } else {
                 self = nil;
             }
@@ -974,14 +1001,86 @@
     return self;
 }
 
+- (id)initWithJson:(id)json storageItemClass:(Class)storageItemClass {
+    self = [super init];
+    if(self != nil) {
+        [self setUnsafeItems:[NSMutableArray array]];
+        [self setFlagLoad:NO];
+        [self convertFromJson:json storageItemClass:storageItemClass];
+        [self setupCollection];
+    }
+    return self;
+}
+
 - (void)dealloc {
+    [self setFileName:nil];
+    [self setUserDefaultsKey:nil];
     [self setFilePath:nil];
     [self setUnsafeItems:nil];
 
     MOBILY_SAFE_DEALLOC;
 }
 
+- (void)encodeWithCoder:(NSCoder*)coder {
+    [self loadIsNeedItems];
+    [coder encodeObject:_unsafeItems forKey:@"items"];
+}
+
+- (id)copyWithZone:(NSZone*)zone {
+    id result = [[[self class] allocWithZone:zone] init];
+    if(result != nil) {
+        [result setFilePath:[self filePath]];
+        [result setUserDefaultsKey:[self userDefaultsKey]];
+        [result setUnsafeItems:[[self unsafeItems] copyWithZone:zone]];
+        [result setFlagLoad:[self flagLoad]];
+    }
+    return result;
+}
+
+#pragma mark Property
+
+- (void)setFileName:(NSString*)fileName {
+    if(_fileName != fileName) {
+        MOBILY_SAFE_SETTER(_fileName, fileName);
+        
+        NSString* fileGroup = [MobilyStorage fileSystemDirectory];
+        if(fileGroup != nil) {
+            NSString* filePath = [fileGroup stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", fileName, MOBILY_STORAGE_COLLECTION_EXTENSION]];
+            if(filePath != nil) {
+                [self setFilePath:filePath];
+            } else {
+                [self setFilePath:nil];
+            }
+        } else {
+            [self setFilePath:nil];
+        }
+    }
+}
+
+- (void)setUserDefaultsKey:(NSString*)userDefaultsKey {
+    if(_userDefaultsKey != userDefaultsKey) {
+        MOBILY_SAFE_SETTER(_userDefaultsKey, userDefaultsKey);
+    }
+}
+
 #pragma mark Public
+
+- (void)setupCollection {
+}
+
+- (void)convertFromJson:(id)json storageItemClass:(Class)storageItemClass {
+    [_unsafeItems removeAllObjects];
+    if([storageItemClass isSubclassOfClass:[MobilyStorageItem class]] == YES) {
+        if([json isKindOfClass:[NSArray class]] == YES) {
+            [json enumerateObjectsUsingBlock:^(id jsonItem, NSUInteger jsonItemIndex, BOOL* jsonItemStop) {
+                id item = [[storageItemClass alloc] initWithJson:jsonItem];
+                if(item != nil) {
+                    [_unsafeItems addObject:item];
+                }
+            }];
+        }
+    }
+}
 
 - (NSUInteger)countItems {
     [self loadIsNeedItems];
@@ -1225,19 +1324,40 @@
 - (void)reloadItems {
     [_unsafeItems removeAllObjects];
     
-    if(_reloadBlock != nil) {
-        for(id item in [_collection safeItems]) {
+    if([_delegate respondsToSelector:@selector(storageQuery:reloadItem:)] == YES) {
+        [[_collection safeItems] enumerateObjectsUsingBlock:^(id item, NSUInteger itemIndex, BOOL* itemStop) {
+            if([_delegate storageQuery:self reloadItem:item] == YES) {
+                [_unsafeItems addObject:item];
+            }
+        }];
+    } else if(_reloadBlock != nil) {
+        [[_collection safeItems] enumerateObjectsUsingBlock:^(id item, NSUInteger itemIndex, BOOL* itemStop) {
             if(_reloadBlock(item) == YES) {
                 [_unsafeItems addObject:item];
             }
-        }
+        }];
     } else {
         [_unsafeItems setArray:[_collection safeItems]];
     }
 }
 
 - (void)resortItems {
-    if(_resortBlock != nil) {
+    if([_delegate respondsToSelector:@selector(storageQuery:resortItem1:item2:)] == YES) {
+        if(_resortInvert == YES) {
+            [_unsafeItems sortUsingComparator:^NSComparisonResult(id item1, id item2) {
+                switch([_delegate storageQuery:self resortItem1:item1 item2:item2]) {
+                    case MobilyStorageQuerySortResultMore: return NSOrderedDescending;
+                    case MobilyStorageQuerySortResultLess: return NSOrderedAscending;
+                    default: break;
+                }
+                return NSOrderedSame;
+            }];
+        } else {
+            [_unsafeItems sortUsingComparator:^NSComparisonResult(id item1, id item2) {
+                return (NSComparisonResult)[_delegate storageQuery:self resortItem1:item1 item2:item2];
+            }];
+        }
+    } else if(_resortBlock != nil) {
         if(_resortInvert == YES) {
             [_unsafeItems sortUsingComparator:^NSComparisonResult(id item1, id item2) {
                 switch(_resortBlock(item1, item2)) {

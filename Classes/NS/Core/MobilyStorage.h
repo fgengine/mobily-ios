@@ -178,13 +178,19 @@ typedef void (^MobilyStorageCollectionEnumBlock)(id item, BOOL* stop);
 
 /*--------------------------------------------------*/
 
-@interface MobilyStorageCollection : NSObject
+@interface MobilyStorageCollection : NSObject < NSCoding, NSCopying >
 
 @property(nonatomic, readwrite, strong) NSString* userDefaultsKey;
+@property(nonatomic, readwrite, strong) NSString* fileName;
 @property(nonatomic, readonly, copy) NSArray* items;
 
 - (id)initWithUserDefaultsKey:(NSString*)userDefaultsKey;
-- (id)initWithName:(NSString*)name;
+- (id)initWithFileName:(NSString*)fileName;
+- (id)initWithJson:(id)json storageItemClass:(Class)storageItemClass;
+
+- (void)setupCollection;
+
+- (void)convertFromJson:(id)json storageItemClass:(Class)storageItemClass;
 
 - (NSUInteger)countItems;
 
@@ -222,6 +228,10 @@ typedef NS_ENUM(NSInteger, MobilyStorageQuerySortResult) {
 
 /*--------------------------------------------------*/
 
+@protocol MobilyStorageQueryDelegate;
+
+/*--------------------------------------------------*/
+
 typedef BOOL (^MobilyStorageQueryReloadBlock)(id item);
 typedef MobilyStorageQuerySortResult (^MobilyStorageQueryResortBlock)(id item1, id item2);
 
@@ -229,6 +239,7 @@ typedef MobilyStorageQuerySortResult (^MobilyStorageQueryResortBlock)(id item1, 
 
 @interface MobilyStorageQuery : NSObject
 
+@property(nonatomic, readwrite, weak) id< MobilyStorageQueryDelegate > delegate;
 @property(nonatomic, readwrite, copy) MobilyStorageQueryReloadBlock reloadBlock;
 @property(nonatomic, readwrite, copy) MobilyStorageQueryResortBlock resortBlock;
 @property(nonatomic, readwrite, assign) BOOL resortInvert;
@@ -242,6 +253,16 @@ typedef MobilyStorageQuerySortResult (^MobilyStorageQueryResortBlock)(id item1, 
 - (NSUInteger)countItems;
 
 - (id)itemAtIndex:(NSUInteger)index;
+
+@end
+
+/*--------------------------------------------------*/
+
+@protocol MobilyStorageQueryDelegate < NSObject >
+
+@optional
+- (BOOL)storageQuery:(MobilyStorageQuery*)storageQuery reloadItem:(id)item;
+- (MobilyStorageQuerySortResult)storageQuery:(MobilyStorageQuery*)storageQuery resortItem1:(id)item1 item2:(id)item2;
 
 @end
 
