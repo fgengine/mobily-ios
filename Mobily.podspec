@@ -29,6 +29,7 @@ Pod::Spec.new do |s|
 		ss.dependency 'Mobily/UIViewFieldList'
 		ss.dependency 'Mobily/UIViewImage'
         ss.dependency 'Mobily/UIViewScroll'
+        ss.dependency 'Mobily/UIViewTable'
         ss.dependency 'Mobily/UIViewElements'
 	end
   
@@ -101,6 +102,12 @@ Pod::Spec.new do |s|
     s.subspec 'UIViewScroll' do |ss|
         ss.public_header_files = 'Classes/UI/ViewScroll/*.h'
         ss.source_files = 'Classes/UI/ViewScroll/*.{h,m}'
+        ss.dependency 'Mobily/UI'
+    end
+
+    s.subspec 'UIViewTable' do |ss|
+        ss.public_header_files = 'Classes/UI/ViewTable/*.h'
+        ss.source_files = 'Classes/UI/ViewTable/*.{h,m}'
         ss.dependency 'Mobily/UI'
     end
 
