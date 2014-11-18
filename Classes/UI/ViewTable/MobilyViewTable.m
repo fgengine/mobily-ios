@@ -58,10 +58,11 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintCenterYRightSwipeView;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintHeightRightSwipeView;
 
+@property(nonatomic, readwrite, assign) CGFloat swipeLastOffset;
+@property(nonatomic, readwrite, assign) CGFloat swipeLastVelocity;
 @property(nonatomic, readwrite, assign) CGFloat swipeProgress;
 @property(nonatomic, readwrite, assign) CGFloat swipeLeftWidth;
 @property(nonatomic, readwrite, assign) CGFloat swipeRightWidth;
-@property(nonatomic, readwrite, assign) CGFloat swipeStartOffset;
 @property(nonatomic, readwrite, assign) MobilyViewTableCellSwipeDirection swipeDirection;
 
 - (CGFloat)leftConstant;
@@ -563,6 +564,7 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
     [self setSwipeStyle:MobilyViewTableCellSwipeStyleLeaves];
     [self setSwipeThreshold:2.0f];
     [self setSwipeSpeed:120.0f];
+    [self setSwipeVelocity:800.0f];
 }
 
 - (void)setShowedLeftSwipeView:(BOOL)showedLeftSwipeView animated:(BOOL)animated {
@@ -791,17 +793,19 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
 - (void)handlerPanGestupe {
     if(_swipeDecelerating == NO) {
         CGPoint translation = [_panGestupe translationInView:self];
+        CGPoint velocity = [_panGestupe velocityInView:self];
         switch([_panGestupe state]) {
             case UIGestureRecognizerStateBegan: {
                 [self willBeganSwipe];
+                [self setSwipeLastOffset:translation.x];
+                [self setSwipeLastVelocity:velocity.x];
                 [self setSwipeLeftWidth:-[_leftSwipeView frameWidth]];
                 [self setSwipeRightWidth:[_rightSwipeView frameWidth]];
-                [self setSwipeStartOffset:translation.x];
                 [self setSwipeDirection:MobilyViewTableCellSwipeDirectionUnknown];
                 break;
             }
             case UIGestureRecognizerStateChanged: {
-                CGFloat delta = _swipeStartOffset - translation.x;
+                CGFloat delta = _swipeLastOffset - translation.x;
                 if(_swipeDirection == MobilyViewTableCellSwipeDirectionUnknown) {
                     if((_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (delta > _swipeThreshold)) {
                         [self setSwipeDirection:MobilyViewTableCellSwipeDirectionLeft];
@@ -835,17 +839,18 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
                             break;
                         }
                     }
-                    [self setSwipeStartOffset:translation.x];
+                    [self setSwipeLastOffset:translation.x];
+                    [self setSwipeLastVelocity:velocity.x];
                 }
                 break;
             }
             case UIGestureRecognizerStateEnded:
             case UIGestureRecognizerStateCancelled: {
                 [self willEndedSwipe];
+                CGFloat needSwipeProgress = roundf(_swipeProgress - (_swipeLastVelocity / _swipeVelocity));
                 switch(_swipeDirection) {
                     case MobilyViewTableCellSwipeDirectionLeft: {
                         __weak id weakSelf = self;
-                        CGFloat needSwipeProgress = roundf(_swipeProgress);
                         [self setSwipeProgress:needSwipeProgress speed:_swipeLeftWidth * ABS(needSwipeProgress - _swipeProgress) complete:^{
                             [weakSelf didEndedSwipe];
                         }];
@@ -853,7 +858,6 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
                     }
                     case MobilyViewTableCellSwipeDirectionRight: {
                         __weak id weakSelf = self;
-                        CGFloat needSwipeProgress = roundf(_swipeProgress);
                         [self setSwipeProgress:needSwipeProgress speed:_swipeRightWidth * ABS(needSwipeProgress - _swipeProgress) complete:^{
                             [weakSelf didEndedSwipe];
                         }];

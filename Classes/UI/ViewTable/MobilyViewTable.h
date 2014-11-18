@@ -78,6 +78,7 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeStyle) {
 
 @property(nonatomic, readwrite, assign) MobilyViewTableCellSwipeStyle swipeStyle;
 @property(nonatomic, readwrite, assign) CGFloat swipeThreshold;
+@property(nonatomic, readwrite, assign) CGFloat swipeVelocity;
 @property(nonatomic, readwrite, assign) CGFloat swipeSpeed;
 @property(nonatomic, readwrite, assign, getter=isShowedLeftSwipeView) BOOL showedLeftSwipeView;
 @property(nonatomic, readwrite, assign, getter=isShowedRightSwipeView) BOOL showedRightSwipeView;
