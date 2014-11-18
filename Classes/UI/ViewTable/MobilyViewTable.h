@@ -37,9 +37,17 @@
 
 /*--------------------------------------------------*/
 
+@class MobilyViewTableCellSwipe;
+
+/*--------------------------------------------------*/
+
 @interface MobilyViewTable : UITableView< MobilyBuilderObject >
 
+@property(nonatomic, readwrite, weak) MobilyViewTableCellSwipe* currentSwipeCell;
+
 - (void)setupView;
+
+- (void)setCurrentSwipeCell:(MobilyViewTableCellSwipe*)currentSwipeCell animated:(BOOL)animated;
 
 - (void)registerCellClass:(Class)cellClass;
 - (void)registerHeaderFooterClass:(Class)headerFooterClass;
@@ -89,6 +97,7 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeStyle) {
 
 - (void)setShowedLeftSwipeView:(BOOL)showedLeftSwipeView animated:(BOOL)animated;
 - (void)setShowedRightSwipeView:(BOOL)showedRightSwipeView animated:(BOOL)animated;
+- (void)setHiddenAnySwipeViewAnimated:(BOOL)animated;
 
 - (void)willBeganSwipe;
 - (void)didBeganSwipe;
