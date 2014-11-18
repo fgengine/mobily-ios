@@ -54,6 +54,7 @@
 
 @interface MobilyViewTableCell : UITableViewCell
 
+@property(nonatomic, readwrite, weak) MobilyViewTable* tableView;
 @property(nonatomic, readwrite, strong) IBOutlet UIView* rootView;
 @property(nonatomic, readwrite, weak) id model;
 
@@ -90,6 +91,7 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeStyle) {
 
 - (void)willBeganSwipe;
 - (void)didBeganSwipe;
+- (void)movingSwipe:(CGFloat)progress;
 - (void)willEndedSwipe;
 - (void)didEndedSwipe;
 

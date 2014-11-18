@@ -179,6 +179,7 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
             [nib instantiateWithOwner:cell options:nil];
         }
     }
+    [cell setTableView:self];
     return cell;
 }
 
@@ -190,6 +191,7 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
             [nib instantiateWithOwner:cell options:nil];
         }
     }
+    [cell setTableView:self];
     return cell;
 }
 
@@ -201,6 +203,7 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
             [nib instantiateWithOwner:headerFooter options:nil];
         }
     }
+    [headerFooter setTableView:self];
     return headerFooter;
 }
 
@@ -598,6 +601,9 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
     [self setSwipeDecelerating:YES];
 }
 
+- (void)movingSwipe:(CGFloat)progress {
+}
+
 - (void)didEndedSwipe {
     _showedLeftSwipeView = (_swipeProgress < 0.0f) ? YES : NO;
     _showedRightSwipeView = (_swipeProgress > 0.0f) ? YES : NO;
@@ -605,6 +611,12 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
 }
 
 #pragma mark UITableViewCell
+
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    
+    [self setSwipeProgress:0.0f];
+}
 
 - (void)updateConstraints {
     [super updateConstraints];
@@ -813,11 +825,13 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
                         case MobilyViewTableCellSwipeDirectionLeft: {
                             CGFloat localDelta = MIN(MAX(_swipeLeftWidth, delta), -_swipeLeftWidth);
                             [self setSwipeProgress:_swipeProgress - (localDelta / _swipeLeftWidth) speed:localDelta complete:nil];
+                            [self movingSwipe:_swipeProgress];
                             break;
                         }
                         case MobilyViewTableCellSwipeDirectionRight: {
                             CGFloat localDelta = MIN(MAX(-_swipeRightWidth, delta), _swipeRightWidth);
                             [self setSwipeProgress:_swipeProgress + (localDelta / _swipeRightWidth) speed:localDelta complete:nil];
+                            [self movingSwipe:_swipeProgress];
                             break;
                         }
                     }

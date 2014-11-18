@@ -39,8 +39,8 @@
             <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y8d-B9-dph">
-                    <rect key="frame" x="17" y="8" width="64" height="64"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y8d-B9-dph">
+                    <rect key="frame" x="8" y="8" width="64" height="64"/>
                     <state key="normal" title="Button">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
@@ -50,11 +50,11 @@
             <constraints>
                 <constraint firstItem="Y8d-B9-dph" firstAttribute="leading" secondItem="0w3-nf-Xsp" secondAttribute="leading" constant="8" id="EYI-mn-KmV"/>
                 <constraint firstAttribute="bottom" secondItem="Y8d-B9-dph" secondAttribute="bottom" constant="8" id="NQh-Lk-lVb"/>
-                <constraint firstAttribute="trailing" secondItem="Y8d-B9-dph" secondAttribute="trailing" constant="-1" id="glE-IC-kCj"/>
+                <constraint firstAttribute="trailing" secondItem="Y8d-B9-dph" secondAttribute="trailing" constant="8" id="glE-IC-kCj"/>
                 <constraint firstItem="Y8d-B9-dph" firstAttribute="top" secondItem="0w3-nf-Xsp" secondAttribute="top" constant="8" id="xdV-Ot-zbU"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="283" y="387"/>
+            <point key="canvasLocation" x="157" y="181"/>
         </view>
         <view contentMode="scaleToFill" id="Ka1-gh-f4O">
             <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>

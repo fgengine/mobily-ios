@@ -70,7 +70,10 @@
     [self setTitle:@"TITLE"];
     [self setEdgesForExtendedLayout:UIRectEdgeNone];
     
-    [self setDataSource:@[ @"Data #1", @"Data #2", @"Data #3", @"Data #4", @"Data #5" ]];
+    [self setDataSource:@[ @"Data #1", @"Data #2", @"Data #3",
+                           @"Data #4", @"Data #5", @"Data #6",
+                           @"Data #7", @"Data #8", @"Data #9",
+                           @"Data #10", @"Data #11", @"Data #12" ]];
 }
 
 - (void)dealloc {
