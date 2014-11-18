@@ -865,16 +865,16 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
     if((_swipeDragging == NO) && (_swipeDecelerating == NO)) {
         CGPoint translation = [_panGestupe translationInView:self];
         if(fabs(translation.x) >= fabs(translation.y)) {
-            if(translation.x > 0.0f) {
-                if(_leftSwipeView == nil) {
-                    return NO;
-                }
-            } else if(translation.x < 0.0f) {
-                if(_rightSwipeView == nil) {
-                    return NO;
-                }
+            if((_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (translation.x < 0.0f)) {
+                return YES;
+            } else if((_showedRightSwipeView == YES) && (_rightSwipeView != nil) && (translation.x > 0.0f)) {
+                return YES;
+            } else if((_showedLeftSwipeView == NO) && (_leftSwipeView != nil) && (translation.x > 0.0f)) {
+                return YES;
+            } else if((_showedRightSwipeView == NO) && (_rightSwipeView != nil) && (translation.x < 0.0f)) {
+                return YES;
             }
-            return YES;
+            return NO;
         }
     }
     return NO;
