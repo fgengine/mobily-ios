@@ -1207,12 +1207,15 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 }
 
 - (void)setSubviews:(NSArray*)subviews {
-    [[self subviews] enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
-        [view removeFromSuperview];
-    }];
-    [subviews enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
-        [self addSubview:view];
-    }];
+    NSArray* currentSubviews = [self subviews];
+    if([currentSubviews isEqualToArray:subviews] == NO) {
+        [[self subviews] enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
+            [view removeFromSuperview];
+        }];
+        [subviews enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
+            [self addSubview:view];
+        }];
+    }
 }
 
 - (void)removeAllSubviews {

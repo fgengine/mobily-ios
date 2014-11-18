@@ -1,46 +1,81 @@
-//----------------------------------------------//
+/*--------------------------------------------------*/
 
 #import "MobilyViewTable.h"
 
-//----------------------------------------------//
+/*--------------------------------------------------*/
 
 @interface MobilyViewTable ()
 
-@property(nonatomic, readwrite, strong) NSMutableArray* section;
-
-@property(nonatomic, readwrite, weak) UIResponder* keyboardResponder;
-
-- (void)notificationKeyboardShow:(NSNotification*)notification;
-- (void)notificationKeyboardHide:(NSNotification*)notification;
-- (void)updateData;
+@property(nonatomic, readwrite, strong) NSMutableDictionary* registeredCellNibs;
+@property(nonatomic, readwrite, strong) NSMutableDictionary* registeredHeaderFooterNibs;
 
 @end
 
-//----------------------------------------------//
-
-@interface MobilyViewTableSection ()
-
-@property(nonatomic, readwrite, strong) NSMutableArray* rows;
-
-@end
-
-//----------------------------------------------//
-
-@interface MobilyViewTableRowFactory ()
-
-
-
-@end
-
-//----------------------------------------------//
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
 
 @interface MobilyViewTableCell ()
 
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintCenterXRootView;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintCenterYRootView;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintWidthRootView;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintHeightRootView;
 
+- (NSArray*)orderedSubviews;
+
+- (void)cleanupConstraint;
+
+- (CGFloat)rootConstantX;
+- (CGFloat)rootConstantY;
+- (CGFloat)rootConstantWidth;
+- (CGFloat)rootConstantHeight;
 
 @end
 
-//----------------------------------------------//
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
+    MobilyViewTableCellSwipeDirectionUnknown,
+    MobilyViewTableCellSwipeDirectionLeft,
+    MobilyViewTableCellSwipeDirectionRight
+};
+
+/*--------------------------------------------------*/
+
+@interface MobilyViewTableCellSwipe () < UIGestureRecognizerDelegate >
+
+@property(nonatomic, readwrite, getter=isSwipeDragging) BOOL swipeDragging;
+@property(nonatomic, readwrite, getter=isSwipeDecelerating) BOOL swipeDecelerating;
+
+@property(nonatomic, readwrite, strong) UIPanGestureRecognizer* panGestupe;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintOffsetLeftSwipeView;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintCenterYLeftSwipeView;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintHeightLeftSwipeView;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintOffsetRightSwipeView;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintCenterYRightSwipeView;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintHeightRightSwipeView;
+
+@property(nonatomic, readwrite, assign) CGFloat swipeProgress;
+@property(nonatomic, readwrite, assign) CGFloat swipeLeftWidth;
+@property(nonatomic, readwrite, assign) CGFloat swipeRightWidth;
+@property(nonatomic, readwrite, assign) CGFloat swipeStartOffset;
+@property(nonatomic, readwrite, assign) MobilyViewTableCellSwipeDirection swipeDirection;
+
+- (CGFloat)leftConstant;
+- (CGFloat)rightConstant;
+
+- (void)setSwipeProgress:(CGFloat)swipeProgress speed:(CGFloat)speed complete:(void(^)())complete;
+
+- (void)handlerPanGestupe;
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
 
 @implementation MobilyViewTable
 
@@ -48,6 +83,8 @@
 @synthesize objectParent = _objectParent;
 @synthesize objectChilds = _objectChilds;
 
+#pragma mark NSKeyValueCoding
+
 #pragma mark Standart
 
 - (id)initWithCoder:(NSCoder*)coder {
@@ -67,11 +104,14 @@
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self unregisterAdjustmentResponder];
     
     [self setObjectName:nil];
     [self setObjectParent:nil];
     [self setObjectChilds:nil];
+    
+    [self setRegisteredCellNibs:nil];
+    [self setRegisteredHeaderFooterNibs:nil];
     
     MOBILY_SAFE_DEALLOC;
 }
@@ -106,179 +146,72 @@
     return [MobilyBuilderForm object:self forSelector:selector];
 }
 
-#pragma mark UIKeyboarNotification
-
-- (void)notificationKeyboardShow:(NSNotification*)notification {
-    [self setKeyboardResponder:[UIResponder currentFirstResponderInView:self]];
-    if([_keyboardResponder isKindOfClass:[UIView class]] == YES) {
-        UIView* view = (UIView*)_keyboardResponder;
-        NSDictionary* info = [notification userInfo];
-        if(info != nil) {
-            CGRect screenRect = [[self window] bounds];
-            CGRect scrollRect = [self convertRect:[self bounds] toView:[[[self window] rootViewController] view]];
-            CGRect keyboardRect = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-            UIEdgeInsets scrollInsets = [self contentInset];
-            CGPoint scrollOffset = [self contentOffset];
-            CGSize scrollSize = [self contentSize];
-            
-            CGFloat overallSize = 0.0f;
-            switch([[UIApplication sharedApplication] statusBarOrientation]) {
-                case UIInterfaceOrientationPortrait:
-                case UIInterfaceOrientationPortraitUpsideDown:
-                    overallSize = ABS((screenRect.size.height - keyboardRect.size.height) - (scrollRect.origin.y + scrollRect.size.height));
-                    break;
-                case UIInterfaceOrientationLandscapeLeft:
-                case UIInterfaceOrientationLandscapeRight:
-                    overallSize = ABS((screenRect.size.width - keyboardRect.size.width) - (scrollRect.origin.y + scrollRect.size.height));
-                    break;
-                case UIInterfaceOrientationUnknown:
-                    break;
-            }
-            scrollInsets = UIEdgeInsetsMake(scrollInsets.top, scrollInsets.left, overallSize, scrollInsets.right);
-            [self setScrollIndicatorInsets:scrollInsets];
-            [self setContentInset:scrollInsets];
-            
-            scrollRect = UIEdgeInsetsInsetRect(scrollRect, scrollInsets);
-            
-            CGRect rect = [view convertRect:[view bounds] toView:self];
-            scrollOffset.y = (rect.origin.y + (rect.size.height * 0.5f)) - (scrollRect.size.height * 0.5f);
-            if(scrollOffset.y < 0.0f) {
-                scrollOffset.y = 0.0f;
-            } else if(scrollOffset.y > scrollSize.height - scrollRect.size.height) {
-                scrollOffset.y = scrollSize.height - scrollRect.size.height;
-            }
-            [self setContentOffset:scrollOffset animated:YES];
-        }
-    }
-}
-
-- (void)notificationKeyboardHide:(NSNotification*)notification {
-    if(_keyboardResponder != nil) {
-        NSDictionary* info = [notification userInfo];
-        if(info != nil) {
-            NSTimeInterval duration = [[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-            [UIView animateWithDuration:duration
-                             animations:^{
-                                 [self setScrollIndicatorInsets:UIEdgeInsetsZero];
-                                 [self setContentInset:UIEdgeInsetsZero];
-                             }];
-        }
-        [self setKeyboardResponder:nil];
-    }
-}
-
-- (void)updateData {
-    [self reloadData];
-}
-
 #pragma mark Public
 
 - (void)setupView {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationKeyboardShow:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationKeyboardHide:) name:UIKeyboardWillHideNotification object:nil];
+    [self setRegisteredCellNibs:[NSMutableDictionary dictionary]];
+    [self setRegisteredHeaderFooterNibs:[NSMutableDictionary dictionary]];
+    
+    [self registerAdjustmentResponder];
 }
 
-- (void)setArray:(NSArray*)array {
-    [self updateData];
-}
-
-- (void)addObject:(id)object {
-    [self updateData];
-}
-
-- (void)addObjectsFromArray:(NSArray*)array {
-    [self updateData];
-}
-
-- (void)insertObject:(id)object atIndex:(NSUInteger)index {
-    [self updateData];
-}
-
-- (void)insertObjectsFromArray:(NSArray*)array atIndex:(NSUInteger)index {
-    [self updateData];
-}
-
-- (void)removeObjectsInArray:(NSArray*)array {
-    [self updateData];
-}
-
-- (void)removeObjectsInRange:(NSRange)range {
-    [self updateData];
-}
-
-- (void)removeObject:(id)object inRange:(NSRange)range {
-    [self updateData];
-}
-
-- (void)removeObject:(id)object {
-    [self updateData];
-}
-
-- (void)removeObjectAtIndex:(NSUInteger)index {
-    [self updateData];
-}
-
-- (void)removeLastObject {
-    [self updateData];
-}
-
-- (void)removeAllObjects {
-    [self updateData];
-}
-
-- (void)replaceObjectsInRange:(NSRange)range withObjectsFromArray:(NSArray*)otherArray range:(NSRange)otherRange {
-    [self updateData];
-}
-
-- (void)replaceObjectsInRange:(NSRange)range withObjectsFromArray:(NSArray*)otherArray {
-    [self updateData];
-}
-
-- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject {
-    [self updateData];
-}
-
-- (void)registerClassCell:(Class)classCell classData:(Class)classData {
-}
-
-- (void)unregisterClassCell:(Class)classCell classData:(Class)classData {
-}
-
-@end
-
-//----------------------------------------------//
-
-@implementation MobilyViewTableSection
-
-- (void)registerClassCell:(Class)classCell classData:(Class)classData {
-}
-
-- (void)unregisterClassCell:(Class)classCell classData:(Class)classData {
-}
-
-@end
-
-//----------------------------------------------//
-
-@implementation MobilyViewTableRowFactory
-
-- (id)initWithClassCell:(Class)classCell classData:(Class)classData {
-    self = [super init];
-    if(self != nil) {
+- (void)registerCellClass:(Class)cellClass {
+    UINib* nib = [UINib nibWithClass:cellClass bundle:nil];
+    if(nib != nil) {
+        [_registeredCellNibs setObject:nib forKey:NSStringFromClass(cellClass)];
+        [self registerClass:cellClass forCellReuseIdentifier:NSStringFromClass(cellClass)];
     }
-    return self;
+}
+
+- (void)registerHeaderFooterClass:(Class)headerFooterClass {
+    UINib* nib = [UINib nibWithClass:headerFooterClass bundle:nil];
+    if(nib != nil) {
+        [_registeredHeaderFooterNibs setObject:nib forKey:NSStringFromClass(headerFooterClass)];
+        [self registerClass:headerFooterClass forHeaderFooterViewReuseIdentifier:NSStringFromClass(headerFooterClass)];
+    }
+}
+
+- (id)dequeueReusableCellWithClass:(Class)cellClass {
+    id cell = [self dequeueReusableCellWithIdentifier:NSStringFromClass(cellClass)];
+    if([cell rootView] == nil) {
+        UINib* nib = [_registeredCellNibs objectForKey:NSStringFromClass(cellClass)];
+        if(nib != nil) {
+            [nib instantiateWithOwner:cell options:nil];
+        }
+    }
+    return cell;
+}
+
+- (id)dequeueReusableCellWithClass:(Class)cellClass forIndexPath:(NSIndexPath*)indexPath {
+    id cell = [self dequeueReusableCellWithIdentifier:NSStringFromClass(cellClass) forIndexPath:indexPath];
+    if([cell rootView] == nil) {
+        UINib* nib = [_registeredCellNibs objectForKey:NSStringFromClass(cellClass)];
+        if(nib != nil) {
+            [nib instantiateWithOwner:cell options:nil];
+        }
+    }
+    return cell;
+}
+
+- (id)dequeueReusableHeaderFooterViewWithClass:(Class)headerFooterClass {
+    id headerFooter = [self dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass(headerFooterClass)];
+    if([headerFooter rootView] == nil) {
+        UINib* nib = [_registeredHeaderFooterNibs objectForKey:NSStringFromClass(headerFooterClass)];
+        if(nib != nil) {
+            [nib instantiateWithOwner:headerFooter options:nil];
+        }
+    }
+    return headerFooter;
 }
 
 @end
 
-//----------------------------------------------//
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
 
 @implementation MobilyViewTableCell
 
-@synthesize objectName = _objectName;
-@synthesize objectParent = _objectParent;
-@synthesize objectChilds = _objectChilds;
-
 #pragma mark Standart
 
 - (id)initWithCoder:(NSCoder*)coder {
@@ -297,51 +230,656 @@
     return self;
 }
 
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if(self != nil) {
+        [self setupView];
+    }
+    return self;
+}
+
+- (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString*)reuseIdentifier {
+    self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier];
+    if(self != nil) {
+        [self setupView];
+    }
+    return self;
+}
+
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    [self setObjectName:nil];
-    [self setObjectParent:nil];
-    [self setObjectChilds:nil];
+    [self setConstraintCenterXRootView:nil];
+    [self setConstraintCenterYRootView:nil];
+    [self setConstraintWidthRootView:nil];
+    [self setConstraintHeightRootView:nil];
+    [self setRootView:nil];
     
     MOBILY_SAFE_DEALLOC;
 }
 
-#pragma mark MobilyBuilderObject
+#pragma mark Property
 
-- (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIView class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andAddingObject:objectChild]];
-        [self addSubview:(UIView*)objectChild];
+- (void)setRootView:(UIView*)rootView {
+    if(_rootView != rootView) {
+        if(_rootView != nil) {
+            [self cleanupConstraint];
+            [_rootView removeFromSuperview];
+        }
+        MOBILY_SAFE_SETTER(_rootView, rootView);
+        if(_rootView != nil) {
+            [_rootView setTranslatesAutoresizingMaskIntoConstraints:NO];
+            [[self contentView] setSubviews:[self orderedSubviews]];
+            [self setNeedsUpdateConstraints];
+        }
     }
 }
 
-- (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIView class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild]];
-        [self removeSubview:(UIView*)objectChild];
+- (void)setConstraintCenterXRootView:(NSLayoutConstraint*)constraintCenterXRootView {
+    if(_constraintCenterXRootView != constraintCenterXRootView) {
+        if(_constraintCenterXRootView != nil) {
+            [[self contentView] removeConstraint:_constraintCenterXRootView];
+        }
+        MOBILY_SAFE_SETTER(_constraintCenterXRootView, constraintCenterXRootView);
+        if(_constraintCenterXRootView != nil) {
+            [[self contentView] addConstraint:_constraintCenterXRootView];
+        }
     }
 }
 
-- (void)willLoadObjectChilds {
+- (void)setConstraintCenterYRootView:(NSLayoutConstraint*)constraintCenterYRootView {
+    if(_constraintCenterYRootView != constraintCenterYRootView) {
+        if(_constraintCenterYRootView != nil) {
+            [[self contentView] removeConstraint:_constraintCenterYRootView];
+        }
+        MOBILY_SAFE_SETTER(_constraintCenterYRootView, constraintCenterYRootView);
+        if(_constraintCenterYRootView != nil) {
+            [[self contentView] addConstraint:_constraintCenterYRootView];
+        }
+    }
 }
 
-- (void)didLoadObjectChilds {
+- (void)setConstraintWidthRootView:(NSLayoutConstraint*)constraintWidthRootView {
+    if(_constraintWidthRootView != constraintWidthRootView) {
+        if(_constraintWidthRootView != nil) {
+            [[self contentView] removeConstraint:_constraintWidthRootView];
+        }
+        MOBILY_SAFE_SETTER(_constraintWidthRootView, constraintWidthRootView);
+        if(_constraintWidthRootView != nil) {
+            [[self contentView] addConstraint:_constraintWidthRootView];
+        }
+    }
 }
 
-- (id< MobilyBuilderObject >)objectForName:(NSString*)name {
-    return [MobilyBuilderForm object:self forName:name];
-}
-
-- (id< MobilyBuilderObject >)objectForSelector:(SEL)selector {
-    return [MobilyBuilderForm object:self forSelector:selector];
+- (void)setConstraintHeightRootView:(NSLayoutConstraint*)constraintHeightRootView {
+    if(_constraintHeightRootView != constraintHeightRootView) {
+        if(_constraintHeightRootView != nil) {
+            [[self contentView] removeConstraint:_constraintHeightRootView];
+        }
+        MOBILY_SAFE_SETTER(_constraintHeightRootView, constraintHeightRootView);
+        if(_constraintHeightRootView != nil) {
+            [[self contentView] addConstraint:_constraintHeightRootView];
+        }
+    }
 }
 
 #pragma mark Public
 
 - (void)setupView {
+    [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+    [self setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self setClipsToBounds:YES];
+    [self setNeedsUpdateConstraints];
+}
+
++ (CGFloat)heightForModel:(id)model tableView:(UITableView*)tableView {
+    return 88.0f;
+}
+
+#pragma mark UITableViewCell
+
+- (void)updateConstraints {
+    [super updateConstraints];
+    
+    if(_constraintCenterXRootView == nil) {
+        [self setConstraintCenterXRootView:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:[self contentView] attribute:NSLayoutAttributeCenterX multiplier:1.0f constant:[self rootConstantX]]];
+    } else {
+        [_constraintCenterXRootView setConstant:[self rootConstantX]];
+    }
+    if(_constraintCenterYRootView == nil) {
+        [self setConstraintCenterYRootView:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:[self contentView] attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:[self rootConstantY]]];
+    } else {
+        [_constraintCenterYRootView setConstant:[self rootConstantY]];
+    }
+    if(_constraintWidthRootView == nil) {
+        [self setConstraintWidthRootView:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:[self contentView] attribute:NSLayoutAttributeWidth multiplier:1.0f constant:[self rootConstantWidth]]];
+    } else {
+        [_constraintWidthRootView setConstant:[self rootConstantWidth]];
+    }
+    if(_constraintHeightRootView == nil) {
+        [self setConstraintHeightRootView:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:[self contentView] attribute:NSLayoutAttributeHeight multiplier:1.0f constant:[self rootConstantHeight]]];
+    } else {
+        [_constraintHeightRootView setConstant:[self rootConstantHeight]];
+    }
+}
+
+#pragma mark Private
+
+- (NSArray*)orderedSubviews {
+    NSMutableArray* result = [NSMutableArray array];
+    if(_rootView != nil) {
+        [result addObject:_rootView];
+    }
+    return result;
+}
+
+- (void)cleanupConstraint {
+    [self setConstraintCenterXRootView:nil];
+    [self setConstraintCenterYRootView:nil];
+    [self setConstraintWidthRootView:nil];
+    [self setConstraintHeightRootView:nil];
+}
+
+- (CGFloat)rootConstantX {
+    return 0.0f;
+}
+
+- (CGFloat)rootConstantY {
+    return 0.0f;
+}
+
+- (CGFloat)rootConstantWidth {
+    return 0.0f;
+}
+
+- (CGFloat)rootConstantHeight {
+    return 0.0f;
 }
 
 @end
 
-//----------------------------------------------//
+/*--------------------------------------------------*/
+
+@implementation MobilyViewTableCellSwipe
+
+#pragma mark Standart
+
+- (void)dealloc {
+    [self setPanGestupe:nil];
+    [self setConstraintOffsetLeftSwipeView:nil];
+    [self setLeftSwipeView:nil];
+    [self setConstraintOffsetRightSwipeView:nil];
+    [self setRightSwipeView:nil];
+
+    MOBILY_SAFE_DEALLOC;
+}
+
+#pragma mark Property
+
+- (void)setPanGestupe:(UIPanGestureRecognizer*)gestupePanSwipeRight {
+    if(_panGestupe != gestupePanSwipeRight) {
+        if(_panGestupe != nil) {
+            [self removeGestureRecognizer:_panGestupe];
+        }
+        MOBILY_SAFE_SETTER(_panGestupe, gestupePanSwipeRight);
+        if(_panGestupe != nil) {
+            [_panGestupe setDelegate:self];
+            [self addGestureRecognizer:_panGestupe];
+        }
+    }
+}
+
+- (void)setSwipeStyle:(MobilyViewTableCellSwipeStyle)swipeStyle {
+    if(_swipeStyle != swipeStyle) {
+        [self cleanupConstraint];
+        _swipeStyle = swipeStyle;
+        [[self contentView] setSubviews:[self orderedSubviews]];
+        [self setNeedsUpdateConstraints];
+    }
+}
+
+- (void)setShowedLeftSwipeView:(BOOL)showedSwipeLeft {
+    [self setShowedLeftSwipeView:showedSwipeLeft animated:NO];
+}
+
+- (void)setShowedRightSwipeView:(BOOL)showedRightSwipeView {
+    [self setShowedRightSwipeView:showedRightSwipeView animated:NO];
+}
+
+- (void)setLeftSwipeView:(UIView*)leftSwipeView {
+    if(_leftSwipeView != leftSwipeView) {
+        if(_leftSwipeView != nil) {
+            [self cleanupConstraint];
+            [_leftSwipeView removeFromSuperview];
+        }
+        MOBILY_SAFE_SETTER(_leftSwipeView, leftSwipeView);
+        if(_leftSwipeView != nil) {
+            [_leftSwipeView setTranslatesAutoresizingMaskIntoConstraints:NO];
+            [[self contentView] setSubviews:[self orderedSubviews]];
+            [self setNeedsUpdateConstraints];
+        }
+    }
+}
+
+- (void)setConstraintOffsetLeftSwipeView:(NSLayoutConstraint*)constraintOffsetLeftSwipeView {
+    if(_constraintOffsetLeftSwipeView != constraintOffsetLeftSwipeView) {
+        if(_constraintOffsetLeftSwipeView != nil) {
+            [[self contentView] removeConstraint:_constraintOffsetLeftSwipeView];
+        }
+        MOBILY_SAFE_SETTER(_constraintOffsetLeftSwipeView, constraintOffsetLeftSwipeView);
+        if(_constraintOffsetLeftSwipeView != nil) {
+            [[self contentView] addConstraint:_constraintOffsetLeftSwipeView];
+        }
+    }
+}
+
+- (void)setConstraintCenterYLeftSwipeView:(NSLayoutConstraint*)constraintCenterYLeftSwipeView {
+    if(_constraintCenterYLeftSwipeView != constraintCenterYLeftSwipeView) {
+        if(_constraintCenterYLeftSwipeView != nil) {
+            [[self contentView] removeConstraint:_constraintCenterYLeftSwipeView];
+        }
+        MOBILY_SAFE_SETTER(_constraintCenterYLeftSwipeView, constraintCenterYLeftSwipeView);
+        if(_constraintCenterYLeftSwipeView != nil) {
+            [[self contentView] addConstraint:_constraintCenterYLeftSwipeView];
+        }
+    }
+}
+
+- (void)setConstraintHeightLeftSwipeView:(NSLayoutConstraint*)constraintHeightLeftSwipeView {
+    if(_constraintHeightLeftSwipeView != constraintHeightLeftSwipeView) {
+        if(_constraintHeightLeftSwipeView != nil) {
+            [[self contentView] removeConstraint:_constraintHeightLeftSwipeView];
+        }
+        MOBILY_SAFE_SETTER(_constraintHeightLeftSwipeView, constraintHeightLeftSwipeView);
+        if(_constraintHeightLeftSwipeView != nil) {
+            [[self contentView] addConstraint:_constraintHeightLeftSwipeView];
+        }
+    }
+}
+
+- (void)setRightSwipeView:(UIView*)rightSwipeView {
+    if(_rightSwipeView != rightSwipeView) {
+        if(_rightSwipeView != nil) {
+            [self cleanupConstraint];
+            [_rightSwipeView removeFromSuperview];
+        }
+        MOBILY_SAFE_SETTER(_rightSwipeView, rightSwipeView);
+        if(_rightSwipeView != nil) {
+            [_rightSwipeView setTranslatesAutoresizingMaskIntoConstraints:NO];
+            [[self contentView] setSubviews:[self orderedSubviews]];
+            [self setNeedsUpdateConstraints];
+        }
+    }
+}
+
+- (void)setConstraintOffsetRightSwipeView:(NSLayoutConstraint*)constraintOffsetRightSwipeView {
+    if(_constraintOffsetRightSwipeView != constraintOffsetRightSwipeView) {
+        if(_constraintOffsetRightSwipeView != nil) {
+            [[self contentView] removeConstraint:_constraintOffsetRightSwipeView];
+        }
+        MOBILY_SAFE_SETTER(_constraintOffsetRightSwipeView, constraintOffsetRightSwipeView);
+        if(_constraintOffsetRightSwipeView != nil) {
+            [[self contentView] addConstraint:_constraintOffsetRightSwipeView];
+        }
+    }
+}
+
+- (void)setConstraintCenterYRightSwipeView:(NSLayoutConstraint*)constraintCenterYRightSwipeView {
+    if(_constraintCenterYRightSwipeView != constraintCenterYRightSwipeView) {
+        if(_constraintCenterYRightSwipeView != nil) {
+            [[self contentView] removeConstraint:_constraintCenterYRightSwipeView];
+        }
+        MOBILY_SAFE_SETTER(_constraintCenterYRightSwipeView, constraintCenterYRightSwipeView);
+        if(_constraintCenterYRightSwipeView != nil) {
+            [[self contentView] addConstraint:_constraintCenterYRightSwipeView];
+        }
+    }
+}
+
+- (void)setConstraintHeightRightSwipeView:(NSLayoutConstraint*)constraintHeightRightSwipeView {
+    if(_constraintHeightRightSwipeView != constraintHeightRightSwipeView) {
+        if(_constraintHeightRightSwipeView != nil) {
+            [[self contentView] removeConstraint:_constraintHeightRightSwipeView];
+        }
+        MOBILY_SAFE_SETTER(_constraintHeightRightSwipeView, constraintHeightRightSwipeView);
+        if(_constraintHeightRightSwipeView != nil) {
+            [[self contentView] addConstraint:_constraintHeightRightSwipeView];
+        }
+    }
+}
+
+- (void)setSwipeProgress:(CGFloat)swipeProgress {
+    [self setSwipeProgress:swipeProgress speed:FLT_EPSILON complete:nil];
+}
+
+#pragma mark Public
+
+- (void)setupView {
+    [super setupView];
+    
+    [self setPanGestupe:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlerPanGestupe)]];
+    
+    [self setSwipeStyle:MobilyViewTableCellSwipeStyleLeaves];
+    [self setSwipeThreshold:2.0f];
+    [self setSwipeSpeed:120.0f];
+}
+
+- (void)setShowedLeftSwipeView:(BOOL)showedLeftSwipeView animated:(BOOL)animated {
+    if(_showedLeftSwipeView != showedLeftSwipeView) {
+        _showedLeftSwipeView = showedLeftSwipeView;
+        _showedRightSwipeView = NO;
+        
+        CGFloat needSwipeProgress = (showedLeftSwipeView == YES) ? -1.0f : 0.0f;
+        [self setSwipeProgress:needSwipeProgress
+                         speed:[_leftSwipeView frameWidth] * ABS(needSwipeProgress - _swipeProgress)
+                      complete:nil];
+    }
+}
+
+- (void)setShowedRightSwipeView:(BOOL)showedRightSwipeView animated:(BOOL)animated {
+    if(_showedRightSwipeView != showedRightSwipeView) {
+        _showedRightSwipeView = showedRightSwipeView;
+        _showedLeftSwipeView = NO;
+        
+        CGFloat needSwipeProgress = (_showedRightSwipeView == YES) ? 1.0f : 0.0f;
+        [self setSwipeProgress:needSwipeProgress
+                         speed:[_rightSwipeView frameWidth] * ABS(needSwipeProgress - _swipeProgress)
+                      complete:nil];
+    }
+}
+
+- (void)willBeganSwipe {
+}
+
+- (void)didBeganSwipe {
+    [self setSwipeDragging:YES];
+}
+
+- (void)willEndedSwipe {
+    [self setSwipeDragging:NO];
+    [self setSwipeDecelerating:YES];
+}
+
+- (void)didEndedSwipe {
+    _showedLeftSwipeView = (_swipeProgress < 0.0f) ? YES : NO;
+    _showedRightSwipeView = (_swipeProgress > 0.0f) ? YES : NO;
+    [self setSwipeDecelerating:NO];
+}
+
+#pragma mark UITableViewCell
+
+- (void)updateConstraints {
+    [super updateConstraints];
+    
+    if(_leftSwipeView != nil) {
+        if(_constraintOffsetLeftSwipeView == nil) {
+            [self setConstraintOffsetLeftSwipeView:[NSLayoutConstraint constraintWithItem:_leftSwipeView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:[self contentView] attribute:NSLayoutAttributeLeft multiplier:1.0f constant:[self leftConstant]]];
+        } else {
+            [_constraintOffsetLeftSwipeView setConstant:[self leftConstant]];
+        }
+        if(_constraintCenterYLeftSwipeView == nil) {
+            [self setConstraintCenterYLeftSwipeView:[NSLayoutConstraint constraintWithItem:_leftSwipeView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:[self contentView] attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:0.0f]];
+        }
+        if(_constraintHeightLeftSwipeView == nil) {
+            [self setConstraintHeightLeftSwipeView:[NSLayoutConstraint constraintWithItem:_leftSwipeView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:[self contentView] attribute:NSLayoutAttributeHeight multiplier:1.0f constant:0.0f]];
+        }
+    }
+    if(_rightSwipeView != nil) {
+        if(_constraintOffsetRightSwipeView == nil) {
+            [self setConstraintOffsetRightSwipeView:[NSLayoutConstraint constraintWithItem:_rightSwipeView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:[self contentView] attribute:NSLayoutAttributeRight multiplier:1.0f constant:[self rightConstant]]];
+        } else {
+            [_constraintOffsetRightSwipeView setConstant:[self rightConstant]];
+        }
+        if(_constraintCenterYRightSwipeView == nil) {
+            [self setConstraintCenterYRightSwipeView:[NSLayoutConstraint constraintWithItem:_rightSwipeView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:[self contentView] attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:0.0f]];
+        }
+        if(_constraintHeightRightSwipeView == nil) {
+            [self setConstraintHeightRightSwipeView:[NSLayoutConstraint constraintWithItem:_rightSwipeView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:[self contentView] attribute:NSLayoutAttributeHeight multiplier:1.0f constant:0.0f]];
+        }
+    }
+}
+
+#pragma mark Private
+
+- (NSArray*)orderedSubviews {
+    NSMutableArray* result = [NSMutableArray array];
+    switch(_swipeStyle) {
+        case MobilyViewTableCellSwipeStyleStands: {
+            if(_leftSwipeView != nil) {
+                [result addObject:_leftSwipeView];
+            }
+            if(_rightSwipeView != nil) {
+                [result addObject:_rightSwipeView];
+            }
+            if([self rootView] != nil) {
+                [result addObject:[self rootView]];
+            }
+            break;
+        }
+        case MobilyViewTableCellSwipeStyleLeaves:
+        case MobilyViewTableCellSwipeStylePushes: {
+            if([self rootView] != nil) {
+                [result addObject:[self rootView]];
+            }
+            if(_leftSwipeView != nil) {
+                [result addObject:_leftSwipeView];
+            }
+            if(_rightSwipeView != nil) {
+                [result addObject:_rightSwipeView];
+            }
+            break;
+        }
+    }
+    return result;
+}
+
+- (void)cleanupConstraint {
+    [super cleanupConstraint];
+    
+    [self setConstraintOffsetLeftSwipeView:nil];
+    [self setConstraintCenterYLeftSwipeView:nil];
+    [self setConstraintHeightLeftSwipeView:nil];
+    
+    [self setConstraintOffsetRightSwipeView:nil];
+    [self setConstraintCenterYRightSwipeView:nil];
+    [self setConstraintHeightRightSwipeView:nil];
+}
+
+- (CGFloat)rootConstantX {
+    switch(_swipeStyle) {
+        case MobilyViewTableCellSwipeStyleStands:
+        case MobilyViewTableCellSwipeStyleLeaves: {
+            if(_swipeProgress < 0.0f) {
+                return [_leftSwipeView frameWidth] * (-_swipeProgress);
+            } else if(_swipeProgress > 0.0f) {
+                return (-[_rightSwipeView frameWidth]) * _swipeProgress;
+            }
+            break;
+        }
+        case MobilyViewTableCellSwipeStylePushes:
+            break;
+    }
+    return 0.0f;
+}
+
+- (CGFloat)leftConstant {
+    CGFloat leftWidth = [_leftSwipeView frameWidth];
+    switch(_swipeStyle) {
+        case MobilyViewTableCellSwipeStyleStands:
+            return 0.0f;
+        case MobilyViewTableCellSwipeStyleLeaves:
+        case MobilyViewTableCellSwipeStylePushes:
+            if(_swipeProgress < 0.0f) {
+                return -leftWidth + (leftWidth * (-_swipeProgress));
+            }
+            break;
+    }
+    return -leftWidth;
+}
+
+- (CGFloat)rightConstant {
+    CGFloat rightWidth = [_rightSwipeView frameWidth];
+    switch(_swipeStyle) {
+        case MobilyViewTableCellSwipeStyleStands:
+            return 0.0f;
+        case MobilyViewTableCellSwipeStyleLeaves:
+        case MobilyViewTableCellSwipeStylePushes:
+            if(_swipeProgress > 0.0f) {
+                return rightWidth * (1.0f - _swipeProgress);
+            }
+            break;
+    }
+    return rightWidth;
+}
+
+- (void)setSwipeProgress:(CGFloat)swipeProgress speed:(CGFloat)speed complete:(void(^)())complete {
+    CGFloat minSwipeProgress = 0.0f;
+    CGFloat maxSwipeProgress = 0.0f;
+    switch(_swipeDirection) {
+        case MobilyViewTableCellSwipeDirectionLeft: {
+            minSwipeProgress = -1.0f;
+            break;
+        }
+        case MobilyViewTableCellSwipeDirectionRight: {
+            maxSwipeProgress = 1.0f;
+            break;
+        }
+        default: {
+            break;
+        }
+    }
+    CGFloat normalizedSwipeProgress = MIN(MAX(minSwipeProgress, swipeProgress), maxSwipeProgress);
+    if(_swipeProgress != normalizedSwipeProgress) {
+        _swipeProgress = normalizedSwipeProgress;
+        [self setNeedsUpdateConstraints];
+        [self setNeedsLayout];
+        CGFloat duration = ABS(speed) / _swipeSpeed;
+        if(duration > 0.05f) {
+            [UIView animateWithDuration:duration
+                             animations:^{
+                                 [self updateConstraintsIfNeeded];
+                                 [self layoutIfNeeded];
+                             } completion:^(BOOL finished) {
+                                 if(complete != nil) {
+                                     complete();
+                                 }
+                             }];
+        } else {
+            [self updateConstraintsIfNeeded];
+            [self layoutIfNeeded];
+            if(complete != nil) {
+                complete();
+            }
+        }
+    } else {
+        if(complete != nil) {
+            complete();
+        }
+    }
+}
+
+- (void)handlerPanGestupe {
+    if(_swipeDecelerating == NO) {
+        CGPoint translation = [_panGestupe translationInView:self];
+        switch([_panGestupe state]) {
+            case UIGestureRecognizerStateBegan: {
+                [self willBeganSwipe];
+                [self setSwipeLeftWidth:-[_leftSwipeView frameWidth]];
+                [self setSwipeRightWidth:[_rightSwipeView frameWidth]];
+                [self setSwipeStartOffset:translation.x];
+                [self setSwipeDirection:MobilyViewTableCellSwipeDirectionUnknown];
+                break;
+            }
+            case UIGestureRecognizerStateChanged: {
+                CGFloat delta = _swipeStartOffset - translation.x;
+                if(_swipeDirection == MobilyViewTableCellSwipeDirectionUnknown) {
+                    if((_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (delta > _swipeThreshold)) {
+                        [self setSwipeDirection:MobilyViewTableCellSwipeDirectionLeft];
+                        [self didBeganSwipe];
+                    } else if((_showedRightSwipeView == YES) && (_rightSwipeView != nil) && (delta < -_swipeThreshold)) {
+                        [self setSwipeDirection:MobilyViewTableCellSwipeDirectionRight];
+                        [self didBeganSwipe];
+                    } else if((_showedLeftSwipeView == NO) && (_leftSwipeView != nil) && (delta < -_swipeThreshold)) {
+                        [self setSwipeDirection:MobilyViewTableCellSwipeDirectionLeft];
+                        [self didBeganSwipe];
+                    } else if((_showedRightSwipeView == NO) && (_rightSwipeView != nil) && (delta > _swipeThreshold)) {
+                        [self setSwipeDirection:MobilyViewTableCellSwipeDirectionRight];
+                        [self didBeganSwipe];
+                    }
+                }
+                if(_swipeDirection != MobilyViewTableCellSwipeDirectionUnknown) {
+                    switch(_swipeDirection) {
+                        case MobilyViewTableCellSwipeDirectionUnknown: {
+                            break;
+                        }
+                        case MobilyViewTableCellSwipeDirectionLeft: {
+                            CGFloat localDelta = MIN(MAX(_swipeLeftWidth, delta), -_swipeLeftWidth);
+                            [self setSwipeProgress:_swipeProgress - (localDelta / _swipeLeftWidth) speed:localDelta complete:nil];
+                            break;
+                        }
+                        case MobilyViewTableCellSwipeDirectionRight: {
+                            CGFloat localDelta = MIN(MAX(-_swipeRightWidth, delta), _swipeRightWidth);
+                            [self setSwipeProgress:_swipeProgress + (localDelta / _swipeRightWidth) speed:localDelta complete:nil];
+                            break;
+                        }
+                    }
+                    [self setSwipeStartOffset:translation.x];
+                }
+                break;
+            }
+            case UIGestureRecognizerStateEnded:
+            case UIGestureRecognizerStateCancelled: {
+                [self willEndedSwipe];
+                switch(_swipeDirection) {
+                    case MobilyViewTableCellSwipeDirectionLeft: {
+                        __weak id weakSelf = self;
+                        CGFloat needSwipeProgress = roundf(_swipeProgress);
+                        [self setSwipeProgress:needSwipeProgress speed:_swipeLeftWidth * ABS(needSwipeProgress - _swipeProgress) complete:^{
+                            [weakSelf didEndedSwipe];
+                        }];
+                        break;
+                    }
+                    case MobilyViewTableCellSwipeDirectionRight: {
+                        __weak id weakSelf = self;
+                        CGFloat needSwipeProgress = roundf(_swipeProgress);
+                        [self setSwipeProgress:needSwipeProgress speed:_swipeRightWidth * ABS(needSwipeProgress - _swipeProgress) complete:^{
+                            [weakSelf didEndedSwipe];
+                        }];
+                        break;
+                    }
+                    default: {
+                        [self didEndedSwipe];
+                        break;
+                    }
+                }
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+}
+
+#pragma mark UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer {
+    if((_swipeDragging == NO) && (_swipeDecelerating == NO)) {
+        CGPoint translation = [_panGestupe translationInView:self];
+        if(fabs(translation.x) >= fabs(translation.y)) {
+            if(translation.x > 0.0f) {
+                if(_leftSwipeView == nil) {
+                    return NO;
+                }
+            } else if(translation.x < 0.0f) {
+                if(_rightSwipeView == nil) {
+                    return NO;
+                }
+            }
+            return YES;
+        }
+    }
+    return NO;
+}
+
+@end
+
+/*--------------------------------------------------*/

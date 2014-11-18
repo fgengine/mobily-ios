@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		400B4D081A19E29900F2B61E /* MobilyViewTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 400B4D071A19E29900F2B61E /* MobilyViewTable.m */; };
+		400B4D0A1A1A0D6700F2B61E /* ExampleControllerMainCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 400B4D091A1A0D6700F2B61E /* ExampleControllerMainCell.xib */; };
 		401FEE5318A3F92800B445EB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401FEE5218A3F92800B445EB /* Foundation.framework */; };
 		401FEE5518A3F92800B445EB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401FEE5418A3F92800B445EB /* CoreGraphics.framework */; };
 		401FEE5718A3F92800B445EB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401FEE5618A3F92800B445EB /* UIKit.framework */; };
@@ -51,6 +53,9 @@
 
 /* Begin PBXFileReference section */
 		2BBC62D562492FDF2CDB1707 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		400B4D061A19E29900F2B61E /* MobilyViewTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyViewTable.h; sourceTree = "<group>"; };
+		400B4D071A19E29900F2B61E /* MobilyViewTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewTable.m; sourceTree = "<group>"; };
+		400B4D091A1A0D6700F2B61E /* ExampleControllerMainCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExampleControllerMainCell.xib; sourceTree = "<group>"; };
 		401FEE4F18A3F92800B445EB /* Mobily.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mobily.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		401FEE5218A3F92800B445EB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		401FEE5418A3F92800B445EB /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -140,6 +145,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		400B4D051A19E29900F2B61E /* ViewTable */ = {
+			isa = PBXGroup;
+			children = (
+				400B4D061A19E29900F2B61E /* MobilyViewTable.h */,
+				400B4D071A19E29900F2B61E /* MobilyViewTable.m */,
+			);
+			path = ViewTable;
+			sourceTree = "<group>";
+		};
 		401FEE4618A3F92800B445EB = {
 			isa = PBXGroup;
 			children = (
@@ -179,6 +193,7 @@
 				401FEE8418A3FAE600B445EB /* ExampleApplication.h */,
 				401FEE8518A3FAE600B445EB /* ExampleApplication.m */,
 				9AA83B7A19E536FE009F6C5F /* ExampleControllerMain.xib */,
+				400B4D091A1A0D6700F2B61E /* ExampleControllerMainCell.xib */,
 				401FEF1818A3FE3200B445EB /* Application.mobily */,
 				401FEF1918A3FE3200B445EB /* Presets.mobily */,
 			);
@@ -259,6 +274,7 @@
 				40798A2F1948AC0600A04686 /* ViewFieldList */,
 				40798A381948AFC400A04686 /* ViewImage */,
 				403258081A0BBBA700949E8F /* ViewScroll */,
+				400B4D051A19E29900F2B61E /* ViewTable */,
 				40798A3C1948C0F700A04686 /* ViewElements */,
 			);
 			path = UI;
@@ -442,6 +458,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				401FEF1A18A3FE3200B445EB /* Application.mobily in Resources */,
+				400B4D0A1A1A0D6700F2B61E /* ExampleControllerMainCell.xib in Resources */,
 				401FEF1B18A3FE3200B445EB /* Presets.mobily in Resources */,
 				407903D01943079600EC8855 /* Mobily.podspec in Resources */,
 				9AA83B7B19E536FF009F6C5F /* ExampleControllerMain.xib in Resources */,
@@ -516,6 +533,7 @@
 				4032580B1A0BBBA700949E8F /* MobilyViewScroll.m in Sources */,
 				40798A3B1948AFC400A04686 /* MobilyViewImage.m in Sources */,
 				401FEE8A18A3FAE600B445EB /* ExampleApplication.m in Sources */,
+				400B4D081A19E29900F2B61E /* MobilyViewTable.m in Sources */,
 				407989EC19484C9700A04686 /* MobilyControllerDynamicsDrawer.m in Sources */,
 				401FEEFD18A3FAF100B445EB /* MobilyApplication.m in Sources */,
 				40798A371948AC0600A04686 /* MobilyViewFieldText.m in Sources */,

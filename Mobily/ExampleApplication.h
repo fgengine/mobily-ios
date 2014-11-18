@@ -41,23 +41,31 @@
 #import "MobilyControllerView.h"
 #import "MobilyControllerDynamicsDrawer.h"
 #import "MobilyViewImage.h"
+#import "MobilyViewTable.h"
 
 /*--------------------------------------------------*/
 
 @interface ExampleApplication : MobilyApplication
 
 @property(nonatomic, readwrite, weak) MobilyWindow* window;
-@property(nonatomic, readwrite, weak) MobilyControllerDynamicsDrawer* mainSlide;
-@property(nonatomic, readwrite, weak) MobilyControllerNavigation* mainNavigation;
-@property(nonatomic, readwrite, weak) MobilyControllerView* mainMenuLeft;
-@property(nonatomic, readwrite, weak) MobilyControllerView* mainMenuRight;
 @property(nonatomic, readwrite, weak) MobilyControllerView* mainView;
 
 @end
 
 /*--------------------------------------------------*/
 
-@interface ExampleControllerMain : MobilyControllerView
+@interface ExampleControllerMain : MobilyControllerView < UITableViewDataSource, UITableViewDelegate >
+
+@property(nonatomic, readwrite, weak) IBOutlet MobilyViewTable* viewTable;
+@property(nonatomic, readwrite, strong) NSArray* dataSource;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface ExampleControllerMainCell : MobilyViewTableCellSwipe
+
+@property(nonatomic, readwrite, weak) IBOutlet UILabel* viewTitle;
 
 @end
 

@@ -3,6 +3,14 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "-[MobilyViewTableCellSwipe rootConstantX]:MobilyViewTable.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[_leftSwipeView frameWidth] * (1.0f - (-_swipeProgress))">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ExampleControllerMain pressedMenu]:ExampleApplication.m">
          <PersistentStrings>
             <PersistentString

@@ -8,6 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ExampleControllerMain">
             <connections>
                 <outlet property="view" destination="iN0-l3-epB" id="dih-gg-VNH"/>
+                <outlet property="viewTable" destination="95r-vW-zdb" id="qKC-6d-oJs"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -15,64 +16,23 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8tQ-1W-oWx">
-                    <rect key="frame" x="8" y="8" width="42" height="30"/>
-                    <state key="normal" title="BACK">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="95r-vW-zdb" customClass="MobilyViewTable">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <connections>
-                        <action selector="pressedBack" destination="-1" eventType="touchUpInside" id="dE7-Hd-hvi"/>
+                        <outlet property="dataSource" destination="-1" id="8cV-kz-Spj"/>
+                        <outlet property="delegate" destination="-1" id="L0h-nD-xFw"/>
                     </connections>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9OP-fh-o0t">
-                    <rect key="frame" x="550" y="8" width="42" height="30"/>
-                    <state key="normal" title="PUSH">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="pressedPush" destination="-1" eventType="touchUpInside" id="Z3A-4i-hCb"/>
-                    </connections>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cSJ-G2-baS">
-                    <rect key="frame" x="269" y="8" width="62" height="30"/>
-                    <state key="normal" title="TOGGLE">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="pressedToggle" destination="-1" eventType="touchUpInside" id="TBS-Uz-MDs"/>
-                    </connections>
-                </button>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9cW-9I-Erw" customClass="MobilyViewFieldText">
-                    <rect key="frame" x="152" y="86" width="97" height="30"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <textInputTraits key="textInputTraits"/>
-                </textField>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Hyc-nh-xM8" customClass="MobilyViewFieldText">
-                    <rect key="frame" x="33" y="86" width="97" height="30"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <textInputTraits key="textInputTraits"/>
-                </textField>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qu1-ak-Gal" customClass="MobilyViewFieldText">
-                    <rect key="frame" x="87" y="67" width="97" height="30"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <textInputTraits key="textInputTraits"/>
-                </textField>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MC2-mM-GYp" customClass="MobilyViewFieldText">
-                    <rect key="frame" x="87" y="105" width="97" height="30"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <textInputTraits key="textInputTraits"/>
-                </textField>
+                </tableView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="8tQ-1W-oWx" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="3dx-0q-UIw"/>
-                <constraint firstItem="9OP-fh-o0t" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="6Sy-PC-qXp"/>
-                <constraint firstItem="8tQ-1W-oWx" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="6zX-Am-ZAn"/>
-                <constraint firstItem="cSJ-G2-baS" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="Gou-BK-2uu"/>
-                <constraint firstAttribute="trailing" secondItem="9OP-fh-o0t" secondAttribute="trailing" constant="8" id="cdX-7j-feO"/>
-                <constraint firstAttribute="centerX" secondItem="cSJ-G2-baS" secondAttribute="centerX" id="dkA-cd-xFK"/>
+                <constraint firstAttribute="bottom" secondItem="95r-vW-zdb" secondAttribute="bottom" id="2mc-hO-tWx"/>
+                <constraint firstAttribute="trailing" secondItem="95r-vW-zdb" secondAttribute="trailing" id="QGF-LX-sFH"/>
+                <constraint firstItem="95r-vW-zdb" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="knA-qS-j3C"/>
+                <constraint firstItem="95r-vW-zdb" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="ugf-MS-6XL"/>
             </constraints>
-            <point key="canvasLocation" x="-675" y="-34"/>
+            <point key="canvasLocation" x="-811" y="-109"/>
         </view>
     </objects>
 </document>
