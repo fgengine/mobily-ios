@@ -3,18 +3,10 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "-[ExampleControllerMain pressedMenu]:ExampleApplication.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "[MobilyContext application]">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
          contextName = "-[MobilyViewTableCellSwipe handlerPanGestupe]:MobilyViewTable.m">
          <PersistentStrings>
             <PersistentString
-               value = "_swipeLastVelocity / _swipeVelocity">
+               value = "_swipeLeftWidth / (_swipeLastVelocity / _swipeVelocity)">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -23,6 +15,22 @@
          <PersistentStrings>
             <PersistentString
                value = "[_leftSwipeView frameWidth] * (1.0f - (-_swipeProgress))">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MobilyViewTableCellSwipe setSwipeProgress:speed:endedSwipe:]:MobilyViewTable.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "speed / _swipeSpeed">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ExampleControllerMain pressedMenu]:ExampleApplication.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[MobilyContext application]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

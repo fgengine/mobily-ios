@@ -578,8 +578,8 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
     
     [self setSwipeStyle:MobilyViewTableCellSwipeStyleLeaves];
     [self setSwipeThreshold:2.0f];
-    [self setSwipeSpeed:120.0f];
-    [self setSwipeVelocity:800.0f];
+    [self setSwipeSpeed:420.0f];
+    [self setSwipeVelocity:320.0f];
 }
 
 - (void)setShowedLeftSwipeView:(BOOL)showedLeftSwipeView animated:(BOOL)animated {
@@ -775,44 +775,23 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
 }
 
 - (void)setSwipeProgress:(CGFloat)swipeProgress speed:(CGFloat)speed endedSwipe:(BOOL)endedSwipe {
-    CGFloat minSwipeProgress = 0.0f;
-    CGFloat maxSwipeProgress = 0.0f;
-    switch(_swipeDirection) {
-        case MobilyViewTableCellSwipeDirectionLeft: {
-            minSwipeProgress = -1.0f;
-            break;
-        }
-        case MobilyViewTableCellSwipeDirectionRight: {
-            maxSwipeProgress = 1.0f;
-            break;
-        }
-        default: {
-            break;
-        }
-    }
+    CGFloat minSwipeProgress = (_swipeDirection == MobilyViewTableCellSwipeDirectionLeft) ? -1.0f : 0.0f;
+    CGFloat maxSwipeProgress = (_swipeDirection == MobilyViewTableCellSwipeDirectionRight) ? 1.0f :0.0f;
     CGFloat normalizedSwipeProgress = MIN(MAX(minSwipeProgress, swipeProgress), maxSwipeProgress);
     if(_swipeProgress != normalizedSwipeProgress) {
         _swipeProgress = normalizedSwipeProgress;
         [self setNeedsUpdateConstraints];
         [self setNeedsLayout];
-        CGFloat duration = ABS(speed) / _swipeSpeed;
-        if(duration > 0.05f) {
-            [UIView animateWithDuration:duration
-                             animations:^{
-                                 [self updateConstraintsIfNeeded];
-                                 [self layoutIfNeeded];
-                             } completion:^(BOOL finished) {
-                                 if(endedSwipe == YES) {
-                                     [self didEndedSwipe];
-                                 }
-                             }];
-        } else {
-            [self updateConstraintsIfNeeded];
-            [self layoutIfNeeded];
-            if(endedSwipe == YES) {
-                [self didEndedSwipe];
-            }
-        }
+        
+        [UIView animateWithDuration:ABS(speed) / _swipeSpeed
+                         animations:^{
+                             [self updateConstraintsIfNeeded];
+                             [self layoutIfNeeded];
+                         } completion:^(BOOL finished) {
+                             if(endedSwipe == YES) {
+                                 [self didEndedSwipe];
+                             }
+                         }];
     } else {
         if(endedSwipe == YES) {
             [self didEndedSwipe];
@@ -877,7 +856,10 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
             case UIGestureRecognizerStateEnded:
             case UIGestureRecognizerStateCancelled: {
                 [self willEndedSwipe];
-                CGFloat needSwipeProgress = roundf(_swipeProgress - (_swipeLastVelocity / _swipeVelocity));
+                CGFloat swipeProgress = roundf(_swipeProgress - (_swipeLastVelocity / _swipeVelocity));
+                CGFloat minSwipeProgress = (_swipeDirection == MobilyViewTableCellSwipeDirectionLeft) ? -1.0f : 0.0f;
+                CGFloat maxSwipeProgress = (_swipeDirection == MobilyViewTableCellSwipeDirectionRight) ? 1.0f :0.0f;
+                CGFloat needSwipeProgress = MIN(MAX(minSwipeProgress, swipeProgress), maxSwipeProgress);
                 switch(_swipeDirection) {
                     case MobilyViewTableCellSwipeDirectionLeft: {
                         [self setSwipeProgress:needSwipeProgress speed:_swipeLeftWidth * ABS(needSwipeProgress - _swipeProgress) endedSwipe:YES];

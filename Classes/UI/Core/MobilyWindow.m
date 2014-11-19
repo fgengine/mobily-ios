@@ -185,7 +185,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 
 - (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
     UIView* result = nil;
-    if([_emptyView isHidden] == NO) {
+    if((_automaticallyHideKeyboard == YES) && ([_emptyView isHidden] == NO)) {
         UIViewController* rootController = [self rootViewController];
         if([rootController presentedViewController] != nil) {
             rootController = [rootController presentedViewController];
@@ -210,6 +210,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 #pragma mark Public
 
 - (void)setupWindow {
+    [self setAutomaticallyHideKeyboard:YES];
 }
 
 #pragma mark Private

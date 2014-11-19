@@ -40,6 +40,7 @@
 
 @interface MobilyWindow : UIWindow< MobilyBuilderObject >
 
+@property(nonatomic, readwrite, assign, getter=isAutomaticallyHideKeyboard) BOOL automaticallyHideKeyboard;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidLoad;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidUnload;
 
