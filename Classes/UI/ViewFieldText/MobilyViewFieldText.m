@@ -37,6 +37,7 @@
 
 /*--------------------------------------------------*/
 
+#define MOBILY_DURATION                             0.2f
 #define MOBILY_TOOLBAR_HEIGHT                       44.0f
 
 /*--------------------------------------------------*/
@@ -129,11 +130,35 @@
     return [MobilyBuilderForm object:self forSelector:selector];
 }
 
+#pragma mark Property
+
+- (void)setHiddenToolbar:(BOOL)hiddenToolbar {
+    [self setHiddenToolbar:hiddenToolbar animated:NO];
+}
+
 #pragma mark Public
 
 - (void)setupView {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBeginEditing) name:UITextFieldTextDidBeginEditingNotification object:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEndEditing) name:UITextFieldTextDidEndEditingNotification object:self];
+}
+
+- (void)setHiddenToolbar:(BOOL)hiddenToolbar animated:(BOOL)animated {
+    if(_hiddenToolbar != hiddenToolbar) {
+        _hiddenToolbar = hiddenToolbar;
+        
+        if([self isEditing] == YES) {
+            CGFloat toolbarHeight = (_hiddenToolbar == NO) ? MOBILY_TOOLBAR_HEIGHT : 0.0f;
+            if(animated == YES) {
+                [UIView animateWithDuration:MOBILY_DURATION
+                                 animations:^{
+                                     [_toolbar setFrameHeight:toolbarHeight];
+                                 }];
+            } else {
+                [_toolbar setFrameHeight:toolbarHeight];
+            }
+        }
+    }
 }
 
 - (void)didBeginEditing {
@@ -148,6 +173,7 @@
             
             [_toolbar setItems:@[_prevButton, _nextButton, _flexButton, _doneButton]];
             [_toolbar setBarStyle:UIBarStyleDefault];
+            [_toolbar setClipsToBounds:YES];
         }
     }
     if(_toolbar != nil) {
@@ -156,6 +182,7 @@
         [_prevButton setEnabled:(_prevInputResponder != nil)];
         [_nextButton setEnabled:(_nextInputResponder != nil)];
         
+        [_toolbar setFrameHeight:(_hiddenToolbar == NO) ? MOBILY_TOOLBAR_HEIGHT : 0.0f];
         [self setInputAccessoryView:_toolbar];
     }
 }

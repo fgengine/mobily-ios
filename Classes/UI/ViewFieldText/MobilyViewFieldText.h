@@ -39,6 +39,7 @@
 
 @interface MobilyViewFieldText : UITextField< MobilyBuilderObject >
 
+@property(nonatomic, readwrite, assign) BOOL hiddenToolbar;
 @property(nonatomic, readwrite, strong) UIToolbar* toolbar;
 @property(nonatomic, readwrite, strong) UIBarButtonItem* prevButton;
 @property(nonatomic, readwrite, strong) UIBarButtonItem* nextButton;
@@ -46,6 +47,8 @@
 @property(nonatomic, readwrite, strong) UIBarButtonItem* doneButton;
 
 - (void)setupView;
+
+- (void)setHiddenToolbar:(BOOL)hiddenToolbar animated:(BOOL)animated;
 
 - (void)didBeginEditing;
 - (void)didEndEditing;
