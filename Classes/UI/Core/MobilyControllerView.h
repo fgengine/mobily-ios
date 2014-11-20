@@ -39,6 +39,7 @@
 
 @interface MobilyControllerView : MobilyController
 
+@property(nonatomic, readwrite, assign, getter=isAutomaticallyHideKeyboard) BOOL automaticallyHideKeyboard;
 @property(nonatomic, readwrite, assign) UIInterfaceOrientationMask orientation;
 @property(nonatomic, readonly, strong) NSString* mobilyName;
 

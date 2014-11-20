@@ -1799,6 +1799,20 @@ MOBILY_DEFINE_VALIDATE_STRING(Title)
     }
 }
 
+- (void)unloadViewIfPossible {
+    if([self isViewLoaded] == YES) {
+        if([[self view] window] == nil) {
+            [self setView:nil];
+        }
+    }
+}
+
+- (void)unloadView {
+    if([self isViewLoaded] == YES) {
+        [self setView:nil];
+    }
+}
+
 #pragma mark Property
 
 - (UIView*)topView {

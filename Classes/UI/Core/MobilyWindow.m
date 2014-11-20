@@ -39,6 +39,10 @@
 
 /*--------------------------------------------------*/
 
+#import "MobilyControllerView.h"
+
+/*--------------------------------------------------*/
+
 @interface MobilyWindow ()
 
 @property(nonatomic, readwrite, assign) BOOL isNeedLoad;
@@ -184,27 +188,32 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 }
 
 - (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
-    UIView* result = nil;
     if((_automaticallyHideKeyboard == YES) && ([_emptyView isHidden] == NO)) {
         UIViewController* rootController = [self rootViewController];
         if([rootController presentedViewController] != nil) {
             rootController = [rootController presentedViewController];
         }
-        result = [[rootController view] hitTest:point withEvent:event];
-        if([result canBecomeFirstResponder] == NO) {
-            if([result isKindOfClass:[UIControl class]] == YES) {
-                UIControl* control = (UIControl*)result;
+        if([rootController isKindOfClass:[MobilyControllerView class]] == YES) {
+            MobilyControllerView* rootViewController = (MobilyControllerView*)rootController;
+            if([rootViewController isAutomaticallyHideKeyboard] == NO) {
+                return [super hitTest:point withEvent:event];
+            }
+        }
+        UIView* view = [[rootController view] hitTest:point withEvent:event];
+        if([view canBecomeFirstResponder] == NO) {
+            if([view isKindOfClass:[UIControl class]] == YES) {
+                UIControl* control = (UIControl*)view;
                 if([control isEnabled] == NO) {
-                    result = _emptyView;
+                    return _emptyView;
                 }
             } else {
-                result = _emptyView;
+                return _emptyView;
             }
         }
     } else {
-        result = [super hitTest:point withEvent:event];
+        return [super hitTest:point withEvent:event];
     }
-    return result;
+    return nil;
 }
 
 #pragma mark Public

@@ -63,7 +63,7 @@
 @property(nonatomic, readwrite, strong) NSMutableIndexSet* mutableVisibleIndexSet;
 @property(nonatomic, readwrite, strong) NSMutableIndexSet* mutableSelectedIndexSet;
 
-@property(nonatomic, readwrite, assign, getter = isUpdating) BOOL updating;
+@property(nonatomic, readwrite, assign, getter=isUpdating) BOOL updating;
 @property(nonatomic, readwrite, assign) CGSize updatingContentSize;
 
 // Private
@@ -113,7 +113,7 @@
 
 @property(nonatomic, readwrite, assign) NSUInteger index;
 @property(nonatomic, readwrite, strong) NSString* identifier;
-@property(nonatomic, readwrite, assign, getter = isSelected) BOOL selected;
+@property(nonatomic, readwrite, assign, getter=isSelected) BOOL selected;
 
 - (id)initWithElements:(MobilyViewElements*)elements;
 

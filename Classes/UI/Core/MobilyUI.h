@@ -318,6 +318,8 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 @property(nonatomic, readonly, strong) UIView* topView;
 
 - (void)loadViewIfNeed;
+- (void)unloadViewIfPossible;
+- (void)unloadView;
 
 @end
 
@@ -325,7 +327,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 @interface UINavigationController (MobilyUI)
 
-@property(nonatomic, readwrite, assign, getter = isTranslucent) BOOL translucent NS_AVAILABLE_IOS(3_0);
+@property(nonatomic, readwrite, assign, getter=isTranslucent) BOOL translucent NS_AVAILABLE_IOS(3_0);
 @property(nonatomic, readwrite, retain) UIColor* tintColor;
 @property(nonatomic, readwrite, retain) UIColor* barTintColor NS_AVAILABLE_IOS(7_0);
 @property(nonatomic, readwrite, retain) UIImage* shadowImage NS_AVAILABLE_IOS(6_0);

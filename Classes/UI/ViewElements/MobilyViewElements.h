@@ -132,7 +132,7 @@ typedef NS_OPTIONS(NSUInteger, MobilyViewElementsScrollPosition) {
 @property(nonatomic, readonly, strong) NSArray* selectedItems;
 @property(nonatomic, readonly, strong) NSArray* selectedCells;
 
-@property(nonatomic, readonly, assign, getter = isUpdating) BOOL updating;
+@property(nonatomic, readonly, assign, getter=isUpdating) BOOL updating;
 
 - (void)setupView;
 
@@ -202,7 +202,7 @@ typedef NS_OPTIONS(NSUInteger, MobilyViewElementsScrollPosition) {
 
 @property(nonatomic, readonly, assign) NSUInteger index;
 @property(nonatomic, readonly, strong) NSString* identifier;
-@property(nonatomic, readonly, assign, getter = isSelected) BOOL selected;
+@property(nonatomic, readonly, assign, getter=isSelected) BOOL selected;
 
 @property(nonatomic, readwrite, assign) NSInteger zIndex;
 

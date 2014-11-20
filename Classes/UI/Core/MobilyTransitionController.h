@@ -52,7 +52,7 @@
 @interface MobilyTransitionController : NSObject < UIViewControllerAnimatedTransitioning >
 
 @property(nonatomic, readwrite, assign) NSTimeInterval duration;
-@property(nonatomic, readwrite, assign, getter = isReverse) BOOL reverse;
+@property(nonatomic, readwrite, assign, getter=isReverse) BOOL reverse;
 
 - (void)setupTransitionController;
 

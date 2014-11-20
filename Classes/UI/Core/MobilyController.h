@@ -45,7 +45,7 @@
 
 @property(nonatomic, readwrite, strong) MobilyTransitionController* transitionModal;
 
-@property(nonatomic, readwrite, assign, getter = isNavigationBarHidden) BOOL navigationBarHidden;
+@property(nonatomic, readwrite, assign, getter=isNavigationBarHidden) BOOL navigationBarHidden;
 
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidLoad;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidUnload;

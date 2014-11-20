@@ -203,11 +203,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     
-    if([self isViewLoaded] == YES) {
-        if([[self view] window] == nil) {
-            [self setView:nil];
-        }
-    }
+    [self unloadViewIfPossible];
 }
 
 #pragma mark UIViewControllerTransitioningDelegate
