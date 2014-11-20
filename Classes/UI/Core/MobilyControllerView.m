@@ -57,6 +57,12 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
 
 #pragma mark Standart
 
+- (void)setupController {
+    [super setupController];
+    
+    [self setAutomaticallyHideKeyboard:YES];
+}
+
 - (void)dealloc {
     [self setMobilyName:nil];
 

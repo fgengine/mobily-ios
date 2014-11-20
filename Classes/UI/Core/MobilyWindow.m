@@ -189,31 +189,27 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 
 - (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
     if((_automaticallyHideKeyboard == YES) && ([_emptyView isHidden] == NO)) {
-        UIViewController* rootController = [self rootViewController];
-        if([rootController presentedViewController] != nil) {
-            rootController = [rootController presentedViewController];
-        }
-        if([rootController isKindOfClass:[MobilyControllerView class]] == YES) {
-            MobilyControllerView* rootViewController = (MobilyControllerView*)rootController;
-            if([rootViewController isAutomaticallyHideKeyboard] == NO) {
-                return [super hitTest:point withEvent:event];
+        UIViewController* currentViewController = [self currentViewController];
+        if([currentViewController isKindOfClass:[MobilyControllerView class]] == YES) {
+            MobilyControllerView* mobilyViewController = (MobilyControllerView*)currentViewController;
+            if([mobilyViewController isAutomaticallyHideKeyboard] == NO) {
+                return [[[self rootViewController] view] hitTest:point withEvent:event];
             }
         }
-        UIView* view = [[rootController view] hitTest:point withEvent:event];
+        UIView* view = [[currentViewController view] hitTest:point withEvent:event];
         if([view canBecomeFirstResponder] == NO) {
             if([view isKindOfClass:[UIControl class]] == YES) {
                 UIControl* control = (UIControl*)view;
                 if([control isEnabled] == NO) {
-                    return _emptyView;
+                    view = _emptyView;
                 }
             } else {
-                return _emptyView;
+                view = _emptyView;
             }
         }
-    } else {
-        return [super hitTest:point withEvent:event];
+        return view;
     }
-    return nil;
+    return [super hitTest:point withEvent:event];
 }
 
 #pragma mark Public

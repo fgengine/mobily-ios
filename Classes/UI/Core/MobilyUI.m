@@ -829,11 +829,7 @@ static UIResponder* MOBILY_CURRENT_FIRST_RESPONDER = nil;
 #pragma mark Property
 
 - (UIViewController*)currentViewController {
-    UIViewController* viewController = [self rootViewController];
-    while([viewController presentedViewController] != nil) {
-        viewController = [viewController presentedViewController];
-    }
-    return viewController;
+    return [[self rootViewController] currentViewController];
 }
 
 #ifdef __IPHONE_7_0
@@ -1813,14 +1809,24 @@ MOBILY_DEFINE_VALIDATE_STRING(Title)
     }
 }
 
-#pragma mark Property
+- (UIViewController*)currentViewController {
+    return [UIViewController currentViewController:self];
+}
 
-- (UIView*)topView {
-    UIViewController* viewController = self;
-    while([viewController parentViewController] != nil) {
-        viewController = [viewController parentViewController];
+#pragma mark Private
+
++ (UIViewController*)currentViewController:(UIViewController*)rootViewController {
+    if([rootViewController presentedViewController] != nil) {
+        return [self currentViewController:[rootViewController presentedViewController]];
     }
-    return [viewController view];
+    if([rootViewController isKindOfClass:[UINavigationController class]] == YES) {
+        UINavigationController* navigationController = (UINavigationController*)rootViewController;
+        return [self currentViewController:[navigationController topViewController]];
+    } else if([rootViewController isKindOfClass:[UITabBarController class]] == YES) {
+        UITabBarController* tabBarController = (UITabBarController*)rootViewController;
+        return [self currentViewController:[tabBarController selectedViewController]];
+    }
+    return rootViewController;
 }
 
 @end

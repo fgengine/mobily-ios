@@ -315,11 +315,11 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 @interface UIViewController (MobilyUI)
 
-@property(nonatomic, readonly, strong) UIView* topView;
-
 - (void)loadViewIfNeed;
 - (void)unloadViewIfPossible;
 - (void)unloadView;
+
+- (UIViewController*)currentViewController;
 
 @end
 
