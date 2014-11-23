@@ -42,6 +42,8 @@
 
 @interface MobilyControllerTabBar () < UIViewControllerTransitioningDelegate, UITabBarControllerDelegate >
 
+@property(nonatomic, readwrite, assign, getter=isAppeared) BOOL appeared;
+
 @end
 
 /*--------------------------------------------------*/
@@ -134,6 +136,12 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     return [MobilyBuilderForm object:self forSelector:selector];
 }
 
+#pragma mark Property
+
+- (BOOL)isAppeared {
+    return (_appeared > 0);
+}
+
 #pragma mark Public
 
 - (void)setupController {
@@ -185,11 +193,12 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
     if(_navigationBarHidden == YES) {
         [[self navigationController] setNavigationBarHidden:YES animated:animated];
     }
     [_eventWillAppear fireSender:self object:nil];
+    [self setAppeared:_appeared + 1];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -210,6 +219,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
+    [self setAppeared:_appeared - 1];
     [_eventDidDisappear fireSender:self object:nil];
 }
 

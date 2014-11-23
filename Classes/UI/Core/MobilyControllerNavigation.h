@@ -40,6 +40,7 @@
 
 @interface MobilyControllerNavigation : UINavigationController< MobilyBuilderObject >
 
+@property(nonatomic, readonly, assign, getter=isAppeared) BOOL appeared;
 @property(nonatomic, readwrite, strong) MobilyTransitionController* transitionModal;
 @property(nonatomic, readwrite, strong) MobilyTransitionController* transitionNavigation;
 
