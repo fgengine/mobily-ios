@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name = 'Mobily'
-	s.version = '0.1.57'
+	s.version = '0.1.58'
 	s.summary = 'Mobily framework for iOS'
 	s.homepage = 'https://github.com/fgengine/mobily-ios'
 	s.license = {
@@ -77,7 +77,7 @@ Pod::Spec.new do |s|
     s.subspec 'UIControllerSlideMenu' do |ss|
         ss.public_header_files = 'Classes/UI/ControllerSlideMenu/**/*.h'
         ss.source_files = 'Classes/UI/ControllerSlideMenu/**/*.{h,m}'
-        ss.resources = 'Classes/UI/ControllerSlideMenu/**/*.{.png}'
+        ss.resources = 'Classes/UI/ControllerSlideMenu/**/*.{png}'
         ss.dependency 'Mobily/UI'
     end
 
