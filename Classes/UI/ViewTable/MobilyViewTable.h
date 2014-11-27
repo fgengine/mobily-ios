@@ -68,6 +68,8 @@
 
 - (void)setupView;
 
+- (void)didLoadFromNib;
+
 + (CGFloat)heightForModel:(id)model tableView:(UITableView*)tableView;
 
 @end

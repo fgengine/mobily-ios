@@ -194,6 +194,9 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
         UINib* nib = [_registeredCellNibs objectForKey:NSStringFromClass(cellClass)];
         if(nib != nil) {
             [nib instantiateWithOwner:cell options:nil];
+            if([cell isKindOfClass:[MobilyViewTableCell class]] == YES) {
+                [cell didLoadFromNib];
+            }
         }
     }
     return cell;
@@ -206,6 +209,9 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
         UINib* nib = [_registeredCellNibs objectForKey:NSStringFromClass(cellClass)];
         if(nib != nil) {
             [nib instantiateWithOwner:cell options:nil];
+            if([cell isKindOfClass:[MobilyViewTableCell class]] == YES) {
+                [cell didLoadFromNib];
+            }
         }
     }
     return cell;
@@ -218,6 +224,9 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
         UINib* nib = [_registeredHeaderFooterNibs objectForKey:NSStringFromClass(headerFooterClass)];
         if(nib != nil) {
             [nib instantiateWithOwner:headerFooter options:nil];
+            if([headerFooter isKindOfClass:[MobilyViewTableCell class]] == YES) {
+                [headerFooter didLoadFromNib];
+            }
         }
     }
     return headerFooter;
@@ -347,6 +356,9 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
     [self setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self setClipsToBounds:YES];
     [self setNeedsUpdateConstraints];
+}
+
+- (void)didLoadFromNib {
 }
 
 + (CGFloat)heightForModel:(id)model tableView:(UITableView*)tableView {
