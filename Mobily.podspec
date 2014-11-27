@@ -77,7 +77,7 @@ Pod::Spec.new do |s|
     s.subspec 'UIControllerSlideMenu' do |ss|
         ss.public_header_files = 'Classes/UI/ControllerSlideMenu/**/*.h'
         ss.source_files = 'Classes/UI/ControllerSlideMenu/**/*.{h,m}'
-        ss.resources = 'Classes/UI/ControllerSlideMenu/Assets/*.*'
+        ss.resources = 'Classes/UI/ControllerSlideMenu/**/*.{.png}'
         ss.dependency 'Mobily/UI'
     end
 
