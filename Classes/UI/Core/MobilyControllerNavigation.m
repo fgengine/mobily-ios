@@ -69,14 +69,6 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 #pragma mark Standart
 
-- (id)init {
-    self = [super init];
-    if(self != nil) {
-        [self setupController];
-    }
-    return self;
-}
-
 - (id)initWithCoder:(NSCoder*)coder {
     self = [super initWithCoder:coder];
     if(self != nil) {
@@ -87,6 +79,22 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (id)initWithNibName:(NSString*)nib bundle:(NSBundle*)bundle {
     self = [super initWithNibName:nib bundle:bundle];
+    if(self != nil) {
+        [self setupController];
+    }
+    return self;
+}
+
+- (instancetype)initWithNavigationBarClass:(Class)navigationBarClass toolbarClass:(Class)toolbarClass {
+    self = [super initWithNavigationBarClass:navigationBarClass toolbarClass:toolbarClass];
+    if(self != nil) {
+        [self setupController];
+    }
+    return self;
+}
+
+- (instancetype)initWithRootViewController:(UIViewController*)rootViewController {
+    self = [super initWithRootViewController:rootViewController];
     if(self != nil) {
         [self setupController];
     }
@@ -119,6 +127,12 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)didLoadObjectChilds {
+    if([self rootViewController] == nil) {
+        UIViewController* viewController = [_objectChilds firstObjectIsClass:[UIViewController class]];
+        if(viewController != nil) {
+            [self setViewControllers:@[ viewController ]];
+        }
+    }
 }
 
 - (id< MobilyBuilderObject >)objectForName:(NSString*)name {

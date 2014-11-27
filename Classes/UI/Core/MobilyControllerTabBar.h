@@ -41,7 +41,7 @@
 @interface MobilyControllerTabBar : UITabBarController< MobilyBuilderObject >
 
 @property(nonatomic, readonly, assign, getter=isAppeared) BOOL appeared;
-@property(nonatomic, readwrite, assign) BOOL navigationBarHidden;
+@property(nonatomic, readwrite, assign, getter=isNavigationBarHidden) BOOL navigationBarHidden;
 @property(nonatomic, readwrite, strong) MobilyTransitionController* transitionModal;
 @property(nonatomic, readwrite, strong) MobilyTransitionController* transitionNavigation;
 

@@ -39,6 +39,8 @@
 
 @interface MobilyControllerDynamicsDrawer () < UIViewControllerTransitioningDelegate >
 
+@property(nonatomic, readwrite, assign, getter=isAppeared) BOOL appeared;
+
 @end
 
 /*--------------------------------------------------*/
@@ -155,6 +157,10 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 #pragma mark Property
 
+- (BOOL)isAppeared {
+    return (_appeared > 0);
+}
+
 - (void)setLeftDrawerViewController:(UIViewController*)leftDrawerViewController {
     [self setDrawerViewController:leftDrawerViewController forDirection:MSDynamicsDrawerDirectionLeft];
 }
@@ -216,6 +222,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
         [[self navigationController] setNavigationBarHidden:YES animated:animated];
     }
     [_eventWillAppear fireSender:self object:nil];
+    [self setAppeared:_appeared + 1];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -236,6 +243,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
+    [self setAppeared:_appeared - 1];
     [_eventDidDisappear fireSender:self object:nil];
 }
 

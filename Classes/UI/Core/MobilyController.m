@@ -71,14 +71,6 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 #pragma mark Standart
 
-- (id)init {
-    self = [super init];
-    if(self != nil) {
-        [self setupController];
-    }
-    return self;
-}
-
 - (id)initWithCoder:(NSCoder*)coder {
     self = [super initWithCoder:coder];
     if(self != nil) {

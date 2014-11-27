@@ -52,6 +52,8 @@
 - (BOOL)launchingWithOptions:(NSDictionary *)options {
     BOOL result = [super launchingWithOptions:options];
     if(result == YES) {
+        [_slideView setLeftMenu:_leftView];
+        [_slideView setRightMenu:_rightView];
     }
     return result;
 }
@@ -78,6 +80,14 @@
 
 - (void)dealloc {
     MOBILY_SAFE_DEALLOC;
+}
+
+- (BOOL)slideNavigationControllerShouldDisplayLeftMenu {
+    return YES;
+}
+
+- (BOOL)slideNavigationControllerShouldDisplayRightMenu {
+    return YES;
 }
 
 - (void)viewDidLoad {

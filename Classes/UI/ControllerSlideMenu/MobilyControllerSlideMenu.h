@@ -37,16 +37,15 @@
 
 /*--------------------------------------------------*/
 
-#import <MSDynamicsDrawerViewController/MSDynamicsDrawerViewController.h>
+#import "SlideNavigationController.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyControllerDynamicsDrawer : MSDynamicsDrawerViewController< MobilyBuilderObject >
-
-@property(nonatomic, readwrite, assign) BOOL navigationBarHidden;
+@interface MobilyControllerSlideMenu : SlideNavigationController< MobilyBuilderObject >
 
 @property(nonatomic, readonly, assign, getter=isAppeared) BOOL appeared;
 @property(nonatomic, readwrite, strong) MobilyTransitionController* transitionModal;
+@property(nonatomic, readwrite, strong) MobilyTransitionController* transitionNavigation;
 
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidLoad;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidUnload;
@@ -54,17 +53,6 @@
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidAppear;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventWillDisappear;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidDisappear;
-
-@property(nonatomic, readwrite, strong) UIViewController* leftDrawerViewController;
-@property(nonatomic, readwrite, strong) UIViewController* rightDrawerViewController;
-
-- (void)showWideLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion;
-- (void)showLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion;
-- (void)hideLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion;
-
-- (void)showWideRightDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion;
-- (void)showRightDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion;
-- (void)hideRightDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion;
 
 - (void)setupController;
 

@@ -40,6 +40,7 @@
 #import "MobilyControllerNavigation.h"
 #import "MobilyControllerView.h"
 #import "MobilyControllerDynamicsDrawer.h"
+#import "MobilyControllerSlideMenu.h"
 #import "MobilyViewImage.h"
 #import "MobilyViewTable.h"
 
@@ -48,7 +49,10 @@
 @interface ExampleApplication : MobilyApplication
 
 @property(nonatomic, readwrite, weak) MobilyWindow* window;
+@property(nonatomic, readwrite, weak) MobilyControllerSlideMenu* slideView;
 @property(nonatomic, readwrite, weak) MobilyControllerView* mainView;
+@property(nonatomic, readwrite, weak) MobilyControllerView* leftView;
+@property(nonatomic, readwrite, weak) MobilyControllerView* rightView;
 
 @end
 

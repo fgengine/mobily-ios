@@ -33,14 +33,11 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyControllerTabBar.h"
-#import "MobilyControllerNavigation.h"
-#import "MobilyController.h"
-#import "MobilyEvent.h"
+#import "MobilyControllerSlideMenu.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyControllerTabBar () < UIViewControllerTransitioningDelegate, UITabBarControllerDelegate >
+@interface MobilyControllerSlideMenu () < UIViewControllerTransitioningDelegate >
 
 @property(nonatomic, readwrite, assign, getter=isAppeared) BOOL appeared;
 
@@ -50,7 +47,7 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation MobilyControllerTabBar
+@implementation MobilyControllerSlideMenu
 
 @synthesize objectName = _objectName;
 @synthesize objectParent = _objectParent;
@@ -58,7 +55,6 @@
 
 #pragma mark NSKeyValueCoding
 
-MOBILY_DEFINE_VALIDATE_BOOL(NavigationBarHidden)
 MOBILY_DEFINE_VALIDATE_TRANSITION_CONTROLLER(TransitionModal);
 MOBILY_DEFINE_VALIDATE_TRANSITION_CONTROLLER(TransitionNavigation);
 MOBILY_DEFINE_VALIDATE_EVENT(EventDidLoad)
@@ -80,6 +76,22 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (id)initWithNibName:(NSString*)nib bundle:(NSBundle*)bundle {
     self = [super initWithNibName:nib bundle:bundle];
+    if(self != nil) {
+        [self setupController];
+    }
+    return self;
+}
+
+- (instancetype)initWithNavigationBarClass:(Class)navigationBarClass toolbarClass:(Class)toolbarClass {
+    self = [super initWithNavigationBarClass:navigationBarClass toolbarClass:toolbarClass];
+    if(self != nil) {
+        [self setupController];
+    }
+    return self;
+}
+
+- (instancetype)initWithRootViewController:(UIViewController*)rootViewController {
+    self = [super initWithRootViewController:rootViewController];
     if(self != nil) {
         [self setupController];
     }
@@ -112,11 +124,11 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)didLoadObjectChilds {
-    if([UIDevice systemVersion] >= 7.0f) {
-        if([[self viewControllers] count] < 1) {
-            [self setViewControllers:[_objectChilds arrayByObjectClass:[UIViewController class]]];
+    if([self rootViewController] == nil) {
+        UIViewController* viewController = [_objectChilds firstObjectIsClass:[UIViewController class]];
+        if(viewController != nil) {
+            [self setViewControllers:@[ viewController ]];
         }
-        [_eventDidLoad fireSender:self object:nil];
     }
 }
 
@@ -128,53 +140,53 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     return [MobilyBuilderForm object:self forSelector:selector];
 }
 
+#pragma mark Public
+
+- (void)setupController {
+}
+
 #pragma mark Property
 
 - (BOOL)isAppeared {
     return (_appeared > 0);
 }
 
-#pragma mark Public
-
-- (void)setupController {
-    [self setDelegate:self];
-}
-
 #pragma mark UIViewController
 
 - (BOOL)shouldAutorotate {
-    return [[self selectedViewController] shouldAutorotate];
+    return [[self topViewController] shouldAutorotate];
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return [[self selectedViewController] supportedInterfaceOrientations];
+    return [[self topViewController] supportedInterfaceOrientations];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation {
-    return [[self selectedViewController] shouldAutorotateToInterfaceOrientation:orientation];
+    return [[self topViewController] shouldAutorotateToInterfaceOrientation:orientation];
 }
 
 - (BOOL)prefersStatusBarHidden {
-    return [[self selectedViewController] prefersStatusBarHidden];
+    return [[self topViewController] prefersStatusBarHidden];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    return [[self selectedViewController] preferredStatusBarStyle];
+    return [[self topViewController] preferredStatusBarStyle];
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
-    return [[self selectedViewController] preferredStatusBarUpdateAnimation];
+    return [[self topViewController] preferredStatusBarUpdateAnimation];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if([UIDevice systemVersion] < 7.0f) {
-        if([[self viewControllers] count] < 1) {
-            [self setViewControllers:[_objectChilds arrayByObjectClass:[UIViewController class]]];
+    if([self rootViewController] == nil) {
+        UIViewController* viewController = [_objectChilds firstObjectIsClass:[UIViewController class]];
+        if(viewController != nil) {
+            [self setViewControllers:@[ viewController ]];
         }
-        [_eventDidLoad fireSender:self object:nil];
     }
+    [_eventDidLoad fireSender:self object:nil];
 }
 
 - (void)viewDidUnload {
@@ -185,10 +197,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-
-    if(_navigationBarHidden == YES) {
-        [[self navigationController] setNavigationBarHidden:YES animated:animated];
-    }
+    
     [_eventWillAppear fireSender:self object:nil];
     [self setAppeared:_appeared + 1];
 }
@@ -201,10 +210,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    
-    if(_navigationBarHidden == YES) {
-        [[self navigationController] setNavigationBarHidden:NO animated:animated];
-    }
+
     [_eventWillDisappear fireSender:self object:nil];
 }
 
@@ -231,13 +237,30 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     return _transitionModal;
 }
 
-#pragma mark UITabBarControllerDelegate
+#pragma mark UINavigationControllerDelegate
 
-- (id< UIViewControllerAnimatedTransitioning >)tabBarController:(UITabBarController*)tabBarController animationControllerForTransitionFromViewController:(UIViewController*)fromVC toViewController:(UIViewController*)toVC {
-    NSArray* viewControllers = [tabBarController viewControllers];
-    NSUInteger fromVCIndex = [viewControllers indexOfObject:fromVC];
-    NSUInteger toVCIndex = [viewControllers indexOfObject:toVC];
-    [_transitionNavigation setReverse:fromVCIndex < toVCIndex];
+- (void)navigationController:(UINavigationController*)navigationController willShowViewController:(UIViewController*)viewController animated:(BOOL)animated {
+    if([viewController isKindOfClass:[MobilyController class]] == YES) {
+        MobilyController* mobilyController = (MobilyController*)viewController;
+        [navigationController setNavigationBarHidden:[mobilyController isNavigationBarHidden] animated:animated];
+    }
+}
+
+- (id< UIViewControllerAnimatedTransitioning >)navigationController:(UINavigationController*)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController*)fromViewController toViewController:(UIViewController*)toViewController {
+    switch(operation) {
+        case UINavigationControllerOperationPush:
+            if(_transitionNavigation != nil) {
+                [_transitionNavigation setReverse:NO];
+            }
+            break;
+        case UINavigationControllerOperationPop:
+            if(_transitionNavigation != nil) {
+                [_transitionNavigation setReverse:YES];
+            }
+            break;
+        default:
+            break;
+    }
     return _transitionNavigation;
 }
 
