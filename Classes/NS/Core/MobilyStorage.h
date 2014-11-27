@@ -137,12 +137,16 @@ typedef void (^MobilyStorageItemBlock)();
 @interface MobilyStorageJsonConverterDate : MobilyStorageJsonConverter
 
 @property(nonatomic, readonly, strong) NSDate* defaultValue;
-@property(nonatomic, readonly, strong) NSString* format;
+@property(nonatomic, readonly, strong) NSArray* formats;
 
 - (id)initWithFormat:(NSString*)format;
+- (id)initWithFormats:(NSArray*)formats;
 - (id)initWithFormat:(NSString*)format defaultValue:(NSDate*)defaultValue;
+- (id)initWithFormats:(NSArray*)formats defaultValue:(NSDate*)defaultValue;
 - (id)initWithPath:(NSString*)path format:(NSString*)format;
+- (id)initWithPath:(NSString*)path formats:(NSArray*)formats;
 - (id)initWithPath:(NSString*)path format:(NSString*)format defaultValue:(NSDate*)defaultValue;
+- (id)initWithPath:(NSString*)path formats:(NSArray*)formats defaultValue:(NSDate*)defaultValue;
 - (id)initWithPath:(NSString*)path defaultValue:(NSDate*)defaultValue;
 
 @end

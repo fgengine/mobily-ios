@@ -125,7 +125,7 @@
 @interface MobilyStorageJsonConverterDate ()
 
 @property(nonatomic, readwrite, strong) NSDate* defaultValue;
-@property(nonatomic, readwrite, strong) NSString* format;
+@property(nonatomic, readwrite, strong) NSArray* formats;
 
 @end
 
@@ -704,14 +704,14 @@
     if([value isKindOfClass:[NSString class]] == YES) {
         return value;
     } else if([value isKindOfClass:[NSNumber class]] == YES) {
-        NSNumberFormatter* numberFormat = [[NSNumberFormatter alloc] init];
-        if(numberFormat != nil) {
+        static NSNumberFormatter* numberFormat = nil;
+        if(numberFormat == nil) {
+            numberFormat = [[NSNumberFormatter alloc] init];
             [numberFormat setLocale:[NSLocale currentLocale]];
             [numberFormat setFormatterBehavior:NSNumberFormatterBehavior10_4];
             [numberFormat setNumberStyle:NSNumberFormatterDecimalStyle];
-            
-            return [numberFormat stringFromNumber:value];
         }
+        return [numberFormat stringFromNumber:value];
     }
     return _defaultValue;
 }
@@ -742,22 +742,23 @@
     if([value isKindOfClass:[NSNumber class]] == YES) {
         return value;
     } else if([value isKindOfClass:[NSString class]] == YES) {
-        NSNumberFormatter* numberFormat = [[NSNumberFormatter alloc] init];
-        if(numberFormat != nil) {
-            [numberFormat setLocale:[NSLocale currentLocale]];
-            [numberFormat setFormatterBehavior:NSNumberFormatterBehavior10_4];
-            [numberFormat setNumberStyle:NSNumberFormatterDecimalStyle];
-            
-            NSNumber* number = [numberFormat numberFromString:value];
-            if(number == nil) {
-                if([[numberFormat decimalSeparator] isEqualToString:@"."] == YES) {
-                    [numberFormat setDecimalSeparator:@","];
-                }
-                number = [numberFormat numberFromString:value];
+        static NSNumberFormatter* numberFormat = nil;
+        if(numberFormat == nil) {
+            numberFormat = [[NSNumberFormatter alloc] init];
+        }
+        [numberFormat setLocale:[NSLocale currentLocale]];
+        [numberFormat setFormatterBehavior:NSNumberFormatterBehavior10_4];
+        [numberFormat setNumberStyle:NSNumberFormatterDecimalStyle];
+        
+        NSNumber* number = [numberFormat numberFromString:value];
+        if(number == nil) {
+            if([[numberFormat decimalSeparator] isEqualToString:@"."] == YES) {
+                [numberFormat setDecimalSeparator:@","];
             }
-            if(number != nil) {
-                return number;
-            }
+            number = [numberFormat numberFromString:value];
+        }
+        if(number != nil) {
+            return number;
         }
     }
     return _defaultValue;
@@ -774,7 +775,15 @@
 - (id)initWithFormat:(NSString*)format {
     self = [super init];
     if(self != nil) {
-        [self setFormat:format];
+        [self setFormats:@[ format ]];
+    }
+    return self;
+}
+
+- (id)initWithFormats:(NSArray*)formats {
+    self = [super init];
+    if(self != nil) {
+        [self setFormats:formats];
     }
     return self;
 }
@@ -782,7 +791,16 @@
 - (id)initWithFormat:(NSString*)format defaultValue:(NSDate*)defaultValue {
     self = [super init];
     if(self != nil) {
-        [self setFormat:format];
+        [self setFormats:@[ format ]];
+        [self setDefaultValue:defaultValue];
+    }
+    return self;
+}
+
+- (id)initWithFormats:(NSArray*)formats defaultValue:(NSDate*)defaultValue {
+    self = [super init];
+    if(self != nil) {
+        [self setFormats:formats];
         [self setDefaultValue:defaultValue];
     }
     return self;
@@ -791,7 +809,15 @@
 - (id)initWithPath:(NSString*)path format:(NSString*)format {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setFormat:format];
+        [self setFormats:@[ format ]];
+    }
+    return self;
+}
+
+- (id)initWithPath:(NSString*)path formats:(NSArray*)formats {
+    self = [super initWithPath:path];
+    if(self != nil) {
+        [self setFormats:formats];
     }
     return self;
 }
@@ -799,7 +825,16 @@
 - (id)initWithPath:(NSString*)path format:(NSString*)format defaultValue:(NSDate*)defaultValue {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setFormat:format];
+        [self setFormats:@[ format ]];
+        [self setDefaultValue:defaultValue];
+    }
+    return self;
+}
+
+- (id)initWithPath:(NSString*)path formats:(NSArray*)formats defaultValue:(NSDate*)defaultValue {
+    self = [super initWithPath:path];
+    if(self != nil) {
+        [self setFormats:formats];
         [self setDefaultValue:defaultValue];
     }
     return self;
@@ -814,7 +849,7 @@
 }
 
 - (void)dealloc {
-    [self setFormat:nil];
+    [self setFormats:nil];
     [self setDefaultValue:nil];
     
     MOBILY_SAFE_DEALLOC;
@@ -822,13 +857,22 @@
 
 - (id)convertValue:(id)value {
     if([value isKindOfClass:[NSString class]] == YES) {
-        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-        if(dateFormatter != nil) {
-            if(_format != nil) {
-                [dateFormatter setDateFormat:_format];
-            }
-            return [dateFormatter dateFromString:value];
+        static NSDateFormatter* dateFormatter = nil;
+        if(dateFormatter == nil) {
+            dateFormatter = [[NSDateFormatter alloc] init];
         }
+        __block NSDate* resultValue = nil;
+        [_formats enumerateObjectsUsingBlock:^(NSString* format, NSUInteger index, BOOL* stop) {
+            if([format isKindOfClass:[NSString class]] == true) {
+                [dateFormatter setDateFormat:format];
+            }
+            NSDate* date = [dateFormatter dateFromString:value];
+            if(date != nil) {
+                resultValue = date;
+                *stop = YES;
+            }
+        }];
+        return resultValue;
     } else if([value isKindOfClass:[NSNumber class]] == YES) {
         return [NSDate dateWithTimeIntervalSince1970:[value floatValue]];
     }
