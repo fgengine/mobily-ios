@@ -188,26 +188,34 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 }
 
 - (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
-    if((_automaticallyHideKeyboard == YES) && ([_emptyView isHidden] == NO)) {
+    if([_emptyView isHidden] == NO) {
         UIViewController* currentViewController = [self currentViewController];
-        if([currentViewController isKindOfClass:[MobilyControllerView class]] == YES) {
-            MobilyControllerView* mobilyViewController = (MobilyControllerView*)currentViewController;
-            if([mobilyViewController isAutomaticallyHideKeyboard] == NO) {
-                return [[[self rootViewController] view] hitTest:point withEvent:event];
-            }
+        UIViewController* parentViewController = [currentViewController parentViewController];
+        if(parentViewController == nil) {
+            parentViewController = currentViewController;
         }
-        UIView* view = [[currentViewController view] hitTest:point withEvent:event];
-        if([view canBecomeFirstResponder] == NO) {
-            if([view isKindOfClass:[UIControl class]] == YES) {
-                UIControl* control = (UIControl*)view;
-                if([control isEnabled] == NO) {
+        if(_automaticallyHideKeyboard == YES) {
+            if([currentViewController isKindOfClass:[MobilyControllerView class]] == YES) {
+                MobilyControllerView* mobilyViewController = (MobilyControllerView*)currentViewController;
+                if([mobilyViewController isAutomaticallyHideKeyboard] == NO) {
+                    return [[[self rootViewController] view] hitTest:point withEvent:event];
+                }
+            }
+            UIView* view = [[parentViewController view] hitTest:point withEvent:event];
+            if([view canBecomeFirstResponder] == NO) {
+                if([view isKindOfClass:[UIControl class]] == YES) {
+                    UIControl* control = (UIControl*)view;
+                    if([control isEnabled] == NO) {
+                        view = _emptyView;
+                    }
+                } else {
                     view = _emptyView;
                 }
-            } else {
-                view = _emptyView;
             }
+            return view;
+        } else {
+            return [[[self rootViewController] view] hitTest:point withEvent:event];
         }
-        return view;
     }
     return [super hitTest:point withEvent:event];
 }
