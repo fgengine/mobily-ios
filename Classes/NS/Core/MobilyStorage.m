@@ -930,11 +930,15 @@
 
 - (id)convertValue:(id)value {
     if([value isKindOfClass:[NSString class]] == YES) {
-        return [_enums objectForKey:value];
+        if([[_enums allKeys] containsObject:value] == YES) {
+            return [_enums objectForKey:value];
+        }
     } else if([value isKindOfClass:[NSNumber class]] == YES) {
-        return [_enums objectForKey:value];
+        if([[_enums allKeys] containsObject:value] == YES) {
+            return [_enums objectForKey:value];
+        }
     }
-    return nil;
+    return _defaultValue;
 }
 
 @end
