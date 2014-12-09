@@ -79,6 +79,7 @@ typedef void (^MobilyImageLoaderBlock)();
 @property(nonatomic, readwrite, strong) NSString* imageUrl;
 @property(nonatomic, readwrite, strong) NSString* cacheKey;
 @property(nonatomic, readwrite, strong) UIImage* image;
+@property(nonatomic, readwrite, assign) NSUInteger countErrors;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > completeEvent;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > failureEvent;
 
@@ -419,6 +420,11 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
 #pragma mark -
 /*--------------------------------------------------*/
 
+#define MOBILY_TASK_IMAGE_LOADER_ERROR_LIMITS       5
+#define MOBILY_TASK_IMAGE_LOADER_DELAY              1.0f
+
+/*--------------------------------------------------*/
+
 @implementation MobilyTaskImageLoader
 
 #pragma mark Standart
@@ -470,7 +476,7 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
     [self setImage:nil];
     [self setCompleteEvent:nil];
     [self setFailureEvent:nil];
-
+    
     MOBILY_SAFE_DEALLOC;
 }
 
@@ -485,12 +491,19 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
             if(image != nil) {
                 [_imageLoader addImageData:data byCacheKey:_cacheKey];
                 [self setImage:image];
+                [self setNeedRework:NO];
             }
         } else {
+            if(_countErrors < MOBILY_TASK_IMAGE_LOADER_ERROR_LIMITS) {
+                [self setCountErrors:_countErrors + 1];
+                [self setNeedRework:YES];
+            } else {
+                [self setNeedRework:NO];
+            }
 #if defined(MOBILY_DEBUG)
             NSLog(@"Failure load image:%@", _imageUrl);
 #endif
-            [self setNeedRework:YES];
+            [NSThread sleepForTimeInterval:MOBILY_TASK_IMAGE_LOADER_DELAY];
         }
     } else {
         [self setImage:image];
