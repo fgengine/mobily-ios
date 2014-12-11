@@ -258,7 +258,7 @@
 
 - (BOOL)isEqual:(id)object {
     __block BOOL result = NO;
-    if([object isKindOfClass:[self class]] == YES) {
+    if(([object isKindOfClass:[self class]] == YES) && ([[self propertyMap] count] > 0)) {
         result = YES;
         [[self propertyMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
             id value1 = [self valueForKey:field];
