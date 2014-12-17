@@ -162,13 +162,74 @@ CGFloat CGFloatNearestMore(CGFloat value, CGFloat step) {
 #pragma mark -
 /*--------------------------------------------------*/
 
-CGSize CGSizeNearestMore(CGSize size, CGFloat step) {
-    return CGSizeMake(CGFloatNearestMore(size.width, step), CGFloatNearestMore(size.height, step));
+CGPoint CGPointMul(CGPoint point, CGFloat value) {
+    return CGPointMake(point.x * value, point.y * value);
+}
+
+CGPoint CGPointDiv(CGPoint point, CGFloat value) {
+    return CGPointMake(point.x / value, point.y / value);
 }
 
 /*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
+
+CGSize CGSizeNearestMore(CGSize size, CGFloat step) {
+    return CGSizeMake(CGFloatNearestMore(size.width, step), CGFloatNearestMore(size.height, step));
+}
+
+CGSize CGSizeMul(CGSize size, CGFloat value) {
+    return CGSizeMake(size.width * value, size.height * value);
+}
+
+CGSize CGSizeDiv(CGSize size, CGFloat value) {
+    return CGSizeMake(size.width / value, size.height / value);
+}
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+CGRect CGRectMul(CGRect rect, CGFloat value) {
+    return CGRectMake(rect.origin.x * value, rect.origin.y * value, rect.size.width * value, rect.size.height * value);
+}
+
+CGRect CGRectDiv(CGRect rect, CGFloat value) {
+    return CGRectMake(rect.origin.x / value, rect.origin.y / value, rect.size.width / value, rect.size.height / value);
+}
+
+CGRect CGRectIntersectionExt(CGRect r1, CGRect r2, CGRect* smallRemainder, CGRect* largeRemainder) {
+    CGRect intersection = CGRectIntersection(r1, r2);
+    if(CGRectIsNull(intersection) == NO) {
+        CGFloat r1sx = CGRectGetMinX(r1);
+        CGFloat r1sy = CGRectGetMinY(r1);
+        CGFloat r1ex = CGRectGetMaxX(r1);
+        CGFloat r1ey = CGRectGetMaxY(r1);
+        CGFloat r2sx = CGRectGetMinX(r2);
+        CGFloat r2sy = CGRectGetMinY(r2);
+        CGFloat r2ex = CGRectGetMaxX(r2);
+        CGFloat r2ey = CGRectGetMaxY(r2);
+        CGFloat dsx = ABS(r1sx - r2sx);
+        CGFloat dsy = ABS(r1sy - r2sy);
+        CGFloat dex = ABS(r1ex - r2ex);
+        CGFloat dey = ABS(r1ey - r2ey);
+        if(smallRemainder != NULL) {
+            CGFloat sx = (dsx <= dex) ? r1sx : r2ex;
+            CGFloat sy = (dsy <= dey) ? r1sy : r2ey;
+            CGFloat ex = (dsx >= dex) ? r1ex : r2sx;
+            CGFloat ey = (dsy >= dey) ? r1ey : r2sy;
+            *smallRemainder = CGRectMake(sx, sy, ex - sx, ey - sy);
+        }
+        if(largeRemainder != NULL) {
+            CGFloat sx = (dsx >= dex) ? r1sx : r2ex;
+            CGFloat sy = (dsy >= dey) ? r1sy : r2ey;
+            CGFloat ex = (dsx <= dex) ? r1ex : r2sx;
+            CGFloat ey = (dsy <= dey) ? r1ey : r2sy;
+            *largeRemainder = CGRectMake(sx, sy, ex - sx, ey - sy);
+        }
+    }
+    return intersection;
+}
 
 CGRect CGRectAspectFillFromBoundsAndSize(CGRect bounds, CGSize size) {
     CGFloat iw = floorf(size.width);
@@ -198,6 +259,10 @@ CGRect CGRectAspectFitFromBoundsAndSize(CGRect bounds, CGSize size) {
     CGFloat rx = (bw - rw) * 0.5f;
     CGFloat ry = (bh - rh) * 0.5f;
     return CGRectMake(bounds.origin.x + rx, bounds.origin.y + ry, rw, rh);
+}
+
+CGPoint CGRectGetCenterPoint(CGRect rect) {
+    return CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect));
 }
 
 /*--------------------------------------------------*/

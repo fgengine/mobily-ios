@@ -1242,6 +1242,17 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 #pragma mark -
 /*--------------------------------------------------*/
 
+@interface UIScrollView (MobilyUI_Keyboard)
+
+@property(nonatomic, readwrite, weak) UIResponder* keyboardResponder;
+@property(nonatomic, readwrite, assign) CGPoint keyboardContentOffset;
+@property(nonatomic, readwrite, assign) UIEdgeInsets keyboardContentInset;
+@property(nonatomic, readwrite, assign) UIEdgeInsets keyboardIndicatorInset;
+
+@end
+
+/*--------------------------------------------------*/
+
 @implementation UIScrollView (MobilyUI)
 
 #pragma mark NSKeyValueCoding
@@ -1271,11 +1282,40 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 #pragma mark Property
 
 - (void)setKeyboardResponder:(UIResponder*)keyboardResponder {
+    if([self keyboardResponder] == nil) {
+        [self setKeyboardContentOffset:[self contentOffset]];
+        [self setKeyboardContentInset:[self contentInset]];
+        [self setKeyboardIndicatorInset:[self scrollIndicatorInsets]];
+    }
     objc_setAssociatedObject(self, @selector(keyboardResponder), keyboardResponder, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (UIResponder*)keyboardResponder {
     return objc_getAssociatedObject(self, @selector(keyboardResponder));
+}
+
+- (void)setKeyboardContentOffset:(CGPoint)keyboardContentOffset {
+    objc_setAssociatedObject(self, @selector(keyboardContentOffset), [NSValue valueWithCGPoint:keyboardContentOffset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CGPoint)keyboardContentOffset {
+    return [objc_getAssociatedObject(self, @selector(keyboardContentOffset)) CGPointValue];
+}
+
+- (void)setKeyboardContentInset:(UIEdgeInsets)keyboardContentInset {
+    objc_setAssociatedObject(self, @selector(keyboardContentInset), [NSValue valueWithUIEdgeInsets:keyboardContentInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIEdgeInsets)keyboardContentInset {
+    return [objc_getAssociatedObject(self, @selector(keyboardContentInset)) UIEdgeInsetsValue];
+}
+
+- (void)setKeyboardIndicatorInset:(UIEdgeInsets)keyboardIndicatorInset {
+    objc_setAssociatedObject(self, @selector(keyboardIndicatorInset), [NSValue valueWithUIEdgeInsets:keyboardIndicatorInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIEdgeInsets)keyboardIndicatorInset {
+    return [objc_getAssociatedObject(self, @selector(keyboardIndicatorInset)) UIEdgeInsetsValue];
 }
 
 - (void)setContentOffsetX:(CGFloat)contentOffsetX {
@@ -1430,58 +1470,67 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 - (void)adjustmentNotificationKeyboardShow:(NSNotification*)notification {
     [self setKeyboardResponder:[UIResponder currentFirstResponderInView:self]];
     if([[self keyboardResponder] isKindOfClass:[UIView class]] == YES) {
-        UIView* view = (UIView*)[self keyboardResponder];
-        NSDictionary* info = [notification userInfo];
-        if(info != nil) {
-            CGRect screenRect = [[self window] bounds];
-            CGRect scrollRect = [self convertRect:[self bounds] toView:[[[self window] rootViewController] view]];
-            CGRect keyboardRect = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-            UIEdgeInsets scrollInsets = [self contentInset];
-            CGPoint scrollOffset = [self contentOffset];
-            CGSize scrollSize = [self contentSize];
-            
-            CGFloat overallSize = 0.0f;
-            switch([[UIApplication sharedApplication] statusBarOrientation]) {
-                case UIInterfaceOrientationPortrait:
-                case UIInterfaceOrientationPortraitUpsideDown:
-                    overallSize = ABS((screenRect.size.height - keyboardRect.size.height) - (scrollRect.origin.y + scrollRect.size.height));
-                    break;
-                case UIInterfaceOrientationLandscapeLeft:
-                case UIInterfaceOrientationLandscapeRight:
-                    overallSize = ABS((screenRect.size.width - keyboardRect.size.width) - (scrollRect.origin.y + scrollRect.size.height));
-                    break;
-                case UIInterfaceOrientationUnknown:
-                    break;
+        CGPoint contentOffset = [self contentOffset];
+        UIEdgeInsets contentInsets = [self contentInset];
+        UIEdgeInsets indicatorInsets = [self scrollIndicatorInsets];
+        CGRect scrollRect = [self convertRect:[self bounds] toView:nil];
+        CGRect keyboardRect = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+        CGRect responderRect = [(UIView*)[self keyboardResponder] convertRect:[(UIView*)[self keyboardResponder] bounds] toView:nil];
+        CGRect smallRemainderRect = CGRectZero, largeRemainderRect = CGRectZero;
+        CGRect intersectionRect = CGRectIntersectionExt(scrollRect, keyboardRect, &smallRemainderRect, &largeRemainderRect);
+        if(CGRectIsNull(intersectionRect) == NO) {
+            CGPoint smallRemainderCenter = CGRectGetCenterPoint(smallRemainderRect);
+            CGPoint largeRemainderCenter = CGRectGetCenterPoint(largeRemainderRect);
+            if(ABS(smallRemainderCenter.x - largeRemainderCenter.x) > FLT_EPSILON) {
+                if(smallRemainderCenter.x >= largeRemainderCenter.x) {
+                    contentInsets.right = intersectionRect.size.width + smallRemainderRect.size.width;
+                    indicatorInsets.right = intersectionRect.size.width + smallRemainderRect.size.width;
+                } else {
+                    contentInsets.left = intersectionRect.size.width + smallRemainderRect.size.width;
+                    indicatorInsets.left = intersectionRect.size.width + smallRemainderRect.size.width;
+                }
             }
-            scrollInsets = UIEdgeInsetsMake(scrollInsets.top, scrollInsets.left, overallSize, scrollInsets.right);
-            [self setScrollIndicatorInsets:scrollInsets];
-            [self setContentInset:scrollInsets];
-            
-            scrollRect = UIEdgeInsetsInsetRect(scrollRect, scrollInsets);
-            
-            CGRect rect = [view convertRect:[view bounds] toView:self];
-            scrollOffset.y = (rect.origin.y + (rect.size.height * 0.5f)) - (scrollRect.size.height * 0.5f);
-            if(scrollOffset.y < 0.0f) {
-                scrollOffset.y = 0.0f;
-            } else if(scrollOffset.y > scrollSize.height - scrollRect.size.height) {
-                scrollOffset.y = scrollSize.height - scrollRect.size.height;
+            if(ABS(smallRemainderCenter.y - largeRemainderCenter.y) > FLT_EPSILON) {
+                if(smallRemainderCenter.y >= largeRemainderCenter.y) {
+                    contentInsets.bottom = intersectionRect.size.height + smallRemainderRect.size.height;
+                    indicatorInsets.bottom = intersectionRect.size.height + smallRemainderRect.size.height;
+                } else {
+                    contentInsets.top = intersectionRect.size.height + smallRemainderRect.size.height;
+                    indicatorInsets.top = intersectionRect.size.height + smallRemainderRect.size.height;
+                }
             }
-            [self setContentOffset:scrollOffset animated:YES];
+            if(CGRectContainsRect(largeRemainderRect, responderRect) == NO) {
+                CGPoint responderCenter = CGRectGetCenterPoint(responderRect);
+                contentOffset.x += largeRemainderCenter.x - responderCenter.x;
+                contentOffset.y += largeRemainderCenter.y - responderCenter.y;
+            }
         }
+        [UIView animateWithDuration:[[[notification userInfo] valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
+            [self setContentOffset:contentOffset];
+            [self setContentInset:contentInsets];
+            [self setScrollIndicatorInsets:indicatorInsets];
+        } completion:^(BOOL finished) {
+            [self setContentOffset:contentOffset];
+            [self setContentInset:contentInsets];
+            [self setScrollIndicatorInsets:indicatorInsets];
+        }];
     }
 }
 
 - (void)adjustmentNotificationKeyboardHide:(NSNotification*)notification {
     if([self keyboardResponder] != nil) {
-        NSDictionary* info = [notification userInfo];
-        if(info != nil) {
-            NSTimeInterval duration = [[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-            [UIView animateWithDuration:duration
-                             animations:^{
-                                 [self setScrollIndicatorInsets:UIEdgeInsetsZero];
-                                 [self setContentInset:UIEdgeInsetsZero];
-                             }];
-        }
+        CGPoint contentOffset = [self keyboardContentOffset];
+        UIEdgeInsets contentInsets = [self keyboardContentInset];
+        UIEdgeInsets indicatorInsets = [self keyboardIndicatorInset];
+        [UIView animateWithDuration:[[[notification userInfo] valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
+            [self setContentOffset:contentOffset];
+            [self setContentInset:contentInsets];
+            [self setScrollIndicatorInsets:indicatorInsets];
+        } completion:^(BOOL finished) {
+            [self setContentOffset:contentOffset];
+            [self setContentInset:contentInsets];
+            [self setScrollIndicatorInsets:indicatorInsets];
+        }];
         [self setKeyboardResponder:nil];
     }
 }

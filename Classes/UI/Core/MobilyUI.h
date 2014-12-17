@@ -228,8 +228,6 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 @interface UIScrollView (MobilyUI)
 
-@property(nonatomic, readwrite, weak) UIResponder* keyboardResponder;
-
 @property(nonatomic, readwrite, assign) CGFloat contentOffsetX;
 @property(nonatomic, readwrite, assign) CGFloat contentOffsetY;
 @property(nonatomic, readwrite, assign) CGFloat contentSizeWidth;
