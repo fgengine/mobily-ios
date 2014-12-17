@@ -1318,6 +1318,18 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
     return [objc_getAssociatedObject(self, @selector(keyboardIndicatorInset)) UIEdgeInsetsValue];
 }
 
+- (void)setKeyboardInset:(UIEdgeInsets)keyboardInset {
+    objc_setAssociatedObject(self, @selector(keyboardInset), [NSValue valueWithUIEdgeInsets:keyboardInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIEdgeInsets)keyboardInset {
+    NSValue* value = objc_getAssociatedObject(self, @selector(keyboardInset));
+    if(value != nil) {
+        return [value UIEdgeInsetsValue];
+    }
+    return UIEdgeInsetsMake(8.0f, 8.0f, 8.0f, 8.0f);
+}
+
 - (void)setContentOffsetX:(CGFloat)contentOffsetX {
     [self setContentOffsetX:contentOffsetX animated:NO];
 }
@@ -1500,37 +1512,42 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
                 }
             }
             if(CGRectContainsRect(largeRemainderRect, responderRect) == NO) {
-                CGPoint responderCenter = CGRectGetCenterPoint(responderRect);
-                contentOffset.x += largeRemainderCenter.x - responderCenter.x;
-                contentOffset.y += largeRemainderCenter.y - responderCenter.y;
+                CGRect visibleRect = UIEdgeInsetsInsetRect(largeRemainderRect, [self keyboardInset]);
+                CGRect correctRect = CGRectOffset(responderRect, contentOffset.x, contentOffset.y);
+                CGFloat vrsx = CGRectGetMinX(visibleRect), vrsy = CGRectGetMinY(visibleRect);
+                CGFloat vrex = CGRectGetMaxX(visibleRect), vrey = CGRectGetMaxY(visibleRect);
+                CGFloat vrcx = CGRectGetMidX(visibleRect), vrcy = CGRectGetMidY(visibleRect);
+                CGFloat crsx = CGRectGetMinX(correctRect), crsy = CGRectGetMinY(correctRect);
+                CGFloat crex = CGRectGetMaxX(correctRect), crey = CGRectGetMaxY(correctRect);
+                CGFloat crcx = CGRectGetMidX(correctRect), crcy = CGRectGetMidY(correctRect);
+                if((vrex - vrsx) < (crex - crsx)) {
+                    contentOffset.x += vrcx - crcx;
+                } else if(vrsx > crsx) {
+                    contentOffset.x -= vrsx - crsx;
+                } else if(vrex < crex) {
+                    contentOffset.x -= vrex - crex;
+                }
+                if((vrey - vrsy) < (crey - crsy)) {
+                    contentOffset.y += vrcy - crcy;
+                } else if(vrsy > crsy) {
+                    contentOffset.y -= vrsy - crsy;
+                } else if(vrey < crey) {
+                    contentOffset.y -= vrey - crey;
+                }
             }
         }
-        [UIView animateWithDuration:[[[notification userInfo] valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
-            [self setContentOffset:contentOffset];
-            [self setContentInset:contentInsets];
-            [self setScrollIndicatorInsets:indicatorInsets];
-        } completion:^(BOOL finished) {
-            [self setContentOffset:contentOffset];
-            [self setContentInset:contentInsets];
-            [self setScrollIndicatorInsets:indicatorInsets];
-        }];
+        [self setContentInset:contentInsets];
+        [self setScrollIndicatorInsets:indicatorInsets];
+        [self setContentOffset:contentOffset animated:YES];
     }
 }
 
 - (void)adjustmentNotificationKeyboardHide:(NSNotification*)notification {
     if([self keyboardResponder] != nil) {
         CGPoint contentOffset = [self keyboardContentOffset];
-        UIEdgeInsets contentInsets = [self keyboardContentInset];
-        UIEdgeInsets indicatorInsets = [self keyboardIndicatorInset];
-        [UIView animateWithDuration:[[[notification userInfo] valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
-            [self setContentOffset:contentOffset];
-            [self setContentInset:contentInsets];
-            [self setScrollIndicatorInsets:indicatorInsets];
-        } completion:^(BOOL finished) {
-            [self setContentOffset:contentOffset];
-            [self setContentInset:contentInsets];
-            [self setScrollIndicatorInsets:indicatorInsets];
-        }];
+        [self setContentInset:[self keyboardContentInset]];
+        [self setScrollIndicatorInsets:[self keyboardIndicatorInset]];
+        [self setContentOffset:contentOffset animated:YES];
         [self setKeyboardResponder:nil];
     }
 }

@@ -228,6 +228,8 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 @interface UIScrollView (MobilyUI)
 
+@property(nonatomic, readwrite, assign) UIEdgeInsets keyboardInset;
+
 @property(nonatomic, readwrite, assign) CGFloat contentOffsetX;
 @property(nonatomic, readwrite, assign) CGFloat contentOffsetY;
 @property(nonatomic, readwrite, assign) CGFloat contentSizeWidth;

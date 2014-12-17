@@ -162,6 +162,14 @@ CGFloat CGFloatNearestMore(CGFloat value, CGFloat step) {
 #pragma mark -
 /*--------------------------------------------------*/
 
+CGPoint CGPointAdd(CGPoint point, CGFloat value) {
+    return CGPointMake(point.x + value, point.y + value);
+}
+
+CGPoint CGPointSub(CGPoint point, CGFloat value) {
+    return CGPointMake(point.x - value, point.y - value);
+}
+
 CGPoint CGPointMul(CGPoint point, CGFloat value) {
     return CGPointMake(point.x * value, point.y * value);
 }
@@ -170,12 +178,36 @@ CGPoint CGPointDiv(CGPoint point, CGFloat value) {
     return CGPointMake(point.x / value, point.y / value);
 }
 
+CGPoint CGPointAddPoint(CGPoint point1, CGPoint point2) {
+    return CGPointMake(point1.x + point2.x, point1.y + point2.y);
+}
+
+CGPoint CGPointSubPoint(CGPoint point1, CGPoint point2) {
+    return CGPointMake(point1.x - point2.x, point1.y - point2.y);
+}
+
+CGPoint CGPointMulPoint(CGPoint point1, CGPoint point2) {
+    return CGPointMake(point1.x * point2.x, point1.y * point2.y);
+}
+
+CGPoint CGPointDivPoint(CGPoint point1, CGPoint point2) {
+    return CGPointMake(point1.x / point2.x, point1.y / point2.y);
+}
+
 /*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
 CGSize CGSizeNearestMore(CGSize size, CGFloat step) {
     return CGSizeMake(CGFloatNearestMore(size.width, step), CGFloatNearestMore(size.height, step));
+}
+
+CGSize CGSizeAdd(CGSize size, CGFloat value) {
+    return CGSizeMake(size.width + value, size.height + value);
+}
+
+CGSize CGSizeSub(CGSize size, CGFloat value) {
+    return CGSizeMake(size.width - value, size.height - value);
 }
 
 CGSize CGSizeMul(CGSize size, CGFloat value) {
@@ -189,6 +221,14 @@ CGSize CGSizeDiv(CGSize size, CGFloat value) {
 /*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
+
+CGRect CGRectAdd(CGRect rect, CGFloat value) {
+    return CGRectMake(rect.origin.x + value, rect.origin.y + value, rect.size.width + value, rect.size.height + value);
+}
+
+CGRect CGRectSub(CGRect rect, CGFloat value) {
+    return CGRectMake(rect.origin.x - value, rect.origin.y - value, rect.size.width - value, rect.size.height - value);
+}
 
 CGRect CGRectMul(CGRect rect, CGFloat value) {
     return CGRectMake(rect.origin.x * value, rect.origin.y * value, rect.size.width * value, rect.size.height * value);

@@ -59,17 +59,27 @@ CGFloat CGFloatNearestMore(CGFloat value, CGFloat step);
 
 /*--------------------------------------------------*/
 
-CGPoint CGPointMult(CGPoint point, CGFloat value);
+CGPoint CGPointAdd(CGPoint point, CGFloat value);
+CGPoint CGPointSub(CGPoint point, CGFloat value);
+CGPoint CGPointMul(CGPoint point, CGFloat value);
 CGPoint CGPointDiv(CGPoint point, CGFloat value);
+CGPoint CGPointAddPoint(CGPoint point1, CGPoint point2);
+CGPoint CGPointSubPoint(CGPoint point1, CGPoint point2);
+CGPoint CGPointMulPoint(CGPoint point1, CGPoint point2);
+CGPoint CGPointDivPoint(CGPoint point1, CGPoint point2);
 
 /*--------------------------------------------------*/
 
 CGSize CGSizeNearestMore(CGSize size, CGFloat step);
-CGSize CGSizeMult(CGSize size, CGFloat value);
+CGSize CGSizeAdd(CGSize size, CGFloat value);
+CGSize CGSizeSub(CGSize size, CGFloat value);
+CGSize CGSizeMul(CGSize size, CGFloat value);
 CGSize CGSizeDiv(CGSize size, CGFloat value);
 
 /*--------------------------------------------------*/
 
+CGRect CGRectAdd(CGRect rect, CGFloat value);
+CGRect CGRectSub(CGRect rect, CGFloat value);
 CGRect CGRectMul(CGRect rect, CGFloat value);
 CGRect CGRectDiv(CGRect rect, CGFloat value);
 CGRect CGRectIntersectionExt(CGRect r1, CGRect r2, CGRect* smallRemainder, CGRect* largeRemainder);
