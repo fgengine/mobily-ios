@@ -130,6 +130,13 @@
     [_viewTitle setText:model];
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    [_viewTitle setFrame:CGRectInset([[self contentView] bounds], 24.0f, 24.0f)];
+    NSLog(@"layoutSubviews");
+}
+
 @end
 
 /*--------------------------------------------------*/

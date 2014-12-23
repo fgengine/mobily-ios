@@ -53,9 +53,11 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
 @property(nonatomic, readwrite, strong) UIPanGestureRecognizer* panGestupe;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintOffsetLeftSwipeView;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintCenterYLeftSwipeView;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintWidthLeftSwipeView;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintHeightLeftSwipeView;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintOffsetRightSwipeView;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintCenterYRightSwipeView;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintWidthRightSwipeView;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintHeightRightSwipeView;
 
 @property(nonatomic, readwrite, assign) CGFloat swipeLastOffset;
@@ -355,14 +357,13 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     [self setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self setClipsToBounds:YES];
-    [self setNeedsUpdateConstraints];
 }
 
 - (void)didLoadFromNib {
 }
 
 + (CGFloat)heightForModel:(id)model tableView:(UITableView*)tableView {
-    return 88.0f;
+    return 240.0f;
 }
 
 #pragma mark UITableViewCell
@@ -490,6 +491,15 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
     }
 }
 
+- (void)setLeftSwipeViewWidth:(CGFloat)leftSwipeViewWidth {
+    if(_leftSwipeViewWidth != leftSwipeViewWidth) {
+        _leftSwipeViewWidth = leftSwipeViewWidth;
+        if(_leftSwipeView != nil) {
+            [self setNeedsUpdateConstraints];
+        }
+    }
+}
+
 - (void)setConstraintOffsetLeftSwipeView:(NSLayoutConstraint*)constraintOffsetLeftSwipeView {
     if(_constraintOffsetLeftSwipeView != constraintOffsetLeftSwipeView) {
         if(_constraintOffsetLeftSwipeView != nil) {
@@ -510,6 +520,18 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
         MOBILY_SAFE_SETTER(_constraintCenterYLeftSwipeView, constraintCenterYLeftSwipeView);
         if(_constraintCenterYLeftSwipeView != nil) {
             [[self contentView] addConstraint:_constraintCenterYLeftSwipeView];
+        }
+    }
+}
+
+- (void)setConstraintWidthLeftSwipeView:(NSLayoutConstraint*)constraintWidthLeftSwipeView {
+    if(_constraintWidthLeftSwipeView != constraintWidthLeftSwipeView) {
+        if(_constraintWidthLeftSwipeView != nil) {
+            [_leftSwipeView removeConstraint:_constraintWidthLeftSwipeView];
+        }
+        MOBILY_SAFE_SETTER(_constraintWidthLeftSwipeView, constraintWidthLeftSwipeView);
+        if(_constraintWidthLeftSwipeView != nil) {
+            [_leftSwipeView addConstraint:_constraintWidthLeftSwipeView];
         }
     }
 }
@@ -541,6 +563,15 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
     }
 }
 
+- (void)setRightSwipeViewWidth:(CGFloat)rightSwipeViewWidth {
+    if(_rightSwipeViewWidth != rightSwipeViewWidth) {
+        _rightSwipeViewWidth = rightSwipeViewWidth;
+        if(_rightSwipeView != nil) {
+            [self setNeedsUpdateConstraints];
+        }
+    }
+}
+
 - (void)setConstraintOffsetRightSwipeView:(NSLayoutConstraint*)constraintOffsetRightSwipeView {
     if(_constraintOffsetRightSwipeView != constraintOffsetRightSwipeView) {
         if(_constraintOffsetRightSwipeView != nil) {
@@ -561,6 +592,18 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
         MOBILY_SAFE_SETTER(_constraintCenterYRightSwipeView, constraintCenterYRightSwipeView);
         if(_constraintCenterYRightSwipeView != nil) {
             [[self contentView] addConstraint:_constraintCenterYRightSwipeView];
+        }
+    }
+}
+
+- (void)setConstraintWidthRightSwipeView:(NSLayoutConstraint*)constraintWidthRightSwipeView {
+    if(_constraintWidthRightSwipeView != constraintWidthRightSwipeView) {
+        if(_constraintWidthRightSwipeView != nil) {
+            [_rightSwipeView removeConstraint:_constraintWidthRightSwipeView];
+        }
+        MOBILY_SAFE_SETTER(_constraintWidthRightSwipeView, constraintWidthRightSwipeView);
+        if(_constraintWidthRightSwipeView != nil) {
+            [_rightSwipeView addConstraint:_constraintWidthRightSwipeView];
         }
     }
 }
@@ -592,6 +635,8 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
     [self setSwipeThreshold:2.0f];
     [self setSwipeSpeed:420.0f];
     [self setSwipeVelocity:320.0f];
+    [self setLeftSwipeViewWidth:-1.0f];
+    [self setRightSwipeViewWidth:-1.0f];
 }
 
 - (void)setShowedLeftSwipeView:(BOOL)showedLeftSwipeView animated:(BOOL)animated {
@@ -666,6 +711,15 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
     [super updateConstraints];
     
     if(_leftSwipeView != nil) {
+        if(_leftSwipeViewWidth >= 0.0f) {
+            if(_constraintWidthLeftSwipeView == nil) {
+                [self setConstraintWidthLeftSwipeView:[NSLayoutConstraint constraintWithItem:_leftSwipeView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:_leftSwipeViewWidth]];
+            } else {
+                [_constraintOffsetLeftSwipeView setConstant:_leftSwipeViewWidth];
+            }
+        } else {
+            [self setConstraintWidthLeftSwipeView:nil];
+        }
         if(_constraintOffsetLeftSwipeView == nil) {
             [self setConstraintOffsetLeftSwipeView:[NSLayoutConstraint constraintWithItem:_leftSwipeView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:[self contentView] attribute:NSLayoutAttributeLeft multiplier:1.0f constant:[self leftConstant]]];
         } else {
@@ -679,6 +733,15 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
         }
     }
     if(_rightSwipeView != nil) {
+        if(_rightSwipeViewWidth >= 0.0f) {
+            if(_constraintWidthRightSwipeView == nil) {
+                [self setConstraintWidthRightSwipeView:[NSLayoutConstraint constraintWithItem:_rightSwipeView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:_rightSwipeViewWidth]];
+            } else {
+                [_constraintOffsetRightSwipeView setConstant:_rightSwipeViewWidth];
+            }
+        } else {
+            [self setConstraintWidthRightSwipeView:nil];
+        }
         if(_constraintOffsetRightSwipeView == nil) {
             [self setConstraintOffsetRightSwipeView:[NSLayoutConstraint constraintWithItem:_rightSwipeView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:[self contentView] attribute:NSLayoutAttributeRight multiplier:1.0f constant:[self rightConstant]]];
         } else {
@@ -732,10 +795,12 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
     
     [self setConstraintOffsetLeftSwipeView:nil];
     [self setConstraintCenterYLeftSwipeView:nil];
+    [self setConstraintWidthLeftSwipeView:nil];
     [self setConstraintHeightLeftSwipeView:nil];
     
     [self setConstraintOffsetRightSwipeView:nil];
     [self setConstraintCenterYRightSwipeView:nil];
+    [self setConstraintWidthRightSwipeView:nil];
     [self setConstraintHeightRightSwipeView:nil];
 }
 
@@ -793,7 +858,6 @@ typedef NS_ENUM(NSUInteger, MobilyViewTableCellSwipeDirection) {
     if(_swipeProgress != normalizedSwipeProgress) {
         _swipeProgress = normalizedSwipeProgress;
         [self setNeedsUpdateConstraints];
-        [self setNeedsLayout];
         
         [UIView animateWithDuration:ABS(speed) / _swipeSpeed
                          animations:^{

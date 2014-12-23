@@ -1,10 +1,6 @@
 <?xml version="1.0"?>
 <ExampleApplication>
     <Window name="window">
-        <MobilyControllerSlideMenu name="slideView" preset="navigation-controller">
-            <ExampleControllerMain name="mainView" preset="controller"/>
-        </MobilyControllerSlideMenu>
-        <ExampleControllerMain name="leftView" preset="controller"/>
-        <ExampleControllerMain name="rightView" preset="controller"/>
+        <ExampleControllerMain name="mainView" preset="controller"/>
     </Window>
 </ExampleApplication>
