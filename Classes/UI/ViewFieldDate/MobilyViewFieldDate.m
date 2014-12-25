@@ -217,7 +217,7 @@
                 [_pickerView setDate:_date animated:animated];
             }
         }
-        if(emitted != YES) {
+        if(emitted == YES) {
             [self sendActionsForControlEvents:UIControlEventValueChanged];
         }
     }
