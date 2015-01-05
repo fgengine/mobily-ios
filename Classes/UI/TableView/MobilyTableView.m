@@ -15,7 +15,7 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilyTableViewCell ()
+@interface MobilyTableCell ()
 
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintCenterXRootView;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintCenterYRootView;
@@ -37,15 +37,15 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
-    MobilyTableViewCellSwipeDirectionUnknown,
-    MobilyTableViewCellSwipeDirectionLeft,
-    MobilyTableViewCellSwipeDirectionRight
+typedef NS_ENUM(NSUInteger, MobilyTableCellSwipeDirection) {
+    MobilyTableCellSwipeDirectionUnknown,
+    MobilyTableCellSwipeDirectionLeft,
+    MobilyTableCellSwipeDirectionRight
 };
 
 /*--------------------------------------------------*/
 
-@interface MobilyTableViewCellSwipe () < UIGestureRecognizerDelegate >
+@interface MobilyTableCellSwipe () < UIGestureRecognizerDelegate >
 
 @property(nonatomic, readwrite, getter=isSwipeDragging) BOOL swipeDragging;
 @property(nonatomic, readwrite, getter=isSwipeDecelerating) BOOL swipeDecelerating;
@@ -65,7 +65,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
 @property(nonatomic, readwrite, assign) CGFloat swipeProgress;
 @property(nonatomic, readwrite, assign) CGFloat swipeLeftWidth;
 @property(nonatomic, readwrite, assign) CGFloat swipeRightWidth;
-@property(nonatomic, readwrite, assign) MobilyTableViewCellSwipeDirection swipeDirection;
+@property(nonatomic, readwrite, assign) MobilyTableCellSwipeDirection swipeDirection;
 
 - (CGFloat)leftConstant;
 - (CGFloat)rightConstant;
@@ -151,7 +151,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
 
 #pragma mark Property
 
-- (void)setCurrentSwipeCell:(MobilyTableViewCellSwipe*)currentSwipeCell {
+- (void)setCurrentSwipeCell:(MobilyTableCellSwipe*)currentSwipeCell {
     [self setCurrentSwipeCell:currentSwipeCell animated:NO];
 }
 
@@ -164,7 +164,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
     [self registerAdjustmentResponder];
 }
 
-- (void)setCurrentSwipeCell:(MobilyTableViewCellSwipe*)currentSwipeCell animated:(BOOL)animated {
+- (void)setCurrentSwipeCell:(MobilyTableCellSwipe*)currentSwipeCell animated:(BOOL)animated {
     if(_currentSwipeCell != currentSwipeCell) {
         if(_currentSwipeCell != nil) {
             [_currentSwipeCell setHiddenAnySwipeViewAnimated:animated];
@@ -196,7 +196,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
         UINib* nib = [_registeredCellNibs objectForKey:NSStringFromClass(cellClass)];
         if(nib != nil) {
             [nib instantiateWithOwner:cell options:nil];
-            if([cell isKindOfClass:[MobilyTableViewCell class]] == YES) {
+            if([cell isKindOfClass:[MobilyTableCell class]] == YES) {
                 [cell didLoadFromNib];
             }
         }
@@ -211,7 +211,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
         UINib* nib = [_registeredCellNibs objectForKey:NSStringFromClass(cellClass)];
         if(nib != nil) {
             [nib instantiateWithOwner:cell options:nil];
-            if([cell isKindOfClass:[MobilyTableViewCell class]] == YES) {
+            if([cell isKindOfClass:[MobilyTableCell class]] == YES) {
                 [cell didLoadFromNib];
             }
         }
@@ -226,7 +226,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
         UINib* nib = [_registeredHeaderFooterNibs objectForKey:NSStringFromClass(headerFooterClass)];
         if(nib != nil) {
             [nib instantiateWithOwner:headerFooter options:nil];
-            if([headerFooter isKindOfClass:[MobilyTableViewCell class]] == YES) {
+            if([headerFooter isKindOfClass:[MobilyTableCell class]] == YES) {
                 [headerFooter didLoadFromNib];
             }
         }
@@ -240,7 +240,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation MobilyTableViewCell
+@implementation MobilyTableCell
 
 #pragma mark Standart
 
@@ -430,7 +430,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
 
 /*--------------------------------------------------*/
 
-@implementation MobilyTableViewCellSwipe
+@implementation MobilyTableCellSwipe
 
 #pragma mark Standart
 
@@ -459,7 +459,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
     }
 }
 
-- (void)setSwipeStyle:(MobilyTableViewCellSwipeStyle)swipeStyle {
+- (void)setSwipeStyle:(MobilyTableCellSwipeStyle)swipeStyle {
     if(_swipeStyle != swipeStyle) {
         [self cleanupConstraint];
         _swipeStyle = swipeStyle;
@@ -631,7 +631,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
     
     [self setPanGestupe:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlerPanGestupe)]];
     
-    [self setSwipeStyle:MobilyTableViewCellSwipeStyleLeaves];
+    [self setSwipeStyle:MobilyTableCellSwipeStyleLeaves];
     [self setSwipeThreshold:2.0f];
     [self setSwipeSpeed:420.0f];
     [self setSwipeVelocity:320.0f];
@@ -761,7 +761,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
 - (NSArray*)orderedSubviews {
     NSMutableArray* result = [NSMutableArray array];
     switch(_swipeStyle) {
-        case MobilyTableViewCellSwipeStyleStands: {
+        case MobilyTableCellSwipeStyleStands: {
             if(_leftSwipeView != nil) {
                 [result addObject:_leftSwipeView];
             }
@@ -773,8 +773,8 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
             }
             break;
         }
-        case MobilyTableViewCellSwipeStyleLeaves:
-        case MobilyTableViewCellSwipeStylePushes: {
+        case MobilyTableCellSwipeStyleLeaves:
+        case MobilyTableCellSwipeStylePushes: {
             if([self rootView] != nil) {
                 [result addObject:[self rootView]];
             }
@@ -806,8 +806,8 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
 
 - (CGFloat)rootConstantX {
     switch(_swipeStyle) {
-        case MobilyTableViewCellSwipeStyleStands:
-        case MobilyTableViewCellSwipeStyleLeaves: {
+        case MobilyTableCellSwipeStyleStands:
+        case MobilyTableCellSwipeStyleLeaves: {
             if(_swipeProgress < 0.0f) {
                 return [_leftSwipeView frameWidth] * (-_swipeProgress);
             } else if(_swipeProgress > 0.0f) {
@@ -815,7 +815,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
             }
             break;
         }
-        case MobilyTableViewCellSwipeStylePushes:
+        case MobilyTableCellSwipeStylePushes:
             break;
     }
     return 0.0f;
@@ -824,10 +824,10 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
 - (CGFloat)leftConstant {
     CGFloat leftWidth = [_leftSwipeView frameWidth];
     switch(_swipeStyle) {
-        case MobilyTableViewCellSwipeStyleStands:
+        case MobilyTableCellSwipeStyleStands:
             return 0.0f;
-        case MobilyTableViewCellSwipeStyleLeaves:
-        case MobilyTableViewCellSwipeStylePushes:
+        case MobilyTableCellSwipeStyleLeaves:
+        case MobilyTableCellSwipeStylePushes:
             if(_swipeProgress < 0.0f) {
                 return -leftWidth + (leftWidth * (-_swipeProgress));
             }
@@ -839,10 +839,10 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
 - (CGFloat)rightConstant {
     CGFloat rightWidth = [_rightSwipeView frameWidth];
     switch(_swipeStyle) {
-        case MobilyTableViewCellSwipeStyleStands:
+        case MobilyTableCellSwipeStyleStands:
             return 0.0f;
-        case MobilyTableViewCellSwipeStyleLeaves:
-        case MobilyTableViewCellSwipeStylePushes:
+        case MobilyTableCellSwipeStyleLeaves:
+        case MobilyTableCellSwipeStylePushes:
             if(_swipeProgress > 0.0f) {
                 return rightWidth * (1.0f - _swipeProgress);
             }
@@ -852,8 +852,8 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
 }
 
 - (void)setSwipeProgress:(CGFloat)swipeProgress speed:(CGFloat)speed endedSwipe:(BOOL)endedSwipe {
-    CGFloat minSwipeProgress = (_swipeDirection == MobilyTableViewCellSwipeDirectionLeft) ? -1.0f : 0.0f;
-    CGFloat maxSwipeProgress = (_swipeDirection == MobilyTableViewCellSwipeDirectionRight) ? 1.0f :0.0f;
+    CGFloat minSwipeProgress = (_swipeDirection == MobilyTableCellSwipeDirectionLeft) ? -1.0f : 0.0f;
+    CGFloat maxSwipeProgress = (_swipeDirection == MobilyTableCellSwipeDirectionRight) ? 1.0f :0.0f;
     CGFloat normalizedSwipeProgress = MIN(MAX(minSwipeProgress, swipeProgress), maxSwipeProgress);
     if(_swipeProgress != normalizedSwipeProgress) {
         _swipeProgress = normalizedSwipeProgress;
@@ -886,38 +886,38 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
                 [self setSwipeLastVelocity:velocity.x];
                 [self setSwipeLeftWidth:-[_leftSwipeView frameWidth]];
                 [self setSwipeRightWidth:[_rightSwipeView frameWidth]];
-                [self setSwipeDirection:MobilyTableViewCellSwipeDirectionUnknown];
+                [self setSwipeDirection:MobilyTableCellSwipeDirectionUnknown];
                 break;
             }
             case UIGestureRecognizerStateChanged: {
                 CGFloat delta = _swipeLastOffset - translation.x;
-                if(_swipeDirection == MobilyTableViewCellSwipeDirectionUnknown) {
+                if(_swipeDirection == MobilyTableCellSwipeDirectionUnknown) {
                     if((_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (delta > _swipeThreshold)) {
-                        [self setSwipeDirection:MobilyTableViewCellSwipeDirectionLeft];
+                        [self setSwipeDirection:MobilyTableCellSwipeDirectionLeft];
                         [self didBeganSwipe];
                     } else if((_showedRightSwipeView == YES) && (_rightSwipeView != nil) && (delta < -_swipeThreshold)) {
-                        [self setSwipeDirection:MobilyTableViewCellSwipeDirectionRight];
+                        [self setSwipeDirection:MobilyTableCellSwipeDirectionRight];
                         [self didBeganSwipe];
                     } else if((_showedLeftSwipeView == NO) && (_leftSwipeView != nil) && (delta < -_swipeThreshold)) {
-                        [self setSwipeDirection:MobilyTableViewCellSwipeDirectionLeft];
+                        [self setSwipeDirection:MobilyTableCellSwipeDirectionLeft];
                         [self didBeganSwipe];
                     } else if((_showedRightSwipeView == NO) && (_rightSwipeView != nil) && (delta > _swipeThreshold)) {
-                        [self setSwipeDirection:MobilyTableViewCellSwipeDirectionRight];
+                        [self setSwipeDirection:MobilyTableCellSwipeDirectionRight];
                         [self didBeganSwipe];
                     }
                 }
-                if(_swipeDirection != MobilyTableViewCellSwipeDirectionUnknown) {
+                if(_swipeDirection != MobilyTableCellSwipeDirectionUnknown) {
                     switch(_swipeDirection) {
-                        case MobilyTableViewCellSwipeDirectionUnknown: {
+                        case MobilyTableCellSwipeDirectionUnknown: {
                             break;
                         }
-                        case MobilyTableViewCellSwipeDirectionLeft: {
+                        case MobilyTableCellSwipeDirectionLeft: {
                             CGFloat localDelta = MIN(MAX(_swipeLeftWidth, delta), -_swipeLeftWidth);
                             [self setSwipeProgress:_swipeProgress - (localDelta / _swipeLeftWidth) speed:localDelta endedSwipe:NO];
                             [self movingSwipe:_swipeProgress];
                             break;
                         }
-                        case MobilyTableViewCellSwipeDirectionRight: {
+                        case MobilyTableCellSwipeDirectionRight: {
                             CGFloat localDelta = MIN(MAX(-_swipeRightWidth, delta), _swipeRightWidth);
                             [self setSwipeProgress:_swipeProgress + (localDelta / _swipeRightWidth) speed:localDelta endedSwipe:NO];
                             [self movingSwipe:_swipeProgress];
@@ -933,15 +933,15 @@ typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeDirection) {
             case UIGestureRecognizerStateCancelled: {
                 [self willEndedSwipe];
                 CGFloat swipeProgress = roundf(_swipeProgress - (_swipeLastVelocity / _swipeVelocity));
-                CGFloat minSwipeProgress = (_swipeDirection == MobilyTableViewCellSwipeDirectionLeft) ? -1.0f : 0.0f;
-                CGFloat maxSwipeProgress = (_swipeDirection == MobilyTableViewCellSwipeDirectionRight) ? 1.0f :0.0f;
+                CGFloat minSwipeProgress = (_swipeDirection == MobilyTableCellSwipeDirectionLeft) ? -1.0f : 0.0f;
+                CGFloat maxSwipeProgress = (_swipeDirection == MobilyTableCellSwipeDirectionRight) ? 1.0f :0.0f;
                 CGFloat needSwipeProgress = MIN(MAX(minSwipeProgress, swipeProgress), maxSwipeProgress);
                 switch(_swipeDirection) {
-                    case MobilyTableViewCellSwipeDirectionLeft: {
+                    case MobilyTableCellSwipeDirectionLeft: {
                         [self setSwipeProgress:needSwipeProgress speed:_swipeLeftWidth * ABS(needSwipeProgress - _swipeProgress) endedSwipe:YES];
                         break;
                     }
-                    case MobilyTableViewCellSwipeDirectionRight: {
+                    case MobilyTableCellSwipeDirectionRight: {
                         [self setSwipeProgress:needSwipeProgress speed:_swipeRightWidth * ABS(needSwipeProgress - _swipeProgress) endedSwipe:YES];
                         break;
                     }

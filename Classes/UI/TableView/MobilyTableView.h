@@ -37,17 +37,17 @@
 
 /*--------------------------------------------------*/
 
-@class MobilyTableViewCellSwipe;
+@class MobilyTableCellSwipe;
 
 /*--------------------------------------------------*/
 
 @interface MobilyTableView : UITableView< MobilyBuilderObject >
 
-@property(nonatomic, readwrite, weak) MobilyTableViewCellSwipe* currentSwipeCell;
+@property(nonatomic, readwrite, weak) MobilyTableCellSwipe* currentSwipeCell;
 
 - (void)setupView;
 
-- (void)setCurrentSwipeCell:(MobilyTableViewCellSwipe*)currentSwipeCell animated:(BOOL)animated;
+- (void)setCurrentSwipeCell:(MobilyTableCellSwipe*)currentSwipeCell animated:(BOOL)animated;
 
 - (void)registerCellClass:(Class)cellClass;
 - (void)registerHeaderFooterClass:(Class)headerFooterClass;
@@ -60,7 +60,7 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyTableViewCell : UITableViewCell
+@interface MobilyTableCell : UITableViewCell
 
 @property(nonatomic, readwrite, weak) MobilyTableView* tableView;
 @property(nonatomic, readwrite, strong) IBOutlet UIView* rootView;
@@ -76,17 +76,17 @@
 
 /*--------------------------------------------------*/
 
-typedef NS_ENUM(NSUInteger, MobilyTableViewCellSwipeStyle) {
-    MobilyTableViewCellSwipeStyleStands,
-    MobilyTableViewCellSwipeStyleLeaves,
-    MobilyTableViewCellSwipeStylePushes
+typedef NS_ENUM(NSUInteger, MobilyTableCellSwipeStyle) {
+    MobilyTableCellSwipeStyleStands,
+    MobilyTableCellSwipeStyleLeaves,
+    MobilyTableCellSwipeStylePushes
 };
 
 /*--------------------------------------------------*/
 
-@interface MobilyTableViewCellSwipe : MobilyTableViewCell
+@interface MobilyTableCellSwipe : MobilyTableCell
 
-@property(nonatomic, readwrite, assign) MobilyTableViewCellSwipeStyle swipeStyle;
+@property(nonatomic, readwrite, assign) MobilyTableCellSwipeStyle swipeStyle;
 @property(nonatomic, readwrite, assign) CGFloat swipeThreshold;
 @property(nonatomic, readwrite, assign) CGFloat swipeVelocity;
 @property(nonatomic, readwrite, assign) CGFloat swipeSpeed;

@@ -67,7 +67,7 @@
 
 /*--------------------------------------------------*/
 
-@interface ExampleControllerMainCell : MobilyTableViewCellSwipe
+@interface ExampleControllerMainCell : MobilyTableCellSwipe
 
 @property(nonatomic, readwrite, weak) IBOutlet UILabel* viewTitle;
 
