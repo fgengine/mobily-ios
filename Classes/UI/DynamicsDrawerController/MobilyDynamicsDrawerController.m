@@ -33,14 +33,11 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyController.h"
-#import "MobilyNavigationController.h"
-#import "MobilyTabBarController.h"
-#import "MobilyEvent.h"
+#import "MobilyDynamicsDrawerController.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyController () < UIViewControllerTransitioningDelegate >
+@interface MobilyDynamicsDrawerController () < UIViewControllerTransitioningDelegate >
 
 @property(nonatomic, readwrite, assign, getter=isAppeared) BOOL appeared;
 
@@ -50,7 +47,7 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation MobilyController
+@implementation MobilyDynamicsDrawerController
 
 @synthesize objectName = _objectName;
 @synthesize objectParent = _objectParent;
@@ -58,8 +55,6 @@
 
 #pragma mark NSKeyValueCoding
 
-MOBILY_DEFINE_VALIDATE_STATUS_BAR_STYLE(StatusBarStyle)
-MOBILY_DEFINE_VALIDATE_STATUS_BAR_ANIMATION(StatusBarAnimation)
 MOBILY_DEFINE_VALIDATE_BOOL(NavigationBarHidden)
 MOBILY_DEFINE_VALIDATE_TRANSITION_CONTROLLER(TransitionModal);
 MOBILY_DEFINE_VALIDATE_EVENT(EventDidLoad)
@@ -70,6 +65,14 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventWillDisappear)
 MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 #pragma mark Standart
+
+- (id)init {
+    self = [super init];
+    if(self != nil) {
+        [self setupController];
+    }
+    return self;
+}
 
 - (id)initWithCoder:(NSCoder*)coder {
     self = [super initWithCoder:coder];
@@ -128,43 +131,81 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 - (void)setupController {
 }
 
+- (void)showWideLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
+    [self setPaneState:MSDynamicsDrawerPaneStateOpenWide inDirection:MSDynamicsDrawerDirectionLeft animated:animated allowUserInterruption:YES completion:completion];
+}
+
+- (void)showLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
+    [self setPaneState:MSDynamicsDrawerPaneStateOpen inDirection:MSDynamicsDrawerDirectionLeft animated:animated allowUserInterruption:YES completion:completion];
+}
+
+- (void)hideLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
+    [self setPaneState:MSDynamicsDrawerPaneStateClosed inDirection:MSDynamicsDrawerDirectionLeft animated:animated allowUserInterruption:YES completion:completion];
+}
+
+- (void)showWideRightDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
+    [self setPaneState:MSDynamicsDrawerPaneStateOpenWide inDirection:MSDynamicsDrawerDirectionRight animated:animated allowUserInterruption:YES completion:completion];
+}
+
+- (void)showRightDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
+    [self setPaneState:MSDynamicsDrawerPaneStateOpen inDirection:MSDynamicsDrawerDirectionRight animated:animated allowUserInterruption:YES completion:completion];
+}
+
+- (void)hideRightDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
+    [self setPaneState:MSDynamicsDrawerPaneStateClosed inDirection:MSDynamicsDrawerDirectionRight animated:animated allowUserInterruption:YES completion:completion];
+}
+
 #pragma mark Property
 
 - (BOOL)isAppeared {
     return (_appeared > 0);
 }
 
-- (void)setNavigationBarHidden:(BOOL)navigationBarHidden {
-    [self setNavigationBarHidden:navigationBarHidden animated:NO];
+- (void)setLeftDrawerViewController:(UIViewController*)leftDrawerViewController {
+    [self setDrawerViewController:leftDrawerViewController forDirection:MSDynamicsDrawerDirectionLeft];
 }
 
-- (void)setNavigationBarHidden:(BOOL)navigationBarHidden animated:(BOOL)animated {
-    if(_navigationBarHidden != navigationBarHidden) {
-        _navigationBarHidden = navigationBarHidden;
-        
-        if([self isViewLoaded] == YES) {
-            [[self navigationController] setNavigationBarHidden:_navigationBarHidden animated:animated];
-        }
-    }
+- (UIViewController*)leftDrawerViewController {
+    return [self drawerViewControllerForDirection:MSDynamicsDrawerDirectionLeft];
+}
+
+- (void)setRightDrawerViewController:(UIViewController*)rightDrawerViewController {
+    [self setDrawerViewController:rightDrawerViewController forDirection:MSDynamicsDrawerDirectionRight];
+}
+
+- (UIViewController*)rightDrawerViewController {
+    return [self drawerViewControllerForDirection:MSDynamicsDrawerDirectionRight];
 }
 
 #pragma mark UIViewController
 
 - (BOOL)prefersStatusBarHidden {
-    return NO;
+    if([self paneViewController] != nil) {
+        return [[self paneViewController] prefersStatusBarHidden];
+    }
+    return [super prefersStatusBarHidden];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    return _statusBarStyle;
+    if([self paneViewController] != nil) {
+        return [[self paneViewController] preferredStatusBarStyle];
+    }
+    return [super preferredStatusBarStyle];
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
-    return _statusBarAnimation;
+    if([self paneViewController] != nil) {
+        return [[self paneViewController] preferredStatusBarUpdateAnimation];
+    }
+    return [super preferredStatusBarUpdateAnimation];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    if([self paneViewController] == nil) {
+        [self setPaneViewController:[_objectChilds firstObjectIsClass:[UIViewController class]]];
+    }
     [_eventDidLoad fireSender:self object:nil];
 }
 
@@ -177,19 +218,25 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    if(_navigationBarHidden == YES) {
+        [[self navigationController] setNavigationBarHidden:YES animated:animated];
+    }
     [_eventWillAppear fireSender:self object:nil];
     [self setAppeared:_appeared + 1];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-
+    
     [_eventDidAppear fireSender:self object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
+    if(_navigationBarHidden == YES) {
+        [[self navigationController] setNavigationBarHidden:NO animated:animated];
+    }
     [_eventWillDisappear fireSender:self object:nil];
 }
 
@@ -203,7 +250,11 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     
-    [self unloadViewIfPossible];
+    if([self isViewLoaded] == YES) {
+        if([[self view] window] == nil) {
+            [self setView:nil];
+        }
+    }
 }
 
 #pragma mark UIViewControllerTransitioningDelegate

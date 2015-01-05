@@ -33,43 +33,15 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyContext.h"
-#import "MobilyApplication.h"
-#import "MobilyWindow.h"
 #import "MobilyController.h"
-#import "MobilyNavigationController.h"
-#import "MobilyViewController.h"
-#import "MobilyDynamicsDrawerController.h"
-#import "MobilySlideMenuController.h"
-#import "MobilyImageView.h"
-#import "MobilyTableView.h"
 
 /*--------------------------------------------------*/
 
-@interface ExampleApplication : MobilyApplication
+@interface MobilyViewController : MobilyController
 
-@property(nonatomic, readwrite, weak) MobilyWindow* window;
-@property(nonatomic, readwrite, weak) MobilySlideMenuController* slideView;
-@property(nonatomic, readwrite, weak) MobilyViewController* mainView;
-@property(nonatomic, readwrite, weak) MobilyViewController* leftView;
-@property(nonatomic, readwrite, weak) MobilyViewController* rightView;
-
-@end
-
-/*--------------------------------------------------*/
-
-@interface ExampleControllerMain : MobilyViewController < UITableViewDataSource, UITableViewDelegate >
-
-@property(nonatomic, readwrite, weak) IBOutlet MobilyTableView* viewTable;
-@property(nonatomic, readwrite, strong) NSArray* dataSource;
-
-@end
-
-/*--------------------------------------------------*/
-
-@interface ExampleControllerMainCell : MobilyTableViewCellSwipe
-
-@property(nonatomic, readwrite, weak) IBOutlet UILabel* viewTitle;
+@property(nonatomic, readwrite, assign, getter=isAutomaticallyHideKeyboard) BOOL automaticallyHideKeyboard;
+@property(nonatomic, readwrite, assign) UIInterfaceOrientationMask orientation;
+@property(nonatomic, readonly, strong) NSString* mobilyName;
 
 @end
 

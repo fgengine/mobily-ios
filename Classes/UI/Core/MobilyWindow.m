@@ -39,7 +39,7 @@
 
 /*--------------------------------------------------*/
 
-#import "MobilyControllerView.h"
+#import "MobilyViewController.h"
 
 /*--------------------------------------------------*/
 
@@ -195,8 +195,8 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
             parentViewController = currentViewController;
         }
         if(_automaticallyHideKeyboard == YES) {
-            if([currentViewController isKindOfClass:[MobilyControllerView class]] == YES) {
-                MobilyControllerView* mobilyViewController = (MobilyControllerView*)currentViewController;
+            if([currentViewController isKindOfClass:[MobilyViewController class]] == YES) {
+                MobilyViewController* mobilyViewController = (MobilyViewController*)currentViewController;
                 if([mobilyViewController isAutomaticallyHideKeyboard] == NO) {
                     return [[[self rootViewController] view] hitTest:point withEvent:event];
                 }

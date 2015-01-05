@@ -33,43 +33,25 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyContext.h"
-#import "MobilyApplication.h"
-#import "MobilyWindow.h"
-#import "MobilyController.h"
-#import "MobilyNavigationController.h"
-#import "MobilyViewController.h"
-#import "MobilyDynamicsDrawerController.h"
-#import "MobilySlideMenuController.h"
-#import "MobilyImageView.h"
-#import "MobilyTableView.h"
+#import "MobilyBuilder.h"
 
 /*--------------------------------------------------*/
 
-@interface ExampleApplication : MobilyApplication
+@interface MobilyTextField : UITextField< MobilyBuilderObject >
 
-@property(nonatomic, readwrite, weak) MobilyWindow* window;
-@property(nonatomic, readwrite, weak) MobilySlideMenuController* slideView;
-@property(nonatomic, readwrite, weak) MobilyViewController* mainView;
-@property(nonatomic, readwrite, weak) MobilyViewController* leftView;
-@property(nonatomic, readwrite, weak) MobilyViewController* rightView;
+@property(nonatomic, readwrite, assign) BOOL hiddenToolbar;
+@property(nonatomic, readwrite, strong) UIToolbar* toolbar;
+@property(nonatomic, readwrite, strong) UIBarButtonItem* prevButton;
+@property(nonatomic, readwrite, strong) UIBarButtonItem* nextButton;
+@property(nonatomic, readwrite, strong) UIBarButtonItem* flexButton;
+@property(nonatomic, readwrite, strong) UIBarButtonItem* doneButton;
 
-@end
+- (void)setupView;
 
-/*--------------------------------------------------*/
+- (void)setHiddenToolbar:(BOOL)hiddenToolbar animated:(BOOL)animated;
 
-@interface ExampleControllerMain : MobilyViewController < UITableViewDataSource, UITableViewDelegate >
-
-@property(nonatomic, readwrite, weak) IBOutlet MobilyTableView* viewTable;
-@property(nonatomic, readwrite, strong) NSArray* dataSource;
-
-@end
-
-/*--------------------------------------------------*/
-
-@interface ExampleControllerMainCell : MobilyTableViewCellSwipe
-
-@property(nonatomic, readwrite, weak) IBOutlet UILabel* viewTitle;
+- (void)didBeginEditing;
+- (void)didEndEditing;
 
 @end
 

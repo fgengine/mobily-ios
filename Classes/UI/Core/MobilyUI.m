@@ -1460,14 +1460,6 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
     [self setContentOffset:CGPointMake(contentOffset.x, contentOffsetY) animated:animated];
 }
 
-- (CGSize)contentSizeFromSubviews {
-    CGRect rect = CGRectZero;
-    for(UIView* view in [self subviews]) {
-        rect = CGRectUnion(rect, [view frame]);
-    }
-    return rect.size;
-}
-
 - (void)registerAdjustmentResponder {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustmentNotificationKeyboardShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustmentNotificationKeyboardHide:) name:UIKeyboardWillHideNotification object:nil];

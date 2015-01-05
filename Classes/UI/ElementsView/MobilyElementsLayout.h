@@ -33,43 +33,47 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyContext.h"
-#import "MobilyApplication.h"
-#import "MobilyWindow.h"
-#import "MobilyController.h"
-#import "MobilyNavigationController.h"
-#import "MobilyViewController.h"
-#import "MobilyDynamicsDrawerController.h"
-#import "MobilySlideMenuController.h"
-#import "MobilyImageView.h"
-#import "MobilyTableView.h"
+#import "MobilyElementsView.h"
 
 /*--------------------------------------------------*/
 
-@interface ExampleApplication : MobilyApplication
+@interface MobilyElementsListLayout : NSObject < MobilyElementsLayout >
 
-@property(nonatomic, readwrite, weak) MobilyWindow* window;
-@property(nonatomic, readwrite, weak) MobilySlideMenuController* slideView;
-@property(nonatomic, readwrite, weak) MobilyViewController* mainView;
-@property(nonatomic, readwrite, weak) MobilyViewController* leftView;
-@property(nonatomic, readwrite, weak) MobilyViewController* rightView;
+@property(nonatomic, readwrite, assign) CGFloat margin;
+@property(nonatomic, readwrite, assign) CGFloat spacing;
 
 @end
 
 /*--------------------------------------------------*/
 
-@interface ExampleControllerMain : MobilyViewController < UITableViewDataSource, UITableViewDelegate >
-
-@property(nonatomic, readwrite, weak) IBOutlet MobilyTableView* viewTable;
-@property(nonatomic, readwrite, strong) NSArray* dataSource;
+@interface MobilyElementsVerticalListLayout : MobilyElementsListLayout
 
 @end
 
 /*--------------------------------------------------*/
 
-@interface ExampleControllerMainCell : MobilyTableViewCellSwipe
+@interface MobilyElementsHorizontalListLayout : MobilyElementsListLayout
 
-@property(nonatomic, readwrite, weak) IBOutlet UILabel* viewTitle;
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyElementsGridLayout : NSObject < MobilyElementsLayout >
+
+@property(nonatomic, readwrite, assign) CGSize margin;
+@property(nonatomic, readwrite, assign) CGSize spacing;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyElementsVerticalGridLayout : MobilyElementsGridLayout
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyElementsHorizontalGridLayout : MobilyElementsGridLayout
 
 @end
 

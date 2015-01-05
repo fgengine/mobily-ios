@@ -33,43 +33,25 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyContext.h"
-#import "MobilyApplication.h"
-#import "MobilyWindow.h"
-#import "MobilyController.h"
-#import "MobilyNavigationController.h"
-#import "MobilyViewController.h"
-#import "MobilyDynamicsDrawerController.h"
-#import "MobilySlideMenuController.h"
-#import "MobilyImageView.h"
-#import "MobilyTableView.h"
+#import "MobilyBuilder.h"
+#import "MobilyTransitionController.h"
 
 /*--------------------------------------------------*/
 
-@interface ExampleApplication : MobilyApplication
+@interface MobilyNavigationController : UINavigationController< MobilyBuilderObject >
 
-@property(nonatomic, readwrite, weak) MobilyWindow* window;
-@property(nonatomic, readwrite, weak) MobilySlideMenuController* slideView;
-@property(nonatomic, readwrite, weak) MobilyViewController* mainView;
-@property(nonatomic, readwrite, weak) MobilyViewController* leftView;
-@property(nonatomic, readwrite, weak) MobilyViewController* rightView;
+@property(nonatomic, readonly, assign, getter=isAppeared) BOOL appeared;
+@property(nonatomic, readwrite, strong) MobilyTransitionController* transitionModal;
+@property(nonatomic, readwrite, strong) MobilyTransitionController* transitionNavigation;
 
-@end
+@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidLoad;
+@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidUnload;
+@property(nonatomic, readwrite, strong) id< MobilyEvent > eventWillAppear;
+@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidAppear;
+@property(nonatomic, readwrite, strong) id< MobilyEvent > eventWillDisappear;
+@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidDisappear;
 
-/*--------------------------------------------------*/
-
-@interface ExampleControllerMain : MobilyViewController < UITableViewDataSource, UITableViewDelegate >
-
-@property(nonatomic, readwrite, weak) IBOutlet MobilyTableView* viewTable;
-@property(nonatomic, readwrite, strong) NSArray* dataSource;
-
-@end
-
-/*--------------------------------------------------*/
-
-@interface ExampleControllerMainCell : MobilyTableViewCellSwipe
-
-@property(nonatomic, readwrite, weak) IBOutlet UILabel* viewTitle;
+- (void)setupController;
 
 @end
 

@@ -33,43 +33,24 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyContext.h"
-#import "MobilyApplication.h"
-#import "MobilyWindow.h"
-#import "MobilyController.h"
-#import "MobilyNavigationController.h"
-#import "MobilyViewController.h"
-#import "MobilyDynamicsDrawerController.h"
-#import "MobilySlideMenuController.h"
-#import "MobilyImageView.h"
-#import "MobilyTableView.h"
+#import "MobilyBuilder.h"
 
 /*--------------------------------------------------*/
 
-@interface ExampleApplication : MobilyApplication
-
-@property(nonatomic, readwrite, weak) MobilyWindow* window;
-@property(nonatomic, readwrite, weak) MobilySlideMenuController* slideView;
-@property(nonatomic, readwrite, weak) MobilyViewController* mainView;
-@property(nonatomic, readwrite, weak) MobilyViewController* leftView;
-@property(nonatomic, readwrite, weak) MobilyViewController* rightView;
-
-@end
+typedef NS_ENUM(NSInteger, MobilyScrollViewDirection) {
+    MobilyScrollViewDirectionStretch,
+    MobilyScrollViewDirectionHorizontal,
+    MobilyScrollViewDirectionVertical
+};
 
 /*--------------------------------------------------*/
 
-@interface ExampleControllerMain : MobilyViewController < UITableViewDataSource, UITableViewDelegate >
+@interface MobilyScrollView : UIScrollView< MobilyBuilderObject >
 
-@property(nonatomic, readwrite, weak) IBOutlet MobilyTableView* viewTable;
-@property(nonatomic, readwrite, strong) NSArray* dataSource;
+@property(nonatomic, readwrite, assign) MobilyScrollViewDirection direction;
+@property(nonatomic, readwrite, strong) IBOutlet UIView* rootView;
 
-@end
-
-/*--------------------------------------------------*/
-
-@interface ExampleControllerMainCell : MobilyTableViewCellSwipe
-
-@property(nonatomic, readwrite, weak) IBOutlet UILabel* viewTitle;
+- (void)setupView;
 
 @end
 

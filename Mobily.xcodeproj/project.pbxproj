@@ -7,16 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		40081AA01A27122300F2FBE6 /* MobilyControllerSlideMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 40081A8D1A27122200F2FBE6 /* MobilyControllerSlideMenu.m */; };
-		40081AA11A27122300F2FBE6 /* SlideNavigationContorllerAnimatorFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 40081A921A27122200F2FBE6 /* SlideNavigationContorllerAnimatorFade.m */; };
-		40081AA21A27122300F2FBE6 /* SlideNavigationContorllerAnimatorScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 40081A941A27122200F2FBE6 /* SlideNavigationContorllerAnimatorScale.m */; };
-		40081AA31A27122300F2FBE6 /* SlideNavigationContorllerAnimatorScaleAndFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 40081A961A27122200F2FBE6 /* SlideNavigationContorllerAnimatorScaleAndFade.m */; };
-		40081AA41A27122300F2FBE6 /* SlideNavigationContorllerAnimatorSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 40081A981A27122200F2FBE6 /* SlideNavigationContorllerAnimatorSlide.m */; };
-		40081AA51A27122300F2FBE6 /* SlideNavigationContorllerAnimatorSlideAndFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 40081A9A1A27122200F2FBE6 /* SlideNavigationContorllerAnimatorSlideAndFade.m */; };
-		40081AA61A27122300F2FBE6 /* menu-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 40081A9C1A27122200F2FBE6 /* menu-button.png */; };
-		40081AA71A27122300F2FBE6 /* menu-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40081A9D1A27122300F2FBE6 /* menu-button@2x.png */; };
-		40081AA81A27122300F2FBE6 /* SlideNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40081A9F1A27122300F2FBE6 /* SlideNavigationController.m */; };
-		400B4D081A19E29900F2B61E /* MobilyViewTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 400B4D071A19E29900F2B61E /* MobilyViewTable.m */; };
 		400B4D0A1A1A0D6700F2B61E /* ExampleControllerMainCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 400B4D091A1A0D6700F2B61E /* ExampleControllerMainCell.xib */; };
 		401FEE5318A3F92800B445EB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401FEE5218A3F92800B445EB /* Foundation.framework */; };
 		401FEE5518A3F92800B445EB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401FEE5418A3F92800B445EB /* CoreGraphics.framework */; };
@@ -24,63 +14,55 @@
 		401FEE8918A3FAE600B445EB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 401FEE8218A3FAE600B445EB /* InfoPlist.strings */; };
 		401FEE8A18A3FAE600B445EB /* ExampleApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEE8518A3FAE600B445EB /* ExampleApplication.m */; };
 		401FEE8B18A3FAE600B445EB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEE8618A3FAE600B445EB /* main.m */; };
-		401FEEF018A3FAF100B445EB /* MobilyCG.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEE9018A3FAF100B445EB /* MobilyCG.m */; };
-		401FEEF118A3FAF100B445EB /* MobilyEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEE9718A3FAF100B445EB /* MobilyEvent.m */; };
-		401FEEF318A3FAF100B445EB /* MobilyHttpQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEE9B18A3FAF100B445EB /* MobilyHttpQuery.m */; };
-		401FEEF418A3FAF100B445EB /* MobilyKVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEE9D18A3FAF100B445EB /* MobilyKVO.m */; };
-		401FEEF518A3FAF100B445EB /* MobilyNS.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEE9F18A3FAF100B445EB /* MobilyNS.m */; };
-		401FEEF618A3FAF100B445EB /* MobilyStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEEA118A3FAF100B445EB /* MobilyStorage.m */; };
-		401FEEF718A3FAF100B445EB /* MobilyTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEEA318A3FAF100B445EB /* MobilyTaskManager.m */; };
-		401FEEFD18A3FAF100B445EB /* MobilyApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEEB618A3FAF100B445EB /* MobilyApplication.m */; };
-		401FEEFE18A3FAF100B445EB /* MobilyContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEEB818A3FAF100B445EB /* MobilyContext.m */; };
-		401FEEFF18A3FAF100B445EB /* MobilyController.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEEBA18A3FAF100B445EB /* MobilyController.m */; };
-		401FEF0018A3FAF100B445EB /* MobilyControllerNavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEEBC18A3FAF100B445EB /* MobilyControllerNavigation.m */; };
-		401FEF0118A3FAF100B445EB /* MobilyControllerTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEEBE18A3FAF100B445EB /* MobilyControllerTabBar.m */; };
-		401FEF0218A3FAF100B445EB /* MobilyControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEEC018A3FAF100B445EB /* MobilyControllerView.m */; };
-		401FEF0618A3FAF100B445EB /* MobilyBuilderForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEEC818A3FAF100B445EB /* MobilyBuilderForm.m */; };
-		401FEF0718A3FAF100B445EB /* MobilyUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEECA18A3FAF100B445EB /* MobilyUI.m */; };
-		401FEF1218A3FAF100B445EB /* MobilyWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 401FEEE018A3FAF100B445EB /* MobilyWindow.m */; };
 		401FEF1A18A3FE3200B445EB /* Application.mobily in Resources */ = {isa = PBXBuildFile; fileRef = 401FEF1818A3FE3200B445EB /* Application.mobily */; };
 		401FEF1B18A3FE3200B445EB /* Presets.mobily in Resources */ = {isa = PBXBuildFile; fileRef = 401FEF1918A3FE3200B445EB /* Presets.mobily */; };
-		4032580B1A0BBBA700949E8F /* MobilyViewScroll.m in Sources */ = {isa = PBXBuildFile; fileRef = 4032580A1A0BBBA700949E8F /* MobilyViewScroll.m */; };
 		407903D01943079600EC8855 /* Mobily.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 407903CF1943079600EC8855 /* Mobily.podspec */; };
-		407903D219464A1E00EC8855 /* MobilyBuilderPreset.m in Sources */ = {isa = PBXBuildFile; fileRef = 407903D119464A1E00EC8855 /* MobilyBuilderPreset.m */; };
-		407989E41947834F00A04686 /* MobilyTransitionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 407989E31947834F00A04686 /* MobilyTransitionController.m */; };
-		407989E7194788EE00A04686 /* MobilyTransitionControllerCards.m in Sources */ = {isa = PBXBuildFile; fileRef = 407989E5194788EE00A04686 /* MobilyTransitionControllerCards.m */; };
-		407989E8194788EE00A04686 /* MobilyTransitionControllerCrossFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 407989E6194788EE00A04686 /* MobilyTransitionControllerCrossFade.m */; };
-		407989EC19484C9700A04686 /* MobilyControllerDynamicsDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = 407989EB19484C9700A04686 /* MobilyControllerDynamicsDrawer.m */; };
-		40798A2B1948ABAF00A04686 /* MobilyRegExpParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798A2A1948ABAF00A04686 /* MobilyRegExpParser.m */; };
-		40798A351948AC0600A04686 /* MobilyViewFieldDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798A2E1948AC0600A04686 /* MobilyViewFieldDate.m */; };
-		40798A361948AC0600A04686 /* MobilyViewFieldList.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798A311948AC0600A04686 /* MobilyViewFieldList.m */; };
-		40798A371948AC0600A04686 /* MobilyViewFieldText.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798A341948AC0600A04686 /* MobilyViewFieldText.m */; };
-		40798A3B1948AFC400A04686 /* MobilyViewImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798A3A1948AFC400A04686 /* MobilyViewImage.m */; };
-		40798A411948C0F700A04686 /* MobilyViewElementsLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798A3E1948C0F700A04686 /* MobilyViewElementsLayout.m */; };
-		40798A421948C0F700A04686 /* MobilyViewElements.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798A401948C0F700A04686 /* MobilyViewElements.m */; };
+		40C8CD5D1A5AA45100F737B2 /* MobilyCG.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CCFF1A5AA45100F737B2 /* MobilyCG.m */; };
+		40C8CD5E1A5AA45100F737B2 /* MobilyEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD051A5AA45100F737B2 /* MobilyEvent.m */; };
+		40C8CD5F1A5AA45100F737B2 /* MobilyHttpQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD071A5AA45100F737B2 /* MobilyHttpQuery.m */; };
+		40C8CD601A5AA45100F737B2 /* MobilyKVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD091A5AA45100F737B2 /* MobilyKVO.m */; };
+		40C8CD611A5AA45100F737B2 /* MobilyNS.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD0B1A5AA45100F737B2 /* MobilyNS.m */; };
+		40C8CD621A5AA45100F737B2 /* MobilyModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD0E1A5AA45100F737B2 /* MobilyModel.m */; };
+		40C8CD631A5AA45100F737B2 /* MobilyRegExpParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD111A5AA45100F737B2 /* MobilyRegExpParser.m */; };
+		40C8CD641A5AA45100F737B2 /* MobilyTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD141A5AA45100F737B2 /* MobilyTaskManager.m */; };
+		40C8CD651A5AA45100F737B2 /* MobilyApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD181A5AA45100F737B2 /* MobilyApplication.m */; };
+		40C8CD661A5AA45100F737B2 /* MobilyBuilderForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD1A1A5AA45100F737B2 /* MobilyBuilderForm.m */; };
+		40C8CD671A5AA45100F737B2 /* MobilyBuilderPreset.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD1B1A5AA45100F737B2 /* MobilyBuilderPreset.m */; };
+		40C8CD681A5AA45100F737B2 /* MobilyContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD1D1A5AA45100F737B2 /* MobilyContext.m */; };
+		40C8CD691A5AA45100F737B2 /* MobilyController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD1F1A5AA45100F737B2 /* MobilyController.m */; };
+		40C8CD6A1A5AA45100F737B2 /* MobilyNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD211A5AA45100F737B2 /* MobilyNavigationController.m */; };
+		40C8CD6B1A5AA45100F737B2 /* MobilyTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD231A5AA45100F737B2 /* MobilyTabBarController.m */; };
+		40C8CD6C1A5AA45100F737B2 /* MobilyTransitionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD251A5AA45100F737B2 /* MobilyTransitionController.m */; };
+		40C8CD6D1A5AA45100F737B2 /* MobilyTransitionControllerCards.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD261A5AA45100F737B2 /* MobilyTransitionControllerCards.m */; };
+		40C8CD6E1A5AA45100F737B2 /* MobilyTransitionControllerCrossFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD271A5AA45100F737B2 /* MobilyTransitionControllerCrossFade.m */; };
+		40C8CD6F1A5AA45100F737B2 /* MobilyUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD291A5AA45100F737B2 /* MobilyUI.m */; };
+		40C8CD701A5AA45100F737B2 /* MobilyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD2B1A5AA45100F737B2 /* MobilyViewController.m */; };
+		40C8CD711A5AA45100F737B2 /* MobilyWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD2D1A5AA45100F737B2 /* MobilyWindow.m */; };
+		40C8CD721A5AA45100F737B2 /* MobilyDateField.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD301A5AA45100F737B2 /* MobilyDateField.m */; };
+		40C8CD731A5AA45100F737B2 /* MobilyDynamicsDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD331A5AA45100F737B2 /* MobilyDynamicsDrawerController.m */; };
+		40C8CD741A5AA45100F737B2 /* MobilyElementsLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD361A5AA45100F737B2 /* MobilyElementsLayout.m */; };
+		40C8CD751A5AA45100F737B2 /* MobilyElementsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD381A5AA45100F737B2 /* MobilyElementsView.m */; };
+		40C8CD761A5AA45100F737B2 /* MobilyImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD3B1A5AA45100F737B2 /* MobilyImageView.m */; };
+		40C8CD771A5AA45100F737B2 /* MobilyListField.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD3E1A5AA45100F737B2 /* MobilyListField.m */; };
+		40C8CD781A5AA45100F737B2 /* MobilyScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD411A5AA45100F737B2 /* MobilyScrollView.m */; };
+		40C8CD791A5AA45100F737B2 /* MobilySlideMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD441A5AA45100F737B2 /* MobilySlideMenuController.m */; };
+		40C8CD7A1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD491A5AA45100F737B2 /* SlideNavigationContorllerAnimatorFade.m */; };
+		40C8CD7B1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD4B1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorScale.m */; };
+		40C8CD7C1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorScaleAndFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD4D1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorScaleAndFade.m */; };
+		40C8CD7D1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD4F1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorSlide.m */; };
+		40C8CD7E1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorSlideAndFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD511A5AA45100F737B2 /* SlideNavigationContorllerAnimatorSlideAndFade.m */; };
+		40C8CD7F1A5AA45100F737B2 /* menu-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 40C8CD531A5AA45100F737B2 /* menu-button.png */; };
+		40C8CD801A5AA45100F737B2 /* menu-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40C8CD541A5AA45100F737B2 /* menu-button@2x.png */; };
+		40C8CD811A5AA45100F737B2 /* SlideNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD561A5AA45100F737B2 /* SlideNavigationController.m */; };
+		40C8CD821A5AA45100F737B2 /* MobilyTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD591A5AA45100F737B2 /* MobilyTableView.m */; };
+		40C8CD831A5AA45100F737B2 /* MobilyTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD5C1A5AA45100F737B2 /* MobilyTextField.m */; };
+		40C8CD861A5AA4DC00F737B2 /* MobilyModelJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD851A5AA4DC00F737B2 /* MobilyModelJson.m */; };
 		9AA83B7B19E536FF009F6C5F /* ExampleControllerMain.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9AA83B7A19E536FE009F6C5F /* ExampleControllerMain.xib */; };
 		C13E78B87D644CF2A6696DA8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F16AA68F9FE04603B1D99102 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2BBC62D562492FDF2CDB1707 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		40081A8C1A27122200F2FBE6 /* MobilyControllerSlideMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyControllerSlideMenu.h; sourceTree = "<group>"; };
-		40081A8D1A27122200F2FBE6 /* MobilyControllerSlideMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyControllerSlideMenu.m; sourceTree = "<group>"; };
-		40081A901A27122200F2FBE6 /* SlideNavigationContorllerAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimator.h; sourceTree = "<group>"; };
-		40081A911A27122200F2FBE6 /* SlideNavigationContorllerAnimatorFade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorFade.h; sourceTree = "<group>"; };
-		40081A921A27122200F2FBE6 /* SlideNavigationContorllerAnimatorFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorFade.m; sourceTree = "<group>"; };
-		40081A931A27122200F2FBE6 /* SlideNavigationContorllerAnimatorScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorScale.h; sourceTree = "<group>"; };
-		40081A941A27122200F2FBE6 /* SlideNavigationContorllerAnimatorScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorScale.m; sourceTree = "<group>"; };
-		40081A951A27122200F2FBE6 /* SlideNavigationContorllerAnimatorScaleAndFade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorScaleAndFade.h; sourceTree = "<group>"; };
-		40081A961A27122200F2FBE6 /* SlideNavigationContorllerAnimatorScaleAndFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorScaleAndFade.m; sourceTree = "<group>"; };
-		40081A971A27122200F2FBE6 /* SlideNavigationContorllerAnimatorSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorSlide.h; sourceTree = "<group>"; };
-		40081A981A27122200F2FBE6 /* SlideNavigationContorllerAnimatorSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorSlide.m; sourceTree = "<group>"; };
-		40081A991A27122200F2FBE6 /* SlideNavigationContorllerAnimatorSlideAndFade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorSlideAndFade.h; sourceTree = "<group>"; };
-		40081A9A1A27122200F2FBE6 /* SlideNavigationContorllerAnimatorSlideAndFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorSlideAndFade.m; sourceTree = "<group>"; };
-		40081A9C1A27122200F2FBE6 /* menu-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-button.png"; sourceTree = "<group>"; };
-		40081A9D1A27122300F2FBE6 /* menu-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-button@2x.png"; sourceTree = "<group>"; };
-		40081A9E1A27122300F2FBE6 /* SlideNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationController.h; sourceTree = "<group>"; };
-		40081A9F1A27122300F2FBE6 /* SlideNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationController.m; sourceTree = "<group>"; };
-		400B4D061A19E29900F2B61E /* MobilyViewTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyViewTable.h; sourceTree = "<group>"; };
-		400B4D071A19E29900F2B61E /* MobilyViewTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewTable.m; sourceTree = "<group>"; };
 		400B4D091A1A0D6700F2B61E /* ExampleControllerMainCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExampleControllerMainCell.xib; sourceTree = "<group>"; };
 		401FEE4F18A3F92800B445EB /* Mobily.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mobily.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		401FEE5218A3F92800B445EB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -92,65 +74,86 @@
 		401FEE8618A3FAE600B445EB /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		401FEE8718A3FAE600B445EB /* Mobily-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Mobily-Info.plist"; sourceTree = "<group>"; };
 		401FEE8818A3FAE600B445EB /* Mobily-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Mobily-Prefix.pch"; sourceTree = "<group>"; };
-		401FEE9018A3FAF100B445EB /* MobilyCG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyCG.m; sourceTree = "<group>"; };
-		401FEE9118A3FAF100B445EB /* MobilyCG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyCG.h; sourceTree = "<group>"; };
-		401FEE9318A3FAF100B445EB /* MobilyCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyCore.h; sourceTree = "<group>"; };
-		401FEE9618A3FAF100B445EB /* MobilyEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyEvent.h; sourceTree = "<group>"; };
-		401FEE9718A3FAF100B445EB /* MobilyEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyEvent.m; sourceTree = "<group>"; };
-		401FEE9A18A3FAF100B445EB /* MobilyHttpQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyHttpQuery.h; sourceTree = "<group>"; };
-		401FEE9B18A3FAF100B445EB /* MobilyHttpQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyHttpQuery.m; sourceTree = "<group>"; };
-		401FEE9C18A3FAF100B445EB /* MobilyKVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyKVO.h; sourceTree = "<group>"; };
-		401FEE9D18A3FAF100B445EB /* MobilyKVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyKVO.m; sourceTree = "<group>"; };
-		401FEE9E18A3FAF100B445EB /* MobilyNS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyNS.h; sourceTree = "<group>"; };
-		401FEE9F18A3FAF100B445EB /* MobilyNS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyNS.m; sourceTree = "<group>"; };
-		401FEEA018A3FAF100B445EB /* MobilyStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyStorage.h; sourceTree = "<group>"; };
-		401FEEA118A3FAF100B445EB /* MobilyStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyStorage.m; sourceTree = "<group>"; };
-		401FEEA218A3FAF100B445EB /* MobilyTaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyTaskManager.h; sourceTree = "<group>"; };
-		401FEEA318A3FAF100B445EB /* MobilyTaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyTaskManager.m; sourceTree = "<group>"; };
-		401FEEB518A3FAF100B445EB /* MobilyApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyApplication.h; sourceTree = "<group>"; };
-		401FEEB618A3FAF100B445EB /* MobilyApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyApplication.m; sourceTree = "<group>"; };
-		401FEEB718A3FAF100B445EB /* MobilyContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyContext.h; sourceTree = "<group>"; };
-		401FEEB818A3FAF100B445EB /* MobilyContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyContext.m; sourceTree = "<group>"; };
-		401FEEB918A3FAF100B445EB /* MobilyController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyController.h; sourceTree = "<group>"; };
-		401FEEBA18A3FAF100B445EB /* MobilyController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyController.m; sourceTree = "<group>"; };
-		401FEEBB18A3FAF100B445EB /* MobilyControllerNavigation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyControllerNavigation.h; sourceTree = "<group>"; };
-		401FEEBC18A3FAF100B445EB /* MobilyControllerNavigation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyControllerNavigation.m; sourceTree = "<group>"; };
-		401FEEBD18A3FAF100B445EB /* MobilyControllerTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyControllerTabBar.h; sourceTree = "<group>"; };
-		401FEEBE18A3FAF100B445EB /* MobilyControllerTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyControllerTabBar.m; sourceTree = "<group>"; };
-		401FEEBF18A3FAF100B445EB /* MobilyControllerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyControllerView.h; sourceTree = "<group>"; };
-		401FEEC018A3FAF100B445EB /* MobilyControllerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyControllerView.m; sourceTree = "<group>"; };
-		401FEEC718A3FAF100B445EB /* MobilyBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyBuilder.h; sourceTree = "<group>"; };
-		401FEEC818A3FAF100B445EB /* MobilyBuilderForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyBuilderForm.m; sourceTree = "<group>"; };
-		401FEEC918A3FAF100B445EB /* MobilyUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyUI.h; sourceTree = "<group>"; };
-		401FEECA18A3FAF100B445EB /* MobilyUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyUI.m; sourceTree = "<group>"; };
-		401FEEDF18A3FAF100B445EB /* MobilyWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyWindow.h; sourceTree = "<group>"; };
-		401FEEE018A3FAF100B445EB /* MobilyWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyWindow.m; sourceTree = "<group>"; };
 		401FEF1818A3FE3200B445EB /* Application.mobily */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Application.mobily; sourceTree = "<group>"; };
 		401FEF1918A3FE3200B445EB /* Presets.mobily */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Presets.mobily; sourceTree = "<group>"; };
-		403258091A0BBBA700949E8F /* MobilyViewScroll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyViewScroll.h; sourceTree = "<group>"; };
-		4032580A1A0BBBA700949E8F /* MobilyViewScroll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewScroll.m; sourceTree = "<group>"; };
 		407903CF1943079600EC8855 /* Mobily.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Mobily.podspec; sourceTree = "<group>"; };
-		407903D119464A1E00EC8855 /* MobilyBuilderPreset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyBuilderPreset.m; sourceTree = "<group>"; };
-		407989E21947834F00A04686 /* MobilyTransitionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyTransitionController.h; sourceTree = "<group>"; };
-		407989E31947834F00A04686 /* MobilyTransitionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyTransitionController.m; sourceTree = "<group>"; };
-		407989E5194788EE00A04686 /* MobilyTransitionControllerCards.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyTransitionControllerCards.m; sourceTree = "<group>"; };
-		407989E6194788EE00A04686 /* MobilyTransitionControllerCrossFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyTransitionControllerCrossFade.m; sourceTree = "<group>"; };
-		407989EA19484C9700A04686 /* MobilyControllerDynamicsDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyControllerDynamicsDrawer.h; sourceTree = "<group>"; };
-		407989EB19484C9700A04686 /* MobilyControllerDynamicsDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyControllerDynamicsDrawer.m; sourceTree = "<group>"; };
-		40798A291948ABAF00A04686 /* MobilyRegExpParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyRegExpParser.h; sourceTree = "<group>"; };
-		40798A2A1948ABAF00A04686 /* MobilyRegExpParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyRegExpParser.m; sourceTree = "<group>"; };
-		40798A2D1948AC0600A04686 /* MobilyViewFieldDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyViewFieldDate.h; sourceTree = "<group>"; };
-		40798A2E1948AC0600A04686 /* MobilyViewFieldDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewFieldDate.m; sourceTree = "<group>"; };
-		40798A301948AC0600A04686 /* MobilyViewFieldList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyViewFieldList.h; sourceTree = "<group>"; };
-		40798A311948AC0600A04686 /* MobilyViewFieldList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewFieldList.m; sourceTree = "<group>"; };
-		40798A331948AC0600A04686 /* MobilyViewFieldText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyViewFieldText.h; sourceTree = "<group>"; };
-		40798A341948AC0600A04686 /* MobilyViewFieldText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewFieldText.m; sourceTree = "<group>"; };
-		40798A391948AFC400A04686 /* MobilyViewImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyViewImage.h; sourceTree = "<group>"; };
-		40798A3A1948AFC400A04686 /* MobilyViewImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewImage.m; sourceTree = "<group>"; };
-		40798A3D1948C0F700A04686 /* MobilyViewElementsLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyViewElementsLayout.h; sourceTree = "<group>"; };
-		40798A3E1948C0F700A04686 /* MobilyViewElementsLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewElementsLayout.m; sourceTree = "<group>"; };
-		40798A3F1948C0F700A04686 /* MobilyViewElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyViewElements.h; sourceTree = "<group>"; };
-		40798A401948C0F700A04686 /* MobilyViewElements.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewElements.m; sourceTree = "<group>"; };
+		40C8CCFE1A5AA45100F737B2 /* MobilyCG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyCG.h; sourceTree = "<group>"; };
+		40C8CCFF1A5AA45100F737B2 /* MobilyCG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyCG.m; sourceTree = "<group>"; };
+		40C8CD011A5AA45100F737B2 /* MobilyCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyCore.h; sourceTree = "<group>"; };
+		40C8CD041A5AA45100F737B2 /* MobilyEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyEvent.h; sourceTree = "<group>"; };
+		40C8CD051A5AA45100F737B2 /* MobilyEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyEvent.m; sourceTree = "<group>"; };
+		40C8CD061A5AA45100F737B2 /* MobilyHttpQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyHttpQuery.h; sourceTree = "<group>"; };
+		40C8CD071A5AA45100F737B2 /* MobilyHttpQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyHttpQuery.m; sourceTree = "<group>"; };
+		40C8CD081A5AA45100F737B2 /* MobilyKVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyKVO.h; sourceTree = "<group>"; };
+		40C8CD091A5AA45100F737B2 /* MobilyKVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyKVO.m; sourceTree = "<group>"; };
+		40C8CD0A1A5AA45100F737B2 /* MobilyNS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyNS.h; sourceTree = "<group>"; };
+		40C8CD0B1A5AA45100F737B2 /* MobilyNS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyNS.m; sourceTree = "<group>"; };
+		40C8CD0D1A5AA45100F737B2 /* MobilyModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyModel.h; sourceTree = "<group>"; };
+		40C8CD0E1A5AA45100F737B2 /* MobilyModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyModel.m; sourceTree = "<group>"; };
+		40C8CD101A5AA45100F737B2 /* MobilyRegExpParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyRegExpParser.h; sourceTree = "<group>"; };
+		40C8CD111A5AA45100F737B2 /* MobilyRegExpParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyRegExpParser.m; sourceTree = "<group>"; };
+		40C8CD131A5AA45100F737B2 /* MobilyTaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyTaskManager.h; sourceTree = "<group>"; };
+		40C8CD141A5AA45100F737B2 /* MobilyTaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyTaskManager.m; sourceTree = "<group>"; };
+		40C8CD171A5AA45100F737B2 /* MobilyApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyApplication.h; sourceTree = "<group>"; };
+		40C8CD181A5AA45100F737B2 /* MobilyApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyApplication.m; sourceTree = "<group>"; };
+		40C8CD191A5AA45100F737B2 /* MobilyBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyBuilder.h; sourceTree = "<group>"; };
+		40C8CD1A1A5AA45100F737B2 /* MobilyBuilderForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyBuilderForm.m; sourceTree = "<group>"; };
+		40C8CD1B1A5AA45100F737B2 /* MobilyBuilderPreset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyBuilderPreset.m; sourceTree = "<group>"; };
+		40C8CD1C1A5AA45100F737B2 /* MobilyContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyContext.h; sourceTree = "<group>"; };
+		40C8CD1D1A5AA45100F737B2 /* MobilyContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyContext.m; sourceTree = "<group>"; };
+		40C8CD1E1A5AA45100F737B2 /* MobilyController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyController.h; sourceTree = "<group>"; };
+		40C8CD1F1A5AA45100F737B2 /* MobilyController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyController.m; sourceTree = "<group>"; };
+		40C8CD201A5AA45100F737B2 /* MobilyNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyNavigationController.h; sourceTree = "<group>"; };
+		40C8CD211A5AA45100F737B2 /* MobilyNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyNavigationController.m; sourceTree = "<group>"; };
+		40C8CD221A5AA45100F737B2 /* MobilyTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyTabBarController.h; sourceTree = "<group>"; };
+		40C8CD231A5AA45100F737B2 /* MobilyTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyTabBarController.m; sourceTree = "<group>"; };
+		40C8CD241A5AA45100F737B2 /* MobilyTransitionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyTransitionController.h; sourceTree = "<group>"; };
+		40C8CD251A5AA45100F737B2 /* MobilyTransitionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyTransitionController.m; sourceTree = "<group>"; };
+		40C8CD261A5AA45100F737B2 /* MobilyTransitionControllerCards.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyTransitionControllerCards.m; sourceTree = "<group>"; };
+		40C8CD271A5AA45100F737B2 /* MobilyTransitionControllerCrossFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyTransitionControllerCrossFade.m; sourceTree = "<group>"; };
+		40C8CD281A5AA45100F737B2 /* MobilyUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyUI.h; sourceTree = "<group>"; };
+		40C8CD291A5AA45100F737B2 /* MobilyUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyUI.m; sourceTree = "<group>"; };
+		40C8CD2A1A5AA45100F737B2 /* MobilyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyViewController.h; sourceTree = "<group>"; };
+		40C8CD2B1A5AA45100F737B2 /* MobilyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyViewController.m; sourceTree = "<group>"; };
+		40C8CD2C1A5AA45100F737B2 /* MobilyWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyWindow.h; sourceTree = "<group>"; };
+		40C8CD2D1A5AA45100F737B2 /* MobilyWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyWindow.m; sourceTree = "<group>"; };
+		40C8CD2F1A5AA45100F737B2 /* MobilyDateField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyDateField.h; sourceTree = "<group>"; };
+		40C8CD301A5AA45100F737B2 /* MobilyDateField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyDateField.m; sourceTree = "<group>"; };
+		40C8CD321A5AA45100F737B2 /* MobilyDynamicsDrawerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyDynamicsDrawerController.h; sourceTree = "<group>"; };
+		40C8CD331A5AA45100F737B2 /* MobilyDynamicsDrawerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyDynamicsDrawerController.m; sourceTree = "<group>"; };
+		40C8CD351A5AA45100F737B2 /* MobilyElementsLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyElementsLayout.h; sourceTree = "<group>"; };
+		40C8CD361A5AA45100F737B2 /* MobilyElementsLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyElementsLayout.m; sourceTree = "<group>"; };
+		40C8CD371A5AA45100F737B2 /* MobilyElementsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyElementsView.h; sourceTree = "<group>"; };
+		40C8CD381A5AA45100F737B2 /* MobilyElementsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyElementsView.m; sourceTree = "<group>"; };
+		40C8CD3A1A5AA45100F737B2 /* MobilyImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyImageView.h; sourceTree = "<group>"; };
+		40C8CD3B1A5AA45100F737B2 /* MobilyImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyImageView.m; sourceTree = "<group>"; };
+		40C8CD3D1A5AA45100F737B2 /* MobilyListField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyListField.h; sourceTree = "<group>"; };
+		40C8CD3E1A5AA45100F737B2 /* MobilyListField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyListField.m; sourceTree = "<group>"; };
+		40C8CD401A5AA45100F737B2 /* MobilyScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyScrollView.h; sourceTree = "<group>"; };
+		40C8CD411A5AA45100F737B2 /* MobilyScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyScrollView.m; sourceTree = "<group>"; };
+		40C8CD431A5AA45100F737B2 /* MobilySlideMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilySlideMenuController.h; sourceTree = "<group>"; };
+		40C8CD441A5AA45100F737B2 /* MobilySlideMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilySlideMenuController.m; sourceTree = "<group>"; };
+		40C8CD471A5AA45100F737B2 /* SlideNavigationContorllerAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimator.h; sourceTree = "<group>"; };
+		40C8CD481A5AA45100F737B2 /* SlideNavigationContorllerAnimatorFade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorFade.h; sourceTree = "<group>"; };
+		40C8CD491A5AA45100F737B2 /* SlideNavigationContorllerAnimatorFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorFade.m; sourceTree = "<group>"; };
+		40C8CD4A1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorScale.h; sourceTree = "<group>"; };
+		40C8CD4B1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorScale.m; sourceTree = "<group>"; };
+		40C8CD4C1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorScaleAndFade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorScaleAndFade.h; sourceTree = "<group>"; };
+		40C8CD4D1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorScaleAndFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorScaleAndFade.m; sourceTree = "<group>"; };
+		40C8CD4E1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorSlide.h; sourceTree = "<group>"; };
+		40C8CD4F1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorSlide.m; sourceTree = "<group>"; };
+		40C8CD501A5AA45100F737B2 /* SlideNavigationContorllerAnimatorSlideAndFade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorSlideAndFade.h; sourceTree = "<group>"; };
+		40C8CD511A5AA45100F737B2 /* SlideNavigationContorllerAnimatorSlideAndFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorSlideAndFade.m; sourceTree = "<group>"; };
+		40C8CD531A5AA45100F737B2 /* menu-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-button.png"; sourceTree = "<group>"; };
+		40C8CD541A5AA45100F737B2 /* menu-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-button@2x.png"; sourceTree = "<group>"; };
+		40C8CD551A5AA45100F737B2 /* SlideNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationController.h; sourceTree = "<group>"; };
+		40C8CD561A5AA45100F737B2 /* SlideNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationController.m; sourceTree = "<group>"; };
+		40C8CD581A5AA45100F737B2 /* MobilyTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyTableView.h; sourceTree = "<group>"; };
+		40C8CD591A5AA45100F737B2 /* MobilyTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyTableView.m; sourceTree = "<group>"; };
+		40C8CD5B1A5AA45100F737B2 /* MobilyTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyTextField.h; sourceTree = "<group>"; };
+		40C8CD5C1A5AA45100F737B2 /* MobilyTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyTextField.m; sourceTree = "<group>"; };
+		40C8CD841A5AA4DC00F737B2 /* MobilyModelJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyModelJson.h; sourceTree = "<group>"; };
+		40C8CD851A5AA4DC00F737B2 /* MobilyModelJson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyModelJson.m; sourceTree = "<group>"; };
 		5A2438BFA45DA754D1C37067 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		9AA83B7A19E536FE009F6C5F /* ExampleControllerMain.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExampleControllerMain.xib; sourceTree = "<group>"; };
 		F16AA68F9FE04603B1D99102 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -171,63 +174,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		40081A8B1A27122200F2FBE6 /* ControllerSlideMenu */ = {
-			isa = PBXGroup;
-			children = (
-				40081A8E1A27122200F2FBE6 /* SlideNavigationController */,
-				40081A8C1A27122200F2FBE6 /* MobilyControllerSlideMenu.h */,
-				40081A8D1A27122200F2FBE6 /* MobilyControllerSlideMenu.m */,
-			);
-			path = ControllerSlideMenu;
-			sourceTree = "<group>";
-		};
-		40081A8E1A27122200F2FBE6 /* SlideNavigationController */ = {
-			isa = PBXGroup;
-			children = (
-				40081A8F1A27122200F2FBE6 /* Animations */,
-				40081A9B1A27122200F2FBE6 /* Assets */,
-				40081A9E1A27122300F2FBE6 /* SlideNavigationController.h */,
-				40081A9F1A27122300F2FBE6 /* SlideNavigationController.m */,
-			);
-			path = SlideNavigationController;
-			sourceTree = "<group>";
-		};
-		40081A8F1A27122200F2FBE6 /* Animations */ = {
-			isa = PBXGroup;
-			children = (
-				40081A901A27122200F2FBE6 /* SlideNavigationContorllerAnimator.h */,
-				40081A911A27122200F2FBE6 /* SlideNavigationContorllerAnimatorFade.h */,
-				40081A921A27122200F2FBE6 /* SlideNavigationContorllerAnimatorFade.m */,
-				40081A931A27122200F2FBE6 /* SlideNavigationContorllerAnimatorScale.h */,
-				40081A941A27122200F2FBE6 /* SlideNavigationContorllerAnimatorScale.m */,
-				40081A951A27122200F2FBE6 /* SlideNavigationContorllerAnimatorScaleAndFade.h */,
-				40081A961A27122200F2FBE6 /* SlideNavigationContorllerAnimatorScaleAndFade.m */,
-				40081A971A27122200F2FBE6 /* SlideNavigationContorllerAnimatorSlide.h */,
-				40081A981A27122200F2FBE6 /* SlideNavigationContorllerAnimatorSlide.m */,
-				40081A991A27122200F2FBE6 /* SlideNavigationContorllerAnimatorSlideAndFade.h */,
-				40081A9A1A27122200F2FBE6 /* SlideNavigationContorllerAnimatorSlideAndFade.m */,
-			);
-			path = Animations;
-			sourceTree = "<group>";
-		};
-		40081A9B1A27122200F2FBE6 /* Assets */ = {
-			isa = PBXGroup;
-			children = (
-				40081A9C1A27122200F2FBE6 /* menu-button.png */,
-				40081A9D1A27122300F2FBE6 /* menu-button@2x.png */,
-			);
-			path = Assets;
-			sourceTree = "<group>";
-		};
-		400B4D051A19E29900F2B61E /* ViewTable */ = {
-			isa = PBXGroup;
-			children = (
-				400B4D061A19E29900F2B61E /* MobilyViewTable.h */,
-				400B4D071A19E29900F2B61E /* MobilyViewTable.m */,
-			);
-			path = ViewTable;
-			sourceTree = "<group>";
-		};
 		401FEE4618A3F92800B445EB = {
 			isa = PBXGroup;
 			children = (
@@ -277,112 +223,12 @@
 		401FEE8D18A3FAF100B445EB /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				401FEE9218A3FAF100B445EB /* Core */,
-				401FEE9418A3FAF100B445EB /* NS */,
-				401FEE8E18A3FAF100B445EB /* CG */,
-				401FEEA418A3FAF100B445EB /* UI */,
+				40C8CD001A5AA45100F737B2 /* Core */,
+				40C8CD021A5AA45100F737B2 /* NS */,
+				40C8CCFC1A5AA45100F737B2 /* CG */,
+				40C8CD151A5AA45100F737B2 /* UI */,
 			);
 			path = Classes;
-			sourceTree = "<group>";
-		};
-		401FEE8E18A3FAF100B445EB /* CG */ = {
-			isa = PBXGroup;
-			children = (
-				401FEE8F18A3FAF100B445EB /* Core */,
-			);
-			path = CG;
-			sourceTree = "<group>";
-		};
-		401FEE8F18A3FAF100B445EB /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				401FEE9118A3FAF100B445EB /* MobilyCG.h */,
-				401FEE9018A3FAF100B445EB /* MobilyCG.m */,
-			);
-			path = Core;
-			sourceTree = "<group>";
-		};
-		401FEE9218A3FAF100B445EB /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				401FEE9318A3FAF100B445EB /* MobilyCore.h */,
-			);
-			path = Core;
-			sourceTree = "<group>";
-		};
-		401FEE9418A3FAF100B445EB /* NS */ = {
-			isa = PBXGroup;
-			children = (
-				401FEE9518A3FAF100B445EB /* Core */,
-				40798A281948ABAF00A04686 /* RegExpParser */,
-			);
-			path = NS;
-			sourceTree = "<group>";
-		};
-		401FEE9518A3FAF100B445EB /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				401FEE9E18A3FAF100B445EB /* MobilyNS.h */,
-				401FEE9F18A3FAF100B445EB /* MobilyNS.m */,
-				401FEE9C18A3FAF100B445EB /* MobilyKVO.h */,
-				401FEE9D18A3FAF100B445EB /* MobilyKVO.m */,
-				401FEE9618A3FAF100B445EB /* MobilyEvent.h */,
-				401FEE9718A3FAF100B445EB /* MobilyEvent.m */,
-				401FEEA018A3FAF100B445EB /* MobilyStorage.h */,
-				401FEEA118A3FAF100B445EB /* MobilyStorage.m */,
-				401FEEA218A3FAF100B445EB /* MobilyTaskManager.h */,
-				401FEEA318A3FAF100B445EB /* MobilyTaskManager.m */,
-				401FEE9A18A3FAF100B445EB /* MobilyHttpQuery.h */,
-				401FEE9B18A3FAF100B445EB /* MobilyHttpQuery.m */,
-			);
-			path = Core;
-			sourceTree = "<group>";
-		};
-		401FEEA418A3FAF100B445EB /* UI */ = {
-			isa = PBXGroup;
-			children = (
-				401FEEB418A3FAF100B445EB /* Core */,
-				407989E919484C7000A04686 /* ControllerDynamicsDrawer */,
-				40081A8B1A27122200F2FBE6 /* ControllerSlideMenu */,
-				40798A321948AC0600A04686 /* ViewFieldText */,
-				40798A2C1948AC0600A04686 /* ViewFieldDate */,
-				40798A2F1948AC0600A04686 /* ViewFieldList */,
-				40798A381948AFC400A04686 /* ViewImage */,
-				403258081A0BBBA700949E8F /* ViewScroll */,
-				400B4D051A19E29900F2B61E /* ViewTable */,
-				40798A3C1948C0F700A04686 /* ViewElements */,
-			);
-			path = UI;
-			sourceTree = "<group>";
-		};
-		401FEEB418A3FAF100B445EB /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				401FEEC918A3FAF100B445EB /* MobilyUI.h */,
-				401FEECA18A3FAF100B445EB /* MobilyUI.m */,
-				401FEEB718A3FAF100B445EB /* MobilyContext.h */,
-				401FEEB818A3FAF100B445EB /* MobilyContext.m */,
-				401FEEC718A3FAF100B445EB /* MobilyBuilder.h */,
-				407903D119464A1E00EC8855 /* MobilyBuilderPreset.m */,
-				401FEEC818A3FAF100B445EB /* MobilyBuilderForm.m */,
-				401FEEB518A3FAF100B445EB /* MobilyApplication.h */,
-				401FEEB618A3FAF100B445EB /* MobilyApplication.m */,
-				401FEEDF18A3FAF100B445EB /* MobilyWindow.h */,
-				401FEEE018A3FAF100B445EB /* MobilyWindow.m */,
-				401FEEB918A3FAF100B445EB /* MobilyController.h */,
-				401FEEBA18A3FAF100B445EB /* MobilyController.m */,
-				401FEEBB18A3FAF100B445EB /* MobilyControllerNavigation.h */,
-				401FEEBC18A3FAF100B445EB /* MobilyControllerNavigation.m */,
-				401FEEBD18A3FAF100B445EB /* MobilyControllerTabBar.h */,
-				401FEEBE18A3FAF100B445EB /* MobilyControllerTabBar.m */,
-				401FEEBF18A3FAF100B445EB /* MobilyControllerView.h */,
-				401FEEC018A3FAF100B445EB /* MobilyControllerView.m */,
-				407989E21947834F00A04686 /* MobilyTransitionController.h */,
-				407989E31947834F00A04686 /* MobilyTransitionController.m */,
-				407989E6194788EE00A04686 /* MobilyTransitionControllerCrossFade.m */,
-				407989E5194788EE00A04686 /* MobilyTransitionControllerCards.m */,
-			);
-			path = Core;
 			sourceTree = "<group>";
 		};
 		401FEF1C18A3FE3500B445EB /* Supported files */ = {
@@ -395,78 +241,253 @@
 			name = "Supported files";
 			sourceTree = "<group>";
 		};
-		403258081A0BBBA700949E8F /* ViewScroll */ = {
+		40C8CCFC1A5AA45100F737B2 /* CG */ = {
 			isa = PBXGroup;
 			children = (
-				403258091A0BBBA700949E8F /* MobilyViewScroll.h */,
-				4032580A1A0BBBA700949E8F /* MobilyViewScroll.m */,
+				40C8CCFD1A5AA45100F737B2 /* Core */,
 			);
-			path = ViewScroll;
+			path = CG;
 			sourceTree = "<group>";
 		};
-		407989E919484C7000A04686 /* ControllerDynamicsDrawer */ = {
+		40C8CCFD1A5AA45100F737B2 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				407989EA19484C9700A04686 /* MobilyControllerDynamicsDrawer.h */,
-				407989EB19484C9700A04686 /* MobilyControllerDynamicsDrawer.m */,
+				40C8CCFE1A5AA45100F737B2 /* MobilyCG.h */,
+				40C8CCFF1A5AA45100F737B2 /* MobilyCG.m */,
 			);
-			path = ControllerDynamicsDrawer;
+			path = Core;
 			sourceTree = "<group>";
 		};
-		40798A281948ABAF00A04686 /* RegExpParser */ = {
+		40C8CD001A5AA45100F737B2 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				40798A291948ABAF00A04686 /* MobilyRegExpParser.h */,
-				40798A2A1948ABAF00A04686 /* MobilyRegExpParser.m */,
+				40C8CD011A5AA45100F737B2 /* MobilyCore.h */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		40C8CD021A5AA45100F737B2 /* NS */ = {
+			isa = PBXGroup;
+			children = (
+				40C8CD031A5AA45100F737B2 /* Core */,
+				40C8CD0C1A5AA45100F737B2 /* Model */,
+				40C8CD121A5AA45100F737B2 /* TaskManager */,
+				40C8CD0F1A5AA45100F737B2 /* RegExpParser */,
+			);
+			path = NS;
+			sourceTree = "<group>";
+		};
+		40C8CD031A5AA45100F737B2 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				40C8CD0A1A5AA45100F737B2 /* MobilyNS.h */,
+				40C8CD0B1A5AA45100F737B2 /* MobilyNS.m */,
+				40C8CD041A5AA45100F737B2 /* MobilyEvent.h */,
+				40C8CD051A5AA45100F737B2 /* MobilyEvent.m */,
+				40C8CD061A5AA45100F737B2 /* MobilyHttpQuery.h */,
+				40C8CD071A5AA45100F737B2 /* MobilyHttpQuery.m */,
+				40C8CD081A5AA45100F737B2 /* MobilyKVO.h */,
+				40C8CD091A5AA45100F737B2 /* MobilyKVO.m */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		40C8CD0C1A5AA45100F737B2 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				40C8CD0D1A5AA45100F737B2 /* MobilyModel.h */,
+				40C8CD0E1A5AA45100F737B2 /* MobilyModel.m */,
+				40C8CD841A5AA4DC00F737B2 /* MobilyModelJson.h */,
+				40C8CD851A5AA4DC00F737B2 /* MobilyModelJson.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		40C8CD0F1A5AA45100F737B2 /* RegExpParser */ = {
+			isa = PBXGroup;
+			children = (
+				40C8CD101A5AA45100F737B2 /* MobilyRegExpParser.h */,
+				40C8CD111A5AA45100F737B2 /* MobilyRegExpParser.m */,
 			);
 			path = RegExpParser;
 			sourceTree = "<group>";
 		};
-		40798A2C1948AC0600A04686 /* ViewFieldDate */ = {
+		40C8CD121A5AA45100F737B2 /* TaskManager */ = {
 			isa = PBXGroup;
 			children = (
-				40798A2D1948AC0600A04686 /* MobilyViewFieldDate.h */,
-				40798A2E1948AC0600A04686 /* MobilyViewFieldDate.m */,
+				40C8CD131A5AA45100F737B2 /* MobilyTaskManager.h */,
+				40C8CD141A5AA45100F737B2 /* MobilyTaskManager.m */,
 			);
-			path = ViewFieldDate;
+			path = TaskManager;
 			sourceTree = "<group>";
 		};
-		40798A2F1948AC0600A04686 /* ViewFieldList */ = {
+		40C8CD151A5AA45100F737B2 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				40798A301948AC0600A04686 /* MobilyViewFieldList.h */,
-				40798A311948AC0600A04686 /* MobilyViewFieldList.m */,
+				40C8CD161A5AA45100F737B2 /* Core */,
+				40C8CD5A1A5AA45100F737B2 /* TextField */,
+				40C8CD2E1A5AA45100F737B2 /* DateField */,
+				40C8CD3C1A5AA45100F737B2 /* ListField */,
+				40C8CD391A5AA45100F737B2 /* ImageView */,
+				40C8CD3F1A5AA45100F737B2 /* ScrollView */,
+				40C8CD571A5AA45100F737B2 /* TableView */,
+				40C8CD341A5AA45100F737B2 /* ElementsView */,
+				40C8CD311A5AA45100F737B2 /* DynamicsDrawerController */,
+				40C8CD421A5AA45100F737B2 /* SlideMenuController */,
 			);
-			path = ViewFieldList;
+			path = UI;
 			sourceTree = "<group>";
 		};
-		40798A321948AC0600A04686 /* ViewFieldText */ = {
+		40C8CD161A5AA45100F737B2 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				40798A331948AC0600A04686 /* MobilyViewFieldText.h */,
-				40798A341948AC0600A04686 /* MobilyViewFieldText.m */,
+				40C8CD281A5AA45100F737B2 /* MobilyUI.h */,
+				40C8CD291A5AA45100F737B2 /* MobilyUI.m */,
+				40C8CD1C1A5AA45100F737B2 /* MobilyContext.h */,
+				40C8CD1D1A5AA45100F737B2 /* MobilyContext.m */,
+				40C8CD191A5AA45100F737B2 /* MobilyBuilder.h */,
+				40C8CD1B1A5AA45100F737B2 /* MobilyBuilderPreset.m */,
+				40C8CD1A1A5AA45100F737B2 /* MobilyBuilderForm.m */,
+				40C8CD171A5AA45100F737B2 /* MobilyApplication.h */,
+				40C8CD181A5AA45100F737B2 /* MobilyApplication.m */,
+				40C8CD2C1A5AA45100F737B2 /* MobilyWindow.h */,
+				40C8CD2D1A5AA45100F737B2 /* MobilyWindow.m */,
+				40C8CD1E1A5AA45100F737B2 /* MobilyController.h */,
+				40C8CD1F1A5AA45100F737B2 /* MobilyController.m */,
+				40C8CD2A1A5AA45100F737B2 /* MobilyViewController.h */,
+				40C8CD2B1A5AA45100F737B2 /* MobilyViewController.m */,
+				40C8CD201A5AA45100F737B2 /* MobilyNavigationController.h */,
+				40C8CD211A5AA45100F737B2 /* MobilyNavigationController.m */,
+				40C8CD221A5AA45100F737B2 /* MobilyTabBarController.h */,
+				40C8CD231A5AA45100F737B2 /* MobilyTabBarController.m */,
+				40C8CD241A5AA45100F737B2 /* MobilyTransitionController.h */,
+				40C8CD251A5AA45100F737B2 /* MobilyTransitionController.m */,
+				40C8CD261A5AA45100F737B2 /* MobilyTransitionControllerCards.m */,
+				40C8CD271A5AA45100F737B2 /* MobilyTransitionControllerCrossFade.m */,
 			);
-			path = ViewFieldText;
+			path = Core;
 			sourceTree = "<group>";
 		};
-		40798A381948AFC400A04686 /* ViewImage */ = {
+		40C8CD2E1A5AA45100F737B2 /* DateField */ = {
 			isa = PBXGroup;
 			children = (
-				40798A391948AFC400A04686 /* MobilyViewImage.h */,
-				40798A3A1948AFC400A04686 /* MobilyViewImage.m */,
+				40C8CD2F1A5AA45100F737B2 /* MobilyDateField.h */,
+				40C8CD301A5AA45100F737B2 /* MobilyDateField.m */,
 			);
-			path = ViewImage;
+			path = DateField;
 			sourceTree = "<group>";
 		};
-		40798A3C1948C0F700A04686 /* ViewElements */ = {
+		40C8CD311A5AA45100F737B2 /* DynamicsDrawerController */ = {
 			isa = PBXGroup;
 			children = (
-				40798A3F1948C0F700A04686 /* MobilyViewElements.h */,
-				40798A401948C0F700A04686 /* MobilyViewElements.m */,
-				40798A3D1948C0F700A04686 /* MobilyViewElementsLayout.h */,
-				40798A3E1948C0F700A04686 /* MobilyViewElementsLayout.m */,
+				40C8CD321A5AA45100F737B2 /* MobilyDynamicsDrawerController.h */,
+				40C8CD331A5AA45100F737B2 /* MobilyDynamicsDrawerController.m */,
 			);
-			path = ViewElements;
+			path = DynamicsDrawerController;
+			sourceTree = "<group>";
+		};
+		40C8CD341A5AA45100F737B2 /* ElementsView */ = {
+			isa = PBXGroup;
+			children = (
+				40C8CD371A5AA45100F737B2 /* MobilyElementsView.h */,
+				40C8CD381A5AA45100F737B2 /* MobilyElementsView.m */,
+				40C8CD351A5AA45100F737B2 /* MobilyElementsLayout.h */,
+				40C8CD361A5AA45100F737B2 /* MobilyElementsLayout.m */,
+			);
+			path = ElementsView;
+			sourceTree = "<group>";
+		};
+		40C8CD391A5AA45100F737B2 /* ImageView */ = {
+			isa = PBXGroup;
+			children = (
+				40C8CD3A1A5AA45100F737B2 /* MobilyImageView.h */,
+				40C8CD3B1A5AA45100F737B2 /* MobilyImageView.m */,
+			);
+			path = ImageView;
+			sourceTree = "<group>";
+		};
+		40C8CD3C1A5AA45100F737B2 /* ListField */ = {
+			isa = PBXGroup;
+			children = (
+				40C8CD3D1A5AA45100F737B2 /* MobilyListField.h */,
+				40C8CD3E1A5AA45100F737B2 /* MobilyListField.m */,
+			);
+			path = ListField;
+			sourceTree = "<group>";
+		};
+		40C8CD3F1A5AA45100F737B2 /* ScrollView */ = {
+			isa = PBXGroup;
+			children = (
+				40C8CD401A5AA45100F737B2 /* MobilyScrollView.h */,
+				40C8CD411A5AA45100F737B2 /* MobilyScrollView.m */,
+			);
+			path = ScrollView;
+			sourceTree = "<group>";
+		};
+		40C8CD421A5AA45100F737B2 /* SlideMenuController */ = {
+			isa = PBXGroup;
+			children = (
+				40C8CD431A5AA45100F737B2 /* MobilySlideMenuController.h */,
+				40C8CD441A5AA45100F737B2 /* MobilySlideMenuController.m */,
+				40C8CD451A5AA45100F737B2 /* SlideNavigationController */,
+			);
+			path = SlideMenuController;
+			sourceTree = "<group>";
+		};
+		40C8CD451A5AA45100F737B2 /* SlideNavigationController */ = {
+			isa = PBXGroup;
+			children = (
+				40C8CD461A5AA45100F737B2 /* Animations */,
+				40C8CD521A5AA45100F737B2 /* Assets */,
+				40C8CD551A5AA45100F737B2 /* SlideNavigationController.h */,
+				40C8CD561A5AA45100F737B2 /* SlideNavigationController.m */,
+			);
+			path = SlideNavigationController;
+			sourceTree = "<group>";
+		};
+		40C8CD461A5AA45100F737B2 /* Animations */ = {
+			isa = PBXGroup;
+			children = (
+				40C8CD471A5AA45100F737B2 /* SlideNavigationContorllerAnimator.h */,
+				40C8CD481A5AA45100F737B2 /* SlideNavigationContorllerAnimatorFade.h */,
+				40C8CD491A5AA45100F737B2 /* SlideNavigationContorllerAnimatorFade.m */,
+				40C8CD4A1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorScale.h */,
+				40C8CD4B1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorScale.m */,
+				40C8CD4C1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorScaleAndFade.h */,
+				40C8CD4D1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorScaleAndFade.m */,
+				40C8CD4E1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorSlide.h */,
+				40C8CD4F1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorSlide.m */,
+				40C8CD501A5AA45100F737B2 /* SlideNavigationContorllerAnimatorSlideAndFade.h */,
+				40C8CD511A5AA45100F737B2 /* SlideNavigationContorllerAnimatorSlideAndFade.m */,
+			);
+			path = Animations;
+			sourceTree = "<group>";
+		};
+		40C8CD521A5AA45100F737B2 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				40C8CD531A5AA45100F737B2 /* menu-button.png */,
+				40C8CD541A5AA45100F737B2 /* menu-button@2x.png */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		40C8CD571A5AA45100F737B2 /* TableView */ = {
+			isa = PBXGroup;
+			children = (
+				40C8CD581A5AA45100F737B2 /* MobilyTableView.h */,
+				40C8CD591A5AA45100F737B2 /* MobilyTableView.m */,
+			);
+			path = TableView;
+			sourceTree = "<group>";
+		};
+		40C8CD5A1A5AA45100F737B2 /* TextField */ = {
+			isa = PBXGroup;
+			children = (
+				40C8CD5B1A5AA45100F737B2 /* MobilyTextField.h */,
+				40C8CD5C1A5AA45100F737B2 /* MobilyTextField.m */,
+			);
+			path = TextField;
 			sourceTree = "<group>";
 		};
 		4F1F86033CDFF14E4568271C /* Pods */ = {
@@ -537,8 +558,8 @@
 				401FEF1B18A3FE3200B445EB /* Presets.mobily in Resources */,
 				407903D01943079600EC8855 /* Mobily.podspec in Resources */,
 				9AA83B7B19E536FF009F6C5F /* ExampleControllerMain.xib in Resources */,
-				40081AA71A27122300F2FBE6 /* menu-button@2x.png in Resources */,
-				40081AA61A27122300F2FBE6 /* menu-button.png in Resources */,
+				40C8CD801A5AA45100F737B2 /* menu-button@2x.png in Resources */,
+				40C8CD7F1A5AA45100F737B2 /* menu-button.png in Resources */,
 				401FEE8918A3FAE600B445EB /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -583,45 +604,46 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				401FEEF618A3FAF100B445EB /* MobilyStorage.m in Sources */,
-				40081AA31A27122300F2FBE6 /* SlideNavigationContorllerAnimatorScaleAndFade.m in Sources */,
-				40798A361948AC0600A04686 /* MobilyViewFieldList.m in Sources */,
-				401FEEFE18A3FAF100B445EB /* MobilyContext.m in Sources */,
-				401FEEF118A3FAF100B445EB /* MobilyEvent.m in Sources */,
-				401FEF0018A3FAF100B445EB /* MobilyControllerNavigation.m in Sources */,
-				40081AA51A27122300F2FBE6 /* SlideNavigationContorllerAnimatorSlideAndFade.m in Sources */,
-				40798A411948C0F700A04686 /* MobilyViewElementsLayout.m in Sources */,
-				401FEF1218A3FAF100B445EB /* MobilyWindow.m in Sources */,
-				401FEEF518A3FAF100B445EB /* MobilyNS.m in Sources */,
-				407989E41947834F00A04686 /* MobilyTransitionController.m in Sources */,
-				401FEF0718A3FAF100B445EB /* MobilyUI.m in Sources */,
-				40798A351948AC0600A04686 /* MobilyViewFieldDate.m in Sources */,
-				407903D219464A1E00EC8855 /* MobilyBuilderPreset.m in Sources */,
-				40798A421948C0F700A04686 /* MobilyViewElements.m in Sources */,
-				407989E7194788EE00A04686 /* MobilyTransitionControllerCards.m in Sources */,
+				40C8CD741A5AA45100F737B2 /* MobilyElementsLayout.m in Sources */,
+				40C8CD5D1A5AA45100F737B2 /* MobilyCG.m in Sources */,
+				40C8CD7E1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorSlideAndFade.m in Sources */,
+				40C8CD811A5AA45100F737B2 /* SlideNavigationController.m in Sources */,
+				40C8CD791A5AA45100F737B2 /* MobilySlideMenuController.m in Sources */,
+				40C8CD6D1A5AA45100F737B2 /* MobilyTransitionControllerCards.m in Sources */,
+				40C8CD661A5AA45100F737B2 /* MobilyBuilderForm.m in Sources */,
+				40C8CD611A5AA45100F737B2 /* MobilyNS.m in Sources */,
+				40C8CD671A5AA45100F737B2 /* MobilyBuilderPreset.m in Sources */,
+				40C8CD761A5AA45100F737B2 /* MobilyImageView.m in Sources */,
 				401FEE8B18A3FAE600B445EB /* main.m in Sources */,
-				407989E8194788EE00A04686 /* MobilyTransitionControllerCrossFade.m in Sources */,
-				40081AA41A27122300F2FBE6 /* SlideNavigationContorllerAnimatorSlide.m in Sources */,
-				401FEF0118A3FAF100B445EB /* MobilyControllerTabBar.m in Sources */,
-				401FEEF018A3FAF100B445EB /* MobilyCG.m in Sources */,
-				40081AA81A27122300F2FBE6 /* SlideNavigationController.m in Sources */,
-				401FEEFF18A3FAF100B445EB /* MobilyController.m in Sources */,
-				40081AA01A27122300F2FBE6 /* MobilyControllerSlideMenu.m in Sources */,
-				40081AA21A27122300F2FBE6 /* SlideNavigationContorllerAnimatorScale.m in Sources */,
-				40081AA11A27122300F2FBE6 /* SlideNavigationContorllerAnimatorFade.m in Sources */,
-				401FEF0218A3FAF100B445EB /* MobilyControllerView.m in Sources */,
-				401FEEF718A3FAF100B445EB /* MobilyTaskManager.m in Sources */,
-				401FEEF318A3FAF100B445EB /* MobilyHttpQuery.m in Sources */,
-				401FEF0618A3FAF100B445EB /* MobilyBuilderForm.m in Sources */,
-				40798A2B1948ABAF00A04686 /* MobilyRegExpParser.m in Sources */,
-				4032580B1A0BBBA700949E8F /* MobilyViewScroll.m in Sources */,
-				40798A3B1948AFC400A04686 /* MobilyViewImage.m in Sources */,
+				40C8CD701A5AA45100F737B2 /* MobilyViewController.m in Sources */,
+				40C8CD711A5AA45100F737B2 /* MobilyWindow.m in Sources */,
+				40C8CD601A5AA45100F737B2 /* MobilyKVO.m in Sources */,
+				40C8CD6F1A5AA45100F737B2 /* MobilyUI.m in Sources */,
+				40C8CD5E1A5AA45100F737B2 /* MobilyEvent.m in Sources */,
+				40C8CD6A1A5AA45100F737B2 /* MobilyNavigationController.m in Sources */,
+				40C8CD681A5AA45100F737B2 /* MobilyContext.m in Sources */,
+				40C8CD621A5AA45100F737B2 /* MobilyModel.m in Sources */,
+				40C8CD641A5AA45100F737B2 /* MobilyTaskManager.m in Sources */,
+				40C8CD7A1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorFade.m in Sources */,
+				40C8CD7B1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorScale.m in Sources */,
+				40C8CD691A5AA45100F737B2 /* MobilyController.m in Sources */,
+				40C8CD831A5AA45100F737B2 /* MobilyTextField.m in Sources */,
+				40C8CD821A5AA45100F737B2 /* MobilyTableView.m in Sources */,
+				40C8CD5F1A5AA45100F737B2 /* MobilyHttpQuery.m in Sources */,
+				40C8CD731A5AA45100F737B2 /* MobilyDynamicsDrawerController.m in Sources */,
+				40C8CD861A5AA4DC00F737B2 /* MobilyModelJson.m in Sources */,
+				40C8CD6B1A5AA45100F737B2 /* MobilyTabBarController.m in Sources */,
+				40C8CD721A5AA45100F737B2 /* MobilyDateField.m in Sources */,
+				40C8CD771A5AA45100F737B2 /* MobilyListField.m in Sources */,
+				40C8CD6C1A5AA45100F737B2 /* MobilyTransitionController.m in Sources */,
+				40C8CD7D1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorSlide.m in Sources */,
+				40C8CD7C1A5AA45100F737B2 /* SlideNavigationContorllerAnimatorScaleAndFade.m in Sources */,
+				40C8CD631A5AA45100F737B2 /* MobilyRegExpParser.m in Sources */,
+				40C8CD781A5AA45100F737B2 /* MobilyScrollView.m in Sources */,
+				40C8CD6E1A5AA45100F737B2 /* MobilyTransitionControllerCrossFade.m in Sources */,
+				40C8CD751A5AA45100F737B2 /* MobilyElementsView.m in Sources */,
+				40C8CD651A5AA45100F737B2 /* MobilyApplication.m in Sources */,
 				401FEE8A18A3FAE600B445EB /* ExampleApplication.m in Sources */,
-				400B4D081A19E29900F2B61E /* MobilyViewTable.m in Sources */,
-				407989EC19484C9700A04686 /* MobilyControllerDynamicsDrawer.m in Sources */,
-				401FEEFD18A3FAF100B445EB /* MobilyApplication.m in Sources */,
-				40798A371948AC0600A04686 /* MobilyViewFieldText.m in Sources */,
-				401FEEF418A3FAF100B445EB /* MobilyKVO.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

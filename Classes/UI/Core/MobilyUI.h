@@ -246,8 +246,6 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 - (void)setContentOffsetX:(CGFloat)contentOffsetX animated:(BOOL)animated;
 - (void)setContentOffsetY:(CGFloat)contentOffsetY animated:(BOOL)animated;
 
-- (CGSize)contentSizeFromSubviews;
-
 - (void)registerAdjustmentResponder;
 - (void)unregisterAdjustmentResponder;
 

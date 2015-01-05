@@ -33,43 +33,39 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyContext.h"
-#import "MobilyApplication.h"
-#import "MobilyWindow.h"
-#import "MobilyController.h"
-#import "MobilyNavigationController.h"
-#import "MobilyViewController.h"
-#import "MobilyDynamicsDrawerController.h"
-#import "MobilySlideMenuController.h"
-#import "MobilyImageView.h"
-#import "MobilyTableView.h"
+#import "MobilyBuilder.h"
 
 /*--------------------------------------------------*/
 
-@interface ExampleApplication : MobilyApplication
+typedef void (^MobilyImageLoaderCompleteBlock)(UIImage* image, NSString* imageUrl);
+typedef void (^MobilyImageLoaderFailureBlock)(NSString* imageUrl);
 
-@property(nonatomic, readwrite, weak) MobilyWindow* window;
-@property(nonatomic, readwrite, weak) MobilySlideMenuController* slideView;
-@property(nonatomic, readwrite, weak) MobilyViewController* mainView;
-@property(nonatomic, readwrite, weak) MobilyViewController* leftView;
-@property(nonatomic, readwrite, weak) MobilyViewController* rightView;
+/*--------------------------------------------------*/
+
+@interface MobilyImageView : UIImageView< MobilyBuilderObject >
+
+@property(nonatomic, readwrite, strong) UIImage* defaultImage;
+@property(nonatomic, readwrite, strong) NSString* imageUrl;
+
+- (void)setupView;
+
+- (void)setImageUrl:(NSString*)imageUrl complete:(MobilyImageLoaderCompleteBlock)complete failure:(MobilyImageLoaderFailureBlock)failure;
 
 @end
 
 /*--------------------------------------------------*/
 
-@interface ExampleControllerMain : MobilyViewController < UITableViewDataSource, UITableViewDelegate >
+@interface MobilyImageLoader : NSObject
 
-@property(nonatomic, readwrite, weak) IBOutlet MobilyTableView* viewTable;
-@property(nonatomic, readwrite, strong) NSArray* dataSource;
++ (BOOL)isExistImageWithImageUrl:(NSString*)imageUrl;
++ (UIImage*)imageWithImageUrl:(NSString*)imageUrl;
++ (void)removeByImageUrl:(NSString*)imageUrl;
++ (void)cleanup;
 
-@end
-
-/*--------------------------------------------------*/
-
-@interface ExampleControllerMainCell : MobilyTableViewCellSwipe
-
-@property(nonatomic, readwrite, weak) IBOutlet UILabel* viewTitle;
++ (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
++ (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target completeBlock:(MobilyImageLoaderCompleteBlock)completeBlock failureBlock:(MobilyImageLoaderFailureBlock)failureBlock;
++ (void)cancelByImageUrl:(NSString*)imageUrl;
++ (void)cancelByTarget:(id)target;
 
 @end
 

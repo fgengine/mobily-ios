@@ -33,43 +33,35 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyContext.h"
-#import "MobilyApplication.h"
-#import "MobilyWindow.h"
-#import "MobilyController.h"
-#import "MobilyNavigationController.h"
-#import "MobilyViewController.h"
-#import "MobilyDynamicsDrawerController.h"
-#import "MobilySlideMenuController.h"
-#import "MobilyImageView.h"
-#import "MobilyTableView.h"
+#import "MobilyTextField.h"
 
 /*--------------------------------------------------*/
 
-@interface ExampleApplication : MobilyApplication
+@class MobilyListFieldItem;
 
-@property(nonatomic, readwrite, weak) MobilyWindow* window;
-@property(nonatomic, readwrite, weak) MobilySlideMenuController* slideView;
-@property(nonatomic, readwrite, weak) MobilyViewController* mainView;
-@property(nonatomic, readwrite, weak) MobilyViewController* leftView;
-@property(nonatomic, readwrite, weak) MobilyViewController* rightView;
+/*--------------------------------------------------*/
+
+@interface MobilyListField : MobilyTextField< MobilyBuilderObject >
+
+@property(nonatomic, readwrite, strong) NSArray* items;
+@property(nonatomic, readwrite, strong) MobilyListFieldItem* selectedItem;
+
+- (void)setSelectedItem:(MobilyListFieldItem*)selectedItem animated:(BOOL)animated;
 
 @end
 
 /*--------------------------------------------------*/
 
-@interface ExampleControllerMain : MobilyViewController < UITableViewDataSource, UITableViewDelegate >
+@interface MobilyListFieldItem : NSObject
 
-@property(nonatomic, readwrite, weak) IBOutlet MobilyTableView* viewTable;
-@property(nonatomic, readwrite, strong) NSArray* dataSource;
+@property(nonatomic, readwrite, strong) NSString* title;
+@property(nonatomic, readwrite, strong) UIFont* font;
+@property(nonatomic, readwrite, strong) UIColor* color;
+@property(nonatomic, readwrite, strong) id value;
 
-@end
-
-/*--------------------------------------------------*/
-
-@interface ExampleControllerMainCell : MobilyTableViewCellSwipe
-
-@property(nonatomic, readwrite, weak) IBOutlet UILabel* viewTitle;
+- (id)initWithTitle:(NSString*)title value:(id)value;
+- (id)initWithTitle:(NSString*)title color:(UIColor*)color value:(id)value;
+- (id)initWithTitle:(NSString*)title font:(UIFont*)font color:(UIColor*)color value:(id)value;
 
 @end
 
