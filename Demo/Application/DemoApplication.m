@@ -33,13 +33,13 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "ExampleApplication.h"
+#import "DemoApplication.h"
 
 /*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation ExampleApplication
+@implementation DemoApplication
 
 - (void)setupApplication {
     [super setupApplication];
@@ -52,89 +52,8 @@
 - (BOOL)launchingWithOptions:(NSDictionary *)options {
     BOOL result = [super launchingWithOptions:options];
     if(result == YES) {
-        [_slideView setLeftMenu:_leftView];
-        [_slideView setRightMenu:_rightView];
     }
     return result;
-}
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@implementation ExampleControllerMain
-
-- (void)setupController {
-    [super setupController];
-    
-    [self setTitle:@"TITLE"];
-    [self setEdgesForExtendedLayout:UIRectEdgeNone];
-    
-    [self setDataSource:@[ @"Data #1", @"Data #2", @"Data #3",
-                           @"Data #4", @"Data #5", @"Data #6",
-                           @"Data #7", @"Data #8", @"Data #9",
-                           @"Data #10", @"Data #11", @"Data #12" ]];
-}
-
-- (void)dealloc {
-    MOBILY_SAFE_DEALLOC;
-}
-
-- (BOOL)slideNavigationControllerShouldDisplayLeftMenu {
-    return YES;
-}
-
-- (BOOL)slideNavigationControllerShouldDisplayRightMenu {
-    return YES;
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    [_viewTable registerCellClass:[ExampleControllerMainCell class]];
-}
-
-- (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_dataSource count];
-}
-
-- (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
-    ExampleControllerMainCell* cell = [_viewTable dequeueReusableCellWithClass:[ExampleControllerMainCell class]];
-    if(cell != nil) {
-        [cell setModel:[_dataSource objectAtIndex:[indexPath row]]];
-    }
-    return cell;
-}
-
-- (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
-    return [ExampleControllerMainCell heightForModel:[_dataSource objectAtIndex:[indexPath row]] tableView:tableView];
-}
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@implementation ExampleControllerMainCell
-
-- (void)setupView {
-    [super setupView];
-}
-
-- (void)setModel:(id)model {
-    [super setModel:model];
-    
-    [_viewTitle setText:model];
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    [_viewTitle setFrame:CGRectInset([[self contentView] bounds], 24.0f, 24.0f)];
-    NSLog(@"layoutSubviews");
 }
 
 @end

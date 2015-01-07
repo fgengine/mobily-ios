@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<DemoApplication>
+    <Window name="window">
+        <NavigationController name="categoriesNavigation" preset="navigation-controller">
+            <DemoCategoriesController name="categoriesController" preset="controller"/>
+        </NavigationController>
+    </Window>
+</DemoApplication>

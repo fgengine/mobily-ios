@@ -223,6 +223,25 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
+@implementation NSDateFormatter (MobilyNS)
+
++ (NSDateFormatter*)dateFormatterWithFormat:(NSString*)format {
+    return [self dateFormatterWithFormat:format locale:[NSLocale currentLocale]];
+}
+
++ (NSDateFormatter*)dateFormatterWithFormat:(NSString*)format locale:(NSLocale*)locale {
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:[NSDateFormatter dateFormatFromTemplate:format options:0 locale:locale]];
+    [dateFormatter setLocale:locale];
+    return dateFormatter;
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
 static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
 /*--------------------------------------------------*/

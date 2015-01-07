@@ -70,6 +70,15 @@
 
 /*--------------------------------------------------*/
 
+@interface NSDateFormatter (MobilyNS)
+
++ (NSDateFormatter*)dateFormatterWithFormat:(NSString*)format;
++ (NSDateFormatter*)dateFormatterWithFormat:(NSString*)format locale:(NSLocale*)locale;
+
+@end
+
+/*--------------------------------------------------*/
+
 @interface NSData (MobilyNS)
 
 - (NSString*)toHex;

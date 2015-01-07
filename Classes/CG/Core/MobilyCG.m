@@ -222,6 +222,10 @@ CGSize CGSizeDiv(CGSize size, CGFloat value) {
 #pragma mark -
 /*--------------------------------------------------*/
 
+CGRect CGRectMakeCenterPoint(CGPoint center, CGFloat width, CGFloat height) {
+    return CGRectMake(center.x - (width * 0.5f), center.y - (height * 0.5f), width, height);
+}
+
 CGRect CGRectAdd(CGRect rect, CGFloat value) {
     return CGRectMake(rect.origin.x + value, rect.origin.y + value, rect.size.width + value, rect.size.height + value);
 }
@@ -301,8 +305,40 @@ CGRect CGRectAspectFitFromBoundsAndSize(CGRect bounds, CGSize size) {
     return CGRectMake(bounds.origin.x + rx, bounds.origin.y + ry, rw, rh);
 }
 
+CGPoint CGRectGetTopLeftPoint(CGRect rect) {
+    return CGPointMake(CGRectGetMinX(rect), CGRectGetMinY(rect));
+}
+
+CGPoint CGRectGetTopCenterPoint(CGRect rect) {
+    return CGPointMake(CGRectGetMidX(rect), CGRectGetMinY(rect));
+}
+
+CGPoint CGRectGetTopRightPoint(CGRect rect) {
+    return CGPointMake(CGRectGetMaxX(rect), CGRectGetMinY(rect));
+}
+
+CGPoint CGRectGetLeftPoint(CGRect rect) {
+    return CGPointMake(CGRectGetMinX(rect), CGRectGetMidY(rect));
+}
+
 CGPoint CGRectGetCenterPoint(CGRect rect) {
     return CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect));
+}
+
+CGPoint CGRectGetRightPoint(CGRect rect) {
+    return CGPointMake(CGRectGetMaxX(rect), CGRectGetMidY(rect));
+}
+
+CGPoint CGRectGetBottomLeftPoint(CGRect rect) {
+    return CGPointMake(CGRectGetMinX(rect), CGRectGetMaxY(rect));
+}
+
+CGPoint CGRectGetBottomCenterPoint(CGRect rect) {
+    return CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect));
+}
+
+CGPoint CGRectGetBottomRightPoint(CGRect rect) {
+    return CGPointMake(CGRectGetMaxX(rect), CGRectGetMaxY(rect));
 }
 
 /*--------------------------------------------------*/

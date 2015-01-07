@@ -78,6 +78,8 @@ CGSize CGSizeDiv(CGSize size, CGFloat value);
 
 /*--------------------------------------------------*/
 
+CGRect CGRectMakeCenterPoint(CGPoint center, CGFloat width, CGFloat height);
+
 CGRect CGRectAdd(CGRect rect, CGFloat value);
 CGRect CGRectSub(CGRect rect, CGFloat value);
 CGRect CGRectMul(CGRect rect, CGFloat value);
@@ -86,7 +88,15 @@ CGRect CGRectIntersectionExt(CGRect r1, CGRect r2, CGRect* smallRemainder, CGRec
 CGRect CGRectAspectFillFromBoundsAndSize(CGRect bounds, CGSize size);
 CGRect CGRectAspectFitFromBoundsAndSize(CGRect bounds, CGSize size);
 
+CGPoint CGRectGetTopLeftPoint(CGRect rect);
+CGPoint CGRectGetTopCenterPoint(CGRect rect);
+CGPoint CGRectGetTopRightPoint(CGRect rect);
+CGPoint CGRectGetLeftPoint(CGRect rect);
 CGPoint CGRectGetCenterPoint(CGRect rect);
+CGPoint CGRectGetRightPoint(CGRect rect);
+CGPoint CGRectGetBottomLeftPoint(CGRect rect);
+CGPoint CGRectGetBottomCenterPoint(CGRect rect);
+CGPoint CGRectGetBottomRightPoint(CGRect rect);
 
 /*--------------------------------------------------*/
 #endif

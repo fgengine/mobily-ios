@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<ExampleApplication>
-    <Window name="window">
-        <ExampleControllerMain name="mainView" preset="controller"/>
-    </Window>
-</ExampleApplication>

@@ -60,7 +60,7 @@
         if(textRect.size.height < [font lineHeight]) {
             textRect.size.height = [font lineHeight];
         }
-        return CGSizeMake(floorf(textRect.size.width), floorf(textRect.size.height));
+        return CGSizeMake(ceilf(textRect.size.width), ceilf(textRect.size.height));
     }
 #endif
 #pragma clang diagnostic push
@@ -70,7 +70,7 @@
         size.height = [font lineHeight];
     }
 #pragma clang diagnostic pop
-    return CGSizeMake(floorf(size.width), floorf(size.height));
+    return CGSizeMake(ceilf(size.width), ceilf(size.height));
 }
 
 - (UIEdgeInsets)convertToEdgeInsets {

@@ -1,0 +1,43 @@
+/*--------------------------------------------------*/
+
+#import <Availability.h>
+
+/*--------------------------------------------------*/
+
+#ifndef __IPHONE_5_0
+#   warning "This project uses features only available in iOS SDK 5.0 and later."
+#endif
+
+/*--------------------------------------------------*/
+
+#ifdef __OBJC__
+#   import <UIKit/UIKit.h>
+#   import <Foundation/Foundation.h>
+#endif
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+#ifdef __OBJC__
+#   import "MobilyNS.h"
+#   import "MobilyModel.h"
+#   import "MobilyModelJson.h"
+#   import "MobilyCG.h"
+#   import "MobilyUI.h"
+#   import "MobilyContext.h"
+#   import "MobilyApplication.h"
+#   import "MobilyWindow.h"
+#   import "MobilyNavigationController.h"
+#   import "MobilyTabBarController.h"
+#   import "MobilyViewController.h"
+#   import "MobilyButton.h"
+#   import "MobilyTextField.h"
+#   import "MobilyDateField.h"
+#   import "MobilyListField.h"
+#   import "MobilyImageView.h"
+#   import "MobilyScrollView.h"
+#   import "MobilyTableView.h"
+#endif
+
+/*--------------------------------------------------*/

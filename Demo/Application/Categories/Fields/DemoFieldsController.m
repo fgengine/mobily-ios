@@ -33,43 +33,27 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyContext.h"
-#import "MobilyApplication.h"
-#import "MobilyWindow.h"
-#import "MobilyController.h"
-#import "MobilyNavigationController.h"
-#import "MobilyViewController.h"
-#import "MobilyDynamicsDrawerController.h"
-#import "MobilySlideMenuController.h"
-#import "MobilyImageView.h"
-#import "MobilyTableView.h"
+#import "DemoFieldsController.h"
 
 /*--------------------------------------------------*/
 
-@interface ExampleApplication : MobilyApplication
+@implementation DemoFieldsController
 
-@property(nonatomic, readwrite, weak) MobilyWindow* window;
-@property(nonatomic, readwrite, weak) MobilySlideMenuController* slideView;
-@property(nonatomic, readwrite, weak) MobilyViewController* mainView;
-@property(nonatomic, readwrite, weak) MobilyViewController* leftView;
-@property(nonatomic, readwrite, weak) MobilyViewController* rightView;
+- (void)setupController {
+    [super setupController];
+    
+    [self setTitle:@"Fields"];
+    [self setEdgesForExtendedLayout:UIRectEdgeNone];
+}
 
-@end
-
-/*--------------------------------------------------*/
-
-@interface ExampleControllerMain : MobilyViewController < UITableViewDataSource, UITableViewDelegate >
-
-@property(nonatomic, readwrite, weak) IBOutlet MobilyTableView* viewTable;
-@property(nonatomic, readwrite, strong) NSArray* dataSource;
-
-@end
-
-/*--------------------------------------------------*/
-
-@interface ExampleControllerMainCell : MobilyTableCellSwipe
-
-@property(nonatomic, readwrite, weak) IBOutlet UILabel* viewTitle;
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    [_dateField setDatePickerMode:UIDatePickerModeDate];
+    [_dateField setDateFormatter:[NSDateFormatter dateFormatterWithFormat:@"d MMM yyyy"]];
+    [_timeField setDatePickerMode:UIDatePickerModeTime];
+    [_timeField setDateFormatter:[NSDateFormatter dateFormatterWithFormat:@"HH:mm:ss"]];
+}
 
 @end
 
