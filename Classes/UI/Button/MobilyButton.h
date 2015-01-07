@@ -48,7 +48,7 @@ typedef NS_ENUM(NSInteger, MobilyButtonImageAlignment) {
 
 @interface MobilyButton : UIButton< MobilyBuilderObject >
 
-@property(nonatomic, readwrite, assign) MobilyButtonImageAlignment imageAlignment;
+@property(nonatomic, readwrite, assign) IBInspectable MobilyButtonImageAlignment imageAlignment;
 
 - (void)setupView;
 

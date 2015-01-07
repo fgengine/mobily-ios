@@ -86,16 +86,16 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellStyle) {
 
 @interface MobilyTableSwipeCell : MobilyTableCell
 
-@property(nonatomic, readwrite, assign) MobilyTableSwipeCellStyle swipeStyle;
-@property(nonatomic, readwrite, assign) CGFloat swipeThreshold;
-@property(nonatomic, readwrite, assign) CGFloat swipeVelocity;
-@property(nonatomic, readwrite, assign) CGFloat swipeSpeed;
-@property(nonatomic, readwrite, assign, getter=isShowedLeftSwipeView) BOOL showedLeftSwipeView;
-@property(nonatomic, readwrite, assign, getter=isShowedRightSwipeView) BOOL showedRightSwipeView;
+@property(nonatomic, readwrite, assign) IBInspectable MobilyTableSwipeCellStyle swipeStyle;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeThreshold;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeVelocity;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeSpeed;
+@property(nonatomic, readwrite, assign, getter=isShowedLeftSwipeView) IBInspectable BOOL showedLeftSwipeView;
+@property(nonatomic, readwrite, assign, getter=isShowedRightSwipeView) IBInspectable BOOL showedRightSwipeView;
 @property(nonatomic, readwrite, strong) IBOutlet UIView* leftSwipeView;
-@property(nonatomic, readwrite, assign) CGFloat leftSwipeViewWidth;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat leftSwipeViewWidth;
 @property(nonatomic, readwrite, strong) IBOutlet UIView* rightSwipeView;
-@property(nonatomic, readwrite, assign) CGFloat rightSwipeViewWidth;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat rightSwipeViewWidth;
 @property(nonatomic, readonly, getter=isSwipeDragging) BOOL swipeDragging;
 @property(nonatomic, readonly, getter=isSwipeDecelerating) BOOL swipeDecelerating;
 

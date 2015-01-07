@@ -39,7 +39,7 @@
 
 @interface MobilyTextField : UITextField< MobilyBuilderObject >
 
-@property(nonatomic, readwrite, assign) BOOL hiddenToolbar;
+@property(nonatomic, readwrite, assign) IBInspectable BOOL hiddenToolbar;
 @property(nonatomic, readwrite, strong) UIToolbar* toolbar;
 @property(nonatomic, readwrite, strong) UIBarButtonItem* prevButton;
 @property(nonatomic, readwrite, strong) UIBarButtonItem* nextButton;

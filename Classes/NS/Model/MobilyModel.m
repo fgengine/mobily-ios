@@ -815,9 +815,9 @@
 - (void)reloadItems {
     [_unsafeItems removeAllObjects];
     
-    if([_delegate respondsToSelector:@selector(storageQuery:reloadItem:)] == YES) {
+    if([_delegate respondsToSelector:@selector(modelQuery:reloadItem:)] == YES) {
         [[_collection safeItems] enumerateObjectsUsingBlock:^(id item, NSUInteger itemIndex, BOOL* itemStop) {
-            if([_delegate storageQuery:self reloadItem:item] == YES) {
+            if([_delegate modelQuery:self reloadItem:item] == YES) {
                 [_unsafeItems addObject:item];
             }
         }];
@@ -833,10 +833,10 @@
 }
 
 - (void)resortItems {
-    if([_delegate respondsToSelector:@selector(storageQuery:resortItem1:item2:)] == YES) {
+    if([_delegate respondsToSelector:@selector(modelQuery:resortItem1:item2:)] == YES) {
         if(_resortInvert == YES) {
             [_unsafeItems sortUsingComparator:^NSComparisonResult(id item1, id item2) {
-                switch([_delegate storageQuery:self resortItem1:item1 item2:item2]) {
+                switch([_delegate modelQuery:self resortItem1:item1 item2:item2]) {
                     case MobilyModelQuerySortResultMore: return NSOrderedDescending;
                     case MobilyModelQuerySortResultLess: return NSOrderedAscending;
                     default: break;
@@ -845,7 +845,7 @@
             }];
         } else {
             [_unsafeItems sortUsingComparator:^NSComparisonResult(id item1, id item2) {
-                return (NSComparisonResult)[_delegate storageQuery:self resortItem1:item1 item2:item2];
+                return (NSComparisonResult)[_delegate modelQuery:self resortItem1:item1 item2:item2];
             }];
         }
     } else if(_resortBlock != nil) {

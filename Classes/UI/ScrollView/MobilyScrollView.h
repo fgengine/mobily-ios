@@ -47,7 +47,7 @@ typedef NS_ENUM(NSInteger, MobilyScrollViewDirection) {
 
 @interface MobilyScrollView : UIScrollView< MobilyBuilderObject >
 
-@property(nonatomic, readwrite, assign) MobilyScrollViewDirection direction;
+@property(nonatomic, readwrite, assign) IBInspectable MobilyScrollViewDirection direction;
 @property(nonatomic, readwrite, strong) IBOutlet UIView* rootView;
 
 - (void)setupView;

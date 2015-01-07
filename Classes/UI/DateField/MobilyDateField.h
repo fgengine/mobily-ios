@@ -39,14 +39,14 @@
 
 @interface MobilyDateField : MobilyTextField< MobilyBuilderObject >
 
-@property(nonatomic, readwrite, assign) UIDatePickerMode datePickerMode;
-@property(nonatomic, readwrite, strong) NSDateFormatter* dateFormatter;
-@property(nonatomic, readwrite, strong) NSLocale* locale;
-@property(nonatomic, readwrite, copy)   NSCalendar* calendar;
-@property(nonatomic, readwrite, strong) NSTimeZone* timeZone;
-@property(nonatomic, readwrite, strong) NSDate* minimumDate;
-@property(nonatomic, readwrite, strong) NSDate* maximumDate;
-@property(nonatomic, readwrite, strong) NSDate* date;
+@property(nonatomic, readwrite, assign) IBInspectable UIDatePickerMode datePickerMode;
+@property(nonatomic, readwrite, strong) IBInspectable NSDateFormatter* dateFormatter;
+@property(nonatomic, readwrite, strong) IBInspectable NSLocale* locale;
+@property(nonatomic, readwrite, copy) IBInspectable NSCalendar* calendar;
+@property(nonatomic, readwrite, strong) IBInspectable NSTimeZone* timeZone;
+@property(nonatomic, readwrite, strong) IBInspectable NSDate* minimumDate;
+@property(nonatomic, readwrite, strong) IBInspectable NSDate* maximumDate;
+@property(nonatomic, readwrite, strong) IBInspectable NSDate* date;
 
 - (void)setDate:(NSDate*)date animated:(BOOL)animated;
 

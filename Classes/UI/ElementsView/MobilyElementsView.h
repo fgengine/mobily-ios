@@ -120,8 +120,8 @@ typedef NS_OPTIONS(NSUInteger, MobilyElementsViewScrollPosition) {
 @property(nonatomic, readwrite, assign) IBOutlet id< MobilyElementsViewDelegate > elementsDelegate;
 @property(nonatomic, readwrite, weak) IBOutlet id< MobilyElementsLayout > elementsLayout;
 
-@property(nonatomic, readwrite, assign) BOOL allowsSelection;
-@property(nonatomic, readwrite, assign) BOOL allowsMultipleSelection;
+@property(nonatomic, readwrite, assign) IBInspectable BOOL allowsSelection;
+@property(nonatomic, readwrite, assign) IBInspectable BOOL allowsMultipleSelection;
 
 @property(nonatomic, readonly, copy) NSIndexSet* visibleIndexSet;
 @property(nonatomic, readonly, strong) NSArray* visibleItems;

@@ -155,8 +155,8 @@ typedef MobilyModelQuerySortResult (^MobilyModelQueryResortBlock)(id item1, id i
 @protocol MobilyModelQueryDelegate < NSObject >
 
 @optional
-- (BOOL)storageQuery:(MobilyModelQuery*)storageQuery reloadItem:(id)item;
-- (MobilyModelQuerySortResult)storageQuery:(MobilyModelQuery*)storageQuery resortItem1:(id)item1 item2:(id)item2;
+- (BOOL)modelQuery:(MobilyModelQuery*)modelQuery reloadItem:(id)item;
+- (MobilyModelQuerySortResult)modelQuery:(MobilyModelQuery*)modelQuery resortItem1:(id)item1 item2:(id)item2;
 
 @end
 

@@ -202,13 +202,13 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 @property(nonatomic, readonly, assign) CGFloat boundsWidth;
 @property(nonatomic, readonly, assign) CGFloat boundsHeight;
 
-@property(nonatomic, readwrite, assign) CGFloat cornerRadius;
-@property(nonatomic, readwrite, assign) CGFloat borderWidth;
-@property(nonatomic, readwrite, strong) UIColor* borderColor;
-@property(nonatomic, readwrite, strong) UIColor* shadowColor;
-@property(nonatomic, readwrite, assign) CGFloat shadowOpacity;
-@property(nonatomic, readwrite, assign) CGSize shadowOffset;
-@property(nonatomic, readwrite, assign) CGFloat shadowRadius;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat cornerRadius;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat borderWidth;
+@property(nonatomic, readwrite, strong) IBInspectable UIColor* borderColor;
+@property(nonatomic, readwrite, strong) IBInspectable UIColor* shadowColor;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat shadowOpacity;
+@property(nonatomic, readwrite, assign) IBInspectable CGSize shadowOffset;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat shadowRadius;
 @property(nonatomic, readwrite, strong) UIBezierPath* shadowPath;
 
 - (NSArray*)responders;
@@ -228,7 +228,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 @interface UIScrollView (MobilyUI)
 
-@property(nonatomic, readwrite, assign) UIEdgeInsets keyboardInset;
+@property(nonatomic, readwrite, assign) IBInspectable UIEdgeInsets keyboardInset;
 
 @property(nonatomic, readwrite, assign) CGFloat contentOffsetX;
 @property(nonatomic, readwrite, assign) CGFloat contentOffsetY;
