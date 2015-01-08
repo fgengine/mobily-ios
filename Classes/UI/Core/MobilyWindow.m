@@ -45,8 +45,6 @@
 
 @interface MobilyWindow ()
 
-@property(nonatomic, readwrite, assign) BOOL isNeedLoad;
-
 @property(nonatomic, readwrite, strong) UIView* emptyView;
 @property(nonatomic, readwrite, strong) UITapGestureRecognizer* emptyTabGesture;
 @property(nonatomic, readwrite, strong) UIPanGestureRecognizer* emptyPanGesture;
