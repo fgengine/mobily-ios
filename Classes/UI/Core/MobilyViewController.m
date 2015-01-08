@@ -40,6 +40,7 @@
 
 @interface MobilyViewController ()
 
+@property(nonatomic, readwrite, assign, getter = isNeedUpdate) BOOL needUpdate;
 @property(nonatomic, readwrite, strong) NSString* mobilyName;
 
 @end
@@ -61,6 +62,7 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
     [super setupController];
     
     [self setAutomaticallyHideKeyboard:YES];
+    [self setNeedUpdate:YES];
 }
 
 - (void)dealloc {
@@ -126,6 +128,38 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
             [super loadView];
         }
     }
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    
+    [self setNeedUpdate];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if([self isNeedUpdate] == YES) {
+        [self setNeedUpdate:NO];
+        [self update];
+    }
+}
+
+#pragma mark Public
+
+- (void)setNeedUpdate {
+    if(([self isViewLoaded] == YES) && ([self isAppeared] == YES)) {
+        [self update];
+    } else {
+        [self setNeedUpdate];
+    }
+}
+
+- (void)update {
+}
+
+- (void)clear {
+    [self setNeedUpdate];
 }
 
 @end

@@ -24,6 +24,7 @@
 		408718F91A5D315D00833F0A /* DemoButtonsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 408718F71A5D315D00833F0A /* DemoButtonsController.xib */; };
 		408718FE1A5D491600833F0A /* DemoFieldsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 408718FC1A5D491600833F0A /* DemoFieldsController.m */; };
 		408718FF1A5D491600833F0A /* DemoFieldsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 408718FD1A5D491600833F0A /* DemoFieldsController.xib */; };
+		408719021A5DA8D500833F0A /* MobilyDialogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 408719011A5DA8D500833F0A /* MobilyDialogController.m */; };
 		40C8CD5D1A5AA45100F737B2 /* MobilyCG.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CCFF1A5AA45100F737B2 /* MobilyCG.m */; };
 		40C8CD5E1A5AA45100F737B2 /* MobilyEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD051A5AA45100F737B2 /* MobilyEvent.m */; };
 		40C8CD5F1A5AA45100F737B2 /* MobilyHttpQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD071A5AA45100F737B2 /* MobilyHttpQuery.m */; };
@@ -94,6 +95,8 @@
 		408718FB1A5D491600833F0A /* DemoFieldsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoFieldsController.h; sourceTree = "<group>"; };
 		408718FC1A5D491600833F0A /* DemoFieldsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoFieldsController.m; sourceTree = "<group>"; };
 		408718FD1A5D491600833F0A /* DemoFieldsController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DemoFieldsController.xib; sourceTree = "<group>"; };
+		408719001A5DA8D500833F0A /* MobilyDialogController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyDialogController.h; sourceTree = "<group>"; };
+		408719011A5DA8D500833F0A /* MobilyDialogController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyDialogController.m; sourceTree = "<group>"; };
 		40C8CCFE1A5AA45100F737B2 /* MobilyCG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyCG.h; sourceTree = "<group>"; };
 		40C8CCFF1A5AA45100F737B2 /* MobilyCG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyCG.m; sourceTree = "<group>"; };
 		40C8CD011A5AA45100F737B2 /* MobilyCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyCore.h; sourceTree = "<group>"; };
@@ -438,6 +441,8 @@
 				40C8CD251A5AA45100F737B2 /* MobilyTransitionController.m */,
 				40C8CD261A5AA45100F737B2 /* MobilyTransitionControllerCards.m */,
 				40C8CD271A5AA45100F737B2 /* MobilyTransitionControllerCrossFade.m */,
+				408719001A5DA8D500833F0A /* MobilyDialogController.h */,
+				408719011A5DA8D500833F0A /* MobilyDialogController.m */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -706,6 +711,7 @@
 				40C8CD691A5AA45100F737B2 /* MobilyController.m in Sources */,
 				40C8CD831A5AA45100F737B2 /* MobilyTextField.m in Sources */,
 				40C8CD821A5AA45100F737B2 /* MobilyTableView.m in Sources */,
+				408719021A5DA8D500833F0A /* MobilyDialogController.m in Sources */,
 				40C8CD5F1A5AA45100F737B2 /* MobilyHttpQuery.m in Sources */,
 				40C8CD731A5AA45100F737B2 /* MobilyDynamicsDrawerController.m in Sources */,
 				40C8CD861A5AA4DC00F737B2 /* MobilyModelJson.m in Sources */,
