@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name = 'Mobily'
-	s.version = '2.0.1'
+	s.version = '2.0.2'
 	s.summary = 'Mobily framework for iOS'
 	s.homepage = 'https://github.com/fgengine/mobily-ios/tree/v2'
 	s.license = {
@@ -25,6 +25,7 @@ Pod::Spec.new do |s|
 		ss.dependency 'Mobily/NSRegExpParser'
 		ss.dependency 'Mobily/CG'
 		ss.dependency 'Mobily/UI'
+        ss.dependency 'Mobily/UIButton'
 		ss.dependency 'Mobily/UITextField'
 		ss.dependency 'Mobily/UIDateField'
 		ss.dependency 'Mobily/UIListField'
@@ -91,6 +92,12 @@ Pod::Spec.new do |s|
         ss.public_header_files = 'Classes/UI/SlideMenuController/**/*.h'
         ss.source_files = 'Classes/UI/SlideMenuController/**/*.{h,m}'
         ss.resources = 'Classes/UI/SlideMenuController/**/*.{png}'
+        ss.dependency 'Mobily/UI'
+    end
+
+    s.subspec 'UIButton' do |ss|
+        ss.public_header_files = 'Classes/UI/Button/**/*.h'
+        ss.source_files = 'Classes/UI/Button/**/*.{h,m}'
         ss.dependency 'Mobily/UI'
     end
 
