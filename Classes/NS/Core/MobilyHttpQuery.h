@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyTaskManager.h"
+#import "MobilyNS.h"
 
 /*--------------------------------------------------*/
 
@@ -93,14 +93,6 @@ typedef void (^MobilyHttpQueryBlock)(MobilyHttpQuery* query);
 
 - (void)start;
 - (void)cancel;
-
-@end
-
-/*--------------------------------------------------*/
-
-@interface MobilyTaskHttpQuery : MobilyTask
-
-@property(nonatomic, readwrite, strong) MobilyHttpQuery* httpQuery;
 
 @end
 

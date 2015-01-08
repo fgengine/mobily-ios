@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyNS.h"
+#import "MobilyHttpQuery.h"
 
 /*--------------------------------------------------*/
 
@@ -89,6 +89,14 @@ typedef void (^MobilyTaskManagerEnumBlock)(id task, BOOL* stop);
 - (void)didCancel;
 
 - (void)cancel;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyTaskHttpQuery : MobilyTask
+
+@property(nonatomic, readwrite, strong) MobilyHttpQuery* httpQuery;
 
 @end
 

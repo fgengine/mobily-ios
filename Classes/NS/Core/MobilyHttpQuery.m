@@ -439,28 +439,3 @@
 @end
 
 /*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@implementation MobilyTaskHttpQuery
-
-#pragma mark Standart
-
-- (void)dealloc {
-    [self setHttpQuery:nil];
-    
-    MOBILY_SAFE_DEALLOC;
-}
-
-#pragma mark Public
-
-- (void)cancel {
-    if(_httpQuery != nil) {
-        [_httpQuery cancel];
-    }
-    [super cancel];
-}
-
-@end
-
-/*--------------------------------------------------*/
