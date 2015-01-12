@@ -35,6 +35,7 @@
 
 #import "MobilyDialogController.h"
 #import "MobilyApplication.h"
+#import "MobilyWindow.h"
 
 /*--------------------------------------------------*/
 
