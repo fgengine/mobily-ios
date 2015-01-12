@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DemoAudioRecorderController">
+            <connections>
+                <outlet property="elapsedTimeLabel" destination="RUy-fA-Y7S" id="S5e-TS-oKc"/>
+                <outlet property="fileSizeLabel" destination="PV4-Uo-biF" id="AUI-cE-3IN"/>
+                <outlet property="pauseButton" destination="Nne-5I-CsT" id="3KK-Ye-0fe"/>
+                <outlet property="resumeButton" destination="E9D-aI-ssi" id="2wB-Ki-JP1"/>
+                <outlet property="startButton" destination="d4g-is-eL8" id="tTO-5K-m4D"/>
+                <outlet property="stopButton" destination="OAn-Vi-gX6" id="PpH-tT-GTt"/>
+                <outlet property="view" destination="iN0-l3-epB" id="dih-gg-VNH"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d4g-is-eL8" customClass="MobilyButton">
+                    <rect key="frame" x="8" y="8" width="33" height="30"/>
+                    <state key="normal" title="Start">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="pressedStartButton:" destination="-1" eventType="touchUpInside" id="vUL-34-IEC"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OAn-Vi-gX6" customClass="MobilyButton">
+                    <rect key="frame" x="8" y="46" width="33" height="30"/>
+                    <state key="normal" title="Stop">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="pressedStopButton:" destination="-1" eventType="touchUpInside" id="gQZ-kX-eE4"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nne-5I-CsT" customClass="MobilyButton">
+                    <rect key="frame" x="269" y="8" width="43" height="30"/>
+                    <state key="normal" title="Pause">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="pressedPauseButton:" destination="-1" eventType="touchUpInside" id="rDF-c6-pHw"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E9D-aI-ssi" customClass="MobilyButton">
+                    <rect key="frame" x="256" y="46" width="56" height="30"/>
+                    <state key="normal" title="Resume">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="pressedResumeButton:" destination="-1" eventType="touchUpInside" id="mMn-Uc-aFH"/>
+                    </connections>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vcA-8E-0Kk">
+                    <rect key="frame" x="8" y="451" width="304" height="21"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="File size" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hvH-ms-JFq">
+                            <rect key="frame" x="0.0" y="0.0" width="254" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="252" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PV4-Uo-biF">
+                            <rect key="frame" x="262" y="0.0" width="42" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="PV4-Uo-biF" secondAttribute="trailing" id="6cZ-dP-hBl"/>
+                        <constraint firstItem="PV4-Uo-biF" firstAttribute="top" secondItem="vcA-8E-0Kk" secondAttribute="top" id="6sR-Eq-hJL"/>
+                        <constraint firstItem="hvH-ms-JFq" firstAttribute="top" secondItem="vcA-8E-0Kk" secondAttribute="top" id="HS1-H0-fzB"/>
+                        <constraint firstItem="hvH-ms-JFq" firstAttribute="leading" secondItem="vcA-8E-0Kk" secondAttribute="leading" id="MGv-Xi-D44"/>
+                        <constraint firstAttribute="bottom" secondItem="PV4-Uo-biF" secondAttribute="bottom" id="VjU-wv-2nR"/>
+                        <constraint firstItem="PV4-Uo-biF" firstAttribute="leading" secondItem="hvH-ms-JFq" secondAttribute="trailing" constant="8" id="WFM-BY-ILZ"/>
+                        <constraint firstAttribute="bottom" secondItem="hvH-ms-JFq" secondAttribute="bottom" id="YLm-uT-Wve"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Oc-pP-eI5">
+                    <rect key="frame" x="8" y="426" width="304" height="21"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Elapsed time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K5C-0a-Pca">
+                            <rect key="frame" x="0.0" y="0.0" width="254" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="252" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RUy-fA-Y7S">
+                            <rect key="frame" x="262" y="0.0" width="42" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="K5C-0a-Pca" secondAttribute="bottom" id="Ajo-kb-5mJ"/>
+                        <constraint firstItem="K5C-0a-Pca" firstAttribute="leading" secondItem="4Oc-pP-eI5" secondAttribute="leading" id="Sp1-6m-NeX"/>
+                        <constraint firstItem="RUy-fA-Y7S" firstAttribute="leading" secondItem="K5C-0a-Pca" secondAttribute="trailing" constant="8" id="TOA-5j-xc8"/>
+                        <constraint firstAttribute="trailing" secondItem="RUy-fA-Y7S" secondAttribute="trailing" id="ZPc-4n-D4i"/>
+                        <constraint firstItem="RUy-fA-Y7S" firstAttribute="top" secondItem="4Oc-pP-eI5" secondAttribute="top" id="cbV-uj-4E4"/>
+                        <constraint firstAttribute="bottom" secondItem="RUy-fA-Y7S" secondAttribute="bottom" id="gud-9e-ekU"/>
+                        <constraint firstItem="K5C-0a-Pca" firstAttribute="top" secondItem="4Oc-pP-eI5" secondAttribute="top" id="m6o-J5-AU7"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="4Oc-pP-eI5" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="0Ze-gz-gef"/>
+                <constraint firstAttribute="trailing" secondItem="vcA-8E-0Kk" secondAttribute="trailing" constant="8" id="5DS-Pi-6ET"/>
+                <constraint firstItem="Nne-5I-CsT" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="CsE-oV-JgA"/>
+                <constraint firstItem="vcA-8E-0Kk" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="D6L-xL-wgg"/>
+                <constraint firstItem="OAn-Vi-gX6" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="FWJ-AR-ADA"/>
+                <constraint firstItem="E9D-aI-ssi" firstAttribute="top" secondItem="Nne-5I-CsT" secondAttribute="bottom" constant="8" id="Oe4-jP-g8s"/>
+                <constraint firstAttribute="bottom" secondItem="vcA-8E-0Kk" secondAttribute="bottom" constant="8" id="R3T-CN-3Xr"/>
+                <constraint firstItem="d4g-is-eL8" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="X6y-Nu-Tpo"/>
+                <constraint firstItem="OAn-Vi-gX6" firstAttribute="top" secondItem="d4g-is-eL8" secondAttribute="bottom" constant="8" id="iKS-Zt-kk9"/>
+                <constraint firstItem="vcA-8E-0Kk" firstAttribute="top" secondItem="4Oc-pP-eI5" secondAttribute="bottom" constant="4" id="iVN-sL-eHA"/>
+                <constraint firstAttribute="trailing" secondItem="E9D-aI-ssi" secondAttribute="trailing" constant="8" id="qsc-c0-RAd"/>
+                <constraint firstAttribute="trailing" secondItem="Nne-5I-CsT" secondAttribute="trailing" constant="8" id="tID-GV-xpo"/>
+                <constraint firstItem="d4g-is-eL8" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="tRr-Db-hjg"/>
+                <constraint firstAttribute="trailing" secondItem="4Oc-pP-eI5" secondAttribute="trailing" constant="8" id="tar-VP-pIe"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-894" y="-168"/>
+        </view>
+    </objects>
+</document>

@@ -118,7 +118,7 @@
 - (id)init {
     self = [super init];
     if(self != nil) {
-        [self setupItem];
+        [self setup];
     }
     return self;
 }
@@ -132,7 +132,7 @@
                 [self setValue:value forKey:field];
             }
         }];
-        [self setupItem];
+        [self setup];
     }
     return self;
 }
@@ -141,7 +141,7 @@
     self = [super init];
     if(self != nil) {
         [self convertFromJson:json];
-        [self setupItem];
+        [self setup];
     }
     return self;
 }
@@ -151,7 +151,7 @@
     if(self != nil) {
         [self setUserDefaultsKey:userDefaultsKey];
         [self loadItem];
-        [self setupItem];
+        [self setup];
     }
     return self;
 }
@@ -209,7 +209,7 @@
 
 #pragma mark Property
 
-- (void)setupItem {
+- (void)setup {
 }
 
 - (NSArray*)propertyMap {
@@ -454,7 +454,7 @@
             [self setUnsafeItems:[NSMutableArray array]];
         }
         [self setFlagLoad:NO];
-        [self setupCollection];
+        [self setup];
     }
     return self;
 }
@@ -465,7 +465,7 @@
         [self setUserDefaultsKey:userDefaultsKey];
         [self setUnsafeItems:[NSMutableArray array]];
         [self setFlagLoad:YES];
-        [self setupCollection];
+        [self setup];
     }
     return self;
 }
@@ -481,7 +481,7 @@
                 [self setFilePath:filePath];
                 [self setUnsafeItems:[NSMutableArray array]];
                 [self setFlagLoad:YES];
-                [self setupCollection];
+                [self setup];
             } else {
                 self = nil;
             }
@@ -498,7 +498,7 @@
         [self setUnsafeItems:[NSMutableArray array]];
         [self setFlagLoad:NO];
         [self convertFromJson:json storageItemClass:storageItemClass];
-        [self setupCollection];
+        [self setup];
     }
     return self;
 }
@@ -556,7 +556,7 @@
 
 #pragma mark Public
 
-- (void)setupCollection {
+- (void)setup {
 }
 
 - (void)convertFromJson:(id)json storageItemClass:(Class)storageItemClass {

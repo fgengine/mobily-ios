@@ -33,29 +33,40 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyBuilder.h"
-#import "MobilyTransitionController.h"
+#import "MobilyNS.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyController : UIViewController< MobilyBuilderObject >
+typedef void(^MobilyTimerBlock)();
 
-@property(nonatomic, readonly, assign, getter=isAppeared) BOOL appeared;
-@property(nonatomic, readwrite, assign) UIStatusBarStyle statusBarStyle;
-@property(nonatomic, readwrite, assign) UIStatusBarAnimation statusBarAnimation;
-@property(nonatomic, readwrite, assign, getter=isNavigationBarHidden) BOOL navigationBarHidden;
-@property(nonatomic, readwrite, strong) MobilyTransitionController* transitionModal;
+/*--------------------------------------------------*/
 
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidLoad;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidUnload;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventWillAppear;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidAppear;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventWillDisappear;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidDisappear;
+@interface MobilyTimer : NSObject
 
-- (void)setup;
+@property(nonatomic, readonly, assign, getter=isDelaying) BOOL delaying;
+@property(nonatomic, readonly, assign, getter=isStarted) BOOL started;
+@property(nonatomic, readwrite, assign) NSTimeInterval delay;
+@property(nonatomic, readwrite, assign) NSTimeInterval interval;
+@property(nonatomic, readwrite, assign) NSUInteger repeat;
+@property(nonatomic, readonly, assign) NSTimeInterval elapsed;
+@property(nonatomic, readonly, assign) NSUInteger repeated;
 
-- (void)setNavigationBarHidden:(BOOL)navigationBarHidden animated:(BOOL)animated;
+@property(nonatomic, readwrite, copy) MobilyTimerBlock startBlock;
+@property(nonatomic, readwrite, copy) MobilyTimerBlock repeatBlock;
+@property(nonatomic, readwrite, copy) MobilyTimerBlock stopBlock;
+
++ (instancetype)timerWithInterval:(NSTimeInterval)interval;
++ (instancetype)timerWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval;
++ (instancetype)timerWithInterval:(NSTimeInterval)interval repeat:(NSUInteger)repeat;
++ (instancetype)timerWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval repeat:(NSUInteger)repeat;
+
+- (id)initWithInterval:(NSTimeInterval)interval;
+- (id)initWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval;
+- (id)initWithInterval:(NSTimeInterval)interval repeat:(NSUInteger)repeat;
+- (id)initWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval repeat:(NSUInteger)repeat;
+
+- (void)start;
+- (void)stop;
 
 @end
 

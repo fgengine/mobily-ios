@@ -39,13 +39,14 @@
 
 #import "DemoButtonsController.h"
 #import "DemoFieldsController.h"
+#import "DemoAudioRecorderController.h"
 
 /*--------------------------------------------------*/
 
 @implementation DemoCategoriesController
 
-- (void)setupController {
-    [super setupController];
+- (void)setup {
+    [super setup];
     
     [self setTitle:@"Categories"];
     [self setEdgesForExtendedLayout:UIRectEdgeNone];
@@ -53,6 +54,7 @@
     [self setDataSource:@[
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeButtons title:@"Buttons"],
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeFields title:@"Fields"],
+        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioRecorder title:@"AudioRecorder"],
     ]];
 }
 
@@ -93,6 +95,10 @@
                 [[self navigationController] pushViewController:[DemoFieldsController new] animated:YES];
                 break;
             }
+            case DemoCategoriesTypeAudioRecorder: {
+                [[self navigationController] pushViewController:[DemoAudioRecorderController new] animated:YES];
+                break;
+            }
         }
     }
     [_tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -110,8 +116,8 @@
     return 44.0f;
 }
 
-- (void)setupView {
-    [super setupView];
+- (void)setup {
+    [super setup];
 }
 
 - (void)setModel:(DemoCategoriesModel*)model {

@@ -64,8 +64,8 @@
 
 #pragma mark Public
 
-- (void)setupView {
-    [super setupView];
+- (void)setup {
+    [super setup];
     
     [self setLocale:[NSLocale currentLocale]];
     [self setCalendar:[NSCalendar currentCalendar]];

@@ -48,7 +48,7 @@ typedef void (^MobilyModelBlock)();
 - (id)initWithUserDefaultsKey:(NSString*)userDefaultsKey;
 - (id)initWithJson:(id)json;
 
-- (void)setupItem;
+- (void)setup;
 
 + (NSArray*)propertyMap;
 + (NSDictionary*)jsonMap;
@@ -82,7 +82,7 @@ typedef void (^MobilyModelCollectionEnumBlock)(id item, BOOL* stop);
 - (id)initWithFileName:(NSString*)fileName;
 - (id)initWithJson:(id)json storageItemClass:(Class)storageItemClass;
 
-- (void)setupCollection;
+- (void)setup;
 
 - (void)convertFromJson:(id)json storageItemClass:(Class)storageItemClass;
 

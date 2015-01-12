@@ -106,7 +106,7 @@ typedef void (^MobilyImageLoaderBlock)();
 - (id)initWithCoder:(NSCoder*)coder {
     self = [super initWithCoder:coder];
     if(self != nil) {
-        [self setupView];
+        [self setup];
     }
     return self;
 }
@@ -114,7 +114,7 @@ typedef void (^MobilyImageLoaderBlock)();
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self != nil) {
-        [self setupView];
+        [self setup];
     }
     return self;
 }
@@ -162,7 +162,7 @@ typedef void (^MobilyImageLoaderBlock)();
 
 #pragma mark Public
 
-- (void)setupView {
+- (void)setup {
     [[self layer] setMasksToBounds:YES];
 }
 

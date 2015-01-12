@@ -46,7 +46,7 @@
 @property(nonatomic, readwrite, strong) UIBarButtonItem* flexButton;
 @property(nonatomic, readwrite, strong) UIBarButtonItem* doneButton;
 
-- (void)setupView;
+- (void)setup;
 
 - (void)setHiddenToolbar:(BOOL)hiddenToolbar animated:(BOOL)animated;
 

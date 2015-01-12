@@ -92,14 +92,14 @@
 - (id)init {
     self = [super init];
     if(self != nil) {
-        [self setupTransitionController];
+        [self setup];
     }
     return self;
 }
 
 #pragma mark Public
 
-- (void)setupTransitionController {
+- (void)setup {
     [self setDuration:1.0f];
 }
 

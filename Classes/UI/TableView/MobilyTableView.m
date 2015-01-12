@@ -93,7 +93,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 - (id)initWithCoder:(NSCoder*)coder {
     self = [super initWithCoder:coder];
     if(self != nil) {
-        [self setupView];
+        [self setup];
     }
     return self;
 }
@@ -101,7 +101,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self != nil) {
-        [self setupView];
+        [self setup];
     }
     return self;
 }
@@ -157,7 +157,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 
 #pragma mark Public
 
-- (void)setupView {
+- (void)setup {
     [self setRegisteredCellNibs:[NSMutableDictionary dictionary]];
     [self setRegisteredHeaderFooterNibs:[NSMutableDictionary dictionary]];
     
@@ -247,7 +247,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 - (id)initWithCoder:(NSCoder*)coder {
     self = [super initWithCoder:coder];
     if(self != nil) {
-        [self setupView];
+        [self setup];
     }
     return self;
 }
@@ -255,7 +255,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self != nil) {
-        [self setupView];
+        [self setup];
     }
     return self;
 }
@@ -263,7 +263,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if(self != nil) {
-        [self setupView];
+        [self setup];
     }
     return self;
 }
@@ -271,7 +271,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 - (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString*)reuseIdentifier {
     self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier];
     if(self != nil) {
-        [self setupView];
+        [self setup];
     }
     return self;
 }
@@ -353,7 +353,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 
 #pragma mark Public
 
-- (void)setupView {
+- (void)setup {
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     [self setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self setClipsToBounds:YES];
@@ -626,8 +626,8 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 
 #pragma mark Public
 
-- (void)setupView {
-    [super setupView];
+- (void)setup {
+    [super setup];
     
     [self setPanGestupe:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlerPanGestupe)]];
     

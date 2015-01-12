@@ -39,8 +39,8 @@
 
 @implementation DemoFieldsController
 
-- (void)setupController {
-    [super setupController];
+- (void)setup {
+    [super setup];
     
     [self setTitle:@"Fields"];
     [self setEdgesForExtendedLayout:UIRectEdgeNone];

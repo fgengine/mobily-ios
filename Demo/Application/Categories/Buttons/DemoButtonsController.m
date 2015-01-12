@@ -39,8 +39,8 @@
 
 @implementation DemoButtonsController
 
-- (void)setupController {
-    [super setupController];
+- (void)setup {
+    [super setup];
     
     [self setTitle:@"Buttons"];
     [self setEdgesForExtendedLayout:UIRectEdgeNone];

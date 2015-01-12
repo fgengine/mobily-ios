@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name = 'Mobily'
-	s.version = '2.0.2'
+	s.version = '2.0.3'
 	s.summary = 'Mobily framework for iOS'
 	s.homepage = 'https://github.com/fgengine/mobily-ios/tree/v2'
 	s.license = {
@@ -142,5 +142,18 @@ Pod::Spec.new do |s|
         ss.public_header_files = 'Classes/UI/ElementsView/**/*.h'
         ss.source_files = 'Classes/UI/ElementsView/**/*.{h,m}'
         ss.dependency 'Mobily/UI'
+    end
+
+    s.subspec 'AV' do |ss|
+        ss.public_header_files = 'Classes/AV/Core/**/*.h'
+        ss.source_files = 'Classes/AV/Core/**/*.{h,m}'
+        ss.frameworks = 'AVFoundation'
+        ss.dependency 'Mobily/NS'
+    end
+
+    s.subspec 'AVAudioRecorder' do |ss|
+        ss.public_header_files = 'Classes/AV/AudioRecorder/**/*.h'
+        ss.source_files = 'Classes/AV/AudioRecorder/**/*.{h,m}'
+        ss.dependency 'Mobily/AV'
     end
 end

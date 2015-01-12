@@ -51,7 +51,7 @@
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventWillDisappear;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidDisappear;
 
-- (void)setupController;
+- (void)setup;
 
 @end
 

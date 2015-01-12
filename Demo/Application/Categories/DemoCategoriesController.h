@@ -55,7 +55,8 @@
 
 typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
     DemoCategoriesTypeButtons,
-    DemoCategoriesTypeFields
+    DemoCategoriesTypeFields,
+    DemoCategoriesTypeAudioRecorder
 };
 
 @interface DemoCategoriesModel : MobilyModel

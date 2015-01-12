@@ -58,8 +58,8 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
 
 #pragma mark Standart
 
-- (void)setupController {
-    [super setupController];
+- (void)setup {
+    [super setup];
     
     [self setAutomaticallyHideKeyboard:YES];
     [self setNeedUpdate:YES];

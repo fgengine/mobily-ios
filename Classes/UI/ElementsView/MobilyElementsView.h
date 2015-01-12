@@ -134,7 +134,7 @@ typedef NS_OPTIONS(NSUInteger, MobilyElementsViewScrollPosition) {
 
 @property(nonatomic, readonly, assign, getter=isUpdating) BOOL updating;
 
-- (void)setupView;
+- (void)setup;
 
 - (void)registerCellClass:(Class)cellClass withIdentifier:(NSString*)identifier;
 - (void)registerCellClass:(Class)cellClass fromNib:(UINib*)nib withIdentifier:(NSString*)identifier;

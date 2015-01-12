@@ -59,7 +59,7 @@
 - (id)initWithCoder:(NSCoder*)coder {
     self = [super initWithCoder:coder];
     if(self != nil) {
-        [self setupView];
+        [self setup];
     }
     return self;
 }
@@ -67,7 +67,7 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self != nil) {
-        [self setupView];
+        [self setup];
     }
     return self;
 }
@@ -121,7 +121,7 @@
 
 #pragma mark Public
 
-- (void)setupView {
+- (void)setup {
 }
 
 #pragma mark UIButton

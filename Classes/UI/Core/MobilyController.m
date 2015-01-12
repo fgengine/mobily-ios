@@ -74,7 +74,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 - (id)initWithCoder:(NSCoder*)coder {
     self = [super initWithCoder:coder];
     if(self != nil) {
-        [self setupController];
+        [self setup];
     }
     return self;
 }
@@ -82,7 +82,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 - (id)initWithNibName:(NSString*)nib bundle:(NSBundle*)bundle {
     self = [super initWithNibName:nib bundle:bundle];
     if(self != nil) {
-        [self setupController];
+        [self setup];
     }
     return self;
 }
@@ -125,7 +125,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 #pragma mark Public
 
-- (void)setupController {
+- (void)setup {
 }
 
 #pragma mark Property

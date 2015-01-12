@@ -60,7 +60,7 @@
 - (id)init {
     self = [super init];
     if(self != nil) {
-        [self setupApplication];
+        [self setup];
     }
     return self;
 }
@@ -103,7 +103,7 @@
 
 #pragma mark Public
 
-- (void)setupApplication {
+- (void)setup {
 }
 
 - (BOOL)launchingWithOptions:(NSDictionary*)options {

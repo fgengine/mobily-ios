@@ -21,6 +21,7 @@
 
 #ifdef __OBJC__
 #   import "MobilyNS.h"
+#   import "MobilyTimer.h"
 #   import "MobilyModel.h"
 #   import "MobilyModelJson.h"
 #   import "MobilyCG.h"
@@ -38,6 +39,7 @@
 #   import "MobilyImageView.h"
 #   import "MobilyScrollView.h"
 #   import "MobilyTableView.h"
+#   import "MobilyAudioRecorder.h"
 #endif
 
 /*--------------------------------------------------*/

@@ -45,7 +45,7 @@
 
 @property(nonatomic, readwrite, weak) MobilyTableSwipeCell* currentSwipeCell;
 
-- (void)setupView;
+- (void)setup;
 
 - (void)setCurrentSwipeCell:(MobilyTableSwipeCell*)currentSwipeCell animated:(BOOL)animated;
 
@@ -66,7 +66,7 @@
 @property(nonatomic, readwrite, strong) IBOutlet UIView* rootView;
 @property(nonatomic, readwrite, weak) id model;
 
-- (void)setupView;
+- (void)setup;
 
 - (void)didLoadFromNib;
 

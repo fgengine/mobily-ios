@@ -47,7 +47,7 @@ typedef void (^MobilyImageLoaderFailureBlock)(NSString* imageUrl);
 @property(nonatomic, readwrite, strong) IBInspectable UIImage* defaultImage;
 @property(nonatomic, readwrite, strong) IBInspectable NSString* imageUrl;
 
-- (void)setupView;
+- (void)setup;
 
 - (void)setImageUrl:(NSString*)imageUrl complete:(MobilyImageLoaderCompleteBlock)complete failure:(MobilyImageLoaderFailureBlock)failure;
 

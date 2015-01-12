@@ -76,7 +76,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 - (id)init {
     self = [super initWithFrame:[[UIScreen mainScreen] bounds]];
     if(self != nil) {
-        [self setupWindow];
+        [self setup];
     }
     return self;
 }
@@ -84,7 +84,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self != nil) {
-        [self setupWindow];
+        [self setup];
     }
     return self;
 }
@@ -220,7 +220,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 
 #pragma mark Public
 
-- (void)setupWindow {
+- (void)setup {
     [self setAutomaticallyHideKeyboard:YES];
 }
 

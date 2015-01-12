@@ -33,30 +33,10 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyBuilder.h"
-#import "MobilyTransitionController.h"
+#import "MobilyNS.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyController : UIViewController< MobilyBuilderObject >
-
-@property(nonatomic, readonly, assign, getter=isAppeared) BOOL appeared;
-@property(nonatomic, readwrite, assign) UIStatusBarStyle statusBarStyle;
-@property(nonatomic, readwrite, assign) UIStatusBarAnimation statusBarAnimation;
-@property(nonatomic, readwrite, assign, getter=isNavigationBarHidden) BOOL navigationBarHidden;
-@property(nonatomic, readwrite, strong) MobilyTransitionController* transitionModal;
-
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidLoad;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidUnload;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventWillAppear;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidAppear;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventWillDisappear;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidDisappear;
-
-- (void)setup;
-
-- (void)setNavigationBarHidden:(BOOL)navigationBarHidden animated:(BOOL)animated;
-
-@end
+#import <AVFoundation/AVFoundation.h>
 
 /*--------------------------------------------------*/

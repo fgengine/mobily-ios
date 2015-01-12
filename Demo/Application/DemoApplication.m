@@ -41,8 +41,8 @@
 
 @implementation DemoApplication
 
-- (void)setupApplication {
-    [super setupApplication];
+- (void)setup {
+    [super setup];
 }
 
 - (void)dealloc {

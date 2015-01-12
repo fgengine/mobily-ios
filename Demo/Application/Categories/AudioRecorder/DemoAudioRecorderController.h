@@ -33,29 +33,17 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyBuilder.h"
-#import "MobilyTransitionController.h"
+@interface DemoAudioRecorderController : MobilyViewController
 
-/*--------------------------------------------------*/
+@property(nonatomic, readwrite, strong) MobilyAudioRecorder* audioRecorder;
+@property(nonatomic, readwrite, strong) MobilyTimer* timer;
 
-@interface MobilyController : UIViewController< MobilyBuilderObject >
-
-@property(nonatomic, readonly, assign, getter=isAppeared) BOOL appeared;
-@property(nonatomic, readwrite, assign) UIStatusBarStyle statusBarStyle;
-@property(nonatomic, readwrite, assign) UIStatusBarAnimation statusBarAnimation;
-@property(nonatomic, readwrite, assign, getter=isNavigationBarHidden) BOOL navigationBarHidden;
-@property(nonatomic, readwrite, strong) MobilyTransitionController* transitionModal;
-
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidLoad;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidUnload;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventWillAppear;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidAppear;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventWillDisappear;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidDisappear;
-
-- (void)setup;
-
-- (void)setNavigationBarHidden:(BOOL)navigationBarHidden animated:(BOOL)animated;
+@property(nonatomic, readwrite, weak) IBOutlet MobilyButton* startButton;
+@property(nonatomic, readwrite, weak) IBOutlet MobilyButton* stopButton;
+@property(nonatomic, readwrite, weak) IBOutlet MobilyButton* pauseButton;
+@property(nonatomic, readwrite, weak) IBOutlet MobilyButton* resumeButton;
+@property(nonatomic, readwrite, weak) IBOutlet UILabel* elapsedTimeLabel;
+@property(nonatomic, readwrite, weak) IBOutlet UILabel* fileSizeLabel;
 
 @end
 

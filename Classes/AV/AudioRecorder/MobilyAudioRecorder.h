@@ -33,29 +33,48 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyBuilder.h"
-#import "MobilyTransitionController.h"
+#import "MobilyAV.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyController : UIViewController< MobilyBuilderObject >
+typedef void(^MobilyAudioRecorderBlock)();
+typedef void(^MobilyAudioRecorderErrorBlock)(NSError* error);
 
-@property(nonatomic, readonly, assign, getter=isAppeared) BOOL appeared;
-@property(nonatomic, readwrite, assign) UIStatusBarStyle statusBarStyle;
-@property(nonatomic, readwrite, assign) UIStatusBarAnimation statusBarAnimation;
-@property(nonatomic, readwrite, assign, getter=isNavigationBarHidden) BOOL navigationBarHidden;
-@property(nonatomic, readwrite, strong) MobilyTransitionController* transitionModal;
+/*--------------------------------------------------*/
 
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidLoad;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidUnload;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventWillAppear;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidAppear;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventWillDisappear;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidDisappear;
+@interface MobilyAudioRecorder : NSObject
+
+@property(nonatomic, readwrite, assign) AudioFormatID format;
+@property(nonatomic, readwrite, assign) AVAudioQuality quality;
+@property(nonatomic, readwrite, assign) NSUInteger bitRate;
+@property(nonatomic, readwrite, assign) NSUInteger numberOfChannels;
+@property(nonatomic, readwrite, assign) CGFloat sampleRate;
+@property(nonatomic, readonly, strong) NSURL* url;
+@property(nonatomic, readonly, assign) NSTimeInterval duration;
+
+@property(nonatomic, readonly, assign, getter=isPrepared) BOOL prepared;
+@property(nonatomic, readonly, assign, getter=isStarted) BOOL started;
+@property(nonatomic, readonly, assign, getter=isRecording) BOOL recording;
+
+@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock startBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock stopBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock finishBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock resumeBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock pauseBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioRecorderErrorBlock encodeErrorBlock;
 
 - (void)setup;
 
-- (void)setNavigationBarHidden:(BOOL)navigationBarHidden animated:(BOOL)animated;
+- (BOOL)prepareWithName:(NSString*)name;
+- (BOOL)prepareWithPath:(NSString*)path name:(NSString*)name;
+- (BOOL)prepareWithUrl:(NSURL*)url;
+- (void)clean;
+
+- (BOOL)start;
+- (void)stop;
+
+- (void)resume;
+- (void)pause;
 
 @end
 
