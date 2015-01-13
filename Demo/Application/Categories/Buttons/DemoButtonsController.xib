@@ -20,28 +20,28 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jFh-1k-q9D" customClass="MobilyButton">
-                    <rect key="frame" x="134" y="8" width="53" height="22"/>
+                    <rect key="frame" x="134" y="16" width="53" height="22"/>
                     <state key="normal" title="Left" image="menu-button.png">
                         <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mlg-E0-ieV" customClass="MobilyButton">
-                    <rect key="frame" x="128" y="38" width="65" height="22"/>
+                    <rect key="frame" x="128" y="54" width="65" height="22"/>
                     <state key="normal" title="Right" image="menu-button.png">
                         <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uw9-bi-2TR" customClass="MobilyButton">
-                    <rect key="frame" x="119" y="98" width="82" height="22"/>
+                    <rect key="frame" x="119" y="130" width="82" height="22"/>
                     <state key="normal" title="Bottom" image="menu-button.png">
                         <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V3A-tl-gSK" customClass="MobilyButton">
-                    <rect key="frame" x="134" y="68" width="52" height="22"/>
+                    <rect key="frame" x="134" y="92" width="52" height="22"/>
                     <state key="normal" title="Top" image="menu-button.png">
                         <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -50,13 +50,13 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="jFh-1k-q9D" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="4V6-nd-53Q"/>
+                <constraint firstItem="jFh-1k-q9D" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="4V6-nd-53Q"/>
                 <constraint firstAttribute="centerX" secondItem="V3A-tl-gSK" secondAttribute="centerX" id="A4b-Ya-NKO"/>
                 <constraint firstAttribute="centerX" secondItem="mlg-E0-ieV" secondAttribute="centerX" id="Tp3-0O-pnH"/>
                 <constraint firstAttribute="centerX" secondItem="uw9-bi-2TR" secondAttribute="centerX" id="cA6-vn-WD5"/>
-                <constraint firstItem="mlg-E0-ieV" firstAttribute="top" secondItem="jFh-1k-q9D" secondAttribute="bottom" constant="8" id="dia-2K-i6c"/>
-                <constraint firstItem="V3A-tl-gSK" firstAttribute="top" secondItem="mlg-E0-ieV" secondAttribute="bottom" constant="8" id="i5O-b6-HL0"/>
-                <constraint firstItem="uw9-bi-2TR" firstAttribute="top" secondItem="V3A-tl-gSK" secondAttribute="bottom" constant="8" id="iKH-zq-xab"/>
+                <constraint firstItem="mlg-E0-ieV" firstAttribute="top" secondItem="jFh-1k-q9D" secondAttribute="bottom" constant="16" id="dia-2K-i6c"/>
+                <constraint firstItem="V3A-tl-gSK" firstAttribute="top" secondItem="mlg-E0-ieV" secondAttribute="bottom" constant="16" id="i5O-b6-HL0"/>
+                <constraint firstItem="uw9-bi-2TR" firstAttribute="top" secondItem="V3A-tl-gSK" secondAttribute="bottom" constant="16" id="iKH-zq-xab"/>
                 <constraint firstAttribute="centerX" secondItem="jFh-1k-q9D" secondAttribute="centerX" id="zCa-4A-SVh"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics"/>

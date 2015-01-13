@@ -189,13 +189,13 @@
 
 - (void)parser:(NSXMLParser*)parser didStartElement:(NSString*)elementName namespaceURI:(NSString*)namespaceURI qualifiedName:(NSString*)qualifiedName attributes:(NSDictionary*)attributes {
     Class targetClass = nil;
-    Class defaultClass = NSClassFromString([NSString stringWithFormat:MOBILY_BUILDER_FORM_CLASS, elementName]);
-    if(defaultClass != nil) {
-        targetClass = defaultClass;
+    Class customClass = NSClassFromString(elementName);
+    if(customClass != nil) {
+        targetClass = customClass;
     } else {
-        Class customClass = NSClassFromString(elementName);
-        if(customClass != nil) {
-            targetClass = customClass;
+        Class defaultClass = NSClassFromString([NSString stringWithFormat:MOBILY_BUILDER_FORM_CLASS, elementName]);
+        if(defaultClass != nil) {
+            targetClass = defaultClass;
         }
     }
     id target = nil;

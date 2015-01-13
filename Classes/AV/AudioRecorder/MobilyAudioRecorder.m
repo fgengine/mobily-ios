@@ -72,11 +72,13 @@
 
 - (void)dealloc {
     [self setRecorder:nil];
-    [self setStartBlock:nil];
-    [self setStopBlock:nil];
-    [self setFinishBlock:nil];
-    [self setResumeBlock:nil];
-    [self setPauseBlock:nil];
+    [self setPreparedBlock:nil];
+    [self setCleanedBlock:nil];
+    [self setStartedBlock:nil];
+    [self setStopedBlock:nil];
+    [self setFinishedBlock:nil];
+    [self setResumedBlock:nil];
+    [self setPausedBlock:nil];
     [self setEncodeErrorBlock:nil];
     
     MOBILY_SAFE_DEALLOC;
@@ -105,7 +107,7 @@
 }
 
 - (NSTimeInterval)duration {
-    if(_started == YES) {
+    if((_started == YES) && ([self isRecording] == YES)) {
         [self setDuration:[_recorder currentTime]];
     }
     return _duration;
@@ -136,6 +138,11 @@
         if(_recorder != nil) {
             if([_recorder prepareToRecord] == YES) {
                 [self setPrepared:YES];
+                if([_delegate respondsToSelector:@selector(audioRecorderDidPrepared:)] == YES) {
+                    [_delegate audioRecorderDidPrepared:self];
+                } else if(_preparedBlock != nil) {
+                    _preparedBlock();
+                }
             }
         } else if(error != nil) {
             NSLog(@"MobilyAudioRecorder::prepareWithUrl:%@ Error=%@", url, [error localizedDescription]);
@@ -149,6 +156,11 @@
         [self stop];
         [self setPrepared:NO];
         [self setRecorder:nil];
+        if([_delegate respondsToSelector:@selector(audioRecorderDidCleaned:)] == YES) {
+            [_delegate audioRecorderDidCleaned:self];
+        } else if(_cleanedBlock != nil) {
+            _cleanedBlock();
+        }
     }
 }
 
@@ -156,8 +168,10 @@
     if((_prepared == YES) && (_started == NO)) {
         if([_recorder record] == YES) {
             [self setStarted:YES];
-            if(_startBlock != nil) {
-                _startBlock();
+            if([_delegate respondsToSelector:@selector(audioRecorderDidStarted:)] == YES) {
+                [_delegate audioRecorderDidStarted:self];
+            } else if(_startedBlock != nil) {
+                _startedBlock();
             }
         }
     }
@@ -168,8 +182,10 @@
     if((_prepared == YES) && (_started == YES)) {
         [self setDuration:[_recorder currentTime]];
         [_recorder stop];
-        if(_stopBlock != nil) {
-            _stopBlock();
+        if([_delegate respondsToSelector:@selector(audioRecorderDidStoped:)] == YES) {
+            [_delegate audioRecorderDidStoped:self];
+        } else if(_stopedBlock != nil) {
+            _stopedBlock();
         }
     }
 }
@@ -179,8 +195,10 @@
         if([self isRecording] == YES) {
             [self setDuration:[_recorder currentTime]];
             [_recorder pause];
-            if(_pauseBlock != nil) {
-                _pauseBlock();
+            if([_delegate respondsToSelector:@selector(audioRecorderDidPaused:)] == YES) {
+                [_delegate audioRecorderDidPaused:self];
+            } else if(_pausedBlock != nil) {
+                _pausedBlock();
             }
         }
     }
@@ -190,8 +208,10 @@
     if((_prepared == YES) && (_started == YES)) {
         if([self isRecording] == NO) {
             [_recorder record];
-            if(_resumeBlock != nil) {
-                _resumeBlock();
+            if([_delegate respondsToSelector:@selector(audioRecorderDidResumed:)] == YES) {
+                [_delegate audioRecorderDidResumed:self];
+            } else if(_resumedBlock != nil) {
+                _resumedBlock();
             }
         }
     }
@@ -213,17 +233,22 @@
 
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder*)recorder successfully:(BOOL)successfully {
     [self setStarted:NO];
-    
-    if(_finishBlock != nil) {
-        _finishBlock();
+    if([_delegate respondsToSelector:@selector(audioRecorderDidFinished:)] == YES) {
+        [_delegate audioRecorderDidFinished:self];
+    } else if(_finishedBlock != nil) {
+        _finishedBlock();
     }
 }
 
 - (void)audioRecorderEncodeErrorDidOccur:(AVAudioRecorder*)recorder error:(NSError*)error {
-    if(_encodeErrorBlock != nil) {
+#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
+    NSLog(@"MobilyAudioRecorder::EncodeErrorDidOccur:%@", error);
+#endif
+    if([_delegate respondsToSelector:@selector(audioRecorder:didEncodeError:)] == YES) {
+        [_delegate audioRecorder:self didEncodeError:error];
+    } else if(_encodeErrorBlock != nil) {
         _encodeErrorBlock(error);
     }
-    NSLog(@"MobilyAudioRecorder::EncodeErrorDidOccur:%@", error);
 }
 
 @end

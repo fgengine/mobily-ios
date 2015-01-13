@@ -56,6 +56,12 @@
     
     __weak id selfWeak = self;
     
+    NSError* error = nil;
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
+    if(error != nil) {
+        NSLog(@"AVAudioSession: %@", [error localizedDescription]);
+    }
+    
     [self setAudioRecorder:[[MobilyAudioRecorder alloc] init]];
     if(_audioRecorder != nil) {
 #if defined(MOBILY_SIMULATOR)
@@ -65,26 +71,35 @@
         [_audioRecorder setFormat:kAudioFormatMPEG4AAC];
         [_audioRecorder prepareWithName:@"Test.m4a"];
 #endif
-        [_audioRecorder setStartBlock:^{
+        [_audioRecorder setStartedBlock:^{
             [[selfWeak timer] start];
             [selfWeak updateButtonState];
         }];
-        [_audioRecorder setStopBlock:^{
+        [_audioRecorder setFinishedBlock:^{
+            [[selfWeak timer] stop];
             [selfWeak updateButtonState];
         }];
-        [_audioRecorder setPauseBlock:^{
+        [_audioRecorder setStopedBlock:^{
+            [[selfWeak timer] stop];
             [selfWeak updateButtonState];
         }];
-        [_audioRecorder setResumeBlock:^{
+        [_audioRecorder setPausedBlock:^{
             [selfWeak updateButtonState];
         }];
-        [_audioRecorder setFinishBlock:^{
+        [_audioRecorder setResumedBlock:^{
             [selfWeak updateButtonState];
         }];
     }
     [self setTimer:[MobilyTimer timerWithInterval:UPDATE_INTERVAL repeat:MAXIMUM_DURATION / UPDATE_INTERVAL]];
     if(_timer != nil) {
+        [_timer setStartBlock:^{
+            [selfWeak updateLabelState];
+        }];
         [_timer setRepeatBlock:^{
+            [selfWeak updateLabelState];
+        }];
+        [_timer setStopBlock:^{
+            [[selfWeak audioRecorder] stop];
             [selfWeak updateLabelState];
         }];
     }

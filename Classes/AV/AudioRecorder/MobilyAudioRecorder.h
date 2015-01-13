@@ -42,6 +42,10 @@ typedef void(^MobilyAudioRecorderErrorBlock)(NSError* error);
 
 /*--------------------------------------------------*/
 
+@protocol MobilyAudioRecorderDelegate;
+
+/*--------------------------------------------------*/
+
 @interface MobilyAudioRecorder : NSObject
 
 @property(nonatomic, readwrite, assign) AudioFormatID format;
@@ -56,11 +60,14 @@ typedef void(^MobilyAudioRecorderErrorBlock)(NSError* error);
 @property(nonatomic, readonly, assign, getter=isStarted) BOOL started;
 @property(nonatomic, readonly, assign, getter=isRecording) BOOL recording;
 
-@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock startBlock;
-@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock stopBlock;
-@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock finishBlock;
-@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock resumeBlock;
-@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock pauseBlock;
+@property(nonatomic, readwrite, weak) id< MobilyAudioRecorderDelegate > delegate;
+@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock preparedBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock cleanedBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock startedBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock stopedBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock finishedBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock resumedBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock pausedBlock;
 @property(nonatomic, readwrite, copy) MobilyAudioRecorderErrorBlock encodeErrorBlock;
 
 - (void)setup;
@@ -75,6 +82,22 @@ typedef void(^MobilyAudioRecorderErrorBlock)(NSError* error);
 
 - (void)resume;
 - (void)pause;
+
+@end
+
+/*--------------------------------------------------*/
+
+@protocol MobilyAudioRecorderDelegate < NSObject >
+
+@optional
+-(void)audioRecorderDidPrepared:(MobilyAudioRecorder*)audioRecorder;
+-(void)audioRecorderDidCleaned:(MobilyAudioRecorder*)audioRecorder;
+-(void)audioRecorderDidStarted:(MobilyAudioRecorder*)audioRecorder;
+-(void)audioRecorderDidStoped:(MobilyAudioRecorder*)audioRecorder;
+-(void)audioRecorderDidFinished:(MobilyAudioRecorder*)audioRecorder;
+-(void)audioRecorderDidResumed:(MobilyAudioRecorder*)audioRecorder;
+-(void)audioRecorderDidPaused:(MobilyAudioRecorder*)audioRecorder;
+-(void)audioRecorder:(MobilyAudioRecorder*)audioRecorder didEncodeError:(NSError*)encodeError;
 
 @end
 
