@@ -43,6 +43,8 @@
 
 @property(nonatomic, readwrite, assign, getter=isPrepared) BOOL prepared;
 @property(nonatomic, readwrite, assign, getter=isStarted) BOOL started;
+@property(nonatomic, readwrite, assign, getter=isWaitFinished) BOOL waitFinished;
+@property(nonatomic, readwrite, assign, getter=isPaused) BOOL paused;
 
 @property(nonatomic, readwrite, strong) AVAudioRecorder* recorder;
 
@@ -107,7 +109,7 @@
 }
 
 - (NSTimeInterval)duration {
-    if((_started == YES) && ([self isRecording] == YES)) {
+    if([_recorder isRecording] == YES) {
         [self setDuration:[_recorder currentTime]];
     }
     return _duration;
@@ -179,8 +181,9 @@
 }
 
 - (void)stop {
-    if((_prepared == YES) && (_started == YES)) {
+    if((_prepared == YES) && (_started == YES) && (_waitFinished == NO)) {
         [self setDuration:[_recorder currentTime]];
+        [self setWaitFinished:YES];
         [_recorder stop];
         if([_delegate respondsToSelector:@selector(audioRecorderDidStoped:)] == YES) {
             [_delegate audioRecorderDidStoped:self];
@@ -191,28 +194,26 @@
 }
 
 - (void)pause {
-    if((_prepared == YES) && (_started == YES)) {
-        if([self isRecording] == YES) {
-            [self setDuration:[_recorder currentTime]];
-            [_recorder pause];
-            if([_delegate respondsToSelector:@selector(audioRecorderDidPaused:)] == YES) {
-                [_delegate audioRecorderDidPaused:self];
-            } else if(_pausedBlock != nil) {
-                _pausedBlock();
-            }
+    if((_prepared == YES) && (_started == YES) && (_paused == NO)) {
+        [self setPaused:YES];
+        [self setDuration:[_recorder currentTime]];
+        [_recorder pause];
+        if([_delegate respondsToSelector:@selector(audioRecorderDidPaused:)] == YES) {
+            [_delegate audioRecorderDidPaused:self];
+        } else if(_pausedBlock != nil) {
+            _pausedBlock();
         }
     }
 }
 
 - (void)resume {
-    if((_prepared == YES) && (_started == YES)) {
-        if([self isRecording] == NO) {
-            [_recorder record];
-            if([_delegate respondsToSelector:@selector(audioRecorderDidResumed:)] == YES) {
-                [_delegate audioRecorderDidResumed:self];
-            } else if(_resumedBlock != nil) {
-                _resumedBlock();
-            }
+    if((_prepared == YES) && (_started == YES) && (_paused == YES)) {
+        [self setPaused:NO];
+        [_recorder record];
+        if([_delegate respondsToSelector:@selector(audioRecorderDidResumed:)] == YES) {
+            [_delegate audioRecorderDidResumed:self];
+        } else if(_resumedBlock != nil) {
+            _resumedBlock();
         }
     }
 }
@@ -232,6 +233,7 @@
 #pragma mark AVAudioRecorderDelegate
 
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder*)recorder successfully:(BOOL)successfully {
+    [self setWaitFinished:NO];
     [self setStarted:NO];
     if([_delegate respondsToSelector:@selector(audioRecorderDidFinished:)] == YES) {
         [_delegate audioRecorderDidFinished:self];

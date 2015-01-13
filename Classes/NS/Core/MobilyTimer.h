@@ -41,19 +41,27 @@ typedef void(^MobilyTimerBlock)();
 
 /*--------------------------------------------------*/
 
+@protocol MobilyTimerDelegate;
+
+/*--------------------------------------------------*/
+
 @interface MobilyTimer : NSObject
 
 @property(nonatomic, readonly, assign, getter=isDelaying) BOOL delaying;
 @property(nonatomic, readonly, assign, getter=isStarted) BOOL started;
+@property(nonatomic, readonly, assign, getter=isPaused) BOOL paused;
 @property(nonatomic, readwrite, assign) NSTimeInterval delay;
 @property(nonatomic, readwrite, assign) NSTimeInterval interval;
 @property(nonatomic, readwrite, assign) NSUInteger repeat;
 @property(nonatomic, readonly, assign) NSTimeInterval elapsed;
 @property(nonatomic, readonly, assign) NSUInteger repeated;
 
-@property(nonatomic, readwrite, copy) MobilyTimerBlock startBlock;
+@property(nonatomic, readwrite, weak) id< MobilyTimerDelegate > delegate;
+@property(nonatomic, readwrite, copy) MobilyTimerBlock startedBlock;
 @property(nonatomic, readwrite, copy) MobilyTimerBlock repeatBlock;
-@property(nonatomic, readwrite, copy) MobilyTimerBlock stopBlock;
+@property(nonatomic, readwrite, copy) MobilyTimerBlock stopedBlock;
+@property(nonatomic, readwrite, copy) MobilyTimerBlock pausedBlock;
+@property(nonatomic, readwrite, copy) MobilyTimerBlock resumedBlock;
 
 + (instancetype)timerWithInterval:(NSTimeInterval)interval;
 + (instancetype)timerWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval;
@@ -67,6 +75,22 @@ typedef void(^MobilyTimerBlock)();
 
 - (void)start;
 - (void)stop;
+
+- (void)pause;
+- (void)resume;
+
+@end
+
+/*--------------------------------------------------*/
+
+@protocol MobilyTimerDelegate < NSObject >
+
+@optional
+-(void)timerDidStarted:(MobilyTimer*)timer;
+-(void)timerDidRepeat:(MobilyTimer*)timer;
+-(void)timerDidStoped:(MobilyTimer*)timer;
+-(void)timerDidResumed:(MobilyTimer*)timer;
+-(void)timerDidPaused:(MobilyTimer*)timer;
 
 @end
 

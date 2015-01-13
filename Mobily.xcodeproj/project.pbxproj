@@ -16,6 +16,9 @@
 		407B41BF1A6420ED00A3DFFD /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 407B41BE1A6420ED00A3DFFD /* AVFoundation.framework */; };
 		407B41C61A642F7300A3DFFD /* DemoAudioRecorderController.m in Sources */ = {isa = PBXBuildFile; fileRef = 407B41C41A642F7300A3DFFD /* DemoAudioRecorderController.m */; };
 		407B41C71A642F7300A3DFFD /* DemoAudioRecorderController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 407B41C51A642F7300A3DFFD /* DemoAudioRecorderController.xib */; };
+		407F25B41A65864C00B0A79C /* TestMusic.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 407F25B31A65864C00B0A79C /* TestMusic.m4a */; };
+		407F25B91A65CB4800B0A79C /* DemoAudioPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 407F25B71A65CB4800B0A79C /* DemoAudioPlayerController.m */; };
+		407F25BA1A65CB4800B0A79C /* DemoAudioPlayerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 407F25B81A65CB4800B0A79C /* DemoAudioPlayerController.xib */; };
 		408718D81A5BDC8200833F0A /* MobilyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 408718D71A5BDC8200833F0A /* MobilyButton.m */; };
 		408718EA1A5C443900833F0A /* DemoCategoriesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 408718DD1A5C443900833F0A /* DemoCategoriesController.m */; };
 		408718EB1A5C443900833F0A /* DemoCategoriesController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 408718DE1A5C443900833F0A /* DemoCategoriesController.xib */; };
@@ -70,6 +73,7 @@
 		40C8CD821A5AA45100F737B2 /* MobilyTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD591A5AA45100F737B2 /* MobilyTableView.m */; };
 		40C8CD831A5AA45100F737B2 /* MobilyTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD5C1A5AA45100F737B2 /* MobilyTextField.m */; };
 		40C8CD861A5AA4DC00F737B2 /* MobilyModelJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8CD851A5AA4DC00F737B2 /* MobilyModelJson.m */; };
+		40EC21581A65306500419DC3 /* MobilyAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 40EC21571A65306500419DC3 /* MobilyAudioPlayer.m */; };
 		C13E78B87D644CF2A6696DA8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F16AA68F9FE04603B1D99102 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -89,6 +93,10 @@
 		407B41C31A642F7300A3DFFD /* DemoAudioRecorderController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoAudioRecorderController.h; sourceTree = "<group>"; };
 		407B41C41A642F7300A3DFFD /* DemoAudioRecorderController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoAudioRecorderController.m; sourceTree = "<group>"; };
 		407B41C51A642F7300A3DFFD /* DemoAudioRecorderController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DemoAudioRecorderController.xib; sourceTree = "<group>"; };
+		407F25B31A65864C00B0A79C /* TestMusic.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = TestMusic.m4a; sourceTree = "<group>"; };
+		407F25B61A65CB4800B0A79C /* DemoAudioPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoAudioPlayerController.h; sourceTree = "<group>"; };
+		407F25B71A65CB4800B0A79C /* DemoAudioPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoAudioPlayerController.m; sourceTree = "<group>"; };
+		407F25B81A65CB4800B0A79C /* DemoAudioPlayerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DemoAudioPlayerController.xib; sourceTree = "<group>"; };
 		408718D61A5BDC8200833F0A /* MobilyButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyButton.h; sourceTree = "<group>"; };
 		408718D71A5BDC8200833F0A /* MobilyButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyButton.m; sourceTree = "<group>"; };
 		408718DC1A5C443900833F0A /* DemoCategoriesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoCategoriesController.h; sourceTree = "<group>"; };
@@ -188,6 +196,8 @@
 		40C8CD5C1A5AA45100F737B2 /* MobilyTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyTextField.m; sourceTree = "<group>"; };
 		40C8CD841A5AA4DC00F737B2 /* MobilyModelJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyModelJson.h; sourceTree = "<group>"; };
 		40C8CD851A5AA4DC00F737B2 /* MobilyModelJson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyModelJson.m; sourceTree = "<group>"; };
+		40EC21561A65306500419DC3 /* MobilyAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyAudioPlayer.h; sourceTree = "<group>"; };
+		40EC21571A65306500419DC3 /* MobilyAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyAudioPlayer.m; sourceTree = "<group>"; };
 		5A2438BFA45DA754D1C37067 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		F16AA68F9FE04603B1D99102 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -257,6 +267,7 @@
 			children = (
 				407B41C01A64211800A3DFFD /* Core */,
 				407B41BA1A64201F00A3DFFD /* AudioRecorder */,
+				40EC21551A65305000419DC3 /* AudioPlayer */,
 			);
 			path = AV;
 			sourceTree = "<group>";
@@ -288,6 +299,32 @@
 			path = AudioRecorder;
 			sourceTree = "<group>";
 		};
+		407F25B11A65864C00B0A79C /* Media */ = {
+			isa = PBXGroup;
+			children = (
+				407F25B21A65864C00B0A79C /* Audio */,
+			);
+			path = Media;
+			sourceTree = "<group>";
+		};
+		407F25B21A65864C00B0A79C /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				407F25B31A65864C00B0A79C /* TestMusic.m4a */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		407F25B51A65CB4800B0A79C /* AudioPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				407F25B61A65CB4800B0A79C /* DemoAudioPlayerController.h */,
+				407F25B71A65CB4800B0A79C /* DemoAudioPlayerController.m */,
+				407F25B81A65CB4800B0A79C /* DemoAudioPlayerController.xib */,
+			);
+			path = AudioPlayer;
+			sourceTree = "<group>";
+		};
 		408718D51A5BDC8200833F0A /* Button */ = {
 			isa = PBXGroup;
 			children = (
@@ -303,6 +340,7 @@
 				408718DA1A5C443900833F0A /* Application */,
 				408718E71A5C443900833F0A /* Mobily */,
 				408718E31A5C443900833F0A /* Locale */,
+				407F25B11A65864C00B0A79C /* Media */,
 				408718E11A5C443900833F0A /* Demo.pch */,
 				408718E21A5C443900833F0A /* Demo.plist */,
 				408718E61A5C443900833F0A /* Main.m */,
@@ -326,6 +364,7 @@
 				408718F41A5D315C00833F0A /* Buttons */,
 				408718FA1A5D491600833F0A /* Fields */,
 				407B41C21A642F7300A3DFFD /* AudioRecorder */,
+				407F25B51A65CB4800B0A79C /* AudioPlayer */,
 				408718DC1A5C443900833F0A /* DemoCategoriesController.h */,
 				408718DD1A5C443900833F0A /* DemoCategoriesController.m */,
 				408718DE1A5C443900833F0A /* DemoCategoriesController.xib */,
@@ -625,6 +664,16 @@
 			path = TextField;
 			sourceTree = "<group>";
 		};
+		40EC21551A65305000419DC3 /* AudioPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				40EC21561A65306500419DC3 /* MobilyAudioPlayer.h */,
+				40EC21571A65306500419DC3 /* MobilyAudioPlayer.m */,
+			);
+			name = AudioPlayer;
+			path = Classes/AV/AudioPlayer;
+			sourceTree = SOURCE_ROOT;
+		};
 		4F1F86033CDFF14E4568271C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -695,6 +744,8 @@
 			files = (
 				408718EB1A5C443900833F0A /* DemoCategoriesController.xib in Resources */,
 				408718FF1A5D491600833F0A /* DemoFieldsController.xib in Resources */,
+				407F25B41A65864C00B0A79C /* TestMusic.m4a in Resources */,
+				407F25BA1A65CB4800B0A79C /* DemoAudioPlayerController.xib in Resources */,
 				408718EE1A5C443900833F0A /* InfoPlist.strings in Resources */,
 				408718F31A5D2A3E00833F0A /* DemoCategoriesCell.xib in Resources */,
 				407B41C71A642F7300A3DFFD /* DemoAudioRecorderController.xib in Resources */,
@@ -775,7 +826,9 @@
 				40C8CD831A5AA45100F737B2 /* MobilyTextField.m in Sources */,
 				40C8CD821A5AA45100F737B2 /* MobilyTableView.m in Sources */,
 				408719021A5DA8D500833F0A /* MobilyDialogController.m in Sources */,
+				407F25B91A65CB4800B0A79C /* DemoAudioPlayerController.m in Sources */,
 				40C8CD5F1A5AA45100F737B2 /* MobilyHttpQuery.m in Sources */,
+				40EC21581A65306500419DC3 /* MobilyAudioPlayer.m in Sources */,
 				40C8CD731A5AA45100F737B2 /* MobilyDynamicsDrawerController.m in Sources */,
 				40C8CD861A5AA4DC00F737B2 /* MobilyModelJson.m in Sources */,
 				40C8CD6B1A5AA45100F737B2 /* MobilyTabBarController.m in Sources */,

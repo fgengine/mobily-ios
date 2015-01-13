@@ -37,39 +37,40 @@
 
 /*--------------------------------------------------*/
 
-typedef void(^MobilyAudioRecorderBlock)();
-typedef void(^MobilyAudioRecorderErrorBlock)(NSError* error);
+typedef void(^MobilyAudioPlayerBlock)();
+typedef void(^MobilyAudioPlayerErrorBlock)(NSError* error);
 
 /*--------------------------------------------------*/
 
-@protocol MobilyAudioRecorderDelegate;
+@protocol MobilyAudioPlayerDelegate;
 
 /*--------------------------------------------------*/
 
-@interface MobilyAudioRecorder : NSObject
+@interface MobilyAudioPlayer : NSObject
 
-@property(nonatomic, readwrite, assign) AudioFormatID format;
-@property(nonatomic, readwrite, assign) AVAudioQuality quality;
-@property(nonatomic, readwrite, assign) NSUInteger bitRate;
-@property(nonatomic, readwrite, assign) NSUInteger numberOfChannels;
-@property(nonatomic, readwrite, assign) CGFloat sampleRate;
 @property(nonatomic, readonly, strong) NSURL* url;
+@property(nonatomic, readonly, assign) NSUInteger numberOfChannels;
+@property(nonatomic, readwrite, assign) NSTimeInterval currentTime;
 @property(nonatomic, readonly, assign) NSTimeInterval duration;
+@property(nonatomic, readwrite, assign) CGFloat volume;
+@property(nonatomic, readwrite, assign) CGFloat pan;
+@property(nonatomic, readwrite, assign) BOOL enableRate;
+@property(nonatomic, readwrite, assign) CGFloat rate;
+@property(nonatomic, readwrite, assign) NSInteger numberOfLoops;
 
 @property(nonatomic, readonly, assign, getter=isPrepared) BOOL prepared;
-@property(nonatomic, readonly, assign, getter=isStarted) BOOL started;
-@property(nonatomic, readonly, assign, getter=isRecording) BOOL recording;
+@property(nonatomic, readonly, assign, getter=isPlaying) BOOL playing;
 @property(nonatomic, readonly, assign, getter=isPaused) BOOL paused;
 
-@property(nonatomic, readwrite, weak) id< MobilyAudioRecorderDelegate > delegate;
-@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock preparedBlock;
-@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock cleanedBlock;
-@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock startedBlock;
-@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock stopedBlock;
-@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock finishedBlock;
-@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock resumedBlock;
-@property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock pausedBlock;
-@property(nonatomic, readwrite, copy) MobilyAudioRecorderErrorBlock encodeErrorBlock;
+@property(nonatomic, readwrite, weak) id< MobilyAudioPlayerDelegate > delegate;
+@property(nonatomic, readwrite, copy) MobilyAudioPlayerBlock preparedBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioPlayerBlock cleanedBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioPlayerBlock playingBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioPlayerBlock stopedBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioPlayerBlock finishedBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioPlayerBlock resumedBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioPlayerBlock pausedBlock;
+@property(nonatomic, readwrite, copy) MobilyAudioPlayerErrorBlock decodeErrorBlock;
 
 - (void)setup;
 
@@ -78,7 +79,7 @@ typedef void(^MobilyAudioRecorderErrorBlock)(NSError* error);
 - (BOOL)prepareWithUrl:(NSURL*)url;
 - (void)clean;
 
-- (BOOL)start;
+- (BOOL)play;
 - (void)stop;
 
 - (void)resume;
@@ -88,17 +89,17 @@ typedef void(^MobilyAudioRecorderErrorBlock)(NSError* error);
 
 /*--------------------------------------------------*/
 
-@protocol MobilyAudioRecorderDelegate < NSObject >
+@protocol MobilyAudioPlayerDelegate < NSObject >
 
 @optional
--(void)audioRecorderDidPrepared:(MobilyAudioRecorder*)audioRecorder;
--(void)audioRecorderDidCleaned:(MobilyAudioRecorder*)audioRecorder;
--(void)audioRecorderDidStarted:(MobilyAudioRecorder*)audioRecorder;
--(void)audioRecorderDidStoped:(MobilyAudioRecorder*)audioRecorder;
--(void)audioRecorderDidFinished:(MobilyAudioRecorder*)audioRecorder;
--(void)audioRecorderDidPaused:(MobilyAudioRecorder*)audioRecorder;
--(void)audioRecorderDidResumed:(MobilyAudioRecorder*)audioRecorder;
--(void)audioRecorder:(MobilyAudioRecorder*)audioRecorder didEncodeError:(NSError*)encodeError;
+-(void)audioPlayerDidPrepared:(MobilyAudioPlayer*)audioPlayer;
+-(void)audioPlayerDidCleaned:(MobilyAudioPlayer*)audioPlayer;
+-(void)audioPlayerDidPlaying:(MobilyAudioPlayer*)audioPlayer;
+-(void)audioPlayerDidStoped:(MobilyAudioPlayer*)audioPlayer;
+-(void)audioPlayerDidFinished:(MobilyAudioPlayer*)audioPlayer;
+-(void)audioPlayerDidPaused:(MobilyAudioPlayer*)audioPlayer;
+-(void)audioPlayerDidResumed:(MobilyAudioPlayer*)audioPlayer;
+-(void)audioPlayer:(MobilyAudioPlayer*)audioPlayer didDecodeError:(NSError*)encodeError;
 
 @end
 

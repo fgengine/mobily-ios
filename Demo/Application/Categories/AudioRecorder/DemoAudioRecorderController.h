@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-@interface DemoAudioRecorderController : MobilyViewController
+@interface DemoAudioRecorderController : MobilyViewController < MobilyTimerDelegate, MobilyAudioRecorderDelegate >
 
 @property(nonatomic, readwrite, strong) MobilyAudioRecorder* audioRecorder;
 @property(nonatomic, readwrite, strong) MobilyTimer* timer;

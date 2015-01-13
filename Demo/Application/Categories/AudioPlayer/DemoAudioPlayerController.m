@@ -33,21 +33,20 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "DemoAudioRecorderController.h"
+#import "DemoAudioPlayerController.h"
 
 /*--------------------------------------------------*/
 
-#define UPDATE_INTERVAL 0.25f
-#define MAXIMUM_DURATION 10.0f
+#define UPDATE_INTERVAL 0.1f
 
 /*--------------------------------------------------*/
 
-@implementation DemoAudioRecorderController
+@implementation DemoAudioPlayerController
 
 - (void)setup {
     [super setup];
     
-    [self setTitle:@"AudioRecorder"];
+    [self setTitle:@"AudioPlayer"];
     [self setEdgesForExtendedLayout:UIRectEdgeNone];
 }
 
@@ -60,20 +59,14 @@
         NSLog(@"AVAudioSession: %@", [error localizedDescription]);
     }
     
-    [self setAudioRecorder:[[MobilyAudioRecorder alloc] init]];
-    if(_audioRecorder != nil) {
-        [_audioRecorder setDelegate:self];
-#if defined(MOBILY_SIMULATOR)
-        [_audioRecorder setFormat:kAudioFormatAppleIMA4];
-        [_audioRecorder prepareWithName:@"Test.caf"];
-#elif defined(MOBILY_DEVICE)
-        [_audioRecorder setFormat:kAudioFormatMPEG4AAC];
-        [_audioRecorder prepareWithName:@"Test.m4a"];
-#endif
-    }
-    [self setTimer:[MobilyTimer timerWithInterval:UPDATE_INTERVAL repeat:MAXIMUM_DURATION / UPDATE_INTERVAL]];
+    [self setTimer:[MobilyTimer timerWithInterval:UPDATE_INTERVAL]];
     if(_timer != nil) {
         [_timer setDelegate:self];
+    }
+    [self setAudioPlayer:[[MobilyAudioPlayer alloc] init]];
+    if(_audioPlayer != nil) {
+        [_audioPlayer setDelegate:self];
+        [_audioPlayer prepareWithName:@"TestMusic.m4a"];
     }
     [self updateButtonState];
 }
@@ -81,17 +74,15 @@
 #pragma mark Private
 
 - (void)updateLabelState {
-    NSDictionary* attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:[[_audioRecorder url] absoluteString] error:nil];
-    
-    [_elapsedTimeLabel setText:[NSString stringWithFormat:@"%d s", (int)[_audioRecorder duration]]];
-    [_fileSizeLabel setText:[NSString stringWithFormat:@"%d kb", (int)([attrs fileSize] / 1024)]];
+    [_currentTimeLabel setText:[NSString stringWithFormat:@"%0.2f s", [_audioPlayer currentTime]]];
+    [_currentTimeSlider setValue:[_audioPlayer currentTime]];
 }
 
 - (void)updateButtonState {
-    [_startButton setEnabled:([_audioRecorder isPrepared] == YES) && ([_audioRecorder isStarted] == NO)];
-    [_stopButton setEnabled:([_audioRecorder isPrepared] == YES) && ([_audioRecorder isStarted] == YES)];
-    [_pauseButton setEnabled:([_audioRecorder isPrepared] == YES) && ([_audioRecorder isStarted] == YES) && ([_audioRecorder isPaused] == NO)];
-    [_resumeButton setEnabled:([_audioRecorder isPrepared] == YES) && ([_audioRecorder isStarted] == YES) && ([_audioRecorder isPaused] == YES)];
+    [_playButton setEnabled:([_audioPlayer isPrepared] == YES) && ([_audioPlayer isPlaying] == NO)];
+    [_stopButton setEnabled:([_audioPlayer isPrepared] == YES) && ([_audioPlayer isPlaying] == YES)];
+    [_pauseButton setEnabled:([_audioPlayer isPrepared] == YES) && ([_audioPlayer isPlaying] == YES) && ([_audioPlayer isPaused] == NO)];
+    [_resumeButton setEnabled:([_audioPlayer isPrepared] == YES) && ([_audioPlayer isPlaying] == YES) && ([_audioPlayer isPaused] == YES)];
 }
 
 #pragma mark MobilyTimerDelegate
@@ -105,64 +96,87 @@
 }
 
 -(void)timerDidStoped:(MobilyTimer*)timer {
-    [_audioRecorder stop];
+    [_audioPlayer stop];
     [self updateLabelState];
 }
 
-#pragma mark MobilyAudioRecorderDelegate
+#pragma mark MobilyAudioPlayerDelegate
 
--(void)audioRecorderDidPrepared:(MobilyAudioRecorder*)audioRecorder {
+-(void)audioPlayerDidPrepared:(MobilyAudioPlayer*)audioPlayer {
+    [_timer setRepeat:[_audioPlayer duration] / UPDATE_INTERVAL];
+    [_currentTimeSlider setMaximumValue:[_audioPlayer duration]];
+    [_currentTimeSlider setValue:[_audioPlayer currentTime]];
+    [_durationLabel setText:[NSString stringWithFormat:@"%0.2f s", [_audioPlayer duration]]];
+    [_volumeSlider setValue:[_audioPlayer volume]];
+    [_volumeLabel setText:[NSString stringWithFormat:@"%0.1f s", [_audioPlayer volume]]];
+    [_panSlider setValue:[_audioPlayer pan]];
+    [_panLabel setText:[NSString stringWithFormat:@"%0.1f s", [_audioPlayer pan]]];
 }
 
--(void)audioRecorderDidCleaned:(MobilyAudioRecorder*)audioRecorder {
+-(void)audioPlayerDidCleaned:(MobilyAudioPlayer*)audioPlayer {
 }
 
--(void)audioRecorderDidStarted:(MobilyAudioRecorder*)audioRecorder {
+-(void)audioPlayerDidPlaying:(MobilyAudioPlayer*)audioPlayer {
     [_timer start];
     [self updateButtonState];
 }
 
--(void)audioRecorderDidStoped:(MobilyAudioRecorder*)audioRecorder {
+-(void)audioPlayerDidStoped:(MobilyAudioPlayer*)audioPlayer {
     [_timer stop];
     [self updateButtonState];
 }
 
--(void)audioRecorderDidFinished:(MobilyAudioRecorder*)audioRecorder {
+-(void)audioPlayerDidFinished:(MobilyAudioPlayer*)audioPlayer {
     [_timer stop];
     [self updateButtonState];
 }
 
--(void)audioRecorderDidPaused:(MobilyAudioRecorder*)audioRecorder {
+-(void)audioPlayerDidPaused:(MobilyAudioPlayer*)audioPlayer {
     [_timer pause];
     [self updateButtonState];
 }
 
--(void)audioRecorderDidResumed:(MobilyAudioRecorder*)audioRecorder {
+-(void)audioPlayerDidResumed:(MobilyAudioPlayer*)audioPlayer {
     [_timer resume];
     [self updateButtonState];
 }
 
--(void)audioRecorder:(MobilyAudioRecorder*)audioRecorder didEncodeError:(NSError*)encodeError {
+-(void)audioPlayer:(MobilyAudioPlayer*)audioPlayer didDecodeError:(NSError*)encodeError {
 }
 
 #pragma mark Action
 
-- (IBAction)pressedStartButton:(id)sender {
-    [_audioRecorder start];
+- (IBAction)pressedPlayButton:(id)sender {
+    [_audioPlayer play];
 }
 
 - (IBAction)pressedStopButton:(id)sender {
-    [_audioRecorder stop];
+    [_audioPlayer stop];
 }
 
 - (IBAction)pressedPauseButton:(id)sender {
-    [_audioRecorder pause];
+    [_audioPlayer pause];
     [self updateButtonState];
 }
 
 - (IBAction)pressedResumeButton:(id)sender {
-    [_audioRecorder resume];
+    [_audioPlayer resume];
     [self updateButtonState];
+}
+
+- (IBAction)changedCurrentTimeSlider:(id)sender {
+    [_audioPlayer setCurrentTime:[_currentTimeSlider value]];
+    [_currentTimeLabel setText:[NSString stringWithFormat:@"%0.2f s", [_audioPlayer currentTime]]];
+}
+
+- (IBAction)changedVolumeSlider:(id)sender {
+    [_audioPlayer setVolume:[_volumeSlider value]];
+    [_volumeLabel setText:[NSString stringWithFormat:@"%0.1f s", [_audioPlayer volume]]];
+}
+
+- (IBAction)changedPanSlider:(id)sender {
+    [_audioPlayer setPan:[_panSlider value]];
+    [_panLabel setText:[NSString stringWithFormat:@"%0.1f s", [_audioPlayer pan]]];
 }
 
 @end

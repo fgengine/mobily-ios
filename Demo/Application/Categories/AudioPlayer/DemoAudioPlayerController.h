@@ -33,39 +33,22 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-@interface DemoCategoriesController : MobilyViewController < UITableViewDataSource, UITableViewDelegate >
+@interface DemoAudioPlayerController : MobilyViewController < MobilyTimerDelegate, MobilyAudioPlayerDelegate >
 
-@property(nonatomic, readwrite, strong) NSArray* dataSource;
-@property(nonatomic, readwrite, weak) IBOutlet MobilyTableView* tableView;
+@property(nonatomic, readwrite, strong) MobilyTimer* timer;
+@property(nonatomic, readwrite, strong) MobilyAudioPlayer* audioPlayer;
 
-@end
-
-/*--------------------------------------------------*/
-
-@class DemoCategoriesModel;
-
-@interface DemoCategoriesCell : MobilyTableSwipeCell
-
-@property(nonatomic, readwrite, weak) DemoCategoriesModel* model;
-@property(nonatomic, readwrite, weak) IBOutlet UILabel* textView;
-
-@end
-
-/*--------------------------------------------------*/
-
-typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
-    DemoCategoriesTypeButtons,
-    DemoCategoriesTypeFields,
-    DemoCategoriesTypeAudioRecorder,
-    DemoCategoriesTypeAudioPlayer
-};
-
-@interface DemoCategoriesModel : MobilyModel
-
-@property(nonatomic, readwrite, assign) DemoCategoriesType type;
-@property(nonatomic, readwrite, strong) NSString* title;
-
-- (id)initWithType:(DemoCategoriesType)type title:(NSString*)title;
+@property(nonatomic, readwrite, weak) IBOutlet MobilyButton* playButton;
+@property(nonatomic, readwrite, weak) IBOutlet MobilyButton* stopButton;
+@property(nonatomic, readwrite, weak) IBOutlet MobilyButton* pauseButton;
+@property(nonatomic, readwrite, weak) IBOutlet MobilyButton* resumeButton;
+@property(nonatomic, readwrite, weak) IBOutlet UISlider* currentTimeSlider;
+@property(nonatomic, readwrite, weak) IBOutlet UILabel* currentTimeLabel;
+@property(nonatomic, readwrite, weak) IBOutlet UILabel* durationLabel;
+@property(nonatomic, readwrite, weak) IBOutlet UISlider* volumeSlider;
+@property(nonatomic, readwrite, weak) IBOutlet UILabel* volumeLabel;
+@property(nonatomic, readwrite, weak) IBOutlet UISlider* panSlider;
+@property(nonatomic, readwrite, weak) IBOutlet UILabel* panLabel;
 
 @end
 

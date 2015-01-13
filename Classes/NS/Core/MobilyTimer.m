@@ -41,7 +41,9 @@
 
 @property(nonatomic, readwrite, assign, getter=isDelaying) BOOL delaying;
 @property(nonatomic, readwrite, assign, getter=isStarted) BOOL started;
+@property(nonatomic, readwrite, assign, getter=isPaused) BOOL paused;
 @property(nonatomic, readwrite, assign) NSTimeInterval startTime;
+@property(nonatomic, readwrite, assign) NSTimeInterval pauseTime;
 @property(nonatomic, readwrite, assign) NSTimeInterval elapsed;
 @property(nonatomic, readwrite, assign) NSUInteger repeated;
 @property(nonatomic, readwrite, strong) NSTimer* timer;
@@ -117,17 +119,21 @@
 - (void)start {
     if(_started == NO) {
         [self setStarted:YES];
+        [self setPaused:NO];
         [self setElapsed:0.0f];
         [self setRepeated:0];
         if(_delay > 0.0f) {
             [self setDelaying:YES];
             [self setTimer:[NSTimer scheduledTimerWithTimeInterval:_delay target:self selector:@selector(delayStartHandler) userInfo:nil repeats:NO]];
-        } else {
+        }
+        if(_timer == nil) {
             [self setStartTime:[NSDate timeIntervalSinceReferenceDate]];
             [self setDelaying:NO];
             [self setTimer:[NSTimer scheduledTimerWithTimeInterval:_interval target:self selector:@selector(timerHandler) userInfo:nil repeats:(_repeat != 0)]];
-            if(_startBlock != nil) {
-                _startBlock();
+            if([_delegate respondsToSelector:@selector(timerDidStarted:)] == YES) {
+                [_delegate timerDidStarted:self];
+            } else if(_startedBlock != nil) {
+                _startedBlock();
             }
         }
     }
@@ -137,8 +143,41 @@
     if(_started == YES) {
         [self setStarted:NO];
         [self setTimer:nil];
-        if(_stopBlock != nil) {
-            _stopBlock();
+        if([_delegate respondsToSelector:@selector(timerDidStoped:)] == YES) {
+            [_delegate timerDidStoped:self];
+        } else if(_stopedBlock != nil) {
+            _stopedBlock();
+        }
+    }
+}
+
+- (void)pause {
+    if((_started == YES) && (_paused == NO)) {
+        [self setPauseTime:[NSDate timeIntervalSinceReferenceDate]];
+        [self setPaused:YES];
+        [self setTimer:nil];
+        if([_delegate respondsToSelector:@selector(timerDidPaused:)] == YES) {
+            [_delegate timerDidPaused:self];
+        } else if(_pausedBlock != nil) {
+            _pausedBlock();
+        }
+    }
+}
+
+- (void)resume {
+    if((_started == YES) && (_paused == YES)) {
+        [self setPaused:NO];
+        if(_delaying == YES) {
+            [self setTimer:[NSTimer scheduledTimerWithTimeInterval:[NSDate timeIntervalSinceReferenceDate] - _delay target:self selector:@selector(delayStartHandler) userInfo:nil repeats:NO]];
+        }
+        if(_timer == nil) {
+            [self setStartTime:[NSDate timeIntervalSinceReferenceDate] - (_pauseTime - _startTime)];
+            [self setTimer:[NSTimer scheduledTimerWithTimeInterval:_interval target:self selector:@selector(timerHandler) userInfo:nil repeats:(_repeat != 0)]];
+            if([_delegate respondsToSelector:@selector(timerDidResumed:)] == YES) {
+                [_delegate timerDidResumed:self];
+            } else if(_resumedBlock != nil) {
+                _resumedBlock();
+            }
         }
     }
 }
@@ -185,23 +224,28 @@
     [self setStartTime:[NSDate timeIntervalSinceReferenceDate]];
     [self setDelaying:NO];
     [self setTimer:[NSTimer scheduledTimerWithTimeInterval:_interval target:self selector:@selector(timerHandler) userInfo:nil repeats:(_repeat != 0)]];
-    if(_startBlock != nil) {
-        _startBlock();
+    if([_delegate respondsToSelector:@selector(timerDidStarted:)] == YES) {
+        [_delegate timerDidStarted:self];
+    } else if(_startedBlock != nil) {
+        _startedBlock();
     }
 }
 
 - (void)timerHandler {
     _repeated++;
     if(_repeat == NSNotFound) {
-        if(_repeatBlock != nil) {
+        if([_delegate respondsToSelector:@selector(timerDidRepeat:)] == YES) {
+            [_delegate timerDidRepeat:self];
+        } else if(_repeatBlock != nil) {
             _repeatBlock();
         }
     } else if(_repeat != 0) {
-        if(_repeat != _repeated) {
-            if(_repeatBlock != nil) {
-                _repeatBlock();
-            }
-        } else {
+        if([_delegate respondsToSelector:@selector(timerDidRepeat:)] == YES) {
+            [_delegate timerDidRepeat:self];
+        } else if(_repeatBlock != nil) {
+            _repeatBlock();
+        }
+        if(_repeated >= _repeat) {
             [self stop];
         }
     } else {
