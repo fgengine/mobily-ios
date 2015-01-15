@@ -355,7 +355,6 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 
 - (void)setup {
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
-    [self setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self setClipsToBounds:YES];
 }
 
