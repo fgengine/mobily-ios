@@ -72,7 +72,7 @@
     [self setTitle:@"TITLE"];
     [self setEdgesForExtendedLayout:UIRectEdgeNone];
     
-    [self setDataSource:@[ @"Data #1", @"Data #2", @"Data #3",
+    [self setDataSource:@[ @"Data #1 / Data #1 / Data #1 / Data #1 / Data #1 / Data #1 / Data #1 / Data #1", @"Data #2", @"Data #3",
                            @"Data #4", @"Data #5", @"Data #6",
                            @"Data #7", @"Data #8", @"Data #9",
                            @"Data #10", @"Data #11", @"Data #12" ]];
@@ -128,13 +128,6 @@
     [super setModel:model];
     
     [_viewTitle setText:model];
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    [_viewTitle setFrame:CGRectInset([[self contentView] bounds], 24.0f, 24.0f)];
-    NSLog(@"layoutSubviews");
 }
 
 @end

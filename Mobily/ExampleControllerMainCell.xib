@@ -7,8 +7,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ExampleControllerMainCell">
             <connections>
-                <outlet property="leftSwipeView" destination="Ka1-gh-f4O" id="znF-Oq-K5N"/>
-                <outlet property="rightSwipeView" destination="0w3-nf-Xsp" id="Gtf-2u-GtF"/>
                 <outlet property="rootView" destination="lUL-MD-0aZ" id="ChF-38-KVW"/>
                 <outlet property="viewTitle" destination="CQR-jM-dxK" id="Pen-1U-EPx"/>
             </connections>
@@ -28,13 +26,13 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="CQR-jM-dxK" secondAttribute="bottom" constant="8" placeholder="YES" id="SAX-DT-yJV"/>
-                <constraint firstAttribute="trailing" secondItem="CQR-jM-dxK" secondAttribute="trailing" constant="8" placeholder="YES" id="UPu-d4-dPs"/>
-                <constraint firstItem="CQR-jM-dxK" firstAttribute="leading" secondItem="lUL-MD-0aZ" secondAttribute="leading" constant="8" placeholder="YES" id="oXA-0s-CXw"/>
-                <constraint firstItem="CQR-jM-dxK" firstAttribute="top" secondItem="lUL-MD-0aZ" secondAttribute="top" constant="8" placeholder="YES" id="ruv-vu-F4N"/>
+                <constraint firstAttribute="bottom" secondItem="CQR-jM-dxK" secondAttribute="bottom" constant="8" id="SAX-DT-yJV"/>
+                <constraint firstAttribute="trailing" secondItem="CQR-jM-dxK" secondAttribute="trailing" constant="8" id="UPu-d4-dPs"/>
+                <constraint firstItem="CQR-jM-dxK" firstAttribute="leading" secondItem="lUL-MD-0aZ" secondAttribute="leading" constant="8" id="oXA-0s-CXw"/>
+                <constraint firstItem="CQR-jM-dxK" firstAttribute="top" secondItem="lUL-MD-0aZ" secondAttribute="top" constant="8" id="ruv-vu-F4N"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-143.5" y="123"/>
+            <point key="canvasLocation" x="-113.5" y="139"/>
         </view>
         <view contentMode="scaleToFill" id="0w3-nf-Xsp">
             <rect key="frame" x="0.0" y="0.0" width="144" height="80"/>
