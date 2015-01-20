@@ -7,6 +7,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ExampleControllerMainCell">
             <connections>
+                <outlet property="leftSwipeView" destination="0w3-nf-Xsp" id="uxJ-Bo-Q31"/>
+                <outlet property="rightSwipeView" destination="Ka1-gh-f4O" id="rwt-1E-7Ib"/>
                 <outlet property="rootView" destination="lUL-MD-0aZ" id="ChF-38-KVW"/>
                 <outlet property="viewTitle" destination="CQR-jM-dxK" id="Pen-1U-EPx"/>
             </connections>
@@ -46,6 +48,9 @@
                     <state key="normal" title="Button">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                    <connections>
+                        <action selector="pressedReloadContext:" destination="-1" eventType="touchUpInside" id="AUk-ME-Sla"/>
+                    </connections>
                 </button>
             </subviews>
             <color key="backgroundColor" red="0.5" green="0.0" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
@@ -56,7 +61,7 @@
                 <constraint firstItem="Y8d-B9-dph" firstAttribute="top" secondItem="0w3-nf-Xsp" secondAttribute="top" constant="8" id="xdV-Ot-zbU"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-265" y="-172"/>
+            <point key="canvasLocation" x="-235" y="-90"/>
         </view>
         <view contentMode="scaleToFill" id="Ka1-gh-f4O">
             <rect key="frame" x="0.0" y="0.0" width="144" height="80"/>

@@ -46,6 +46,9 @@
 
 @property(nonatomic, readwrite, strong) MobilyApplication* application;
 
+- (BOOL)loadWithOptions:(NSDictionary*)options;
+- (void)unload;
+
 @end
 
 /*--------------------------------------------------*/
@@ -67,25 +70,6 @@ static NSString* MOBILY_ACCESS_KEY = nil;
 @synthesize objectParent = _objectParent;
 @synthesize objectChilds = _objectChilds;
 
-#pragma mark Public
-
-+ (void)setArgCount:(int)argCount argValue:(char**)argValue {
-    MOBILY_YARG_COUNT = argCount;
-    MOBILY_YARG_VALUE = argValue;
-}
-
-+ (void)setAccessKey:(NSString*)accessKey {
-    MOBILY_SAFE_SETTER(MOBILY_ACCESS_KEY, accessKey);
-}
-
-+ (int)run {
-    return UIApplicationMain(MOBILY_YARG_COUNT, MOBILY_YARG_VALUE, nil, NSStringFromClass([MobilyContext class]));
-}
-
-+ (id)application {
-    return MOBILY_APPLICATION;
-}
-
 #pragma mark Standart
 
 - (id)init {
@@ -97,7 +81,7 @@ static NSString* MOBILY_ACCESS_KEY = nil;
 
 - (void)dealloc {
     [self setApplication:nil];
-
+    
     MOBILY_SAFE_DEALLOC;
 }
 
@@ -129,6 +113,75 @@ static NSString* MOBILY_ACCESS_KEY = nil;
     return [MobilyBuilderForm object:self forSelector:selector];
 }
 
+#pragma mark Property
+
+- (void)setApplication:(MobilyApplication*)application {
+    if(_application != application) {
+        MOBILY_SAFE_SETTER(_application, application);
+        MOBILY_APPLICATION = _application;
+    }
+}
+
+#pragma mark Public
+
++ (void)setArgCount:(int)argCount argValue:(char**)argValue {
+    MOBILY_YARG_COUNT = argCount;
+    MOBILY_YARG_VALUE = argValue;
+}
+
++ (void)setAccessKey:(NSString*)accessKey {
+    MOBILY_SAFE_SETTER(MOBILY_ACCESS_KEY, accessKey);
+}
+
++ (int)run {
+    return UIApplicationMain(MOBILY_YARG_COUNT, MOBILY_YARG_VALUE, nil, NSStringFromClass([MobilyContext class]));
+}
+
++ (id)application {
+    return MOBILY_APPLICATION;
+}
+
++ (BOOL)loadWithOptions:(NSDictionary*)options {
+    id appDelegate = [[UIApplication sharedApplication] delegate];
+    if([appDelegate isKindOfClass:[MobilyContext class]] == YES) {
+        return [(MobilyContext*)appDelegate loadWithOptions:options];
+    }
+    return NO;
+}
+
++ (void)unload {
+    id appDelegate = [[UIApplication sharedApplication] delegate];
+    if([appDelegate isKindOfClass:[MobilyContext class]] == YES) {
+        [(MobilyContext*)appDelegate unload];
+    }
+}
+
+#pragma mark Private
+
+- (BOOL)loadWithOptions:(NSDictionary*)options {
+    [MobilyBuilderPreset loadFromFilename:MOBILY_FILE_PRESETS];
+    
+    id mobilyApplication = [MobilyBuilderForm objectFromFilename:MOBILY_FILE_APPLICATION owner:self];
+    if([mobilyApplication isKindOfClass:[MobilyApplication class]] == YES) {
+        [self setApplication:mobilyApplication];
+        if(_application != nil) {
+            [_application launchingWithOptions:options];
+        }
+    } else {
+#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
+        NSLog(@"Failure loading '%@'", MOBILY_FILE_APPLICATION);
+#endif
+    }
+    return (_application != nil);
+}
+
+- (void)unload {
+    if(_application != nil) {
+        [_application terminate];
+        [self setApplication:nil];
+    }
+}
+
 #pragma mark UIApplicationDelegate
 
 - (void)setWindow:(UIWindow*)window {
@@ -140,29 +193,11 @@ static NSString* MOBILY_ACCESS_KEY = nil;
 }
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)options {
-    [MobilyBuilderPreset loadFromFilename:MOBILY_FILE_PRESETS];
-    
-    id mobilyApplication = [MobilyBuilderForm objectFromFilename:MOBILY_FILE_APPLICATION owner:self];
-    if([mobilyApplication isKindOfClass:[MobilyApplication class]] == YES) {
-        MOBILY_APPLICATION = mobilyApplication;
-        [self setApplication:mobilyApplication];
-        if(_application != nil) {
-            [_application launchingWithOptions:options];
-        }
-    } else {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-        NSLog(@"Failure loading '%@' object '%@'", MOBILY_FILE_APPLICATION, NSStringFromClass([application class]));
-#endif
-    }
-    return (_application != nil);
+    return [self loadWithOptions:options];
 }
 
 - (void)applicationWillTerminate:(UIApplication*)application {
-    if(_application != nil) {
-        [_application terminate];
-        [self setApplication:nil];
-    }
-    MOBILY_APPLICATION = nil;
+    [self unload];
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication*)application {

@@ -130,6 +130,11 @@
     [_viewTitle setText:model];
 }
 
+- (IBAction)pressedReloadContext:(id)sender {
+    [MobilyContext unload];
+    [MobilyContext loadWithOptions:@{}];
+}
+
 @end
 
 /*--------------------------------------------------*/

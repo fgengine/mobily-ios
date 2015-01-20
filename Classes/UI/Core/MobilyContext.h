@@ -46,6 +46,9 @@
 
 + (id)application;
 
++ (BOOL)loadWithOptions:(NSDictionary*)options;
++ (void)unload;
+
 @end
 
 /*--------------------------------------------------*/
