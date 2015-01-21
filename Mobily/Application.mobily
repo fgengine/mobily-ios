@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <ExampleApplication>
-    <Window name="window">
+    <Window name="window" event:didLoad="windowDidLoad">
+        <ControllerNavigation>
+            <ExampleControllerMain name="navMainView" preset="controller"/>
+        </ControllerNavigation>
         <ExampleControllerMain name="mainView" preset="controller"/>
     </Window>
 </ExampleApplication>

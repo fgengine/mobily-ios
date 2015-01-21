@@ -41,23 +41,24 @@
 
 @implementation ExampleApplication
 
-- (void)setupApplication {
-    [super setupApplication];
-}
-
-- (void)dealloc {
-    MOBILY_SAFE_DEALLOC;
-}
-
 - (BOOL)launchingWithOptions:(NSDictionary *)options {
     BOOL result = [super launchingWithOptions:options];
     if(result == YES) {
-        [_slideView setLeftMenu:_leftView];
-        [_slideView setRightMenu:_rightView];
     }
     return result;
 }
 
+///* Вариан 1 (заливаю фикс)
+- (void)windowDidLoad {
+    [_window setRootViewController:_mainView];
+}
+//*/
+
+/* Вариан 2 (работает)
+- (UIViewController*)windowDidLoad {
+    return _mainView;
+}
+*/
 @end
 
 /*--------------------------------------------------*/

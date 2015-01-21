@@ -163,10 +163,12 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
     
     if([self rootViewController] == nil) {
         UIViewController* controller = [_eventDidLoad fireSender:self object:nil];
-        if(controller != nil) {
-            [self setRootViewController:controller];
-        } else if([_objectChilds count] > 0) {
-            [self setRootViewController:[_objectChilds firstObject]];
+        if([self rootViewController] == nil) {
+            if(controller != nil) {
+                [self setRootViewController:controller];
+            } else if([_objectChilds count] > 0) {
+                [self setRootViewController:[_objectChilds firstObject]];
+            }
         }
     }
 }

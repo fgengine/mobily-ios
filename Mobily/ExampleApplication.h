@@ -50,9 +50,8 @@
 
 @property(nonatomic, readwrite, weak) MobilyWindow* window;
 @property(nonatomic, readwrite, weak) MobilyControllerSlideMenu* slideView;
+@property(nonatomic, readwrite, weak) MobilyControllerView* navMainView;
 @property(nonatomic, readwrite, weak) MobilyControllerView* mainView;
-@property(nonatomic, readwrite, weak) MobilyControllerView* leftView;
-@property(nonatomic, readwrite, weak) MobilyControllerView* rightView;
 
 @end
 
