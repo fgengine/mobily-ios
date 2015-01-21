@@ -792,15 +792,19 @@
 
 #pragma mark Property
 
-- (void)setReloadBlock:(MobilyModelQueryReloadBlock)block {
-    _reloadBlock = MOBILY_SAFE_RETAIN([block copy]);
-    _flagReload = YES;
-    _flagResort = YES;
+- (void)setReloadBlock:(MobilyModelQueryReloadBlock)reloadBlock {
+    if(_reloadBlock != reloadBlock) {
+        MOBILY_SAFE_SETTER(_reloadBlock, [reloadBlock copy]);
+        _flagReload = YES;
+        _flagResort = YES;
+    }
 }
 
-- (void)setResortBlock:(MobilyModelQueryResortBlock)block {
-    _resortBlock = MOBILY_SAFE_RETAIN([block copy]);
-    _flagResort = YES;
+- (void)setResortBlock:(MobilyModelQueryResortBlock)resortBlock {
+    if(_resortBlock != resortBlock) {
+        MOBILY_SAFE_SETTER(_resortBlock, [resortBlock copy]);
+        _flagResort = YES;
+    }
 }
 
 - (void)setResortInvert:(BOOL)resortInvert {

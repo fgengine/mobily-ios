@@ -125,7 +125,7 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
         }
     }];
     if(MOBILY_BUILDER_PRESET == nil) {
-        MOBILY_BUILDER_PRESET = MOBILY_SAFE_RETAIN([NSMutableDictionary dictionaryWithObject:finalAttributes forKey:name]);
+        MOBILY_SAFE_SETTER(MOBILY_BUILDER_PRESET, [NSMutableDictionary dictionaryWithObject:finalAttributes forKey:name]);
     } else {
         [MOBILY_BUILDER_PRESET setObject:finalAttributes forKey:name];
     }

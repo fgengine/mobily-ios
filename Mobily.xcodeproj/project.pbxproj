@@ -11,6 +11,7 @@
 		401FEE5518A3F92800B445EB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401FEE5418A3F92800B445EB /* CoreGraphics.framework */; };
 		401FEE5718A3F92800B445EB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401FEE5618A3F92800B445EB /* UIKit.framework */; };
 		403160AC1A643A4B00361D85 /* MobilyTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 403160AB1A643A4B00361D85 /* MobilyTimer.m */; };
+		403F2EB51A6FCCD600D4D556 /* MobilyCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 403F2EB41A6FCCD600D4D556 /* MobilyCache.m */; };
 		407903D01943079600EC8855 /* Mobily.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 407903CF1943079600EC8855 /* Mobily.podspec */; };
 		407B41BD1A64204300A3DFFD /* MobilyAudioRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 407B41BC1A64204300A3DFFD /* MobilyAudioRecorder.m */; };
 		407B41BF1A6420ED00A3DFFD /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 407B41BE1A6420ED00A3DFFD /* AVFoundation.framework */; };
@@ -85,6 +86,8 @@
 		401FEE5618A3F92800B445EB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		403160AA1A643A4B00361D85 /* MobilyTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyTimer.h; sourceTree = "<group>"; };
 		403160AB1A643A4B00361D85 /* MobilyTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyTimer.m; sourceTree = "<group>"; };
+		403F2EB31A6FCCD600D4D556 /* MobilyCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyCache.h; sourceTree = "<group>"; };
+		403F2EB41A6FCCD600D4D556 /* MobilyCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyCache.m; sourceTree = "<group>"; };
 		407903CF1943079600EC8855 /* Mobily.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Mobily.podspec; sourceTree = "<group>"; };
 		407B41BB1A64204300A3DFFD /* MobilyAudioRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyAudioRecorder.h; sourceTree = "<group>"; };
 		407B41BC1A64204300A3DFFD /* MobilyAudioRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyAudioRecorder.m; sourceTree = "<group>"; };
@@ -260,6 +263,15 @@
 				407B41B91A64201F00A3DFFD /* AV */,
 			);
 			path = Classes;
+			sourceTree = "<group>";
+		};
+		403F2EB21A6FCCD600D4D556 /* Cache */ = {
+			isa = PBXGroup;
+			children = (
+				403F2EB31A6FCCD600D4D556 /* MobilyCache.h */,
+				403F2EB41A6FCCD600D4D556 /* MobilyCache.m */,
+			);
+			path = Cache;
 			sourceTree = "<group>";
 		};
 		407B41B91A64201F00A3DFFD /* AV */ = {
@@ -442,6 +454,7 @@
 				40C8CD0C1A5AA45100F737B2 /* Model */,
 				40C8CD121A5AA45100F737B2 /* TaskManager */,
 				40C8CD0F1A5AA45100F737B2 /* RegExpParser */,
+				403F2EB21A6FCCD600D4D556 /* Cache */,
 			);
 			path = NS;
 			sourceTree = "<group>";
@@ -826,6 +839,7 @@
 				40C8CD831A5AA45100F737B2 /* MobilyTextField.m in Sources */,
 				40C8CD821A5AA45100F737B2 /* MobilyTableView.m in Sources */,
 				408719021A5DA8D500833F0A /* MobilyDialogController.m in Sources */,
+				403F2EB51A6FCCD600D4D556 /* MobilyCache.m in Sources */,
 				407F25B91A65CB4800B0A79C /* DemoAudioPlayerController.m in Sources */,
 				40C8CD5F1A5AA45100F737B2 /* MobilyHttpQuery.m in Sources */,
 				40EC21581A65306500419DC3 /* MobilyAudioPlayer.m in Sources */,

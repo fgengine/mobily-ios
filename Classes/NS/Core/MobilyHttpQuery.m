@@ -135,7 +135,7 @@
 - (id)init {
     self = [super init];
     if(self != nil) {
-        _request = MOBILY_SAFE_RETAIN([NSMutableURLRequest new]);
+        [self setRequest:[NSMutableURLRequest new]];
         [_request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
         [_request setNetworkServiceType:NSURLNetworkServiceTypeDefault];
     }
@@ -178,7 +178,7 @@
         [self setMutableResponseData:nil];
         [self setLastError:nil];
         
-        _connection = MOBILY_SAFE_RETAIN([[NSURLConnection alloc] initWithRequest:_request delegate:self startImmediately:NO]);
+        [self setConnection:[[NSURLConnection alloc] initWithRequest:_request delegate:self startImmediately:NO]];
         if(_connection != nil) {
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
             
@@ -413,9 +413,13 @@
 
 #pragma mark NSURLConnectionDataDelegate
 
+- (NSCachedURLResponse*)connection:(NSURLConnection*)connection willCacheResponse:(NSCachedURLResponse*)cachedResponse {
+    return nil;
+}
+
 - (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response {
     if([response isKindOfClass:[NSHTTPURLResponse class]] == YES) {
-        _response = MOBILY_SAFE_RETAIN((NSHTTPURLResponse*)response);
+        [self setResponse:(NSHTTPURLResponse*)response];
     }
 }
 

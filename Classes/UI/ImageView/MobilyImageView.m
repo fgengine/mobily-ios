@@ -211,7 +211,7 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
 
 #define MOBILY_IMAGE_LOADER_FOLDER                  @"MobilyImageLoaderCache"
 #define MOBILY_IMAGE_LOADER_MAX_CONCURRENT_TASK     5
-#define MOBILY_IMAGE_LOADER_COUNT_LIMIT             512
+#define MOBILY_IMAGE_LOADER_COST_LIMIT              (1024 * 1024) * 500
 
 /*--------------------------------------------------*/
 
@@ -229,7 +229,7 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
         [self setCache:[[NSCache alloc] init]];
         if(_cache != nil) {
             [_cache setName:MOBILY_IMAGE_LOADER_FOLDER];
-            [_cache setCountLimit:MOBILY_IMAGE_LOADER_COUNT_LIMIT];
+            [_cache setTotalCostLimit:MOBILY_IMAGE_LOADER_COST_LIMIT];
         }
     }
     return self;
@@ -318,7 +318,7 @@ static MobilyImageLoader* MOBILY_IMAGE_LOADER = nil;
 }
 
 - (void)addImageData:(NSData*)imageData byCacheKey:(NSString*)cacheKey {
-    [_cache setObject:imageData forKey:cacheKey];
+    [_cache setObject:imageData forKey:cacheKey cost:[imageData length]];
 }
 
 - (void)removeByImageUrl:(NSString*)imageUrl {
