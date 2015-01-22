@@ -16,9 +16,9 @@ Pod::Spec.new do |s|
         :branch => 'v2',
 		:tag => s.version.to_s
 	}
-	s.default_subspec = 'All'
-    s.requires_arc = true
     s.public_header_files = 'Classes/Mobily.h'
+    s.requires_arc = true
+    s.default_subspec = 'All'
 
 	s.subspec 'All' do |ss|
 		ss.dependency 'Mobily/NS'
@@ -29,77 +29,76 @@ Pod::Spec.new do |s|
 	s.subspec 'Core' do |ss|
 		ss.public_header_files = 'Classes/Core/**/*.h'
 		ss.source_files = 'Classes/Core/**/*.{h,m}'
-		ss.frameworks = 'Foundation'
         ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_CORE' }
+        ss.frameworks = 'Foundation'
 	end
 
 	s.subspec 'NS' do |ss|
 		ss.public_header_files = 'Classes/NS/Core/**/*.h'
 		ss.source_files = 'Classes/NS/Core/**/*.{h,m}'
-        ss.dependency 'Mobily/Core'
         ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_NS' }
+        ss.dependency 'Mobily/Core'
 	end
 
 	s.subspec 'CG' do |ss|
 		ss.public_header_files = 'Classes/CG/Core/**/*.h'
 		ss.source_files = 'Classes/CG/Core/**/*.{h,m}'
-		ss.frameworks = 'CoreGraphics'
-        ss.dependency 'Mobily/Core'
         ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_GC' }
+        ss.frameworks = 'CoreGraphics'
+        ss.dependency 'Mobily/Core'
 	end
 
 	s.subspec 'UI' do |ss|
 		ss.public_header_files = 'Classes/UI/Core/**/*.h'
 		ss.source_files = 'Classes/UI/Core/**/*.{h,m}'
+        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI' }
 		ss.frameworks = 'UIKit'
-		ss.dependency 'Mobily/Core'
 		ss.dependency 'Mobily/NS'
         ss.dependency 'Mobily/CG'
-        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI' }
 	end
 
     s.subspec 'UIDynamicsDrawerController' do |ss|
         ss.public_header_files = 'Classes/UI/DynamicsDrawerController/**/*.h'
         ss.source_files = 'Classes/UI/DynamicsDrawerController/**/*.{h,m}'
+        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_DYNAMIC_DRAWER_CONTROLLER' }
         ss.dependency 'MSDynamicsDrawerViewController'
         ss.dependency 'Mobily/UI'
-        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_DYNAMIC_DRAWER_CONTROLLER' }
     end
 
     s.subspec 'UISlideMenuController' do |ss|
         ss.public_header_files = 'Classes/UI/SlideMenuController/**/*.h'
         ss.source_files = 'Classes/UI/SlideMenuController/**/*.{h,m}'
         ss.resources = 'Classes/UI/SlideMenuController/**/*.{png}'
-        ss.dependency 'Mobily/UI'
         ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_SLIDE_MENU_CONTROLLER' }
+        ss.dependency 'Mobily/UI'
     end
 
     s.subspec 'UIElementsView' do |ss|
         ss.public_header_files = 'Classes/UI/ElementsView/**/*.h'
         ss.source_files = 'Classes/UI/ElementsView/**/*.{h,m}'
-        ss.dependency 'Mobily/UI'
         ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_ELEMENTS_VIEW' }
+        ss.dependency 'Mobily/UI'
     end
 
     s.subspec 'AV' do |ss|
         ss.public_header_files = 'Classes/AV/Core/**/*.h'
         ss.source_files = 'Classes/AV/Core/**/*.{h,m}'
+        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_AV' }
         ss.frameworks = 'AVFoundation'
         ss.dependency 'Mobily/NS'
-        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_AV' }
     end
 
     s.subspec 'AVAudioRecorder' do |ss|
         ss.public_header_files = 'Classes/AV/AudioRecorder/**/*.h'
         ss.source_files = 'Classes/AV/AudioRecorder/**/*.{h,m}'
-        ss.dependency 'Mobily/AV'
         ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_AV_AUDIO_RECORDER' }
+        ss.dependency 'Mobily/AV'
     end
 
     s.subspec 'AVAudioPlayer' do |ss|
         ss.public_header_files = 'Classes/AV/AudioPlayer/**/*.h'
         ss.source_files = 'Classes/AV/AudioPlayer/**/*.{h,m}'
-        ss.dependency 'Mobily/AV'
         ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_AV_AUDIO_PLAYER' }
+        ss.dependency 'Mobily/AV'
     end
 end
