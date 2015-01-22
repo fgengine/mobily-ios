@@ -46,22 +46,26 @@ typedef void (^MobilyCacheCompleted)();
 
 @property(nonatomic, readonly, copy) NSString* name;
 @property(nonatomic, readonly, assign) NSUInteger memoryCapacity;
-@property(nonatomic, readonly, assign) NSTimeInterval memoryStorageTime;
-@property(nonatomic, readonly, assign) NSUInteger diskCapacity;
-@property(nonatomic, readonly, assign) NSTimeInterval discStorageTime;
+@property(nonatomic, readonly, assign) NSTimeInterval memoryStorageInterval;
+@property(nonatomic, readonly, assign) NSUInteger discCapacity;
+@property(nonatomic, readonly, assign) NSTimeInterval discStorageInterval;
 @property(nonatomic, readonly, assign) NSUInteger currentMemoryUsage;
-@property(nonatomic, readonly, assign) NSUInteger currentDiskUsage;
+@property(nonatomic, readonly, assign) NSUInteger currentDiscUsage;
 
-- (id)initWithName:(NSString*)name memoryCapacity:(NSUInteger)memoryCapacity memoryStorageTime:(NSTimeInterval)memoryStorageTime diskCapacity:(NSUInteger)diskCapacity discStorageTime:(NSTimeInterval)discStorageTime;
++ (instancetype)shared;
+
+- (id)initWithName:(NSString*)name;
+- (id)initWithName:(NSString*)name memoryCapacity:(NSUInteger)memoryCapacity discCapacity:(NSUInteger)discCapacity;
+- (id)initWithName:(NSString*)name memoryCapacity:(NSUInteger)memoryCapacity memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discCapacity:(NSUInteger)discCapacity discStorageInterval:(NSTimeInterval)discStorageInterval;
 
 - (void)setCacheData:(NSData*)data forKey:(NSString*)key;
 - (void)setCacheData:(NSData*)data forKey:(NSString*)key completed:(MobilyCacheCompleted)completed;
-- (void)setCacheData:(NSData*)data forKey:(NSString*)key memoryStorageTime:(NSTimeInterval)memoryStorageTime;
-- (void)setCacheData:(NSData*)data forKey:(NSString*)key memoryStorageTime:(NSTimeInterval)memoryStorageTime completed:(MobilyCacheCompleted)completed;
-- (void)setCacheData:(NSData*)data forKey:(NSString*)key discStorageTime:(NSTimeInterval)discStorageTime;
-- (void)setCacheData:(NSData*)data forKey:(NSString*)key discStorageTime:(NSTimeInterval)discStorageTime completed:(MobilyCacheCompleted)completed;
-- (void)setCacheData:(NSData*)data forKey:(NSString*)key memoryStorageTime:(NSTimeInterval)memoryStorageTime discStorageTime:(NSTimeInterval)discStorageTime;
-- (void)setCacheData:(NSData*)data forKey:(NSString*)key memoryStorageTime:(NSTimeInterval)memoryStorageTime discStorageTime:(NSTimeInterval)discStorageTime completed:(MobilyCacheCompleted)completed;
+- (void)setCacheData:(NSData*)data forKey:(NSString*)key memoryStorageInterval:(NSTimeInterval)memoryStorageInterval;
+- (void)setCacheData:(NSData*)data forKey:(NSString*)key memoryStorageInterval:(NSTimeInterval)memoryStorageInterval completed:(MobilyCacheCompleted)completed;
+- (void)setCacheData:(NSData*)data forKey:(NSString*)key discStorageInterval:(NSTimeInterval)discStorageInterval;
+- (void)setCacheData:(NSData*)data forKey:(NSString*)key discStorageInterval:(NSTimeInterval)discStorageInterval completed:(MobilyCacheCompleted)completed;
+- (void)setCacheData:(NSData*)data forKey:(NSString*)key memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discStorageInterval:(NSTimeInterval)discStorageInterval;
+- (void)setCacheData:(NSData*)data forKey:(NSString*)key memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discStorageInterval:(NSTimeInterval)discStorageInterval completed:(MobilyCacheCompleted)completed;
 - (NSData*)cacheDataForKey:(NSString*)key;
 - (void)cacheDataForKey:(NSString*)key completed:(MobilyCacheDataForKey)completed;
 

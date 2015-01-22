@@ -5,7 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DemoCategoriesCell">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DemoTablesCell">
             <connections>
                 <outlet property="rootView" destination="lUL-MD-0aZ" id="ChF-38-KVW"/>
                 <outlet property="textView" destination="CQR-jM-dxK" id="sCP-Te-cNh"/>

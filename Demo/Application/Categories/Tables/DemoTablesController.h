@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-@interface DemoCategoriesController : MobilyViewController < UITableViewDataSource, UITableViewDelegate >
+@interface DemoTablesController : MobilyViewController < UITableViewDataSource, UITableViewDelegate >
 
 @property(nonatomic, readwrite, strong) NSArray* dataSource;
 @property(nonatomic, readwrite, weak) IBOutlet MobilyTableView* tableView;
@@ -42,31 +42,27 @@
 
 /*--------------------------------------------------*/
 
-@class DemoCategoriesModel;
+@class DemoTablesModel;
 
-@interface DemoCategoriesCell : MobilyTableCell
+@interface DemoTablesCell : MobilyTableCell
 
-@property(nonatomic, readwrite, weak) DemoCategoriesModel* model;
+@property(nonatomic, readwrite, weak) DemoTablesModel* model;
 @property(nonatomic, readwrite, weak) IBOutlet UILabel* textView;
 
 @end
 
 /*--------------------------------------------------*/
 
-typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
-    DemoCategoriesTypeButtons,
-    DemoCategoriesTypeFields,
-    DemoCategoriesTypeTables,
-    DemoCategoriesTypeAudioRecorder,
-    DemoCategoriesTypeAudioPlayer
+typedef NS_ENUM(NSUInteger, DemoTablesType) {
+    DemoTablesType500px,
 };
 
-@interface DemoCategoriesModel : MobilyModel
+@interface DemoTablesModel : MobilyModel
 
-@property(nonatomic, readwrite, assign) DemoCategoriesType type;
+@property(nonatomic, readwrite, assign) DemoTablesType type;
 @property(nonatomic, readwrite, strong) NSString* title;
 
-- (id)initWithType:(DemoCategoriesType)type title:(NSString*)title;
+- (id)initWithType:(DemoTablesType)type title:(NSString*)title;
 
 @end
 

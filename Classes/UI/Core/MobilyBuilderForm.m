@@ -162,9 +162,8 @@
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_INFO) != 0)
     NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
 #endif
-    NSFileManager* fileManager = [NSFileManager defaultManager];
     NSString* filePath = [[NSBundle mainBundle] pathForResource:filename ofType:MOBILY_BUILDER_FORM_FILE_EXTENSION];
-    if([fileManager fileExistsAtPath:filePath] == YES) {
+    if([[NSFileManager defaultManager] fileExistsAtPath:filePath] == YES) {
         NSData* data = [NSData dataWithContentsOfFile:filePath];
         if(data != nil) {
             [self setLastFormObject:owner];

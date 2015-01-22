@@ -37,8 +37,8 @@
 
 /*--------------------------------------------------*/
 
-typedef void (^MobilyImageLoaderCompleteBlock)(UIImage* image, NSString* imageUrl);
-typedef void (^MobilyImageLoaderFailureBlock)(NSString* imageUrl);
+typedef void (^MobilyImageLoaderCompleteBlock)(UIImage* image, NSString* path);
+typedef void (^MobilyImageLoaderFailureBlock)(NSString* path);
 
 /*--------------------------------------------------*/
 
@@ -57,15 +57,19 @@ typedef void (^MobilyImageLoaderFailureBlock)(NSString* imageUrl);
 
 @interface MobilyImageLoader : NSObject
 
-+ (BOOL)isExistImageWithImageUrl:(NSString*)imageUrl;
-+ (UIImage*)imageWithImageUrl:(NSString*)imageUrl;
-+ (void)removeByImageUrl:(NSString*)imageUrl;
-+ (void)cleanup;
++ (instancetype)shared;
 
-+ (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
-+ (void)loadWithImageUrl:(NSString*)imageUrl target:(id)target completeBlock:(MobilyImageLoaderCompleteBlock)completeBlock failureBlock:(MobilyImageLoaderFailureBlock)failureBlock;
-+ (void)cancelByImageUrl:(NSString*)imageUrl;
-+ (void)cancelByTarget:(id)target;
+- (BOOL)isExistImageWithPath:(NSString*)path;
+- (void)setImage:(UIImage*)image byPath:(NSString*)path;
+- (void)removeByPath:(NSString*)path;
+- (void)cleanup;
+
+- (UIImage*)imageWithPath:(NSString*)path;
+
+- (void)loadWithPath:(NSString*)path target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
+- (void)loadWithPath:(NSString*)path target:(id)target completeBlock:(MobilyImageLoaderCompleteBlock)completeBlock failureBlock:(MobilyImageLoaderFailureBlock)failureBlock;
+- (void)cancelByPath:(NSString*)path;
+- (void)cancelByTarget:(id)target;
 
 @end
 

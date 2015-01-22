@@ -33,40 +33,50 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-@interface DemoCategoriesController : MobilyViewController < UITableViewDataSource, UITableViewDelegate >
+#import "MobilyTaskManager.h"
+#import "MobilyCache.h"
 
-@property(nonatomic, readwrite, strong) NSArray* dataSource;
-@property(nonatomic, readwrite, weak) IBOutlet MobilyTableView* tableView;
+/*--------------------------------------------------*/
+
+typedef void (^MobilyLoaderCompleteBlock)(id entry, NSString* path);
+typedef void (^MobilyLoaderFailureBlock)(NSString* path);
+
+/*--------------------------------------------------*/
+
+@protocol MobilyLoaderDelegate;
+
+/*--------------------------------------------------*/
+
+@interface MobilyLoader : NSObject
+
+@property(nonatomic, readwrite, weak) id< MobilyLoaderDelegate > delegate;
+@property(nonatomic, readonly, strong) MobilyTaskManager* taskManager;
+@property(nonatomic, readonly, strong) MobilyCache* cache;
+
+- (id)initWithDelegate:(id< MobilyLoaderDelegate >)delegate;
+
+- (BOOL)isExistEntryByPath:(NSString*)path;
+- (BOOL)setEntry:(id)entry byPath:(NSString*)path;
+- (void)removeEntryByPath:(NSString*)path;
+- (id)entryByPath:(NSString*)path;
+
+- (void)cleanup;
+
+- (void)loadWithPath:(NSString*)path target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
+- (void)loadWithPath:(NSString*)path target:(id)target completeBlock:(MobilyLoaderCompleteBlock)completeBlock failureBlock:(MobilyLoaderFailureBlock)failureBlock;
+- (void)cancelByPath:(NSString*)path;
+- (void)cancelByTarget:(id)target;
 
 @end
 
 /*--------------------------------------------------*/
 
-@class DemoCategoriesModel;
+@protocol MobilyLoaderDelegate < NSObject >
 
-@interface DemoCategoriesCell : MobilyTableCell
-
-@property(nonatomic, readwrite, weak) DemoCategoriesModel* model;
-@property(nonatomic, readwrite, weak) IBOutlet UILabel* textView;
-
-@end
-
-/*--------------------------------------------------*/
-
-typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
-    DemoCategoriesTypeButtons,
-    DemoCategoriesTypeFields,
-    DemoCategoriesTypeTables,
-    DemoCategoriesTypeAudioRecorder,
-    DemoCategoriesTypeAudioPlayer
-};
-
-@interface DemoCategoriesModel : MobilyModel
-
-@property(nonatomic, readwrite, assign) DemoCategoriesType type;
-@property(nonatomic, readwrite, strong) NSString* title;
-
-- (id)initWithType:(DemoCategoriesType)type title:(NSString*)title;
+@optional
+- (NSData*)loader:(MobilyLoader*)mobilyLoader dataForPath:(NSString*)path;
+- (id)loader:(MobilyLoader*)mobilyLoader entryFromData:(NSData*)data;
+- (NSData*)loader:(MobilyLoader*)mobilyLoader entryToData:(id)entry;
 
 @end
 

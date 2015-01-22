@@ -719,3 +719,43 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 @end
 
 /*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation NSBundle (MobilyNS)
+
+- (id)objectForInfoDictionaryKey:(NSString*)key defaultValue:(id)defaultValue {
+    id value = [self objectForInfoDictionaryKey:key];
+    if(value == nil) {
+        return defaultValue;
+    }
+    return value;
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation MobilyStorage
+
++ (NSString*)fileSystemDirectory {
+    static NSString* fileSystemDirectory = nil;
+    if(fileSystemDirectory == nil) {
+        NSFileManager* fileManager = [NSFileManager defaultManager];
+        NSString* path = [[NSFileManager cachesDirectory] stringByAppendingPathComponent:[[NSBundle mainBundle] bundleIdentifier]];
+        if([fileManager fileExistsAtPath:path] == NO) {
+            if([fileManager createDirectoryAtPath:fileSystemDirectory withIntermediateDirectories:YES attributes:nil error:nil] == YES) {
+                fileSystemDirectory = path;
+            }
+        } else {
+            fileSystemDirectory = path;
+        }
+    }
+    return fileSystemDirectory;
+}
+
+@end
+
+/*--------------------------------------------------*/

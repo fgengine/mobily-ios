@@ -193,3 +193,19 @@
 @end
 
 /*--------------------------------------------------*/
+
+@interface NSBundle (MobilyNS)
+
+- (id)objectForInfoDictionaryKey:(NSString*)key defaultValue:(id)defaultValue;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyStorage : NSObject
+
++ (NSString*)fileSystemDirectory;
+
+@end
+
+/*--------------------------------------------------*/

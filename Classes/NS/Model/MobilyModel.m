@@ -37,14 +37,6 @@
 #import "MobilyModelJson.h"
 
 /*--------------------------------------------------*/
-
-@interface MobilyStorage : NSObject
-
-+ (NSString*)fileSystemDirectory;
-
-@end
-
-/*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
@@ -88,22 +80,6 @@
 
 - (void)reloadItems;
 - (void)resortItems;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@implementation MobilyStorage
-
-+ (NSString*)fileSystemDirectory {
-    static NSString* fileSystemDirectory = nil;
-    if(fileSystemDirectory == nil) {
-        fileSystemDirectory = [[NSFileManager cachesDirectory] stringByAppendingPathComponent:[[NSBundle mainBundle] bundleIdentifier]];
-    }
-    return fileSystemDirectory;
-}
 
 @end
 
@@ -533,15 +509,8 @@
 - (void)setFileName:(NSString*)fileName {
     if(_fileName != fileName) {
         MOBILY_SAFE_SETTER(_fileName, fileName);
-        
-        NSString* fileGroup = [MobilyStorage fileSystemDirectory];
-        if(fileGroup != nil) {
-            NSString* filePath = [fileGroup stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", fileName, MOBILY_STORAGE_COLLECTION_EXTENSION]];
-            if(filePath != nil) {
-                [self setFilePath:filePath];
-            } else {
-                [self setFilePath:nil];
-            }
+        if(_fileName != nil) {
+            [self setFilePath:[[MobilyStorage fileSystemDirectory] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", _fileName, MOBILY_STORAGE_COLLECTION_EXTENSION]]];
         } else {
             [self setFilePath:nil];
         }
@@ -666,14 +635,6 @@
                     }
                 }
             } else if([_filePath length] > 0) {
-                NSFileManager* fileManager = [NSFileManager defaultManager];
-                if([fileManager fileExistsAtPath:_filePath] == NO) {
-                    NSError* error = nil;
-                    NSString* fileSystemDirectory = [MobilyStorage fileSystemDirectory];
-                    if([fileManager createDirectoryAtPath:fileSystemDirectory withIntermediateDirectories:YES attributes:nil error:&error] == NO) {
-                        return NO;
-                    }
-                }
                 return [NSKeyedArchiver archiveRootObject:_unsafeItems toFile:_filePath];
             }
         }

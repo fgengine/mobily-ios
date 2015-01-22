@@ -33,33 +33,31 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "DemoCategoriesController.h"
+#import "Demo500pxController.h"
 
 /*--------------------------------------------------*/
 
 #import "DemoButtonsController.h"
 #import "DemoFieldsController.h"
-#import "DemoTablesController.h"
 #import "DemoAudioRecorderController.h"
 #import "DemoAudioPlayerController.h"
 
 /*--------------------------------------------------*/
 
-@implementation DemoCategoriesController
+static NSString* PXConsumerKey = @"81gxei623475kKd1k4cIOT0AMUDO9C8LNmRlZa4p";
+static NSString* PXConsumerSecret = @"wMDdVbq28mvbkb0GxbLxBW9UdO8v4NZkMIVFqZWl";
+
+/*--------------------------------------------------*/
+
+@implementation Demo500pxController
 
 - (void)setup {
     [super setup];
     
-    [self setTitle:@"Categories"];
+    [self setTitle:@"500px"];
     [self setEdgesForExtendedLayout:UIRectEdgeNone];
     
-    [self setDataSource:@[
-        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeButtons title:@"Buttons"],
-        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeFields title:@"Fields"],
-        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeTables title:@"Tables"],
-        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioRecorder title:@"AudioRecorder"],
-        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioPlayer title:@"AudioPlayer"],
-    ]];
+    [PXRequest setConsumerKey:PXConsumerKey consumerSecret:PXConsumerSecret];
 }
 
 - (void)dealloc {
@@ -68,7 +66,23 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [_tableView registerCellClass:[DemoCategoriesCell class]];
+    [_tableView registerCellClass:[Demo500pxCell class]];
+}
+
+- (void)update {
+    [super update];
+    
+    [PXRequest requestForSearchTerm:@"Comics"
+                               page:1
+                     resultsPerPage:500
+                         photoSizes:PXPhotoModelSizeLarge
+                             except:PXPhotoModelCategoryUncategorized
+                         completion:^(NSDictionary* results, NSError* error) {
+                             if(results != nil) {
+                                 [self setDataSource:[results valueForKey:@"photos"]];
+                                 [_tableView reloadData];
+                             }
+                         }];
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
@@ -76,7 +90,7 @@
 }
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
-    DemoCategoriesCell* cell = [_tableView dequeueReusableCellWithClass:[DemoCategoriesCell class]];
+    Demo500pxCell* cell = [_tableView dequeueReusableCellWithClass:[Demo500pxCell class]];
     if(cell != nil) {
         [cell setModel:[_dataSource objectAtIndex:[indexPath row]]];
     }
@@ -84,36 +98,7 @@
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
-    return [DemoCategoriesCell heightForModel:[_dataSource objectAtIndex:[indexPath row]] tableView:_tableView];
-}
-
-- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-    DemoCategoriesModel* model = [_dataSource objectAtIndex:[indexPath row]];
-    if(model != nil) {
-        switch([model type]) {
-            case DemoCategoriesTypeButtons: {
-                [[self navigationController] pushViewController:[DemoButtonsController new] animated:YES];
-                break;
-            }
-            case DemoCategoriesTypeFields: {
-                [[self navigationController] pushViewController:[DemoFieldsController new] animated:YES];
-                break;
-            }
-            case DemoCategoriesTypeTables: {
-                [[self navigationController] pushViewController:[DemoTablesController new] animated:YES];
-                break;
-            }
-            case DemoCategoriesTypeAudioRecorder: {
-                [[self navigationController] pushViewController:[DemoAudioRecorderController new] animated:YES];
-                break;
-            }
-            case DemoCategoriesTypeAudioPlayer: {
-                [[self navigationController] pushViewController:[DemoAudioPlayerController new] animated:YES];
-                break;
-            }
-        }
-    }
-    [_tableView deselectRowAtIndexPath:indexPath animated:YES];
+    return [Demo500pxCell heightForModel:[_dataSource objectAtIndex:[indexPath row]] tableView:_tableView];
 }
 
 @end
@@ -122,37 +107,28 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation DemoCategoriesCell
+@implementation Demo500pxCell
 
-+ (CGFloat)heightForModel:(DemoCategoriesModel*)model tableView:(UITableView*)tableView {
-    return 44.0f;
++ (CGFloat)heightForModel:(NSDictionary*)model tableView:(UITableView*)tableView {
+    CGFloat width = [[model objectForKey:@"width"] floatValue];
+    CGFloat height = [[model objectForKey:@"height"] floatValue];
+    CGRect rect = CGRectAspectFillFromBoundsAndSize([tableView bounds], CGSizeMake(width, height));
+    return rect.size.height;
 }
 
 - (void)setup {
     [super setup];
 }
 
-- (void)setModel:(DemoCategoriesModel*)model {
+- (void)setModel:(NSDictionary*)model {
     [super setModel:model];
     
-    [_textView setText:[model title]];
-}
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@implementation DemoCategoriesModel
-
-- (id)initWithType:(DemoCategoriesType)type title:(NSString*)title {
-    self = [super init];
-    if(self != nil) {
-        [self setType:type];
-        [self setTitle:title];
-    }
-    return self;
+    [_activityView startAnimating];
+    [_photoView setImageUrl:[[[model objectForKey:@"images"] lastObject] valueForKey:@"url"] complete:^(UIImage *image, NSString *path) {
+        [_activityView stopAnimating];
+    } failure:^(NSString* path) {
+        [_activityView stopAnimating];
+    }];
 }
 
 @end

@@ -33,32 +33,24 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "DemoCategoriesController.h"
-
-/*--------------------------------------------------*/
-
-#import "DemoButtonsController.h"
-#import "DemoFieldsController.h"
 #import "DemoTablesController.h"
-#import "DemoAudioRecorderController.h"
-#import "DemoAudioPlayerController.h"
 
 /*--------------------------------------------------*/
 
-@implementation DemoCategoriesController
+#import "Demo500pxController.h"
+
+/*--------------------------------------------------*/
+
+@implementation DemoTablesController
 
 - (void)setup {
     [super setup];
     
-    [self setTitle:@"Categories"];
+    [self setTitle:@"Tables"];
     [self setEdgesForExtendedLayout:UIRectEdgeNone];
     
     [self setDataSource:@[
-        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeButtons title:@"Buttons"],
-        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeFields title:@"Fields"],
-        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeTables title:@"Tables"],
-        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioRecorder title:@"AudioRecorder"],
-        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioPlayer title:@"AudioPlayer"],
+        [[DemoTablesModel alloc] initWithType:DemoTablesType500px title:@"500 px"],
     ]];
 }
 
@@ -68,7 +60,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [_tableView registerCellClass:[DemoCategoriesCell class]];
+    [_tableView registerCellClass:[DemoTablesCell class]];
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
@@ -76,7 +68,7 @@
 }
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
-    DemoCategoriesCell* cell = [_tableView dequeueReusableCellWithClass:[DemoCategoriesCell class]];
+    DemoTablesCell* cell = [_tableView dequeueReusableCellWithClass:[DemoTablesCell class]];
     if(cell != nil) {
         [cell setModel:[_dataSource objectAtIndex:[indexPath row]]];
     }
@@ -84,31 +76,15 @@
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
-    return [DemoCategoriesCell heightForModel:[_dataSource objectAtIndex:[indexPath row]] tableView:_tableView];
+    return [DemoTablesCell heightForModel:[_dataSource objectAtIndex:[indexPath row]] tableView:_tableView];
 }
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-    DemoCategoriesModel* model = [_dataSource objectAtIndex:[indexPath row]];
+    DemoTablesModel* model = [_dataSource objectAtIndex:[indexPath row]];
     if(model != nil) {
         switch([model type]) {
-            case DemoCategoriesTypeButtons: {
-                [[self navigationController] pushViewController:[DemoButtonsController new] animated:YES];
-                break;
-            }
-            case DemoCategoriesTypeFields: {
-                [[self navigationController] pushViewController:[DemoFieldsController new] animated:YES];
-                break;
-            }
-            case DemoCategoriesTypeTables: {
-                [[self navigationController] pushViewController:[DemoTablesController new] animated:YES];
-                break;
-            }
-            case DemoCategoriesTypeAudioRecorder: {
-                [[self navigationController] pushViewController:[DemoAudioRecorderController new] animated:YES];
-                break;
-            }
-            case DemoCategoriesTypeAudioPlayer: {
-                [[self navigationController] pushViewController:[DemoAudioPlayerController new] animated:YES];
+            case DemoTablesType500px: {
+                [[self navigationController] pushViewController:[Demo500pxController new] animated:YES];
                 break;
             }
         }
@@ -122,9 +98,9 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation DemoCategoriesCell
+@implementation DemoTablesCell
 
-+ (CGFloat)heightForModel:(DemoCategoriesModel*)model tableView:(UITableView*)tableView {
++ (CGFloat)heightForModel:(DemoTablesModel*)model tableView:(UITableView*)tableView {
     return 44.0f;
 }
 
@@ -132,7 +108,7 @@
     [super setup];
 }
 
-- (void)setModel:(DemoCategoriesModel*)model {
+- (void)setModel:(DemoTablesModel*)model {
     [super setModel:model];
     
     [_textView setText:[model title]];
@@ -144,9 +120,9 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation DemoCategoriesModel
+@implementation DemoTablesModel
 
-- (id)initWithType:(DemoCategoriesType)type title:(NSString*)title {
+- (id)initWithType:(DemoTablesType)type title:(NSString*)title {
     self = [super init];
     if(self != nil) {
         [self setType:type];
