@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name = 'Mobily'
-	s.version = '2.0.7'
+	s.version = '2.0.8'
 	s.summary = 'Mobily framework for iOS'
 	s.homepage = 'https://github.com/fgengine/mobily-ios/tree/v2'
 	s.license = {
@@ -16,7 +16,6 @@ Pod::Spec.new do |s|
         :branch => 'v2',
 		:tag => s.version.to_s
 	}
-    s.public_header_files = 'Classes/Mobily.h'
     s.requires_arc = true
     s.default_subspec = 'All'
 
@@ -28,7 +27,7 @@ Pod::Spec.new do |s|
 
     s.subspec 'CocoaPods' do |ss|
         ss.public_header_files = 'Classes/CocoaPods/**/*.h'
-        ss.source_files = 'Classes/Core/**/*.{h,m}'
+        ss.source_files = 'Classes/CocoaPods/**/*.{h,m}'
     end
 
 	s.subspec 'Core' do |ss|
