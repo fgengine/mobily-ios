@@ -220,7 +220,7 @@
 		409829851A71872500D83152 /* menu-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-button@2x.png"; sourceTree = "<group>"; };
 		409829861A71872500D83152 /* SlideNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationController.h; sourceTree = "<group>"; };
 		409829871A71872500D83152 /* SlideNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationController.m; sourceTree = "<group>"; };
-		409829B71A71877D00D83152 /* Mobily.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mobily.h; sourceTree = "<group>"; };
+		409829B91A71945F00D83152 /* MobilyCocoaPods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyCocoaPods.h; sourceTree = "<group>"; };
 		5A2438BFA45DA754D1C37067 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		F16AA68F9FE04603B1D99102 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -282,7 +282,7 @@
 				409829241A71872400D83152 /* CG */,
 				409829421A71872500D83152 /* UI */,
 				4098291B1A71872400D83152 /* AV */,
-				409829B71A71877D00D83152 /* Mobily.h */,
+				409829B81A71945F00D83152 /* CocoaPods */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -644,6 +644,14 @@
 				409829851A71872500D83152 /* menu-button@2x.png */,
 			);
 			path = Assets;
+			sourceTree = "<group>";
+		};
+		409829B81A71945F00D83152 /* CocoaPods */ = {
+			isa = PBXGroup;
+			children = (
+				409829B91A71945F00D83152 /* MobilyCocoaPods.h */,
+			);
+			path = CocoaPods;
 			sourceTree = "<group>";
 		};
 		4F1F86033CDFF14E4568271C /* Pods */ = {
