@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 	}
 	s.default_subspec = 'All'
     s.requires_arc = true
-    ss.public_header_files = 'Classes/Mobily.h'
+    s.public_header_files = 'Classes/Mobily.h'
 
 	s.subspec 'All' do |ss|
 		ss.dependency 'Mobily/NS'
