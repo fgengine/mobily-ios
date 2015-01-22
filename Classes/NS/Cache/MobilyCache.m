@@ -44,9 +44,7 @@
 @property(nonatomic, readwrite, copy) NSString* name;
 @property(nonatomic, readwrite, strong) NSString* fileName;
 @property(nonatomic, readwrite, strong) NSString* filePath;
-@property(nonatomic, readwrite, assign) NSUInteger memoryCapacity;
 @property(nonatomic, readwrite, assign) NSTimeInterval memoryStorageInterval;
-@property(nonatomic, readwrite, assign) NSUInteger discCapacity;
 @property(nonatomic, readwrite, assign) NSTimeInterval discStorageInterval;
 @property(nonatomic, readwrite, assign) NSUInteger currentMemoryUsage;
 @property(nonatomic, readwrite, assign) NSUInteger currentDiscUsage;
@@ -57,6 +55,8 @@
 - (void)removeObsoleteItemsInViewOfReserveSize:(NSUInteger)reserveSize;
 - (void)removeObsoleteItems;
 - (void)saveItems;
+
+- (void)notificationReceiveMemoryWarning:(NSNotification*)notification;
 
 @end
 
@@ -93,9 +93,9 @@
 
 #define MOBILY_CACHE_NAME                           @"MobilyCache"
 #define MOBILY_CACHE_EXTENSION                      @"cache"
-#define MOBILY_CACHE_MEMORY_CAPACITY                (1024 * 1024) * 5
+#define MOBILY_CACHE_MEMORY_CAPACITY                (1024 * 1024) * 30
 #define MOBILY_CACHE_MEMORY_STORAGE_INTERVAL        (60 * 10)
-#define MOBILY_CACHE_DISC_CAPACITY                  (1024 * 1024) * 10
+#define MOBILY_CACHE_DISC_CAPACITY                  (1024 * 1024) * 500
 #define MOBILY_CACHE_DISC_STORAGE_INTERVAL          ((60 * 60) * 24) * 7
 
 /*--------------------------------------------------*/
@@ -162,11 +162,15 @@
             [item setCache:self];
         }];
         [self removeObsoleteItems];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationReceiveMemoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     }
     return self;
 }
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     [self setName:nil];
     [self setTimer:nil];
     [self setItems:nil];
@@ -176,6 +180,26 @@
 
 #pragma mark Property
 
+- (void)setMemoryCapacity:(NSUInteger)memoryCapacity {
+    if(_memoryCapacity != memoryCapacity) {
+        BOOL needRemoveObsoleteItems = (_memoryCapacity > memoryCapacity);
+        _memoryCapacity = memoryCapacity;
+        if(needRemoveObsoleteItems == YES) {
+            [self removeObsoleteItems];
+        }
+    }
+}
+
+- (void)setDiscCapacity:(NSUInteger)discCapacity {
+    if(_discCapacity != discCapacity) {
+        BOOL needRemoveObsoleteItems = (_discCapacity > discCapacity);
+        _discCapacity = discCapacity;
+        if(needRemoveObsoleteItems == YES) {
+            [self removeObsoleteItems];
+        }
+    }
+}
+
 - (void)setTimer:(MobilyTimer*)timer {
     if(_timer != timer) {
         if(_timer != nil) {
@@ -183,8 +207,8 @@
         }
         MOBILY_SAFE_SETTER(_timer, timer);
         if(_timer != nil) {
-            [timer setDelegate:self];
-            [timer start];
+            [_timer setDelegate:self];
+            [_timer start];
         }
     }
 }
@@ -316,56 +340,58 @@
 #pragma mark Private
 
 - (void)removeObsoleteItemsInViewOfReserveSize:(NSUInteger)reserveSize {
-    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
     __block NSUInteger currentMemoryUsage = 0;
-    NSMutableArray* removedMemoryItems = [NSMutableArray array];
     __block NSUInteger currentDiscUsage = 0;
-    NSMutableArray* removedDiscItems = [NSMutableArray array];
-    [_items sortUsingComparator:^NSComparisonResult(MobilyCacheItem* item1, MobilyCacheItem* item2) {
-        if([item1 discStorageTime] > [item2 discStorageTime]) {
-            return NSOrderedDescending;
-        } else if([item1 discStorageTime] < [item2 discStorageTime]) {
-            return NSOrderedAscending;
-        } else {
-            if([item1 memoryStorageTime] > [item2 memoryStorageTime]) {
+    if([_items count] > 0) {
+        NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+        NSMutableArray* removedMemoryItems = [NSMutableArray array];
+        NSMutableArray* removedDiscItems = [NSMutableArray array];
+        [_items sortUsingComparator:^NSComparisonResult(MobilyCacheItem* item1, MobilyCacheItem* item2) {
+            if([item1 discStorageTime] > [item2 discStorageTime]) {
                 return NSOrderedDescending;
-            } else if([item1 memoryStorageTime] < [item2 memoryStorageTime]) {
+            } else if([item1 discStorageTime] < [item2 discStorageTime]) {
                 return NSOrderedAscending;
             } else {
-                if([item1 size] > [item2 size]) {
+                if([item1 memoryStorageTime] > [item2 memoryStorageTime]) {
                     return NSOrderedDescending;
-                } else if([item1 size] < [item2 size]) {
+                } else if([item1 memoryStorageTime] < [item2 memoryStorageTime]) {
                     return NSOrderedAscending;
+                } else {
+                    if([item1 size] > [item2 size]) {
+                        return NSOrderedDescending;
+                    } else if([item1 size] < [item2 size]) {
+                        return NSOrderedAscending;
+                    }
                 }
             }
-        }
-        return NSOrderedSame;
-    }];
-    [_items enumerateObjectsUsingBlock:^(MobilyCacheItem* item, NSUInteger index, BOOL* stop) {
-        if(([item discStorageTime] > now) && (((currentDiscUsage + reserveSize) + [item size]) <= _discCapacity)) {
-            if(([item memoryStorageTime] > now) && (((currentMemoryUsage + reserveSize) + [item size]) <= _memoryCapacity)) {
-                if([item isInMemory] == YES) {
-                    currentMemoryUsage += [item size];
+            return NSOrderedSame;
+        }];
+        [_items enumerateObjectsUsingBlock:^(MobilyCacheItem* item, NSUInteger index, BOOL* stop) {
+            if(([item discStorageTime] > now) && (((currentDiscUsage + reserveSize) + [item size]) <= _discCapacity)) {
+                if(([item memoryStorageTime] > now) && (((currentMemoryUsage + reserveSize) + [item size]) <= _memoryCapacity)) {
+                    if([item isInMemory] == YES) {
+                        currentMemoryUsage += [item size];
+                    }
+                } else {
+                    [removedMemoryItems addObject:item];
                 }
+                currentDiscUsage += [item size];
             } else {
-                [removedMemoryItems addObject:item];
+                [removedDiscItems addObject:item];
             }
-            currentDiscUsage += [item size];
-        } else {
-            [removedDiscItems addObject:item];
+        }];
+        if([removedMemoryItems count] > 0) {
+            [removedMemoryItems enumerateObjectsUsingBlock:^(MobilyCacheItem* item, NSUInteger index, BOOL* stop) {
+                [item clearFromMemoryCache];
+            }];
         }
-    }];
-    if([removedMemoryItems count] > 0) {
-        [removedMemoryItems enumerateObjectsUsingBlock:^(MobilyCacheItem* item, NSUInteger index, BOOL* stop) {
-            [item clearFromMemoryCache];
-        }];
-    }
-    if([removedDiscItems count] > 0) {
-        [removedDiscItems enumerateObjectsUsingBlock:^(MobilyCacheItem* item, NSUInteger index, BOOL* stop) {
-            [item clearFromAllCache];
-        }];
-        [_items removeObjectsInArray:removedDiscItems];
-        [self saveItems];
+        if([removedDiscItems count] > 0) {
+            [removedDiscItems enumerateObjectsUsingBlock:^(MobilyCacheItem* item, NSUInteger index, BOOL* stop) {
+                [item clearFromAllCache];
+            }];
+            [_items removeObjectsInArray:removedDiscItems];
+            [self saveItems];
+        }
     }
     [self setCurrentMemoryUsage:currentMemoryUsage];
     [self setCurrentDiscUsage:currentDiscUsage];
@@ -385,6 +411,15 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self removeObsoleteItems];
     });
+}
+
+#pragma mark NSNotificationCenter
+
+- (void)notificationReceiveMemoryWarning:(NSNotification*)notification {
+    [_items enumerateObjectsUsingBlock:^(MobilyCacheItem* item, NSUInteger index, BOOL* stop) {
+        [item clearFromMemoryCache];
+    }];
+    [self setCurrentMemoryUsage:0];
 }
 
 @end
@@ -407,7 +442,6 @@
     return @[
         @"key",
         @"fileName",
-        @"filePath",
         @"size",
         @"memoryStorageInterval",
         @"memoryStorageTime",
@@ -424,7 +458,6 @@
         [self setCache:cache];
         [self setKey:key];
         [self setFileName:[[[_key stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString] stringByMD5]];
-        [self setFilePath:[[MobilyStorage fileSystemDirectory] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", _fileName, MOBILY_CACHE_ITEM_EXTENSION]]];
         [self setData:data];
         [self setSize:[data length]];
         [self setMemoryStorageInterval:memoryStorageInterval];
@@ -439,7 +472,6 @@
     [self setCache:nil];
     [self setKey:nil];
     [self setFileName:nil];
-    [self setFilePath:nil];
     [self setData:nil];
     
     MOBILY_SAFE_DEALLOC;
@@ -452,6 +484,17 @@
 }
 
 #pragma mark Property
+
+- (void)setFileName:(NSString*)fileName {
+    if([_fileName isEqualToString:fileName] == NO) {
+        MOBILY_SAFE_SETTER(_fileName, fileName);
+        if(_fileName != nil) {
+            [self setFilePath:[[MobilyStorage fileSystemDirectory] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", _fileName, MOBILY_CACHE_ITEM_EXTENSION]]];
+        } else {
+            [self setFilePath:nil];
+        }
+    }
+}
 
 - (void)setData:(NSData*)data {
     if([_data isEqualToData:data] == NO) {
@@ -475,12 +518,6 @@
         }
     }
     return _data;
-}
-
-- (void)setSize:(NSUInteger)size {
-    if(_size != size) {
-        _size = size;
-    }
 }
 
 - (BOOL)isInMemory {

@@ -45,9 +45,9 @@ typedef void (^MobilyCacheCompleted)();
 @interface MobilyCache : NSObject
 
 @property(nonatomic, readonly, copy) NSString* name;
-@property(nonatomic, readonly, assign) NSUInteger memoryCapacity;
+@property(nonatomic, readwrite, assign) NSUInteger memoryCapacity;
 @property(nonatomic, readonly, assign) NSTimeInterval memoryStorageInterval;
-@property(nonatomic, readonly, assign) NSUInteger discCapacity;
+@property(nonatomic, readwrite, assign) NSUInteger discCapacity;
 @property(nonatomic, readonly, assign) NSTimeInterval discStorageInterval;
 @property(nonatomic, readonly, assign) NSUInteger currentMemoryUsage;
 @property(nonatomic, readonly, assign) NSUInteger currentDiscUsage;

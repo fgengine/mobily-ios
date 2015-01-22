@@ -320,7 +320,9 @@ typedef void (^MobilyLoaderBlock)();
         if([_loaderDelegate respondsToSelector:@selector(loader:dataForPath:)] == YES) {
             entry = [_loaderDelegate loader:_loader dataForPath:_path];
         } else {
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
             data = [NSData dataWithContentsOfURL:[NSURL URLWithString:_path]];
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         }
         if(data != nil) {
             if([_loaderDelegate respondsToSelector:@selector(loader:entryFromData:)] == YES) {

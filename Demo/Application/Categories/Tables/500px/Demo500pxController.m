@@ -72,6 +72,7 @@ static NSString* PXConsumerSecret = @"wMDdVbq28mvbkb0GxbLxBW9UdO8v4NZkMIVFqZWl";
 - (void)update {
     [super update];
     
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [PXRequest requestForSearchTerm:@"Comics"
                                page:1
                      resultsPerPage:500
@@ -82,6 +83,7 @@ static NSString* PXConsumerSecret = @"wMDdVbq28mvbkb0GxbLxBW9UdO8v4NZkMIVFqZWl";
                                  [self setDataSource:[results valueForKey:@"photos"]];
                                  [_tableView reloadData];
                              }
+                             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                          }];
 }
 
