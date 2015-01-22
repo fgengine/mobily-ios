@@ -42,10 +42,14 @@
 
 @interface MobilyModel ()
 
-@property(nonatomic, readwrite, weak) NSArray* propertyMap;
+@property(nonatomic, readwrite, weak) NSArray* compareMap;
+@property(nonatomic, readwrite, weak) NSArray* serializeMap;
 @property(nonatomic, readwrite, weak) NSDictionary* jsonMap;
 
-+ (NSArray*)buildPropertyMap;
++ (NSArray*)arrayMap:(NSMutableDictionary*)cache class:(Class)class selector:(SEL)selector;
++ (NSDictionary*)dictionaryMap:(NSMutableDictionary*)cache class:(Class)class selector:(SEL)selector;
++ (NSArray*)buildCompareMap;
++ (NSArray*)buildSerializeMap;
 + (NSDictionary*)buildJsonMap;
 
 @end
@@ -102,7 +106,7 @@
 - (id)initWithCoder:(NSCoder*)coder {
     self = [super init];
     if(self != nil) {
-        [[self propertyMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
+        [[self serializeMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
             id value = [coder decodeObjectForKey:field];
             if(value != nil) {
                 [self setValue:value forKey:field];
@@ -134,7 +138,7 @@
 
 - (void)dealloc {
     [self setUserDefaultsKey:nil];
-    [self setPropertyMap:nil];
+    [self setSerializeMap:nil];
     [self setJsonMap:nil];
     
     MOBILY_SAFE_DEALLOC;
@@ -142,9 +146,9 @@
 
 - (BOOL)isEqual:(id)object {
     __block BOOL result = NO;
-    if(([object isKindOfClass:[self class]] == YES) && ([[self propertyMap] count] > 0)) {
+    if(([object isKindOfClass:[self class]] == YES) && ([[self compareMap] count] > 0)) {
         result = YES;
-        [[self propertyMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
+        [[self compareMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
             id value1 = [self valueForKey:field];
             id value2 = [object valueForKey:field];
             if(value1 != value2) {
@@ -161,7 +165,7 @@
 }
 
 - (void)encodeWithCoder:(NSCoder*)coder {
-    [[self propertyMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
+    [[self serializeMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
         id value = [self valueForKey:field];
         if(value != nil) {
             [coder encodeObject:value forKey:field];
@@ -172,15 +176,25 @@
 - (id)copyWithZone:(NSZone*)zone {
     id result = [[[self class] allocWithZone:zone] init];
     if(result != nil) {
-        [result setPropertyMap:[self propertyMap]];
+        [result setSerializeMap:[self serializeMap]];
         [result setJsonMap:[self jsonMap]];
         [result setUserDefaultsKey:[self userDefaultsKey]];
         
-        [[self propertyMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
+        [[self serializeMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
             [result setValue:[[self valueForKey:field] copyWithZone:zone] forKey:field];
         }];
     }
     return result;
+}
+
+#pragma mark Debug
+
+- (NSString*)description {
+    NSMutableArray* result = [NSMutableArray array];
+    [[self serializeMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
+        [result addObject:[NSString stringWithFormat:@"%@ = %@", field, [self valueForKey:field]]];
+    }];
+    return [result componentsJoinedByString:@"; "];
 }
 
 #pragma mark Property
@@ -188,11 +202,18 @@
 - (void)setup {
 }
 
-- (NSArray*)propertyMap {
-    if(_propertyMap == nil) {
-        [self setPropertyMap:[[self class] buildPropertyMap]];
+- (NSArray*)compareMap {
+    if(_compareMap == nil) {
+        [self setCompareMap:[[self class] buildCompareMap]];
     }
-    return _propertyMap;
+    return _compareMap;
+}
+
+- (NSArray*)serializeMap {
+    if(_serializeMap == nil) {
+        [self setSerializeMap:[[self class] buildSerializeMap]];
+    }
+    return _serializeMap;
 }
 
 - (NSDictionary*)jsonMap {
@@ -204,7 +225,11 @@
 
 #pragma mark Public
 
-+ (NSArray*)propertyMap {
++ (NSArray*)compareMap {
+    return nil;
+}
+
++ (NSArray*)serializeMap {
     return nil;
 }
 
@@ -222,7 +247,7 @@
 }
 
 - (void)clearItem {
-    [[self propertyMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
+    [[self serializeMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
         @try {
             [self setValue:nil forKey:field];
         }
@@ -246,7 +271,7 @@
     @try {
         NSMutableDictionary* dict = [NSMutableDictionary dictionary];
         if(dict != nil) {
-            [[self propertyMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
+            [[self serializeMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
                 @try {
                     id value = [self valueForKey:field];
                     if(value != nil) {
@@ -292,7 +317,7 @@
     @try {
         NSDictionary* dict = [[NSUserDefaults standardUserDefaults] objectForKey:_userDefaultsKey];
         if(dict != nil) {
-            [[self propertyMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
+            [[self serializeMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
                 id value = [dict objectForKey:field];
                 if(value != nil) {
                     if([value isKindOfClass:[NSData class]] == YES) {
@@ -327,74 +352,71 @@
 
 #pragma mark Private
 
-+ (NSArray*)buildPropertyMap {
-    static NSMutableDictionary* propertyMap = nil;
-    if(propertyMap == nil) {
-        propertyMap = [NSMutableDictionary dictionary];
-    }
-    NSMutableArray* result = nil;
-    NSString* className = NSStringFromClass([self class]);
-    if(className != nil) {
-        result = [propertyMap objectForKey:className];
-        if(result == nil) {
-            result = [NSMutableArray array];
-            if(result != nil) {
-                NSMutableArray* finalMap = [NSMutableArray array];
-                if(finalMap != nil) {
-                    if([[self superclass] respondsToSelector:_cmd] == YES) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                        id superMap = [[self superclass] performSelector:_cmd];
-#pragma clang diagnostic pop
-                        if([superMap isKindOfClass:[NSArray class]] == YES) {
-                            [result addObjectsFromArray:superMap];
-                        }
-                    }
-                    id selfMap = [self propertyMap];
-                    if([selfMap isKindOfClass:[NSArray class]] == YES) {
-                        [result addObjectsFromArray:selfMap];
-                    }
-                    [propertyMap setObject:result forKey:className];
+
++ (NSArray*)arrayMap:(NSMutableDictionary*)cache class:(Class)class selector:(SEL)selector {
+    NSString* className = NSStringFromClass(class);
+    NSMutableArray* map = [cache objectForKey:className];
+    if(map == nil) {
+        map = [NSMutableArray array];
+        while(class != nil) {
+            if([class respondsToSelector:selector] == YES) {
+                NSArray* mapPart = [class performSelector:selector];
+                if([mapPart isKindOfClass:[NSArray class]] == YES) {
+                    [map addObjectsFromArray:mapPart];
                 }
             }
+            class = [class superclass];
         }
+        [cache setObject:map forKey:className];
     }
-    return result;
+    return map;
+}
+
++ (NSDictionary*)dictionaryMap:(NSMutableDictionary*)cache class:(Class)class selector:(SEL)selector {
+    NSString* className = NSStringFromClass(class);
+    NSMutableDictionary* map = [cache objectForKey:className];
+    if(map == nil) {
+        map = [NSMutableDictionary dictionary];
+        while(class != nil) {
+            if([class respondsToSelector:selector] == YES) {
+                NSDictionary* mapPart = [class performSelector:selector];
+                if([mapPart isKindOfClass:[NSDictionary class]] == YES) {
+                    [map addEntriesFromDictionary:mapPart];
+                }
+            }
+            class = [class superclass];
+        }
+        [cache setObject:map forKey:className];
+    }
+    return map;
+}
+
+#pragma clang diagnostic pop
+
++ (NSArray*)buildCompareMap {
+    static NSMutableDictionary* cache = nil;
+    if(cache == nil) {
+        cache = [NSMutableDictionary dictionary];
+    }
+    return [self arrayMap:cache class:[self class] selector:@selector(compareMap)];
+}
+
++ (NSArray*)buildSerializeMap {
+    static NSMutableDictionary* cache = nil;
+    if(cache == nil) {
+        cache = [NSMutableDictionary dictionary];
+    }
+    return [self arrayMap:cache class:[self class] selector:@selector(serializeMap)];
 }
 
 + (NSDictionary*)buildJsonMap {
-    static NSMutableDictionary* jsonMaps = nil;
-    if(jsonMaps == nil) {
-        jsonMaps = [NSMutableDictionary dictionary];
+    static NSMutableDictionary* cache = nil;
+    if(cache == nil) {
+        cache = [NSMutableDictionary dictionary];
     }
-    NSMutableDictionary* result = nil;
-    NSString* className = NSStringFromClass([self class]);
-    if(className != nil) {
-        result = [jsonMaps objectForKey:className];
-        if(result == nil) {
-            result = [NSMutableDictionary dictionary];
-            if(result != nil) {
-                NSMutableDictionary* finalMap = [NSMutableDictionary dictionary];
-                if(finalMap != nil) {
-                    if([[self superclass] respondsToSelector:_cmd] == YES) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                        id superMap = [[self superclass] performSelector:_cmd];
-#pragma clang diagnostic pop
-                        if([superMap isKindOfClass:[NSDictionary class]] == YES) {
-                            [result addEntriesFromDictionary:superMap];
-                        }
-                    }
-                    id selfMap = [self jsonMap];
-                    if([selfMap isKindOfClass:[NSDictionary class]] == YES) {
-                        [result addEntriesFromDictionary:selfMap];
-                    }
-                    [jsonMaps setObject:result forKey:className];
-                }
-            }
-        }
-    }
-    return result;
+    return [self dictionaryMap:cache class:[self class] selector:@selector(jsonMap)];
 }
 
 @end

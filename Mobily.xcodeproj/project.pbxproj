@@ -43,7 +43,7 @@
 		4098298C1A71872500D83152 /* MobilyEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 4098292F1A71872500D83152 /* MobilyEvent.m */; };
 		4098298D1A71872500D83152 /* MobilyHttpQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 409829311A71872500D83152 /* MobilyHttpQuery.m */; };
 		4098298E1A71872500D83152 /* MobilyKVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 409829331A71872500D83152 /* MobilyKVO.m */; };
-		4098298F1A71872500D83152 /* MobilyLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 409829351A71872500D83152 /* MobilyLoader.m */; };
+		4098298F1A71872500D83152 /* MobilyDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 409829351A71872500D83152 /* MobilyDownloader.m */; };
 		409829901A71872500D83152 /* MobilyModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 409829371A71872500D83152 /* MobilyModel.m */; };
 		409829911A71872500D83152 /* MobilyModelJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 409829391A71872500D83152 /* MobilyModelJson.m */; };
 		409829921A71872500D83152 /* MobilyNS.m in Sources */ = {isa = PBXBuildFile; fileRef = 4098293B1A71872500D83152 /* MobilyNS.m */; };
@@ -144,8 +144,8 @@
 		409829311A71872500D83152 /* MobilyHttpQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyHttpQuery.m; sourceTree = "<group>"; };
 		409829321A71872500D83152 /* MobilyKVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyKVO.h; sourceTree = "<group>"; };
 		409829331A71872500D83152 /* MobilyKVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyKVO.m; sourceTree = "<group>"; };
-		409829341A71872500D83152 /* MobilyLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyLoader.h; sourceTree = "<group>"; };
-		409829351A71872500D83152 /* MobilyLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyLoader.m; sourceTree = "<group>"; };
+		409829341A71872500D83152 /* MobilyDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyDownloader.h; sourceTree = "<group>"; };
+		409829351A71872500D83152 /* MobilyDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyDownloader.m; sourceTree = "<group>"; };
 		409829361A71872500D83152 /* MobilyModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyModel.h; sourceTree = "<group>"; };
 		409829371A71872500D83152 /* MobilyModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyModel.m; sourceTree = "<group>"; };
 		409829381A71872500D83152 /* MobilyModelJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyModelJson.h; sourceTree = "<group>"; };
@@ -511,8 +511,8 @@
 				4098293F1A71872500D83152 /* MobilyTaskManager.m */,
 				409829301A71872500D83152 /* MobilyHttpQuery.h */,
 				409829311A71872500D83152 /* MobilyHttpQuery.m */,
-				409829341A71872500D83152 /* MobilyLoader.h */,
-				409829351A71872500D83152 /* MobilyLoader.m */,
+				409829341A71872500D83152 /* MobilyDownloader.h */,
+				409829351A71872500D83152 /* MobilyDownloader.m */,
 				4098293C1A71872500D83152 /* MobilyRegExpParser.h */,
 				4098293D1A71872500D83152 /* MobilyRegExpParser.m */,
 				409829321A71872500D83152 /* MobilyKVO.h */,
@@ -805,7 +805,7 @@
 				409829191A712B9200D83152 /* Demo500pxController.m in Sources */,
 				409829941A71872500D83152 /* MobilyTaskManager.m in Sources */,
 				4098299F1A71872500D83152 /* MobilyListField.m in Sources */,
-				4098298F1A71872500D83152 /* MobilyLoader.m in Sources */,
+				4098298F1A71872500D83152 /* MobilyDownloader.m in Sources */,
 				407F25B91A65CB4800B0A79C /* DemoAudioPlayerController.m in Sources */,
 				409829931A71872500D83152 /* MobilyRegExpParser.m in Sources */,
 				409829A11A71872500D83152 /* MobilyScrollView.m in Sources */,

@@ -438,7 +438,13 @@
 
 #pragma mark MobilyModel
 
-+ (NSArray*)propertyMap {
++ (NSArray*)compareMap {
+    return @[
+        @"key",
+    ];
+}
+
++ (NSArray*)serializeMap {
     return @[
         @"key",
         @"fileName",
@@ -475,12 +481,6 @@
     [self setData:nil];
     
     MOBILY_SAFE_DEALLOC;
-}
-
-#pragma mark Debug
-
-- (NSString*)description {
-    return [NSString stringWithFormat:@"%@ - %d b - %d s - %d s", _key, (int)_size, (int)_memoryStorageTime, (int)_memoryStorageTime];
 }
 
 #pragma mark Property

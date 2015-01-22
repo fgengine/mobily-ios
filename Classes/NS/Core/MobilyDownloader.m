@@ -33,16 +33,16 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyLoader.h"
+#import "MobilyDownloader.h"
 #import "MobilyEvent.h"
 
 /*--------------------------------------------------*/
 
-typedef void (^MobilyLoaderBlock)();
+typedef void (^MobilyDownloaderBlock)();
 
 /*--------------------------------------------------*/
 
-@interface MobilyLoader ()
+@interface MobilyDownloader ()
 
 @property(nonatomic, readwrite, strong) MobilyTaskManager* taskManager;
 @property(nonatomic, readwrite, strong) MobilyCache* cache;
@@ -53,11 +53,11 @@ typedef void (^MobilyLoaderBlock)();
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilyLoaderTask : MobilyTask
+@interface MobilyDownloaderTask : MobilyTask
 
-@property(nonatomic, readwrite, weak) MobilyLoader* loader;
-@property(nonatomic, readwrite, weak) id< MobilyLoaderDelegate > loaderDelegate;
-@property(nonatomic, readwrite, weak) MobilyCache* loaderCache;
+@property(nonatomic, readwrite, weak) MobilyDownloader* downloader;
+@property(nonatomic, readwrite, weak) id< MobilyDownloaderDelegate > downloaderDelegate;
+@property(nonatomic, readwrite, weak) MobilyCache* downloaderCache;
 @property(nonatomic, readwrite, strong) id target;
 @property(nonatomic, readwrite, strong) NSString* path;
 @property(nonatomic, readwrite, strong) id entry;
@@ -65,9 +65,9 @@ typedef void (^MobilyLoaderBlock)();
 @property(nonatomic, readwrite, strong) id< MobilyEvent > completeEvent;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > failureEvent;
 
-- (id)initWithLoader:(MobilyLoader*)loader path:(NSString*)path target:(id)target;
-- (id)initWithLoader:(MobilyLoader*)loader path:(NSString*)path target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
-- (id)initWithLoader:(MobilyLoader*)loader path:(NSString*)path target:(id)target completeBlock:(MobilyLoaderCompleteBlock)completeBlock failureBlock:(MobilyLoaderFailureBlock)failureBlock;
+- (id)initWithDownloader:(MobilyDownloader*)downloader path:(NSString*)path target:(id)target;
+- (id)initWithDownloader:(MobilyDownloader*)downloader path:(NSString*)path target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
+- (id)initWithDownloader:(MobilyDownloader*)downloader path:(NSString*)path target:(id)target completeBlock:(MobilyDownloaderCompleteBlock)completeBlock failureBlock:(MobilyDownloaderFailureBlock)failureBlock;
 
 @end
 
@@ -79,7 +79,7 @@ typedef void (^MobilyLoaderBlock)();
 
 /*--------------------------------------------------*/
 
-@implementation MobilyLoader
+@implementation MobilyDownloader
 
 #pragma mark Standart
 
@@ -87,7 +87,7 @@ typedef void (^MobilyLoaderBlock)();
     return [self initWithDelegate:nil];
 }
 
-- (id)initWithDelegate:(id< MobilyLoaderDelegate >)delegate {
+- (id)initWithDelegate:(id< MobilyDownloaderDelegate >)delegate {
     self = [super init];
     if(self != nil) {
         [self setDelegate:delegate];
@@ -116,8 +116,8 @@ typedef void (^MobilyLoaderBlock)();
 - (BOOL)setEntry:(id)entry byPath:(NSString*)path {
     NSData* data = nil;
     if(entry != nil) {
-        if([_delegate respondsToSelector:@selector(loader:entryToData:)] == YES) {
-            data = [_delegate loader:self entryToData:entry];
+        if([_delegate respondsToSelector:@selector(downloader:entryToData:)] == YES) {
+            data = [_delegate downloader:self entryToData:entry];
         } else if([entry isKindOfClass:[NSData class]] == YES) {
             data = entry;
         }
@@ -136,8 +136,8 @@ typedef void (^MobilyLoaderBlock)();
     id entry = nil;
     id data = [_cache cacheDataForKey:path];
     if(data != nil) {
-        if([_delegate respondsToSelector:@selector(loader:entryFromData:)] == YES) {
-            entry = [_delegate loader:self entryFromData:data];
+        if([_delegate respondsToSelector:@selector(downloader:entryFromData:)] == YES) {
+            entry = [_delegate downloader:self entryFromData:data];
         } else {
             entry = data;
         }
@@ -152,19 +152,19 @@ typedef void (^MobilyLoaderBlock)();
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-- (void)loadWithPath:(NSString*)path target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector {
+- (void)downloadWithPath:(NSString*)path target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector {
     if([path length] > 0) {
         id entry = nil;
         NSData* data = [_cache cacheDataForKey:path];
         if(data != nil) {
-            if([_delegate respondsToSelector:@selector(loader:entryFromData:)] == YES) {
-                entry = [_delegate loader:self entryFromData:data];
+            if([_delegate respondsToSelector:@selector(downloader:entryFromData:)] == YES) {
+                entry = [_delegate downloader:self entryFromData:data];
             } else {
                 entry = data;
             }
         }
         if(entry == nil) {
-            MobilyLoaderTask* task = [[MobilyLoaderTask alloc] initWithLoader:self path:path target:target completeSelector:completeSelector failureSelector:failureSelector];
+            MobilyDownloaderTask* task = [[MobilyDownloaderTask alloc] initWithDownloader:self path:path target:target completeSelector:completeSelector failureSelector:failureSelector];
             if(task != nil) {
                 [_taskManager updating];
                 [_taskManager addTask:task];
@@ -187,19 +187,19 @@ typedef void (^MobilyLoaderBlock)();
 }
 #pragma clang diagnostic pop
 
-- (void)loadWithPath:(NSString*)path target:(id)target completeBlock:(MobilyLoaderCompleteBlock)completeBlock failureBlock:(MobilyLoaderFailureBlock)failureBlock {
+- (void)downloadWithPath:(NSString*)path target:(id)target completeBlock:(MobilyDownloaderCompleteBlock)completeBlock failureBlock:(MobilyDownloaderFailureBlock)failureBlock {
     if([path length] > 0) {
         id entry = nil;
         NSData* data = [_cache cacheDataForKey:path];
         if(data != nil) {
-            if([_delegate respondsToSelector:@selector(loader:entryFromData:)] == YES) {
-                entry = [_delegate loader:self entryFromData:data];
+            if([_delegate respondsToSelector:@selector(downloader:entryFromData:)] == YES) {
+                entry = [_delegate downloader:self entryFromData:data];
             } else {
                 entry = data;
             }
         }
         if(entry == nil) {
-            MobilyLoaderTask* task = [[MobilyLoaderTask alloc] initWithLoader:self path:path target:target completeBlock:completeBlock failureBlock:failureBlock];
+            MobilyDownloaderTask* task = [[MobilyDownloaderTask alloc] initWithDownloader:self path:path target:target completeBlock:completeBlock failureBlock:failureBlock];
             if(task != nil) {
                 [_taskManager updating];
                 [_taskManager addTask:task];
@@ -222,7 +222,7 @@ typedef void (^MobilyLoaderBlock)();
 }
 
 - (void)cancelByPath:(NSString*)path {
-    [_taskManager enumirateTasksUsingBlock:^(MobilyLoaderTask* task, BOOL* stop) {
+    [_taskManager enumirateTasksUsingBlock:^(MobilyDownloaderTask* task, BOOL* stop) {
         if([[task path] isEqualToString:path] == YES) {
             [task cancel];
         }
@@ -230,7 +230,7 @@ typedef void (^MobilyLoaderBlock)();
 }
 
 - (void)cancelByTarget:(id)target {
-    [_taskManager enumirateTasksUsingBlock:^(MobilyLoaderTask* task, BOOL* stop) {
+    [_taskManager enumirateTasksUsingBlock:^(MobilyDownloaderTask* task, BOOL* stop) {
         if([task target] == target) {
             [task cancel];
         }
@@ -248,24 +248,24 @@ typedef void (^MobilyLoaderBlock)();
 
 /*--------------------------------------------------*/
 
-@implementation MobilyLoaderTask
+@implementation MobilyDownloaderTask
 
 #pragma mark Standart
 
-- (id)initWithLoader:(MobilyLoader*)loader path:(NSString*)path target:(id)target {
+- (id)initWithDownloader:(MobilyDownloader*)downloader path:(NSString*)path target:(id)target {
     self = [super init];
     if(self != nil) {
-        [self setLoader:loader];
-        [self setLoaderDelegate:[_loader delegate]];
-        [self setLoaderCache:[_loader cache]];
+        [self setDownloader:downloader];
+        [self setDownloaderDelegate:[_downloader delegate]];
+        [self setDownloaderCache:[_downloader cache]];
         [self setTarget:target];
         [self setPath:path];
     }
     return self;
 }
 
-- (id)initWithLoader:(MobilyLoader*)loader path:(NSString*)path target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector {
-    self = [self initWithLoader:loader path:path target:target];
+- (id)initWithDownloader:(MobilyDownloader*)downloader path:(NSString*)path target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector {
+    self = [self initWithDownloader:downloader path:path target:target];
     if(self != nil) {
         [self setCompleteEvent:[MobilyEventSelector callbackWithTarget:target action:completeSelector inMainThread:YES]];
         [self setFailureEvent:[MobilyEventSelector callbackWithTarget:target action:failureSelector inMainThread:YES]];
@@ -273,8 +273,8 @@ typedef void (^MobilyLoaderBlock)();
     return self;
 }
 
-- (id)initWithLoader:(MobilyLoader*)loader path:(NSString*)path target:(id)target completeBlock:(MobilyLoaderCompleteBlock)completeBlock failureBlock:(MobilyLoaderFailureBlock)failureBlock {
-    self = [self initWithLoader:loader path:path target:target];
+- (id)initWithDownloader:(MobilyDownloader*)downloader path:(NSString*)path target:(id)target completeBlock:(MobilyDownloaderCompleteBlock)completeBlock failureBlock:(MobilyDownloaderFailureBlock)failureBlock {
+    self = [self initWithDownloader:downloader path:path target:target];
     if(self != nil) {
         [self setCompleteEvent:[MobilyEventBlock callbackWithBlock:^id(id sender, id object) {
             if(completeBlock != nil) {
@@ -293,9 +293,9 @@ typedef void (^MobilyLoaderBlock)();
 }
 
 - (void)dealloc {
-    [self setLoader:nil];
-    [self setLoaderDelegate:nil];
-    [self setLoaderCache:nil];
+    [self setDownloader:nil];
+    [self setDownloaderDelegate:nil];
+    [self setDownloaderCache:nil];
     [self setTarget:nil];
     [self setPath:nil];
     [self setEntry:nil];
@@ -309,30 +309,30 @@ typedef void (^MobilyLoaderBlock)();
 
 - (void)working {
     id entry = nil;
-    NSData* data = [_loaderCache cacheDataForKey:_path];
+    NSData* data = [_downloaderCache cacheDataForKey:_path];
     if(data != nil) {
-        if([_loaderDelegate respondsToSelector:@selector(loader:entryFromData:)] == YES) {
-            entry = [_loaderDelegate loader:_loader entryFromData:data];
+        if([_downloaderDelegate respondsToSelector:@selector(downloader:entryFromData:)] == YES) {
+            entry = [_downloaderDelegate downloader:_downloader entryFromData:data];
         } else {
             entry = data;
         }
     }
     if(entry == nil) {
-        if([_loaderDelegate respondsToSelector:@selector(loader:dataForPath:)] == YES) {
-            entry = [_loaderDelegate loader:_loader dataForPath:_path];
+        if([_downloaderDelegate respondsToSelector:@selector(downloader:dataForPath:)] == YES) {
+            entry = [_downloaderDelegate downloader:_downloader dataForPath:_path];
         } else {
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
             data = [NSData dataWithContentsOfURL:[NSURL URLWithString:_path]];
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         }
         if(data != nil) {
-            if([_loaderDelegate respondsToSelector:@selector(loader:entryFromData:)] == YES) {
-                entry = [_loaderDelegate loader:_loader entryFromData:data];
+            if([_downloaderDelegate respondsToSelector:@selector(downloader:entryFromData:)] == YES) {
+                entry = [_downloaderDelegate downloader:_downloader entryFromData:data];
             } else {
                 entry = data;
             }
             if(entry != nil) {
-                [_loaderCache setCacheData:data forKey:_path];
+                [_downloaderCache setCacheData:data forKey:_path];
                 [self setEntry:entry];
                 [self setNeedRework:NO];
             }

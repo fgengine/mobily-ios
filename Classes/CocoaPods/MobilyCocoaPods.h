@@ -48,7 +48,7 @@
 #   import "MobilyCache.h"
 #   import "MobilyTaskManager.h"
 #   import "MobilyHttpQuery.h"
-#   import "MobilyLoader.h"
+#   import "MobilyDownloader.h"
 #   import "MobilyRegExpParser.h"
 #   import "MobilyKVO.h"
 #endif

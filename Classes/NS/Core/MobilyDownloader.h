@@ -38,22 +38,22 @@
 
 /*--------------------------------------------------*/
 
-typedef void (^MobilyLoaderCompleteBlock)(id entry, NSString* path);
-typedef void (^MobilyLoaderFailureBlock)(NSString* path);
+typedef void (^MobilyDownloaderCompleteBlock)(id entry, NSString* path);
+typedef void (^MobilyDownloaderFailureBlock)(NSString* path);
 
 /*--------------------------------------------------*/
 
-@protocol MobilyLoaderDelegate;
+@protocol MobilyDownloaderDelegate;
 
 /*--------------------------------------------------*/
 
-@interface MobilyLoader : NSObject
+@interface MobilyDownloader : NSObject
 
-@property(nonatomic, readwrite, weak) id< MobilyLoaderDelegate > delegate;
+@property(nonatomic, readwrite, weak) id< MobilyDownloaderDelegate > delegate;
 @property(nonatomic, readonly, strong) MobilyTaskManager* taskManager;
 @property(nonatomic, readonly, strong) MobilyCache* cache;
 
-- (id)initWithDelegate:(id< MobilyLoaderDelegate >)delegate;
+- (id)initWithDelegate:(id< MobilyDownloaderDelegate >)delegate;
 
 - (BOOL)isExistEntryByPath:(NSString*)path;
 - (BOOL)setEntry:(id)entry byPath:(NSString*)path;
@@ -62,8 +62,8 @@ typedef void (^MobilyLoaderFailureBlock)(NSString* path);
 
 - (void)cleanup;
 
-- (void)loadWithPath:(NSString*)path target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
-- (void)loadWithPath:(NSString*)path target:(id)target completeBlock:(MobilyLoaderCompleteBlock)completeBlock failureBlock:(MobilyLoaderFailureBlock)failureBlock;
+- (void)downloadWithPath:(NSString*)path target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
+- (void)downloadWithPath:(NSString*)path target:(id)target completeBlock:(MobilyDownloaderCompleteBlock)completeBlock failureBlock:(MobilyDownloaderFailureBlock)failureBlock;
 - (void)cancelByPath:(NSString*)path;
 - (void)cancelByTarget:(id)target;
 
@@ -71,12 +71,12 @@ typedef void (^MobilyLoaderFailureBlock)(NSString* path);
 
 /*--------------------------------------------------*/
 
-@protocol MobilyLoaderDelegate < NSObject >
+@protocol MobilyDownloaderDelegate < NSObject >
 
 @optional
-- (NSData*)loader:(MobilyLoader*)mobilyLoader dataForPath:(NSString*)path;
-- (id)loader:(MobilyLoader*)mobilyLoader entryFromData:(NSData*)data;
-- (NSData*)loader:(MobilyLoader*)mobilyLoader entryToData:(id)entry;
+- (NSData*)downloader:(MobilyDownloader*)downloader dataForPath:(NSString*)path;
+- (id)downloader:(MobilyDownloader*)downloader entryFromData:(NSData*)data;
+- (NSData*)downloader:(MobilyDownloader*)downloader entryToData:(id)entry;
 
 @end
 

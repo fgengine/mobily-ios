@@ -50,7 +50,8 @@ typedef void (^MobilyModelBlock)();
 
 - (void)setup;
 
-+ (NSArray*)propertyMap;
++ (NSArray*)compareMap;
++ (NSArray*)serializeMap;
 + (NSDictionary*)jsonMap;
 
 - (void)convertFromJson:(id)json;
@@ -76,6 +77,7 @@ typedef void (^MobilyModelCollectionEnumBlock)(id item, BOOL* stop);
 
 @property(nonatomic, readwrite, strong) NSString* userDefaultsKey;
 @property(nonatomic, readwrite, strong) NSString* fileName;
+@property(nonatomic, readonly, strong) NSString* filePath;
 @property(nonatomic, readonly, copy) NSArray* items;
 
 - (id)initWithUserDefaultsKey:(NSString*)userDefaultsKey;

@@ -34,13 +34,13 @@
 /*--------------------------------------------------*/
 
 #import "MobilyImageView.h"
-#import "MobilyLoader.h"
+#import "MobilyDownloader.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyImageLoader () < MobilyLoaderDelegate >
+@interface MobilyImageDownloader () < MobilyDownloaderDelegate >
 
-@property(nonatomic, readwrite, strong) MobilyLoader* loader;
+@property(nonatomic, readwrite, strong) MobilyDownloader* downloader;
 
 @end
 
@@ -134,14 +134,14 @@
     [self setImageUrl:imageUrl complete:nil failure:nil];
 }
 
-- (void)setImageUrl:(NSString*)imageUrl complete:(MobilyImageLoaderCompleteBlock)complete failure:(MobilyImageLoaderFailureBlock)failure {
+- (void)setImageUrl:(NSString*)imageUrl complete:(MobilyImageDownloaderCompleteBlock)complete failure:(MobilyImageDownloaderFailureBlock)failure {
     if([_imageUrl isEqualToString:imageUrl] == NO) {
         if(_imageUrl != nil) {
-            [[MobilyImageLoader shared] cancelByTarget:self];
+            [[MobilyImageDownloader shared] cancelByTarget:self];
         }
         _imageUrl = imageUrl;
         [super setImage:_defaultImage];
-        [[MobilyImageLoader shared] loadWithPath:_imageUrl target:self completeBlock:^(UIImage* image, NSString* path) {
+        [[MobilyImageDownloader shared] downloadWithPath:_imageUrl target:self completeBlock:^(UIImage* image, NSString* path) {
             [super setImage:image];
             if(complete != nil) {
                 complete(image, _imageUrl);
@@ -160,20 +160,20 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation MobilyImageLoader
+@implementation MobilyImageDownloader
 
 #pragma mark Standart
 
 - (id)init {
     self = [super init];
     if(self != nil) {
-        [self setLoader:[[MobilyLoader alloc] initWithDelegate:self]];
+        [self setDownloader:[[MobilyDownloader alloc] initWithDelegate:self]];
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setLoader:nil];
+    [self setDownloader:nil];
     
     MOBILY_SAFE_DEALLOC;
 }
@@ -193,48 +193,48 @@
 }
 
 - (BOOL)isExistImageWithPath:(NSString*)path {
-    return [_loader isExistEntryByPath:path];
+    return [_downloader isExistEntryByPath:path];
 }
 
 - (UIImage*)imageWithPath:(NSString*)path {
-    return [_loader entryByPath:path];
+    return [_downloader entryByPath:path];
 }
 
 - (void)setImage:(UIImage*)image byPath:(NSString*)path {
-    [_loader setEntry:image byPath:path];
+    [_downloader setEntry:image byPath:path];
 }
 
 - (void)removeByPath:(NSString*)path {
-    [[_loader cache] removeCacheDataForKey:path];
+    [_downloader removeEntryByPath:path];
 }
 
 - (void)cleanup {
-    [[_loader cache] removeAllCachedData];
+    [_downloader cleanup];
 }
 
-- (void)loadWithPath:(NSString*)path target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector {
-    [_loader loadWithPath:path target:target completeSelector:completeSelector failureSelector:failureSelector];
+- (void)downloadWithPath:(NSString*)path target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector {
+    [_downloader downloadWithPath:path target:target completeSelector:completeSelector failureSelector:failureSelector];
 }
 
-- (void)loadWithPath:(NSString*)path target:(id)target completeBlock:(MobilyImageLoaderCompleteBlock)completeBlock failureBlock:(MobilyImageLoaderFailureBlock)failureBlock {
-    [_loader loadWithPath:path target:target completeBlock:completeBlock failureBlock:failureBlock];
+- (void)downloadWithPath:(NSString*)path target:(id)target completeBlock:(MobilyImageDownloaderCompleteBlock)completeBlock failureBlock:(MobilyImageDownloaderFailureBlock)failureBlock {
+    [_downloader downloadWithPath:path target:target completeBlock:completeBlock failureBlock:failureBlock];
 }
 
 - (void)cancelByPath:(NSString*)path {
-    [_loader cancelByPath:path];
+    [_downloader cancelByPath:path];
 }
 
 - (void)cancelByTarget:(id)target {
-    [_loader cancelByTarget:target];
+    [_downloader cancelByTarget:target];
 }
 
-#pragma mark MobilyLoaderDelegatec
+#pragma mark MobilyDownloaderDelegate
 
-- (id)loader:(MobilyLoader*)mobilyLoader entryFromData:(NSData*)data {
+- (id)downloader:(MobilyDownloader*)mobilyDownloader entryFromData:(NSData*)data {
     return [UIImage imageWithData:data];
 }
 
-- (NSData*)loader:(MobilyLoader*)mobilyLoader entryToData:(id)entry {
+- (NSData*)downloader:(MobilyDownloader*)mobilyDownloader entryToData:(id)entry {
     return UIImagePNGRepresentation(entry);
 }
 
