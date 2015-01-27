@@ -33,52 +33,54 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyTaskManager.h"
-#import "MobilyCache.h"
+#import "MobilyApiResponse.h"
 
 /*--------------------------------------------------*/
 
-typedef void (^MobilyDownloaderCompleteBlock)(id entry, NSURL* url);
-typedef void (^MobilyDownloaderFailureBlock)(NSURL* url);
+@interface MobilyApiResponse ()
 
-/*--------------------------------------------------*/
-
-@protocol MobilyDownloaderDelegate;
-
-/*--------------------------------------------------*/
-
-@interface MobilyDownloader : NSObject
-
-@property(nonatomic, readwrite, weak) id< MobilyDownloaderDelegate > delegate;
-@property(nonatomic, readonly, strong) MobilyTaskManager* taskManager;
-@property(nonatomic, readonly, strong) MobilyCache* cache;
-
-+ (instancetype)shared;
-
-- (id)initWithDelegate:(id< MobilyDownloaderDelegate >)delegate;
-
-- (BOOL)isExistEntryByUrl:(NSURL*)url;
-- (BOOL)setEntry:(id)entry byUrl:(NSURL*)url;
-- (void)removeEntryByUrl:(NSURL*)url;
-- (id)entryByUrl:(NSURL*)url;
-
-- (void)cleanup;
-
-- (void)downloadWithUrl:(NSURL*)url byTarget:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
-- (void)downloadWithUrl:(NSURL*)url byTarget:(id)target completeBlock:(MobilyDownloaderCompleteBlock)completeBlock failureBlock:(MobilyDownloaderFailureBlock)failureBlock;
-- (void)cancelByUrl:(NSURL*)url;
-- (void)cancelByTarget:(id)target;
 
 @end
 
 /*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
 
-@protocol MobilyDownloaderDelegate < NSObject >
+@implementation MobilyApiResponse
 
-@optional
-- (NSData*)downloader:(MobilyDownloader*)downloader dataForUrl:(NSURL*)url;
-- (id)downloader:(MobilyDownloader*)downloader entryFromData:(NSData*)data;
-- (NSData*)downloader:(MobilyDownloader*)downloader entryToData:(id)entry;
+#pragma mark Init
+
+- (id)initWithHttpQuery:(MobilyHttpQuery*)httpQuery {
+    self = [super init];
+    if(self != nil) {
+        [self setValid:[self fromHttpQuery:httpQuery]];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [self setHttpError:nil];
+    
+    MOBILY_SAFE_DEALLOC;
+}
+
+#pragma mark Init
+
+- (BOOL)fromHttpQuery:(MobilyHttpQuery*)httpQuery {
+    if([httpQuery error] == nil) {
+        NSString* responseMimeType = [httpQuery responseMimeType];
+        if(([responseMimeType isEqualToString:@"application/json"] == YES) || ([responseMimeType isEqualToString:@"text/json"] == YES)) {
+            id json = [httpQuery responseJson];
+            if(json != nil) {
+                [self convertFromJson:json];
+                return YES;
+            }
+        }
+    } else {
+        [self setHttpError:[httpQuery error]];
+    }
+    return NO;
+}
 
 @end
 

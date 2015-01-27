@@ -34,11 +34,13 @@
 /*--------------------------------------------------*/
 
 #import "MobilyAudioPlayer.h"
+#import "MobilyDownloader.h"
 
 /*--------------------------------------------------*/
 
 @interface MobilyAudioPlayer () < AVAudioPlayerDelegate >
 
+@property(nonatomic, readwrite, strong) NSURL* url;
 @property(nonatomic, readwrite, assign, getter=isPrepared) BOOL prepared;
 @property(nonatomic, readwrite, assign, getter=isPlaying) BOOL playing;
 @property(nonatomic, readwrite, assign, getter=isPaused) BOOL paused;
@@ -70,6 +72,7 @@
 }
 
 - (void)dealloc {
+    [self setUrl:nil];
     [self setPlayer:nil];
     [self setPreparedBlock:nil];
     [self setCleanedBlock:nil];
@@ -95,10 +98,6 @@
             [_player setDelegate:self];
         }
     }
-}
-
-- (NSURL*)url {
-    return [_player url];
 }
 
 - (NSUInteger)numberOfChannels {
@@ -176,18 +175,58 @@
         [self setPlayer:[[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error]];
         if(_player != nil) {
             if([_player prepareToPlay] == YES) {
+                [self setUrl:url];
                 [self setPrepared:YES];
                 if([_delegate respondsToSelector:@selector(audioPlayerDidPrepared:)] == YES) {
                     [_delegate audioPlayerDidPrepared:self];
                 } else if(_preparedBlock != nil) {
                     _preparedBlock();
                 }
+            } else {
+                [self setPlayer:nil];
             }
         } else if(error != nil) {
             NSLog(@"MobilyAudioPlayer::prepareWithUrl:%@ Error=%@", url, [error localizedDescription]);
         }
     }
     return _prepared;
+}
+
+- (void)prepareWithUrl:(NSURL*)url success:(MobilyAudioPlayerBlock)success failure:(MobilyAudioPlayerBlock)failure {
+    if((_prepared == NO) && ([_url isEqual:url] == NO)) {
+        if([_player url] != nil) {
+            [[MobilyDownloader shared] cancelByTarget:self];
+        }
+        [[MobilyDownloader shared] downloadWithUrl:url byTarget:self completeBlock:^(NSData* data, NSURL* url) {
+            NSError* error = nil;
+            [self setPlayer:[[AVAudioPlayer alloc] initWithData:data error:&error]];
+            if(_player != nil) {
+                if([_player prepareToPlay] == YES) {
+                    [self setUrl:url];
+                    [self setPrepared:YES];
+                    if([_delegate respondsToSelector:@selector(audioPlayerDidPrepared:)] == YES) {
+                        [_delegate audioPlayerDidPrepared:self];
+                    } else if(_preparedBlock != nil) {
+                        _preparedBlock();
+                    }
+                    if(success != nil) {
+                        success();
+                    }
+                } else {
+                    [self setPlayer:nil];
+                }
+            } else if(error != nil) {
+                NSLog(@"MobilyAudioPlayer::prepareWithUrl:%@ Error=%@", url, [error localizedDescription]);
+            }
+            if((_prepared == NO) && (failure != nil)) {
+                failure();
+            }
+        } failureBlock:^(NSURL *url) {
+            if(failure != nil) {
+                failure();
+            }
+        }];
+    }
 }
 
 - (void)clean {

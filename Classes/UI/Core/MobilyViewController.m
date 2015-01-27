@@ -131,9 +131,9 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
 }
 
 - (void)viewDidUnload {
-    [super viewDidUnload];
-    
     [self setNeedUpdate];
+    
+    [super viewDidUnload];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -151,7 +151,7 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
     if(([self isViewLoaded] == YES) && ([self isAppeared] == YES)) {
         [self update];
     } else {
-        [self setNeedUpdate];
+        [self setNeedUpdate:YES];
     }
 }
 

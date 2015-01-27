@@ -77,6 +77,7 @@ typedef void(^MobilyAudioPlayerErrorBlock)(NSError* error);
 - (BOOL)prepareWithName:(NSString*)name;
 - (BOOL)prepareWithPath:(NSString*)path name:(NSString*)name;
 - (BOOL)prepareWithUrl:(NSURL*)url;
+- (void)prepareWithUrl:(NSURL*)url success:(MobilyAudioPlayerBlock)success failure:(MobilyAudioPlayerBlock)failure;
 - (void)clean;
 
 - (BOOL)play;

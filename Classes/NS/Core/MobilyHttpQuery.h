@@ -37,11 +37,12 @@
 
 /*--------------------------------------------------*/
 
-@class MobilyHttpQuery;
+@protocol MobilyHttpQueryDelegate;
 
 /*--------------------------------------------------*/
 
-typedef void (^MobilyHttpQueryBlock)(MobilyHttpQuery* query);
+typedef void (^MobilyHttpQueryBlock)();
+typedef void (^MobilyHttpQueryErrorBlock)(NSError* error);
 
 /*--------------------------------------------------*/
 
@@ -49,7 +50,7 @@ typedef void (^MobilyHttpQueryBlock)(MobilyHttpQuery* query);
 
 @property(nonatomic, readwrite, strong) NSString* certificateFilename;
 
-@property(nonatomic, readwrite, strong) NSString* requestUrl;
+@property(nonatomic, readwrite, strong) NSURL* requestUrl;
 @property(nonatomic, readwrite, strong) NSString* requestMethod;
 @property(nonatomic, readwrite, strong) NSDictionary* requestHeaders;
 @property(nonatomic, readwrite, strong) NSData* requestBody;
@@ -66,33 +67,35 @@ typedef void (^MobilyHttpQueryBlock)(MobilyHttpQuery* query);
 @property(nonatomic, readonly, strong) NSArray* responseJsonArray;
 @property(nonatomic, readonly, assign) id responseJson;
 
-@property(nonatomic, readwrite, strong) NSError* lastError;
+@property(nonatomic, readonly, strong) NSError* error;
 
+@property(nonatomic, readwrite, weak) id< MobilyHttpQueryDelegate > delegate;
 @property(nonatomic, readwrite, copy) MobilyHttpQueryBlock startCallback;
 @property(nonatomic, readwrite, copy) MobilyHttpQueryBlock cancelCallback;
 @property(nonatomic, readwrite, copy) MobilyHttpQueryBlock finishCallback;
-@property(nonatomic, readwrite, copy) MobilyHttpQueryBlock errorCallback;
+@property(nonatomic, readwrite, copy) MobilyHttpQueryErrorBlock errorCallback;
 
-+ (MobilyHttpQuery*)queryWithMethod:(NSString*)method
-                            headers:(NSDictionary*)headers
-                                url:(NSString*)url
-                               body:(id)body;
-
-+ (MobilyHttpQuery*)queryWithMethod:(NSString*)method
-                            headers:(NSDictionary*)headers
-                                url:(NSString*)url
-                             params:(id)params
-                     attachBoundary:(NSString*)attachBoundary
-                         attachType:(NSString*)attachType
-                          attachKey:(NSString*)attachKey
-                         attachName:(NSString*)attachName
-                         attachData:(NSData*)attachData;
+- (void)setRequestUrlParams:(NSDictionary*)params;
+- (void)setRequestBodyParams:(NSDictionary*)params;
+- (void)setRequestBodyParams:(NSDictionary*)params boundary:(NSString*)boundary attachments:(NSArray*)attachments;
 
 - (void)addRequestHeader:(NSString*)header value:(NSString*)value;
 - (void)removeRequestHeader:(NSString*)header;
 
 - (void)start;
 - (void)cancel;
+
+@end
+
+/*--------------------------------------------------*/
+
+@protocol MobilyHttpQueryDelegate < NSObject >
+
+@optional
+- (void)didStartHttpQuery:(MobilyHttpQuery*)httpQuery;
+- (void)didCancelHttpQuery:(MobilyHttpQuery*)httpQuery;
+- (void)didFinishHttpQuery:(MobilyHttpQuery*)httpQuery;
+- (void)httpQuery:(MobilyHttpQuery*)httpQuery didError:(NSError*)error;
 
 @end
 

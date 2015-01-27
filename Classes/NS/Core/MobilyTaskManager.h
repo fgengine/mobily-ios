@@ -94,7 +94,7 @@ typedef void (^MobilyTaskManagerEnumBlock)(id task, BOOL* stop);
 
 /*--------------------------------------------------*/
 
-@interface MobilyTaskHttpQuery : MobilyTask
+@interface MobilyTaskHttpQuery : MobilyTask < MobilyHttpQueryDelegate >
 
 @property(nonatomic, readwrite, strong) MobilyHttpQuery* httpQuery;
 

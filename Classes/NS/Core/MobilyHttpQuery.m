@@ -39,13 +39,15 @@
 
 @interface MobilyHttpQuery () < NSURLConnectionDelegate, NSURLConnectionDataDelegate >
 
+@property(nonatomic, readwrite, strong) NSError* error;
+
 @property(nonatomic, readwrite, strong) NSURLConnection* connection;
 @property(nonatomic, readwrite, strong) NSMutableURLRequest* request;
 @property(nonatomic, readwrite, strong) NSHTTPURLResponse* response;
 @property(nonatomic, readwrite, strong) NSMutableData* mutableResponseData;
 
-+ (NSDictionary*)formDataFromDictionary:(NSDictionary*)dictionary;
-+ (void)formDataFromDictionary:(NSMutableDictionary*)dictionary value:(id)value keyPath:(NSString*)keyPath;
+- (NSDictionary*)formDataFromDictionary:(NSDictionary*)dictionary;
+- (void)formDataFromDictionary:(NSMutableDictionary*)dictionary value:(id)value keyPath:(NSString*)keyPath;
 
 @end
 
@@ -54,81 +56,6 @@
 /*--------------------------------------------------*/
 
 @implementation MobilyHttpQuery
-
-#pragma mark Builder
-
-+ (MobilyHttpQuery*)queryWithMethod:(NSString*)method
-                            headers:(NSDictionary*)headers
-                                url:(NSString*)url
-                               body:(id)body {
-    MobilyHttpQuery* query = [MobilyHttpQuery new];
-    if(query != nil) {
-        NSData* bodyData = nil;
-        if([body isKindOfClass:[NSDictionary class]] == YES) {
-            NSMutableString* bodyString = [NSMutableString string];
-            if(bodyString != nil) {
-                NSDictionary* formData = [self formDataFromDictionary:body];
-                [formData enumerateKeysAndObjectsUsingBlock:^(NSString* key, id value, BOOL* stop) {
-                    if([bodyString length] > 0) {
-                        [bodyString appendString:@"&"];
-                    }
-                    [bodyString appendFormat:@"%@=%@", key, [value description]];
-                }];
-                bodyData = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
-            }
-        }
-        [query setRequestMethod:method];
-        [query setRequestHeaders:headers];
-        [query setRequestUrl:url];
-        [query setRequestBody:bodyData];
-    }
-    return query;
-}
-
-+ (MobilyHttpQuery*)queryWithMethod:(NSString*)method
-                            headers:(NSDictionary*)headers
-                                url:(NSString*)url
-                             params:(id)params
-                     attachBoundary:(NSString*)attachBoundary
-                         attachType:(NSString*)attachType
-                          attachKey:(NSString*)attachKey
-                         attachName:(NSString*)attachName
-                         attachData:(NSData*)attachData {
-    MobilyHttpQuery* query = [MobilyHttpQuery new];
-    if(query != nil) {
-        NSMutableDictionary* mutableHeaders = [NSMutableDictionary dictionaryWithDictionary:headers];
-        if(mutableHeaders != nil) {
-            [mutableHeaders setObject:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", attachBoundary] forKey:@"Content-Type"];
-            
-            NSMutableData* body = [NSMutableData data];
-            if(body != nil) {
-                if([params isKindOfClass:[NSDictionary class]] == YES) {
-                    NSDictionary* formData = [self formDataFromDictionary:params];
-                    [formData enumerateKeysAndObjectsUsingBlock:^(NSString* key, id value, BOOL* stop) {
-                        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", attachBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-                        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]];
-                        [body appendData:[[NSString stringWithFormat:@"%@\r\n", [value description]] dataUsingEncoding:NSUTF8StringEncoding]];
-                    }];
-                }
-                if(attachData != nil) {
-                    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", attachBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-                    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", attachKey, attachName] dataUsingEncoding:NSUTF8StringEncoding]];
-                    [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", attachType] dataUsingEncoding:NSUTF8StringEncoding]];
-                    [body appendData:attachData];
-                    [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-                }
-                [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", attachBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-                
-                [mutableHeaders setObject:[NSString stringWithFormat:@"%lu", (unsigned long)[body length]] forKey:@"Content-Length"];
-                
-                [query setRequestMethod:@"POST"];
-                [query setRequestHeaders:mutableHeaders];
-                [query setRequestUrl:url];
-                [query setRequestBody:body];
-            }
-        }
-    }
-    return query;}
 
 #pragma mark Standart
 
@@ -146,10 +73,10 @@
     [self cancel];
     
     [self setCertificateFilename:nil];
+    [self setError:nil];
     [self setRequest:nil];
     [self setResponse:nil];
     [self setMutableResponseData:nil];
-    [self setLastError:nil];
     [self setStartCallback:nil];
     [self setCancelCallback:nil];
     [self setFinishCallback:nil];
@@ -159,6 +86,60 @@
 }
 
 #pragma mark Public
+
+- (void)setRequestUrlParams:(NSDictionary*)params {
+    NSURLComponents* urlComponents = [NSURLComponents componentsWithString:[[_request URL] absoluteString]];
+    NSMutableDictionary* queryParams = [NSMutableDictionary dictionary];
+    if([[urlComponents query] length] > 0) {
+        [queryParams addEntriesFromDictionary:[[urlComponents query] dictionaryFromQueryComponents]];
+    }
+    [queryParams addEntriesFromDictionary:[self formDataFromDictionary:params]];
+    NSMutableString* queryString = [NSMutableString string];
+    [queryParams enumerateKeysAndObjectsUsingBlock:^(NSString* key, id value, BOOL* stop) {
+        if([queryString length] > 0) {
+            [queryString appendString:@"&"];
+        }
+        [queryString appendFormat:@"%@=%@", key, [value description]];
+    }];
+    [urlComponents setQuery:queryString];
+    [self setRequestUrl:[NSURL URLWithString:[urlComponents string]]];
+}
+
+- (void)setRequestBodyParams:(NSDictionary*)params {
+    NSMutableData* body = [NSMutableData data];
+    NSDictionary* formData = [self formDataFromDictionary:params];
+    [formData enumerateKeysAndObjectsUsingBlock:^(NSString* key, id value, BOOL* stop) {
+        if([body length] > 0) {
+            [body appendData:[@"&" dataUsingEncoding:NSUTF8StringEncoding]];
+        }
+        [body appendData:[[NSString stringWithFormat:@"%@=%@", key, [value description]] dataUsingEncoding:NSUTF8StringEncoding]];
+    }];
+    
+    [self addRequestHeader:@"Content-Length" value:[NSString stringWithFormat:@"%lu", (unsigned long)[body length]]];
+    [self setRequestBody:body];
+}
+
+- (void)setRequestBodyParams:(NSDictionary*)params boundary:(NSString*)boundary attachments:(NSArray*)attachments {
+    NSMutableData* body = [NSMutableData data];
+    NSDictionary* formData = [self formDataFromDictionary:params];
+    [formData enumerateKeysAndObjectsUsingBlock:^(NSString* key, id value, BOOL* stop) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"%@\r\n", [value description]] dataUsingEncoding:NSUTF8StringEncoding]];
+    }];
+    [attachments enumerateObjectsUsingBlock:^(NSDictionary* attachment, NSUInteger index, BOOL* stop) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", [attachment objectForKey:@"name"], [attachment objectForKey:@"filename"]] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", [attachment objectForKey:@"type"]] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[attachment objectForKey:@"data"]];
+        [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    }];
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [self addRequestHeader:@"Content-Type" value:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary]];
+    [self addRequestHeader:@"Content-Length" value:[NSString stringWithFormat:@"%lu", (unsigned long)[body length]]];
+    [self setRequestBody:body];
+}
 
 - (void)addRequestHeader:(NSString*)header value:(NSString*)value {
     [_request setValue:value forHTTPHeaderField:header];
@@ -176,7 +157,6 @@
     if(_connection == nil) {
         [self setResponse:nil];
         [self setMutableResponseData:nil];
-        [self setLastError:nil];
         
         [self setConnection:[[NSURLConnection alloc] initWithRequest:_request delegate:self startImmediately:NO]];
         if(_connection != nil) {
@@ -185,7 +165,9 @@
             [_connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
             [_connection start];
             
-            if(_startCallback != nil) {
+            if([_delegate respondsToSelector:@selector(didStartHttpQuery:)] == YES) {
+                [_delegate didStartHttpQuery:self];
+            } else if(_startCallback != nil) {
                 _startCallback(self);
             }
             
@@ -201,9 +183,10 @@
         [self setConnection:nil];
         [self setResponse:nil];
         [self setMutableResponseData:nil];
-        [self setLastError:nil];
         
-        if(_cancelCallback != nil) {
+        if([_delegate respondsToSelector:@selector(didCancelHttpQuery:)] == YES) {
+            [_delegate didCancelHttpQuery:self];
+        } else if(_cancelCallback != nil) {
             _cancelCallback(self);
         }
         
@@ -213,12 +196,12 @@
 
 #pragma mark Property
 
-- (void)setRequestUrl:(NSString*)requestUrl {
-    [_request setURL:[NSURL URLWithString:requestUrl]];
+- (void)setRequestUrl:(NSURL*)requestUrl {
+    [_request setURL:requestUrl];
 }
 
-- (NSString*)requestUrl {
-    return [[_request URL] absoluteString];
+- (NSURL*)requestUrl {
+    return [_request URL];
 }
 
 - (void)setRequestTimeout:(NSTimeInterval)requestTimeout {
@@ -297,17 +280,17 @@
     if([_mutableResponseData length] < 1) {
         return nil;
     }
-    NSError* error = nil;
-    id result = [NSJSONSerialization JSONObjectWithData:_mutableResponseData options:0 error:&error];
-    if(error != nil) {
-        [self setLastError:error];
+    NSError* parseError = nil;
+    id result = [NSJSONSerialization JSONObjectWithData:_mutableResponseData options:0 error:&parseError];
+    if(parseError != nil) {
+        NSLog(@"MobilyHttpQuery::responseJson:%@", parseError);
     }
     return result;
 }
 
 #pragma mark Private
 
-+ (NSDictionary*)formDataFromDictionary:(NSDictionary*)dictionary {
+- (NSDictionary*)formDataFromDictionary:(NSDictionary*)dictionary {
     NSMutableDictionary* result = [NSMutableDictionary dictionary];
     [dictionary enumerateKeysAndObjectsUsingBlock:^(id keyPath, id value, BOOL* stop) {
         [self formDataFromDictionary:result value:value keyPath:keyPath];
@@ -315,7 +298,7 @@
     return result;
 }
 
-+ (void)formDataFromDictionary:(NSMutableDictionary*)dictionary value:(id)value keyPath:(NSString*)keyPath {
+- (void)formDataFromDictionary:(NSMutableDictionary*)dictionary value:(id)value keyPath:(NSString*)keyPath {
     if([value isKindOfClass:[NSDictionary class]] == YES) {
         [value enumerateKeysAndObjectsUsingBlock:^(id dictKey, id dictValue, BOOL* stop) {
             [self formDataFromDictionary:dictionary value:dictValue keyPath:[NSString stringWithFormat:@"%@[%@]", keyPath, dictKey]];
@@ -340,10 +323,12 @@
     [self setConnection:nil];
     [self setResponse:nil];
     [self setMutableResponseData:nil];
-    [self setLastError:error];
+    [self setError:error];
     
-    if(_errorCallback != nil) {
-        _errorCallback(self);
+    if([_delegate respondsToSelector:@selector(httpQuery:didError:)] == YES) {
+        [_delegate httpQuery:self didError:_error];
+    } else if(_errorCallback != nil) {
+        _errorCallback(_error);
     }
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -433,7 +418,9 @@
 - (void)connectionDidFinishLoading:(NSURLConnection*)connection {
     [self setConnection:nil];
     
-    if(_finishCallback != nil) {
+    if([_delegate respondsToSelector:@selector(didFinishHttpQuery:)] == YES) {
+        [_delegate didFinishHttpQuery:self];
+    } else if(_finishCallback != nil) {
         _finishCallback(self);
     }
     

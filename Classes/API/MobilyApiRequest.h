@@ -33,52 +33,43 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyTaskManager.h"
-#import "MobilyCache.h"
+#import "MobilyApiManager.h"
+#import "MobilyModel.h"
 
 /*--------------------------------------------------*/
 
-typedef void (^MobilyDownloaderCompleteBlock)(id entry, NSURL* url);
-typedef void (^MobilyDownloaderFailureBlock)(NSURL* url);
+@class MobilyApiResponse;
+@class MobilyHttpQuery;
 
 /*--------------------------------------------------*/
 
-@protocol MobilyDownloaderDelegate;
+typedef NS_ENUM(NSUInteger, MobilyApiRequestHttpMethodType) {
+    MobilyApiRequestHttpMethodTypeGet,
+    MobilyApiRequestHttpMethodTypePost,
+};
 
 /*--------------------------------------------------*/
 
-@interface MobilyDownloader : NSObject
-
-@property(nonatomic, readwrite, weak) id< MobilyDownloaderDelegate > delegate;
-@property(nonatomic, readonly, strong) MobilyTaskManager* taskManager;
-@property(nonatomic, readonly, strong) MobilyCache* cache;
-
-+ (instancetype)shared;
-
-- (id)initWithDelegate:(id< MobilyDownloaderDelegate >)delegate;
-
-- (BOOL)isExistEntryByUrl:(NSURL*)url;
-- (BOOL)setEntry:(id)entry byUrl:(NSURL*)url;
-- (void)removeEntryByUrl:(NSURL*)url;
-- (id)entryByUrl:(NSURL*)url;
-
-- (void)cleanup;
-
-- (void)downloadWithUrl:(NSURL*)url byTarget:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
-- (void)downloadWithUrl:(NSURL*)url byTarget:(id)target completeBlock:(MobilyDownloaderCompleteBlock)completeBlock failureBlock:(MobilyDownloaderFailureBlock)failureBlock;
-- (void)cancelByUrl:(NSURL*)url;
-- (void)cancelByTarget:(id)target;
-
-@end
+typedef NS_ENUM(NSUInteger, MobilyApiRequestParamsType) {
+    MobilyApiRequestParamsTypeUrl,
+    MobilyApiRequestParamsTypeFormData
+};
 
 /*--------------------------------------------------*/
 
-@protocol MobilyDownloaderDelegate < NSObject >
+@interface MobilyApiRequest : MobilyModel
 
-@optional
-- (NSData*)downloader:(MobilyDownloader*)downloader dataForUrl:(NSURL*)url;
-- (id)downloader:(MobilyDownloader*)downloader entryFromData:(NSData*)data;
-- (NSData*)downloader:(MobilyDownloader*)downloader entryToData:(id)entry;
+@property(nonatomic, readonly, assign) MobilyApiRequestHttpMethodType methodType;
+@property(nonatomic, readonly, assign) MobilyApiRequestParamsType paramsType;
+@property(nonatomic, readonly, strong) NSString* relativeUrl;
+@property(nonatomic, readonly, strong) NSDictionary* params;
+@property(nonatomic, readonly, strong) NSArray* attachments;
+@property(nonatomic, readonly, assign) NSUInteger numberOfRetries;
+
+- (id)initWithMethodType:(MobilyApiRequestHttpMethodType)methodType relativeUrl:(NSString*)relativeUrl paramsType:(MobilyApiRequestParamsType)paramsType params:(NSDictionary*)params attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries;
+
+- (MobilyHttpQuery*)httpQueryByBaseUrl:(NSURL*)baseUrl;
+- (MobilyApiResponse*)responseByHttpQuery:(MobilyHttpQuery*)httpQuery;
 
 @end
 

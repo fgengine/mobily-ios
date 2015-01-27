@@ -33,52 +33,40 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyTaskManager.h"
-#import "MobilyCache.h"
+#import "MobilyApiManager.h"
 
 /*--------------------------------------------------*/
 
-typedef void (^MobilyDownloaderCompleteBlock)(id entry, NSURL* url);
-typedef void (^MobilyDownloaderFailureBlock)(NSURL* url);
+@class MobilyApiRequest;
+@class MobilyApiResponse;
 
 /*--------------------------------------------------*/
 
-@protocol MobilyDownloaderDelegate;
+typedef void (^MobilyApiProviderSuccessBlock)(MobilyApiRequest* request, MobilyApiResponse* response);
+typedef void (^MobilyApiProviderFailureBlock)(MobilyApiRequest* request, MobilyApiResponse* response);
 
 /*--------------------------------------------------*/
 
-@interface MobilyDownloader : NSObject
+@protocol MobilyApiProviderDelegate;
 
-@property(nonatomic, readwrite, weak) id< MobilyDownloaderDelegate > delegate;
-@property(nonatomic, readonly, strong) MobilyTaskManager* taskManager;
-@property(nonatomic, readonly, strong) MobilyCache* cache;
+/*--------------------------------------------------*/
 
-+ (instancetype)shared;
+@interface MobilyApiProvider : NSObject
 
-- (id)initWithDelegate:(id< MobilyDownloaderDelegate >)delegate;
+@property(nonatomic, readwrite, weak) MobilyApiManager* manager;
+@property(nonatomic, readwrite, strong) MobilyTaskManager* taskManager;
+@property(nonatomic, readwrite, strong) MobilyCache* cache;
 
-- (BOOL)isExistEntryByUrl:(NSURL*)url;
-- (BOOL)setEntry:(id)entry byUrl:(NSURL*)url;
-- (void)removeEntryByUrl:(NSURL*)url;
-- (id)entryByUrl:(NSURL*)url;
+@property(nonatomic, readonly, strong) NSString* name;
+@property(nonatomic, readonly, strong) NSURL* url;
+@property(nonatomic, readonly, weak) id< MobilyApiProviderDelegate > delegate;
 
-- (void)cleanup;
+- (id)initWithName:(NSString*)name url:(NSURL*)url;
 
-- (void)downloadWithUrl:(NSURL*)url byTarget:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
-- (void)downloadWithUrl:(NSURL*)url byTarget:(id)target completeBlock:(MobilyDownloaderCompleteBlock)completeBlock failureBlock:(MobilyDownloaderFailureBlock)failureBlock;
-- (void)cancelByUrl:(NSURL*)url;
+- (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target successSelector:(SEL)successSelector failureSelector:(SEL)failureSelector;
+- (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target successBlock:(MobilyApiProviderSuccessBlock)successBlock failureBlock:(MobilyApiProviderFailureBlock)failureBlock;
+- (void)cancelByRequest:(MobilyApiRequest*)request;
 - (void)cancelByTarget:(id)target;
-
-@end
-
-/*--------------------------------------------------*/
-
-@protocol MobilyDownloaderDelegate < NSObject >
-
-@optional
-- (NSData*)downloader:(MobilyDownloader*)downloader dataForUrl:(NSURL*)url;
-- (id)downloader:(MobilyDownloader*)downloader entryFromData:(NSData*)data;
-- (NSData*)downloader:(MobilyDownloader*)downloader entryToData:(id)entry;
 
 @end
 

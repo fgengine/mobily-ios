@@ -190,9 +190,9 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)viewDidUnload {
-    [super viewDidUnload];
-    
     [_eventDidUnload fireSender:self object:nil];
+    
+    [super viewDidUnload];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -209,16 +209,16 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-
     [_eventWillDisappear fireSender:self object:nil];
+    
+    [super viewWillDisappear:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    
     [self setAppeared:_appeared - 1];
     [_eventDidDisappear fireSender:self object:nil];
+    
+    [super viewDidDisappear:animated];
 }
 
 #pragma mark UIViewControllerTransitioningDelegate

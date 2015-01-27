@@ -83,6 +83,10 @@
 		409829B41A71872500D83152 /* menu-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 409829841A71872500D83152 /* menu-button.png */; };
 		409829B51A71872500D83152 /* menu-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 409829851A71872500D83152 /* menu-button@2x.png */; };
 		409829B61A71872500D83152 /* SlideNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 409829871A71872500D83152 /* SlideNavigationController.m */; };
+		40C0A3E21A742E3400F69B88 /* MobilyApiManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C0A3DB1A742E3400F69B88 /* MobilyApiManager.m */; };
+		40C0A3E31A742E3400F69B88 /* MobilyApiProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C0A3DD1A742E3400F69B88 /* MobilyApiProvider.m */; };
+		40C0A3E41A742E3400F69B88 /* MobilyApiRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C0A3DF1A742E3400F69B88 /* MobilyApiRequest.m */; };
+		40C0A3E51A742E3400F69B88 /* MobilyApiResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C0A3E11A742E3400F69B88 /* MobilyApiResponse.m */; };
 		C13E78B87D644CF2A6696DA8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F16AA68F9FE04603B1D99102 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -221,6 +225,14 @@
 		409829861A71872500D83152 /* SlideNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationController.h; sourceTree = "<group>"; };
 		409829871A71872500D83152 /* SlideNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationController.m; sourceTree = "<group>"; };
 		409829B91A71945F00D83152 /* MobilyCocoaPods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyCocoaPods.h; sourceTree = "<group>"; };
+		40C0A3DA1A742E3400F69B88 /* MobilyApiManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyApiManager.h; sourceTree = "<group>"; };
+		40C0A3DB1A742E3400F69B88 /* MobilyApiManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyApiManager.m; sourceTree = "<group>"; };
+		40C0A3DC1A742E3400F69B88 /* MobilyApiProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyApiProvider.h; sourceTree = "<group>"; };
+		40C0A3DD1A742E3400F69B88 /* MobilyApiProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyApiProvider.m; sourceTree = "<group>"; };
+		40C0A3DE1A742E3400F69B88 /* MobilyApiRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyApiRequest.h; sourceTree = "<group>"; };
+		40C0A3DF1A742E3400F69B88 /* MobilyApiRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyApiRequest.m; sourceTree = "<group>"; };
+		40C0A3E01A742E3400F69B88 /* MobilyApiResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyApiResponse.h; sourceTree = "<group>"; };
+		40C0A3E11A742E3400F69B88 /* MobilyApiResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyApiResponse.m; sourceTree = "<group>"; };
 		5A2438BFA45DA754D1C37067 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		F16AA68F9FE04603B1D99102 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -282,6 +294,7 @@
 				409829241A71872400D83152 /* CG */,
 				409829421A71872500D83152 /* UI */,
 				4098291B1A71872400D83152 /* AV */,
+				40C0A3D91A742E3400F69B88 /* API */,
 				409829B81A71945F00D83152 /* CocoaPods */,
 			);
 			path = Classes;
@@ -654,6 +667,21 @@
 			path = CocoaPods;
 			sourceTree = "<group>";
 		};
+		40C0A3D91A742E3400F69B88 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				40C0A3DA1A742E3400F69B88 /* MobilyApiManager.h */,
+				40C0A3DB1A742E3400F69B88 /* MobilyApiManager.m */,
+				40C0A3DC1A742E3400F69B88 /* MobilyApiProvider.h */,
+				40C0A3DD1A742E3400F69B88 /* MobilyApiProvider.m */,
+				40C0A3DE1A742E3400F69B88 /* MobilyApiRequest.h */,
+				40C0A3DF1A742E3400F69B88 /* MobilyApiRequest.m */,
+				40C0A3E01A742E3400F69B88 /* MobilyApiResponse.h */,
+				40C0A3E11A742E3400F69B88 /* MobilyApiResponse.m */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
 		4F1F86033CDFF14E4568271C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -806,11 +834,13 @@
 				409829941A71872500D83152 /* MobilyTaskManager.m in Sources */,
 				4098299F1A71872500D83152 /* MobilyListField.m in Sources */,
 				4098298F1A71872500D83152 /* MobilyDownloader.m in Sources */,
+				40C0A3E51A742E3400F69B88 /* MobilyApiResponse.m in Sources */,
 				407F25B91A65CB4800B0A79C /* DemoAudioPlayerController.m in Sources */,
 				409829931A71872500D83152 /* MobilyRegExpParser.m in Sources */,
 				409829A11A71872500D83152 /* MobilyScrollView.m in Sources */,
 				407B41C61A642F7300A3DFFD /* DemoAudioRecorderController.m in Sources */,
 				409829961A71872500D83152 /* MobilyApplication.m in Sources */,
+				40C0A3E21A742E3400F69B88 /* MobilyApiManager.m in Sources */,
 				409829A51A71872500D83152 /* MobilyTransitionController.m in Sources */,
 				409829981A71872500D83152 /* MobilyBuilderPreset.m in Sources */,
 				409829AB1A71872500D83152 /* MobilyDynamicsDrawerController.m in Sources */,
@@ -836,7 +866,9 @@
 				409829AE1A71872500D83152 /* MobilySlideMenuController.m in Sources */,
 				409829A21A71872500D83152 /* MobilyTabBarController.m in Sources */,
 				409829AC1A71872500D83152 /* MobilyElementsLayout.m in Sources */,
+				40C0A3E41A742E3400F69B88 /* MobilyApiRequest.m in Sources */,
 				409829A41A71872500D83152 /* MobilyTextField.m in Sources */,
+				40C0A3E31A742E3400F69B88 /* MobilyApiProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -37,21 +37,25 @@
 
 /*--------------------------------------------------*/
 
-typedef void (^MobilyImageDownloaderCompleteBlock)(UIImage* image, NSString* path);
-typedef void (^MobilyImageDownloaderFailureBlock)(NSString* path);
+typedef void (^MobilyImageViewBlock)();
 
 /*--------------------------------------------------*/
 
 @interface MobilyImageView : UIImageView< MobilyBuilderObject >
 
 @property(nonatomic, readwrite, strong) IBInspectable UIImage* defaultImage;
-@property(nonatomic, readwrite, strong) IBInspectable NSString* imageUrl;
+@property(nonatomic, readwrite, strong) IBInspectable NSURL* imageUrl;
 
 - (void)setup;
 
-- (void)setImageUrl:(NSString*)imageUrl complete:(MobilyImageDownloaderCompleteBlock)complete failure:(MobilyImageDownloaderFailureBlock)failure;
+- (void)setImageUrl:(NSURL*)imageUrl complete:(MobilyImageViewBlock)complete failure:(MobilyImageViewBlock)failure;
 
 @end
+
+/*--------------------------------------------------*/
+
+typedef void (^MobilyImageDownloaderCompleteBlock)(UIImage* image, NSURL* url);
+typedef void (^MobilyImageDownloaderFailureBlock)(NSURL* url);
 
 /*--------------------------------------------------*/
 
@@ -59,16 +63,16 @@ typedef void (^MobilyImageDownloaderFailureBlock)(NSString* path);
 
 + (instancetype)shared;
 
-- (BOOL)isExistImageWithPath:(NSString*)path;
-- (void)setImage:(UIImage*)image byPath:(NSString*)path;
-- (void)removeByPath:(NSString*)path;
+- (BOOL)isExistImageWithUrl:(NSURL*)url;
+- (void)setImage:(UIImage*)image byUrl:(NSURL*)url;
+- (void)removeByUrl:(NSURL*)url;
 - (void)cleanup;
 
-- (UIImage*)imageWithPath:(NSString*)path;
+- (UIImage*)imageWithUrl:(NSURL*)url;
 
-- (void)downloadWithPath:(NSString*)path target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
-- (void)downloadWithPath:(NSString*)path target:(id)target completeBlock:(MobilyImageDownloaderCompleteBlock)completeBlock failureBlock:(MobilyImageDownloaderFailureBlock)failureBlock;
-- (void)cancelByPath:(NSString*)path;
+- (void)downloadWithUrl:(NSURL*)url byTarget:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
+- (void)downloadWithUrl:(NSURL*)url byTarget:(id)target completeBlock:(MobilyImageDownloaderCompleteBlock)completeBlock failureBlock:(MobilyImageDownloaderFailureBlock)failureBlock;
+- (void)cancelByUrl:(NSURL*)url;
 - (void)cancelByTarget:(id)target;
 
 @end

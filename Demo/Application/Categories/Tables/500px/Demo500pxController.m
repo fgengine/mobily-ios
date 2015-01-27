@@ -126,9 +126,9 @@ static NSString* PXConsumerSecret = @"wMDdVbq28mvbkb0GxbLxBW9UdO8v4NZkMIVFqZWl";
     [super setModel:model];
     
     [_activityView startAnimating];
-    [_photoView setImageUrl:[[[model objectForKey:@"images"] lastObject] valueForKey:@"url"] complete:^(UIImage *image, NSString *path) {
+    [_photoView setImageUrl:[NSURL URLWithString:[[[model objectForKey:@"images"] lastObject] valueForKey:@"url"]] complete:^(UIImage *image, NSURL *url) {
         [_activityView stopAnimating];
-    } failure:^(NSString* path) {
+    } failure:^(NSURL* url) {
         [_activityView stopAnimating];
     }];
 }

@@ -33,52 +33,85 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyTaskManager.h"
-#import "MobilyCache.h"
+#import "MobilyApiManager.h"
+#import "MobilyApiProvider.h"
 
 /*--------------------------------------------------*/
 
-typedef void (^MobilyDownloaderCompleteBlock)(id entry, NSURL* url);
-typedef void (^MobilyDownloaderFailureBlock)(NSURL* url);
+@interface MobilyApiManager ()
 
-/*--------------------------------------------------*/
 
-@protocol MobilyDownloaderDelegate;
-
-/*--------------------------------------------------*/
-
-@interface MobilyDownloader : NSObject
-
-@property(nonatomic, readwrite, weak) id< MobilyDownloaderDelegate > delegate;
-@property(nonatomic, readonly, strong) MobilyTaskManager* taskManager;
-@property(nonatomic, readonly, strong) MobilyCache* cache;
-
-+ (instancetype)shared;
-
-- (id)initWithDelegate:(id< MobilyDownloaderDelegate >)delegate;
-
-- (BOOL)isExistEntryByUrl:(NSURL*)url;
-- (BOOL)setEntry:(id)entry byUrl:(NSURL*)url;
-- (void)removeEntryByUrl:(NSURL*)url;
-- (id)entryByUrl:(NSURL*)url;
-
-- (void)cleanup;
-
-- (void)downloadWithUrl:(NSURL*)url byTarget:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
-- (void)downloadWithUrl:(NSURL*)url byTarget:(id)target completeBlock:(MobilyDownloaderCompleteBlock)completeBlock failureBlock:(MobilyDownloaderFailureBlock)failureBlock;
-- (void)cancelByUrl:(NSURL*)url;
-- (void)cancelByTarget:(id)target;
+@property(nonatomic, readwrite, strong) NSMutableArray* mutableProviders;
 
 @end
 
 /*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
 
-@protocol MobilyDownloaderDelegate < NSObject >
+#define MOBILY_API_MANAGER_MAX_CONCURRENT_TASK      5
 
-@optional
-- (NSData*)downloader:(MobilyDownloader*)downloader dataForUrl:(NSURL*)url;
-- (id)downloader:(MobilyDownloader*)downloader entryFromData:(NSData*)data;
-- (NSData*)downloader:(MobilyDownloader*)downloader entryToData:(id)entry;
+/*--------------------------------------------------*/
+
+@implementation MobilyApiManager
+
+#pragma mark Singleton
+
++ (instancetype)shared {
+    static id shared = nil;
+    if(shared == nil) {
+        @synchronized(self) {
+            if(shared == nil) {
+                shared = [[self alloc] init];
+            }
+        }
+    }
+    return shared;
+}
+
+#pragma mark Init
+
+- (id)init {
+    self = [super init];
+    if(self != nil) {
+        [self setTaskManager:[[MobilyTaskManager alloc] init]];
+        if(_taskManager != nil) {
+            [_taskManager setMaxConcurrentTask:MOBILY_API_MANAGER_MAX_CONCURRENT_TASK];
+        }
+        [self setCache:[MobilyCache shared]];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [self setMutableProviders:nil];
+    [self setTaskManager:nil];
+    [self setCache:nil];
+    
+    MOBILY_SAFE_DEALLOC;
+}
+
+#pragma mark Property
+
+- (NSArray*)providers {
+    return [_mutableProviders copy];
+}
+
+#pragma mark Public
+
+- (void)registerProvider:(MobilyApiProvider*)provider {
+    if([_mutableProviders containsObject:provider] == NO) {
+        [_mutableProviders addObject:provider];
+        [provider setManager:self];
+    }
+}
+
+- (void)unregisterProvider:(MobilyApiProvider*)provider {
+    if([_mutableProviders containsObject:provider] == YES) {
+        [_mutableProviders removeObject:provider];
+        [provider setManager:nil];
+    }
+}
 
 @end
 

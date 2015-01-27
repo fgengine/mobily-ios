@@ -511,7 +511,7 @@
 
 - (NSData*)data {
     if((_data == nil) && (_filePath != nil)) {
-        _data = MOBILY_SAFE_RETAIN([NSData dataWithContentsOfFile:_filePath]);
+        MOBILY_SAFE_SETTER(_data, [NSData dataWithContentsOfFile:_filePath]);
         if(_data != nil) {
             [self setMemoryStorageInterval:_memoryStorageInterval];
             [_cache setCurrentMemoryUsage:ceil([_cache currentMemoryUsage] + [_data length])];

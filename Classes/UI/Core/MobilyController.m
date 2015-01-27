@@ -169,9 +169,9 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)viewDidUnload {
-    [super viewDidUnload];
-    
     [_eventDidUnload fireSender:self object:nil];
+    
+    [super viewDidUnload];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -188,22 +188,33 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
     [_eventWillDisappear fireSender:self object:nil];
+    
+    [super viewWillDisappear:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    
     [self setAppeared:_appeared - 1];
     [_eventDidDisappear fireSender:self object:nil];
+    
+    [super viewDidDisappear:animated];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     
     [self unloadViewIfPossible];
+}
+
+- (void)setView:(UIView*)view {
+    [super setView:view];
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    if(([UIDevice systemVersion] >= 6.0f) && (view == nil)) {
+        [self viewDidUnload];
+    }
+#pragma clang diagnostic pop
 }
 
 #pragma mark UIViewControllerTransitioningDelegate

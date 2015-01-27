@@ -332,6 +332,16 @@
     [super cancel];
 }
 
+#pragma mark MobilyTask
+
+- (BOOL)willStart {
+    return (_httpQuery != nil);
+}
+
+- (void)working {
+    [_httpQuery start];
+}
+
 @end
 
 /*--------------------------------------------------*/

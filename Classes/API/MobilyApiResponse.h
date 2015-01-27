@@ -33,52 +33,23 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyTaskManager.h"
-#import "MobilyCache.h"
+#import "MobilyApiManager.h"
+#import "MobilyModel.h"
 
 /*--------------------------------------------------*/
 
-typedef void (^MobilyDownloaderCompleteBlock)(id entry, NSURL* url);
-typedef void (^MobilyDownloaderFailureBlock)(NSURL* url);
+@class MobilyHttpQuery;
 
 /*--------------------------------------------------*/
 
-@protocol MobilyDownloaderDelegate;
+@interface MobilyApiResponse : MobilyModel
 
-/*--------------------------------------------------*/
+@property(nonatomic, readwrite, strong) NSError* httpError;
+@property(nonatomic, readwrite, assign, getter=isValid) BOOL valid;
 
-@interface MobilyDownloader : NSObject
+- (id)initWithHttpQuery:(MobilyHttpQuery*)httpQuery;
 
-@property(nonatomic, readwrite, weak) id< MobilyDownloaderDelegate > delegate;
-@property(nonatomic, readonly, strong) MobilyTaskManager* taskManager;
-@property(nonatomic, readonly, strong) MobilyCache* cache;
-
-+ (instancetype)shared;
-
-- (id)initWithDelegate:(id< MobilyDownloaderDelegate >)delegate;
-
-- (BOOL)isExistEntryByUrl:(NSURL*)url;
-- (BOOL)setEntry:(id)entry byUrl:(NSURL*)url;
-- (void)removeEntryByUrl:(NSURL*)url;
-- (id)entryByUrl:(NSURL*)url;
-
-- (void)cleanup;
-
-- (void)downloadWithUrl:(NSURL*)url byTarget:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
-- (void)downloadWithUrl:(NSURL*)url byTarget:(id)target completeBlock:(MobilyDownloaderCompleteBlock)completeBlock failureBlock:(MobilyDownloaderFailureBlock)failureBlock;
-- (void)cancelByUrl:(NSURL*)url;
-- (void)cancelByTarget:(id)target;
-
-@end
-
-/*--------------------------------------------------*/
-
-@protocol MobilyDownloaderDelegate < NSObject >
-
-@optional
-- (NSData*)downloader:(MobilyDownloader*)downloader dataForUrl:(NSURL*)url;
-- (id)downloader:(MobilyDownloader*)downloader entryFromData:(NSData*)data;
-- (NSData*)downloader:(MobilyDownloader*)downloader entryToData:(id)entry;
+- (BOOL)fromHttpQuery:(MobilyHttpQuery*)httpQuery;
 
 @end
 

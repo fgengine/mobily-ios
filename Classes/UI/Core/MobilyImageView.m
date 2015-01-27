@@ -130,26 +130,30 @@
     [super setImage:image];
 }
 
-- (void)setImageUrl:(NSString*)imageUrl {
+- (void)setImageUrl:(NSURL*)imageUrl {
     [self setImageUrl:imageUrl complete:nil failure:nil];
 }
 
-- (void)setImageUrl:(NSString*)imageUrl complete:(MobilyImageDownloaderCompleteBlock)complete failure:(MobilyImageDownloaderFailureBlock)failure {
-    if([_imageUrl isEqualToString:imageUrl] == NO) {
+- (void)setImageUrl:(NSURL*)imageUrl complete:(MobilyImageViewBlock)complete failure:(MobilyImageViewBlock)failure {
+    if([_imageUrl isEqual:imageUrl] == NO) {
         if(_imageUrl != nil) {
             [[MobilyImageDownloader shared] cancelByTarget:self];
         }
         _imageUrl = imageUrl;
         [super setImage:_defaultImage];
-        [[MobilyImageDownloader shared] downloadWithPath:_imageUrl target:self completeBlock:^(UIImage* image, NSString* path) {
+        [[MobilyImageDownloader shared] downloadWithUrl:_imageUrl byTarget:self completeBlock:^(UIImage* image, NSURL* url) {
             [super setImage:image];
             if(complete != nil) {
-                complete(image, _imageUrl);
+                complete();
             }
-        } failureBlock:failure];
+        } failureBlock:^(NSURL* url) {
+            if(failure != nil) {
+                failure();
+            }
+        }];
     } else {
         if(complete != nil) {
-            complete([self image], _imageUrl);
+            complete();
         }
     }
 }
@@ -192,36 +196,36 @@
     return shared;
 }
 
-- (BOOL)isExistImageWithPath:(NSString*)path {
-    return [_downloader isExistEntryByPath:path];
+- (BOOL)isExistImageWithUrl:(NSURL*)url {
+    return [_downloader isExistEntryByUrl:url];
 }
 
-- (UIImage*)imageWithPath:(NSString*)path {
-    return [_downloader entryByPath:path];
+- (UIImage*)imageWithUrl:(NSURL*)url {
+    return [_downloader entryByUrl:url];
 }
 
-- (void)setImage:(UIImage*)image byPath:(NSString*)path {
-    [_downloader setEntry:image byPath:path];
+- (void)setImage:(UIImage*)image byUrl:(NSURL*)url {
+    [_downloader setEntry:image byUrl:url];
 }
 
-- (void)removeByPath:(NSString*)path {
-    [_downloader removeEntryByPath:path];
+- (void)removeByUrl:(NSURL*)url {
+    [_downloader removeEntryByUrl:url];
 }
 
 - (void)cleanup {
     [_downloader cleanup];
 }
 
-- (void)downloadWithPath:(NSString*)path target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector {
-    [_downloader downloadWithPath:path target:target completeSelector:completeSelector failureSelector:failureSelector];
+- (void)downloadWithUrl:(NSURL*)url byTarget:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector {
+    [_downloader downloadWithUrl:url byTarget:target completeSelector:completeSelector failureSelector:failureSelector];
 }
 
-- (void)downloadWithPath:(NSString*)path target:(id)target completeBlock:(MobilyImageDownloaderCompleteBlock)completeBlock failureBlock:(MobilyImageDownloaderFailureBlock)failureBlock {
-    [_downloader downloadWithPath:path target:target completeBlock:completeBlock failureBlock:failureBlock];
+- (void)downloadWithUrl:(NSURL*)url byTarget:(id)target completeBlock:(MobilyImageDownloaderCompleteBlock)completeBlock failureBlock:(MobilyImageDownloaderFailureBlock)failureBlock {
+    [_downloader downloadWithUrl:url byTarget:target completeBlock:completeBlock failureBlock:failureBlock];
 }
 
-- (void)cancelByPath:(NSString*)path {
-    [_downloader cancelByPath:path];
+- (void)cancelByUrl:(NSURL*)url {
+    [_downloader cancelByUrl:url];
 }
 
 - (void)cancelByTarget:(id)target {

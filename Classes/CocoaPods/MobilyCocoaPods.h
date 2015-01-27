@@ -51,6 +51,12 @@
 #   import "MobilyDownloader.h"
 #   import "MobilyRegExpParser.h"
 #   import "MobilyKVO.h"
+#   ifdef MOBILY_POD_NS_API
+#       import "MobilyApiManager.h"
+#       import "MobilyApiProvider.h"
+#       import "MobilyApiRequest.h"
+#       import "MobilyApiResponse.h"
+#   endif
 #endif
 
 /*--------------------------------------------------*/
