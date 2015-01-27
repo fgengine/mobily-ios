@@ -37,6 +37,7 @@
 #import "MobilyApiRequest.h"
 #import "MobilyApiResponse.h"
 #import "MobilyHttpQuery.h"
+#import "MobilyEvent.h"
 
 /*--------------------------------------------------*/
 
