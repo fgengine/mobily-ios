@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name = 'Mobily'
-	s.version = '2.0.10'
+	s.version = '2.0.11'
 	s.summary = 'Mobily framework for iOS'
 	s.homepage = 'https://github.com/fgengine/mobily-ios/tree/v2'
 	s.license = {
@@ -22,7 +22,8 @@ Pod::Spec.new do |s|
     s.subspec 'All' do |ss|
 		ss.dependency 'Mobily/NS'
 		ss.dependency 'Mobily/CG'
-		ss.dependency 'Mobily/UI'
+        ss.dependency 'Mobily/UI'
+        ss.dependency 'Mobily/API'
 	end
 
     s.subspec 'CocoaPods' do |ss|
@@ -83,6 +84,13 @@ Pod::Spec.new do |s|
         ss.source_files = 'Classes/UI/ElementsView/**/*.{h,m}'
         ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_ELEMENTS_VIEW' }
         ss.dependency 'Mobily/UI'
+    end
+
+    s.subspec 'API' do |ss|
+        ss.public_header_files = 'Classes/API/**/*.h'
+        ss.source_files = 'Classes/API/**/*.{h,m}'
+        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_API' }
+        ss.dependency 'Mobily/NS'
     end
 
     s.subspec 'AV' do |ss|
