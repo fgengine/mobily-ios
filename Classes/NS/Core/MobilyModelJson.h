@@ -93,6 +93,16 @@
 
 /*--------------------------------------------------*/
 
+@interface MobilyModelJsonUrl : MobilyModelJson
+
+@property(nonatomic, readonly, strong) NSURL* defaultValue;
+
+- (id)initWithPath:(NSString*)path defaultValue:(NSURL*)defaultValue;
+
+@end
+
+/*--------------------------------------------------*/
+
 @interface MobilyModelJsonNumber : MobilyModelJson
 
 @property(nonatomic, readonly, strong) NSNumber* defaultValue;

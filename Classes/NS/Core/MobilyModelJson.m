@@ -89,6 +89,16 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
+@interface MobilyModelJsonUrl ()
+
+@property(nonatomic, readwrite, strong) NSURL* defaultValue;
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
 @interface MobilyModelJsonNumber ()
 
 @property(nonatomic, readwrite, strong) NSNumber* defaultValue;
@@ -324,6 +334,35 @@
             [numberFormat setNumberStyle:NSNumberFormatterDecimalStyle];
         }
         return [numberFormat stringFromNumber:value];
+    }
+    return _defaultValue;
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation MobilyModelJsonUrl
+
+- (id)initWithPath:(NSString*)path defaultValue:(NSURL*)defaultValue {
+    self = [super initWithPath:path];
+    if(self != nil) {
+        [self setDefaultValue:defaultValue];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [self setDefaultValue:nil];
+    
+    MOBILY_SAFE_DEALLOC;
+}
+
+- (id)convertValue:(id)value {
+    if([value isKindOfClass:[NSString class]] == YES) {
+        return [NSURL URLWithString:value];
     }
     return _defaultValue;
 }
