@@ -39,18 +39,9 @@
 
 @interface DemoApplication ()
 
-@property(nonatomic, readwrite, strong) MobilyApiProvider* testProvider;
+
 
 @end
-
-/*
- http://144.76.71.48/api/v1
- http://144.76.71.48/api/v1?m=user.checktoken.ya
- http://144.76.71.48/api/v1?m=user.checktoken
- http://144.76.71.48/api/v1?m=user.checktoken&token=0001.000001.uyetr56w
- http://144.76.71.48/api/v1?m=user.checktoken&token=00001.000001.uyetr56whgd67sghd6e8g
- http://144.76.71.48/api/v1?m=user.checktoken&token=00001.000001.uyetr56whgd67sghd6e8e
-*/
 
 /*--------------------------------------------------*/
 #pragma mark -
@@ -60,9 +51,6 @@
 
 - (void)setup {
     [super setup];
-    
-    [self setTestProvider:[[MobilyApiProvider alloc] initWithName:@"test" url:[NSURL URLWithString:@"http://144.76.71.48/api/v1"]]];
-    [[MobilyApiManager shared] registerProvider:_testProvider];
 }
 
 - (void)dealloc {
@@ -72,20 +60,6 @@
 - (BOOL)launchingWithOptions:(NSDictionary *)options {
     BOOL result = [super launchingWithOptions:options];
     if(result == YES) {
-        MobilyApiRequest* request = [[MobilyApiRequest alloc] initWithMethodType:MobilyApiRequestHttpMethodTypeGet
-                                                                     relativeUrl:nil
-                                                                      paramsType:MobilyApiRequestParamsTypeUrl
-                                                                          params:@{
-                                                                                   @"m": @"user.checktoken",
-                                                                                   @"token" : @"00001.000001.uyetr56whgd67sghd6e8g"
-                                                                                   }
-                                                                     attachments:nil
-                                                                 numberOfRetries:0];
-        [_testProvider sendRequest:request byTarget:self successBlock:^(MobilyApiRequest* request, MobilyApiResponse* response) {
-            NSLog(@"%@ - %@", request, response);
-        } failureBlock:^(MobilyApiRequest* request, MobilyApiResponse* response) {
-            NSLog(@"%@ - %@", request, response);
-        }];
     }
     return result;
 }

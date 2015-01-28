@@ -58,13 +58,12 @@
 @property(nonatomic, readwrite, strong) MobilyApiRequest* request;
 @property(nonatomic, readwrite, strong) MobilyApiResponse* response;
 @property(nonatomic, readwrite, strong) id target;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > successEvent;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > failureEvent;
+@property(nonatomic, readwrite, strong) id< MobilyEvent > completeEvent;
 @property(nonatomic, readwrite, assign) NSUInteger numberOfErrors;
 
 - (id)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target;
-- (id)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target successSelector:(SEL)successSelector failureSelector:(SEL)failureSelector;
-- (id)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target successBlock:(MobilyApiProviderSuccessBlock)successBlock failureBlock:(MobilyApiProviderFailureBlock)failureBlock;
+- (id)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target completeSelector:(SEL)completeSelector;
+- (id)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target completeBlock:(MobilyApiProviderCompleteBlock)completeBlock;
 
 @end
 
@@ -125,12 +124,12 @@
 
 #pragma mark Public
 
-- (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target successSelector:(SEL)successSelector failureSelector:(SEL)failureSelector {
-    [[self taskManager] addTask:[[MobilyApiProviderTask alloc] initWithProvider:self request:request target:target successSelector:successSelector failureSelector:failureSelector]];
+- (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target completeSelector:(SEL)completeSelector {
+    [[self taskManager] addTask:[[MobilyApiProviderTask alloc] initWithProvider:self request:request target:target completeSelector:completeSelector]];
 }
 
-- (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target successBlock:(MobilyApiProviderSuccessBlock)successBlock failureBlock:(MobilyApiProviderFailureBlock)failureBlock {
-    [[self taskManager] addTask:[[MobilyApiProviderTask alloc] initWithProvider:self request:request target:target successBlock:successBlock failureBlock:failureBlock]];
+- (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target completeBlock:(MobilyApiProviderCompleteBlock)completeBlock {
+    [[self taskManager] addTask:[[MobilyApiProviderTask alloc] initWithProvider:self request:request target:target completeBlock:completeBlock]];
 }
 
 - (void)cancelByRequest:(MobilyApiRequest*)request {
@@ -169,27 +168,20 @@
     return self;
 }
 
-- (id)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target successSelector:(SEL)successSelector failureSelector:(SEL)failureSelector {
+- (id)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target completeSelector:(SEL)completeSelector {
     self = [self initWithProvider:provider request:request target:target];
     if(self != nil) {
-        [self setSuccessEvent:[MobilyEventSelector callbackWithTarget:target action:successSelector inMainThread:YES]];
-        [self setFailureEvent:[MobilyEventSelector callbackWithTarget:target action:failureSelector inMainThread:YES]];
+        [self setCompleteEvent:[MobilyEventSelector callbackWithTarget:target action:completeSelector inMainThread:YES]];
     }
     return self;
 }
 
-- (id)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target successBlock:(MobilyApiProviderSuccessBlock)successBlock failureBlock:(MobilyApiProviderFailureBlock)failureBlock {
+- (id)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target completeBlock:(MobilyApiProviderCompleteBlock)completeBlock {
     self = [self initWithProvider:provider request:request target:target];
     if(self != nil) {
-        [self setSuccessEvent:[MobilyEventBlock callbackWithBlock:^id(id sender, id object) {
-            if(successBlock != nil) {
-                successBlock(_request, _response);
-            }
-            return nil;
-        } inMainQueue:YES]];
-        [self setFailureEvent:[MobilyEventBlock callbackWithBlock:^id(id sender, id object) {
-            if(failureBlock != nil) {
-                failureBlock(_request, _response);
+        [self setCompleteEvent:[MobilyEventBlock callbackWithBlock:^id(id sender, id object) {
+            if(completeBlock != nil) {
+                completeBlock(_request, _response);
             }
             return nil;
         } inMainQueue:YES]];
@@ -199,8 +191,7 @@
 
 - (void)dealloc {
     [self setTarget:nil];
-    [self setSuccessEvent:nil];
-    [self setFailureEvent:nil];
+    [self setCompleteEvent:nil];
     
     MOBILY_SAFE_DEALLOC;
 }
@@ -234,11 +225,7 @@
 - (void)didComplete {
     [super didComplete];
     
-    if([_response isValid] == YES) {
-        [_successEvent fireSender:_request object:_response];
-    } else {
-        [_failureEvent fireSender:_request object:_response];
-    }
+    [_completeEvent fireSender:_request object:_response];
 }
 
 @end

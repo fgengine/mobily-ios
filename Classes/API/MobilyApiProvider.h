@@ -42,8 +42,7 @@
 
 /*--------------------------------------------------*/
 
-typedef void (^MobilyApiProviderSuccessBlock)(MobilyApiRequest* request, MobilyApiResponse* response);
-typedef void (^MobilyApiProviderFailureBlock)(MobilyApiRequest* request, MobilyApiResponse* response);
+typedef void (^MobilyApiProviderCompleteBlock)(id request, id response);
 
 /*--------------------------------------------------*/
 
@@ -63,8 +62,8 @@ typedef void (^MobilyApiProviderFailureBlock)(MobilyApiRequest* request, MobilyA
 
 - (id)initWithName:(NSString*)name url:(NSURL*)url;
 
-- (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target successSelector:(SEL)successSelector failureSelector:(SEL)failureSelector;
-- (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target successBlock:(MobilyApiProviderSuccessBlock)successBlock failureBlock:(MobilyApiProviderFailureBlock)failureBlock;
+- (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target completeSelector:(SEL)completeSelector;
+- (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target completeBlock:(MobilyApiProviderCompleteBlock)completeBlock;
 - (void)cancelByRequest:(MobilyApiRequest*)request;
 - (void)cancelByTarget:(id)target;
 
