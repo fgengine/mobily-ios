@@ -75,6 +75,7 @@ typedef void (^MobilyHttpQueryErrorBlock)(NSError* error);
 @property(nonatomic, readwrite, copy) MobilyHttpQueryBlock finishCallback;
 @property(nonatomic, readwrite, copy) MobilyHttpQueryErrorBlock errorCallback;
 
+- (void)setRequestUrl:(NSURL*)url params:(NSDictionary*)params;
 - (void)setRequestUrlParams:(NSDictionary*)params;
 - (void)setRequestBodyParams:(NSDictionary*)params;
 - (void)setRequestBodyParams:(NSDictionary*)params boundary:(NSString*)boundary attachments:(NSArray*)attachments;

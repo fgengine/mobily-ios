@@ -210,7 +210,7 @@
     [super working];
     
     [self setResponse:[_request responseByHttpQuery:[self httpQuery]]];
-    if([_response isValid] == NO) {
+    if([_response isValidResponse] == NO) {
         if([_request numberOfRetries] == NSNotFound) {
             [self setNeedRework:YES];
         } else {

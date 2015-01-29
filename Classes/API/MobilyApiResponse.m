@@ -53,7 +53,7 @@
 - (id)initWithHttpQuery:(MobilyHttpQuery*)httpQuery {
     self = [super init];
     if(self != nil) {
-        [self setValid:[self fromHttpQuery:httpQuery]];
+        [self setValidResponse:[self fromHttpQuery:httpQuery]];
     }
     return self;
 }

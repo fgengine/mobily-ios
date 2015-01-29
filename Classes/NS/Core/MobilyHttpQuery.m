@@ -87,8 +87,8 @@
 
 #pragma mark Public
 
-- (void)setRequestUrlParams:(NSDictionary*)params {
-    NSURLComponents* urlComponents = [NSURLComponents componentsWithString:[[_request URL] absoluteString]];
+- (void)setRequestUrl:(NSURL*)url params:(NSDictionary*)params {
+    NSURLComponents* urlComponents = [NSURLComponents componentsWithString:[url absoluteString]];
     NSMutableDictionary* queryParams = [NSMutableDictionary dictionary];
     if([[urlComponents query] length] > 0) {
         [queryParams addEntriesFromDictionary:[[urlComponents query] dictionaryFromQueryComponents]];
@@ -103,6 +103,10 @@
     }];
     [urlComponents setQuery:queryString];
     [self setRequestUrl:[NSURL URLWithString:[urlComponents string]]];
+}
+
+- (void)setRequestUrlParams:(NSDictionary*)params {
+    [self setRequestUrl:[_request URL] params:params];
 }
 
 - (void)setRequestBodyParams:(NSDictionary*)params {

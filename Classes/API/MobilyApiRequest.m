@@ -41,10 +41,10 @@
 
 @interface MobilyApiRequest ()
 
-@property(nonatomic, readwrite, assign) MobilyApiRequestHttpMethodType methodType;
+@property(nonatomic, readwrite, strong) NSString* method;
 @property(nonatomic, readwrite, strong) NSString* relativeUrl;
-@property(nonatomic, readwrite, assign) MobilyApiRequestParamsType paramsType;
-@property(nonatomic, readwrite, strong) NSDictionary* params;
+@property(nonatomic, readwrite, strong) NSDictionary* urlParams;
+@property(nonatomic, readwrite, strong) NSDictionary* bodyParams;
 @property(nonatomic, readwrite, strong) NSArray* attachments;
 @property(nonatomic, readwrite, assign) NSUInteger numberOfRetries;
 
@@ -60,20 +60,20 @@
 
 + (NSArray*)compareMap {
     return @[
-        @"methodType",
+        @"method",
         @"relativeUrl",
-        @"paramsType",
-        @"params",
+        @"urlParams",
+        @"bodyParams",
         @"attachments"
     ];
 }
 
 + (NSArray*)serializeMap {
     return @[
-        @"methodType",
+        @"method",
         @"relativeUrl",
-        @"paramsType",
-        @"params",
+        @"urlParams",
+        @"bodyParams",
         @"attachments",
         @"numberOfRetries"
     ];
@@ -81,13 +81,37 @@
 
 #pragma mark Init
 
-- (id)initWithMethodType:(MobilyApiRequestHttpMethodType)methodType relativeUrl:(NSString*)relativeUrl paramsType:(MobilyApiRequestParamsType)paramsType params:(NSDictionary*)params attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries {
+- (id)initWithGetRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams {
+    return [self initWithMethod:@"GET" relativeUrl:relativeUrl urlParams:urlParams bodyParams:nil attachments:nil numberOfRetries:0];
+}
+
+- (id)initWithGetRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams numberOfRetries:(NSUInteger)numberOfRetries {
+    return [self initWithMethod:@"GET" relativeUrl:relativeUrl urlParams:urlParams bodyParams:nil attachments:nil numberOfRetries:numberOfRetries];
+}
+
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams bodyParams:(NSDictionary*)bodyParams {
+    return [self initWithMethod:@"POST" relativeUrl:relativeUrl urlParams:urlParams bodyParams:bodyParams attachments:nil numberOfRetries:0];
+}
+
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams bodyParams:(NSDictionary*)bodyParams numberOfRetries:(NSUInteger)numberOfRetries {
+    return [self initWithMethod:@"POST" relativeUrl:relativeUrl urlParams:urlParams bodyParams:bodyParams attachments:nil numberOfRetries:numberOfRetries];
+}
+
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments {
+    return [self initWithMethod:@"POST" relativeUrl:relativeUrl urlParams:urlParams bodyParams:bodyParams attachments:attachments numberOfRetries:0];
+}
+
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries {
+    return [self initWithMethod:@"POST" relativeUrl:relativeUrl urlParams:urlParams bodyParams:bodyParams attachments:attachments numberOfRetries:numberOfRetries];
+}
+
+- (id)initWithMethod:(NSString*)method relativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries {
     self = [super init];
     if(self != nil) {
-        [self setMethodType:methodType];
+        [self setMethod:method];
         [self setRelativeUrl:relativeUrl];
-        [self setParamsType:paramsType];
-        [self setParams:params];
+        [self setUrlParams:urlParams];
+        [self setBodyParams:bodyParams];
         [self setAttachments:attachments];
         [self setNumberOfRetries:numberOfRetries];
     }
@@ -95,7 +119,10 @@
 }
 
 - (void)dealloc {
-    [self setParams:nil];
+    [self setMethod:nil];
+    [self setRelativeUrl:nil];
+    [self setUrlParams:nil];
+    [self setBodyParams:nil];
     [self setAttachments:nil];
     
     MOBILY_SAFE_DEALLOC;
@@ -105,30 +132,21 @@
 
 - (MobilyHttpQuery*)httpQueryByBaseUrl:(NSURL*)baseUrl {
     MobilyHttpQuery* httpQuery = [[MobilyHttpQuery alloc] init];
-    switch(_methodType) {
-        case MobilyApiRequestHttpMethodTypeGet:
-            [httpQuery setRequestMethod:@"GET"];
-            break;
-        case MobilyApiRequestHttpMethodTypePost:
-            [httpQuery setRequestMethod:@"POST"];
-            break;
+    if([_method length] > 0) {
+        [httpQuery setRequestMethod:_method];
     }
     if([_relativeUrl length] > 0) {
         [httpQuery setRequestUrl:[NSURL URLWithString:[[baseUrl absoluteString] stringByAppendingPathComponent:_relativeUrl]]];
     } else {
         [httpQuery setRequestUrl:baseUrl];
     }
-    switch(_paramsType) {
-        case MobilyApiRequestParamsTypeUrl:
-            [httpQuery setRequestUrlParams:_params];
-            break;
-        case MobilyApiRequestParamsTypeFormData:
-            if([_attachments count] > 0) {
-                [httpQuery setRequestBodyParams:_params boundary:@"boundary" attachments:_attachments];
-            } else {
-                [httpQuery setRequestBodyParams:_params];
-            }
-            break;
+    if([_urlParams count] > 0) {
+        [httpQuery setRequestUrlParams:_urlParams];
+    }
+    if([_attachments count] > 0) {
+        [httpQuery setRequestBodyParams:_bodyParams boundary:@"MobilyBoundary" attachments:_attachments];
+    } else {
+        [httpQuery setRequestBodyParams:_bodyParams];
     }
     return httpQuery;
 }

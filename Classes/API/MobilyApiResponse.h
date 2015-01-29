@@ -45,7 +45,7 @@
 @interface MobilyApiResponse : MobilyModel
 
 @property(nonatomic, readwrite, strong) NSError* httpError;
-@property(nonatomic, readwrite, assign, getter=isValid) BOOL valid;
+@property(nonatomic, readwrite, assign, getter=isValidResponse) BOOL validResponse;
 
 - (id)initWithHttpQuery:(MobilyHttpQuery*)httpQuery;
 

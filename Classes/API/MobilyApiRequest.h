@@ -43,30 +43,22 @@
 
 /*--------------------------------------------------*/
 
-typedef NS_ENUM(NSUInteger, MobilyApiRequestHttpMethodType) {
-    MobilyApiRequestHttpMethodTypeGet,
-    MobilyApiRequestHttpMethodTypePost,
-};
-
-/*--------------------------------------------------*/
-
-typedef NS_ENUM(NSUInteger, MobilyApiRequestParamsType) {
-    MobilyApiRequestParamsTypeUrl,
-    MobilyApiRequestParamsTypeFormData
-};
-
-/*--------------------------------------------------*/
-
 @interface MobilyApiRequest : MobilyModel
 
-@property(nonatomic, readonly, assign) MobilyApiRequestHttpMethodType methodType;
-@property(nonatomic, readonly, assign) MobilyApiRequestParamsType paramsType;
+@property(nonatomic, readonly, strong) NSString* method;
 @property(nonatomic, readonly, strong) NSString* relativeUrl;
-@property(nonatomic, readonly, strong) NSDictionary* params;
+@property(nonatomic, readonly, strong) NSDictionary* urlParams;
+@property(nonatomic, readonly, strong) NSDictionary* bodyParams;
 @property(nonatomic, readonly, strong) NSArray* attachments;
 @property(nonatomic, readonly, assign) NSUInteger numberOfRetries;
 
-- (id)initWithMethodType:(MobilyApiRequestHttpMethodType)methodType relativeUrl:(NSString*)relativeUrl paramsType:(MobilyApiRequestParamsType)paramsType params:(NSDictionary*)params attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries;
+- (id)initWithGetRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams;
+- (id)initWithGetRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams numberOfRetries:(NSUInteger)numberOfRetries;
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams bodyParams:(NSDictionary*)bodyParams;
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams bodyParams:(NSDictionary*)bodyParams numberOfRetries:(NSUInteger)numberOfRetries;
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments;
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries;
+- (id)initWithMethod:(NSString*)method relativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries;
 
 - (MobilyHttpQuery*)httpQueryByBaseUrl:(NSURL*)baseUrl;
 - (MobilyApiResponse*)responseByHttpQuery:(MobilyHttpQuery*)httpQuery;
