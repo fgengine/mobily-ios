@@ -136,7 +136,13 @@
         [httpQuery setRequestMethod:_method];
     }
     if([_relativeUrl length] > 0) {
-        [httpQuery setRequestUrl:[NSURL URLWithString:[[baseUrl absoluteString] stringByAppendingPathComponent:_relativeUrl]]];
+        NSMutableString* mutableBaseUrl = [NSMutableString stringWithString:[baseUrl absoluteString]];
+        if([mutableBaseUrl characterAtIndex:[mutableBaseUrl length] - 1] != '/') {
+            [mutableBaseUrl appendFormat:@"/%@", _relativeUrl];
+        } else {
+            [mutableBaseUrl appendString:_relativeUrl];
+        }
+        [httpQuery setRequestUrl:[NSURL URLWithString:mutableBaseUrl]];
     } else {
         [httpQuery setRequestUrl:baseUrl];
     }

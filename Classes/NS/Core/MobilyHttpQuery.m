@@ -311,11 +311,6 @@
         [value enumerateObjectsUsingBlock:^(id arrayValue, NSUInteger arrayIndex, BOOL* stop) {
             [self formDataFromDictionary:dictionary value:arrayValue keyPath:[NSString stringWithFormat:@"%@[%lu]", keyPath, (unsigned long)arrayIndex]];
         }];
-    } else if([value isKindOfClass:[NSString class]] == YES) {
-        value = [value stringByEncodingURLFormat];
-        if(value != nil) {
-            [dictionary setObject:value forKey:keyPath];
-        }
     } else {
         [dictionary setObject:value forKey:keyPath];
     }
@@ -341,10 +336,10 @@
 - (void)connection:(NSURLConnection*)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge {
     id< NSURLAuthenticationChallengeSender > sender = [challenge sender];
     SecTrustRef serverTrust = [[challenge protectionSpace] serverTrust];
-    SecCertificateRef localCertificate = NULL;
     
-    SecTrustResultType serverTrustResult = kSecTrustResultOtherError;
     if(_certificateFilename != nil) {
+        SecCertificateRef localCertificate = NULL;
+        SecTrustResultType serverTrustResult = kSecTrustResultOtherError;
         NSString* path = [[NSBundle mainBundle] pathForResource:_certificateFilename ofType:@"der"];
         if(path != nil) {
             NSData* data = [NSData dataWithContentsOfFile:path];
@@ -365,24 +360,26 @@
                 }
             }
         }
-    }
-    if((serverTrustResult == kSecTrustResultUnspecified) || (serverTrustResult == kSecTrustResultProceed)) {
-        SecCertificateRef serverCertificate = SecTrustGetCertificateAtIndex(serverTrust, 0);
-        if(serverCertificate != NULL) {
-            NSString* serverHash = nil;
-            NSData* serverCertificateData = (__bridge NSData*)SecCertificateCopyData(serverCertificate);
-            if(serverCertificateData != nil) {
-                serverHash = [[serverCertificateData toBase64] stringBySHA256];
-            }
-            NSString* localHash = nil;
-            NSData* localCertificateData = (__bridge NSData*)SecCertificateCopyData(localCertificate);
-            if(localCertificateData != nil) {
-                localHash = [[localCertificateData toBase64] stringBySHA256];
-            }
-            if([serverHash isEqualToString:localHash] == YES) {
-                NSURLCredential* credential = [NSURLCredential credentialForTrust:serverTrust];
-                if(credential != nil) {
-                    [sender useCredential:credential forAuthenticationChallenge:challenge];
+        if((serverTrustResult == kSecTrustResultUnspecified) || (serverTrustResult == kSecTrustResultProceed)) {
+            SecCertificateRef serverCertificate = SecTrustGetCertificateAtIndex(serverTrust, 0);
+            if(serverCertificate != NULL) {
+                NSString* serverHash = nil;
+                NSData* serverCertificateData = (__bridge NSData*)SecCertificateCopyData(serverCertificate);
+                if(serverCertificateData != nil) {
+                    serverHash = [[serverCertificateData toBase64] stringBySHA256];
+                }
+                NSString* localHash = nil;
+                NSData* localCertificateData = (__bridge NSData*)SecCertificateCopyData(localCertificate);
+                if(localCertificateData != nil) {
+                    localHash = [[localCertificateData toBase64] stringBySHA256];
+                }
+                if([serverHash isEqualToString:localHash] == YES) {
+                    NSURLCredential* credential = [NSURLCredential credentialForTrust:serverTrust];
+                    if(credential != nil) {
+                        [sender useCredential:credential forAuthenticationChallenge:challenge];
+                    } else {
+                        [sender cancelAuthenticationChallenge:challenge];
+                    }
                 } else {
                     [sender cancelAuthenticationChallenge:challenge];
                 }
@@ -392,11 +389,11 @@
         } else {
             [sender cancelAuthenticationChallenge:challenge];
         }
+        if(localCertificate != NULL) {
+            CFRelease(localCertificate);
+        }
     } else {
-        [sender cancelAuthenticationChallenge:challenge];
-    }
-    if(localCertificate != NULL) {
-        CFRelease(localCertificate);
+        [sender useCredential:[NSURLCredential credentialForTrust:serverTrust] forAuthenticationChallenge:challenge];
     }
 }
 
