@@ -333,7 +333,7 @@ typedef void (^MobilyDownloaderBlock)();
     }
     if(entry == nil) {
         if([_downloaderDelegate respondsToSelector:@selector(downloader:dataForUrl:)] == YES) {
-            entry = [_downloaderDelegate downloader:_downloader dataForUrl:_url];
+            data = [_downloaderDelegate downloader:_downloader dataForUrl:_url];
         } else {
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
             data = [NSData dataWithContentsOfURL:_url];

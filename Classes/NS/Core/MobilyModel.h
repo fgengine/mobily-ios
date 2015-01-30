@@ -54,16 +54,16 @@ typedef void (^MobilyModelBlock)();
 + (NSArray*)serializeMap;
 + (NSDictionary*)jsonMap;
 
-- (void)convertFromJson:(id)json;
+- (void)fromJson:(id)json;
 
-- (void)clearItem;
-- (void)clearItemComplete:(MobilyModelBlock)complete;
+- (void)clear;
+- (void)clearComplete:(MobilyModelBlock)complete;
 
-- (BOOL)saveItem;
-- (void)saveItemSuccess:(MobilyModelBlock)success failure:(MobilyModelBlock)failure;
+- (BOOL)save;
+- (void)saveSuccess:(MobilyModelBlock)success failure:(MobilyModelBlock)failure;
 
-- (void)loadItem;
-- (void)loadItemComplete:(MobilyModelBlock)complete;
+- (void)load;
+- (void)loadComplete:(MobilyModelBlock)complete;
 
 @end
 
@@ -78,7 +78,7 @@ typedef void (^MobilyModelCollectionEnumBlock)(id item, BOOL* stop);
 @property(nonatomic, readwrite, strong) NSString* userDefaultsKey;
 @property(nonatomic, readwrite, strong) NSString* fileName;
 @property(nonatomic, readonly, strong) NSString* filePath;
-@property(nonatomic, readonly, copy) NSArray* items;
+@property(nonatomic, readwrite, copy) NSArray* models;
 
 - (id)initWithUserDefaultsKey:(NSString*)userDefaultsKey;
 - (id)initWithFileName:(NSString*)fileName;
@@ -86,31 +86,31 @@ typedef void (^MobilyModelCollectionEnumBlock)(id item, BOOL* stop);
 
 - (void)setup;
 
-- (void)convertFromJson:(id)json storageItemClass:(Class)storageItemClass;
+- (void)fromJson:(id)json modelClass:(Class)storageItemClass;
 
-- (NSUInteger)countItems;
+- (NSUInteger)count;
 
-- (id)itemAtIndex:(NSUInteger)index;
+- (id)modelAtIndex:(NSUInteger)index;
 
-- (id)firstItem;
-- (id)lastItem;
+- (id)firstModel;
+- (id)lastModel;
 
-- (void)prependItem:(MobilyModel*)item;
-- (void)prependItems:(NSArray*)items;
+- (void)prependModel:(MobilyModel*)item;
+- (void)prependModelsFromArray:(NSArray*)items;
 
-- (void)appendItem:(MobilyModel*)item;
-- (void)appendItems:(NSArray*)items;
+- (void)appendModel:(MobilyModel*)item;
+- (void)appendModelsFromArray:(NSArray*)items;
 
-- (void)insertItem:(MobilyModel*)item atIndex:(NSUInteger)index;
-- (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index;
+- (void)insertModel:(MobilyModel*)item atIndex:(NSUInteger)index;
+- (void)insertModelsFromArray:(NSArray*)items atIndex:(NSUInteger)index;
 
-- (void)removeItem:(MobilyModel*)item;
-- (void)removeItems:(NSArray*)items;
-- (void)removeAllItems;
+- (void)removeModel:(MobilyModel*)item;
+- (void)removeModelsInArray:(NSArray*)items;
+- (void)removeAllModels;
 
-- (void)enumirateItemsUsingBlock:(MobilyModelCollectionEnumBlock)block;
+- (void)enumirateModelsUsingBlock:(MobilyModelCollectionEnumBlock)block;
 
-- (BOOL)saveItems;
+- (BOOL)save;
 
 @end
 
@@ -139,16 +139,16 @@ typedef MobilyModelQuerySortResult (^MobilyModelQueryResortBlock)(id item1, id i
 @property(nonatomic, readwrite, copy) MobilyModelQueryReloadBlock reloadBlock;
 @property(nonatomic, readwrite, copy) MobilyModelQueryResortBlock resortBlock;
 @property(nonatomic, readwrite, assign) BOOL resortInvert;
-@property(nonatomic, readonly, assign) NSArray* items;
+@property(nonatomic, readonly, assign) NSArray* models;
 
 - (id)initWithCollection:(MobilyModelCollection*)collection;
 
 - (void)setNeedReload;
 - (void)setNeedResort;
 
-- (NSUInteger)countItems;
+- (NSUInteger)count;
 
-- (id)itemAtIndex:(NSUInteger)index;
+- (id)modelAtIndex:(NSUInteger)index;
 
 @end
 

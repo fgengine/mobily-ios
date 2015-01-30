@@ -72,7 +72,7 @@
         if(([responseMimeType isEqualToString:@"application/json"] == YES) || ([responseMimeType isEqualToString:@"text/json"] == YES)) {
             id json = [httpQuery responseJson];
             if(json != nil) {
-                [self convertFromJson:json];
+                [self fromJson:json];
                 return YES;
             }
         }

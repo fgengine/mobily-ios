@@ -45,20 +45,34 @@
 
 @interface MobilyApiRequest : MobilyModel
 
-@property(nonatomic, readonly, strong) NSString* method;
-@property(nonatomic, readonly, strong) NSString* relativeUrl;
-@property(nonatomic, readonly, strong) NSDictionary* urlParams;
-@property(nonatomic, readonly, strong) NSDictionary* bodyParams;
-@property(nonatomic, readonly, strong) NSArray* attachments;
-@property(nonatomic, readonly, assign) NSUInteger numberOfRetries;
+@property(nonatomic, readwrite, strong) NSString* method;
+@property(nonatomic, readwrite, strong) NSString* relativeUrl;
+@property(nonatomic, readwrite, strong) NSDictionary* urlParams;
+@property(nonatomic, readwrite, strong) NSDictionary* headers;
+@property(nonatomic, readwrite, strong) NSDictionary* bodyParams;
+@property(nonatomic, readwrite, strong) NSArray* attachments;
+@property(nonatomic, readwrite, assign) NSUInteger numberOfRetries;
 
+- (id)initWithGetRelativeUrl:(NSString*)relativeUrl;
 - (id)initWithGetRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams;
 - (id)initWithGetRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams numberOfRetries:(NSUInteger)numberOfRetries;
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl bodyParams:(NSDictionary*)bodyParams;
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl bodyParams:(NSDictionary*)bodyParams numberOfRetries:(NSUInteger)numberOfRetries;
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments;
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries;
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl headers:(NSDictionary*)headers bodyParams:(NSDictionary*)bodyParams;
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl headers:(NSDictionary*)headers bodyParams:(NSDictionary*)bodyParams numberOfRetries:(NSUInteger)numberOfRetries;
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl headers:(NSDictionary*)headers bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments;
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl headers:(NSDictionary*)headers bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries;
 - (id)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams bodyParams:(NSDictionary*)bodyParams;
 - (id)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams bodyParams:(NSDictionary*)bodyParams numberOfRetries:(NSUInteger)numberOfRetries;
 - (id)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments;
 - (id)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries;
-- (id)initWithMethod:(NSString*)method relativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries;
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams headers:(NSDictionary*)headers bodyParams:(NSDictionary*)bodyParams;
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams headers:(NSDictionary*)headers bodyParams:(NSDictionary*)bodyParams numberOfRetries:(NSUInteger)numberOfRetries;
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams headers:(NSDictionary*)headers bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments;
+- (id)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams headers:(NSDictionary*)headers bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries;
+- (id)initWithMethod:(NSString*)method relativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams headers:(NSDictionary*)headers bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries;
 
 - (MobilyHttpQuery*)httpQueryByBaseUrl:(NSURL*)baseUrl;
 - (MobilyApiResponse*)responseByHttpQuery:(MobilyHttpQuery*)httpQuery;

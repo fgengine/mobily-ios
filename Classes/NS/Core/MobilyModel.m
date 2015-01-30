@@ -61,11 +61,11 @@
 @interface MobilyModelCollection ()
 
 @property(nonatomic, readwrite, strong) NSString* filePath;
-@property(nonatomic, readwrite, strong) NSMutableArray* unsafeItems;
+@property(nonatomic, readwrite, strong) NSMutableArray* unsafeModels;
 @property(nonatomic, readwrite, assign) BOOL flagLoad;
 
-- (void)loadIsNeedItems;
-- (void)loadItems;
+- (void)loadIsNeed;
+- (void)load;
 
 @end
 
@@ -74,16 +74,16 @@
 /*--------------------------------------------------*/
 
 @interface MobilyModelQuery () {
-    NSMutableArray* _unsafeItems;
+    NSMutableArray* _unsafeModels;
 }
 
 @property(nonatomic, readwrite, weak) MobilyModelCollection* collection;
-@property(nonatomic, readwrite, strong) NSMutableArray* unsafeItems;
+@property(nonatomic, readwrite, strong) NSMutableArray* unsafeModels;
 @property(nonatomic, readwrite, assign) BOOL flagReload;
 @property(nonatomic, readwrite, assign) BOOL flagResort;
 
-- (void)reloadItems;
-- (void)resortItems;
+- (void)reload;
+- (void)resort;
 
 @end
 
@@ -120,7 +120,7 @@
 - (id)initWithJson:(id)json {
     self = [super init];
     if(self != nil) {
-        [self convertFromJson:json];
+        [self fromJson:json];
         [self setup];
     }
     return self;
@@ -130,7 +130,7 @@
     self = [super init];
     if(self != nil) {
         [self setUserDefaultsKey:userDefaultsKey];
-        [self loadItem];
+        [self load];
         [self setup];
     }
     return self;
@@ -237,7 +237,7 @@
     return nil;
 }
 
-- (void)convertFromJson:(id)json {
+- (void)fromJson:(id)json {
     [[self jsonMap] enumerateKeysAndObjectsUsingBlock:^(NSString* field, MobilyModelJson* converter, BOOL* stop) {
         id value = [converter parseJson:json];
         if(value != nil) {
@@ -246,7 +246,7 @@
     }];
 }
 
-- (void)clearItem {
+- (void)clear {
     [[self serializeMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
         @try {
             [self setValue:nil forKey:field];
@@ -256,9 +256,9 @@
     }];
 }
 
-- (void)clearItemComplete:(MobilyModelBlock)complete {
+- (void)clearComplete:(MobilyModelBlock)complete {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        [self clearItem];
+        [self clear];
         if(complete != nil) {
             dispatch_sync(dispatch_get_main_queue(), ^{
                 complete();
@@ -267,7 +267,7 @@
     });
 }
 
-- (BOOL)saveItem {
+- (BOOL)save {
     @try {
         NSMutableDictionary* dict = [NSMutableDictionary dictionary];
         if(dict != nil) {
@@ -295,9 +295,9 @@
     return NO;
 }
 
-- (void)saveItemSuccess:(MobilyModelBlock)success failure:(MobilyModelBlock)failure {
+- (void)saveSuccess:(MobilyModelBlock)success failure:(MobilyModelBlock)failure {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        if([self saveItem] == YES) {
+        if([self save] == YES) {
             if(success != nil) {
                 dispatch_sync(dispatch_get_main_queue(), ^{
                     success();
@@ -313,7 +313,7 @@
     });
 }
 
-- (void)loadItem {
+- (void)load {
     @try {
         NSDictionary* dict = [[NSUserDefaults standardUserDefaults] objectForKey:_userDefaultsKey];
         if(dict != nil) {
@@ -339,9 +339,9 @@
     }
 }
 
-- (void)loadItemComplete:(MobilyModelBlock)complete {
+- (void)loadComplete:(MobilyModelBlock)complete {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        [self loadItem];
+        [self load];
         if(complete != nil) {
             dispatch_sync(dispatch_get_main_queue(), ^{
                 complete();
@@ -436,7 +436,7 @@
 - (id)init {
     self = [super init];
     if(self != nil) {
-        [self setUnsafeItems:[NSMutableArray array]];
+        [self setUnsafeModels:[NSMutableArray array]];
         [self setFlagLoad:NO];
     }
     return self;
@@ -447,9 +447,9 @@
     if(self != nil) {
         id items = [coder decodeObjectForKey:@"items"];
         if(items != nil) {
-            [self setUnsafeItems:items];
+            [self setUnsafeModels:items];
         } else {
-            [self setUnsafeItems:[NSMutableArray array]];
+            [self setUnsafeModels:[NSMutableArray array]];
         }
         [self setFlagLoad:NO];
         [self setup];
@@ -461,7 +461,7 @@
     self = [super init];
     if(self != nil) {
         [self setUserDefaultsKey:userDefaultsKey];
-        [self setUnsafeItems:[NSMutableArray array]];
+        [self setUnsafeModels:[NSMutableArray array]];
         [self setFlagLoad:YES];
         [self setup];
     }
@@ -477,7 +477,7 @@
             if(filePath != nil) {
                 [self setFileName:fileName];
                 [self setFilePath:filePath];
-                [self setUnsafeItems:[NSMutableArray array]];
+                [self setUnsafeModels:[NSMutableArray array]];
                 [self setFlagLoad:YES];
                 [self setup];
             } else {
@@ -493,9 +493,9 @@
 - (id)initWithJson:(id)json storageItemClass:(Class)storageItemClass {
     self = [super init];
     if(self != nil) {
-        [self setUnsafeItems:[NSMutableArray array]];
+        [self setUnsafeModels:[NSMutableArray array]];
         [self setFlagLoad:NO];
-        [self convertFromJson:json storageItemClass:storageItemClass];
+        [self fromJson:json modelClass:storageItemClass];
         [self setup];
     }
     return self;
@@ -505,14 +505,14 @@
     [self setFileName:nil];
     [self setUserDefaultsKey:nil];
     [self setFilePath:nil];
-    [self setUnsafeItems:nil];
+    [self setUnsafeModels:nil];
 
     MOBILY_SAFE_DEALLOC;
 }
 
 - (void)encodeWithCoder:(NSCoder*)coder {
-    [self loadIsNeedItems];
-    [coder encodeObject:_unsafeItems forKey:@"items"];
+    [self loadIsNeed];
+    [coder encodeObject:_unsafeModels forKey:@"items"];
 }
 
 - (id)copyWithZone:(NSZone*)zone {
@@ -520,7 +520,7 @@
     if(result != nil) {
         [result setFilePath:[self filePath]];
         [result setUserDefaultsKey:[self userDefaultsKey]];
-        [result setUnsafeItems:[[self unsafeItems] copyWithZone:zone]];
+        [result setUnsafeModels:[[self unsafeModels] copyWithZone:zone]];
         [result setFlagLoad:[self flagLoad]];
     }
     return result;
@@ -545,105 +545,110 @@
     }
 }
 
+- (void)setModels:(NSArray*)items {
+    [self setFlagLoad:NO];
+    [_unsafeModels setArray:items];
+}
+
+- (NSArray*)models {
+    [self loadIsNeed];
+    return MOBILY_SAFE_AUTORELEASE([_unsafeModels copy]);
+}
+
 #pragma mark Public
 
 - (void)setup {
 }
 
-- (void)convertFromJson:(id)json storageItemClass:(Class)storageItemClass {
-    [_unsafeItems removeAllObjects];
+- (void)fromJson:(id)json modelClass:(Class)storageItemClass {
+    [_unsafeModels removeAllObjects];
     if([storageItemClass isSubclassOfClass:[MobilyModel class]] == YES) {
         if([json isKindOfClass:[NSArray class]] == YES) {
             [json enumerateObjectsUsingBlock:^(id jsonItem, NSUInteger jsonItemIndex, BOOL* jsonItemStop) {
                 id item = [[storageItemClass alloc] initWithJson:jsonItem];
                 if(item != nil) {
-                    [_unsafeItems addObject:item];
+                    [_unsafeModels addObject:item];
                 }
             }];
         }
     }
 }
 
-- (NSUInteger)countItems {
-    [self loadIsNeedItems];
-    return [_unsafeItems count];
+- (NSUInteger)count {
+    [self loadIsNeed];
+    return [_unsafeModels count];
 }
 
-- (id)itemAtIndex:(NSUInteger)index {
-    [self loadIsNeedItems];
-    return [_unsafeItems objectAtIndex:index];
+- (id)modelAtIndex:(NSUInteger)index {
+    [self loadIsNeed];
+    return [_unsafeModels objectAtIndex:index];
 }
 
-- (id)firstItem {
-    [self loadIsNeedItems];
-    if([_unsafeItems count] > 0) {
-        return [_unsafeItems objectAtIndex:0];
+- (id)firstModel {
+    [self loadIsNeed];
+    if([_unsafeModels count] > 0) {
+        return [_unsafeModels objectAtIndex:0];
     }
     return nil;
 }
 
-- (id)lastItem {
-    return [_unsafeItems lastObject];
+- (id)lastModel {
+    return [_unsafeModels lastObject];
 }
 
-- (void)prependItem:(MobilyModel*)item {
-    [self loadIsNeedItems];
-    [_unsafeItems insertObject:item atIndex:0];
+- (void)prependModel:(MobilyModel*)item {
+    [self loadIsNeed];
+    [_unsafeModels insertObject:item atIndex:0];
 }
 
-- (void)prependItems:(NSArray*)items {
-    [self loadIsNeedItems];
-    [_unsafeItems insertObjects:items atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [items count])]];
+- (void)prependModelsFromArray:(NSArray*)items {
+    [self loadIsNeed];
+    [_unsafeModels insertObjects:items atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [items count])]];
 }
 
-- (void)appendItem:(MobilyModel*)item {
-    [self loadIsNeedItems];
-    [_unsafeItems addObject:item];
+- (void)appendModel:(MobilyModel*)item {
+    [self loadIsNeed];
+    [_unsafeModels addObject:item];
 }
 
-- (void)appendItems:(NSArray*)items {
-    [self loadIsNeedItems];
-    [_unsafeItems addObjectsFromArray:items];
+- (void)appendModelsFromArray:(NSArray*)items {
+    [self loadIsNeed];
+    [_unsafeModels addObjectsFromArray:items];
 }
 
-- (void)insertItem:(MobilyModel*)item atIndex:(NSUInteger)index {
-    [self loadIsNeedItems];
-    [_unsafeItems insertObject:item atIndex:index];
+- (void)insertModel:(MobilyModel*)item atIndex:(NSUInteger)index {
+    [self loadIsNeed];
+    [_unsafeModels insertObject:item atIndex:index];
 }
 
-- (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index {
-    [self loadIsNeedItems];
-    [_unsafeItems insertObjects:items atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, [items count])]];
+- (void)insertModelsFromArray:(NSArray*)items atIndex:(NSUInteger)index {
+    [self loadIsNeed];
+    [_unsafeModels insertObjects:items atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, [items count])]];
 }
 
-- (void)removeItem:(MobilyModel*)item {
-    [self loadIsNeedItems];
-    [_unsafeItems removeObject:item];
+- (void)removeModel:(MobilyModel*)item {
+    [self loadIsNeed];
+    [_unsafeModels removeObject:item];
 }
 
-- (void)removeItems:(NSArray*)items {
-    [self loadIsNeedItems];
-    [_unsafeItems removeObjectsInArray:items];
+- (void)removeModelsInArray:(NSArray*)items {
+    [self loadIsNeed];
+    [_unsafeModels removeObjectsInArray:items];
 }
 
-- (void)removeAllItems {
-    [self loadIsNeedItems];
-    [_unsafeItems removeAllObjects];
+- (void)removeAllModels {
+    [self loadIsNeed];
+    [_unsafeModels removeAllObjects];
 }
 
-- (NSArray*)items {
-    [self loadIsNeedItems];
-    return MOBILY_SAFE_AUTORELEASE([_unsafeItems copy]);
-}
-
-- (void)enumirateItemsUsingBlock:(MobilyModelCollectionEnumBlock)block {
-    [self loadIsNeedItems];
-    [_unsafeItems enumerateObjectsUsingBlock:^(id item, NSUInteger idx, BOOL *stop) {
+- (void)enumirateModelsUsingBlock:(MobilyModelCollectionEnumBlock)block {
+    [self loadIsNeed];
+    [_unsafeModels enumerateObjectsUsingBlock:^(id item, NSUInteger idx, BOOL *stop) {
         block(item, stop);
     }];
 }
 
-- (BOOL)saveItems {
+- (BOOL)save {
     @try {
         if(_flagLoad == NO) {
             if([_userDefaultsKey length] > 0) {
@@ -651,13 +656,13 @@
                 if([data isKindOfClass:[NSData class]] == YES) {
                     id items = [NSKeyedUnarchiver unarchiveObjectWithData:data];
                     if([items isKindOfClass:[NSArray class]] == YES) {
-                        [_unsafeItems setArray:items];
+                        [_unsafeModels setArray:items];
                     } else {
-                        [_unsafeItems removeAllObjects];
+                        [_unsafeModels removeAllObjects];
                     }
                 }
             } else if([_filePath length] > 0) {
-                return [NSKeyedArchiver archiveRootObject:_unsafeItems toFile:_filePath];
+                return [NSKeyedArchiver archiveRootObject:_unsafeModels toFile:_filePath];
             }
         }
     }
@@ -672,35 +677,35 @@
 #pragma mark Private
 
 - (NSMutableArray*)safeItems {
-    [self loadIsNeedItems];
-    return _unsafeItems;
+    [self loadIsNeed];
+    return _unsafeModels;
 }
 
-- (void)loadIsNeedItems {
+- (void)loadIsNeed {
     if(_flagLoad == YES) {
-        [self loadItems];
+        [self load];
         _flagLoad = NO;
     }
 }
 
-- (void)loadItems {
+- (void)load {
     @try {
         if([_userDefaultsKey length] > 0) {
             NSData* data = [[NSUserDefaults standardUserDefaults] objectForKey:_userDefaultsKey];
             if([data isKindOfClass:[NSData class]] == YES) {
                 id items = [NSKeyedUnarchiver unarchiveObjectWithData:data];
                 if([items isKindOfClass:[NSArray class]] == YES) {
-                    [_unsafeItems setArray:items];
+                    [_unsafeModels setArray:items];
                 } else {
-                    [_unsafeItems removeAllObjects];
+                    [_unsafeModels removeAllObjects];
                 }
             }
         } else if([_filePath length] > 0) {
             id items = [NSKeyedUnarchiver unarchiveObjectWithFile:_filePath];
             if([items isKindOfClass:[NSArray class]] == YES) {
-                [_unsafeItems setArray:items];
+                [_unsafeModels setArray:items];
             } else {
-                [_unsafeItems removeAllObjects];
+                [_unsafeModels removeAllObjects];
             }
         }
     }
@@ -708,7 +713,7 @@
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
         NSLog(@"MobilyModelCollection::loadItems: Exception = %@", exception);
 #endif
-        [_unsafeItems removeAllObjects];
+        [_unsafeModels removeAllObjects];
     }
 }
 
@@ -726,7 +731,7 @@
     self = [super init];
     if(self != nil) {
         [self setCollection:collection];
-        [self setUnsafeItems:[NSMutableArray array]];
+        [self setUnsafeModels:[NSMutableArray array]];
         [self setFlagReload:YES];
         [self setFlagResort:YES];
     }
@@ -735,7 +740,7 @@
 
 - (void)dealloc {
     [self setCollection:nil];
-    [self setUnsafeItems:nil];
+    [self setUnsafeModels:nil];
     [self setReloadBlock:nil];
     [self setResortBlock:nil];
 
@@ -753,24 +758,24 @@
     _flagReload = YES;
 }
 
-- (NSUInteger)countItems {
-    return [[self items] count];
+- (NSUInteger)count {
+    return [[self models] count];
 }
 
-- (id)itemAtIndex:(NSUInteger)index {
-    return [[self items] objectAtIndex:index];
+- (id)modelAtIndex:(NSUInteger)index {
+    return [[self models] objectAtIndex:index];
 }
 
-- (NSArray*)items {
+- (NSArray*)models {
     if(_flagReload == YES) {
-        [self reloadItems];
+        [self reload];
         _flagReload = NO;
     }
     if(_flagResort == YES) {
-        [self resortItems];
+        [self resort];
         _flagResort = NO;
     }
-    return _unsafeItems;
+    return _unsafeModels;
 }
 
 #pragma mark Property
@@ -799,30 +804,30 @@
 
 #pragma mark Private
 
-- (void)reloadItems {
+- (void)reload {
     if([_delegate respondsToSelector:@selector(modelQuery:reloadItem:)] == YES) {
-        [_unsafeItems removeAllObjects];
+        [_unsafeModels removeAllObjects];
         [[_collection safeItems] enumerateObjectsUsingBlock:^(id item, NSUInteger itemIndex, BOOL* itemStop) {
             if([_delegate modelQuery:self reloadItem:item] == YES) {
-                [_unsafeItems addObject:item];
+                [_unsafeModels addObject:item];
             }
         }];
     } else if(_reloadBlock != nil) {
-        [_unsafeItems removeAllObjects];
+        [_unsafeModels removeAllObjects];
         [[_collection safeItems] enumerateObjectsUsingBlock:^(id item, NSUInteger itemIndex, BOOL* itemStop) {
             if(_reloadBlock(item) == YES) {
-                [_unsafeItems addObject:item];
+                [_unsafeModels addObject:item];
             }
         }];
     } else {
-        [_unsafeItems setArray:[_collection safeItems]];
+        [_unsafeModels setArray:[_collection safeItems]];
     }
 }
 
-- (void)resortItems {
+- (void)resort {
     if(_resortInvert == YES) {
         if([_delegate respondsToSelector:@selector(modelQuery:resortItem1:item2:)] == YES) {
-            [_unsafeItems sortUsingComparator:^NSComparisonResult(id item1, id item2) {
+            [_unsafeModels sortUsingComparator:^NSComparisonResult(id item1, id item2) {
                 switch(_resortBlock(item1, item2)) {
                     case MobilyModelQuerySortResultMore: return NSOrderedDescending;
                     case MobilyModelQuerySortResultLess: return NSOrderedAscending;
@@ -831,7 +836,7 @@
                 return NSOrderedSame;
             }];
         } else if(_resortBlock != nil) {
-            [_unsafeItems sortUsingComparator:^NSComparisonResult(id item1, id item2) {
+            [_unsafeModels sortUsingComparator:^NSComparisonResult(id item1, id item2) {
                 switch([_delegate modelQuery:self resortItem1:item1 item2:item2]) {
                     case MobilyModelQuerySortResultMore: return NSOrderedDescending;
                     case MobilyModelQuerySortResultLess: return NSOrderedAscending;
@@ -842,11 +847,11 @@
         }
     } else {
         if([_delegate respondsToSelector:@selector(modelQuery:resortItem1:item2:)] == YES) {
-            [_unsafeItems sortUsingComparator:^NSComparisonResult(id item1, id item2) {
+            [_unsafeModels sortUsingComparator:^NSComparisonResult(id item1, id item2) {
                 return (NSComparisonResult)_resortBlock(item1, item2);
             }];
         } else if(_resortBlock != nil) {
-            [_unsafeItems sortUsingComparator:^NSComparisonResult(id item1, id item2) {
+            [_unsafeModels sortUsingComparator:^NSComparisonResult(id item1, id item2) {
                 return (NSComparisonResult)[_delegate modelQuery:self resortItem1:item1 item2:item2];
             }];
         }

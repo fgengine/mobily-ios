@@ -81,7 +81,9 @@ typedef void (^MobilyHttpQueryErrorBlock)(NSError* error);
 - (void)setRequestBodyParams:(NSDictionary*)params boundary:(NSString*)boundary attachments:(NSArray*)attachments;
 
 - (void)addRequestHeader:(NSString*)header value:(NSString*)value;
+- (void)addRequestHeaders:(NSDictionary*)headers;
 - (void)removeRequestHeader:(NSString*)header;
+- (void)removeRequestHeaders:(NSArray*)headers;
 
 - (void)start;
 - (void)cancel;

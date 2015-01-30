@@ -747,11 +747,11 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 }
 
 - (id)instantiateWithClass:(Class)class owner:(id)owner options:(NSDictionary*)options {
-    id result = nil;
+    __block id result = nil;
     NSArray* content = [self instantiateWithOwner:owner options:nil];
     [content enumerateObjectsUsingBlock:^(id item, NSUInteger index, BOOL* stop) {
         if([item isKindOfClass:class] == YES) {
-            item = result;
+            result = item;
             *stop = YES;
         }
     }];

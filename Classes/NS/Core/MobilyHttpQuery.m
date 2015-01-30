@@ -146,7 +146,15 @@
 }
 
 - (void)addRequestHeader:(NSString*)header value:(NSString*)value {
-    [_request setValue:value forHTTPHeaderField:header];
+    [_request addValue:value forHTTPHeaderField:header];
+}
+
+- (void)addRequestHeaders:(NSDictionary*)headers {
+    NSMutableDictionary* mutableHeaders = [NSMutableDictionary dictionaryWithDictionary:[_request allHTTPHeaderFields]];
+    if(mutableHeaders != nil) {
+        [mutableHeaders setValuesForKeysWithDictionary:headers];
+        [_request setAllHTTPHeaderFields:mutableHeaders];
+    }
 }
 
 - (void)removeRequestHeader:(NSString*)header {
@@ -154,6 +162,14 @@
     if(headers != nil) {
         [headers removeObjectForKey:header];
         [_request setAllHTTPHeaderFields:headers];
+    }
+}
+
+- (void)removeRequestHeaders:(NSArray*)headers {
+    NSMutableDictionary* mutableHeaders = [NSMutableDictionary dictionaryWithDictionary:[_request allHTTPHeaderFields]];
+    if(mutableHeaders != nil) {
+        [mutableHeaders removeObjectsForKeys:headers];
+        [_request setAllHTTPHeaderFields:mutableHeaders];
     }
 }
 
@@ -344,32 +360,35 @@
         if(path != nil) {
             NSData* data = [NSData dataWithContentsOfFile:path];
             if(data != nil) {
-                localCertificate = SecCertificateCreateWithData(NULL, (__bridge_retained CFDataRef)data);
+                CFDataRef cfData = (__bridge_retained CFDataRef)data;
+                localCertificate = SecCertificateCreateWithData(NULL, cfData);
                 if(localCertificate != NULL) {
-                    CFArrayRef certArray = CFArrayCreate(NULL, (void*)&localCertificate, 1, NULL);
-                    if(certArray != NULL) {
-                        SecTrustSetAnchorCertificates(serverTrust, certArray);
+                    CFArrayRef cfCertArray = CFArrayCreate(NULL, (void*)&localCertificate, 1, NULL);
+                    if(cfCertArray != NULL) {
+                        SecTrustSetAnchorCertificates(serverTrust, cfCertArray);
                         SecTrustEvaluate(serverTrust, &serverTrustResult);
                         if(serverTrustResult == kSecTrustResultRecoverableTrustFailure) {
-                            CFDataRef errorData = SecTrustCopyExceptions(serverTrust);
-                            SecTrustSetExceptions(serverTrust, errorData);
+                            CFDataRef cfErrorData = SecTrustCopyExceptions(serverTrust);
+                            SecTrustSetExceptions(serverTrust, cfErrorData);
                             SecTrustEvaluate(serverTrust, &serverTrustResult);
+                            CFRelease(cfErrorData);
                         }
-                        CFRelease(certArray);
+                        CFRelease(cfCertArray);
                     }
                 }
+                CFRelease(cfData);
             }
         }
         if((serverTrustResult == kSecTrustResultUnspecified) || (serverTrustResult == kSecTrustResultProceed)) {
             SecCertificateRef serverCertificate = SecTrustGetCertificateAtIndex(serverTrust, 0);
             if(serverCertificate != NULL) {
                 NSString* serverHash = nil;
-                NSData* serverCertificateData = (__bridge NSData*)SecCertificateCopyData(serverCertificate);
+                NSData* serverCertificateData = (__bridge_transfer NSData*)SecCertificateCopyData(serverCertificate);
                 if(serverCertificateData != nil) {
                     serverHash = [[serverCertificateData toBase64] stringBySHA256];
                 }
                 NSString* localHash = nil;
-                NSData* localCertificateData = (__bridge NSData*)SecCertificateCopyData(localCertificate);
+                NSData* localCertificateData = (__bridge_transfer NSData*)SecCertificateCopyData(localCertificate);
                 if(localCertificateData != nil) {
                     localHash = [[localCertificateData toBase64] stringBySHA256];
                 }
