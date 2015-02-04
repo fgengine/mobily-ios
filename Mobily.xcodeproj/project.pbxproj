@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4010BD6F1A815953002E8AA8 /* MobilySocialManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4010BD691A815953002E8AA8 /* MobilySocialManager.m */; };
+		4010BD701A815953002E8AA8 /* MobilySocialProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4010BD6B1A815953002E8AA8 /* MobilySocialProvider.m */; };
+		4010BD711A815953002E8AA8 /* MobilySocialFacebookProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4010BD6E1A815953002E8AA8 /* MobilySocialFacebookProvider.m */; };
+		4010BD781A8159D7002E8AA8 /* MobilySocialTwitterProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4010BD741A8159D7002E8AA8 /* MobilySocialTwitterProvider.m */; };
+		4010BD791A8159D7002E8AA8 /* MobilySocialVKontakteProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4010BD771A8159D7002E8AA8 /* MobilySocialVKontakteProvider.m */; };
+		4010BD7D1A815A5E002E8AA8 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4010BD7B1A815A5E002E8AA8 /* FacebookSDK.framework */; };
+		4010BD7E1A815A5E002E8AA8 /* FBAudienceNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4010BD7C1A815A5E002E8AA8 /* FBAudienceNetwork.framework */; };
+		4010BD811A815A65002E8AA8 /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4010BD801A815A65002E8AA8 /* TwitterKit.framework */; };
 		401FEE5318A3F92800B445EB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401FEE5218A3F92800B445EB /* Foundation.framework */; };
 		401FEE5518A3F92800B445EB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401FEE5418A3F92800B445EB /* CoreGraphics.framework */; };
 		401FEE5718A3F92800B445EB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401FEE5618A3F92800B445EB /* UIKit.framework */; };
@@ -92,6 +100,19 @@
 
 /* Begin PBXFileReference section */
 		2BBC62D562492FDF2CDB1707 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		4010BD681A815953002E8AA8 /* MobilySocialManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilySocialManager.h; sourceTree = "<group>"; };
+		4010BD691A815953002E8AA8 /* MobilySocialManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilySocialManager.m; sourceTree = "<group>"; };
+		4010BD6A1A815953002E8AA8 /* MobilySocialProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilySocialProvider.h; sourceTree = "<group>"; };
+		4010BD6B1A815953002E8AA8 /* MobilySocialProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilySocialProvider.m; sourceTree = "<group>"; };
+		4010BD6D1A815953002E8AA8 /* MobilySocialFacebookProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilySocialFacebookProvider.h; sourceTree = "<group>"; };
+		4010BD6E1A815953002E8AA8 /* MobilySocialFacebookProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilySocialFacebookProvider.m; sourceTree = "<group>"; };
+		4010BD731A8159D7002E8AA8 /* MobilySocialTwitterProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilySocialTwitterProvider.h; sourceTree = "<group>"; };
+		4010BD741A8159D7002E8AA8 /* MobilySocialTwitterProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilySocialTwitterProvider.m; sourceTree = "<group>"; };
+		4010BD761A8159D7002E8AA8 /* MobilySocialVKontakteProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilySocialVKontakteProvider.h; sourceTree = "<group>"; };
+		4010BD771A8159D7002E8AA8 /* MobilySocialVKontakteProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilySocialVKontakteProvider.m; sourceTree = "<group>"; };
+		4010BD7B1A815A5E002E8AA8 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
+		4010BD7C1A815A5E002E8AA8 /* FBAudienceNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBAudienceNetwork.framework; sourceTree = "<group>"; };
+		4010BD801A815A65002E8AA8 /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = "<group>"; };
 		401FEE4F18A3F92800B445EB /* Mobily.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mobily.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		401FEE5218A3F92800B445EB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		401FEE5418A3F92800B445EB /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -245,14 +266,85 @@
 				401FEE5518A3F92800B445EB /* CoreGraphics.framework in Frameworks */,
 				401FEE5718A3F92800B445EB /* UIKit.framework in Frameworks */,
 				401FEE5318A3F92800B445EB /* Foundation.framework in Frameworks */,
+				4010BD811A815A65002E8AA8 /* TwitterKit.framework in Frameworks */,
 				407B41BF1A6420ED00A3DFFD /* AVFoundation.framework in Frameworks */,
 				C13E78B87D644CF2A6696DA8 /* libPods.a in Frameworks */,
+				4010BD7E1A815A5E002E8AA8 /* FBAudienceNetwork.framework in Frameworks */,
+				4010BD7D1A815A5E002E8AA8 /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4010BD601A8155DB002E8AA8 /* Social */ = {
+			isa = PBXGroup;
+			children = (
+				4010BD671A815953002E8AA8 /* Core */,
+				4010BD6C1A815953002E8AA8 /* Facebook */,
+				4010BD751A8159D7002E8AA8 /* VKontakte */,
+				4010BD721A8159D7002E8AA8 /* Twitter */,
+			);
+			path = Social;
+			sourceTree = "<group>";
+		};
+		4010BD671A815953002E8AA8 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				4010BD681A815953002E8AA8 /* MobilySocialManager.h */,
+				4010BD691A815953002E8AA8 /* MobilySocialManager.m */,
+				4010BD6A1A815953002E8AA8 /* MobilySocialProvider.h */,
+				4010BD6B1A815953002E8AA8 /* MobilySocialProvider.m */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		4010BD6C1A815953002E8AA8 /* Facebook */ = {
+			isa = PBXGroup;
+			children = (
+				4010BD7A1A815A5E002E8AA8 /* Frameworks */,
+				4010BD6D1A815953002E8AA8 /* MobilySocialFacebookProvider.h */,
+				4010BD6E1A815953002E8AA8 /* MobilySocialFacebookProvider.m */,
+			);
+			path = Facebook;
+			sourceTree = "<group>";
+		};
+		4010BD721A8159D7002E8AA8 /* Twitter */ = {
+			isa = PBXGroup;
+			children = (
+				4010BD7F1A815A65002E8AA8 /* Frameworks */,
+				4010BD731A8159D7002E8AA8 /* MobilySocialTwitterProvider.h */,
+				4010BD741A8159D7002E8AA8 /* MobilySocialTwitterProvider.m */,
+			);
+			path = Twitter;
+			sourceTree = "<group>";
+		};
+		4010BD751A8159D7002E8AA8 /* VKontakte */ = {
+			isa = PBXGroup;
+			children = (
+				4010BD761A8159D7002E8AA8 /* MobilySocialVKontakteProvider.h */,
+				4010BD771A8159D7002E8AA8 /* MobilySocialVKontakteProvider.m */,
+			);
+			path = VKontakte;
+			sourceTree = "<group>";
+		};
+		4010BD7A1A815A5E002E8AA8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4010BD7B1A815A5E002E8AA8 /* FacebookSDK.framework */,
+				4010BD7C1A815A5E002E8AA8 /* FBAudienceNetwork.framework */,
+			);
+			path = Frameworks;
+			sourceTree = "<group>";
+		};
+		4010BD7F1A815A65002E8AA8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4010BD801A815A65002E8AA8 /* TwitterKit.framework */,
+			);
+			path = Frameworks;
+			sourceTree = "<group>";
+		};
 		401FEE4618A3F92800B445EB = {
 			isa = PBXGroup;
 			children = (
@@ -295,6 +387,7 @@
 				409829421A71872500D83152 /* UI */,
 				4098291B1A71872400D83152 /* AV */,
 				40C0A3D91A742E3400F69B88 /* API */,
+				4010BD601A8155DB002E8AA8 /* Social */,
 				409829B81A71945F00D83152 /* CocoaPods */,
 			);
 			path = Classes;
@@ -816,6 +909,7 @@
 				409829881A71872500D83152 /* MobilyAudioPlayer.m in Sources */,
 				409829991A71872500D83152 /* MobilyButton.m in Sources */,
 				409829A91A71872500D83152 /* MobilyViewController.m in Sources */,
+				4010BD711A815953002E8AA8 /* MobilySocialFacebookProvider.m in Sources */,
 				4098298E1A71872500D83152 /* MobilyKVO.m in Sources */,
 				409829971A71872500D83152 /* MobilyBuilderForm.m in Sources */,
 				4098299C1A71872500D83152 /* MobilyDateField.m in Sources */,
@@ -854,11 +948,14 @@
 				409829B31A71872500D83152 /* SlideNavigationContorllerAnimatorSlideAndFade.m in Sources */,
 				409829A31A71872500D83152 /* MobilyTableView.m in Sources */,
 				409829AA1A71872500D83152 /* MobilyWindow.m in Sources */,
+				4010BD701A815953002E8AA8 /* MobilySocialProvider.m in Sources */,
 				409829901A71872500D83152 /* MobilyModel.m in Sources */,
 				408718F81A5D315D00833F0A /* DemoButtonsController.m in Sources */,
 				4098298C1A71872500D83152 /* MobilyEvent.m in Sources */,
 				409829911A71872500D83152 /* MobilyModelJson.m in Sources */,
+				4010BD6F1A815953002E8AA8 /* MobilySocialManager.m in Sources */,
 				409829B61A71872500D83152 /* SlideNavigationController.m in Sources */,
+				4010BD781A8159D7002E8AA8 /* MobilySocialTwitterProvider.m in Sources */,
 				409829A71A71872500D83152 /* MobilyTransitionControllerCrossFade.m in Sources */,
 				4098298D1A71872500D83152 /* MobilyHttpQuery.m in Sources */,
 				409829A61A71872500D83152 /* MobilyTransitionControllerCards.m in Sources */,
@@ -866,6 +963,7 @@
 				409829AE1A71872500D83152 /* MobilySlideMenuController.m in Sources */,
 				409829A21A71872500D83152 /* MobilyTabBarController.m in Sources */,
 				409829AC1A71872500D83152 /* MobilyElementsLayout.m in Sources */,
+				4010BD791A8159D7002E8AA8 /* MobilySocialVKontakteProvider.m in Sources */,
 				40C0A3E41A742E3400F69B88 /* MobilyApiRequest.m in Sources */,
 				409829A41A71872500D83152 /* MobilyTextField.m in Sources */,
 				40C0A3E31A742E3400F69B88 /* MobilyApiProvider.m in Sources */,
@@ -966,6 +1064,11 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Classes/Social/Facebook/Frameworks",
+					"$(PROJECT_DIR)/Classes/Social/Twitter/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Demo/Demo.pch;
 				INFOPLIST_FILE = Demo/Demo.plist;
@@ -983,6 +1086,11 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Classes/Social/Facebook/Frameworks",
+					"$(PROJECT_DIR)/Classes/Social/Twitter/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Demo/Demo.pch;
 				INFOPLIST_FILE = Demo/Demo.plist;

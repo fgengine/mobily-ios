@@ -46,10 +46,6 @@ typedef void (^MobilyApiProviderCompleteBlock)(id request, id response);
 
 /*--------------------------------------------------*/
 
-@protocol MobilyApiProviderDelegate;
-
-/*--------------------------------------------------*/
-
 @interface MobilyApiProvider : NSObject
 
 @property(nonatomic, readwrite, weak) MobilyApiManager* manager;
@@ -58,7 +54,6 @@ typedef void (^MobilyApiProviderCompleteBlock)(id request, id response);
 
 @property(nonatomic, readonly, strong) NSString* name;
 @property(nonatomic, readonly, strong) NSURL* url;
-@property(nonatomic, readonly, weak) id< MobilyApiProviderDelegate > delegate;
 
 - (id)initWithName:(NSString*)name url:(NSURL*)url;
 
