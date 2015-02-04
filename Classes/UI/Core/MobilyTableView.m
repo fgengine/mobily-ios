@@ -632,8 +632,8 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
     
     [self setSwipeStyle:MobilyTableSwipeCellStyleLeaves];
     [self setSwipeThreshold:2.0f];
-    [self setSwipeSpeed:420.0f];
-    [self setSwipeVelocity:320.0f];
+    [self setSwipeSpeed:1050.0f];
+    [self setSwipeVelocity:570.0f];
     [self setLeftSwipeViewWidth:-1.0f];
     [self setRightSwipeViewWidth:-1.0f];
 }

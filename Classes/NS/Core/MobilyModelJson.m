@@ -525,7 +525,7 @@
         }];
         return resultValue;
     } else if([value isKindOfClass:[NSNumber class]] == YES) {
-        return [NSDate dateWithTimeIntervalSince1970:[value floatValue]];
+        return [NSDate dateWithTimeIntervalSince1970:[value longValue]];
     }
     return _defaultValue;
 }
