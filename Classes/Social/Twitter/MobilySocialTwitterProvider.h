@@ -43,6 +43,24 @@
 
 @interface MobilySocialTwitterProvider : MobilySocialProvider
 
+@property(nonatomic, readwrite, strong) NSString* consumerKey;
+@property(nonatomic, readwrite, strong) NSString* consumerSecret;
+
+- (void)signinSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;
+- (void)requestEmailSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilySocialTwitterSession : MobilySocialSession
+
+@property(nonatomic, readonly, strong) NSString* authToken;
+@property(nonatomic, readonly, strong) NSString* authTokenSecret;
+@property(nonatomic, readonly, strong) NSString* userId;
+@property(nonatomic, readonly, strong) NSString* userName;
+@property(nonatomic, readonly, strong) NSString* email;
+
 @end
 
 /*--------------------------------------------------*/

@@ -162,6 +162,16 @@
 
 @interface NSDictionary (MobilyNS)
 
+- (BOOL)boolValueForKey:(NSString*)key orDefault:(BOOL)defaultValue;
+- (NSInteger)integerValueForKey:(NSString*)key orDefault:(NSInteger)defaultValue;
+- (NSUInteger)unsignedIntegerValueForKey:(NSString*)key orDefault:(NSUInteger)defaultValue;
+- (float)floatValueForKey:(NSString*)key orDefault:(float)defaultValue;
+- (double)doubleValueForKey:(NSString*)key orDefault:(double)defaultValue;
+- (NSNumber*)numberValueForKey:(NSString*)key orDefault:(NSNumber*)defaultValue;
+- (NSString*)stringValueForKey:(NSString*)key orDefault:(NSString*)defaultValue;
+- (NSArray*)arrayValueForKey:(NSString*)key orDefault:(NSArray*)defaultValue;
+- (NSDictionary*)dictionaryValueForKey:(NSString*)key orDefault:(NSDictionary*)defaultValue;
+
 - (NSString*)stringFromQueryComponents;
 
 @end

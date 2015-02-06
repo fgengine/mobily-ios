@@ -623,6 +623,78 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 
 @implementation NSDictionary (MobilyNS)
 
+- (BOOL)boolValueForKey:(NSString*)key orDefault:(BOOL)defaultValue {
+    NSNumber* number = [self numberValueForKey:key orDefault:nil];
+    if(number != nil) {
+        return [number boolValue];
+    }
+    return defaultValue;
+}
+
+- (NSInteger)integerValueForKey:(NSString*)key orDefault:(NSInteger)defaultValue {
+    NSNumber* number = [self numberValueForKey:key orDefault:nil];
+    if(number != nil) {
+        return [number integerValue];
+    }
+    return defaultValue;
+}
+
+- (NSUInteger)unsignedIntegerValueForKey:(NSString*)key orDefault:(NSUInteger)defaultValue {
+    NSNumber* number = [self numberValueForKey:key orDefault:nil];
+    if(number != nil) {
+        return [number unsignedIntegerValue];
+    }
+    return defaultValue;
+}
+
+- (float)floatValueForKey:(NSString*)key orDefault:(float)defaultValue {
+    NSNumber* number = [self numberValueForKey:key orDefault:nil];
+    if(number != nil) {
+        return [number floatValue];
+    }
+    return defaultValue;
+}
+
+- (double)doubleValueForKey:(NSString*)key orDefault:(double)defaultValue {
+    NSNumber* number = [self numberValueForKey:key orDefault:nil];
+    if(number != nil) {
+        return [number doubleValue];
+    }
+    return defaultValue;
+}
+
+- (NSNumber*)numberValueForKey:(NSString*)key orDefault:(NSNumber*)defaultValue {
+    id value = [self objectForKey:key];
+    if([value isKindOfClass:[NSNumber class]] == YES) {
+        return value;
+    }
+    return defaultValue;
+}
+
+- (NSString*)stringValueForKey:(NSString*)key orDefault:(NSString*)defaultValue {
+    id value = [self objectForKey:key];
+    if([value isKindOfClass:[NSString class]] == YES) {
+        return value;
+    }
+    return defaultValue;
+}
+
+- (NSArray*)arrayValueForKey:(NSString*)key orDefault:(NSArray*)defaultValue {
+    id value = [self objectForKey:key];
+    if([value isKindOfClass:[NSArray class]] == YES) {
+        return value;
+    }
+    return defaultValue;
+}
+
+- (NSDictionary*)dictionaryValueForKey:(NSString*)key orDefault:(NSDictionary*)defaultValue {
+    id value = [self objectForKey:key];
+    if([value isKindOfClass:[NSDictionary class]] == YES) {
+        return value;
+    }
+    return defaultValue;
+}
+
 - (NSString*)stringFromQueryComponents {
     NSString* result = nil;
     for(NSString* dictKey in [self allKeys]) {

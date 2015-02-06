@@ -39,6 +39,7 @@
 
 @interface MobilySocialVKontakteProvider () < VKSdkDelegate >
 
+@property(nonatomic, readwrite, strong) NSArray* permissions;
 @property(nonatomic, readwrite, copy) MobilySocialProviderSuccessBlock successBlock;
 @property(nonatomic, readwrite, copy) MobilySocialProviderFailureBlock failureBlock;
 
@@ -48,20 +49,157 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
+@interface MobilySocialVKontakteSession ()
+
+@property(nonatomic, readwrite, strong) NSArray* permissions;
+@property(nonatomic, readwrite, strong) NSString* accessToken;
+@property(nonatomic, readwrite, strong) NSDate* expirationDate;
+@property(nonatomic, readwrite, strong) NSString* userId;
+@property(nonatomic, readwrite, strong) NSString* email;
+
+- (id)initWithAccessToken:(VKAccessToken*)accessToken;
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
 @implementation MobilySocialVKontakteProvider
 
-- (void)signinSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
+#pragma mark Init
+
+- (id)initWithName:(NSString*)name {
+    self = [super initWithName:name];
+    if(self != nil) {
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [self setApplicationId:nil];
+    
+    MOBILY_SAFE_DEALLOC;
+}
+
+#pragma mark Property
+
+- (void)setApplicationId:(NSString*)applicationId {
+    if([_applicationId isEqualToString:applicationId] == NO) {
+        MOBILY_SAFE_SETTER(_applicationId, applicationId);
+        [VKSdk initializeWithDelegate:self andAppId:_applicationId];
+    }
+}
+
+#pragma mark Public
+
++ (Class)sessionClass {
+    return [MobilySocialVKontakteSession class];
+}
+
+- (void)signinWithPermissions:(NSArray*)permissions success:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
+    [self setPermissions:permissions];
     [self setSuccessBlock:success];
     [self setFailureBlock:failure];
-    [VKSdk initializeWithDelegate:self andAppId:VKontakteAppId];
-    [VKSdk authorize:[self vkontaktPermisions] revokeAccess:YES forceOAuth:YES];
+    
+    if([VKSdk wakeUpSession] == NO) {
+        [VKSdk authorize:permissions revokeAccess:YES forceOAuth:YES];
+    }
 }
 
 - (void)logoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
+    if([[self session] isValid] == YES) {
+        [VKSdk forceLogout];
+        [self setSession:nil];
+        if(success != nil) {
+            success();
+        }
+    } else {
+        if(failure != nil) {
+            failure(nil);
+        }
+    }
 }
 
 - (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation {
+    return [VKSdk processOpenURL:url fromApplication:sourceApplication];
+}
+
+#pragma mark VKSdkDelegate
+
+- (void)vkSdkNeedCaptchaEnter:(VKError*)captchaError {
+    [self vkSdkShouldPresentViewController:[VKCaptchaViewController captchaControllerWithError:captchaError]];
+}
+
+- (void)vkSdkTokenHasExpired:(VKAccessToken*)expiredToken {
+    if(_failureBlock != nil) {
+        _failureBlock(nil);
+    }
+}
+
+- (void)vkSdkUserDeniedAccess:(VKError*)authorizationError {
+    if(_failureBlock != nil) {
+        _failureBlock([authorizationError httpError]);
+    }
+}
+
+- (void)vkSdkShouldPresentViewController:(UIViewController*)controller {
+    [[[[UIApplication sharedApplication] keyWindow] currentViewController] presentViewController:controller animated:YES completion:nil];
+}
+
+- (void)vkSdkReceivedNewToken:(VKAccessToken*)accessToken {
+    if(accessToken != nil) {
+        [self setSession:[[MobilySocialVKontakteSession alloc] initWithAccessToken:accessToken]];
+        if(_successBlock != nil) {
+            _successBlock();
+        }
+    } else {
+        if(_failureBlock != nil) {
+            _failureBlock(nil);
+        }
+    }
+}
+
+- (BOOL)vkSdkAuthorizationAllowFallbackToSafari {
     return NO;
+}
+
+- (BOOL)vkSdkIsBasicAuthorization {
+    return NO;
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation MobilySocialVKontakteSession
+
++ (NSArray*)serializeMap {
+    return @[
+        @"permissions",
+        @"accessToken",
+        @"expirationDate",
+        @"userId",
+        @"email"
+    ];
+}
+
+- (id)initWithAccessToken:(VKAccessToken*)accessToken {
+    self = [super init];
+    if(self != nil) {
+        [self setPermissions:[accessToken permissions]];
+        [self setAccessToken:[accessToken accessToken]];
+        [self setExpirationDate:[NSDate dateWithTimeIntervalSince1970:[accessToken created] + [[accessToken expiresIn] intValue]]];
+        [self setUserId:[accessToken userId]];
+        [self setEmail:[accessToken email]];
+    }
+    return self;
+}
+
+- (BOOL)isValid {
+    return ([_expirationDate compare:[NSDate date]] == NSOrderedDescending);
 }
 
 @end

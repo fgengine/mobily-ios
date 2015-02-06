@@ -1,13 +1,16 @@
 PODS:
   - 500px-iOS-api (1.0.5)
   - MSDynamicsDrawerViewController (1.5.1)
+  - VK-ios-sdk (1.0.9.3)
 
 DEPENDENCIES:
   - 500px-iOS-api
   - MSDynamicsDrawerViewController
+  - VK-ios-sdk
 
 SPEC CHECKSUMS:
   500px-iOS-api: f3d2933143178565d499977fb18f1730d6a33376
   MSDynamicsDrawerViewController: 0002059480a4b5ddde7eafbafb958a79a9b0ffaf
+  VK-ios-sdk: 9e15e985926988c9eeb6a3eb9cdd6e03e2520e88
 
 COCOAPODS: 0.35.0

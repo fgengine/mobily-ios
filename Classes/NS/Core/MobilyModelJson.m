@@ -215,6 +215,14 @@
     return self;
 }
 
+- (id)initWithPath:(NSString*)path jsonModelClass:(Class)jsonModelClass {
+    self = [super initWithPath:path];
+    if(self != nil) {
+        [self setJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:jsonModelClass]];
+    }
+    return self;
+}
+
 - (id)convertValue:(id)value {
     if([value isKindOfClass:[NSArray class]] == YES) {
         NSMutableArray* result = [NSMutableArray array];
@@ -251,6 +259,14 @@
     self = [super initWithPath:path];
     if(self != nil) {
         [self setJsonConverter:jsonConverter];
+    }
+    return self;
+}
+
+- (id)initWithPath:(NSString*)path jsonModelClass:(Class)jsonModelClass {
+    self = [super initWithPath:path];
+    if(self != nil) {
+        [self setJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:jsonModelClass]];
     }
     return self;
 }

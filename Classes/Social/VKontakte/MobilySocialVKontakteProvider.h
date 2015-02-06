@@ -43,6 +43,22 @@
 
 @interface MobilySocialVKontakteProvider : MobilySocialProvider
 
+@property(nonatomic, readwrite, strong) NSString* applicationId;
+
+- (void)signinWithPermissions:(NSArray*)permissions success:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilySocialVKontakteSession : MobilySocialSession
+
+@property(nonatomic, readonly, strong) NSArray* permissions;
+@property(nonatomic, readonly, strong) NSString* accessToken;
+@property(nonatomic, readonly, strong) NSDate* expirationDate;
+@property(nonatomic, readonly, strong) NSString* userId;
+@property(nonatomic, readonly, strong) NSString* email;
+
 @end
 
 /*--------------------------------------------------*/

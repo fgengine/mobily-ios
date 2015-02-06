@@ -57,6 +57,7 @@
 
 - (id)initWithJsonConverter:(MobilyModelJson*)jsonConverter;
 - (id)initWithPath:(NSString*)path jsonConverter:(MobilyModelJson*)jsonConverter;
+- (id)initWithPath:(NSString*)path jsonModelClass:(Class)jsonModelClass;
 
 @end
 
@@ -68,6 +69,7 @@
 
 - (id)initWithJsonConverter:(MobilyModelJson*)jsonConverter;
 - (id)initWithPath:(NSString*)path jsonConverter:(MobilyModelJson*)jsonConverter;
+- (id)initWithPath:(NSString*)path jsonModelClass:(Class)jsonModelClass;
 
 @end
 

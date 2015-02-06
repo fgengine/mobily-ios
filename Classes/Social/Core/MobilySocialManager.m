@@ -106,6 +106,18 @@
     }
 }
 
+- (void)didBecomeActive {
+    [_mutableProviders enumerateObjectsUsingBlock:^(MobilySocialProvider* provider, NSUInteger index, BOOL* stop) {
+        [provider didBecomeActive];
+    }];
+}
+
+- (void)willResignActive {
+    [_mutableProviders enumerateObjectsUsingBlock:^(MobilySocialProvider* provider, NSUInteger index, BOOL* stop) {
+        [provider willResignActive];
+    }];
+}
+
 - (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation {
     __block BOOL result = NO;
     [_mutableProviders enumerateObjectsUsingBlock:^(MobilySocialProvider* provider, NSUInteger index, BOOL* stop) {

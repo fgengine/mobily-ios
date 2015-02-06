@@ -34,6 +34,11 @@
 /*--------------------------------------------------*/
 
 #import "MobilySocialManager.h"
+#import "MobilyModel.h"
+
+/*--------------------------------------------------*/
+
+@class MobilySocialSession;
 
 /*--------------------------------------------------*/
 
@@ -42,21 +47,34 @@ typedef void (^MobilySocialProviderFailureBlock)(NSError* error);
 
 /*--------------------------------------------------*/
 
-@protocol MobilySocialProviderDelegate;
-
-/*--------------------------------------------------*/
-
 @interface MobilySocialProvider : NSObject
 
 @property(nonatomic, readwrite, weak) MobilySocialManager* manager;
 @property(nonatomic, readonly, strong) NSString* name;
+@property(nonatomic, readonly, strong) NSString* userDefaultsKey;
+
+@property(nonatomic, readwrite, strong) id session;
+
++ (Class)sessionClass;
 
 - (id)initWithName:(NSString*)name;
 
-- (void)signinSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;
+- (void)setup;
+
 - (void)logoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;
 
+- (void)didBecomeActive;
+- (void)willResignActive;
+
 - (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilySocialSession : MobilyModel
+
+@property(nonatomic, readonly, assign, getter=isValid) BOOL valid;
 
 @end
 

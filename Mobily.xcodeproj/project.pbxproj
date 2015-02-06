@@ -91,6 +91,7 @@
 		409829B41A71872500D83152 /* menu-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 409829841A71872500D83152 /* menu-button.png */; };
 		409829B51A71872500D83152 /* menu-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 409829851A71872500D83152 /* menu-button@2x.png */; };
 		409829B61A71872500D83152 /* SlideNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 409829871A71872500D83152 /* SlideNavigationController.m */; };
+		40A63A341A8397F80057DE6A /* MobilySlideNavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = 40A63A331A8397F80057DE6A /* MobilySlideNavigation.m */; };
 		40C0A3E21A742E3400F69B88 /* MobilyApiManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C0A3DB1A742E3400F69B88 /* MobilyApiManager.m */; };
 		40C0A3E31A742E3400F69B88 /* MobilyApiProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C0A3DD1A742E3400F69B88 /* MobilyApiProvider.m */; };
 		40C0A3E41A742E3400F69B88 /* MobilyApiRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C0A3DF1A742E3400F69B88 /* MobilyApiRequest.m */; };
@@ -246,6 +247,8 @@
 		409829861A71872500D83152 /* SlideNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationController.h; sourceTree = "<group>"; };
 		409829871A71872500D83152 /* SlideNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationController.m; sourceTree = "<group>"; };
 		409829B91A71945F00D83152 /* MobilyCocoaPods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyCocoaPods.h; sourceTree = "<group>"; };
+		40A63A321A8397F80057DE6A /* MobilySlideNavigation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilySlideNavigation.h; sourceTree = "<group>"; };
+		40A63A331A8397F80057DE6A /* MobilySlideNavigation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilySlideNavigation.m; sourceTree = "<group>"; };
 		40C0A3DA1A742E3400F69B88 /* MobilyApiManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyApiManager.h; sourceTree = "<group>"; };
 		40C0A3DB1A742E3400F69B88 /* MobilyApiManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyApiManager.m; sourceTree = "<group>"; };
 		40C0A3DC1A742E3400F69B88 /* MobilyApiProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyApiProvider.h; sourceTree = "<group>"; };
@@ -660,6 +663,8 @@
 				409829581A71872500D83152 /* MobilyNavigationController.m */,
 				4098295B1A71872500D83152 /* MobilyTabBarController.h */,
 				4098295C1A71872500D83152 /* MobilyTabBarController.m */,
+				40A63A321A8397F80057DE6A /* MobilySlideNavigation.h */,
+				40A63A331A8397F80057DE6A /* MobilySlideNavigation.m */,
 				409829511A71872500D83152 /* MobilyDialogController.h */,
 				409829521A71872500D83152 /* MobilyDialogController.m */,
 				409829611A71872500D83152 /* MobilyTransitionController.h */,
@@ -935,6 +940,7 @@
 				407B41C61A642F7300A3DFFD /* DemoAudioRecorderController.m in Sources */,
 				409829961A71872500D83152 /* MobilyApplication.m in Sources */,
 				40C0A3E21A742E3400F69B88 /* MobilyApiManager.m in Sources */,
+				40A63A341A8397F80057DE6A /* MobilySlideNavigation.m in Sources */,
 				409829A51A71872500D83152 /* MobilyTransitionController.m in Sources */,
 				409829981A71872500D83152 /* MobilyBuilderPreset.m in Sources */,
 				409829AB1A71872500D83152 /* MobilyDynamicsDrawerController.m in Sources */,

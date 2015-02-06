@@ -75,6 +75,7 @@
 #   import "MobilyController.h"
 #   import "MobilyNavigationController.h"
 #   import "MobilyTabBarController.h"
+#   import "MobilySlideNavigation.h"
 #   import "MobilyViewController.h"
 #   import "MobilyButton.h"
 #   import "MobilyTextField.h"
@@ -103,6 +104,22 @@
 #   endif
 #   ifdef MOBILY_POD_AV_AUDIO_PLAYER
 #       import "MobilyAudioPlayer.h"
+#   endif
+#endif
+
+/*--------------------------------------------------*/
+
+#ifdef MOBILY_POD_SOCIAL
+#   import "MobilySocialManager.h"
+#   import "MobilySocialProvider.h"
+#   ifdef MOBILY_POD_SOCIAL_FACEBOOK
+#       import "MobilySocialFacebookProvider.h"
+#   endif
+#   ifdef MOBILY_POD_SOCIAL_VKONTAKTE
+#       import "MobilySocialVKontakteProvider.h"
+#   endif
+#   ifdef MOBILY_POD_SOCIAL_TWITTER
+#       import "MobilySocialTwitterProvider.h"
 #   endif
 #endif
 

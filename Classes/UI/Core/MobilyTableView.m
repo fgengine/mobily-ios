@@ -50,7 +50,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 @property(nonatomic, readwrite, getter=isSwipeDragging) BOOL swipeDragging;
 @property(nonatomic, readwrite, getter=isSwipeDecelerating) BOOL swipeDecelerating;
 
-@property(nonatomic, readwrite, strong) UIPanGestureRecognizer* panGestupe;
+@property(nonatomic, readwrite, strong) UIPanGestureRecognizer* panGesture;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintOffsetLeftSwipeView;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintCenterYLeftSwipeView;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintWidthLeftSwipeView;
@@ -72,7 +72,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 
 - (void)setSwipeProgress:(CGFloat)swipeProgress speed:(CGFloat)speed endedSwipe:(BOOL)endedSwipe;
 
-- (void)handlerPanGestupe;
+- (void)handlerPanGesture;
 
 @end
 
@@ -434,7 +434,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 #pragma mark Standart
 
 - (void)dealloc {
-    [self setPanGestupe:nil];
+    [self setPanGesture:nil];
     [self setConstraintOffsetLeftSwipeView:nil];
     [self setLeftSwipeView:nil];
     [self setConstraintOffsetRightSwipeView:nil];
@@ -445,15 +445,15 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 
 #pragma mark Property
 
-- (void)setPanGestupe:(UIPanGestureRecognizer*)gestupePanSwipeRight {
-    if(_panGestupe != gestupePanSwipeRight) {
-        if(_panGestupe != nil) {
-            [self removeGestureRecognizer:_panGestupe];
+- (void)setPanGesture:(UIPanGestureRecognizer*)gesturePanSwipeRight {
+    if(_panGesture != gesturePanSwipeRight) {
+        if(_panGesture != nil) {
+            [self removeGestureRecognizer:_panGesture];
         }
-        MOBILY_SAFE_SETTER(_panGestupe, gestupePanSwipeRight);
-        if(_panGestupe != nil) {
-            [_panGestupe setDelegate:self];
-            [self addGestureRecognizer:_panGestupe];
+        MOBILY_SAFE_SETTER(_panGesture, gesturePanSwipeRight);
+        if(_panGesture != nil) {
+            [_panGesture setDelegate:self];
+            [self addGestureRecognizer:_panGesture];
         }
     }
 }
@@ -628,7 +628,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 - (void)setup {
     [super setup];
     
-    [self setPanGestupe:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlerPanGestupe)]];
+    [self setPanGesture:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlerPanGesture)]];
     
     [self setSwipeStyle:MobilyTableSwipeCellStyleLeaves];
     [self setSwipeThreshold:2.0f];
@@ -874,11 +874,11 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
     }
 }
 
-- (void)handlerPanGestupe {
+- (void)handlerPanGesture {
     if(_swipeDecelerating == NO) {
-        CGPoint translation = [_panGestupe translationInView:self];
-        CGPoint velocity = [_panGestupe velocityInView:self];
-        switch([_panGestupe state]) {
+        CGPoint translation = [_panGesture translationInView:self];
+        CGPoint velocity = [_panGesture velocityInView:self];
+        switch([_panGesture state]) {
             case UIGestureRecognizerStateBegan: {
                 [self willBeganSwipe];
                 [self setSwipeLastOffset:translation.x];
@@ -962,7 +962,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer {
     if((_swipeDragging == NO) && (_swipeDecelerating == NO)) {
-        CGPoint translation = [_panGestupe translationInView:self];
+        CGPoint translation = [_panGesture translationInView:self];
         if(fabs(translation.x) >= fabs(translation.y)) {
             if((_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (translation.x < 0.0f)) {
                 return YES;

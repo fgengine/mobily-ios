@@ -39,7 +39,19 @@
 
 @interface MobilySocialFacebookProvider ()
 
+@end
 
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@interface MobilySocialFacebookSession ()
+
+@property(nonatomic, readwrite, strong) NSArray* readPermissions;
+@property(nonatomic, readwrite, strong) NSString* accessToken;
+@property(nonatomic, readwrite, strong) NSDate* expirationDate;
+
+- (id)initWithReadPermissions:(NSArray*)readPermissions facebookSession:(FBSession*)facebookSession;
 
 @end
 
@@ -59,28 +71,31 @@
     return self;
 }
 
-- (id)initWithReadPermissions:(NSArray*)readPermissions {
-    self = [self initWithName:@"Facebook"];
-    if(self != nil) {
-        [self setReadPermissions:readPermissions];
-    }
-    return self;
-}
-
 - (void)dealloc {
-    [self setReadPermissions:nil];
-    
     MOBILY_SAFE_DEALLOC;
 }
 
-- (void)signinSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
-    [FBSession openActiveSessionWithReadPermissions:_readPermissions allowLoginUI:_allowLoginUI completionHandler:^(FBSession* session, FBSessionState state, NSError* error) {
+#pragma mark Public
+
++ (Class)sessionClass {
+    return [MobilySocialFacebookSession class];
+}
+
+- (void)signinWithReadPermissions:(NSArray*)readPermissions success:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
+    [FBSession openActiveSessionWithReadPermissions:readPermissions allowLoginUI:_allowLoginUI completionHandler:^(FBSession* session, FBSessionState state, NSError* error) {
         if(error == nil) {
             switch(state) {
                 case FBSessionStateOpen:
                 case FBSessionStateClosed: {
-                    if(success != nil) {
-                        success();
+                    [self setSession:[[MobilySocialFacebookSession alloc] initWithReadPermissions:readPermissions facebookSession:session]];
+                    if([[self session] isValid] == YES) {
+                        if(success != nil) {
+                            success();
+                        }
+                    } else {
+                        if(failure != nil) {
+                            failure(error);
+                        }
                     }
                     break;
                 }
@@ -96,9 +111,9 @@
 }
 
 - (void)logoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
-    FBSession* session = [FBSession activeSession];
-    if(session != nil) {
-        [session closeAndClearTokenInformation];
+    if([[self session] isValid] == YES) {
+        [[FBSession activeSession] closeAndClearTokenInformation];
+        [self setSession:nil];
         if(success != nil) {
             success();
         }
@@ -109,8 +124,42 @@
     }
 }
 
+- (void)didBecomeActive {
+    [[FBSession activeSession] handleDidBecomeActive];
+}
+
 - (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation {
-    return NO;
+    return [[FBSession activeSession] handleOpenURL:url];
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation MobilySocialFacebookSession
+
++ (NSArray*)serializeMap {
+    return @[
+        @"readPermissions",
+        @"accessToken",
+        @"expirationDate"
+    ];
+}
+
+- (id)initWithReadPermissions:(NSArray*)readPermissions facebookSession:(FBSession*)facebookSession {
+    self = [super init];
+    if(self != nil) {
+        [self setReadPermissions:readPermissions];
+        [self setAccessToken:[[facebookSession accessTokenData] accessToken]];
+        [self setExpirationDate:[[facebookSession accessTokenData] expirationDate]];
+    }
+    return self;
+}
+
+- (BOOL)isValid {
+    return ([_expirationDate compare:[NSDate date]] == NSOrderedDescending);
 }
 
 @end

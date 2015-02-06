@@ -54,7 +54,14 @@
 - (id)initWithName:(NSString*)name {
     self = [super init];
     if(self != nil) {
+        if([[NSUserDefaults standardUserDefaults] objectForKey:[self userDefaultsKey]] != nil) {
+            [self setSession:[[[[self class] sessionClass] alloc] initWithUserDefaultsKey:[self userDefaultsKey]]];
+            if([_session isValid] == NO) {
+                [self setSession:nil];
+            }
+        }
         [self setName:name];
+        [self setup];
     }
     return self;
 }
@@ -62,8 +69,12 @@
 - (void)dealloc {
     [self setManager:nil];
     [self setName:nil];
+    [self setSession:nil];
     
     MOBILY_SAFE_DEALLOC;
+}
+
+- (void)setup {
 }
 
 #pragma mark Property
@@ -80,16 +91,53 @@
     }
 }
 
+- (void)setSession:(id)session {
+    if(_session != session) {
+        if(_session != nil) {
+            [_session erase];
+        }
+        MOBILY_SAFE_SETTER(_session, session);
+        if(_session != nil) {
+            [_session setUserDefaultsKey:[self userDefaultsKey]];
+            [_session save];
+        }
+    }
+}
+
+- (NSString*)userDefaultsKey {
+    return [NSString stringWithFormat:@"MobilySocialSession-%@", _name];
+}
+
 #pragma mark Public
 
-- (void)signinSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
++ (Class)sessionClass {
+    return [MobilySocialSession class];
 }
 
 - (void)logoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
 }
 
+- (void)didBecomeActive {
+}
+
+- (void)willResignActive {
+}
+
 - (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation {
     return NO;
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation MobilySocialSession
+
++ (NSArray*)serializeMap {
+    return @[
+    ];
 }
 
 @end

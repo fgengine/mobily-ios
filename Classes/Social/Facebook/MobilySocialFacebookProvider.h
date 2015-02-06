@@ -41,12 +41,25 @@
 
 /*--------------------------------------------------*/
 
+@class MobilySocialFacebookSession;
+
+/*--------------------------------------------------*/
+
 @interface MobilySocialFacebookProvider : MobilySocialProvider
 
-@property(nonatomic, readwrite, strong) NSArray* readPermissions;
 @property(nonatomic, readwrite, assign) BOOL allowLoginUI;
 
-- (id)initWithReadPermissions:(NSArray*)readPermissions;
+- (void)signinWithReadPermissions:(NSArray*)readPermissions success:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilySocialFacebookSession : MobilySocialSession
+
+@property(nonatomic, readonly, strong) NSArray* readPermissions;
+@property(nonatomic, readonly, strong) NSString* accessToken;
+@property(nonatomic, readonly, strong) NSDate* expirationDate;
 
 @end
 

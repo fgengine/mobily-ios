@@ -65,6 +65,9 @@ typedef void (^MobilyModelBlock)();
 - (void)load;
 - (void)loadComplete:(MobilyModelBlock)complete;
 
+- (void)erase;
+- (void)eraseComplete:(MobilyModelBlock)complete;
+
 @end
 
 /*--------------------------------------------------*/

@@ -50,6 +50,9 @@
 - (void)registerProvider:(MobilySocialProvider*)provider;
 - (void)unregisterProvider:(MobilySocialProvider*)provider;
 
+- (void)didBecomeActive;
+- (void)willResignActive;
+
 - (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation;
 
 @end

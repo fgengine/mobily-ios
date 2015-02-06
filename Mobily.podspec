@@ -114,4 +114,41 @@ Pod::Spec.new do |s|
         ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_AV_AUDIO_PLAYER' }
         ss.dependency 'Mobily/AV'
     end
+
+    s.subspec 'Social' do |ss|
+        ss.public_header_files = 'Classes/Social/Core/**/*.h'
+        ss.source_files = 'Classes/Social/Core/**/*.{h,m}'
+        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_SOCIAL' }
+        ss.frameworks = 'AVFoundation'
+        ss.dependency 'Mobily/NS'
+        ss.dependency 'Mobily/CG'
+        ss.dependency 'Mobily/UI'
+
+        ss.subspec 'Facebook' do |sss|
+            sss.public_header_files = 'Classes/Social/Facebook/*.h'
+            sss.source_files = 'Classes/Social/Facebook/*.{h,m}'
+            sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_SOCIAL_FACEBOOK' }
+            sss.vendored_frameworks = 'Classes/Social/Facebook/Frameworks/FacebookSDK.bundle'
+            sss.vendored_frameworks = 'Classes/Social/Facebook/Frameworks/FBAudienceNetwork.bundle'
+        end
+
+        ss.subspec 'VKontakte' do |sss|
+            sss.public_header_files = 'Classes/Social/VKontakte/*.h'
+            sss.source_files = 'Classes/Social/VKontakte/*.{h,m}'
+            sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_SOCIAL_VKONTAKTE' }
+            sss.dependency 'VK-ios-sdk'
+        end
+
+        ss.subspec 'Twitter' do |sss|
+            sss.public_header_files = 'Classes/Social/Twitter/*.h'
+            sss.source_files = 'Classes/Social/Twitter/*.{h,m}'
+            sss.resource = "Classes/Social/Twitter/Frameworks/TwitterKit.bundle/Resources/TwitterKitResources.bundle"
+            sss.vendored_frameworks = 'Classes/Social/Twitter/Frameworks/TwitterKit.bundle'
+            sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_SOCIAL_TWITTER' }
+            sss.frameworks = 'TwitterKit'
+            sss.frameworks = 'Accounts'
+            sss.frameworks = 'CoreData'
+            sss.frameworks = 'Social'
+        end
+    end
 end

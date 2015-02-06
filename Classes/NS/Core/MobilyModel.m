@@ -350,6 +350,25 @@
     });
 }
 
+- (void)erase {
+    NSDictionary* dict = [[NSUserDefaults standardUserDefaults] objectForKey:_userDefaultsKey];
+    if(dict != nil) {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:_userDefaultsKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
+- (void)eraseComplete:(MobilyModelBlock)complete {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [self erase];
+        if(complete != nil) {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                complete();
+            });
+        }
+    });
+}
+
 #pragma mark Private
 
 #pragma clang diagnostic push
