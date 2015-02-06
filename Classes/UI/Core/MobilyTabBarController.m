@@ -243,13 +243,42 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 #pragma mark UITabBarControllerDelegate
+/*
+- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController*)viewController {
+    return YES;
+}
 
-- (id< UIViewControllerAnimatedTransitioning >)tabBarController:(UITabBarController*)tabBarController animationControllerForTransitionFromViewController:(UIViewController*)fromVC toViewController:(UIViewController*)toVC {
-    NSArray* viewControllers = [tabBarController viewControllers];
-    NSUInteger fromVCIndex = [viewControllers indexOfObject:fromVC];
-    NSUInteger toVCIndex = [viewControllers indexOfObject:toVC];
-    [_transitionNavigation setReverse:fromVCIndex < toVCIndex];
-    return _transitionNavigation;
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController*)viewController {
+}
+
+- (void)tabBarController:(UITabBarController *)tabBarController willBeginCustomizingViewControllers:(NSArray*)viewControllers {
+}
+
+- (void)tabBarController:(UITabBarController *)tabBarController willEndCustomizingViewControllers:(NSArray*)viewControllers changed:(BOOL)changed {
+}
+
+- (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray*)viewControllers changed:(BOOL)changed {
+}
+*/
+- (NSUInteger)tabBarControllerSupportedInterfaceOrientations:(UITabBarController*)tabBarController {
+    return [[self selectedViewController] supportedInterfaceOrientations];
+}
+
+- (UIInterfaceOrientation)tabBarControllerPreferredInterfaceOrientationForPresentation:(UITabBarController*)tabBarController {
+    return [[self selectedViewController] preferredInterfaceOrientationForPresentation];
+}
+
+- (id< UIViewControllerInteractiveTransitioning >)tabBarController:(UITabBarController*)tabBarController interactionControllerForAnimationController:(id< UIViewControllerAnimatedTransitioning >)animationController {
+    return nil;
+}
+
+- (id< UIViewControllerAnimatedTransitioning >)tabBarController:(UITabBarController*)tabBarController animationControllerForTransitionFromViewController:(UIViewController*)fromViewController toViewController:(UIViewController*)toViewController {
+    if(_transitionNavigation != nil) {
+        NSArray* viewControllers = [tabBarController viewControllers];
+        [_transitionNavigation setReverse:[viewControllers indexOfObject:fromViewController] < [viewControllers indexOfObject:toViewController]];
+        return _transitionNavigation;
+    }
+    return nil;
 }
 
 @end

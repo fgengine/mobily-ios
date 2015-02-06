@@ -261,22 +261,28 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     }
 }
 
+- (NSUInteger)navigationControllerSupportedInterfaceOrientations:(UINavigationController*)navigationController {
+    return [[self topViewController] supportedInterfaceOrientations];
+}
+
+- (UIInterfaceOrientation)navigationControllerPreferredInterfaceOrientationForPresentation:(UINavigationController*)navigationController {
+    return [[self topViewController] preferredInterfaceOrientationForPresentation];
+}
+
+- (id< UIViewControllerInteractiveTransitioning >)navigationController:(UINavigationController*)navigationController interactionControllerForAnimationController:(id< UIViewControllerAnimatedTransitioning >)animationController {
+    return nil;
+}
+
 - (id< UIViewControllerAnimatedTransitioning >)navigationController:(UINavigationController*)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController*)fromViewController toViewController:(UIViewController*)toViewController {
-    switch(operation) {
-        case UINavigationControllerOperationPush:
-            if(_transitionNavigation != nil) {
-                [_transitionNavigation setReverse:NO];
-            }
-            break;
-        case UINavigationControllerOperationPop:
-            if(_transitionNavigation != nil) {
-                [_transitionNavigation setReverse:YES];
-            }
-            break;
-        default:
-            break;
+    if(_transitionNavigation != nil) {
+        switch(operation) {
+            case UINavigationControllerOperationPush: [_transitionNavigation setReverse:NO]; break;
+            case UINavigationControllerOperationPop: [_transitionNavigation setReverse:YES]; break;
+            default: break;
+        }
+        return _transitionNavigation;
     }
-    return _transitionNavigation;
+    return nil;
 }
 
 @end
