@@ -123,8 +123,7 @@ Pod::Spec.new do |s|
             sss.public_header_files = 'Classes/Social/Facebook/*.h'
             sss.source_files = 'Classes/Social/Facebook/*.{h,m}'
             sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_SOCIAL_FACEBOOK' }
-            sss.vendored_frameworks = 'Classes/Social/Facebook/Frameworks/FacebookSDK.bundle'
-            sss.vendored_frameworks = 'Classes/Social/Facebook/Frameworks/FBAudienceNetwork.bundle'
+            sss.vendored_frameworks = 'Classes/Social/Facebook/Frameworks/FacebookSDK.bundle', 'Classes/Social/Facebook/Frameworks/FBAudienceNetwork.bundle'
         end
 
         ss.subspec 'VKontakte' do |sss|
@@ -140,10 +139,7 @@ Pod::Spec.new do |s|
             sss.resource = "Classes/Social/Twitter/Frameworks/TwitterKit.bundle/Resources/TwitterKitResources.bundle"
             sss.vendored_frameworks = 'Classes/Social/Twitter/Frameworks/TwitterKit.bundle'
             sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_SOCIAL_TWITTER' }
-            sss.frameworks = 'TwitterKit'
-            sss.frameworks = 'Accounts'
-            sss.frameworks = 'CoreData'
-            sss.frameworks = 'Social'
+            sss.frameworks = 'TwitterKit', 'Accounts', 'CoreData', 'Social'
         end
     end
 end
