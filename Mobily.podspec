@@ -61,30 +61,30 @@ Pod::Spec.new do |s|
 		ss.frameworks = 'UIKit'
 		ss.dependency 'Mobily/NS'
         ss.dependency 'Mobily/CG'
+
+        ss.subspec 'DynamicsDrawerController' do |sss|
+            sss.public_header_files = 'Classes/UI/DynamicsDrawerController/**/*.h'
+            sss.source_files = 'Classes/UI/DynamicsDrawerController/**/*.{h,m}'
+            sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_DYNAMIC_DRAWER_CONTROLLER' }
+            sss.dependency 'MSDynamicsDrawerViewController'
+            sss.dependency 'Mobily/UI'
+        end
+
+        ss.subspec 'SlideMenuController' do |sss|
+            sss.public_header_files = 'Classes/UI/SlideMenuController/**/*.h'
+            sss.source_files = 'Classes/UI/SlideMenuController/**/*.{h,m}'
+            sss.resources = 'Classes/UI/SlideMenuController/**/*.{png}'
+            sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_SLIDE_MENU_CONTROLLER' }
+            sss.dependency 'Mobily/UI'
+        end
+
+        ss.subspec 'ElementsView' do |sss|
+            sss.public_header_files = 'Classes/UI/ElementsView/**/*.h'
+            sss.source_files = 'Classes/UI/ElementsView/**/*.{h,m}'
+            sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_ELEMENTS_VIEW' }
+            sss.dependency 'Mobily/UI'
+        end
 	end
-
-    s.subspec 'UIDynamicsDrawerController' do |ss|
-        ss.public_header_files = 'Classes/UI/DynamicsDrawerController/**/*.h'
-        ss.source_files = 'Classes/UI/DynamicsDrawerController/**/*.{h,m}'
-        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_DYNAMIC_DRAWER_CONTROLLER' }
-        ss.dependency 'MSDynamicsDrawerViewController'
-        ss.dependency 'Mobily/UI'
-    end
-
-    s.subspec 'UISlideMenuController' do |ss|
-        ss.public_header_files = 'Classes/UI/SlideMenuController/**/*.h'
-        ss.source_files = 'Classes/UI/SlideMenuController/**/*.{h,m}'
-        ss.resources = 'Classes/UI/SlideMenuController/**/*.{png}'
-        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_SLIDE_MENU_CONTROLLER' }
-        ss.dependency 'Mobily/UI'
-    end
-
-    s.subspec 'UIElementsView' do |ss|
-        ss.public_header_files = 'Classes/UI/ElementsView/**/*.h'
-        ss.source_files = 'Classes/UI/ElementsView/**/*.{h,m}'
-        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_ELEMENTS_VIEW' }
-        ss.dependency 'Mobily/UI'
-    end
 
     s.subspec 'API' do |ss|
         ss.public_header_files = 'Classes/API/**/*.h'
@@ -99,20 +99,20 @@ Pod::Spec.new do |s|
         ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_AV' }
         ss.frameworks = 'AVFoundation'
         ss.dependency 'Mobily/NS'
-    end
 
-    s.subspec 'AVAudioRecorder' do |ss|
-        ss.public_header_files = 'Classes/AV/AudioRecorder/**/*.h'
-        ss.source_files = 'Classes/AV/AudioRecorder/**/*.{h,m}'
-        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_AV_AUDIO_RECORDER' }
-        ss.dependency 'Mobily/AV'
-    end
+        ss.subspec 'AudioRecorder' do |sss|
+            sss.public_header_files = 'Classes/AV/AudioRecorder/**/*.h'
+            sss.source_files = 'Classes/AV/AudioRecorder/**/*.{h,m}'
+            sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_AV_AUDIO_RECORDER' }
+            sss.dependency 'Mobily/AV'
+        end
 
-    s.subspec 'AVAudioPlayer' do |ss|
-        ss.public_header_files = 'Classes/AV/AudioPlayer/**/*.h'
-        ss.source_files = 'Classes/AV/AudioPlayer/**/*.{h,m}'
-        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_AV_AUDIO_PLAYER' }
-        ss.dependency 'Mobily/AV'
+        ss.subspec 'AudioPlayer' do |sss|
+            sss.public_header_files = 'Classes/AV/AudioPlayer/**/*.h'
+            sss.source_files = 'Classes/AV/AudioPlayer/**/*.{h,m}'
+            sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_AV_AUDIO_PLAYER' }
+            sss.dependency 'Mobily/AV'
+        end
     end
 
     s.subspec 'Social' do |ss|
@@ -130,6 +130,7 @@ Pod::Spec.new do |s|
             sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_SOCIAL_FACEBOOK' }
             sss.vendored_frameworks = 'Classes/Social/Facebook/Frameworks/FacebookSDK.bundle'
             sss.vendored_frameworks = 'Classes/Social/Facebook/Frameworks/FBAudienceNetwork.bundle'
+            sss.dependency 'Mobily/Social'
         end
 
         ss.subspec 'VKontakte' do |sss|
@@ -137,6 +138,7 @@ Pod::Spec.new do |s|
             sss.source_files = 'Classes/Social/VKontakte/*.{h,m}'
             sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_SOCIAL_VKONTAKTE' }
             sss.dependency 'VK-ios-sdk'
+            sss.dependency 'Mobily/Social'
         end
 
         ss.subspec 'Twitter' do |sss|
@@ -149,6 +151,7 @@ Pod::Spec.new do |s|
             sss.frameworks = 'Accounts'
             sss.frameworks = 'CoreData'
             sss.frameworks = 'Social'
+            sss.dependency 'Mobily/Social'
         end
     end
 end
