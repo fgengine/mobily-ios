@@ -129,7 +129,7 @@ Pod::Spec.new do |s|
         ss.public_header_files = 'Classes/Social/Facebook/*.h'
         ss.source_files = 'Classes/Social/Facebook/*.{h,m}'
         ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_SOCIAL_FACEBOOK' }
-        ss.vendored_frameworks = 'Classes/Social/Facebook/Frameworks/FacebookSDK.bundle', 'Classes/Social/Facebook/Frameworks/FBAudienceNetwork.bundle'
+        ss.vendored_frameworks = 'Classes/Social/Facebook/Frameworks/FacebookSDK.framework', 'Classes/Social/Facebook/Frameworks/FBAudienceNetwork.bundle'
         ss.dependency 'Mobily/Social'
     end
 
@@ -145,7 +145,7 @@ Pod::Spec.new do |s|
         ss.public_header_files = 'Classes/Social/Twitter/*.h'
         ss.source_files = 'Classes/Social/Twitter/*.{h,m}'
         ss.resource = "Classes/Social/Twitter/Frameworks/TwitterKit.bundle/Resources/TwitterKitResources.bundle"
-        ss.vendored_frameworks = 'Classes/Social/Twitter/Frameworks/TwitterKit.bundle'
+        ss.vendored_frameworks = 'Classes/Social/Twitter/Frameworks/TwitterKit.framework'
         ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_SOCIAL_TWITTER' }
         ss.frameworks = 'TwitterKit', 'Accounts', 'CoreData', 'Social'
         ss.dependency 'Mobily/Social'
