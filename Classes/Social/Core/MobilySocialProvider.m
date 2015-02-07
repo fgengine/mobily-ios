@@ -54,13 +54,13 @@
 - (id)initWithName:(NSString*)name {
     self = [super init];
     if(self != nil) {
+        [self setName:name];
         if([[NSUserDefaults standardUserDefaults] objectForKey:[self userDefaultsKey]] != nil) {
             [self setSession:[[[[self class] sessionClass] alloc] initWithUserDefaultsKey:[self userDefaultsKey]]];
             if([_session isValid] == NO) {
                 [self setSession:nil];
             }
         }
-        [self setName:name];
         [self setup];
     }
     return self;

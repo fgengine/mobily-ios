@@ -116,6 +116,15 @@
     
     if([VKSdk wakeUpSession] == NO) {
         [VKSdk authorize:permissions revokeAccess:YES forceOAuth:YES];
+    } else if([self session] != nil) {
+        [self setSession:[[MobilySocialVKontakteSession alloc] initWithAccessToken:[VKSdk getAccessToken]]];
+        if(_successBlock != nil) {
+            _successBlock();
+        }
+    } else {
+        if(_successBlock != nil) {
+            _successBlock();
+        }
     }
 }
 
@@ -203,7 +212,11 @@
     if(self != nil) {
         [self setPermissions:[accessToken permissions]];
         [self setAccessToken:[accessToken accessToken]];
-        [self setExpirationDate:[NSDate dateWithTimeIntervalSince1970:[accessToken created] + [[accessToken expiresIn] intValue]]];
+        if([[accessToken expiresIn] intValue] > 0) {
+            [self setExpirationDate:[NSDate dateWithTimeIntervalSince1970:[accessToken created] + [[accessToken expiresIn] intValue]]];
+        } else {
+            [self setExpirationDate:[NSDate dateWithTimeIntervalSince1970:[accessToken created] + MOBILY_YEAR]];
+        }
         [self setUserId:[accessToken userId]];
         [self setEmail:[accessToken email]];
     }
