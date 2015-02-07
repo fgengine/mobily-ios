@@ -41,9 +41,17 @@
 
 /*--------------------------------------------------*/
 
+@class MobilySocialVKontakteSession;
+
+/*--------------------------------------------------*/
+
 @interface MobilySocialVKontakteProvider : MobilySocialProvider
 
 @property(nonatomic, readwrite, strong) NSString* applicationId;
+
+@property(nonatomic, readwrite, strong) MobilySocialVKontakteSession* session;
+
+- (id)initWithApplicationId:(NSString*)applicationId;
 
 - (void)signinWithPermissions:(NSArray*)permissions success:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;
 

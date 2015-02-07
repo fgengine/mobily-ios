@@ -49,6 +49,8 @@
 
 @property(nonatomic, readwrite, assign) BOOL allowLoginUI;
 
+@property(nonatomic, readwrite, strong) MobilySocialFacebookSession* session;
+
 - (void)signinWithReadPermissions:(NSArray*)readPermissions success:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;
 
 @end

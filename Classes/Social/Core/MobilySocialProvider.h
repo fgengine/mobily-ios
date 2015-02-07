@@ -61,7 +61,7 @@ typedef void (^MobilySocialProviderFailureBlock)(NSError* error);
 
 - (void)setup;
 
-- (void)logoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;
+- (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;
 
 - (void)didBecomeActive;
 - (void)willResignActive;

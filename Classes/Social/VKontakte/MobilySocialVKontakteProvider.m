@@ -68,11 +68,12 @@
 
 @implementation MobilySocialVKontakteProvider
 
-#pragma mark Init
+#pragma mark Init / Free
 
-- (id)initWithName:(NSString*)name {
-    self = [super initWithName:name];
+- (id)initWithApplicationId:(NSString*)applicationId {
+    self = [super initWithName:@"VKontakte"];
     if(self != nil) {
+        [self setApplicationId:applicationId];
     }
     return self;
 }
@@ -88,8 +89,18 @@
 - (void)setApplicationId:(NSString*)applicationId {
     if([_applicationId isEqualToString:applicationId] == NO) {
         MOBILY_SAFE_SETTER(_applicationId, applicationId);
-        [VKSdk initializeWithDelegate:self andAppId:_applicationId];
+        if(_applicationId != nil) {
+            [VKSdk initializeWithDelegate:self andAppId:_applicationId];
+        }
     }
+}
+
+- (void)setSession:(MobilySocialVKontakteSession*)session {
+    [super setSession:session];
+}
+
+- (MobilySocialVKontakteSession*)session {
+    return [super session];
 }
 
 #pragma mark Public
@@ -108,7 +119,7 @@
     }
 }
 
-- (void)logoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
+- (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
     if([[self session] isValid] == YES) {
         [VKSdk forceLogout];
         [self setSession:nil];

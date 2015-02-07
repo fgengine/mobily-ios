@@ -41,10 +41,18 @@
 
 /*--------------------------------------------------*/
 
+@class MobilySocialTwitterSession;
+
+/*--------------------------------------------------*/
+
 @interface MobilySocialTwitterProvider : MobilySocialProvider
 
 @property(nonatomic, readwrite, strong) NSString* consumerKey;
 @property(nonatomic, readwrite, strong) NSString* consumerSecret;
+
+@property(nonatomic, readwrite, strong) MobilySocialTwitterSession* session;
+
+- (id)initWithConsumerKey:(NSString*)consumerKey consumerSecret:(NSString*)consumerSecret;
 
 - (void)signinSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;
 - (void)requestEmailSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;

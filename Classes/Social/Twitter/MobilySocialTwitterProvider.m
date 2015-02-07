@@ -66,6 +66,36 @@
 
 @implementation MobilySocialTwitterProvider
 
+#pragma mark Init / Free
+
+- (id)initWithConsumerKey:(NSString*)consumerKey consumerSecret:(NSString*)consumerSecret {
+    self = [super initWithName:@"Twitter"];
+    if(self != nil) {
+        [self setConsumerKey:consumerKey];
+        [self setConsumerSecret:consumerSecret];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [self setConsumerKey:nil];
+    [self setConsumerSecret:nil];
+    
+    MOBILY_SAFE_DEALLOC;
+}
+
+#pragma mark Property
+
+- (void)setSession:(MobilySocialTwitterSession*)session {
+    [super setSession:session];
+}
+
+- (MobilySocialTwitterSession*)session {
+    return [super session];
+}
+
+#pragma mark Public
+
 - (void)signinSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
     [[Twitter sharedInstance] startWithConsumerKey:_consumerKey consumerSecret:_consumerSecret];
     [[Twitter sharedInstance] logInWithCompletion:^(TWTRSession* session, NSError* error) {
@@ -111,7 +141,7 @@
     }
 }
 
-- (void)logoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
+- (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
     if([[self session] isValid] == YES) {
         [[Twitter sharedInstance] logOut];
         [self setSession:nil];

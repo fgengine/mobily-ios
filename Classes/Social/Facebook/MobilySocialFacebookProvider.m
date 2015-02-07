@@ -64,6 +64,10 @@
 
 #pragma mark Init
 
+- (id)init {
+    return [self initWithName:@"Facebook"];
+}
+
 - (id)initWithName:(NSString*)name {
     self = [super initWithName:name];
     if(self != nil) {
@@ -74,6 +78,16 @@
 
 - (void)dealloc {
     MOBILY_SAFE_DEALLOC;
+}
+
+#pragma mark Property
+
+- (void)setSession:(MobilySocialFacebookSession*)session {
+    [super setSession:session];
+}
+
+- (MobilySocialFacebookSession*)session {
+    return [super session];
 }
 
 #pragma mark Public
@@ -111,7 +125,7 @@
     }];
 }
 
-- (void)logoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
+- (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
     if([[self session] isValid] == YES) {
         [[FBSession activeSession] closeAndClearTokenInformation];
         [self setSession:nil];

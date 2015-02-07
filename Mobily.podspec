@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name = 'Mobily'
-	s.version = '2.0.18'
+	s.version = '2.0.19'
 	s.summary = 'Mobily framework for iOS'
 	s.homepage = 'https://github.com/fgengine/mobily-ios/tree/v2'
 	s.license = {
@@ -61,29 +61,26 @@ Pod::Spec.new do |s|
 		ss.frameworks = 'UIKit'
 		ss.dependency 'Mobily/NS'
         ss.dependency 'Mobily/CG'
-    end
 
-    s.subspec 'UI-ElementsView' do |ss|
-        ss.public_header_files = 'Classes/UI/ElementsView/**/*.h'
-        ss.source_files = 'Classes/UI/ElementsView/**/*.{h,m}'
-        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_ELEMENTS_VIEW' }
-        ss.dependency 'Mobily/UI'
-    end
+        ss.subspec 'ElementsView' do |sss|
+            sss.public_header_files = 'Classes/UI/ElementsView/**/*.h'
+            sss.source_files = 'Classes/UI/ElementsView/**/*.{h,m}'
+            sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_ELEMENTS_VIEW' }
+        end
 
-    s.subspec 'UI-DynamicsDrawerController' do |ss|
-        ss.public_header_files = 'Classes/UI/DynamicsDrawerController/**/*.h'
-        ss.source_files = 'Classes/UI/DynamicsDrawerController/**/*.{h,m}'
-        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_DYNAMIC_DRAWER_CONTROLLER' }
-        ss.dependency 'Mobily/UI'
-        ss.dependency 'MSDynamicsDrawerViewController'
-    end
+        ss.subspec 'DynamicsDrawerController' do |sss|
+            sss.public_header_files = 'Classes/UI/DynamicsDrawerController/**/*.h'
+            sss.source_files = 'Classes/UI/DynamicsDrawerController/**/*.{h,m}'
+            sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_DYNAMIC_DRAWER_CONTROLLER' }
+            sss.dependency 'MSDynamicsDrawerViewController'
+        end
 
-    s.subspec 'UI-SlideMenuController' do |ss|
-        ss.public_header_files = 'Classes/UI/SlideMenuController/**/*.h'
-        ss.source_files = 'Classes/UI/SlideMenuController/**/*.{h,m}'
-        ss.resources = 'Classes/UI/SlideMenuController/**/*.{png}'
-        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_SLIDE_MENU_CONTROLLER' }
-        ss.dependency 'Mobily/UI'
+        ss.subspec 'SlideMenuController' do |sss|
+            sss.public_header_files = 'Classes/UI/SlideMenuController/**/*.h'
+            sss.source_files = 'Classes/UI/SlideMenuController/**/*.{h,m}'
+            sss.resources = 'Classes/UI/SlideMenuController/**/*.{png}'
+            sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_SLIDE_MENU_CONTROLLER' }
+        end
     end
 
     s.subspec 'API' do |ss|
@@ -99,20 +96,18 @@ Pod::Spec.new do |s|
         ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_AV' }
         ss.frameworks = 'AVFoundation'
         ss.dependency 'Mobily/NS'
-    end
 
-    s.subspec 'AV-AudioRecorder' do |ss|
-        ss.public_header_files = 'Classes/AV/AudioRecorder/**/*.h'
-        ss.source_files = 'Classes/AV/AudioRecorder/**/*.{h,m}'
-        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_AV_AUDIO_RECORDER' }
-        ss.dependency 'Mobily/AV'
-    end
+        ss.subspec 'AudioRecorder' do |sss|
+            sss.public_header_files = 'Classes/AV/AudioRecorder/**/*.h'
+            sss.source_files = 'Classes/AV/AudioRecorder/**/*.{h,m}'
+            sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_AV_AUDIO_RECORDER' }
+        end
 
-    s.subspec 'AV-AudioPlayer' do |ss|
-        ss.public_header_files = 'Classes/AV/AudioPlayer/**/*.h'
-        ss.source_files = 'Classes/AV/AudioPlayer/**/*.{h,m}'
-        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_AV_AUDIO_PLAYER' }
-        ss.dependency 'Mobily/AV'
+        ss.subspec 'AudioPlayer' do |sss|
+            sss.public_header_files = 'Classes/AV/AudioPlayer/**/*.h'
+            sss.source_files = 'Classes/AV/AudioPlayer/**/*.{h,m}'
+            sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_AV_AUDIO_PLAYER' }
+        end
     end
 
     s.subspec 'Social' do |ss|
@@ -123,31 +118,28 @@ Pod::Spec.new do |s|
         ss.dependency 'Mobily/NS'
         ss.dependency 'Mobily/CG'
         ss.dependency 'Mobily/UI'
-    end
 
-    s.subspec 'Social-Facebook' do |ss|
-        ss.public_header_files = 'Classes/Social/Facebook/*.h'
-        ss.source_files = 'Classes/Social/Facebook/*.{h,m}'
-        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_SOCIAL_FACEBOOK' }
-        ss.vendored_frameworks = 'Classes/Social/Facebook/Frameworks/FacebookSDK.framework', 'Classes/Social/Facebook/Frameworks/FBAudienceNetwork.bundle'
-        ss.dependency 'Mobily/Social'
-    end
+        ss.subspec 'Facebook' do |sss|
+            sss.public_header_files = 'Classes/Social/Facebook/*.h'
+            sss.source_files = 'Classes/Social/Facebook/*.{h,m}'
+            sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_SOCIAL_FACEBOOK' }
+            sss.vendored_frameworks = 'Classes/Social/Facebook/Frameworks/FacebookSDK.framework', 'Classes/Social/Facebook/Frameworks/FBAudienceNetwork.bundle'
+        end
 
-    s.subspec 'Social-VKontakte' do |ss|
-        ss.public_header_files = 'Classes/Social/VKontakte/*.h'
-        ss.source_files = 'Classes/Social/VKontakte/*.{h,m}'
-        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_SOCIAL_VKONTAKTE' }
-        ss.dependency 'Mobily/Social'
-        ss.dependency 'VK-ios-sdk'
-    end
+        ss.subspec 'VKontakte' do |sss|
+            sss.public_header_files = 'Classes/Social/VKontakte/*.h'
+            sss.source_files = 'Classes/Social/VKontakte/*.{h,m}'
+            sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_SOCIAL_VKONTAKTE' }
+            sss.dependency 'VK-ios-sdk'
+        end
 
-    s.subspec 'Social-Twitter' do |ss|
-        ss.public_header_files = 'Classes/Social/Twitter/*.h'
-        ss.source_files = 'Classes/Social/Twitter/*.{h,m}'
-        ss.resource = "Classes/Social/Twitter/Frameworks/TwitterKit.bundle/Resources/TwitterKitResources.bundle"
-        ss.vendored_frameworks = 'Classes/Social/Twitter/Frameworks/TwitterKit.framework'
-        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_SOCIAL_TWITTER' }
-        ss.frameworks = 'TwitterKit', 'Accounts', 'CoreData', 'Social'
-        ss.dependency 'Mobily/Social'
+        ss.subspec 'Twitter' do |sss|
+            sss.public_header_files = 'Classes/Social/Twitter/*.h'
+            sss.source_files = 'Classes/Social/Twitter/*.{h,m}'
+            sss.resource = "Classes/Social/Twitter/Frameworks/TwitterKit.bundle/Resources/TwitterKitResources.bundle"
+            sss.vendored_frameworks = 'Classes/Social/Twitter/Frameworks/TwitterKit.framework'
+            sss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_SOCIAL_TWITTER' }
+            sss.frameworks = 'TwitterKit', 'Accounts', 'CoreData', 'Social'
+        end
     end
 end

@@ -74,6 +74,7 @@
 - (id)init {
     self = [super init];
     if(self != nil) {
+        [self setMutableProviders:[NSMutableArray array]];
     }
     return self;
 }
