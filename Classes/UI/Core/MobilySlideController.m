@@ -33,21 +33,21 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilySlideNavigation.h"
+#import "MobilySlideController.h"
 
 /*--------------------------------------------------*/
 
-typedef NS_ENUM(NSUInteger, MobilySlideNavigationSwipeCellDirection) {
-    MobilySlideNavigationSwipeCellDirectionUnknown,
-    MobilySlideNavigationSwipeCellDirectionLeft,
-    MobilySlideNavigationSwipeCellDirectionRight
+typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
+    MobilySlideControllerSwipeCellDirectionUnknown,
+    MobilySlideControllerSwipeCellDirectionLeft,
+    MobilySlideControllerSwipeCellDirectionRight
 };
 
 /*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilySlideNavigation () < UIGestureRecognizerDelegate >
+@interface MobilySlideController () < UIGestureRecognizerDelegate >
 
 @property(nonatomic, readwrite, getter=isSwipeDragging) BOOL swipeDragging;
 @property(nonatomic, readwrite, getter=isSwipeDecelerating) BOOL swipeDecelerating;
@@ -63,7 +63,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideNavigationSwipeCellDirection) {
 @property(nonatomic, readwrite, assign) CGFloat swipeProgress;
 @property(nonatomic, readwrite, assign) CGFloat swipeLeftWidth;
 @property(nonatomic, readwrite, assign) CGFloat swipeRightWidth;
-@property(nonatomic, readwrite, assign) MobilySlideNavigationSwipeCellDirection swipeDirection;
+@property(nonatomic, readwrite, assign) MobilySlideControllerSwipeCellDirection swipeDirection;
 
 - (CGRect)leftViewFrameByPercent:(CGFloat)percent;
 - (CGRect)leftViewFrameFromBounds:(CGRect)bounds byPercent:(CGFloat)percent;
@@ -98,7 +98,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideNavigationSwipeCellDirection) {
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation MobilySlideNavigation
+@implementation MobilySlideController
 
 #pragma mark Init
 
@@ -214,7 +214,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideNavigationSwipeCellDirection) {
 
 #pragma mark Public
 
-- (void)setBackgroundController:(UIViewController*)backgroundController animated:(BOOL)animated completed:(MobilySlideNavigationBlock)completed {
+- (void)setBackgroundController:(UIViewController*)backgroundController animated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
     if(_backgroundController != backgroundController) {
         if([self isViewLoaded] == NO) {
             animated = NO;
@@ -235,7 +235,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideNavigationSwipeCellDirection) {
     }
 }
 
-- (void)setLeftController:(UIViewController*)leftController animated:(BOOL)animated completed:(MobilySlideNavigationBlock)completed {
+- (void)setLeftController:(UIViewController*)leftController animated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
     if(_leftController != leftController) {
         if([self isViewLoaded] == NO) {
             animated = NO;
@@ -256,7 +256,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideNavigationSwipeCellDirection) {
     }
 }
 
-- (void)setCenterController:(UIViewController*)centerController animated:(BOOL)animated completed:(MobilySlideNavigationBlock)completed {
+- (void)setCenterController:(UIViewController*)centerController animated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
     if(_centerController != centerController) {
         if([self isViewLoaded] == NO) {
             animated = NO;
@@ -277,7 +277,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideNavigationSwipeCellDirection) {
     }
 }
 
-- (void)setRightController:(UIViewController*)rightController animated:(BOOL)animated completed:(MobilySlideNavigationBlock)completed {
+- (void)setRightController:(UIViewController*)rightController animated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
     if(_rightController != rightController) {
         if([self isViewLoaded] == NO) {
             animated = NO;
@@ -298,16 +298,16 @@ typedef NS_ENUM(NSUInteger, MobilySlideNavigationSwipeCellDirection) {
     }
 }
 
-- (void)showLeftControllerAnimated:(BOOL)animated completed:(MobilySlideNavigationBlock)completed {
+- (void)showLeftControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
 }
 
-- (void)hideLeftControllerAnimated:(BOOL)animated completed:(MobilySlideNavigationBlock)completed {
+- (void)hideLeftControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
 }
 
-- (void)showRightControllerAnimated:(BOOL)animated completed:(MobilySlideNavigationBlock)completed {
+- (void)showRightControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
 }
 
-- (void)hideRightControllerAnimated:(BOOL)animated completed:(MobilySlideNavigationBlock)completed {
+- (void)hideRightControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
 }
 
 #pragma mark Private
@@ -470,38 +470,38 @@ typedef NS_ENUM(NSUInteger, MobilySlideNavigationSwipeCellDirection) {
                 [self setSwipeLastVelocity:velocity.x];
                 [self setSwipeLeftWidth:-_leftControllerWidth];
                 [self setSwipeRightWidth:_rightControllerWidth];
-                [self setSwipeDirection:MobilySlideNavigationSwipeCellDirectionUnknown];
+                [self setSwipeDirection:MobilySlideControllerSwipeCellDirectionUnknown];
                 break;
             }
             case UIGestureRecognizerStateChanged: {
                 CGFloat delta = _swipeLastOffset - translation.x;
-                if(_swipeDirection == MobilySlideNavigationSwipeCellDirectionUnknown) {
+                if(_swipeDirection == MobilySlideControllerSwipeCellDirectionUnknown) {
                     if((_showedLeftController == YES) && (_leftController != nil) && (delta > _swipeThreshold)) {
-                        [self setSwipeDirection:MobilySlideNavigationSwipeCellDirectionLeft];
+                        [self setSwipeDirection:MobilySlideControllerSwipeCellDirectionLeft];
                         [self didBeganSwipe];
                     } else if((_showedRightController == YES) && (_rightController != nil) && (delta < -_swipeThreshold)) {
-                        [self setSwipeDirection:MobilySlideNavigationSwipeCellDirectionRight];
+                        [self setSwipeDirection:MobilySlideControllerSwipeCellDirectionRight];
                         [self didBeganSwipe];
                     } else if((_showedLeftController == NO) && (_leftController != nil) && (delta < -_swipeThreshold)) {
-                        [self setSwipeDirection:MobilySlideNavigationSwipeCellDirectionLeft];
+                        [self setSwipeDirection:MobilySlideControllerSwipeCellDirectionLeft];
                         [self didBeganSwipe];
                     } else if((_showedRightController == NO) && (_rightController != nil) && (delta > _swipeThreshold)) {
-                        [self setSwipeDirection:MobilySlideNavigationSwipeCellDirectionRight];
+                        [self setSwipeDirection:MobilySlideControllerSwipeCellDirectionRight];
                         [self didBeganSwipe];
                     }
                 }
-                if(_swipeDirection != MobilySlideNavigationSwipeCellDirectionUnknown) {
+                if(_swipeDirection != MobilySlideControllerSwipeCellDirectionUnknown) {
                     switch(_swipeDirection) {
-                        case MobilySlideNavigationSwipeCellDirectionUnknown: {
+                        case MobilySlideControllerSwipeCellDirectionUnknown: {
                             break;
                         }
-                        case MobilySlideNavigationSwipeCellDirectionLeft: {
+                        case MobilySlideControllerSwipeCellDirectionLeft: {
                             CGFloat localDelta = MIN(MAX(_swipeLeftWidth, delta), -_swipeLeftWidth);
                             [self setSwipeProgress:_swipeProgress - (localDelta / _swipeLeftWidth) speed:localDelta endedSwipe:NO];
                             [self movingSwipe:_swipeProgress];
                             break;
                         }
-                        case MobilySlideNavigationSwipeCellDirectionRight: {
+                        case MobilySlideControllerSwipeCellDirectionRight: {
                             CGFloat localDelta = MIN(MAX(-_swipeRightWidth, delta), _swipeRightWidth);
                             [self setSwipeProgress:_swipeProgress + (localDelta / _swipeRightWidth) speed:localDelta endedSwipe:NO];
                             [self movingSwipe:_swipeProgress];
@@ -517,15 +517,15 @@ typedef NS_ENUM(NSUInteger, MobilySlideNavigationSwipeCellDirection) {
             case UIGestureRecognizerStateCancelled: {
                 [self willEndedSwipe];
                 CGFloat swipeProgress = roundf(_swipeProgress - (_swipeLastVelocity / _swipeVelocity));
-                CGFloat minSwipeProgress = (_swipeDirection == MobilySlideNavigationSwipeCellDirectionLeft) ? -1.0f : 0.0f;
-                CGFloat maxSwipeProgress = (_swipeDirection == MobilySlideNavigationSwipeCellDirectionRight) ? 1.0f :0.0f;
+                CGFloat minSwipeProgress = (_swipeDirection == MobilySlideControllerSwipeCellDirectionLeft) ? -1.0f : 0.0f;
+                CGFloat maxSwipeProgress = (_swipeDirection == MobilySlideControllerSwipeCellDirectionRight) ? 1.0f :0.0f;
                 CGFloat needSwipeProgress = MIN(MAX(minSwipeProgress, swipeProgress), maxSwipeProgress);
                 switch(_swipeDirection) {
-                    case MobilySlideNavigationSwipeCellDirectionLeft: {
+                    case MobilySlideControllerSwipeCellDirectionLeft: {
                         [self setSwipeProgress:needSwipeProgress speed:_swipeLeftWidth * ABS(needSwipeProgress - _swipeProgress) endedSwipe:YES];
                         break;
                     }
-                    case MobilySlideNavigationSwipeCellDirectionRight: {
+                    case MobilySlideControllerSwipeCellDirectionRight: {
                         [self setSwipeProgress:needSwipeProgress speed:_swipeRightWidth * ABS(needSwipeProgress - _swipeProgress) endedSwipe:YES];
                         break;
                     }
@@ -544,8 +544,8 @@ typedef NS_ENUM(NSUInteger, MobilySlideNavigationSwipeCellDirection) {
 }
 
 - (void)setSwipeProgress:(CGFloat)swipeProgress speed:(CGFloat)speed endedSwipe:(BOOL)endedSwipe {
-    CGFloat minSwipeProgress = (_swipeDirection == MobilySlideNavigationSwipeCellDirectionLeft) ? -1.0f : 0.0f;
-    CGFloat maxSwipeProgress = (_swipeDirection == MobilySlideNavigationSwipeCellDirectionRight) ? 1.0f :0.0f;
+    CGFloat minSwipeProgress = (_swipeDirection == MobilySlideControllerSwipeCellDirectionLeft) ? -1.0f : 0.0f;
+    CGFloat maxSwipeProgress = (_swipeDirection == MobilySlideControllerSwipeCellDirectionRight) ? 1.0f :0.0f;
     CGFloat normalizedSwipeProgress = MIN(MAX(minSwipeProgress, swipeProgress), maxSwipeProgress);
     if(_swipeProgress != normalizedSwipeProgress) {
         _swipeProgress = normalizedSwipeProgress;
@@ -629,14 +629,14 @@ static char const* const slideNavigationKey = "slideNavigationKey";
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation UIViewController (MobilySlideNavigation)
+@implementation UIViewController (MobilySlideController)
 
-- (void)setSlideNavigation:(MobilySlideNavigation*)slideNavigation {
+- (void)setSlideNavigation:(MobilySlideController*)slideNavigation {
     objc_setAssociatedObject(self, slideNavigationKey, slideNavigation, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (MobilySlideNavigation*)slideNavigation {
-    MobilySlideNavigation* slideNavigation = objc_getAssociatedObject(self, slideNavigationKey);
+- (MobilySlideController*)slideNavigation {
+    MobilySlideController* slideNavigation = objc_getAssociatedObject(self, slideNavigationKey);
     if(slideNavigation == nil) {
         slideNavigation = [[self parentViewController] slideNavigation];
     }

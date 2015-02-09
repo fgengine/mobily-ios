@@ -60,9 +60,6 @@
 - (NSString*)formatRelativeTime;
 - (NSString*)formatShortRelativeTime;
 
-+ (NSDate*)dateFromIso8601:(NSString*)iso8601;
-- (NSString*)iso8601;
-
 + (NSDate*)dateWithUnixTimestamp:(NSUInteger)timestamp;
 - (NSUInteger)unixTimestamp;
 

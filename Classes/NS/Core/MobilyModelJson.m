@@ -61,7 +61,8 @@
 
 @interface MobilyModelJsonDictionary ()
 
-@property(nonatomic, readwrite, strong) MobilyModelJson* jsonConverter;
+@property(nonatomic, readwrite, strong) MobilyModelJson* keyJsonConverter;
+@property(nonatomic, readwrite, strong) MobilyModelJson* valueJsonConverter;
 
 @end
 
@@ -207,6 +208,14 @@
     return self;
 }
 
+- (id)initWithJsonModelClass:(Class)jsonModelClass {
+    self = [super init];
+    if(self != nil) {
+        [self setJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:jsonModelClass]];
+    }
+    return self;
+}
+
 - (id)initWithPath:(NSString*)path jsonConverter:(MobilyModelJson*)jsonConverter {
     self = [super initWithPath:path];
     if(self != nil) {
@@ -247,26 +256,52 @@
 
 @implementation MobilyModelJsonDictionary
 
-- (id)initWithJsonConverter:(MobilyModelJson*)jsonConverter {
+- (id)initWithValueJsonConverter:(MobilyModelJson*)valueJsonConverter {
     self = [super init];
     if(self != nil) {
-        [self setJsonConverter:jsonConverter];
+        [self setValueJsonConverter:valueJsonConverter];
     }
     return self;
 }
 
-- (id)initWithPath:(NSString*)path jsonConverter:(MobilyModelJson*)jsonConverter {
-    self = [super initWithPath:path];
+- (id)initWithValueJsonModelClass:(Class)valueJsonModelClass {
+    self = [super init];
     if(self != nil) {
-        [self setJsonConverter:jsonConverter];
+        [self setValueJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass]];
     }
     return self;
 }
 
-- (id)initWithPath:(NSString*)path jsonModelClass:(Class)jsonModelClass {
+- (id)initWithPath:(NSString*)path valueJsonConverter:(MobilyModelJson*)valueJsonConverter {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:jsonModelClass]];
+        [self setValueJsonConverter:valueJsonConverter];
+    }
+    return self;
+}
+
+- (id)initWithPath:(NSString*)path valueJsonModelClass:(Class)valueJsonModelClass {
+    self = [super initWithPath:path];
+    if(self != nil) {
+        [self setValueJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass]];
+    }
+    return self;
+}
+
+- (id)initWithPath:(NSString*)path keyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter {
+    self = [super initWithPath:path];
+    if(self != nil) {
+        [self setKeyJsonConverter:keyJsonConverter];
+        [self setValueJsonConverter:valueJsonConverter];
+    }
+    return self;
+}
+
+- (id)initWithPath:(NSString*)path keyJsonModelClass:(Class)keyJsonModelClass valueJsonModelClass:(Class)valueJsonModelClass {
+    self = [super initWithPath:path];
+    if(self != nil) {
+        [self setKeyJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:keyJsonModelClass]];
+        [self setValueJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass]];
     }
     return self;
 }
@@ -275,10 +310,13 @@
     if([value isKindOfClass:[NSDictionary class]] == YES) {
         NSMutableDictionary* result = [NSMutableDictionary dictionary];
         if(result != nil) {
-            [value enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL* stop) {
-                id convertedValue = [_jsonConverter convertValue:object];
-                if(convertedValue != nil) {
-                    [result setObject:convertedValue forKey:key];
+            [value enumerateKeysAndObjectsUsingBlock:^(id jsonKey, id jsonObject, BOOL* stop) {
+                id key = (_keyJsonConverter != nil) ? [_keyJsonConverter convertValue:jsonKey] : jsonKey;
+                if(key != nil) {
+                    id value = [_valueJsonConverter convertValue:jsonObject];
+                    if(value != nil) {
+                        [result setObject:value forKey:key];
+                    }
                 }
             }];
             return result;

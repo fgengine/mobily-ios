@@ -190,25 +190,6 @@
     }
 }
 
-+ (NSDateFormatter*)dateFormatterWithIso8601 {
-    static NSDateFormatter* formatter = nil;
-    if(formatter == nil) {
-        formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'"];
-        [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")]];
-        [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
-    }
-    return formatter;
-}
-
-+ (NSDate*)dateFromIso8601:(NSString*)iso8601 {
-    return [[self dateFormatterWithIso8601] dateFromString:iso8601];
-}
-
-- (NSString*)iso8601 {
-    return [[NSDate dateFormatterWithIso8601] stringFromDate:self];
-}
-
 + (NSDate*)dateWithUnixTimestamp:(NSUInteger)timestamp {
     return [NSDate dateWithTimeIntervalSince1970:timestamp];
 }

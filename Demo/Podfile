@@ -1,0 +1,3 @@
+platform :ios, '7.0'
+pod 'Mobily', '~> 2.0.0', :path => '../'
+pod '500px-iOS-api'

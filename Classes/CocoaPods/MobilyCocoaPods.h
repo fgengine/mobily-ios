@@ -75,7 +75,7 @@
 #   import "MobilyController.h"
 #   import "MobilyNavigationController.h"
 #   import "MobilyTabBarController.h"
-#   import "MobilySlideNavigation.h"
+#   import "MobilySlideController.h"
 #   import "MobilyViewController.h"
 #   import "MobilyButton.h"
 #   import "MobilyTextField.h"

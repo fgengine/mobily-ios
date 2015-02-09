@@ -56,6 +56,7 @@
 @property(nonatomic, readonly, strong) MobilyModelJson* jsonConverter;
 
 - (id)initWithJsonConverter:(MobilyModelJson*)jsonConverter;
+- (id)initWithJsonModelClass:(Class)jsonModelClass;
 - (id)initWithPath:(NSString*)path jsonConverter:(MobilyModelJson*)jsonConverter;
 - (id)initWithPath:(NSString*)path jsonModelClass:(Class)jsonModelClass;
 
@@ -65,11 +66,15 @@
 
 @interface MobilyModelJsonDictionary : MobilyModelJson
 
-@property(nonatomic, readonly, strong) MobilyModelJson* jsonConverter;
+@property(nonatomic, readonly, strong) MobilyModelJson* keyJsonConverter;
+@property(nonatomic, readonly, strong) MobilyModelJson* valueJsonConverter;
 
-- (id)initWithJsonConverter:(MobilyModelJson*)jsonConverter;
-- (id)initWithPath:(NSString*)path jsonConverter:(MobilyModelJson*)jsonConverter;
-- (id)initWithPath:(NSString*)path jsonModelClass:(Class)jsonModelClass;
+- (id)initWithValueJsonConverter:(MobilyModelJson*)valueJsonConverter;
+- (id)initWithValueJsonModelClass:(Class)valueJsonModelClass;
+- (id)initWithPath:(NSString*)path valueJsonConverter:(MobilyModelJson*)valueJsonConverter;
+- (id)initWithPath:(NSString*)path valueJsonModelClass:(Class)valueJsonModelClass;
+- (id)initWithPath:(NSString*)path keyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter;
+- (id)initWithPath:(NSString*)path keyJsonModelClass:(Class)keyJsonModelClass valueJsonModelClass:(Class)valueJsonModelClass;
 
 @end
 
@@ -156,9 +161,5 @@
 - (id)initWithPath:(NSString*)path customClass:(Class)customClass;
 
 @end
-
-/*--------------------------------------------------*/
-
-typedef void (^MobilyModelCollectionEnumBlock)(id item, BOOL* stop);
 
 /*--------------------------------------------------*/

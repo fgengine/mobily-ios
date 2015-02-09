@@ -37,11 +37,11 @@
 
 /*--------------------------------------------------*/
 
-typedef void(^MobilySlideNavigationBlock)();
+typedef void(^MobilySlideControllerBlock)();
 
 /*--------------------------------------------------*/
 
-@interface MobilySlideNavigation : MobilyController
+@interface MobilySlideController : MobilyController
 
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeThreshold;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeVelocity;
@@ -57,44 +57,44 @@ typedef void(^MobilySlideNavigationBlock)();
 @property(nonatomic, readonly, getter=isSwipeDragging) BOOL swipeDragging;
 @property(nonatomic, readonly, getter=isSwipeDecelerating) BOOL swipeDecelerating;
 
-- (void)setBackgroundController:(UIViewController*)backgroundController animated:(BOOL)animated completed:(MobilySlideNavigationBlock)completed;
-- (void)setLeftController:(UIViewController*)leftController animated:(BOOL)animated completed:(MobilySlideNavigationBlock)completed;
-- (void)setCenterController:(UIViewController*)centerController animated:(BOOL)animated completed:(MobilySlideNavigationBlock)completed;
-- (void)setRightController:(UIViewController*)rightController animated:(BOOL)animated completed:(MobilySlideNavigationBlock)completed;
+- (void)setBackgroundController:(UIViewController*)backgroundController animated:(BOOL)animated completed:(MobilySlideControllerBlock)completed;
+- (void)setLeftController:(UIViewController*)leftController animated:(BOOL)animated completed:(MobilySlideControllerBlock)completed;
+- (void)setCenterController:(UIViewController*)centerController animated:(BOOL)animated completed:(MobilySlideControllerBlock)completed;
+- (void)setRightController:(UIViewController*)rightController animated:(BOOL)animated completed:(MobilySlideControllerBlock)completed;
 
-- (void)showLeftControllerAnimated:(BOOL)animated completed:(MobilySlideNavigationBlock)completed;
-- (void)hideLeftControllerAnimated:(BOOL)animated completed:(MobilySlideNavigationBlock)completed;
+- (void)showLeftControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed;
+- (void)hideLeftControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed;
 
-- (void)showRightControllerAnimated:(BOOL)animated completed:(MobilySlideNavigationBlock)completed;
-- (void)hideRightControllerAnimated:(BOOL)animated completed:(MobilySlideNavigationBlock)completed;
-
-@end
-
-/*--------------------------------------------------*/
-
-@protocol MobilySlideNavigationDelegate < NSObject >
-
-@optional
-- (BOOL)canShowLeftControllerInSlideNavigation:(MobilySlideNavigation*)slideNavigation;
-- (void)willShowLeftControllerInSlideNavigation:(MobilySlideNavigation*)slideNavigation duration:(CGFloat)duration;
-- (void)didShowLeftControllerInSlideNavigation:(MobilySlideNavigation*)slideNavigation;
-- (void)willHideLeftControllerInSlideNavigation:(MobilySlideNavigation*)slideNavigation duration:(CGFloat)duration;
-- (void)didHideLeftControllerInSlideNavigation:(MobilySlideNavigation*)slideNavigation;
-
-@optional
-- (BOOL)canShowRightControllerInSlideNavigation:(MobilySlideNavigation*)slideNavigation;
-- (void)willShowRightControllerInSlideNavigation:(MobilySlideNavigation*)slideNavigation duration:(CGFloat)duration;
-- (void)didShowRightControllerInSlideNavigation:(MobilySlideNavigation*)slideNavigation;
-- (void)willHideRightControllerInSlideNavigation:(MobilySlideNavigation*)slideNavigation duration:(CGFloat)duration;
-- (void)didHideRightControllerInSlideNavigation:(MobilySlideNavigation*)slideNavigation;
+- (void)showRightControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed;
+- (void)hideRightControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed;
 
 @end
 
 /*--------------------------------------------------*/
 
-@interface UIViewController (MobilySlideNavigation)
+@protocol MobilySlideControllerDelegate < NSObject >
 
-@property(nonatomic, readwrite, strong) MobilySlideNavigation* slideNavigation;
+@optional
+- (BOOL)canShowLeftControllerInSlideNavigation:(MobilySlideController*)slideNavigation;
+- (void)willShowLeftControllerInSlideNavigation:(MobilySlideController*)slideNavigation duration:(CGFloat)duration;
+- (void)didShowLeftControllerInSlideNavigation:(MobilySlideController*)slideNavigation;
+- (void)willHideLeftControllerInSlideNavigation:(MobilySlideController*)slideNavigation duration:(CGFloat)duration;
+- (void)didHideLeftControllerInSlideNavigation:(MobilySlideController*)slideNavigation;
+
+@optional
+- (BOOL)canShowRightControllerInSlideNavigation:(MobilySlideController*)slideNavigation;
+- (void)willShowRightControllerInSlideNavigation:(MobilySlideController*)slideNavigation duration:(CGFloat)duration;
+- (void)didShowRightControllerInSlideNavigation:(MobilySlideController*)slideNavigation;
+- (void)willHideRightControllerInSlideNavigation:(MobilySlideController*)slideNavigation duration:(CGFloat)duration;
+- (void)didHideRightControllerInSlideNavigation:(MobilySlideController*)slideNavigation;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface UIViewController (MobilySlideController)
+
+@property(nonatomic, readwrite, strong) MobilySlideController* slideNavigation;
 
 @end
 
