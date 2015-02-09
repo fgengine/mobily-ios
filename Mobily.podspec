@@ -26,6 +26,22 @@ Pod::Spec.new do |s|
         ss.dependency 'Mobily/API'
     end
 
+    s.subspec 'Development' do |ss|
+        ss.dependency 'Mobily/NS'
+        ss.dependency 'Mobily/CG'
+        ss.dependency 'Mobily/UI'
+        ss.dependency 'Mobily/UI-DynamicsDrawerController'
+        ss.dependency 'Mobily/UI-SlideMenuController'
+        ss.dependency 'Mobily/AV'
+        ss.dependency 'Mobily/AV-AudioRecorder'
+        ss.dependency 'Mobily/AV-AudioPlayer'
+        ss.dependency 'Mobily/API'
+        ss.dependency 'Mobily/Social'
+        ss.dependency 'Mobily/Social-Facebook'
+        ss.dependency 'Mobily/Social-VKontakte'
+        ss.dependency 'Mobily/Social-Twitter'
+    end
+
     s.subspec 'CocoaPods' do |ss|
         ss.public_header_files = 'Classes/CocoaPods/**/*.h'
         ss.source_files = 'Classes/CocoaPods/**/*.{h,m}'
@@ -61,13 +77,6 @@ Pod::Spec.new do |s|
         ss.frameworks = 'UIKit'
         ss.dependency 'Mobily/NS'
         ss.dependency 'Mobily/CG'
-    end
-
-    s.subspec 'UI-ElementsView' do |ss|
-        ss.public_header_files = 'Classes/UI/ElementsView/**/*.h'
-        ss.source_files = 'Classes/UI/ElementsView/**/*.{h,m}'
-        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_ELEMENTS_VIEW' }
-        ss.dependency 'Mobily/UI'
     end
 
     s.subspec 'UI-DynamicsDrawerController' do |ss|

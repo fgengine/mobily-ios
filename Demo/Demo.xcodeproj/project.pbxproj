@@ -35,6 +35,7 @@
 		409829181A712B9200D83152 /* Demo500pxCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 409829141A712B9200D83152 /* Demo500pxCell.xib */; };
 		409829191A712B9200D83152 /* Demo500pxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 409829161A712B9200D83152 /* Demo500pxController.m */; };
 		4098291A1A712B9200D83152 /* Demo500pxController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 409829171A712B9200D83152 /* Demo500pxController.xib */; };
+		40C01D661A893CBC00FD41B2 /* Mobily.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 40C01D651A893CBC00FD41B2 /* Mobily.podspec */; };
 		C13E78B87D644CF2A6696DA8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F16AA68F9FE04603B1D99102 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -79,6 +80,7 @@
 		409829151A712B9200D83152 /* Demo500pxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Demo500pxController.h; sourceTree = "<group>"; };
 		409829161A712B9200D83152 /* Demo500pxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Demo500pxController.m; sourceTree = "<group>"; };
 		409829171A712B9200D83152 /* Demo500pxController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Demo500pxController.xib; sourceTree = "<group>"; };
+		40C01D651A893CBC00FD41B2 /* Mobily.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Mobily.podspec; path = ../Mobily.podspec; sourceTree = "<group>"; };
 		5A2438BFA45DA754D1C37067 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		F16AA68F9FE04603B1D99102 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -106,6 +108,7 @@
 				401FEE5118A3F92800B445EB /* Frameworks */,
 				401FEE5018A3F92800B445EB /* Products */,
 				4F1F86033CDFF14E4568271C /* Pods */,
+				40C01D651A893CBC00FD41B2 /* Mobily.podspec */,
 				409829091A712A2600D83152 /* Podfile */,
 			);
 			sourceTree = "<group>";
@@ -340,6 +343,7 @@
 				407F25B41A65864C00B0A79C /* TestMusic.m4a in Resources */,
 				407F25BA1A65CB4800B0A79C /* DemoAudioPlayerController.xib in Resources */,
 				409829181A712B9200D83152 /* Demo500pxCell.xib in Resources */,
+				40C01D661A893CBC00FD41B2 /* Mobily.podspec in Resources */,
 				408718EE1A5C443900833F0A /* InfoPlist.strings in Resources */,
 				408718F31A5D2A3E00833F0A /* DemoCategoriesCell.xib in Resources */,
 				407B41C71A642F7300A3DFFD /* DemoAudioRecorderController.xib in Resources */,

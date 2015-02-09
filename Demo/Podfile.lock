@@ -1,15 +1,67 @@
 PODS:
   - 500px-iOS-api (1.0.5)
+  - Mobily/API (2.0.21):
+    - Mobily/NS
+  - Mobily/AV (2.0.21):
+    - Mobily/NS
+  - Mobily/AV-AudioPlayer (2.0.21):
+    - Mobily/AV
+  - Mobily/AV-AudioRecorder (2.0.21):
+    - Mobily/AV
+  - Mobily/CG (2.0.21):
+    - Mobily/Core
+  - Mobily/CocoaPods (2.0.21)
+  - Mobily/Core (2.0.21):
+    - Mobily/CocoaPods
+  - Mobily/Development (2.0.21):
+    - Mobily/API
+    - Mobily/AV
+    - Mobily/AV-AudioPlayer
+    - Mobily/AV-AudioRecorder
+    - Mobily/CG
+    - Mobily/NS
+    - Mobily/Social
+    - Mobily/Social-Facebook
+    - Mobily/Social-Twitter
+    - Mobily/Social-VKontakte
+    - Mobily/UI
+    - Mobily/UI-DynamicsDrawerController
+    - Mobily/UI-SlideMenuController
+  - Mobily/NS (2.0.21):
+    - Mobily/Core
+  - Mobily/Social (2.0.21):
+    - Mobily/CG
+    - Mobily/NS
+    - Mobily/UI
+  - Mobily/Social-Facebook (2.0.21):
+    - Mobily/Social
+  - Mobily/Social-Twitter (2.0.21):
+    - Mobily/Social
+  - Mobily/Social-VKontakte (2.0.21):
+    - Mobily/Social
+    - VK-ios-sdk
+  - Mobily/UI (2.0.21):
+    - Mobily/CG
+    - Mobily/NS
+  - Mobily/UI-DynamicsDrawerController (2.0.21):
+    - Mobily/UI
+    - MSDynamicsDrawerViewController
+  - Mobily/UI-SlideMenuController (2.0.21):
+    - Mobily/UI
   - MSDynamicsDrawerViewController (1.5.1)
   - VK-ios-sdk (1.0.9.3)
 
 DEPENDENCIES:
   - 500px-iOS-api
-  - MSDynamicsDrawerViewController
-  - VK-ios-sdk
+  - Mobily/Development (from `../`)
+
+EXTERNAL SOURCES:
+  Mobily:
+    :path: ../
 
 SPEC CHECKSUMS:
   500px-iOS-api: f3d2933143178565d499977fb18f1730d6a33376
+  Mobily: 34758b090281463cc72d00f0e087b6aa6871c7a2
   MSDynamicsDrawerViewController: 0002059480a4b5ddde7eafbafb958a79a9b0ffaf
   VK-ios-sdk: 9e15e985926988c9eeb6a3eb9cdd6e03e2520e88
 

@@ -84,14 +84,17 @@
 #   import "MobilyImageView.h"
 #   import "MobilyScrollView.h"
 #   import "MobilyTableView.h"
+#   ifdef MOBILY_POD_UI_DATA_VIEW
+#       import "MobilyDataView.h"
+#       import "MobilyDataGroupView.h"
+#       import "MobilyDataCellView.h"
+#       import "MobilyDataDecorView.h"
+#   endif
 #   ifdef MOBILY_POD_UI_DYNAMIC_DRAWER_CONTROLLER
 #       import "MobilyDynamicsDrawerController.h"
 #   endif
 #   ifdef MOBILY_POD_UI_SLIDE_MENU_CONTROLLER
 #       import "MobilySlideMenuController.h"
-#   endif
-#   ifdef MOBILY_POD_UI_ELEMENTS_VIEW
-#       import "MobilyElementsView.h"
 #   endif
 #endif
 
