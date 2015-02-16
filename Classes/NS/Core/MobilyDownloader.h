@@ -47,7 +47,7 @@ typedef void (^MobilyDownloaderFailureBlock)(NSURL* url);
 
 /*--------------------------------------------------*/
 
-@interface MobilyDownloader : NSObject
+@interface MobilyDownloader : NSObject< MobilyObject >
 
 @property(nonatomic, readwrite, weak) id< MobilyDownloaderDelegate > delegate;
 @property(nonatomic, readonly, strong) MobilyTaskManager* taskManager;
@@ -55,7 +55,7 @@ typedef void (^MobilyDownloaderFailureBlock)(NSURL* url);
 
 + (instancetype)shared;
 
-- (id)initWithDelegate:(id< MobilyDownloaderDelegate >)delegate;
+- (instancetype)initWithDelegate:(id< MobilyDownloaderDelegate >)delegate;
 
 - (BOOL)isExistEntryByUrl:(NSURL*)url;
 - (BOOL)setEntry:(id)entry byUrl:(NSURL*)url;

@@ -47,7 +47,7 @@ typedef void (^MobilySocialProviderFailureBlock)(NSError* error);
 
 /*--------------------------------------------------*/
 
-@interface MobilySocialProvider : NSObject
+@interface MobilySocialProvider : NSObject < MobilyObject >
 
 @property(nonatomic, readwrite, weak) MobilySocialManager* manager;
 @property(nonatomic, readonly, strong) NSString* name;
@@ -57,9 +57,7 @@ typedef void (^MobilySocialProviderFailureBlock)(NSError* error);
 
 + (Class)sessionClass;
 
-- (id)initWithName:(NSString*)name;
-
-- (void)setup;
+- (instancetype)initWithName:(NSString*)name;
 
 - (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;
 

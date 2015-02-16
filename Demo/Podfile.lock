@@ -25,6 +25,7 @@ PODS:
     - Mobily/Social-Twitter
     - Mobily/Social-VKontakte
     - Mobily/UI
+    - Mobily/UI-DataView
     - Mobily/UI-DynamicsDrawerController
     - Mobily/UI-SlideMenuController
   - Mobily/NS (2.0.21):
@@ -43,6 +44,8 @@ PODS:
   - Mobily/UI (2.0.21):
     - Mobily/CG
     - Mobily/NS
+  - Mobily/UI-DataView (2.0.21):
+    - Mobily/UI
   - Mobily/UI-DynamicsDrawerController (2.0.21):
     - Mobily/UI
     - MSDynamicsDrawerViewController
@@ -61,7 +64,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   500px-iOS-api: f3d2933143178565d499977fb18f1730d6a33376
-  Mobily: 34758b090281463cc72d00f0e087b6aa6871c7a2
+  Mobily: e7e407b7f269d4b23abda20898905d20e55d0dbe
   MSDynamicsDrawerViewController: 0002059480a4b5ddde7eafbafb958a79a9b0ffaf
   VK-ios-sdk: 9e15e985926988c9eeb6a3eb9cdd6e03e2520e88
 

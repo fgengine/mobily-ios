@@ -39,6 +39,8 @@
 
 @implementation MobilyTransitionControllerCards
 
+#pragma mark MobilyTransitionController
+
 - (void)animateTransition:(id< UIViewControllerContextTransitioning >)transitionContext fromVC:(UIViewController*)fromVC toVC:(UIViewController*)toVC fromView:(UIView*)fromView toView:(UIView*)toView {
     if([self isReverse] == YES){
         [self executeReverseAnimation:transitionContext fromVC:fromVC toVC:toVC fromView:fromView toView:toView];

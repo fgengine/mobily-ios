@@ -61,6 +61,8 @@
 @end
 
 /*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
 
 @interface MobilyCacheItem : MobilyModel
 
@@ -76,7 +78,7 @@
 @property(nonatomic, readwrite, assign) NSTimeInterval discStorageTime;
 @property(nonatomic, readwrite, assign, getter=isInMemory) BOOL inMemory;
 
-- (id)initWithCache:(MobilyCache*)cache key:(NSString*)key data:(NSData*)data memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discStorageInterval:(NSTimeInterval)discStorageInterval;
+- (instancetype)initWithCache:(MobilyCache*)cache key:(NSString*)key data:(NSData*)data memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discStorageInterval:(NSTimeInterval)discStorageInterval;
 
 - (void)updateData:(NSData*)data memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discStorageInterval:(NSTimeInterval)discStorageInterval;
 
@@ -126,21 +128,21 @@
     return shared;
 }
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     return [self initWithName:MOBILY_CACHE_NAME memoryCapacity:MOBILY_CACHE_MEMORY_CAPACITY memoryStorageInterval:MOBILY_CACHE_MEMORY_STORAGE_INTERVAL discCapacity:MOBILY_CACHE_DISC_CAPACITY discStorageInterval:MOBILY_CACHE_DISC_STORAGE_INTERVAL];
 }
 
-- (id)initWithName:(NSString*)name {
+- (instancetype)initWithName:(NSString*)name {
     return [self initWithName:name memoryCapacity:MOBILY_CACHE_MEMORY_CAPACITY memoryStorageInterval:MOBILY_CACHE_MEMORY_STORAGE_INTERVAL discCapacity:MOBILY_CACHE_DISC_CAPACITY discStorageInterval:MOBILY_CACHE_DISC_STORAGE_INTERVAL];
 }
 
-- (id)initWithName:(NSString*)name memoryCapacity:(NSUInteger)memoryCapacity discCapacity:(NSUInteger)discCapacity {
+- (instancetype)initWithName:(NSString*)name memoryCapacity:(NSUInteger)memoryCapacity discCapacity:(NSUInteger)discCapacity {
     return [self initWithName:MOBILY_CACHE_NAME memoryCapacity:memoryCapacity memoryStorageInterval:MOBILY_CACHE_MEMORY_STORAGE_INTERVAL discCapacity:discCapacity discStorageInterval:MOBILY_CACHE_DISC_STORAGE_INTERVAL];
 }
 
-- (id)initWithName:(NSString*)name memoryCapacity:(NSUInteger)memoryCapacity memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discCapacity:(NSUInteger)discCapacity discStorageInterval:(NSTimeInterval)discStorageInterval {
+- (instancetype)initWithName:(NSString*)name memoryCapacity:(NSUInteger)memoryCapacity memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discCapacity:(NSUInteger)discCapacity discStorageInterval:(NSTimeInterval)discStorageInterval {
     self = [super init];
     if(self != nil) {
         [self setName:name];
@@ -164,8 +166,13 @@
         [self removeObsoleteItems];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationReceiveMemoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+        
+        [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {
@@ -405,14 +412,6 @@
     [NSKeyedArchiver archiveRootObject:_items toFile:_filePath];
 }
 
-#pragma mark MobilyTimerDelegate
-
--(void)timerDidRepeat:(MobilyTimer*)timer {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self removeObsoleteItems];
-    });
-}
-
 #pragma mark NSNotificationCenter
 
 - (void)notificationReceiveMemoryWarning:(NSNotification*)notification {
@@ -420,6 +419,14 @@
         [item clearFromMemoryCache];
     }];
     [self setCurrentMemoryUsage:0];
+}
+
+#pragma mark MobilyTimerDelegate
+
+-(void)timerDidRepeat:(MobilyTimer*)timer {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self removeObsoleteItems];
+    });
 }
 
 @end
@@ -434,31 +441,13 @@
 
 @implementation MobilyCacheItem
 
+#pragma mark Synthesize
+
 @synthesize data = _data;
 
-#pragma mark MobilyModel
+#pragma mark Init / Free
 
-+ (NSArray*)compareMap {
-    return @[
-        @"key",
-    ];
-}
-
-+ (NSArray*)serializeMap {
-    return @[
-        @"key",
-        @"fileName",
-        @"size",
-        @"memoryStorageInterval",
-        @"memoryStorageTime",
-        @"discStorageInterval",
-        @"discStorageTime"
-    ];
-}
-
-#pragma mark Init
-
-- (id)initWithCache:(MobilyCache*)cache key:(NSString*)key data:(NSData*)data memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discStorageInterval:(NSTimeInterval)discStorageInterval {
+- (instancetype)initWithCache:(MobilyCache*)cache key:(NSString*)key data:(NSData*)data memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discStorageInterval:(NSTimeInterval)discStorageInterval {
     self = [super init];
     if(self != nil) {
         [self setCache:cache];
@@ -481,6 +470,26 @@
     [self setData:nil];
     
     MOBILY_SAFE_DEALLOC;
+}
+
+#pragma mark MobilyModel
+
++ (NSArray*)compareMap {
+    return @[
+        @"key",
+    ];
+}
+
++ (NSArray*)serializeMap {
+    return @[
+        @"key",
+        @"fileName",
+        @"size",
+        @"memoryStorageInterval",
+        @"memoryStorageTime",
+        @"discStorageInterval",
+        @"discStorageTime"
+    ];
 }
 
 #pragma mark Property
@@ -524,7 +533,7 @@
     return (_data != nil);
 }
 
-#pragma mark Public
+#pragma mark Private
 
 - (void)updateData:(NSData*)data memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discStorageInterval:(NSTimeInterval)discStorageInterval {
     [self setData:data];

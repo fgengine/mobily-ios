@@ -46,7 +46,7 @@ typedef void (^MobilyApiProviderCompleteBlock)(id request, id response);
 
 /*--------------------------------------------------*/
 
-@interface MobilyApiProvider : NSObject
+@interface MobilyApiProvider : NSObject < MobilyObject >
 
 @property(nonatomic, readwrite, weak) MobilyApiManager* manager;
 @property(nonatomic, readwrite, strong) MobilyTaskManager* taskManager;
@@ -55,7 +55,7 @@ typedef void (^MobilyApiProviderCompleteBlock)(id request, id response);
 @property(nonatomic, readonly, strong) NSString* name;
 @property(nonatomic, readonly, strong) NSURL* url;
 
-- (id)initWithName:(NSString*)name url:(NSURL*)url;
+- (instancetype)initWithName:(NSString*)name url:(NSURL*)url;
 
 - (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target completeSelector:(SEL)completeSelector;
 - (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target completeBlock:(MobilyApiProviderCompleteBlock)completeBlock;

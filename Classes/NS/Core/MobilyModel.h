@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyNS.h"
+#import "MobilyObject.h"
 
 /*--------------------------------------------------*/
 
@@ -41,14 +41,12 @@ typedef void (^MobilyModelBlock)();
 
 /*--------------------------------------------------*/
 
-@interface MobilyModel : NSObject < NSCoding, NSCopying >
+@interface MobilyModel : NSObject < MobilyObject, NSCopying >
 
 @property(nonatomic, readwrite, strong) NSString* userDefaultsKey;
 
-- (id)initWithUserDefaultsKey:(NSString*)userDefaultsKey;
-- (id)initWithJson:(id)json;
-
-- (void)setup;
+- (instancetype)initWithUserDefaultsKey:(NSString*)userDefaultsKey;
+- (instancetype)initWithJson:(id)json;
 
 + (NSArray*)compareMap;
 + (NSArray*)serializeMap;
@@ -76,18 +74,16 @@ typedef void (^MobilyModelCollectionEnumBlock)(id item, BOOL* stop);
 
 /*--------------------------------------------------*/
 
-@interface MobilyModelCollection : NSObject < NSCoding, NSCopying >
+@interface MobilyModelCollection : NSObject < MobilyObject, NSCopying >
 
 @property(nonatomic, readwrite, strong) NSString* userDefaultsKey;
 @property(nonatomic, readwrite, strong) NSString* fileName;
 @property(nonatomic, readonly, strong) NSString* filePath;
 @property(nonatomic, readwrite, copy) NSArray* models;
 
-- (id)initWithUserDefaultsKey:(NSString*)userDefaultsKey;
-- (id)initWithFileName:(NSString*)fileName;
-- (id)initWithJson:(id)json storageItemClass:(Class)storageItemClass;
-
-- (void)setup;
+- (instancetype)initWithUserDefaultsKey:(NSString*)userDefaultsKey;
+- (instancetype)initWithFileName:(NSString*)fileName;
+- (instancetype)initWithJson:(id)json storageItemClass:(Class)storageItemClass;
 
 - (void)fromJson:(id)json modelClass:(Class)storageItemClass;
 
@@ -136,7 +132,7 @@ typedef MobilyModelQuerySortResult (^MobilyModelQueryResortBlock)(id item1, id i
 
 /*--------------------------------------------------*/
 
-@interface MobilyModelQuery : NSObject
+@interface MobilyModelQuery : NSObject < MobilyObject >
 
 @property(nonatomic, readwrite, weak) id< MobilyModelQueryDelegate > delegate;
 @property(nonatomic, readwrite, copy) MobilyModelQueryReloadBlock reloadBlock;
@@ -144,7 +140,7 @@ typedef MobilyModelQuerySortResult (^MobilyModelQueryResortBlock)(id item1, id i
 @property(nonatomic, readwrite, assign) BOOL resortInvert;
 @property(nonatomic, readonly, assign) NSArray* models;
 
-- (id)initWithCollection:(MobilyModelCollection*)collection;
+- (instancetype)initWithCollection:(MobilyModelCollection*)collection;
 
 - (void)setNeedReload;
 - (void)setNeedResort;

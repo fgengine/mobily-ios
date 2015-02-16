@@ -69,7 +69,7 @@
 @property(nonatomic, readwrite, weak) MobilyTaskManager* taskManager;
 @property(nonatomic, readwrite, strong) MobilyTask* task;
 
-- (id)initWithMTaskManager:(MobilyTaskManager*)taskManager task:(MobilyTask*)task;
+- (instancetype)initWithTaskManager:(MobilyTaskManager*)taskManager task:(MobilyTask*)task;
 
 @end
 
@@ -79,13 +79,19 @@
 
 @implementation MobilyTaskManager
 
-- (id)init {
+#pragma mark Init / Free
+
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
         [self setQueueManager:[NSOperationQueue new]];
         [self setBackgroundTaskId:UIBackgroundTaskInvalid];
+        [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {
@@ -93,6 +99,8 @@
 
     MOBILY_SAFE_DEALLOC;
 }
+
+#pragma mark Public
 
 - (void)setMaxConcurrentTask:(NSUInteger)maxConcurrentTask {
     [self updating];
@@ -110,7 +118,7 @@
 
 - (void)addTask:(MobilyTask*)task priority:(MobilyTaskPriority)priority {
     [self updating];
-    MobilyTaskOperation* operation = MOBILY_SAFE_AUTORELEASE([[MobilyTaskOperation alloc] initWithMTaskManager:self task:task]);
+    MobilyTaskOperation* operation = MOBILY_SAFE_AUTORELEASE([[MobilyTaskOperation alloc] initWithTaskManager:self task:task]);
     if(operation != nil) {
         [operation setQueuePriority:(NSOperationQueuePriority)priority];
         [_queueManager addOperation:operation];
@@ -206,11 +214,17 @@
 
 @implementation MobilyTask
 
-- (id)init {
+#pragma mark Init / Free
+
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
+        [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {
@@ -219,6 +233,8 @@
 
     MOBILY_SAFE_DEALLOC;
 }
+
+#pragma mark Public
 
 - (BOOL)isCanceled {
     return [_taskOperation isCancelled];
@@ -251,7 +267,9 @@
 
 @implementation MobilyTaskOperation
 
-- (id)initWithMTaskManager:(MobilyTaskManager*)taskManager task:(MobilyTask*)task {
+#pragma mark Init / Free
+
+- (instancetype)initWithTaskManager:(MobilyTaskManager*)taskManager task:(MobilyTask*)task {
     self = [super init];
     if(self != nil) {
         [self setTaskManager:taskManager];
@@ -281,6 +299,8 @@
 
     MOBILY_SAFE_DEALLOC;
 }
+
+#pragma mark NSOperation
 
 - (void)main {
     if(_task != nil) {
@@ -315,21 +335,12 @@
 
 @implementation MobilyTaskHttpQuery
 
-#pragma mark Standart
+#pragma mark Init / Free
 
 - (void)dealloc {
     [self setHttpQuery:nil];
     
     MOBILY_SAFE_DEALLOC;
-}
-
-#pragma mark Public
-
-- (void)cancel {
-    if(_httpQuery != nil) {
-        [_httpQuery cancel];
-    }
-    [super cancel];
 }
 
 #pragma mark MobilyTask
@@ -340,6 +351,13 @@
 
 - (void)working {
     [_httpQuery start];
+}
+
+- (void)cancel {
+    if(_httpQuery != nil) {
+        [_httpQuery cancel];
+    }
+    [super cancel];
 }
 
 @end

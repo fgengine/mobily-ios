@@ -100,7 +100,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 
 @implementation MobilySlideController
 
-#pragma mark Init
+#pragma mark Init / Free
 
 - (void)setup {
     [super setup];

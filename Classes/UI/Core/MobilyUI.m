@@ -54,11 +54,11 @@
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
     if([UIDevice systemVersion] >= 7.0) {
         NSMutableParagraphStyle* paragraphStyle = MOBILY_SAFE_AUTORELEASE([NSMutableParagraphStyle new]);
-        [paragraphStyle setLineBreakMode:lineBreakMode];
+        paragraphStyle.lineBreakMode = lineBreakMode;
         NSDictionary* attributes = @{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle };
         CGRect textRect = [self boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attributes context:nil];
-        if(textRect.size.height < [font lineHeight]) {
-            textRect.size.height = [font lineHeight];
+        if(textRect.size.height < font.lineHeight) {
+            textRect.size.height = font.lineHeight;
         }
         return CGSizeMake(ceilf(textRect.size.width), ceilf(textRect.size.height));
     }
@@ -66,8 +66,8 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     size = [self sizeWithFont:font constrainedToSize:size lineBreakMode:lineBreakMode];
-    if(size.height < [font lineHeight]) {
-        size.height = [font lineHeight];
+    if(size.height < font.lineHeight) {
+        size.height = font.lineHeight;
     }
 #pragma clang diagnostic pop
     return CGSizeMake(ceilf(size.width), ceilf(size.height));
@@ -673,18 +673,18 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     
     CGColorSpaceRef colourSpace = CGColorSpaceCreateDeviceRGB();
     if(colourSpace != NULL) {
-        CGRect drawRect = CGRectAspectFitFromBoundsAndSize(CGRectMake(0.0f, 0.0f, size.width, size.height), [self size]);
+        CGRect drawRect = CGRectAspectFitFromBoundsAndSize(CGRectMake(0.0f, 0.0f, size.width, size.height), self.size);
         drawRect.size.width = floorf(drawRect.size.width);
         drawRect.size.height = floorf(drawRect.size.height);
         
         CGContextRef context = CGBitmapContextCreate(NULL, drawRect.size.width, drawRect.size.height, 8, drawRect.size.width * 4, colourSpace, kCGBitmapByteOrder32Big | kCGImageAlphaPremultipliedLast);
         if(context != NULL) {
             CGContextClearRect(context, CGRectMake(0.0f, 0.0f, drawRect.size.width, drawRect.size.height));
-            CGContextDrawImage(context, CGRectMake(0.0f, 0.0f, drawRect.size.width, drawRect.size.height), [self CGImage]);
+            CGContextDrawImage(context, CGRectMake(0.0f, 0.0f, drawRect.size.width, drawRect.size.height), self.CGImage);
             
             CGImageRef image = CGBitmapContextCreateImage(context);
             if(image != NULL) {
-                result = [UIImage imageWithCGImage:image scale:[self scale] orientation:[self imageOrientation]];
+                result = [UIImage imageWithCGImage:image scale:self.scale orientation:self.imageOrientation];
                 CGImageRelease(image);
             }
             CGContextRelease(context);
@@ -791,8 +791,8 @@ static UIResponder* MOBILY_CURRENT_FIRST_RESPONDER = nil;
 }
 
 + (UIResponder*)prevResponderFromView:(UIView*)view {
-    NSArray* responders = [[view window] responders];
-    if([responders count] > 1) {
+    NSArray* responders = view.window.responders;
+    if(responders.count > 1) {
         NSInteger index = [responders indexOfObject:view];
         if(index != NSNotFound) {
             if(index > 0) {
@@ -804,11 +804,11 @@ static UIResponder* MOBILY_CURRENT_FIRST_RESPONDER = nil;
 }
 
 + (UIResponder*)nextResponderFromView:(UIView*)view {
-    NSArray* responders = [[view window] responders];
-    if([responders count] > 1) {
+    NSArray* responders = view.window.responders;
+    if(responders.count > 1) {
         NSInteger index = [responders indexOfObject:view];
         if(index != NSNotFound) {
-            if(index < [responders count] - 1) {
+            if(index < responders.count - 1) {
                 return [responders objectAtIndex:index + 1];
             }
         }
@@ -829,23 +829,23 @@ static UIResponder* MOBILY_CURRENT_FIRST_RESPONDER = nil;
 #pragma mark Property
 
 - (UIViewController*)currentViewController {
-    return [[self rootViewController] currentViewController];
+    return self.rootViewController.currentViewController;
 }
 
 #ifdef __IPHONE_7_0
 
 - (UIViewController*)viewControllerForStatusBarStyle {
-    UIViewController* currentViewController = [self currentViewController];
-    while([currentViewController childViewControllerForStatusBarStyle] != nil) {
-        currentViewController = [currentViewController childViewControllerForStatusBarStyle];
+    UIViewController* currentViewController = self.currentViewController;
+    while(currentViewController.childViewControllerForStatusBarStyle != nil) {
+        currentViewController = currentViewController.childViewControllerForStatusBarStyle;
     }
     return currentViewController;
 }
 
 - (UIViewController*)viewControllerForStatusBarHidden {
-    UIViewController* currentViewController = [self currentViewController];
-    while ([currentViewController childViewControllerForStatusBarHidden] != nil) {
-        currentViewController = [currentViewController childViewControllerForStatusBarHidden];
+    UIViewController* currentViewController = self.currentViewController;
+    while(currentViewController.childViewControllerForStatusBarHidden != nil) {
+        currentViewController = currentViewController.childViewControllerForStatusBarHidden;
     }
     return currentViewController;
 }
@@ -906,248 +906,256 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 #pragma mark Property
 
 - (void)setFramePosition:(CGPoint)framePosition {
-    CGRect frame = [self frame];
-    [self setFrame:CGRectMake(framePosition.x, framePosition.y, frame.size.width, frame.size.height)];
+    CGRect frame = self.frame;
+    self.frame = CGRectMake(framePosition.x, framePosition.y, frame.size.width, frame.size.height);
 }
 
 - (CGPoint)framePosition {
-    return [self frame].origin;
+    return self.frame.origin;
 }
 
 - (void)setFrameCenter:(CGPoint)frameCenter {
-    CGRect frame = [self frame];
-    [self setFrame:CGRectMake(frameCenter.x - (frame.size.width * 0.5f), frameCenter.y - (frame.size.height * 0.5f), frame.size.width, frame.size.height)];
+    CGRect frame = self.frame;
+    self.frame = CGRectMake(frameCenter.x - (frame.size.width * 0.5f), frameCenter.y - (frame.size.height * 0.5f), frame.size.width, frame.size.height);
 }
 
 - (CGPoint)frameCenter {
-    CGRect frame = [self frame];
+    CGRect frame = self.frame;
     return CGPointMake(frame.origin.x + (frame.size.width * 0.5f), frame.origin.y + (frame.size.height * 0.5f));
 }
 
 - (void)setFrameSize:(CGSize)frameSize {
-    CGRect frame = [self frame];
-    [self setFrame:CGRectMake(frame.origin.x, frame.origin.y, frameSize.width, frameSize.height)];
+    CGRect frame = self.frame;
+    self.frame = CGRectMake(frame.origin.x, frame.origin.y, frameSize.width, frameSize.height);
 }
 
 - (CGSize)frameSize {
-    return [self frame].size;
+    return self.frame.size;
 }
 
 - (void)setFrameSX:(CGFloat)frameSX {
-    CGRect frame = [self frame];
-    [self setFrame:CGRectMake(frameSX, frame.origin.y, frame.size.width, frame.size.height)];
+    CGRect frame = self.frame;
+    self.frame = CGRectMake(frameSX, frame.origin.y, frame.size.width, frame.size.height);
 }
 
 - (CGFloat)frameSX {
-    return CGRectGetMinX([self frame]);
+    return CGRectGetMinX(self.frame);
 }
 
 - (void)setFrameCX:(CGFloat)frameCX {
-    CGRect frame = [self frame];
-    [self setFrame:CGRectMake(frameCX - (frame.size.width * 0.5f), frame.origin.y, frame.size.width, frame.size.height)];
+    CGRect frame = self.frame;
+    self.frame = CGRectMake(frameCX - (frame.size.width * 0.5f), frame.origin.y, frame.size.width, frame.size.height);
 }
 
 - (CGFloat)frameCX {
-    return CGRectGetMidX([self frame]);
+    return CGRectGetMidX(self.frame);
 }
 
 - (void)setFrameEX:(CGFloat)frameEX {
-    CGRect frame = [self frame];
-    [self setFrame:CGRectMake(frame.origin.x, frame.origin.y, frameEX - frame.origin.x, frame.size.height)];
+    CGRect frame = self.frame;
+    self.frame = CGRectMake(frame.origin.x, frame.origin.y, frameEX - frame.origin.x, frame.size.height);
 }
 
 - (CGFloat)frameEX {
-    return CGRectGetMaxX([self frame]);
+    return CGRectGetMaxX(self.frame);
 }
 
 - (void)setFrameSY:(CGFloat)frameSY {
-    CGRect frame = [self frame];
-    [self setFrame:CGRectMake(frame.origin.x, frameSY, frame.size.width, frame.size.height)];
+    CGRect frame = self.frame;
+    self.frame = CGRectMake(frame.origin.x, frameSY, frame.size.width, frame.size.height);
 }
 
 - (CGFloat)frameSY {
-    return CGRectGetMinY([self frame]);
+    return CGRectGetMinY(self.frame);
 }
 
 - (void)setFrameCY:(CGFloat)frameCY {
-    CGRect frame = [self frame];
-    [self setFrame:CGRectMake(frame.origin.x, frameCY - (frame.size.height * 0.5f), frame.size.width, frame.size.height)];
+    CGRect frame = self.frame;
+    self.frame = CGRectMake(frame.origin.x, frameCY - (frame.size.height * 0.5f), frame.size.width, frame.size.height);
 }
 
 - (CGFloat)frameCY {
-    return CGRectGetMidY([self frame]);
+    return CGRectGetMidY(self.frame);
 }
 
 - (void)setFrameEY:(CGFloat)frameEY {
-    CGRect frame = [self frame];
-    [self setFrame:CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frameEY - frame.origin.y)];
+    CGRect frame = self.frame;
+    self.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frameEY - frame.origin.y);
 }
 
 - (CGFloat)frameEY {
-    return CGRectGetMaxY([self frame]);
+    return CGRectGetMaxY(self.frame);
 }
 
 - (void)setFrameWidth:(CGFloat)frameWidth {
-    CGRect frame = [self frame];
-    [self setFrame:CGRectMake(frame.origin.x, frame.origin.y, frameWidth, frame.size.height)];
+    CGRect frame = self.frame;
+    self.frame = CGRectMake(frame.origin.x, frame.origin.y, frameWidth, frame.size.height);
 }
 
 - (CGFloat)frameWidth {
-    return CGRectGetWidth([self frame]);
+    return CGRectGetWidth(self.frame);
 }
 
 - (void)setFrameHeight:(CGFloat)frameHeight {
-    CGRect frame = [self frame];
-    [self setFrame:CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frameHeight)];
+    CGRect frame = self.frame;
+    self.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frameHeight);
 }
 
 - (CGFloat)frameHeight {
-    return CGRectGetHeight([self frame]);
+    return CGRectGetHeight(self.frame);
 }
 
 - (void)setFrameLeft:(CGFloat)frameLeft {
-    CGRect frame = [self frame];
+    CGRect frame = self.frame;
     CGFloat offset = frameLeft;
     CGFloat size = frame.size.width - (frameLeft - frame.origin.x);
-    [self setFrame:CGRectMake(offset, frame.origin.y, size, frame.size.height)];
+    self.frame = CGRectMake(offset, frame.origin.y, size, frame.size.height);
 }
 
 - (CGFloat)frameLeft {
-    CGRect frame = [self frame];
+    CGRect frame = self.frame;
     return frame.origin.x;
 }
 
 - (void)setFrameRight:(CGFloat)frameRight {
-    CGRect frame = [self frame];
-    CGRect bounds = [[self superview] bounds];
+    CGRect frame = self.frame;
+    CGRect bounds = self.superview.bounds;
     CGFloat offset = frame.origin.x;
     CGFloat size = bounds.size.width - (frame.origin.x + frameRight);
-    [self setFrame:CGRectMake(offset, frame.origin.y, size, frame.size.height)];
+    self.frame = CGRectMake(offset, frame.origin.y, size, frame.size.height);
 }
 
 - (CGFloat)frameRight {
-    CGRect frame = [self frame];
-    CGRect bounds = [[self superview] bounds];
+    CGRect frame = self.frame;
+    CGRect bounds = self.superview.bounds;
     return bounds.size.width - (frame.origin.x + frame.size.width);
 }
 
 - (void)setFrameTop:(CGFloat)frameTop {
-    CGRect frame = [self frame];
+    CGRect frame = self.frame;
     CGFloat offset = frameTop;
     CGFloat size = frame.size.height - (frameTop - frame.origin.y);
-    [self setFrame:CGRectMake(frame.origin.x, offset, frame.size.width, size)];
+    self.frame = CGRectMake(frame.origin.x, offset, frame.size.width, size);
 }
 
 - (CGFloat)frameTop {
-    CGRect frame = [self frame];
+    CGRect frame = self.frame;
     return frame.origin.y;
 }
 
 - (void)setFrameBottom:(CGFloat)frameBottom {
-    CGRect frame = [self frame];
-    CGRect bounds = [[self superview] bounds];
+    CGRect frame = self.frame;
+    CGRect bounds = self.superview.bounds;
     CGFloat offset = frame.origin.y;
     CGFloat size = bounds.size.height - (frame.origin.y + frameBottom);
-    [self setFrame:CGRectMake(frame.origin.x, offset, frame.size.width, size)];
+    self.frame = CGRectMake(frame.origin.x, offset, frame.size.width, size);
 }
 
 - (CGFloat)frameBottom {
-    CGRect frame = [self frame];
-    CGRect bounds = [[self superview] bounds];
+    CGRect frame = self.frame;
+    CGRect bounds = [self.superview bounds];
     return bounds.size.height - (frame.origin.y + frame.size.height);
 }
 
 - (CGPoint)boundsPosition {
-    return [self bounds].origin;
+    return self.bounds.origin;
 }
 
 - (CGSize)boundsSize {
-    return [self bounds].size;
+    return self.bounds.size;
 }
 
 - (CGPoint)boundsCenter {
-    CGRect bounds = [self bounds];
+    CGRect bounds = self.bounds;
     return CGPointMake(bounds.origin.x + (bounds.size.width * 0.5f), bounds.origin.y + (bounds.size.height * 0.5f));
 }
 
 - (CGFloat)boundsCX {
-    return CGRectGetMidX([self bounds]);
+    return CGRectGetMidX(self.bounds);
 }
 
 - (CGFloat)boundsCY {
-    return CGRectGetMidY([self bounds]);
+    return CGRectGetMidY(self.bounds);
 }
 
 - (CGFloat)boundsWidth {
-    return CGRectGetWidth([self bounds]);
+    return CGRectGetWidth(self.bounds);
 }
 
 - (CGFloat)boundsHeight {
-    return CGRectGetHeight([self bounds]);
+    return CGRectGetHeight(self.bounds);
+}
+
+- (void)setZPosition:(CGFloat)zPosition {
+    [self.layer setZPosition:zPosition];
+}
+
+- (CGFloat)zPosition {
+    return self.layer.zPosition;
 }
 
 - (void)setCornerRadius:(CGFloat)cornerRadius {
-    [[self layer] setCornerRadius:cornerRadius];
+    self.layer.cornerRadius = cornerRadius;
 }
 
 - (CGFloat)cornerRadius {
-    return [[self layer] cornerRadius];
+    return self.layer.cornerRadius;
 }
 
 - (void)setBorderWidth:(CGFloat)borderWidth {
-    [[self layer] setBorderWidth:borderWidth];
+    self.layer.borderWidth = borderWidth;
 }
 
 - (CGFloat)borderWidth {
-    return [[self layer] borderWidth];
+    return self.layer.borderWidth;
 }
 
 - (void)setBorderColor:(UIColor*)borderColor {
-    [[self layer] setBorderColor:[borderColor CGColor]];
+    self.layer.borderColor = borderColor.CGColor;
 }
 
 - (UIColor*)borderColor {
-    return [UIColor colorWithCGColor:[[self layer] borderColor]];
+    return [UIColor colorWithCGColor:self.layer.borderColor];
 }
 
 - (void)setShadowColor:(UIColor*)shadowColor {
-    [[self layer] setShadowColor:[shadowColor CGColor]];
+    self.layer.shadowColor = shadowColor.CGColor;
 }
 
 - (UIColor*)shadowColor {
-    return [UIColor colorWithCGColor:[[self layer] shadowColor]];
+    return [UIColor colorWithCGColor:self.layer.shadowColor];
 }
 
 - (void)setShadowOpacity:(CGFloat)shadowOpacity {
-    [[self layer] setShadowOpacity:shadowOpacity];
+    self.layer.shadowOpacity = shadowOpacity;
 }
 
 - (CGFloat)shadowOpacity {
-    return [[self layer] shadowOpacity];
+    return self.layer.shadowOpacity;
 }
 
 - (void)setShadowOffset:(CGSize)shadowOffset {
-    [[self layer] setShadowOffset:shadowOffset];
+    self.layer.shadowOffset = shadowOffset;
 }
 
 - (CGSize)shadowOffset {
-    return [[self layer] shadowOffset];
+    return self.layer.shadowOffset;
 }
 
 - (void)setShadowRadius:(CGFloat)shadowRadius {
-    [[self layer] setShadowRadius:shadowRadius];
+    self.layer.shadowRadius = shadowRadius;
 }
 
 - (CGFloat)shadowRadius {
-    return [[self layer] shadowRadius];
+    return self.layer.shadowRadius;
 }
 
 - (void)setShadowPath:(UIBezierPath*)shadowPath {
-    [[self layer] setShadowPath:[shadowPath CGPath]];
+    self.layer.shadowPath = shadowPath.CGPath;
 }
 
 - (UIBezierPath*)shadowPath {
-    return [UIBezierPath bezierPathWithCGPath:[[self layer] shadowPath]];
+    return [UIBezierPath bezierPathWithCGPath:self.layer.shadowPath];
 }
 
 #pragma mark Public
@@ -1157,8 +1165,8 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
     if([self canBecomeFirstResponder] == YES) {
         [result addObject:self];
     }
-    [[self subviews] enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
-        [result addObjectsFromArray:[view responders]];
+    [self.subviews enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
+        [result addObjectsFromArray:view.responders];
     }];
     [result sortWithOptions:0 usingComparator:^NSComparisonResult(UIView* viewA, UIView* viewB) {
         CGFloat aOrder = [[viewA layer] zPosition], bOrder = [[viewB layer] zPosition];
@@ -1186,16 +1194,16 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 }
 
 - (BOOL)isContainsSubview:(UIView*)subview {
-    __block BOOL result = [[self subviews] containsObject:subview];
-    if(result == NO) {
-        [[self subviews] enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
-            if([view isContainsSubview:subview] == YES) {
-                result = YES;
-                *stop = YES;
-            }
-        }];
+    NSArray* subviews = self.subviews;
+    if([subviews containsObject:subview] == YES) {
+        return YES;
     }
-    return result;
+    for(UIView* view in subviews) {
+        if([view isContainsSubview:subview] == YES) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (void)removeSubview:(UIView*)subview {
@@ -1203,9 +1211,9 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 }
 
 - (void)setSubviews:(NSArray*)subviews {
-    NSArray* currentSubviews = [self subviews];
+    NSArray* currentSubviews = self.subviews;
     if([currentSubviews isEqualToArray:subviews] == NO) {
-        [[self subviews] enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
+        [currentSubviews enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
             [view removeFromSuperview];
         }];
         [subviews enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
@@ -1215,22 +1223,22 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 }
 
 - (void)removeAllSubviews {
-    [[self subviews] enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
+    [self.subviews enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
         [view removeFromSuperview];
     }];
 }
 
 - (void)blinkBackgroundColor:(UIColor*)color duration:(NSTimeInterval)duration timeout:(NSTimeInterval)timeout {
-    UIColor* prevColor = [self backgroundColor];
+    UIColor* prevColor = self.backgroundColor;
     [UIView animateWithDuration:duration
                      animations:^{
-                         [self setBackgroundColor:color];
+                         self.backgroundColor = color;
                      } completion:^(BOOL finished) {
                          [UIView animateWithDuration:duration
                                                delay:timeout
                                              options:0
                                           animations:^{
-                                              [self setBackgroundColor:prevColor];
+                                              self.backgroundColor = prevColor;
                                           }
                                           completion:nil];
                      }];
@@ -1282,10 +1290,10 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 #pragma mark Property
 
 - (void)setKeyboardResponder:(UIResponder*)keyboardResponder {
-    if([self keyboardResponder] == nil) {
-        [self setKeyboardContentOffset:[self contentOffset]];
-        [self setKeyboardContentInset:[self contentInset]];
-        [self setKeyboardIndicatorInset:[self scrollIndicatorInsets]];
+    if(self.keyboardResponder == nil) {
+        self.keyboardContentOffset = self.contentOffset;
+        self.keyboardContentInset = self.contentInset;
+        self.keyboardIndicatorInset = self.scrollIndicatorInsets;
     }
     objc_setAssociatedObject(self, @selector(keyboardResponder), keyboardResponder, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
@@ -1325,7 +1333,7 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 - (UIEdgeInsets)keyboardInset {
     NSValue* value = objc_getAssociatedObject(self, @selector(keyboardInset));
     if(value != nil) {
-        return [value UIEdgeInsetsValue];
+        return value.UIEdgeInsetsValue;
     }
     return UIEdgeInsetsMake(8.0f, 8.0f, 8.0f, 8.0f);
 }
@@ -1335,8 +1343,7 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 }
 
 - (CGFloat)contentOffsetX {
-    CGPoint contentOffset = [self contentOffset];
-    return contentOffset.x;
+    return self.contentOffset.x;
 }
 
 - (void)setContentOffsetY:(CGFloat)contentOffsetY {
@@ -1344,120 +1351,97 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 }
 
 - (CGFloat)contentOffsetY {
-    CGPoint contentOffset = [self contentOffset];
-    return contentOffset.y;
+    return self.contentOffset.y;
 }
 
 - (void)setContentSizeWidth:(CGFloat)contentSizeWidth {
-    CGSize contentSize = [self contentSize];
-    [self setContentSize:CGSizeMake(contentSizeWidth, contentSize.height)];
+    [self setContentSize:CGSizeMake(contentSizeWidth, self.contentSize.height)];
 }
 
 - (CGFloat)contentSizeWidth {
-    CGSize contentSize = [self contentSize];
-    return contentSize.width;
+    return self.contentSize.width;
 }
 
 - (void)setContentSizeHeight:(CGFloat)contentSizeHeight {
-    CGSize contentSize = [self contentSize];
-    [self setContentSize:CGSizeMake(contentSize.width, contentSizeHeight)];
+    self.contentSize = CGSizeMake(self.contentSize.width, contentSizeHeight);
 }
 
 - (CGFloat)contentSizeHeight {
-    CGSize contentSize = [self contentSize];
-    return contentSize.height;
+    return self.contentSize.height;
 }
 
 - (void)setContentInsetTop:(CGFloat)contentInsetTop {
-    UIEdgeInsets contentInset = [self contentInset];
-    [self setContentInset:UIEdgeInsetsMake(contentInsetTop, contentInset.left, contentInset.bottom, contentInset.right)];
+    self.contentInset = UIEdgeInsetsMake(contentInsetTop, self.contentInset.left, self.contentInset.bottom, self.contentInset.right);
 }
 
 - (CGFloat)contentInsetTop {
-    UIEdgeInsets contentInset = [self contentInset];
-    return contentInset.top;
+    return self.contentInset.top;
 }
 
 - (void)setContentInsetRight:(CGFloat)contentInsetRight {
-    UIEdgeInsets contentInset = [self contentInset];
-    [self setContentInset:UIEdgeInsetsMake(contentInset.top, contentInset.left, contentInset.bottom, contentInsetRight)];
+    self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, self.contentInset.bottom, contentInsetRight);
 }
 
 - (CGFloat)contentInsetRight {
-    UIEdgeInsets contentInset = [self contentInset];
-    return contentInset.right;
+    return self.contentInset.right;
 }
 
 - (void)setContentInsetBottom:(CGFloat)contentInsetBottom {
-    UIEdgeInsets contentInset = [self contentInset];
-    [self setContentInset:UIEdgeInsetsMake(contentInset.top, contentInset.left, contentInsetBottom, contentInset.right)];
+    self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, contentInsetBottom, self.contentInset.right);
 }
 
 - (CGFloat)contentInsetBottom {
-    UIEdgeInsets contentInset = [self contentInset];
-    return contentInset.bottom;
+    return self.contentInset.bottom;
 }
 
 - (void)setContentInsetLeft:(CGFloat)contentInsetLeft {
-    UIEdgeInsets contentInset = [self contentInset];
-    [self setContentInset:UIEdgeInsetsMake(contentInset.top, contentInsetLeft, contentInset.bottom, contentInset.right)];
+    self.contentInset = UIEdgeInsetsMake(self.contentInset.top, contentInsetLeft, self.contentInset.bottom, self.contentInset.right);
 }
 
 - (CGFloat)contentInsetLeft {
-    UIEdgeInsets contentInset = [self contentInset];
-    return contentInset.left;
+    return self.contentInset.left;
 }
 
 - (void)setScrollIndicatorInsetTop:(CGFloat)scrollIndicatorInsetTop {
-    UIEdgeInsets scrollIndicatorInset = [self scrollIndicatorInsets];
-    [self setScrollIndicatorInsets:UIEdgeInsetsMake(scrollIndicatorInsetTop, scrollIndicatorInset.left, scrollIndicatorInset.bottom, scrollIndicatorInset.right)];
+    self.scrollIndicatorInsets = UIEdgeInsetsMake(scrollIndicatorInsetTop, self.scrollIndicatorInsets.left, self.scrollIndicatorInsets.bottom, self.scrollIndicatorInsets.right);
 }
 
 - (CGFloat)scrollIndicatorInsetTop {
-    UIEdgeInsets scrollIndicatorInset = [self scrollIndicatorInsets];
-    return scrollIndicatorInset.top;
+    return self.scrollIndicatorInsets.top;
 }
 
 - (void)setScrollIndicatorInsetRight:(CGFloat)scrollIndicatorInsetRight {
-    UIEdgeInsets scrollIndicatorInset = [self scrollIndicatorInsets];
-    [self setScrollIndicatorInsets:UIEdgeInsetsMake(scrollIndicatorInset.top, scrollIndicatorInset.left, scrollIndicatorInset.bottom, scrollIndicatorInsetRight)];
+    self.scrollIndicatorInsets = UIEdgeInsetsMake(self.scrollIndicatorInsets.top, self.scrollIndicatorInsets.left, self.scrollIndicatorInsets.bottom, scrollIndicatorInsetRight);
 }
 
 - (CGFloat)scrollIndicatorInsetRight {
-    UIEdgeInsets scrollIndicatorInset = [self scrollIndicatorInsets];
-    return scrollIndicatorInset.right;
+    return self.scrollIndicatorInsets.right;
 }
 
 - (void)setScrollIndicatorInsetBottom:(CGFloat)scrollIndicatorInsetBottom {
-    UIEdgeInsets scrollIndicatorInset = [self scrollIndicatorInsets];
-    [self setScrollIndicatorInsets:UIEdgeInsetsMake(scrollIndicatorInset.top, scrollIndicatorInset.left, scrollIndicatorInsetBottom, scrollIndicatorInset.right)];
+    self.scrollIndicatorInsets = UIEdgeInsetsMake(self.scrollIndicatorInsets.top, self.scrollIndicatorInsets.left, scrollIndicatorInsetBottom, self.scrollIndicatorInsets.right);
 }
 
 - (CGFloat)scrollIndicatorInsetBottom {
-    UIEdgeInsets scrollIndicatorInset = [self scrollIndicatorInsets];
-    return scrollIndicatorInset.bottom;
+    return self.scrollIndicatorInsets.bottom;
 }
 
 - (void)setScrollIndicatorInsetLeft:(CGFloat)scrollIndicatorInsetLeft {
-    UIEdgeInsets scrollIndicatorInset = [self scrollIndicatorInsets];
-    [self setScrollIndicatorInsets:UIEdgeInsetsMake(scrollIndicatorInset.top, scrollIndicatorInsetLeft, scrollIndicatorInset.bottom, scrollIndicatorInset.right)];
+    self.scrollIndicatorInsets = UIEdgeInsetsMake(self.scrollIndicatorInsets.top, scrollIndicatorInsetLeft, self.scrollIndicatorInsets.bottom, self.scrollIndicatorInsets.right);
 }
 
 - (CGFloat)scrollIndicatorInsetLeft {
-    UIEdgeInsets scrollIndicatorInset = [self scrollIndicatorInsets];
-    return scrollIndicatorInset.left;
+    return self.scrollIndicatorInsets.left;
 }
 
 #pragma mark Public
 
 - (void)setContentOffsetX:(CGFloat)contentOffsetX animated:(BOOL)animated {
-    CGPoint contentOffset = [self contentOffset];
-    [self setContentOffset:CGPointMake(contentOffsetX, contentOffset.y) animated:animated];
+    [self setContentOffset:CGPointMake(contentOffsetX, self.contentOffset.y) animated:animated];
 }
 
 - (void)setContentOffsetY:(CGFloat)contentOffsetY animated:(BOOL)animated {
-    CGPoint contentOffset = [self contentOffset];
-    [self setContentOffset:CGPointMake(contentOffset.x, contentOffsetY) animated:animated];
+    [self setContentOffset:CGPointMake(self.contentOffset.x, contentOffsetY) animated:animated];
 }
 
 - (void)registerAdjustmentResponder {
@@ -1466,7 +1450,8 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 }
 
 - (void)unregisterAdjustmentResponder {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 }
 
 #pragma mark UIKeyboarNotification
@@ -1474,12 +1459,12 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 - (void)adjustmentNotificationKeyboardShow:(NSNotification*)notification {
     [self setKeyboardResponder:[UIResponder currentFirstResponderInView:self]];
     if([[self keyboardResponder] isKindOfClass:[UIView class]] == YES) {
-        CGPoint contentOffset = [self contentOffset];
-        UIEdgeInsets contentInsets = [self contentInset];
-        UIEdgeInsets indicatorInsets = [self scrollIndicatorInsets];
-        CGRect scrollRect = [self convertRect:[self bounds] toView:nil];
+        CGPoint contentOffset = self.contentOffset;
+        UIEdgeInsets contentInsets = self.contentInset;
+        UIEdgeInsets indicatorInsets = self.scrollIndicatorInsets;
+        CGRect scrollRect = [self convertRect:self.bounds toView:nil];
         CGRect keyboardRect = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-        CGRect responderRect = [(UIView*)[self keyboardResponder] convertRect:[(UIView*)[self keyboardResponder] bounds] toView:nil];
+        CGRect responderRect = [(UIView*)self.keyboardResponder convertRect:((UIView*)self.keyboardResponder).bounds toView:nil];
         CGRect smallRemainderRect = CGRectZero, largeRemainderRect = CGRectZero;
         CGRect intersectionRect = CGRectIntersectionExt(scrollRect, keyboardRect, &smallRemainderRect, &largeRemainderRect);
         if(CGRectIsNull(intersectionRect) == NO) {
@@ -1535,12 +1520,11 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 }
 
 - (void)adjustmentNotificationKeyboardHide:(NSNotification*)notification {
-    if([self keyboardResponder] != nil) {
-        CGPoint contentOffset = [self keyboardContentOffset];
-        [self setContentInset:[self keyboardContentInset]];
-        [self setScrollIndicatorInsets:[self keyboardIndicatorInset]];
-        [self setContentOffset:contentOffset animated:YES];
-        [self setKeyboardResponder:nil];
+    if(self.keyboardResponder != nil) {
+        self.contentInset = self.keyboardContentInset;
+        self.scrollIndicatorInsets = self.keyboardIndicatorInset;
+        [self setContentOffset:self.keyboardContentOffset animated:YES];
+        self.keyboardResponder = nil;
     }
 }
 
@@ -1570,11 +1554,11 @@ MOBILY_DEFINE_VALIDATE_NUMBER(SelectedItemIndex)
 #pragma mark Property
 
 - (void)setSelectedItemIndex:(NSUInteger)index {
-    [self setSelectedItem:[[self items] objectAtIndex:index]];
+    self.selectedItem = [self.items objectAtIndex:index];
 }
 
 - (NSUInteger)selectedItemIndex {
-    return [[self items] indexOfObject:[self selectedItem]];
+    return [self.items indexOfObject:self.selectedItem];
 }
 
 @end
@@ -1628,7 +1612,7 @@ MOBILY_DEFINE_VALIDATE_NUMBER(PreferredMaxLayoutWidth)
 }
 
 - (CGSize)implicitSizeForSize:(CGSize)size {
-    return [[self text] implicitSizeWithFont:[self font] forSize:size lineBreakMode:[self lineBreakMode]];
+    return [self.text implicitSizeWithFont:self.font forSize:size lineBreakMode:self.lineBreakMode];
 }
 
 @end

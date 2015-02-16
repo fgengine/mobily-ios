@@ -57,6 +57,7 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
     DemoCategoriesTypeButtons,
     DemoCategoriesTypeFields,
     DemoCategoriesTypeTables,
+    DemoCategoriesTypeDataScrollView,
     DemoCategoriesTypeAudioRecorder,
     DemoCategoriesTypeAudioPlayer
 };

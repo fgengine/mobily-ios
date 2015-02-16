@@ -45,8 +45,6 @@
 
 @property(nonatomic, readwrite, weak) MobilyTableSwipeCell* currentSwipeCell;
 
-- (void)setup;
-
 - (void)setCurrentSwipeCell:(MobilyTableSwipeCell*)currentSwipeCell animated:(BOOL)animated;
 
 - (void)registerCellClass:(Class)cellClass;
@@ -60,13 +58,11 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyTableCell : UITableViewCell
+@interface MobilyTableCell : UITableViewCell< MobilyObject >
 
 @property(nonatomic, readwrite, weak) MobilyTableView* tableView;
 @property(nonatomic, readwrite, strong) IBOutlet UIView* rootView;
 @property(nonatomic, readwrite, weak) id model;
-
-- (void)setup;
 
 - (void)didLoadFromNib;
 

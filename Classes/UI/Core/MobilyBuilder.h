@@ -70,7 +70,7 @@
 
 /*--------------------------------------------------*/
 
-@protocol MobilyBuilderObject < NSObject >
+@protocol MobilyBuilderObject < MobilyObject >
 
 @property(nonatomic, readwrite, strong) NSString* objectName;
 

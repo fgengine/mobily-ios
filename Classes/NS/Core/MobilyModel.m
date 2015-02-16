@@ -93,9 +93,9 @@
 
 @implementation MobilyModel
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
         [self setup];
@@ -103,7 +103,7 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     self = [super init];
     if(self != nil) {
         [[self serializeMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
@@ -117,7 +117,7 @@
     return self;
 }
 
-- (id)initWithJson:(id)json {
+- (instancetype)initWithJson:(id)json {
     self = [super init];
     if(self != nil) {
         [self fromJson:json];
@@ -126,7 +126,7 @@
     return self;
 }
 
-- (id)initWithUserDefaultsKey:(NSString*)userDefaultsKey {
+- (instancetype)initWithUserDefaultsKey:(NSString*)userDefaultsKey {
     self = [super init];
     if(self != nil) {
         [self setUserDefaultsKey:userDefaultsKey];
@@ -136,6 +136,9 @@
     return self;
 }
 
+- (void)setup {
+}
+
 - (void)dealloc {
     [self setUserDefaultsKey:nil];
     [self setSerializeMap:nil];
@@ -143,6 +146,8 @@
     
     MOBILY_SAFE_DEALLOC;
 }
+
+#pragma mark NSObject
 
 - (BOOL)isEqual:(id)object {
     __block BOOL result = NO;
@@ -164,6 +169,8 @@
     return result;
 }
 
+#pragma mark NSCoding
+
 - (void)encodeWithCoder:(NSCoder*)coder {
     [[self serializeMap] enumerateObjectsUsingBlock:^(NSString* field, NSUInteger index, BOOL* stop) {
         id value = [self valueForKey:field];
@@ -172,6 +179,8 @@
         }
     }];
 }
+
+#pragma mark NSCopying
 
 - (id)copyWithZone:(NSZone*)zone {
     id result = [[[self class] allocWithZone:zone] init];
@@ -198,9 +207,6 @@
 }
 
 #pragma mark Property
-
-- (void)setup {
-}
 
 - (NSArray*)compareMap {
     if(_compareMap == nil) {
@@ -450,9 +456,9 @@
 
 @implementation MobilyModelCollection
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
         [self setUnsafeModels:[NSMutableArray array]];
@@ -461,7 +467,7 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     self = [super init];
     if(self != nil) {
         id items = [coder decodeObjectForKey:@"items"];
@@ -476,7 +482,7 @@
     return self;
 }
 
-- (id)initWithUserDefaultsKey:(NSString*)userDefaultsKey {
+- (instancetype)initWithUserDefaultsKey:(NSString*)userDefaultsKey {
     self = [super init];
     if(self != nil) {
         [self setUserDefaultsKey:userDefaultsKey];
@@ -487,7 +493,7 @@
     return self;
 }
 
-- (id)initWithFileName:(NSString*)fileName {
+- (instancetype)initWithFileName:(NSString*)fileName {
     self = [super init];
     if(self != nil) {
         NSString* fileGroup = [MobilyStorage fileSystemDirectory];
@@ -509,7 +515,7 @@
     return self;
 }
 
-- (id)initWithJson:(id)json storageItemClass:(Class)storageItemClass {
+- (instancetype)initWithJson:(id)json storageItemClass:(Class)storageItemClass {
     self = [super init];
     if(self != nil) {
         [self setUnsafeModels:[NSMutableArray array]];
@@ -518,6 +524,9 @@
         [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {
@@ -529,10 +538,14 @@
     MOBILY_SAFE_DEALLOC;
 }
 
+#pragma mark NSCoding
+
 - (void)encodeWithCoder:(NSCoder*)coder {
     [self loadIsNeed];
     [coder encodeObject:_unsafeModels forKey:@"items"];
 }
+
+#pragma mark NSCopying
 
 - (id)copyWithZone:(NSZone*)zone {
     id result = [[[self class] allocWithZone:zone] init];
@@ -575,9 +588,6 @@
 }
 
 #pragma mark Public
-
-- (void)setup {
-}
 
 - (void)fromJson:(id)json modelClass:(Class)storageItemClass {
     [_unsafeModels removeAllObjects];
@@ -744,17 +754,21 @@
 
 @implementation MobilyModelQuery : NSObject
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)initWithCollection:(MobilyModelCollection*)collection {
+- (instancetype)initWithCollection:(MobilyModelCollection*)collection {
     self = [super init];
     if(self != nil) {
         [self setCollection:collection];
-        [self setUnsafeModels:[NSMutableArray array]];
-        [self setFlagReload:YES];
-        [self setFlagResort:YES];
+        [self setup];
     }
     return self;
+}
+
+- (void)setup {
+    [self setUnsafeModels:[NSMutableArray array]];
+    [self setFlagReload:YES];
+    [self setFlagResort:YES];
 }
 
 - (void)dealloc {

@@ -28,6 +28,9 @@
 		408718F91A5D315D00833F0A /* DemoButtonsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 408718F71A5D315D00833F0A /* DemoButtonsController.xib */; };
 		408718FE1A5D491600833F0A /* DemoFieldsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 408718FC1A5D491600833F0A /* DemoFieldsController.m */; };
 		408718FF1A5D491600833F0A /* DemoFieldsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 408718FD1A5D491600833F0A /* DemoFieldsController.xib */; };
+		4091AD171A8B63C200EBA11C /* DemoDataScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4091AD151A8B63C200EBA11C /* DemoDataScrollViewController.m */; };
+		4091AD181A8B63C200EBA11C /* DemoDataScrollViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4091AD161A8B63C200EBA11C /* DemoDataScrollViewController.xib */; };
+		4091AD1A1A8B650400EBA11C /* DemoDataScrollViewItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4091AD191A8B650400EBA11C /* DemoDataScrollViewItemView.xib */; };
 		4098290A1A712A2600D83152 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 409829091A712A2600D83152 /* Podfile */; };
 		409829101A712B0400D83152 /* DemoTablesCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4098290C1A712B0400D83152 /* DemoTablesCell.xib */; };
 		409829111A712B0400D83152 /* DemoTablesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4098290E1A712B0400D83152 /* DemoTablesController.m */; };
@@ -35,6 +38,7 @@
 		409829181A712B9200D83152 /* Demo500pxCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 409829141A712B9200D83152 /* Demo500pxCell.xib */; };
 		409829191A712B9200D83152 /* Demo500pxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 409829161A712B9200D83152 /* Demo500pxController.m */; };
 		4098291A1A712B9200D83152 /* Demo500pxController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 409829171A712B9200D83152 /* Demo500pxController.xib */; };
+		40BB5C3F1A8D4BB100060482 /* DemoDataScrollViewItemSwipeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40BB5C3E1A8D4BB100060482 /* DemoDataScrollViewItemSwipeView.xib */; };
 		40C01D661A893CBC00FD41B2 /* Mobily.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 40C01D651A893CBC00FD41B2 /* Mobily.podspec */; };
 		C13E78B87D644CF2A6696DA8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F16AA68F9FE04603B1D99102 /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -71,6 +75,10 @@
 		408718FB1A5D491600833F0A /* DemoFieldsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoFieldsController.h; sourceTree = "<group>"; };
 		408718FC1A5D491600833F0A /* DemoFieldsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoFieldsController.m; sourceTree = "<group>"; };
 		408718FD1A5D491600833F0A /* DemoFieldsController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DemoFieldsController.xib; sourceTree = "<group>"; };
+		4091AD141A8B63C200EBA11C /* DemoDataScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoDataScrollViewController.h; sourceTree = "<group>"; };
+		4091AD151A8B63C200EBA11C /* DemoDataScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoDataScrollViewController.m; sourceTree = "<group>"; };
+		4091AD161A8B63C200EBA11C /* DemoDataScrollViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DemoDataScrollViewController.xib; sourceTree = "<group>"; };
+		4091AD191A8B650400EBA11C /* DemoDataScrollViewItemView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DemoDataScrollViewItemView.xib; sourceTree = "<group>"; };
 		409829091A712A2600D83152 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		4098290C1A712B0400D83152 /* DemoTablesCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DemoTablesCell.xib; sourceTree = "<group>"; };
 		4098290D1A712B0400D83152 /* DemoTablesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoTablesController.h; sourceTree = "<group>"; };
@@ -80,6 +88,7 @@
 		409829151A712B9200D83152 /* Demo500pxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Demo500pxController.h; sourceTree = "<group>"; };
 		409829161A712B9200D83152 /* Demo500pxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Demo500pxController.m; sourceTree = "<group>"; };
 		409829171A712B9200D83152 /* Demo500pxController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Demo500pxController.xib; sourceTree = "<group>"; };
+		40BB5C3E1A8D4BB100060482 /* DemoDataScrollViewItemSwipeView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DemoDataScrollViewItemSwipeView.xib; sourceTree = "<group>"; };
 		40C01D651A893CBC00FD41B2 /* Mobily.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Mobily.podspec; path = ../Mobily.podspec; sourceTree = "<group>"; };
 		5A2438BFA45DA754D1C37067 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		F16AA68F9FE04603B1D99102 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -199,6 +208,7 @@
 				408718F41A5D315C00833F0A /* Buttons */,
 				408718FA1A5D491600833F0A /* Fields */,
 				4098290B1A712B0400D83152 /* Tables */,
+				4091AD131A8B63C200EBA11C /* DataScrollView */,
 				407B41C21A642F7300A3DFFD /* AudioRecorder */,
 				407F25B51A65CB4800B0A79C /* AudioPlayer */,
 				408718DC1A5C443900833F0A /* DemoCategoriesController.h */,
@@ -244,6 +254,18 @@
 				408718FD1A5D491600833F0A /* DemoFieldsController.xib */,
 			);
 			path = Fields;
+			sourceTree = "<group>";
+		};
+		4091AD131A8B63C200EBA11C /* DataScrollView */ = {
+			isa = PBXGroup;
+			children = (
+				4091AD141A8B63C200EBA11C /* DemoDataScrollViewController.h */,
+				4091AD151A8B63C200EBA11C /* DemoDataScrollViewController.m */,
+				4091AD161A8B63C200EBA11C /* DemoDataScrollViewController.xib */,
+				4091AD191A8B650400EBA11C /* DemoDataScrollViewItemView.xib */,
+				40BB5C3E1A8D4BB100060482 /* DemoDataScrollViewItemSwipeView.xib */,
+			);
+			path = DataScrollView;
 			sourceTree = "<group>";
 		};
 		4098290B1A712B0400D83152 /* Tables */ = {
@@ -345,12 +367,15 @@
 				409829181A712B9200D83152 /* Demo500pxCell.xib in Resources */,
 				40C01D661A893CBC00FD41B2 /* Mobily.podspec in Resources */,
 				408718EE1A5C443900833F0A /* InfoPlist.strings in Resources */,
+				40BB5C3F1A8D4BB100060482 /* DemoDataScrollViewItemSwipeView.xib in Resources */,
 				408718F31A5D2A3E00833F0A /* DemoCategoriesCell.xib in Resources */,
 				407B41C71A642F7300A3DFFD /* DemoAudioRecorderController.xib in Resources */,
 				408718F11A5C443900833F0A /* Presets.mobily in Resources */,
 				408718F01A5C443900833F0A /* Application.mobily in Resources */,
 				4098290A1A712A2600D83152 /* Podfile in Resources */,
 				409829121A712B0400D83152 /* DemoTablesController.xib in Resources */,
+				4091AD1A1A8B650400EBA11C /* DemoDataScrollViewItemView.xib in Resources */,
+				4091AD181A8B63C200EBA11C /* DemoDataScrollViewController.xib in Resources */,
 				408718F91A5D315D00833F0A /* DemoButtonsController.xib in Resources */,
 				409829101A712B0400D83152 /* DemoTablesCell.xib in Resources */,
 			);
@@ -402,6 +427,7 @@
 				409829191A712B9200D83152 /* Demo500pxController.m in Sources */,
 				407F25B91A65CB4800B0A79C /* DemoAudioPlayerController.m in Sources */,
 				407B41C61A642F7300A3DFFD /* DemoAudioRecorderController.m in Sources */,
+				4091AD171A8B63C200EBA11C /* DemoDataScrollViewController.m in Sources */,
 				408718EA1A5C443900833F0A /* DemoCategoriesController.m in Sources */,
 				408718F81A5D315D00833F0A /* DemoButtonsController.m in Sources */,
 				408718FE1A5D491600833F0A /* DemoFieldsController.m in Sources */,

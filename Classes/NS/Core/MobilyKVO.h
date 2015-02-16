@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyNS.h"
+#import "MobilyObject.h"
 
 /*--------------------------------------------------*/
 
@@ -45,13 +45,13 @@ typedef void (^MobilyKVOBlock)(MobilyKVO* kvo, id oldValue, id newValue);
 
 /*--------------------------------------------------*/
 
-@interface MobilyKVO : NSObject
+@interface MobilyKVO : NSObject< MobilyObject >
 
 @property(nonatomic, readonly, weak) id subject;
 @property(nonatomic, readonly, strong) NSString* keyPath;
 @property(nonatomic, readwrite, copy) MobilyKVOBlock block;
 
-- (id)initWithSubject:(id)subject keyPath:(NSString*)keyPath block:(MobilyKVOBlock)block;
+- (instancetype)initWithSubject:(id)subject keyPath:(NSString*)keyPath block:(MobilyKVOBlock)block;
 - (void)stopObservation;
 
 @end

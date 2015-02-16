@@ -51,18 +51,23 @@
 
 @implementation MobilyApplication
 
+#pragma mark Synthesize
+
 @synthesize objectName = _objectName;
 @synthesize objectParent = _objectParent;
 @synthesize objectChilds = _objectChilds;
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
         [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {
@@ -102,9 +107,6 @@
 }
 
 #pragma mark Public
-
-- (void)setup {
-}
 
 - (BOOL)launchingWithOptions:(NSDictionary*)options {
     MobilyWindow* window = nil;

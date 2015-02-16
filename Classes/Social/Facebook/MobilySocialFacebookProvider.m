@@ -52,7 +52,7 @@
 @property(nonatomic, readwrite, strong) NSString* accessToken;
 @property(nonatomic, readwrite, strong) NSDate* expirationDate;
 
-- (id)initWithReadPermissions:(NSArray*)readPermissions facebookSession:(FBSession*)facebookSession;
+- (instancetype)initWithReadPermissions:(NSArray*)readPermissions facebookSession:(FBSession*)facebookSession;
 
 @end
 
@@ -62,13 +62,13 @@
 
 @implementation MobilySocialFacebookProvider
 
-#pragma mark Init
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     return [self initWithName:@"Facebook"];
 }
 
-- (id)initWithName:(NSString*)name {
+- (instancetype)initWithName:(NSString*)name {
     self = [super initWithName:name];
     if(self != nil) {
         [self setAllowLoginUI:YES];
@@ -91,10 +91,6 @@
 }
 
 #pragma mark Public
-
-+ (Class)sessionClass {
-    return [MobilySocialFacebookSession class];
-}
 
 - (void)signinWithReadPermissions:(NSArray*)readPermissions success:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
     [FBSession openActiveSessionWithReadPermissions:readPermissions allowLoginUI:_allowLoginUI completionHandler:^(FBSession* session, FBSessionState state, NSError* error) {
@@ -123,6 +119,12 @@
             }
         }
     }];
+}
+
+#pragma mark MobilySocialManager
+
++ (Class)sessionClass {
+    return [MobilySocialFacebookSession class];
 }
 
 - (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
@@ -155,15 +157,9 @@
 
 @implementation MobilySocialFacebookSession
 
-+ (NSArray*)serializeMap {
-    return @[
-        @"readPermissions",
-        @"accessToken",
-        @"expirationDate"
-    ];
-}
+#pragma mark Init / Free
 
-- (id)initWithReadPermissions:(NSArray*)readPermissions facebookSession:(FBSession*)facebookSession {
+- (instancetype)initWithReadPermissions:(NSArray*)readPermissions facebookSession:(FBSession*)facebookSession {
     self = [super init];
     if(self != nil) {
         [self setReadPermissions:readPermissions];
@@ -172,6 +168,18 @@
     }
     return self;
 }
+
+#pragma mark MobilyModel
+
++ (NSArray*)serializeMap {
+    return @[
+        @"readPermissions",
+        @"accessToken",
+        @"expirationDate"
+    ];
+}
+
+#pragma mark MobilySocialSession
 
 - (BOOL)isValid {
     return ([_expirationDate compare:[NSDate date]] == NSOrderedDescending);

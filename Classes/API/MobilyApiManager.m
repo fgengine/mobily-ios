@@ -69,9 +69,9 @@
     return shared;
 }
 
-#pragma mark Init
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
         [self setTaskManager:[[MobilyTaskManager alloc] init]];
@@ -79,8 +79,12 @@
             [_taskManager setMaxConcurrentTask:MOBILY_API_MANAGER_MAX_CONCURRENT_TASK];
         }
         [self setCache:[MobilyCache shared]];
+        [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {

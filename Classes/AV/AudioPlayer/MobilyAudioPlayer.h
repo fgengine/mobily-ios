@@ -46,7 +46,7 @@ typedef void(^MobilyAudioPlayerErrorBlock)(NSError* error);
 
 /*--------------------------------------------------*/
 
-@interface MobilyAudioPlayer : NSObject
+@interface MobilyAudioPlayer : NSObject < MobilyObject >
 
 @property(nonatomic, readonly, strong) NSURL* url;
 @property(nonatomic, readonly, assign) NSUInteger numberOfChannels;
@@ -71,8 +71,6 @@ typedef void(^MobilyAudioPlayerErrorBlock)(NSError* error);
 @property(nonatomic, readwrite, copy) MobilyAudioPlayerBlock resumedBlock;
 @property(nonatomic, readwrite, copy) MobilyAudioPlayerBlock pausedBlock;
 @property(nonatomic, readwrite, copy) MobilyAudioPlayerErrorBlock decodeErrorBlock;
-
-- (void)setup;
 
 - (BOOL)prepareWithName:(NSString*)name;
 - (BOOL)prepareWithPath:(NSString*)path name:(NSString*)name;

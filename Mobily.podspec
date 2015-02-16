@@ -23,6 +23,7 @@ Pod::Spec.new do |s|
         ss.dependency 'Mobily/NS'
         ss.dependency 'Mobily/CG'
         ss.dependency 'Mobily/UI'
+        ss.dependency 'Mobily/UI-DataView'
         ss.dependency 'Mobily/API'
     end
 
@@ -30,6 +31,7 @@ Pod::Spec.new do |s|
         ss.dependency 'Mobily/NS'
         ss.dependency 'Mobily/CG'
         ss.dependency 'Mobily/UI'
+        ss.dependency 'Mobily/UI-DataView'
         ss.dependency 'Mobily/UI-DynamicsDrawerController'
         ss.dependency 'Mobily/UI-SlideMenuController'
         ss.dependency 'Mobily/AV'
@@ -77,6 +79,13 @@ Pod::Spec.new do |s|
         ss.frameworks = 'UIKit'
         ss.dependency 'Mobily/NS'
         ss.dependency 'Mobily/CG'
+    end
+
+    s.subspec 'UI-DataView' do |ss|
+        ss.public_header_files = 'Classes/UI/DataView/**/*.h'
+        ss.source_files = 'Classes/UI/DataView/**/*.{h,m}'
+        ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_UI_DATA_VIEW' }
+        ss.dependency 'Mobily/UI'
     end
 
     s.subspec 'UI-DynamicsDrawerController' do |ss|

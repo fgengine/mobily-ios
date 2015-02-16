@@ -49,9 +49,9 @@
 
 @implementation MobilySocialProvider
 
-#pragma mark Init
+#pragma mark Init / Free
 
-- (id)initWithName:(NSString*)name {
+- (instancetype)initWithName:(NSString*)name {
     self = [super init];
     if(self != nil) {
         [self setName:name];
@@ -66,15 +66,15 @@
     return self;
 }
 
+- (void)setup {
+}
+
 - (void)dealloc {
     [self setManager:nil];
     [self setName:nil];
     [self setSession:nil];
     
     MOBILY_SAFE_DEALLOC;
-}
-
-- (void)setup {
 }
 
 #pragma mark Property
@@ -134,6 +134,8 @@
 /*--------------------------------------------------*/
 
 @implementation MobilySocialSession
+
+#pragma mark MobilyModel
 
 + (NSArray*)serializeMap {
     return @[

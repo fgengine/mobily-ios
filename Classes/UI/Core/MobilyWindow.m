@@ -62,6 +62,8 @@
 
 @implementation MobilyWindow
 
+#pragma mark Synthesize
+
 @synthesize objectName = _objectName;
 @synthesize objectParent = _objectParent;
 @synthesize objectChilds = _objectChilds;
@@ -71,9 +73,9 @@
 MOBILY_DEFINE_VALIDATE_EVENT(EventDidLoad)
 MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     self = [super initWithFrame:[[UIScreen mainScreen] bounds]];
     if(self != nil) {
         [self setup];
@@ -81,12 +83,16 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self != nil) {
         [self setup];
     }
     return self;
+}
+
+- (void)setup {
+    [self setAutomaticallyHideKeyboard:YES];
 }
 
 - (void)dealloc {
@@ -221,10 +227,6 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 }
 
 #pragma mark Public
-
-- (void)setup {
-    [self setAutomaticallyHideKeyboard:YES];
-}
 
 #pragma mark Private
 

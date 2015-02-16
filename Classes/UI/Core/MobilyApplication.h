@@ -43,8 +43,6 @@
 @property(nonatomic, readonly, assign) UIApplicationState applicationState;
 @property(nonatomic, readonly, strong) NSData* deviceToken;
 
-- (void)setup;
-
 - (BOOL)launchingWithOptions:(NSDictionary*)options;
 - (void)terminate;
 - (void)receiveMemoryWarning;

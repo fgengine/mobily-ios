@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyNS.h"
+#import "MobilyObject.h"
 
 /*--------------------------------------------------*/
 
@@ -41,7 +41,7 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyRegExpParser : NSObject
+@interface MobilyRegExpParser : NSObject < MobilyObject >
 
 @property(nonatomic, readwrite, strong) NSString* string;
 @property(nonatomic, readwrite, strong) NSString* expression;
@@ -49,14 +49,14 @@
 @property(nonatomic, readonly, strong) NSArray* matches;
 @property(nonatomic, readonly, strong) NSString* result;
 
-- (id)initWithExpression:(NSString*)expression pattern:(NSString*)pattern;
-- (id)initWithSting:(NSString*)string expression:(NSString*)expression pattern:(NSString*)pattern;
+- (instancetype)initWithExpression:(NSString*)expression pattern:(NSString*)pattern;
+- (instancetype)initWithSting:(NSString*)string expression:(NSString*)expression pattern:(NSString*)pattern;
 
 @end
 
 /*--------------------------------------------------*/
 
-@interface MobilyRegExpMatch : NSObject
+@interface MobilyRegExpMatch : NSObject < MobilyObject >
 
 @property(nonatomic, readonly, strong) NSString* originalString;
 @property(nonatomic, readonly, strong) NSArray* originalSubStrings;

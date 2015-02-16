@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyNS.h"
+#import "MobilyObject.h"
 #import "MobilyCG.h"
 
 /*--------------------------------------------------*/
@@ -202,6 +202,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 @property(nonatomic, readonly, assign) CGFloat boundsWidth;
 @property(nonatomic, readonly, assign) CGFloat boundsHeight;
 
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat zPosition;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat cornerRadius;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat borderWidth;
 @property(nonatomic, readwrite, strong) IBInspectable UIColor* borderColor;

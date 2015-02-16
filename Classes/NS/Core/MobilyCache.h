@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyNS.h"
+#import "MobilyObject.h"
 
 /*--------------------------------------------------*/
 
@@ -42,7 +42,7 @@ typedef void (^MobilyCacheCompleted)();
 
 /*--------------------------------------------------*/
 
-@interface MobilyCache : NSObject
+@interface MobilyCache : NSObject< MobilyObject >
 
 @property(nonatomic, readonly, copy) NSString* name;
 @property(nonatomic, readwrite, assign) NSUInteger memoryCapacity;
@@ -54,9 +54,9 @@ typedef void (^MobilyCacheCompleted)();
 
 + (instancetype)shared;
 
-- (id)initWithName:(NSString*)name;
-- (id)initWithName:(NSString*)name memoryCapacity:(NSUInteger)memoryCapacity discCapacity:(NSUInteger)discCapacity;
-- (id)initWithName:(NSString*)name memoryCapacity:(NSUInteger)memoryCapacity memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discCapacity:(NSUInteger)discCapacity discStorageInterval:(NSTimeInterval)discStorageInterval;
+- (instancetype)initWithName:(NSString*)name;
+- (instancetype)initWithName:(NSString*)name memoryCapacity:(NSUInteger)memoryCapacity discCapacity:(NSUInteger)discCapacity;
+- (instancetype)initWithName:(NSString*)name memoryCapacity:(NSUInteger)memoryCapacity memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discCapacity:(NSUInteger)discCapacity discStorageInterval:(NSTimeInterval)discStorageInterval;
 
 - (void)setCacheData:(NSData*)data forKey:(NSString*)key;
 - (void)setCacheData:(NSData*)data forKey:(NSString*)key completed:(MobilyCacheCompleted)completed;

@@ -85,10 +85,10 @@
 #   import "MobilyScrollView.h"
 #   import "MobilyTableView.h"
 #   ifdef MOBILY_POD_UI_DATA_VIEW
-#       import "MobilyDataView.h"
-#       import "MobilyDataGroupView.h"
-#       import "MobilyDataCellView.h"
-#       import "MobilyDataDecorView.h"
+#       import "MobilyDataScrollView.h"
+#       import "MobilyDataContainer.h"
+#       import "MobilyDataItem.h"
+#       import "MobilyDataItemView.h"
 #   endif
 #   ifdef MOBILY_POD_UI_DYNAMIC_DRAWER_CONTROLLER
 #       import "MobilyDynamicsDrawerController.h"

@@ -70,9 +70,9 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
 
 @implementation MobilyBuilderPreset
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
     }
@@ -232,9 +232,9 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
 
 @implementation MobilyBuilderPresetXML
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
     }

@@ -52,7 +52,7 @@
 
 @property(nonatomic, readwrite, strong) MobilySocialTwitterSession* session;
 
-- (id)initWithConsumerKey:(NSString*)consumerKey consumerSecret:(NSString*)consumerSecret;
+- (instancetype)initWithConsumerKey:(NSString*)consumerKey consumerSecret:(NSString*)consumerSecret;
 
 - (void)signinSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;
 - (void)requestEmailSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;

@@ -51,7 +51,15 @@
 
 #pragma mark NSKeyValueCoding
 
-#pragma mark Standart
+#pragma mark Init / Free
+
+- (void)setup {
+    [super setup];
+    
+    [self setLocale:[NSLocale currentLocale]];
+    [self setCalendar:[NSCalendar currentCalendar]];
+    [self setDate:[NSDate date]];
+}
 
 - (void)dealloc {
     [self setPickerView:nil];
@@ -63,14 +71,6 @@
 }
 
 #pragma mark Public
-
-- (void)setup {
-    [super setup];
-    
-    [self setLocale:[NSLocale currentLocale]];
-    [self setCalendar:[NSCalendar currentCalendar]];
-    [self setDate:[NSDate date]];
-}
 
 - (void)didBeginEditing {
     [super didBeginEditing];

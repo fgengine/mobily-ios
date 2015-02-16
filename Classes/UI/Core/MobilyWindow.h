@@ -44,8 +44,6 @@
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidLoad;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidUnload;
 
-- (void)setup;
-
 @end
 
 /*--------------------------------------------------*/

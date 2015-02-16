@@ -58,7 +58,7 @@
 @property(nonatomic, readwrite, strong) NSString* userId;
 @property(nonatomic, readwrite, strong) NSString* email;
 
-- (id)initWithAccessToken:(VKAccessToken*)accessToken;
+- (instancetype)initWithAccessToken:(VKAccessToken*)accessToken;
 
 @end
 
@@ -70,7 +70,7 @@
 
 #pragma mark Init / Free
 
-- (id)initWithApplicationId:(NSString*)applicationId {
+- (instancetype)initWithApplicationId:(NSString*)applicationId {
     self = [super initWithName:@"VKontakte"];
     if(self != nil) {
         [self setApplicationId:applicationId];
@@ -105,10 +105,6 @@
 
 #pragma mark Public
 
-+ (Class)sessionClass {
-    return [MobilySocialVKontakteSession class];
-}
-
 - (void)signinWithPermissions:(NSArray*)permissions success:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
     [self setPermissions:permissions];
     [self setSuccessBlock:success];
@@ -126,6 +122,12 @@
             _successBlock();
         }
     }
+}
+
+#pragma mark MobilySocialManager
+
++ (Class)sessionClass {
+    return [MobilySocialVKontakteSession class];
 }
 
 - (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
@@ -197,17 +199,9 @@
 
 @implementation MobilySocialVKontakteSession
 
-+ (NSArray*)serializeMap {
-    return @[
-        @"permissions",
-        @"accessToken",
-        @"expirationDate",
-        @"userId",
-        @"email"
-    ];
-}
+#pragma mark Init / Free
 
-- (id)initWithAccessToken:(VKAccessToken*)accessToken {
+- (instancetype)initWithAccessToken:(VKAccessToken*)accessToken {
     self = [super init];
     if(self != nil) {
         [self setPermissions:[accessToken permissions]];
@@ -222,6 +216,20 @@
     }
     return self;
 }
+
+#pragma mark MobilyModel
+
++ (NSArray*)serializeMap {
+    return @[
+        @"permissions",
+        @"accessToken",
+        @"expirationDate",
+        @"userId",
+        @"email"
+    ];
+}
+
+#pragma mark MobilySocialSession
 
 - (BOOL)isValid {
     return ([_expirationDate compare:[NSDate date]] == NSOrderedDescending);

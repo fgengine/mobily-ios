@@ -57,15 +57,17 @@
 
 @implementation MobilyTextField
 
+#pragma mark Synthesize
+
 @synthesize objectName = _objectName;
 @synthesize objectParent = _objectParent;
 @synthesize objectChilds = _objectChilds;
 
 #pragma mark NSKeyValueCoding
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     self = [super initWithCoder:coder];
     if(self != nil) {
         [self setup];
@@ -73,12 +75,17 @@
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self != nil) {
         [self setup];
     }
     return self;
+}
+
+- (void)setup {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBeginEditing) name:UITextFieldTextDidBeginEditingNotification object:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEndEditing) name:UITextFieldTextDidEndEditingNotification object:self];
 }
 
 - (void)dealloc {
@@ -137,11 +144,6 @@
 }
 
 #pragma mark Public
-
-- (void)setup {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBeginEditing) name:UITextFieldTextDidBeginEditingNotification object:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEndEditing) name:UITextFieldTextDidEndEditingNotification object:self];
-}
 
 - (void)setHiddenToolbar:(BOOL)hiddenToolbar animated:(BOOL)animated {
     if(_hiddenToolbar != hiddenToolbar) {

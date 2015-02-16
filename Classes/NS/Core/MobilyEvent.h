@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyNS.h"
+#import "MobilyObject.h"
 
 /*--------------------------------------------------*/
 
@@ -41,7 +41,7 @@ typedef id (^MobilyEventBlockType)(id sender, id object);
 
 /*--------------------------------------------------*/
 
-@protocol MobilyEvent < NSObject, NSCoding >
+@protocol MobilyEvent < MobilyObject, NSCoding >
 
 - (id)fireSender:(id)sender object:(id)object;
 
@@ -54,10 +54,10 @@ typedef id (^MobilyEventBlockType)(id sender, id object);
 @property(nonatomic, readonly, weak) id target;
 @property(nonatomic, readonly, assign) SEL action;
 
-+ (id)callbackWithTarget:(id)target action:(SEL)action;
-+ (id)callbackWithTarget:(id)target action:(SEL)action inMainThread:(BOOL)inMainThread;
-+ (id)callbackWithTarget:(id)target action:(SEL)action inCurrentThread:(BOOL)inCurrentThread;
-- (id)initWithTarget:(id)target action:(SEL)action thread:(NSThread*)thread;
++ (id)eventWithTarget:(id)target action:(SEL)action;
++ (id)eventWithTarget:(id)target action:(SEL)action inMainThread:(BOOL)inMainThread;
++ (id)eventWithTarget:(id)target action:(SEL)action inCurrentThread:(BOOL)inCurrentThread;
+- (instancetype)initWithTarget:(id)target action:(SEL)action thread:(NSThread*)thread;
 
 @end
 
@@ -67,10 +67,27 @@ typedef id (^MobilyEventBlockType)(id sender, id object);
 
 @property(nonatomic, readonly, copy) MobilyEventBlockType block;
 
-+ (id)callbackWithBlock:(MobilyEventBlockType)block;
-+ (id)callbackWithBlock:(MobilyEventBlockType)block inMainQueue:(BOOL)inMainQueue;
-+ (id)callbackWithBlock:(MobilyEventBlockType)block inCurrentQueue:(BOOL)inCurrentQueue;
-- (id)initWithBlock:(MobilyEventBlockType)block queue:(dispatch_queue_t)queue;
++ (id)eventWithBlock:(MobilyEventBlockType)block;
++ (id)eventWithBlock:(MobilyEventBlockType)block inMainQueue:(BOOL)inMainQueue;
++ (id)eventWithBlock:(MobilyEventBlockType)block inCurrentQueue:(BOOL)inCurrentQueue;
+- (instancetype)initWithBlock:(MobilyEventBlockType)block queue:(dispatch_queue_t)queue;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyEvents: NSObject< MobilyObject >
+
+- (void)addEventWithTarget:(id)target action:(SEL)action forKey:(id)key;
+- (void)addEventWithBlock:(MobilyEventBlockType)block forKey:(id)key;
+- (void)addEvent:(id< MobilyEvent >)event forKey:(id)key;
+- (void)removeEventForKey:(id)key;
+- (void)removeAllEvents;
+
+- (BOOL)containsEventForKey:(id)key;
+
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object defaultResult:(id)defaultResult;
 
 @end
 
@@ -83,7 +100,7 @@ typedef id (^MobilyEventBlockType)(id sender, id object);
         if(action != nil) { \
             id target = [self objectForSelector:action]; \
             if(target != nil) { \
-                *value = [MobilyEventSelector callbackWithTarget:target action:action]; \
+                *value = [MobilyEventSelector eventWithTarget:target action:action]; \
             } else { \
                 NSLog(@"Failure bind event %@=\"%@\"", @#name, *value); \
             } \

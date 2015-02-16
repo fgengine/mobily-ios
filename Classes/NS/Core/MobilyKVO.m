@@ -52,9 +52,9 @@ static void* MobilyKVOContext = &MobilyKVOContext;
 
 @implementation MobilyKVO
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)initWithSubject:(id)subject keyPath:(NSString*)keyPath block:(MobilyKVOBlock)block {
+- (instancetype)initWithSubject:(id)subject keyPath:(NSString*)keyPath block:(MobilyKVOBlock)block {
 	self = [super init];
 	if(self != nil) {
         [self setSubject:subject];
@@ -62,8 +62,13 @@ static void* MobilyKVOContext = &MobilyKVOContext;
         [self setBlock:block];
         
 		[subject addObserver:self forKeyPath:keyPath options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:MobilyKVOContext];
+        
+        [self setup];
 	}
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {

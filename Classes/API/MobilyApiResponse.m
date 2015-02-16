@@ -48,9 +48,9 @@
 
 @implementation MobilyApiResponse
 
-#pragma mark Init
+#pragma mark Init / Free
 
-- (id)initWithHttpQuery:(MobilyHttpQuery*)httpQuery {
+- (instancetype)initWithHttpQuery:(MobilyHttpQuery*)httpQuery {
     self = [super init];
     if(self != nil) {
         [self setValidResponse:[self fromHttpQuery:httpQuery]];
@@ -64,7 +64,7 @@
     MOBILY_SAFE_DEALLOC;
 }
 
-#pragma mark Init
+#pragma mark Public
 
 - (BOOL)fromHttpQuery:(MobilyHttpQuery*)httpQuery {
     if([httpQuery error] == nil) {

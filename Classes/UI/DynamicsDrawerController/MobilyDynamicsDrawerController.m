@@ -64,9 +64,9 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidAppear)
 MOBILY_DEFINE_VALIDATE_EVENT(EventWillDisappear)
 MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
         [self setup];
@@ -74,7 +74,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     self = [super initWithCoder:coder];
     if(self != nil) {
         [self setup];
@@ -82,12 +82,15 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     return self;
 }
 
-- (id)initWithNibName:(NSString*)nib bundle:(NSBundle*)bundle {
+- (instancetype)initWithNibName:(NSString*)nib bundle:(NSBundle*)bundle {
     self = [super initWithNibName:nib bundle:bundle];
     if(self != nil) {
         [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {
@@ -127,9 +130,6 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 #pragma mark Public
-
-- (void)setup {
-}
 
 - (void)showWideLeftDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion {
     [self setPaneState:MSDynamicsDrawerPaneStateOpenWide inDirection:MSDynamicsDrawerDirectionLeft animated:animated allowUserInterruption:YES completion:completion];

@@ -33,15 +33,15 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyNS.h"
+#import "MobilyObject.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyModelJson : NSObject
+@interface MobilyModelJson : NSObject < MobilyObject >
 
 @property(nonatomic, readonly, strong) NSString* path;
 
-- (id)initWithPath:(NSString*)path;
+- (instancetype)initWithPath:(NSString*)path;
 
 - (id)parseJson:(id)json;
 
@@ -55,10 +55,10 @@
 
 @property(nonatomic, readonly, strong) MobilyModelJson* jsonConverter;
 
-- (id)initWithJsonConverter:(MobilyModelJson*)jsonConverter;
-- (id)initWithJsonModelClass:(Class)jsonModelClass;
-- (id)initWithPath:(NSString*)path jsonConverter:(MobilyModelJson*)jsonConverter;
-- (id)initWithPath:(NSString*)path jsonModelClass:(Class)jsonModelClass;
+- (instancetype)initWithJsonConverter:(MobilyModelJson*)jsonConverter;
+- (instancetype)initWithJsonModelClass:(Class)jsonModelClass;
+- (instancetype)initWithPath:(NSString*)path jsonConverter:(MobilyModelJson*)jsonConverter;
+- (instancetype)initWithPath:(NSString*)path jsonModelClass:(Class)jsonModelClass;
 
 @end
 
@@ -69,12 +69,12 @@
 @property(nonatomic, readonly, strong) MobilyModelJson* keyJsonConverter;
 @property(nonatomic, readonly, strong) MobilyModelJson* valueJsonConverter;
 
-- (id)initWithValueJsonConverter:(MobilyModelJson*)valueJsonConverter;
-- (id)initWithValueJsonModelClass:(Class)valueJsonModelClass;
-- (id)initWithPath:(NSString*)path valueJsonConverter:(MobilyModelJson*)valueJsonConverter;
-- (id)initWithPath:(NSString*)path valueJsonModelClass:(Class)valueJsonModelClass;
-- (id)initWithPath:(NSString*)path keyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter;
-- (id)initWithPath:(NSString*)path keyJsonModelClass:(Class)keyJsonModelClass valueJsonModelClass:(Class)valueJsonModelClass;
+- (instancetype)initWithValueJsonConverter:(MobilyModelJson*)valueJsonConverter;
+- (instancetype)initWithValueJsonModelClass:(Class)valueJsonModelClass;
+- (instancetype)initWithPath:(NSString*)path valueJsonConverter:(MobilyModelJson*)valueJsonConverter;
+- (instancetype)initWithPath:(NSString*)path valueJsonModelClass:(Class)valueJsonModelClass;
+- (instancetype)initWithPath:(NSString*)path keyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter;
+- (instancetype)initWithPath:(NSString*)path keyJsonModelClass:(Class)keyJsonModelClass valueJsonModelClass:(Class)valueJsonModelClass;
 
 @end
 
@@ -84,7 +84,7 @@
 
 @property(nonatomic, readonly, assign) BOOL defaultValue;
 
-- (id)initWithPath:(NSString*)path defaultValue:(BOOL)defaultValue;
+- (instancetype)initWithPath:(NSString*)path defaultValue:(BOOL)defaultValue;
 
 @end
 
@@ -94,7 +94,7 @@
 
 @property(nonatomic, readonly, strong) NSString* defaultValue;
 
-- (id)initWithPath:(NSString*)path defaultValue:(NSString*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path defaultValue:(NSString*)defaultValue;
 
 @end
 
@@ -104,7 +104,7 @@
 
 @property(nonatomic, readonly, strong) NSURL* defaultValue;
 
-- (id)initWithPath:(NSString*)path defaultValue:(NSURL*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path defaultValue:(NSURL*)defaultValue;
 
 @end
 
@@ -114,7 +114,7 @@
 
 @property(nonatomic, readonly, strong) NSNumber* defaultValue;
 
-- (id)initWithPath:(NSString*)path defaultValue:(NSNumber*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path defaultValue:(NSNumber*)defaultValue;
 
 @end
 
@@ -125,15 +125,15 @@
 @property(nonatomic, readonly, strong) NSDate* defaultValue;
 @property(nonatomic, readonly, strong) NSArray* formats;
 
-- (id)initWithFormat:(NSString*)format;
-- (id)initWithFormats:(NSArray*)formats;
-- (id)initWithFormat:(NSString*)format defaultValue:(NSDate*)defaultValue;
-- (id)initWithFormats:(NSArray*)formats defaultValue:(NSDate*)defaultValue;
-- (id)initWithPath:(NSString*)path format:(NSString*)format;
-- (id)initWithPath:(NSString*)path formats:(NSArray*)formats;
-- (id)initWithPath:(NSString*)path format:(NSString*)format defaultValue:(NSDate*)defaultValue;
-- (id)initWithPath:(NSString*)path formats:(NSArray*)formats defaultValue:(NSDate*)defaultValue;
-- (id)initWithPath:(NSString*)path defaultValue:(NSDate*)defaultValue;
+- (instancetype)initWithFormat:(NSString*)format;
+- (instancetype)initWithFormats:(NSArray*)formats;
+- (instancetype)initWithFormat:(NSString*)format defaultValue:(NSDate*)defaultValue;
+- (instancetype)initWithFormats:(NSArray*)formats defaultValue:(NSDate*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path format:(NSString*)format;
+- (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats;
+- (instancetype)initWithPath:(NSString*)path format:(NSString*)format defaultValue:(NSDate*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats defaultValue:(NSDate*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path defaultValue:(NSDate*)defaultValue;
 
 @end
 
@@ -144,10 +144,10 @@
 @property(nonatomic, readonly, strong) NSNumber* defaultValue;
 @property(nonatomic, readonly, strong) NSDictionary* enums;
 
-- (id)initWithEnums:(NSDictionary*)enums;
-- (id)initWithEnums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue;
-- (id)initWithPath:(NSString*)path enums:(NSDictionary*)enums;
-- (id)initWithPath:(NSString*)path enums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue;
+- (instancetype)initWithEnums:(NSDictionary*)enums;
+- (instancetype)initWithEnums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path enums:(NSDictionary*)enums;
+- (instancetype)initWithPath:(NSString*)path enums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue;
 
 @end
 
@@ -157,8 +157,8 @@
 
 @property(nonatomic, readonly, assign) Class customClass;
 
-- (id)initWithCustomClass:(Class)customClass;
-- (id)initWithPath:(NSString*)path customClass:(Class)customClass;
+- (instancetype)initWithCustomClass:(Class)customClass;
+- (instancetype)initWithPath:(NSString*)path customClass:(Class)customClass;
 
 @end
 

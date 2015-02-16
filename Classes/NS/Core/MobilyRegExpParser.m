@@ -68,35 +68,41 @@
 
 @implementation MobilyRegExpParser
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
         [self setNeedApplyParser:NO];
+        [self setup];
     }
     return self;
 }
 
-- (id)initWithExpression:(NSString*)expression pattern:(NSString*)pattern {
+- (instancetype)initWithExpression:(NSString*)expression pattern:(NSString*)pattern {
     self = [super init];
     if(self != nil) {
         MOBILY_SAFE_SETTER(_expression, expression);
         MOBILY_SAFE_SETTER(_pattern, pattern);
         [self setNeedApplyParser:NO];
+        [self setup];
     }
     return self;
 }
 
-- (id)initWithSting:(NSString*)string expression:(NSString*)expression pattern:(NSString*)pattern {
+- (instancetype)initWithSting:(NSString*)string expression:(NSString*)expression pattern:(NSString*)pattern {
     self = [super init];
     if(self != nil) {
         MOBILY_SAFE_SETTER(_string, string);
         MOBILY_SAFE_SETTER(_expression, expression);
         MOBILY_SAFE_SETTER(_pattern, pattern);
         [self setNeedApplyParser:YES];
+        [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {
@@ -206,7 +212,18 @@
 
 @implementation MobilyRegExpMatch
 
-#pragma mark Standart
+#pragma mark Init / Free
+
+- (instancetype)init {
+    self = [super init];
+    if(self != nil) {
+        [self setup];
+    }
+    return self;
+}
+
+- (void)setup {
+}
 
 - (void)dealloc {
     [self setOriginalString:nil];

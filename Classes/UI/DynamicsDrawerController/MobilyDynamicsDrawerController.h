@@ -66,8 +66,6 @@
 - (void)showRightDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion;
 - (void)hideRightDrawerAnimated:(BOOL)animated completion:(void (^)(void))completion;
 
-- (void)setup;
-
 @end
 
 /*--------------------------------------------------*/

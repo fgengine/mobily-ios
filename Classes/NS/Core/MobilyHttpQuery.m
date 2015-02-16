@@ -57,16 +57,20 @@
 
 @implementation MobilyHttpQuery
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
         [self setRequest:[NSMutableURLRequest new]];
         [_request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
         [_request setNetworkServiceType:NSURLNetworkServiceTypeDefault];
+        [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {

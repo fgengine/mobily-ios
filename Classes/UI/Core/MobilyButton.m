@@ -48,15 +48,17 @@
 
 @implementation MobilyButton
 
+#pragma mark Synthesize
+
 @synthesize objectName = _objectName;
 @synthesize objectParent = _objectParent;
 @synthesize objectChilds = _objectChilds;
 
 #pragma mark NSKeyValueCoding
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     self = [super initWithCoder:coder];
     if(self != nil) {
         [self setup];
@@ -64,12 +66,15 @@
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self != nil) {
         [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {
@@ -117,11 +122,6 @@
         _imageAlignment = imageAlignment;
         [self setNeedsLayout];
     }
-}
-
-#pragma mark Public
-
-- (void)setup {
 }
 
 #pragma mark UIButton

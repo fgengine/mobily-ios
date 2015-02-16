@@ -66,17 +66,23 @@ static NSString* MOBILY_ACCESS_KEY = nil;
 
 @implementation MobilyContext
 
+#pragma mark Synthesize
+
 @synthesize objectName = _objectName;
 @synthesize objectParent = _objectParent;
 @synthesize objectChilds = _objectChilds;
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
+        [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {

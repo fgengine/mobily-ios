@@ -56,7 +56,7 @@
 MOBILY_DEFINE_VALIDATE_INTERFACE_ORIENTATION_MASK(Orientation)
 MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
 
-#pragma mark Standart
+#pragma mark Init / Free
 
 - (void)setup {
     [super setup];

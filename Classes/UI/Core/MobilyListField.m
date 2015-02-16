@@ -49,7 +49,7 @@
 
 #pragma mark NSKeyValueCoding
 
-#pragma mark Standart
+#pragma mark Init / Free
 
 - (void)dealloc {
     [self setPickerView:nil];
@@ -171,9 +171,9 @@
 
 @implementation MobilyListFieldItem
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)initWithTitle:(NSString*)title value:(id)value {
+- (instancetype)initWithTitle:(NSString*)title value:(id)value {
     self = [super init];
     if(self != nil) {
         [self setTitle:title];
@@ -184,7 +184,7 @@
     return self;
 }
 
-- (id)initWithTitle:(NSString*)title color:(UIColor*)color value:(id)value {
+- (instancetype)initWithTitle:(NSString*)title color:(UIColor*)color value:(id)value {
     self = [super init];
     if(self != nil) {
         [self setTitle:title];
@@ -195,7 +195,7 @@
     return self;
 }
 
-- (id)initWithTitle:(NSString*)title font:(UIFont*)font color:(UIColor*)color value:(id)value {
+- (instancetype)initWithTitle:(NSString*)title font:(UIFont*)font color:(UIColor*)color value:(id)value {
     self = [super init];
     if(self != nil) {
         [self setTitle:title];

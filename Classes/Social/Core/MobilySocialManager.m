@@ -69,14 +69,18 @@
     return shared;
 }
 
-#pragma mark Init
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
         [self setMutableProviders:[NSMutableArray array]];
+        [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {

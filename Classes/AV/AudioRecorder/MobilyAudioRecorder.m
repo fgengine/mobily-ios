@@ -56,7 +56,9 @@
 
 @implementation MobilyAudioRecorder
 
-- (id)init {
+#pragma mark Init / Free
+
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
         [self setup];
@@ -64,12 +66,20 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     self = [super init];
     if(self != nil) {
         [self setup];
     }
     return self;
+}
+
+- (void)setup {
+    [self setFormat:kAudioFormatAppleIMA4];
+    [self setQuality:AVAudioQualityMin];
+    [self setBitRate:16];
+    [self setNumberOfChannels:1];
+    [self setSampleRate:44100.0f];
 }
 
 - (void)dealloc {
@@ -116,14 +126,6 @@
 }
 
 #pragma mark Public
-
-- (void)setup {
-    [self setFormat:kAudioFormatAppleIMA4];
-    [self setQuality:AVAudioQualityMin];
-    [self setBitRate:16];
-    [self setNumberOfChannels:1];
-    [self setSampleRate:44100.0f];
-}
 
 - (BOOL)prepareWithName:(NSString*)name {
     return [self prepareWithPath:[NSFileManager documentDirectory] name:name];

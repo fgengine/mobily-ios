@@ -65,9 +65,9 @@ typedef void (^MobilyDownloaderBlock)();
 @property(nonatomic, readwrite, strong) id< MobilyEvent > completeEvent;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > failureEvent;
 
-- (id)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target;
-- (id)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
-- (id)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target completeBlock:(MobilyDownloaderCompleteBlock)completeBlock failureBlock:(MobilyDownloaderFailureBlock)failureBlock;
+- (instancetype)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target;
+- (instancetype)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
+- (instancetype)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target completeBlock:(MobilyDownloaderCompleteBlock)completeBlock failureBlock:(MobilyDownloaderFailureBlock)failureBlock;
 
 @end
 
@@ -95,13 +95,13 @@ typedef void (^MobilyDownloaderBlock)();
     return shared;
 }
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     return [self initWithDelegate:nil];
 }
 
-- (id)initWithDelegate:(id< MobilyDownloaderDelegate >)delegate {
+- (instancetype)initWithDelegate:(id< MobilyDownloaderDelegate >)delegate {
     self = [super init];
     if(self != nil) {
         [self setDelegate:delegate];
@@ -110,8 +110,13 @@ typedef void (^MobilyDownloaderBlock)();
             [_taskManager setMaxConcurrentTask:MOBILY_LOADER_MAX_CONCURRENT_TASK];
         }
         [self setCache:[MobilyCache shared]];
+        
+        [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {
@@ -264,9 +269,9 @@ typedef void (^MobilyDownloaderBlock)();
 
 @implementation MobilyDownloaderTask
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target {
+- (instancetype)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target {
     self = [super init];
     if(self != nil) {
         [self setDownloader:downloader];
@@ -278,25 +283,25 @@ typedef void (^MobilyDownloaderBlock)();
     return self;
 }
 
-- (id)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector {
+- (instancetype)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector {
     self = [self initWithDownloader:downloader url:url target:target];
     if(self != nil) {
-        [self setCompleteEvent:[MobilyEventSelector callbackWithTarget:target action:completeSelector inMainThread:YES]];
-        [self setFailureEvent:[MobilyEventSelector callbackWithTarget:target action:failureSelector inMainThread:YES]];
+        [self setCompleteEvent:[MobilyEventSelector eventWithTarget:target action:completeSelector inMainThread:YES]];
+        [self setFailureEvent:[MobilyEventSelector eventWithTarget:target action:failureSelector inMainThread:YES]];
     }
     return self;
 }
 
-- (id)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target completeBlock:(MobilyDownloaderCompleteBlock)completeBlock failureBlock:(MobilyDownloaderFailureBlock)failureBlock {
+- (instancetype)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target completeBlock:(MobilyDownloaderCompleteBlock)completeBlock failureBlock:(MobilyDownloaderFailureBlock)failureBlock {
     self = [self initWithDownloader:downloader url:url target:target];
     if(self != nil) {
-        [self setCompleteEvent:[MobilyEventBlock callbackWithBlock:^id(id sender, id object) {
+        [self setCompleteEvent:[MobilyEventBlock eventWithBlock:^id(id sender, id object) {
             if(completeBlock != nil) {
                 completeBlock(_entry, _url);
             }
             return nil;
         } inMainQueue:YES]];
-        [self setFailureEvent:[MobilyEventBlock callbackWithBlock:^id(id sender, id object) {
+        [self setFailureEvent:[MobilyEventBlock eventWithBlock:^id(id sender, id object) {
             if(failureBlock != nil) {
                 failureBlock(_url);
             }
@@ -304,6 +309,9 @@ typedef void (^MobilyDownloaderBlock)();
         } inMainQueue:YES]];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {

@@ -50,15 +50,17 @@
 
 @implementation MobilyImageView
 
+#pragma mark Synthesize
+
 @synthesize objectName = _objectName;
 @synthesize objectParent = _objectParent;
 @synthesize objectChilds = _objectChilds;
 
 #pragma mark NSKeyValueCoding
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     self = [super initWithCoder:coder];
     if(self != nil) {
         [self setup];
@@ -66,12 +68,16 @@
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self != nil) {
         [self setup];
     }
     return self;
+}
+
+- (void)setup {
+    [[self layer] setMasksToBounds:YES];
 }
 
 - (void)dealloc {
@@ -113,12 +119,6 @@
 
 - (id< MobilyBuilderObject >)objectForSelector:(SEL)selector {
     return [MobilyBuilderForm object:self forSelector:selector];
-}
-
-#pragma mark Public
-
-- (void)setup {
-    [[self layer] setMasksToBounds:YES];
 }
 
 #pragma mark Property
@@ -166,9 +166,9 @@
 
 @implementation MobilyImageDownloader
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
         [self setDownloader:[[MobilyDownloader alloc] initWithDelegate:self]];

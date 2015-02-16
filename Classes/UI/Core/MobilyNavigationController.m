@@ -52,6 +52,8 @@
 
 @implementation MobilyNavigationController
 
+#pragma mark Synthesize
+
 @synthesize objectName = _objectName;
 @synthesize objectParent = _objectParent;
 @synthesize objectChilds = _objectChilds;
@@ -67,9 +69,9 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidAppear)
 MOBILY_DEFINE_VALIDATE_EVENT(EventWillDisappear)
 MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     self = [super initWithCoder:coder];
     if(self != nil) {
         [self setup];
@@ -77,7 +79,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     return self;
 }
 
-- (id)initWithNibName:(NSString*)nib bundle:(NSBundle*)bundle {
+- (instancetype)initWithNibName:(NSString*)nib bundle:(NSBundle*)bundle {
     self = [super initWithNibName:nib bundle:bundle];
     if(self != nil) {
         [self setup];
@@ -99,6 +101,10 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
         [self setup];
     }
     return self;
+}
+
+- (void)setup {
+    [self setDelegate:self];
 }
 
 - (void)dealloc {
@@ -150,10 +156,6 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 #pragma mark Public
-
-- (void)setup {
-    [self setDelegate:self];
-}
 
 #pragma mark UIViewController
 

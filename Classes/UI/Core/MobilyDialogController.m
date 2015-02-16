@@ -88,7 +88,7 @@
 
 @implementation MobilyDialogWindow
 
-#pragma mark Public
+#pragma mark Init / Free
 
 - (void)setup {
     [super setup];

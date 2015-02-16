@@ -222,6 +222,10 @@ CGSize CGSizeDiv(CGSize size, CGFloat value) {
 #pragma mark -
 /*--------------------------------------------------*/
 
+CGRect CGRectMakeOriginAndSize(CGPoint origin, CGSize size) {
+    return CGRectMake(origin.x, origin.y, size.width, size.height);
+}
+
 CGRect CGRectMakeCenterPoint(CGPoint center, CGFloat width, CGFloat height) {
     return CGRectMake(center.x - (width * 0.5f), center.y - (height * 0.5f), width, height);
 }

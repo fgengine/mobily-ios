@@ -136,9 +136,9 @@
 
 @implementation MobilyBuilderFormXML
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
         [self setStackFormObjects:[NSMutableArray array]];

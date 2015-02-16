@@ -47,7 +47,7 @@
 @property(nonatomic, readwrite, strong) NSError* httpError;
 @property(nonatomic, readwrite, assign, getter=isValidResponse) BOOL validResponse;
 
-- (id)initWithHttpQuery:(MobilyHttpQuery*)httpQuery;
+- (instancetype)initWithHttpQuery:(MobilyHttpQuery*)httpQuery;
 
 - (BOOL)fromHttpQuery:(MobilyHttpQuery*)httpQuery;
 

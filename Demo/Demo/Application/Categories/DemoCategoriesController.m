@@ -40,6 +40,7 @@
 #import "DemoButtonsController.h"
 #import "DemoFieldsController.h"
 #import "DemoTablesController.h"
+#import "DemoDataScrollViewController.h"
 #import "DemoAudioRecorderController.h"
 #import "DemoAudioPlayerController.h"
 
@@ -57,6 +58,7 @@
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeButtons title:@"Buttons"],
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeFields title:@"Fields"],
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeTables title:@"Tables"],
+        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeDataScrollView title:@"DataScrollView"],
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioRecorder title:@"AudioRecorder"],
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioPlayer title:@"AudioPlayer"],
     ]];
@@ -101,6 +103,10 @@
             }
             case DemoCategoriesTypeTables: {
                 [[self navigationController] pushViewController:[DemoTablesController new] animated:YES];
+                break;
+            }
+            case DemoCategoriesTypeDataScrollView: {
+                [[self navigationController] pushViewController:[DemoDataScrollViewController new] animated:YES];
                 break;
             }
             case DemoCategoriesTypeAudioRecorder: {

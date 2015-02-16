@@ -53,7 +53,7 @@ typedef void (^MobilyTaskManagerEnumBlock)(id task, BOOL* stop);
 
 /*--------------------------------------------------*/
 
-@interface MobilyTaskManager : NSObject
+@interface MobilyTaskManager : NSObject < MobilyObject >
 
 @property(nonatomic, readwrite, assign) NSUInteger maxConcurrentTask;
 
@@ -78,7 +78,7 @@ typedef void (^MobilyTaskManagerEnumBlock)(id task, BOOL* stop);
 
 /*--------------------------------------------------*/
 
-@interface MobilyTask : NSObject
+@interface MobilyTask : NSObject < MobilyObject >
 
 @property(nonatomic, readwrite, assign, getter=isNeedRework) BOOL needRework;
 @property(nonatomic, readonly, assign, getter=isCanceled) BOOL cancel;

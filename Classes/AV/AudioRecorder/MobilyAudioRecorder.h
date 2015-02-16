@@ -46,7 +46,7 @@ typedef void(^MobilyAudioRecorderErrorBlock)(NSError* error);
 
 /*--------------------------------------------------*/
 
-@interface MobilyAudioRecorder : NSObject
+@interface MobilyAudioRecorder : NSObject < MobilyObject >
 
 @property(nonatomic, readwrite, assign) AudioFormatID format;
 @property(nonatomic, readwrite, assign) AVAudioQuality quality;
@@ -70,8 +70,6 @@ typedef void(^MobilyAudioRecorderErrorBlock)(NSError* error);
 @property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock resumedBlock;
 @property(nonatomic, readwrite, copy) MobilyAudioRecorderBlock pausedBlock;
 @property(nonatomic, readwrite, copy) MobilyAudioRecorderErrorBlock encodeErrorBlock;
-
-- (void)setup;
 
 - (BOOL)prepareWithName:(NSString*)name;
 - (BOOL)prepareWithPath:(NSString*)path name:(NSString*)name;

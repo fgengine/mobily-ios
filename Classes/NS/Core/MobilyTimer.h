@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyNS.h"
+#import "MobilyObject.h"
 
 /*--------------------------------------------------*/
 
@@ -45,7 +45,7 @@ typedef void(^MobilyTimerBlock)();
 
 /*--------------------------------------------------*/
 
-@interface MobilyTimer : NSObject
+@interface MobilyTimer : NSObject < MobilyObject >
 
 @property(nonatomic, readonly, assign, getter=isDelaying) BOOL delaying;
 @property(nonatomic, readonly, assign, getter=isStarted) BOOL started;
@@ -68,10 +68,10 @@ typedef void(^MobilyTimerBlock)();
 + (instancetype)timerWithInterval:(NSTimeInterval)interval repeat:(NSUInteger)repeat;
 + (instancetype)timerWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval repeat:(NSUInteger)repeat;
 
-- (id)initWithInterval:(NSTimeInterval)interval;
-- (id)initWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval;
-- (id)initWithInterval:(NSTimeInterval)interval repeat:(NSUInteger)repeat;
-- (id)initWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval repeat:(NSUInteger)repeat;
+- (instancetype)initWithInterval:(NSTimeInterval)interval;
+- (instancetype)initWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval;
+- (instancetype)initWithInterval:(NSTimeInterval)interval repeat:(NSUInteger)repeat;
+- (instancetype)initWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval repeat:(NSUInteger)repeat;
 
 - (void)start;
 - (void)stop;

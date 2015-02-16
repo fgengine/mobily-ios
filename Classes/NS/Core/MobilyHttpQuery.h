@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyNS.h"
+#import "MobilyObject.h"
 
 /*--------------------------------------------------*/
 
@@ -46,7 +46,7 @@ typedef void (^MobilyHttpQueryErrorBlock)(NSError* error);
 
 /*--------------------------------------------------*/
 
-@interface MobilyHttpQuery : NSObject
+@interface MobilyHttpQuery : NSObject < MobilyObject >
 
 @property(nonatomic, readwrite, strong) NSString* certificateFilename;
 

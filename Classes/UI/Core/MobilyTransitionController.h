@@ -54,8 +54,6 @@
 @property(nonatomic, readwrite, assign) NSTimeInterval duration;
 @property(nonatomic, readwrite, assign, getter=isReverse) BOOL reverse;
 
-- (void)setup;
-
 - (void)animateTransition:(id< UIViewControllerContextTransitioning >)transitionContext fromVC:(UIViewController*)fromVC toVC:(UIViewController*)toVC fromView:(UIView*)fromView toView:(UIView*)toView;
 
 @end

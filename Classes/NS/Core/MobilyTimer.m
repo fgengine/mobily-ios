@@ -56,7 +56,7 @@
 
 @implementation MobilyTimer
 
-#pragma mark Public
+#pragma mark Init / Free
 
 + (instancetype)timerWithInterval:(NSTimeInterval)interval {
     return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithInterval:interval]);
@@ -74,40 +74,47 @@
     return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithDelay:delay interval:interval repeat:repeat]);
 }
 
-- (id)initWithInterval:(NSTimeInterval)interval {
+- (instancetype)initWithInterval:(NSTimeInterval)interval {
     self = [super init];
     if(self != nil) {
         [self setInterval:interval];
+        [self setup];
     }
     return self;
 }
 
-- (id)initWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval {
+- (instancetype)initWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval {
     self = [super init];
     if(self != nil) {
         [self setDelay:delay];
         [self setInterval:interval];
+        [self setup];
     }
     return self;
 }
 
-- (id)initWithInterval:(NSTimeInterval)interval repeat:(NSUInteger)repeat {
+- (instancetype)initWithInterval:(NSTimeInterval)interval repeat:(NSUInteger)repeat {
     self = [super init];
     if(self != nil) {
         [self setInterval:interval];
         [self setRepeat:repeat];
+        [self setup];
     }
     return self;
 }
 
-- (id)initWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval repeat:(NSUInteger)repeat {
+- (instancetype)initWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval repeat:(NSUInteger)repeat {
     self = [super init];
     if(self != nil) {
         [self setDelay:delay];
         [self setInterval:interval];
         [self setRepeat:repeat];
+        [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {
@@ -115,6 +122,8 @@
     
     MOBILY_SAFE_DEALLOC;
 }
+
+#pragma mark Public
 
 - (void)start {
     if(_started == NO) {

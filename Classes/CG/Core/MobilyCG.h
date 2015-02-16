@@ -78,6 +78,7 @@ CGSize CGSizeDiv(CGSize size, CGFloat value);
 
 /*--------------------------------------------------*/
 
+CGRect CGRectMakeOriginAndSize(CGPoint origin, CGSize size);
 CGRect CGRectMakeCenterPoint(CGPoint center, CGFloat width, CGFloat height);
 
 CGRect CGRectAdd(CGRect rect, CGFloat value);

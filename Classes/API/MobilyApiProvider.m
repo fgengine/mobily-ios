@@ -61,9 +61,9 @@
 @property(nonatomic, readwrite, strong) id< MobilyEvent > completeEvent;
 @property(nonatomic, readwrite, assign) NSUInteger numberOfErrors;
 
-- (id)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target;
-- (id)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target completeSelector:(SEL)completeSelector;
-- (id)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target completeBlock:(MobilyApiProviderCompleteBlock)completeBlock;
+- (instancetype)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target;
+- (instancetype)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target completeSelector:(SEL)completeSelector;
+- (instancetype)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target completeBlock:(MobilyApiProviderCompleteBlock)completeBlock;
 
 @end
 
@@ -73,15 +73,19 @@
 
 @implementation MobilyApiProvider
 
-#pragma mark Init
+#pragma mark Init / Free
 
-- (id)initWithName:(NSString*)name url:(NSURL*)url {
+- (instancetype)initWithName:(NSString*)name url:(NSURL*)url {
     self = [super init];
     if(self != nil) {
         [self setName:name];
         [self setUrl:url];
+        [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {
@@ -156,9 +160,9 @@
 
 @implementation MobilyApiProviderTask
 
-#pragma mark Init
+#pragma mark Init / Free
 
-- (id)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target {
+- (instancetype)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target {
     self = [super init];
     if(self != nil) {
         [self setProvider:provider];
@@ -168,18 +172,18 @@
     return self;
 }
 
-- (id)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target completeSelector:(SEL)completeSelector {
+- (instancetype)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target completeSelector:(SEL)completeSelector {
     self = [self initWithProvider:provider request:request target:target];
     if(self != nil) {
-        [self setCompleteEvent:[MobilyEventSelector callbackWithTarget:target action:completeSelector inMainThread:YES]];
+        [self setCompleteEvent:[MobilyEventSelector eventWithTarget:target action:completeSelector inMainThread:YES]];
     }
     return self;
 }
 
-- (id)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target completeBlock:(MobilyApiProviderCompleteBlock)completeBlock {
+- (instancetype)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target completeBlock:(MobilyApiProviderCompleteBlock)completeBlock {
     self = [self initWithProvider:provider request:request target:target];
     if(self != nil) {
-        [self setCompleteEvent:[MobilyEventBlock callbackWithBlock:^id(id sender, id object) {
+        [self setCompleteEvent:[MobilyEventBlock eventWithBlock:^id(id sender, id object) {
             if(completeBlock != nil) {
                 completeBlock(_request, _response);
             }
@@ -196,7 +200,7 @@
     MOBILY_SAFE_DEALLOC;
 }
 
-#pragma mark MobilyTask
+#pragma mark MobilyTaskHttpQuery
 
 - (BOOL)willStart {
     MobilyHttpQuery* httpQuery = [_request httpQueryByBaseUrl:[_provider url]];

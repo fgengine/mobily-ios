@@ -55,7 +55,9 @@
 
 @implementation MobilyAudioPlayer
 
-- (id)init {
+#pragma mark Init / Free
+
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
         [self setup];
@@ -63,12 +65,15 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     self = [super init];
     if(self != nil) {
         [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {
@@ -157,9 +162,6 @@
 }
 
 #pragma mark Public
-
-- (void)setup {
-}
 
 - (BOOL)prepareWithName:(NSString*)name {
     return [self prepareWithPath:[[NSBundle mainBundle] resourcePath] name:name];

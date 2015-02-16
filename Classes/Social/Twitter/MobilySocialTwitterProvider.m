@@ -56,7 +56,7 @@
 @property(nonatomic, readwrite, strong) NSString* userName;
 @property(nonatomic, readwrite, strong) NSString* email;
 
-- (id)initWithSession:(TWTRSession*)session;
+- (instancetype)initWithSession:(TWTRSession*)session;
 
 @end
 
@@ -68,7 +68,7 @@
 
 #pragma mark Init / Free
 
-- (id)initWithConsumerKey:(NSString*)consumerKey consumerSecret:(NSString*)consumerSecret {
+- (instancetype)initWithConsumerKey:(NSString*)consumerKey consumerSecret:(NSString*)consumerSecret {
     self = [super initWithName:@"Twitter"];
     if(self != nil) {
         [self setConsumerKey:consumerKey];
@@ -141,6 +141,12 @@
     }
 }
 
+#pragma mark MobilySocialManager
+
++ (Class)sessionClass {
+    return [MobilySocialTwitterSession class];
+}
+
 - (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
     if([[self session] isValid] == YES) {
         [[Twitter sharedInstance] logOut];
@@ -167,6 +173,21 @@
 
 @implementation MobilySocialTwitterSession
 
+#pragma mark Init / Free
+
+- (instancetype)initWithSession:(TWTRSession*)session {
+    self = [super init];
+    if(self != nil) {
+        [self setAuthToken:[session authToken]];
+        [self setAuthTokenSecret:[session authTokenSecret]];
+        [self setUserId:[session userID]];
+        [self setUserName:[session userName]];
+    }
+    return self;
+}
+
+#pragma mark MobilyModel
+
 + (NSArray*)serializeMap {
     return @[
         @"authToken",
@@ -177,16 +198,7 @@
     ];
 }
 
-- (id)initWithSession:(TWTRSession*)session {
-    self = [super init];
-    if(self != nil) {
-        [self setAuthToken:[session authToken]];
-        [self setAuthTokenSecret:[session authTokenSecret]];
-        [self setUserId:[session userID]];
-        [self setUserName:[session userName]];
-    }
-    return self;
-}
+#pragma mark MobilySocialSession
 
 - (BOOL)isValid {
     return ([_authToken length] > 0) && ([_authTokenSecret length] > 0) && ([_userId length] > 0);

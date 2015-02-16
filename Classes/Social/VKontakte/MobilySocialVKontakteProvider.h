@@ -51,7 +51,7 @@
 
 @property(nonatomic, readwrite, strong) MobilySocialVKontakteSession* session;
 
-- (id)initWithApplicationId:(NSString*)applicationId;
+- (instancetype)initWithApplicationId:(NSString*)applicationId;
 
 - (void)signinWithPermissions:(NSArray*)permissions success:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;
 

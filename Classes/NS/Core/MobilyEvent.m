@@ -51,57 +51,53 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilyEventBlock ()
-
-@property(nonatomic, readwrite, copy) MobilyEventBlockType block;
-@property(nonatomic, readwrite, assign) dispatch_queue_t safeQueue;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
 @implementation MobilyEventSelector
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-+ (id)callbackWithTarget:(id)target action:(SEL)action {
++ (id)eventWithTarget:(id)target action:(SEL)action {
     return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithTarget:target action:action thread:nil]);
 }
 
-+ (id)callbackWithTarget:(id)target action:(SEL)action inMainThread:(BOOL)inMainThread {
++ (id)eventWithTarget:(id)target action:(SEL)action inMainThread:(BOOL)inMainThread {
     return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithTarget:target action:action thread:(inMainThread == YES) ? [NSThread mainThread] : nil]);
 }
 
-+ (id)callbackWithTarget:(id)target action:(SEL)action inCurrentThread:(BOOL)inCurrentThread {
++ (id)eventWithTarget:(id)target action:(SEL)action inCurrentThread:(BOOL)inCurrentThread {
     return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithTarget:target action:action thread:(inCurrentThread == YES) ? [NSThread currentThread] : nil]);
 }
 
-- (id)initWithTarget:(id)target action:(SEL)action thread:(NSThread*)thread {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     self = [super init];
     if(self != nil) {
-        [self setTarget:target];
-        [self setAction:action];
-        [self setSafeThread:thread];
+        self.action = NSSelectorFromString([coder decodeObjectForKey:@"action"]);
+        [self setup];
     }
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithTarget:(id)target action:(SEL)action thread:(NSThread*)thread {
     self = [super init];
     if(self != nil) {
-        [self setAction:NSSelectorFromString([coder decodeObjectForKey:@"action"])];
+        self.target = target;
+        self.action = action;
+        self.safeThread = thread;
+        [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {
-    [self setTarget:nil];
-    [self setSafeThread:nil];
+    self.target = nil;
+    self.safeThread = nil;
     
     MOBILY_SAFE_DEALLOC;
 }
+
+#pragma mark NSCoding
 
 - (void)encodeWithCoder:(NSCoder*)coder {
     [coder encodeObject:NSStringFromSelector(_action) forKey:@"action"];
@@ -158,43 +154,61 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
+@interface MobilyEventBlock ()
+
+@property(nonatomic, readwrite, copy) MobilyEventBlockType block;
+@property(nonatomic, readwrite, assign) dispatch_queue_t safeQueue;
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
 @implementation MobilyEventBlock
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-+ (id)callbackWithBlock:(MobilyEventBlockType)block {
++ (id)eventWithBlock:(MobilyEventBlockType)block {
     return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithBlock:block queue:nil]);
 }
 
-+ (id)callbackWithBlock:(MobilyEventBlockType)block inMainQueue:(BOOL)inMainQueue {
++ (id)eventWithBlock:(MobilyEventBlockType)block inMainQueue:(BOOL)inMainQueue {
     return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithBlock:block queue:(inMainQueue == YES) ? dispatch_get_main_queue() : nil]);
 }
 
-+ (id)callbackWithBlock:(MobilyEventBlockType)block inCurrentQueue:(BOOL)inCurrentQueue {
++ (id)eventWithBlock:(MobilyEventBlockType)block inCurrentQueue:(BOOL)inCurrentQueue {
     return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithBlock:block queue:(inCurrentQueue == YES) ? dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) : nil]);
 }
 
-- (id)initWithBlock:(MobilyEventBlockType)block queue:(dispatch_queue_t)queue {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     self = [super init];
     if(self != nil) {
-        [self setBlock:block];
-        [self setSafeQueue:queue];
+        [self setup];
     }
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithBlock:(MobilyEventBlockType)block queue:(dispatch_queue_t)queue {
     self = [super init];
     if(self != nil) {
+        self.block = block;
+        self.safeQueue = queue;
+        [self setup];
     }
     return self;
+}
+
+- (void)setup {
 }
 
 - (void)dealloc {
-    [self setBlock:nil];
+    self.block = nil;
     
     MOBILY_SAFE_DEALLOC;
 }
+
+#pragma mark NSCoding
 
 - (void)encodeWithCoder:(NSCoder*)coder {
 }
@@ -213,6 +227,82 @@
         }
     }
     return _block(sender, object);
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@interface MobilyEvents ()
+
+@property(nonatomic, readwrite, strong) NSMutableDictionary* events;
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation MobilyEvents
+
+#pragma mark Init / Free
+
+- (instancetype)init {
+    self = [super init];
+    if(self != nil) {
+        [self setup];
+    }
+    return self;
+}
+
+- (void)setup {
+    self.events = [NSMutableDictionary dictionary];
+}
+
+- (void)dealloc {
+    self.events = nil;
+    
+    MOBILY_SAFE_DEALLOC;
+}
+
+#pragma mark Public
+
+- (void)addEventWithTarget:(id)target action:(SEL)action forKey:(id)key {
+    [self addEvent:[MobilyEventSelector eventWithTarget:target action:action] forKey:key];
+}
+
+- (void)addEventWithBlock:(MobilyEventBlockType)block forKey:(id)key {
+    [self addEvent:[MobilyEventBlock eventWithBlock:block] forKey:key];
+}
+
+- (void)addEvent:(id< MobilyEvent >)event forKey:(id)key {
+    [_events setObject:event forKey:key];
+}
+
+- (void)removeEventForKey:(id)key {
+    [_events removeObjectForKey:key];
+}
+
+- (void)removeAllEvents {
+    [_events removeAllObjects];
+}
+
+- (BOOL)containsEventForKey:(id)key {
+    return ([_events objectForKey:key] != nil);
+}
+
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
+    return [self fireEventForKey:key bySender:sender byObject:object defaultResult:nil];
+}
+
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object defaultResult:(id)defaultResult {
+    id< MobilyEvent > event = [_events objectForKey:key];
+    if(event != nil) {
+        return [event fireSender:sender object:object];
+    }
+    return defaultResult;
 }
 
 @end

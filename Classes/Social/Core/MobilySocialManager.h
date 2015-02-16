@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyNS.h"
+#import "MobilyObject.h"
 
 /*--------------------------------------------------*/
 
@@ -41,7 +41,7 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilySocialManager : NSObject
+@interface MobilySocialManager : NSObject < MobilyObject >
 
 @property(nonatomic, readonly, copy) NSArray* providers;
 

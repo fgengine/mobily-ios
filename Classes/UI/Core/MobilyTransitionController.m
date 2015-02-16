@@ -87,9 +87,9 @@
 
 @implementation MobilyTransitionController
 
-#pragma mark Standart
+#pragma mark Init / Free
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if(self != nil) {
         [self setup];
@@ -97,11 +97,15 @@
     return self;
 }
 
-#pragma mark Public
-
 - (void)setup {
     [self setDuration:1.0f];
 }
+
+- (void)dealloc {
+    MOBILY_SAFE_DEALLOC;
+}
+
+#pragma mark Public
 
 - (void)animateTransition:(id< UIViewControllerContextTransitioning >)transitionContext fromVC:(UIViewController*)fromVC toVC:(UIViewController*)toVC fromView:(UIView*)fromView toView:(UIView*)toView {
 }
