@@ -129,23 +129,25 @@
     CGFloat maxWidth = frame.size.width - (margin.left + margin.right);
     CGSize rowSize = CGSizeZero;
     NSMutableArray* rowItems = [NSMutableArray array];
-    for(id< MobilyDataItem > item in self.items) {
-        CGSize itemSize = [item sizeForAvailableSize:CGSizeMake(maxWidth, FLT_MAX)];
-        if((itemSize.width >= 0.0f) && (itemSize.height >= 0.0f)) {
-            if((rowItems.count > 0) && (cumulative.x + itemSize.width > maxWidth)) {
-                offset.x = 0.0f;
-                offset.y += rowSize.height + spacing.vertical;
-                cumulative.x = MAX(maxWidth, margin.left + rowSize.width + margin.right);
-                cumulative.y += rowSize.height + spacing.vertical;
-                
-                [rowItems removeAllObjects];
-                rowSize = CGSizeZero;
+    for(id type in self.items) {
+        for(id< MobilyDataItem > item in self.items[type]) {
+            CGSize itemSize = [item sizeForAvailableSize:CGSizeMake(maxWidth, FLT_MAX)];
+            if((itemSize.width >= 0.0f) && (itemSize.height >= 0.0f)) {
+                if((rowItems.count > 0) && (cumulative.x + itemSize.width > maxWidth)) {
+                    offset.x = 0.0f;
+                    offset.y += rowSize.height + spacing.vertical;
+                    cumulative.x = MAX(maxWidth, margin.left + rowSize.width + margin.right);
+                    cumulative.y += rowSize.height + spacing.vertical;
+                    
+                    [rowItems removeAllObjects];
+                    rowSize = CGSizeZero;
+                }
+                item.updateFrame = CGRectMake(offset.x, offset.y, itemSize.width, itemSize.height);
+                offset.x += itemSize.width + spacing.horizontal;
+                rowSize.width += itemSize.width + spacing.horizontal;
+                rowSize.height = MAX(itemSize.height, rowSize.height);
+                [rowItems addObject:item];
             }
-            item.updateFrame = CGRectMake(offset.x, offset.y, itemSize.width, itemSize.height);
-            offset.x += itemSize.width + spacing.horizontal;
-            rowSize.width += itemSize.width + spacing.horizontal;
-            rowSize.height = MAX(itemSize.height, rowSize.height);
-            [rowItems addObject:item];
         }
     }
     cumulative.x -= spacing.horizontal;
@@ -210,23 +212,25 @@
     CGFloat maxHeight = frame.size.height - (margin.top + margin.bottom);
     CGSize rowSize = CGSizeZero;
     NSMutableArray* rowItems = [NSMutableArray array];
-    for(id< MobilyDataItem > item in self.items) {
-        CGSize itemSize = [item sizeForAvailableSize:CGSizeMake(FLT_MAX, maxHeight)];
-        if((itemSize.width >= 0.0f) && (itemSize.height >= 0.0f)) {
-            if((rowItems.count > 0) && (cumulative.y + itemSize.height > maxHeight)) {
-                offset.x += rowSize.width + spacing.horizontal;
-                offset.y = 0.0f;
-                cumulative.x = rowSize.width + spacing.horizontal;
-                cumulative.y += MAX(maxHeight, margin.top + rowSize.height + margin.bottom);
-                
-                [rowItems removeAllObjects];
-                rowSize = CGSizeZero;
+    for(id type in self.items) {
+        for(id< MobilyDataItem > item in self.items[type]) {
+            CGSize itemSize = [item sizeForAvailableSize:CGSizeMake(FLT_MAX, maxHeight)];
+            if((itemSize.width >= 0.0f) && (itemSize.height >= 0.0f)) {
+                if((rowItems.count > 0) && (cumulative.y + itemSize.height > maxHeight)) {
+                    offset.x += rowSize.width + spacing.horizontal;
+                    offset.y = 0.0f;
+                    cumulative.x = rowSize.width + spacing.horizontal;
+                    cumulative.y += MAX(maxHeight, margin.top + rowSize.height + margin.bottom);
+                    
+                    [rowItems removeAllObjects];
+                    rowSize = CGSizeZero;
+                }
+                item.updateFrame = CGRectMake(offset.x, offset.y, itemSize.width, itemSize.height);
+                offset.y += itemSize.height + spacing.vertical;
+                rowSize.width = MAX(itemSize.width, rowSize.width);
+                rowSize.height += itemSize.height + spacing.vertical;
+                [rowItems addObject:item];
             }
-            item.updateFrame = CGRectMake(offset.x, offset.y, itemSize.width, itemSize.height);
-            offset.y += itemSize.height + spacing.vertical;
-            rowSize.width = MAX(itemSize.width, rowSize.width);
-            rowSize.height += itemSize.height + spacing.vertical;
-            [rowItems addObject:item];
         }
     }
     cumulative.x -= spacing.horizontal;

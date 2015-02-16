@@ -124,14 +124,16 @@
 - (CGRect)validateItemsLayoutForAvailableFrame:(CGRect)frame {
     UIEdgeInsets margin = self.margin;
     CGFloat spacing = self.spacing;
-    CGFloat cumulative = 0.0f;
     CGPoint offset = CGPointMake(frame.origin.x + margin.left, frame.origin.y + margin.top);
     CGFloat maxWidth = frame.size.width - (margin.left + margin.right);
-    for(id< MobilyDataItem > item in self.items) {
-        CGSize itemSize = [item sizeForAvailableSize:CGSizeMake(maxWidth, FLT_MAX)];
-        if((itemSize.width >= 0.0f) && (itemSize.height >= 0.0f)) {
-            item.updateFrame = CGRectMake(offset.x, offset.y + cumulative, maxWidth, itemSize.height);
-            cumulative += itemSize.height + spacing;
+    CGFloat cumulative = 0.0f;
+    for(id type in self.items) {
+        for(id< MobilyDataItem > item in self.items[type]) {
+            CGSize itemSize = [item sizeForAvailableSize:CGSizeMake(maxWidth, FLT_MAX)];
+            if((itemSize.width >= 0.0f) && (itemSize.height >= 0.0f)) {
+                item.updateFrame = CGRectMake(offset.x, offset.y + cumulative, maxWidth, itemSize.height);
+                cumulative += itemSize.height + spacing;
+            }
         }
     }
     cumulative -= spacing;
@@ -249,14 +251,16 @@
 - (CGRect)validateItemsLayoutForAvailableFrame:(CGRect)frame {
     UIEdgeInsets margin = self.margin;
     CGFloat spacing = self.spacing;
-    CGFloat cumulative = 0.0f;
     CGPoint offset = CGPointMake(frame.origin.x + margin.left, frame.origin.y + margin.top);
     CGFloat maxHeight = frame.size.height - (margin.top + margin.bottom);
-    for(id< MobilyDataItem > item in self.items) {
-        CGSize itemSize = [item sizeForAvailableSize:CGSizeMake(FLT_MAX, maxHeight)];
-        if((itemSize.width >= 0.0f) && (itemSize.height >= 0.0f)) {
-            item.updateFrame = CGRectMake(offset.x + cumulative, offset.y, itemSize.width, maxHeight);
-            cumulative += itemSize.width + spacing;
+    CGFloat cumulative = 0.0f;
+    for(id type in self.items) {
+        for(id< MobilyDataItem > item in self.items[type]) {
+            CGSize itemSize = [item sizeForAvailableSize:CGSizeMake(FLT_MAX, maxHeight)];
+            if((itemSize.width >= 0.0f) && (itemSize.height >= 0.0f)) {
+                item.updateFrame = CGRectMake(offset.x + cumulative, offset.y, itemSize.width, maxHeight);
+                cumulative += itemSize.width + spacing;
+            }
         }
     }
     cumulative -= spacing;

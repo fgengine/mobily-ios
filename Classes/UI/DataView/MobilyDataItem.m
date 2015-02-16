@@ -335,7 +335,7 @@
     [_widget disappearItem:self];
 }
 
-- (void)validateLayoutForVisibleBounds:(CGRect)bounds {
+- (void)validateLayoutForVisibleBounds:(CGRect)bounds forType:(id)type {
     if(_view == nil) {
         if(CGRectIntersectsRect(bounds, CGRectUnion(_originFrame, self.frame)) == YES) {
             [self appear];
