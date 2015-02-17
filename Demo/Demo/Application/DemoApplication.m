@@ -49,14 +49,6 @@
 
 @implementation DemoApplication
 
-- (void)setup {
-    [super setup];
-}
-
-- (void)dealloc {
-    MOBILY_SAFE_DEALLOC;
-}
-
 - (BOOL)launchingWithOptions:(NSDictionary *)options {
     BOOL result = [super launchingWithOptions:options];
     if(result == YES) {

@@ -63,8 +63,8 @@
 
 + (id)objectFromFilename:(NSString*)filename owner:(id)owner;
 
-+ (id< MobilyBuilderObject >)object:(id)object forName:(NSString*)name;
-+ (id< MobilyBuilderObject >)object:(id)object forSelector:(SEL)selector;
++ (id< MobilyBuilderObject >)object:(id< MobilyBuilderObject >)object forName:(NSString*)name;
++ (id< MobilyBuilderObject >)object:(id< MobilyBuilderObject >)object forSelector:(SEL)selector;
 
 @end
 

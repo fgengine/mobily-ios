@@ -38,10 +38,6 @@
 
 /*--------------------------------------------------*/
 
-@class MobilySocialSession;
-
-/*--------------------------------------------------*/
-
 typedef void (^MobilySocialProviderSuccessBlock)();
 typedef void (^MobilySocialProviderFailureBlock)(NSError* error);
 

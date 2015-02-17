@@ -71,6 +71,8 @@
 
 - (instancetype)initWithValueJsonConverter:(MobilyModelJson*)valueJsonConverter;
 - (instancetype)initWithValueJsonModelClass:(Class)valueJsonModelClass;
+- (instancetype)initWithKeyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter;
+- (instancetype)initWithKeyJsonModelClass:(Class)keyJsonModelClass valueJsonModelClass:(Class)valueJsonModelClass;
 - (instancetype)initWithPath:(NSString*)path valueJsonConverter:(MobilyModelJson*)valueJsonConverter;
 - (instancetype)initWithPath:(NSString*)path valueJsonModelClass:(Class)valueJsonModelClass;
 - (instancetype)initWithPath:(NSString*)path keyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter;

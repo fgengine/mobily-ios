@@ -42,17 +42,17 @@
 - (void)setup {
     [super setup];
     
-    [self setTitle:@"Fields"];
-    [self setEdgesForExtendedLayout:UIRectEdgeNone];
+    self.title = @"Fields";
+    self.edgesForExtendedLayout = UIRectEdgeNone;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [_dateField setDatePickerMode:UIDatePickerModeDate];
-    [_dateField setDateFormatter:[NSDateFormatter dateFormatterWithFormat:@"d MMM yyyy"]];
-    [_timeField setDatePickerMode:UIDatePickerModeTime];
-    [_timeField setDateFormatter:[NSDateFormatter dateFormatterWithFormat:@"HH:mm:ss"]];
+    _dateField.datePickerMode = UIDatePickerModeDate;
+    _dateField.dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"d MMM yyyy"];
+    _timeField.datePickerMode = UIDatePickerModeTime;
+    _timeField.dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"HH:mm:ss"];
 }
 
 @end

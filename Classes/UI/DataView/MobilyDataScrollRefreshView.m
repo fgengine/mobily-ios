@@ -85,20 +85,18 @@
     self.objectName = nil;
     self.objectParent = nil;
     self.objectChilds = nil;
-    
-    MOBILY_SAFE_DEALLOC;
 }
 
 #pragma mark MobilyBuilderObject
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIView class]] == YES) {
+    if([objectChild isKindOfClass:UIView.class] == YES) {
         self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIView class]] == YES) {
+    if([objectChild isKindOfClass:UIView.class] == YES) {
         self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
     }
 }

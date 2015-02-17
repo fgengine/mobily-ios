@@ -45,36 +45,38 @@
 @end
 
 /*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
 
 @implementation MobilyFieldForm
 
-- (void)setControls:(NSArray *)controls {
+- (void)setControls:(NSArray*)controls {
     if([_controls isEqualToArray:controls] == NO) {
-        for(id<MobilyValidatedObject> control in _controls) {
+        for(id< MobilyValidatedObject > control in _controls) {
             control.form = nil;
         }
         _controls = controls;
-        for(id<MobilyValidatedObject> control in _controls) {
+        for(id< MobilyValidatedObject > control in _controls) {
             control.form = self;
         }
     }
 }
 
 - (void)validatedSuccess:(id<MobilyValidatedObject>)control {
-    
 }
 
 - (void)validatedFail:(id<MobilyValidatedObject>)control {
-    
 }
 
 @end
 
 /*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
 
 @implementation MobilyFieldEmptyValidator
 
-- (BOOL)validate:(NSString *)value {
+- (BOOL)validate:(NSString*)value {
     NSCharacterSet* whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
     NSString* trimmed = [value stringByTrimmingCharactersInSet:whitespace];
     if([trimmed length] == 0) {
@@ -86,12 +88,14 @@
 @end
 
 /*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
 
 @implementation MobilyFieldRegExpValidator
 
 - (BOOL)validate:(NSString*)value {
     NSPredicate* test = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", _regExp];
-    if([test evaluateWithObject:value]) {
+    if([test evaluateWithObject:value] == YES) {
         return YES;
     }
     return NO;
@@ -99,6 +103,8 @@
 
 @end
 
+/*--------------------------------------------------*/
+#pragma mark -
 /*--------------------------------------------------*/
 
 @implementation MobilyFieldMinLengthValidator
@@ -126,12 +132,14 @@
 @end
 
 /*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
 
 @implementation MobilyFieldDigitValidator
 
 - (BOOL)validate:(NSString*)value {
     NSPredicate* test = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", @"[0-9]+"];
-    if([test evaluateWithObject:value]) {
+    if([test evaluateWithObject:value] == YES) {
         return YES;
     }
     return NO;
@@ -139,4 +147,6 @@
 
 @end
 
+/*--------------------------------------------------*/
+#pragma mark -
 /*--------------------------------------------------*/

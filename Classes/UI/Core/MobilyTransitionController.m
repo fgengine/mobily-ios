@@ -48,33 +48,30 @@
     if(characterSet == nil) {
         characterSet = [NSCharacterSet characterSetWithCharactersInString:@":-"];
     }
-    
-    __block NSString* validKey = [NSString string];;
+    NSString* validKey = NSString.string;;
     NSArray* components = [self componentsSeparatedByCharactersInSet:characterSet];
-    if([components count] > 1) {
-        [components enumerateObjectsUsingBlock:^(NSString* component, NSUInteger index, BOOL* stop) {
+    if(components.count > 1) {
+        for(NSString* component in components) {
             validKey = [validKey stringByAppendingString:[component stringByUppercaseFirstCharacterString]];
-        }];
+        }
     } else {
         validKey = [self stringByUppercaseFirstCharacterString];
     }
-    
     Class resultClass = nil;
-    if([validKey length] > 0) {
+    if(validKey.length > 0) {
         Class defaultClass = NSClassFromString([NSString stringWithFormat:MOBILY_TRANSITION_CONTROLLER_CLASS, validKey]);
-        if([defaultClass isSubclassOfClass:[MobilyTransitionController class]] == YES) {
+        if([defaultClass isSubclassOfClass:MobilyTransitionController.class] == YES) {
             resultClass = defaultClass;
         } else {
             Class customClass = NSClassFromString(self);
-            if([customClass isSubclassOfClass:[MobilyTransitionController class]] == YES) {
+            if([customClass isSubclassOfClass:MobilyTransitionController.class] == YES) {
                 resultClass = customClass;
             }
         }
     }
-    
     MobilyTransitionController* result = nil;
     if(resultClass != nil) {
-        result = [[resultClass alloc] init];
+        result = [resultClass new];
     }
     return result;
 }
@@ -98,11 +95,10 @@
 }
 
 - (void)setup {
-    [self setDuration:1.0f];
+    self.duration = 1.0f;
 }
 
 - (void)dealloc {
-    MOBILY_SAFE_DEALLOC;
 }
 
 #pragma mark Public
@@ -119,7 +115,7 @@
 - (void)animateTransition:(id< UIViewControllerContextTransitioning >)transitionContext {
     UIViewController* fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     UIViewController* toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
-    [self animateTransition:transitionContext fromVC:fromVC toVC:toVC fromView:[fromVC view] toView:[toVC view]];
+    [self animateTransition:transitionContext fromVC:fromVC toVC:toVC fromView:fromVC.view toView:toVC.view];
 }
 
 @end

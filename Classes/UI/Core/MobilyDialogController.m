@@ -93,13 +93,11 @@
 - (void)setup {
     [super setup];
     
-    [self setDialogControllers:[NSMutableArray array]];
+    self.dialogControllers = NSMutableArray.array;
 }
 
 - (void)dealloc {
-    [self setDialogControllers:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.dialogControllers = nil;
 }
 
 #pragma mark Private
@@ -107,7 +105,7 @@
 + (instancetype)shared {
     static id result = nil;
     if(result == nil) {
-        result = [[self alloc] init];
+        result = [self new];
     }
     return result;
 }
@@ -128,13 +126,13 @@
         if(_active == YES) {
             if(_lastWindow != nil) {
                 [_lastWindow makeKeyWindow];
-                [self setLastWindow:nil];
+                self.lastWindow = nil;
             }
             [self endEditing:YES];
         }
         _active = active;
         if(_active == YES) {
-            [self setLastWindow:[[UIApplication sharedApplication] keyWindow]];
+            self.lastWindow = UIApplication.sharedApplication.keyWindow;
             if(_lastWindow != nil) {
                 [_lastWindow endEditing:YES];
             }

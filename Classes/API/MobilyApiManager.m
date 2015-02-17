@@ -62,7 +62,7 @@
     if(shared == nil) {
         @synchronized(self) {
             if(shared == nil) {
-                shared = [[self alloc] init];
+                shared = [self new];
             }
         }
     }
@@ -74,11 +74,11 @@
 - (instancetype)init {
     self = [super init];
     if(self != nil) {
-        [self setTaskManager:[[MobilyTaskManager alloc] init]];
+        self.taskManager = [MobilyTaskManager new];
         if(_taskManager != nil) {
-            [_taskManager setMaxConcurrentTask:MOBILY_API_MANAGER_MAX_CONCURRENT_TASK];
+            _taskManager.maxConcurrentTask = MOBILY_API_MANAGER_MAX_CONCURRENT_TASK;
         }
-        [self setCache:[MobilyCache shared]];
+        self.cache = MobilyCache.shared;
         [self setup];
     }
     return self;
@@ -88,11 +88,9 @@
 }
 
 - (void)dealloc {
-    [self setMutableProviders:nil];
-    [self setTaskManager:nil];
-    [self setCache:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.mutableProviders = nil;
+    self.taskManager = nil;
+    self.cache = nil;
 }
 
 #pragma mark Property
@@ -106,14 +104,14 @@
 - (void)registerProvider:(MobilyApiProvider*)provider {
     if([_mutableProviders containsObject:provider] == NO) {
         [_mutableProviders addObject:provider];
-        [provider setManager:self];
+        provider.manager = self;
     }
 }
 
 - (void)unregisterProvider:(MobilyApiProvider*)provider {
     if([_mutableProviders containsObject:provider] == YES) {
         [_mutableProviders removeObject:provider];
-        [provider setManager:nil];
+        provider.manager = nil;
     }
 }
 

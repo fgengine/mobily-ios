@@ -84,6 +84,7 @@
 #   import "MobilyImageView.h"
 #   import "MobilyScrollView.h"
 #   import "MobilyTableView.h"
+#   import "MobilyFieldValidation.h"
 #   ifdef MOBILY_POD_UI_DATA_VIEW
 #       import "MobilyDataScrollView.h"
 #       import "MobilyDataContainer.h"

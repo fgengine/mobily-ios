@@ -57,9 +57,9 @@ static void* MobilyKVOContext = &MobilyKVOContext;
 - (instancetype)initWithSubject:(id)subject keyPath:(NSString*)keyPath block:(MobilyKVOBlock)block {
 	self = [super init];
 	if(self != nil) {
-        [self setSubject:subject];
-        [self setKeyPath:keyPath];
-        [self setBlock:block];
+        self.subject = subject;
+        self.keyPath = keyPath;
+        self.block = block;
         
 		[subject addObserver:self forKeyPath:keyPath options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:MobilyKVOContext];
         
@@ -74,17 +74,15 @@ static void* MobilyKVOContext = &MobilyKVOContext;
 - (void)dealloc {
 	[self stopObservation];
     
-    [self setKeyPath:nil];
-    [self setBlock:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.keyPath = nil;
+    self.block = nil;
 }
 
 #pragma mark Public
 
 - (void)stopObservation {
 	[_subject removeObserver:self forKeyPath:_keyPath context:MobilyKVOContext];
-    [self setSubject:nil];
+    self.subject = nil;
 }
 
 #pragma mark Private
@@ -92,11 +90,11 @@ static void* MobilyKVOContext = &MobilyKVOContext;
 - (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
 	if(context == MobilyKVOContext) {
 		if(_block != nil) {
-			id oldValue = [change objectForKey:NSKeyValueChangeOldKey];
+			id oldValue = change[NSKeyValueChangeOldKey];
 			if(oldValue == [NSNull null]) {
 				oldValue = nil;
             }
-			id newValue = [change objectForKey:NSKeyValueChangeNewKey];
+			id newValue = change[NSKeyValueChangeNewKey];
 			if(newValue == [NSNull null]) {
 				newValue = nil;
             }

@@ -50,7 +50,7 @@
 @interface MobilyFieldForm : NSObject
 
 @property(nonatomic, readonly, assign, getter=isValid) BOOL valid;
-@property(nonatomic, readwrite, strong) IBOutletCollection(NSObject<MobilyValidatedObject>) NSArray* controls;
+@property(nonatomic, readwrite, strong) IBOutletCollection(NSObject< MobilyValidatedObject >) NSArray* controls;
 
 - (void)validatedSuccess:(id<MobilyValidatedObject>)control;
 - (void)validatedFail:(id<MobilyValidatedObject>)control;
@@ -59,47 +59,37 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyFieldEmptyValidator : NSObject <MobilyFieldValidator>
-
-- (BOOL)validate:(NSString*)value;
+@interface MobilyFieldEmptyValidator : NSObject < MobilyFieldValidator >
 
 @end
 
 /*--------------------------------------------------*/
 
-@interface MobilyFieldRegExpValidator : NSObject <MobilyFieldValidator>
+@interface MobilyFieldRegExpValidator : NSObject < MobilyFieldValidator >
 
 @property(nonatomic, readwrite, strong) NSString* regExp;
 
-- (BOOL)validate:(NSString*)value;
-
 @end
 
 /*--------------------------------------------------*/
 
-@interface MobilyFieldMinLengthValidator : NSObject <MobilyFieldValidator>
+@interface MobilyFieldMinLengthValidator : NSObject < MobilyFieldValidator >
 
 @property(nonatomic, readwrite, assign) NSInteger minLength;
 
-- (BOOL)validate:(NSString*)value;
-
 @end
 
 /*--------------------------------------------------*/
 
-@interface MobilyFieldMaxLengthValidator : NSObject <MobilyFieldValidator>
+@interface MobilyFieldMaxLengthValidator : NSObject < MobilyFieldValidator >
 
 @property(nonatomic, readwrite, assign) NSInteger maxLength;
 
-- (BOOL)validate:(NSString*)value;
-
 @end
 
 /*--------------------------------------------------*/
 
-@interface MobilyFieldDigitValidator : NSObject <MobilyFieldValidator>
-
-- (BOOL)validate:(NSString*)value;
+@interface MobilyFieldDigitValidator : NSObject < MobilyFieldValidator >
 
 @end
 

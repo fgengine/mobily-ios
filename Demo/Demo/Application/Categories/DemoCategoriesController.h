@@ -67,7 +67,7 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
 @property(nonatomic, readwrite, assign) DemoCategoriesType type;
 @property(nonatomic, readwrite, strong) NSString* title;
 
-- (id)initWithType:(DemoCategoriesType)type title:(NSString*)title;
+- (instancetype)initWithType:(DemoCategoriesType)type title:(NSString*)title NS_DESIGNATED_INITIALIZER;
 
 @end
 

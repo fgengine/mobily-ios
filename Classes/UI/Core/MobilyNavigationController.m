@@ -104,28 +104,26 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)setup {
-    [self setDelegate:self];
+    self.delegate = self;
 }
 
 - (void)dealloc {
-    [self setObjectName:nil];
-    [self setObjectParent:nil];
-    [self setObjectChilds:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.objectName = nil;
+    self.objectParent = nil;
+    self.objectChilds = nil;
 }
 
 #pragma mark MobilyBuilderObject
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIViewController class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andAddingObject:objectChild]];
+    if([objectChild isKindOfClass:UIViewController.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIViewController class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild]];
+    if([objectChild isKindOfClass:UIViewController.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
     }
 }
 
@@ -133,10 +131,10 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)didLoadObjectChilds {
-    if([self rootViewController] == nil) {
-        UIViewController* viewController = [_objectChilds firstObjectIsClass:[UIViewController class]];
+    if(self.rootViewController == nil) {
+        UIViewController* viewController = [_objectChilds firstObjectIsClass:UIViewController.class];
         if(viewController != nil) {
-            [self setViewControllers:@[ viewController ]];
+            self.viewControllers = @[ viewController ];
         }
     }
 }
@@ -160,36 +158,36 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 #pragma mark UIViewController
 
 - (BOOL)shouldAutorotate {
-    return [[self topViewController] shouldAutorotate];
+    return self.topViewController.shouldAutorotate;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return [[self topViewController] supportedInterfaceOrientations];
+    return self.topViewController.supportedInterfaceOrientations;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation {
-    return [[self topViewController] shouldAutorotateToInterfaceOrientation:orientation];
+    return [self.topViewController shouldAutorotateToInterfaceOrientation:orientation];
 }
 
 - (BOOL)prefersStatusBarHidden {
-    return [[self topViewController] prefersStatusBarHidden];
+    return self.topViewController.prefersStatusBarHidden;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    return [[self topViewController] preferredStatusBarStyle];
+    return self.topViewController.preferredStatusBarStyle;
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
-    return [[self topViewController] preferredStatusBarUpdateAnimation];
+    return self.topViewController.preferredStatusBarUpdateAnimation;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if([self rootViewController] == nil) {
-        UIViewController* viewController = [_objectChilds firstObjectIsClass:[UIViewController class]];
+    if(self.rootViewController == nil) {
+        UIViewController* viewController = [_objectChilds firstObjectIsClass:UIViewController.class];
         if(viewController != nil) {
-            [self setViewControllers:@[ viewController ]];
+            self.viewControllers = @[ viewController ];
         }
     }
     [_eventDidLoad fireSender:self object:nil];
@@ -205,7 +203,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     [super viewWillAppear:animated];
     
     [_eventWillAppear fireSender:self object:nil];
-    [self setAppeared:_appeared + 1];
+    self.appeared = _appeared + 1;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -221,18 +219,18 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-    [self setAppeared:_appeared - 1];
+    self.appeared = _appeared - 1;
     [_eventDidDisappear fireSender:self object:nil];
     
     [super viewDidDisappear:animated];
 }
 
 - (void)setView:(UIView*)view {
-    [super setView:view];
+    super.view = view;
     
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    if(([UIDevice systemVersion] >= 6.0f) && (view == nil)) {
+    if((UIDevice.systemVersion >= 6.0f) && (view == nil)) {
         [self viewDidUnload];
     }
 #pragma clang diagnostic pop
@@ -242,14 +240,14 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (id< UIViewControllerAnimatedTransitioning >)animationControllerForPresentedController:(UIViewController*)presented presentingController:(UIViewController*)presenting sourceController:(UIViewController*)source {
     if(_transitionModal != nil) {
-        [_transitionModal setReverse:NO];
+        _transitionModal.reverse = NO;
     }
     return _transitionModal;
 }
 
 - (id< UIViewControllerAnimatedTransitioning >)animationControllerForDismissedController:(UIViewController*)dismissed {
     if(_transitionModal != nil) {
-        [_transitionModal setReverse:YES];
+        _transitionModal.reverse = YES;
     }
     return _transitionModal;
 }
@@ -257,18 +255,18 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 #pragma mark UINavigationControllerDelegate
 
 - (void)navigationController:(UINavigationController*)navigationController willShowViewController:(UIViewController*)viewController animated:(BOOL)animated {
-    if([viewController isKindOfClass:[MobilyController class]] == YES) {
+    if([viewController isKindOfClass:MobilyController.class] == YES) {
         MobilyController* mobilyController = (MobilyController*)viewController;
-        [navigationController setNavigationBarHidden:[mobilyController isNavigationBarHidden] animated:animated];
+        [navigationController setNavigationBarHidden:mobilyController.isNavigationBarHidden animated:animated];
     }
 }
 
 - (NSUInteger)navigationControllerSupportedInterfaceOrientations:(UINavigationController*)navigationController {
-    return [[self topViewController] supportedInterfaceOrientations];
+    return self.topViewController.supportedInterfaceOrientations;
 }
 
 - (UIInterfaceOrientation)navigationControllerPreferredInterfaceOrientationForPresentation:(UINavigationController*)navigationController {
-    return [[self topViewController] preferredInterfaceOrientationForPresentation];
+    return [self.topViewController preferredInterfaceOrientationForPresentation];
 }
 
 - (id< UIViewControllerInteractiveTransitioning >)navigationController:(UINavigationController*)navigationController interactionControllerForAnimationController:(id< UIViewControllerAnimatedTransitioning >)animationController {
@@ -278,8 +276,8 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 - (id< UIViewControllerAnimatedTransitioning >)navigationController:(UINavigationController*)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController*)fromViewController toViewController:(UIViewController*)toViewController {
     if(_transitionNavigation != nil) {
         switch(operation) {
-            case UINavigationControllerOperationPush: [_transitionNavigation setReverse:NO]; break;
-            case UINavigationControllerOperationPop: [_transitionNavigation setReverse:YES]; break;
+            case UINavigationControllerOperationPush: _transitionNavigation.reverse = NO; break;
+            case UINavigationControllerOperationPop: _transitionNavigation.reverse = YES; break;
             default: break;
         }
         return _transitionNavigation;

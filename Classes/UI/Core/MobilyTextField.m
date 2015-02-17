@@ -87,42 +87,40 @@
 }
 
 - (void)setup {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBeginEditing) name:UITextFieldTextDidBeginEditingNotification object:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEndEditing) name:UITextFieldTextDidEndEditingNotification object:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didValueChanged) name:UITextFieldTextDidChangeNotification object:self];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(didBeginEditing) name:UITextFieldTextDidBeginEditingNotification object:self];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(didEndEditing) name:UITextFieldTextDidEndEditingNotification object:self];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(didValueChanged) name:UITextFieldTextDidChangeNotification object:self];
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [NSNotificationCenter.defaultCenter removeObserver:self];
     
-    [self setObjectName:nil];
-    [self setObjectParent:nil];
-    [self setObjectChilds:nil];
+    self.objectName = nil;
+    self.objectParent = nil;
+    self.objectChilds = nil;
     
-    [self setToolbar:nil];
-    [self setPrevButton:nil];
-    [self setNextButton:nil];
-    [self setFlexButton:nil];
-    [self setDoneButton:nil];
+    self.toolbar = nil;
+    self.prevButton = nil;
+    self.nextButton = nil;
+    self.flexButton = nil;
+    self.doneButton = nil;
     
-    [self setPrevInputResponder:nil];
-    [self setNextInputResponder:nil];
-
-    MOBILY_SAFE_DEALLOC;
+    self.prevInputResponder = nil;
+    self.nextInputResponder = nil;
 }
 
 #pragma mark MobilyBuilderObject
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIView class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andAddingObject:objectChild]];
+    if([objectChild isKindOfClass:UIView.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
         [self addSubview:(UIView*)objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIView class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild]];
+    if([objectChild isKindOfClass:UIView.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
         [self removeSubview:(UIView*)objectChild];
     }
 }
@@ -158,10 +156,10 @@
             if(animated == YES) {
                 [UIView animateWithDuration:MOBILY_DURATION
                                  animations:^{
-                                     [_toolbar setFrameHeight:toolbarHeight];
+                                     _toolbar.frameHeight = toolbarHeight;
                                  }];
             } else {
-                [_toolbar setFrameHeight:toolbarHeight];
+                _toolbar.frameHeight = toolbarHeight;
             }
         }
     }
@@ -169,27 +167,26 @@
 
 - (void)didBeginEditing {
     if(_toolbar == nil) {
-        CGRect windowBounds = [[self window] bounds];
-        [self setToolbar:[[UIToolbar alloc] initWithFrame:CGRectMake(windowBounds.origin.x, windowBounds.origin.y, windowBounds.size.width, MOBILY_TOOLBAR_HEIGHT)]];
+        CGRect windowBounds = self.window.bounds;
+        self.toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(windowBounds.origin.x, windowBounds.origin.y, windowBounds.size.width, MOBILY_TOOLBAR_HEIGHT)];
         if(_toolbar != nil) {
-            [self setPrevButton:[[UIBarButtonItem alloc] initWithTitle:@"<" style:UIBarButtonItemStyleBordered target:self action:@selector(pressedPrev)]];
-            [self setNextButton:[[UIBarButtonItem alloc] initWithTitle:@">" style:UIBarButtonItemStyleBordered target:self action:@selector(pressedNext)]];
-            [self setFlexButton:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]];
-            [self setDoneButton:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(pressedDone)]];
+            self.prevButton = [[UIBarButtonItem alloc] initWithTitle:@"<" style:UIBarButtonItemStyleBordered target:self action:@selector(pressedPrev)];
+            self.nextButton = [[UIBarButtonItem alloc] initWithTitle:@">" style:UIBarButtonItemStyleBordered target:self action:@selector(pressedNext)];
+            self.flexButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+            self.doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(pressedDone)];
             
-            [_toolbar setItems:@[_prevButton, _nextButton, _flexButton, _doneButton]];
-            [_toolbar setBarStyle:UIBarStyleDefault];
-            [_toolbar setClipsToBounds:YES];
+            _toolbar.items = @[_prevButton, _nextButton, _flexButton, _doneButton];
+            _toolbar.barStyle = UIBarStyleDefault;
+            _toolbar.clipsToBounds = YES;
         }
     }
     if(_toolbar != nil) {
         _prevInputResponder = [UIResponder prevResponderFromView:self];
         _nextInputResponder = [UIResponder nextResponderFromView:self];
-        [_prevButton setEnabled:(_prevInputResponder != nil)];
-        [_nextButton setEnabled:(_nextInputResponder != nil)];
-        
-        [_toolbar setFrameHeight:(_hiddenToolbar == NO) ? MOBILY_TOOLBAR_HEIGHT : 0.0f];
-        [self setInputAccessoryView:_toolbar];
+        _prevButton.enabled = (_prevInputResponder != nil);
+        _nextButton.enabled = (_nextInputResponder != nil);
+        _toolbar.frameHeight = (_hiddenToolbar == NO) ? MOBILY_TOOLBAR_HEIGHT : 0.0f;
+        self.inputAccessoryView = _toolbar;
     }
 }
 
@@ -200,7 +197,7 @@
 
 - (void)didValueChanged {
     if(_validator != nil) {
-        if([_validator validate:[self text]] == YES) {
+        if([_validator validate:self.text] == YES) {
             [_form validatedSuccess:self];
         } else {
             [_form validatedFail:self];

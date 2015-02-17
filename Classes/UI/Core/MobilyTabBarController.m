@@ -89,28 +89,26 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)setup {
-    [self setDelegate:self];
+    self.delegate = self;
 }
 
 - (void)dealloc {
-    [self setObjectName:nil];
-    [self setObjectParent:nil];
-    [self setObjectChilds:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.objectName = nil;
+    self.objectParent = nil;
+    self.objectChilds = nil;
 }
 
 #pragma mark MobilyBuilderObject
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIViewController class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andAddingObject:objectChild]];
+    if([objectChild isKindOfClass:UIViewController.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIViewController class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild]];
+    if([objectChild isKindOfClass:UIViewController.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
     }
 }
 
@@ -118,9 +116,9 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)didLoadObjectChilds {
-    if([UIDevice systemVersion] >= 7.0f) {
-        if([[self viewControllers] count] < 1) {
-            [self setViewControllers:[_objectChilds arrayByObjectClass:[UIViewController class]]];
+    if(UIDevice.systemVersion >= 7.0f) {
+        if(self.viewControllers.count < 1) {
+            self.viewControllers = [_objectChilds arrayByObjectClass:UIViewController.class];
         }
         [_eventDidLoad fireSender:self object:nil];
     }
@@ -145,35 +143,35 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 #pragma mark UIViewController
 
 - (BOOL)shouldAutorotate {
-    return [[self selectedViewController] shouldAutorotate];
+    return self.selectedViewController.shouldAutorotate;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return [[self selectedViewController] supportedInterfaceOrientations];
+    return self.selectedViewController.supportedInterfaceOrientations;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation {
-    return [[self selectedViewController] shouldAutorotateToInterfaceOrientation:orientation];
+    return [self.selectedViewController shouldAutorotateToInterfaceOrientation:orientation];
 }
 
 - (BOOL)prefersStatusBarHidden {
-    return [[self selectedViewController] prefersStatusBarHidden];
+    return self.selectedViewController.prefersStatusBarHidden;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    return [[self selectedViewController] preferredStatusBarStyle];
+    return self.selectedViewController.preferredStatusBarStyle;
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
-    return [[self selectedViewController] preferredStatusBarUpdateAnimation];
+    return self.selectedViewController.preferredStatusBarUpdateAnimation;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if([UIDevice systemVersion] < 7.0f) {
-        if([[self viewControllers] count] < 1) {
-            [self setViewControllers:[_objectChilds arrayByObjectClass:[UIViewController class]]];
+    if(UIDevice.systemVersion < 7.0f) {
+        if(self.viewControllers.count < 1) {
+            self.viewControllers = [_objectChilds arrayByObjectClass:UIViewController.class];
         }
         [_eventDidLoad fireSender:self object:nil];
     }
@@ -189,10 +187,10 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     [super viewWillAppear:animated];
 
     if(_navigationBarHidden == YES) {
-        [[self navigationController] setNavigationBarHidden:YES animated:animated];
+        [self.navigationController setNavigationBarHidden:YES animated:animated];
     }
     [_eventWillAppear fireSender:self object:nil];
-    [self setAppeared:_appeared + 1];
+    self.appeared = _appeared + 1;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -203,7 +201,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (void)viewWillDisappear:(BOOL)animated {
     if(_navigationBarHidden == YES) {
-        [[self navigationController] setNavigationBarHidden:NO animated:animated];
+        [self.navigationController setNavigationBarHidden:NO animated:animated];
     }
     [_eventWillDisappear fireSender:self object:nil];
     
@@ -211,18 +209,18 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-    [self setAppeared:_appeared - 1];
+    self.appeared = _appeared - 1;
     [_eventDidDisappear fireSender:self object:nil];
     
     [super viewDidDisappear:animated];
 }
 
 - (void)setView:(UIView*)view {
-    [super setView:view];
+    super.view = view;
     
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    if(([UIDevice systemVersion] >= 6.0f) && (view == nil)) {
+    if((UIDevice.systemVersion >= 6.0f) && (view == nil)) {
         [self viewDidUnload];
     }
 #pragma clang diagnostic pop
@@ -232,14 +230,14 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (id< UIViewControllerAnimatedTransitioning >)animationControllerForPresentedController:(UIViewController*)presented presentingController:(UIViewController*)presenting sourceController:(UIViewController*)source {
     if(_transitionModal != nil) {
-        [_transitionModal setReverse:NO];
+        _transitionModal.reverse = NO;
     }
     return _transitionModal;
 }
 
 - (id< UIViewControllerAnimatedTransitioning >)animationControllerForDismissedController:(UIViewController*)dismissed {
     if(_transitionModal != nil) {
-        [_transitionModal setReverse:YES];
+        _transitionModal.reverse = YES;
     }
     return _transitionModal;
 }
@@ -263,11 +261,11 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 */
 - (NSUInteger)tabBarControllerSupportedInterfaceOrientations:(UITabBarController*)tabBarController {
-    return [[self selectedViewController] supportedInterfaceOrientations];
+    return self.selectedViewController.supportedInterfaceOrientations;
 }
 
 - (UIInterfaceOrientation)tabBarControllerPreferredInterfaceOrientationForPresentation:(UITabBarController*)tabBarController {
-    return [[self selectedViewController] preferredInterfaceOrientationForPresentation];
+    return [self.selectedViewController preferredInterfaceOrientationForPresentation];
 }
 
 - (id< UIViewControllerInteractiveTransitioning >)tabBarController:(UITabBarController*)tabBarController interactionControllerForAnimationController:(id< UIViewControllerAnimatedTransitioning >)animationController {
@@ -276,8 +274,8 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (id< UIViewControllerAnimatedTransitioning >)tabBarController:(UITabBarController*)tabBarController animationControllerForTransitionFromViewController:(UIViewController*)fromViewController toViewController:(UIViewController*)toViewController {
     if(_transitionNavigation != nil) {
-        NSArray* viewControllers = [tabBarController viewControllers];
-        [_transitionNavigation setReverse:[viewControllers indexOfObject:fromViewController] < [viewControllers indexOfObject:toViewController]];
+        NSArray* viewControllers = tabBarController.viewControllers;
+        _transitionNavigation.reverse = [viewControllers indexOfObject:fromViewController] < [viewControllers indexOfObject:toViewController];
         return _transitionNavigation;
     }
     return nil;

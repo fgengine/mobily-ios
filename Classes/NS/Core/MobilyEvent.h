@@ -95,7 +95,7 @@ typedef id (^MobilyEventBlockType)(id sender, id object);
 
 #define MOBILY_DEFINE_VALIDATE_EVENT(name) \
 - (BOOL)validate##name:(inout id*)value error:(out NSError**)error { \
-    if([*value isKindOfClass:[NSString class]] == YES) { \
+    if([*value isKindOfClass:NSString.class] == YES) { \
         SEL action = NSSelectorFromString(*value); \
         if(action != nil) { \
             id target = [self objectForSelector:action]; \

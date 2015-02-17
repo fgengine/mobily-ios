@@ -61,14 +61,12 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
 - (void)setup {
     [super setup];
     
-    [self setAutomaticallyHideKeyboard:YES];
-    [self setNeedUpdate:YES];
+    self.automaticallyHideKeyboard = YES;
+    self.needUpdate = YES;
 }
 
 - (void)dealloc {
-    [self setMobilyName:nil];
-
-    MOBILY_SAFE_DEALLOC;
+    self.mobilyName = nil;
 }
 
 #pragma mark MobilyLoaderObject
@@ -76,8 +74,8 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
 - (id< MobilyBuilderObject >)objectForName:(NSString*)name {
     id< MobilyBuilderObject > result = [MobilyBuilderForm object:self forName:name];
     if(result == nil) {
-        if([self isViewLoaded] == YES) {
-            UIView< MobilyBuilderObject >* view = (UIView< MobilyBuilderObject >*)[self view];
+        if(self.isViewLoaded == YES) {
+            UIView< MobilyBuilderObject >* view = (UIView< MobilyBuilderObject >*)self.view;
             if([view respondsToSelector:@selector(objectForName:)] == YES) {
                 result = [view objectForName:name];
             }
@@ -101,29 +99,29 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
 }
 
 - (void)loadView {
-    if([_mobilyName length] > 0) {
-        id view = [MobilyBuilderForm objectFromFilename:_mobilyName owner:self];
-        if([view isKindOfClass:[UIView class]] == YES) {
-            [self setView:view];
+    if(_mobilyName.length > 0) {
+        UIView* view = [MobilyBuilderForm objectFromFilename:_mobilyName owner:self];
+        if([view isKindOfClass:UIView.class] == YES) {
+            self.view = view;
         } else {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-            NSLog(@"Failure load view mobily '%@' object '%@'", _mobilyName, NSStringFromClass([view class]));
+            NSLog(@"Failure load view mobily '%@' object '%@'", _mobilyName, NSStringFromClass(view.class));
 #endif
             [super loadView];
         }
     } else {
         UINib* nib = nil;
-        NSString* nibName = [self nibName];
-        if([nibName length] > 0) {
-            nib = [UINib nibWithBaseName:nibName bundle:[self nibBundle]];
+        NSString* nibName = self.nibName;
+        if(nibName.length > 0) {
+            nib = [UINib nibWithBaseName:nibName bundle:self.nibBundle];
         } else {
-            nib = [UINib nibWithClass:[self class] bundle:[self nibBundle]];
+            nib = [UINib nibWithClass:self.class bundle:self.nibBundle];
         }
         if(nib != nil) {
             [nib instantiateWithOwner:self options:nil];
         } else {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-            NSLog(@"Failure load view nib '%@'", NSStringFromClass([self class]));
+            NSLog(@"Failure load view nib '%@'", NSStringFromClass(self.class));
 #endif
             [super loadView];
         }
@@ -140,7 +138,7 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
     [super viewWillAppear:animated];
     
     if([self isNeedUpdate] == YES) {
-        [self setNeedUpdate:NO];
+        self.needUpdate = NO;
         [self update];
     }
 }
@@ -148,10 +146,10 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
 #pragma mark Public
 
 - (void)setNeedUpdate {
-    if(([self isViewLoaded] == YES) && ([self isAppeared] == YES)) {
+    if((self.isViewLoaded == YES) && ([self isAppeared] == YES)) {
         [self update];
     } else {
-        [self setNeedUpdate:YES];
+        self.needUpdate = YES;
     }
 }
 

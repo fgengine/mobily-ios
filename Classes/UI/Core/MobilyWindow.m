@@ -92,34 +92,32 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 }
 
 - (void)setup {
-    [self setAutomaticallyHideKeyboard:YES];
+    self.automaticallyHideKeyboard = YES;
 }
 
 - (void)dealloc {
     [_eventDidUnload fireSender:self object:nil];
     
-    [self setObjectName:nil];
-    [self setObjectParent:nil];
-    [self setObjectChilds:nil];
+    self.objectName = nil;
+    self.objectParent = nil;
+    self.objectChilds = nil;
     
-    [self setEmptyView:nil];
-    [self setEmptyTabGesture:nil];
-    [self setEmptyPanGesture:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.emptyView = nil;
+    self.emptyTabGesture = nil;
+    self.emptyPanGesture = nil;
 }
 
 #pragma mark MobilyBuilderObject
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIViewController class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andAddingObject:objectChild]];
+    if([objectChild isKindOfClass:UIViewController.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIViewController class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild]];
+    if([objectChild isKindOfClass:UIViewController.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
     }
 }
 
@@ -143,35 +141,35 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
     [super becomeKeyWindow];
     
     if(_emptyView == nil) {
-        [self setEmptyView:[[UIView alloc] initWithFrame:[self bounds]]];
+        self.emptyView = [[UIView alloc] initWithFrame:self.bounds];
         if(_emptyView != nil) {
-            [_emptyView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
-            [_emptyView setBackgroundColor:[UIColor clearColor]];
-            [_emptyView setHidden:YES];
+            _emptyView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+            _emptyView.backgroundColor = [UIColor clearColor];
+            _emptyView.hidden = YES;
             [self addSubview:_emptyView];
             
-            [self setEmptyTabGesture:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(resignCurrentFirstResponder)]];
+            self.emptyTabGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(resignCurrentFirstResponder)];
             if(_emptyTabGesture != nil) {
                 [_emptyView addGestureRecognizer:_emptyTabGesture];
             }
             
-            [self setEmptyPanGesture:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(resignCurrentFirstResponder)]];
+            self.emptyPanGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(resignCurrentFirstResponder)];
             if(_emptyPanGesture != nil) {
                 [_emptyView addGestureRecognizer:_emptyPanGesture];
             }
         }
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willShowKeyboard:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didHideKeyboard:) name:UIKeyboardDidHideNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(willShowKeyboard:) name:UIKeyboardWillShowNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(didHideKeyboard:) name:UIKeyboardDidHideNotification object:nil];
     
-    if([self rootViewController] == nil) {
+    if(self.rootViewController == nil) {
         UIViewController* controller = [_eventDidLoad fireSender:self object:nil];
-        if([self rootViewController] == nil) {
+        if(self.rootViewController == nil) {
             if(controller != nil) {
-                [self setRootViewController:controller];
-            } else if([_objectChilds count] > 0) {
-                [self setRootViewController:[_objectChilds firstObject]];
+                self.rootViewController = controller;
+            } else if(_objectChilds.count > 0) {
+                self.rootViewController = _objectChilds.firstObject;
             }
         }
     }
@@ -180,7 +178,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 - (void)resignKeyWindow {
     [super resignKeyWindow];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
 - (void)didAddSubview:(UIView*)subview {
@@ -201,15 +199,15 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
             parentViewController = currentViewController;
         }
         if(_automaticallyHideKeyboard == YES) {
-            if([currentViewController isKindOfClass:[MobilyViewController class]] == YES) {
+            if([currentViewController isKindOfClass:MobilyViewController.class] == YES) {
                 MobilyViewController* mobilyViewController = (MobilyViewController*)currentViewController;
-                if([mobilyViewController isAutomaticallyHideKeyboard] == NO) {
-                    return [[[self rootViewController] view] hitTest:point withEvent:event];
+                if(mobilyViewController.isAutomaticallyHideKeyboard == NO) {
+                    return [self.rootViewController.view hitTest:point withEvent:event];
                 }
             }
-            UIView* view = [[parentViewController view] hitTest:point withEvent:event];
-            if([view canBecomeFirstResponder] == NO) {
-                if([view isKindOfClass:[UIControl class]] == YES) {
+            UIView* view = [parentViewController.view hitTest:point withEvent:event];
+            if(view.canBecomeFirstResponder == NO) {
+                if([view isKindOfClass:UIControl.class] == YES) {
                     UIControl* control = (UIControl*)view;
                     if([control isEnabled] == NO) {
                         view = _emptyView;
@@ -220,7 +218,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
             }
             return view;
         } else {
-            return [[[self rootViewController] view] hitTest:point withEvent:event];
+            return [self.rootViewController.view hitTest:point withEvent:event];
         }
     }
     return [super hitTest:point withEvent:event];
@@ -231,15 +229,15 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 #pragma mark Private
 
 - (void)willShowKeyboard:(NSNotification*)notification {
-    [_emptyView setHidden:NO];
+    _emptyView.hidden = NO;
 }
 
 - (void)didHideKeyboard:(NSNotification*)notification {
-    [_emptyView setHidden:YES];
+    _emptyView.hidden = YES;
 }
 
 - (void)resignCurrentFirstResponder {
-    UIResponder* firstResponder = [UIResponder currentFirstResponder];
+    UIResponder* firstResponder = UIResponder.currentFirstResponder;
     if(firstResponder != nil) {
         [firstResponder resignFirstResponder];
     }

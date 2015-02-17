@@ -59,25 +59,25 @@
 #pragma mark Init / Free
 
 + (instancetype)timerWithInterval:(NSTimeInterval)interval {
-    return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithInterval:interval]);
+    return [[self alloc] initWithInterval:interval];
 }
 
 + (instancetype)timerWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval {
-    return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithDelay:delay interval:interval]);
+    return [[self alloc] initWithDelay:delay interval:interval];
 }
 
 + (instancetype)timerWithInterval:(NSTimeInterval)interval repeat:(NSUInteger)repeat {
-    return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithInterval:interval repeat:repeat]);
+    return [[self alloc] initWithInterval:interval repeat:repeat];
 }
 
 + (instancetype)timerWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval repeat:(NSUInteger)repeat {
-    return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithDelay:delay interval:interval repeat:repeat]);
+    return [[self alloc] initWithDelay:delay interval:interval repeat:repeat];
 }
 
 - (instancetype)initWithInterval:(NSTimeInterval)interval {
     self = [super init];
     if(self != nil) {
-        [self setInterval:interval];
+        self.interval = interval;
         [self setup];
     }
     return self;
@@ -86,8 +86,8 @@
 - (instancetype)initWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval {
     self = [super init];
     if(self != nil) {
-        [self setDelay:delay];
-        [self setInterval:interval];
+        self.delay = delay;
+        self.interval = interval;
         [self setup];
     }
     return self;
@@ -96,8 +96,8 @@
 - (instancetype)initWithInterval:(NSTimeInterval)interval repeat:(NSUInteger)repeat {
     self = [super init];
     if(self != nil) {
-        [self setInterval:interval];
-        [self setRepeat:repeat];
+        self.interval = interval;
+        self.repeat = repeat;
         [self setup];
     }
     return self;
@@ -106,9 +106,9 @@
 - (instancetype)initWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval repeat:(NSUInteger)repeat {
     self = [super init];
     if(self != nil) {
-        [self setDelay:delay];
-        [self setInterval:interval];
-        [self setRepeat:repeat];
+        self.delay = delay;
+        self.interval = interval;
+        self.repeat = repeat;
         [self setup];
     }
     return self;
@@ -119,26 +119,24 @@
 
 - (void)dealloc {
     [self stop];
-    
-    MOBILY_SAFE_DEALLOC;
 }
 
 #pragma mark Public
 
 - (void)start {
     if(_started == NO) {
-        [self setStarted:YES];
-        [self setPaused:NO];
-        [self setElapsed:0.0f];
-        [self setRepeated:0];
+        self.started = YES;
+        self.paused = NO;
+        self.elapsed = 0.0f;
+        self.repeated = 0;
         if(_delay > 0.0f) {
-            [self setDelaying:YES];
-            [self setTimer:[NSTimer scheduledTimerWithTimeInterval:_delay target:self selector:@selector(delayStartHandler) userInfo:nil repeats:NO]];
+            self.delaying = YES;
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:_delay target:self selector:@selector(delayStartHandler) userInfo:nil repeats:NO];
         }
         if(_timer == nil) {
-            [self setStartTime:[NSDate timeIntervalSinceReferenceDate]];
-            [self setDelaying:NO];
-            [self setTimer:[NSTimer scheduledTimerWithTimeInterval:_interval target:self selector:@selector(timerHandler) userInfo:nil repeats:(_repeat != 0)]];
+            self.startTime = NSDate.timeIntervalSinceReferenceDate;
+            self.delaying = NO;
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:_interval target:self selector:@selector(timerHandler) userInfo:nil repeats:(_repeat != 0)];
             if([_delegate respondsToSelector:@selector(timerDidStarted:)] == YES) {
                 [_delegate timerDidStarted:self];
             } else if(_startedBlock != nil) {
@@ -150,8 +148,8 @@
 
 - (void)stop {
     if(_started == YES) {
-        [self setStarted:NO];
-        [self setTimer:nil];
+        self.started = NO;
+        self.timer = nil;
         if([_delegate respondsToSelector:@selector(timerDidStoped:)] == YES) {
             [_delegate timerDidStoped:self];
         } else if(_stopedBlock != nil) {
@@ -162,9 +160,9 @@
 
 - (void)pause {
     if((_started == YES) && (_paused == NO)) {
-        [self setPauseTime:[NSDate timeIntervalSinceReferenceDate]];
-        [self setPaused:YES];
-        [self setTimer:nil];
+        self.pauseTime = NSDate.timeIntervalSinceReferenceDate;
+        self.paused = YES;
+        self.timer = nil;
         if([_delegate respondsToSelector:@selector(timerDidPaused:)] == YES) {
             [_delegate timerDidPaused:self];
         } else if(_pausedBlock != nil) {
@@ -175,13 +173,13 @@
 
 - (void)resume {
     if((_started == YES) && (_paused == YES)) {
-        [self setPaused:NO];
+        self.paused = NO;
         if(_delaying == YES) {
-            [self setTimer:[NSTimer scheduledTimerWithTimeInterval:[NSDate timeIntervalSinceReferenceDate] - _delay target:self selector:@selector(delayStartHandler) userInfo:nil repeats:NO]];
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:NSDate.timeIntervalSinceReferenceDate - _delay target:self selector:@selector(delayStartHandler) userInfo:nil repeats:NO];
         }
         if(_timer == nil) {
-            [self setStartTime:[NSDate timeIntervalSinceReferenceDate] - (_pauseTime - _startTime)];
-            [self setTimer:[NSTimer scheduledTimerWithTimeInterval:_interval target:self selector:@selector(timerHandler) userInfo:nil repeats:(_repeat != 0)]];
+            self.startTime = NSDate.timeIntervalSinceReferenceDate - (_pauseTime - _startTime);
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:_interval target:self selector:@selector(timerHandler) userInfo:nil repeats:(_repeat != 0)];
             if([_delegate respondsToSelector:@selector(timerDidResumed:)] == YES) {
                 [_delegate timerDidResumed:self];
             } else if(_resumedBlock != nil) {
@@ -216,13 +214,13 @@
         if(_timer != nil) {
             [_timer invalidate];
         }
-        MOBILY_SAFE_SETTER(_timer, timer);
+        _timer = timer;
     }
 }
 
 - (NSTimeInterval)elapsed {
     if((_started == YES) && (_delaying == NO)) {
-        [self setElapsed:[NSDate timeIntervalSinceReferenceDate] - _started];
+        self.elapsed = NSDate.timeIntervalSinceReferenceDate - _started;
     }
     return _elapsed;
 }
@@ -230,9 +228,9 @@
 #pragma mark Private
 
 - (void)delayStartHandler {
-    [self setStartTime:[NSDate timeIntervalSinceReferenceDate]];
-    [self setDelaying:NO];
-    [self setTimer:[NSTimer scheduledTimerWithTimeInterval:_interval target:self selector:@selector(timerHandler) userInfo:nil repeats:(_repeat != 0)]];
+    self.startTime = NSDate.timeIntervalSinceReferenceDate;
+    self.delaying = NO;
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:_interval target:self selector:@selector(timerHandler) userInfo:nil repeats:(_repeat != 0)];
     if([_delegate respondsToSelector:@selector(timerDidStarted:)] == YES) {
         [_delegate timerDidStarted:self];
     } else if(_startedBlock != nil) {

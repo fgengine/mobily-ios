@@ -51,7 +51,7 @@
 }
 
 - (void)setup {
-    [self setDirection:MobilyScrollViewDirectionVertical];
+    self.direction = MobilyScrollViewDirectionVertical;
     
     [self registerAdjustmentResponder];
 }
@@ -59,27 +59,25 @@
 - (void)dealloc {
     [self unregisterAdjustmentResponder];
     
-    [self setObjectName:nil];
-    [self setObjectParent:nil];
-    [self setObjectChilds:nil];
+    self.objectName = nil;
+    self.objectParent = nil;
+    self.objectChilds = nil;
     
-    [self setRootView:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.rootView = nil;
 }
 
 #pragma mark MobilyBuilderObject
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIView class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andAddingObject:objectChild]];
+    if([objectChild isKindOfClass:UIView.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
         [self addSubview:(UIView*)objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIView class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild]];
+    if([objectChild isKindOfClass:UIView.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
         [self removeSubview:(UIView*)objectChild];
     }
 }
@@ -107,7 +105,7 @@
         if(_constraintRootViewL != nil) {
             [self removeConstraint:_constraintRootViewL];
         }
-        MOBILY_SAFE_SETTER(_constraintRootViewL, constraintRootViewL);
+        _constraintRootViewL = constraintRootViewL;
         if(_constraintRootViewL != nil) {
             [self addConstraint:_constraintRootViewL];
         }
@@ -119,7 +117,7 @@
         if(_constraintRootViewT != nil) {
             [self removeConstraint:_constraintRootViewT];
         }
-        MOBILY_SAFE_SETTER(_constraintRootViewT, constraintRootViewT);
+        _constraintRootViewT = constraintRootViewT;
         if(_constraintRootViewT != nil) {
             [self addConstraint:_constraintRootViewT];
         }
@@ -131,7 +129,7 @@
         if(_constraintRootViewR != nil) {
             [self removeConstraint:_constraintRootViewR];
         }
-        MOBILY_SAFE_SETTER(_constraintRootViewR, constraintRootViewR);
+        _constraintRootViewR = constraintRootViewR;
         if(_constraintRootViewR != nil) {
             [self addConstraint:_constraintRootViewR];
         }
@@ -143,7 +141,7 @@
         if(_constraintRootViewB != nil) {
             [self removeConstraint:_constraintRootViewB];
         }
-        MOBILY_SAFE_SETTER(_constraintRootViewB, constraintRootViewB);
+        _constraintRootViewB = constraintRootViewB;
         if(_constraintRootViewB != nil) {
             [self addConstraint:_constraintRootViewB];
         }
@@ -155,7 +153,7 @@
         if(_constraintRootViewW != nil) {
             [self removeConstraint:_constraintRootViewW];
         }
-        MOBILY_SAFE_SETTER(_constraintRootViewW, constraintRootViewW);
+        _constraintRootViewW = constraintRootViewW;
         if(_constraintRootViewW != nil) {
             [self addConstraint:_constraintRootViewW];
         }
@@ -167,7 +165,7 @@
         if(_constraintRootViewH != nil) {
             [self removeConstraint:_constraintRootViewH];
         }
-        MOBILY_SAFE_SETTER(_constraintRootViewH, constraintRootViewH);
+        _constraintRootViewH = constraintRootViewH;
         if(_constraintRootViewH != nil) {
             [self addConstraint:_constraintRootViewH];
         }
@@ -193,9 +191,9 @@
             [self unlinkConstraint];
             [_rootView removeFromSuperview];
         }
-        MOBILY_SAFE_SETTER(_rootView, rootView);
+        _rootView = rootView;
         if(_rootView != nil) {
-            [_rootView setTranslatesAutoresizingMaskIntoConstraints:NO];
+            _rootView.translatesAutoresizingMaskIntoConstraints = NO;
             [self addSubview:_rootView];
             [self linkConstraint];
         }
@@ -208,37 +206,37 @@
 - (void)linkConstraint {
     switch(_direction) {
         case MobilyScrollViewDirectionStretch:
-            [self setConstraintRootViewT:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f]];
-            [self setConstraintRootViewB:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f]];
-            [self setConstraintRootViewL:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f]];
-            [self setConstraintRootViewR:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f]];
-            [self setConstraintRootViewW:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0f constant:0.0f]];
-            [self setConstraintRootViewH:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:1.0f constant:0.0f]];
+            self.constraintRootViewL = [NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+            self.constraintRootViewT = [NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+            self.constraintRootViewR = [NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
+            self.constraintRootViewB = [NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
+            self.constraintRootViewW = [NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0f constant:0.0f];
+            self.constraintRootViewH = [NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:1.0f constant:0.0f];
             break;
         case MobilyScrollViewDirectionVertical:
-            [self setConstraintRootViewT:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f]];
-            [self setConstraintRootViewB:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f]];
-            [self setConstraintRootViewL:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f]];
-            [self setConstraintRootViewR:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f]];
-            [self setConstraintRootViewW:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0f constant:0.0f]];
+            self.constraintRootViewT = [NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+            self.constraintRootViewB = [NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+            self.constraintRootViewL = [NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
+            self.constraintRootViewR = [NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
+            self.constraintRootViewW = [NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0f constant:0.0f];
             break;
         case MobilyScrollViewDirectionHorizontal:
-            [self setConstraintRootViewT:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f]];
-            [self setConstraintRootViewB:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f]];
-            [self setConstraintRootViewL:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1.0f constant:0.0f]];
-            [self setConstraintRootViewR:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTrailing multiplier:1.0f constant:0.0f]];
-            [self setConstraintRootViewH:[NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:1.0f constant:0.0f]];
+            self.constraintRootViewT = [NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+            self.constraintRootViewB = [NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+            self.constraintRootViewL = [NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1.0f constant:0.0f];
+            self.constraintRootViewR = [NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTrailing multiplier:1.0f constant:0.0f];
+            self.constraintRootViewH = [NSLayoutConstraint constraintWithItem:_rootView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:1.0f constant:0.0f];
             break;
     }
 }
 
 - (void)unlinkConstraint {
-    [self setConstraintRootViewL:nil];
-    [self setConstraintRootViewT:nil];
-    [self setConstraintRootViewR:nil];
-    [self setConstraintRootViewB:nil];
-    [self setConstraintRootViewW:nil];
-    [self setConstraintRootViewH:nil];
+    self.constraintRootViewL = nil;
+    self.constraintRootViewT = nil;
+    self.constraintRootViewR = nil;
+    self.constraintRootViewB = nil;
+    self.constraintRootViewW = nil;
+    self.constraintRootViewH = nil;
 }
 
 @end

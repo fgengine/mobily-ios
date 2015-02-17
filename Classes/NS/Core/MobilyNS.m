@@ -46,41 +46,41 @@
 
 + (NSDate*)dateOffsetYears:(NSInteger)years months:(NSInteger)months days:(NSInteger)days toDate:(NSDate*)date {
     NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents* component = [[NSDateComponents alloc] init];
-    [component setYear:years];
-    [component setMonth:months];
-    [component setDay:days];
+    NSDateComponents* component = [NSDateComponents new];
+    component.year = years;
+    component.month = months;
+    component.day = days;
     return [calendar dateByAddingComponents:component toDate:date options:0];
 }
 
 + (NSDate*)dateOffsetHours:(NSInteger)hours minutes:(NSInteger)minutes seconds:(NSInteger)secconds toDate:(NSDate*)date {
     NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents* component = [[NSDateComponents alloc] init];
-    [component setHour:hours];
-    [component setMinute:minutes];
-    [component setSecond:secconds];
+    NSDateComponents* component = [NSDateComponents new];
+    component.hour = hours;
+    component.minute = minutes;
+    component.second = secconds;
     return [calendar dateByAddingComponents:component toDate:date options:0];
 }
 
 + (NSDate*)dateOffsetYears:(NSInteger)years months:(NSInteger)months days:(NSInteger)days hours:(NSInteger)hours minutes:(NSInteger)minutes seconds:(NSInteger)secconds toDate:(NSDate*)date {
     NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents* component = [[NSDateComponents alloc] init];
-    [component setYear:years];
-    [component setMonth:months];
-    [component setDay:days];
-    [component setHour:hours];
-    [component setMinute:minutes];
-    [component setSecond:secconds];
+    NSDateComponents* component = [NSDateComponents new];
+    component.year = years;
+    component.month = months;
+    component.day = days;
+    component.hour = hours;
+    component.minute = minutes;
+    component.second = secconds;
     return [calendar dateByAddingComponents:component toDate:date options:0];
 }
 
 - (NSString*)formatTime {
     static NSDateFormatter* formatter = nil;
     if(formatter == nil) {
-        formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:NSLocalizedString(@"h:mm a", @"Date format: 1:05 pm")];
-        [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")]];
-        [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+        formatter = [NSDateFormatter new];
+        formatter.dateFormat = NSLocalizedString(@"h:mm a", @"Date format: 1:05 pm");
+        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")];
+        formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
     }
     return [formatter stringFromDate:self];
 }
@@ -88,69 +88,66 @@
 - (NSString*)formatDate {
     static NSDateFormatter* formatter = nil;
     if(formatter == nil) {
-        formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:NSLocalizedString(@"EEEE, LLLL d, YYYY", @"Date format: Monday, July 27, 2009")];
-        [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")]];
-        [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+        formatter = [NSDateFormatter new];
+        formatter.dateFormat = NSLocalizedString(@"EEEE, LLLL d, YYYY", @"Date format: Monday, July 27, 2009");
+        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")];
+        formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
     }
     return [formatter stringFromDate:self];
 }
 
 - (NSString*)formatShortTime {
-    NSTimeInterval diff = abs([self timeIntervalSinceNow]);
-    
+    NSTimeInterval diff = abs(self.timeIntervalSinceNow);
     if(diff < MOBILY_DAY) {
         return [self formatTime];
     } else if(diff < MOBILY_5_DAYS) {
         static NSDateFormatter* formatter = nil;
         if(formatter == nil) {
-            formatter = [[NSDateFormatter alloc] init];
-            [formatter setDateFormat:NSLocalizedString(@"EEEE", @"Date format: Monday")];
-            [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")]];
-            [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+            formatter = [NSDateFormatter new];
+            formatter.dateFormat = NSLocalizedString(@"EEEE", @"Date format: Monday");
+            formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")];
+            formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         }
         return [formatter stringFromDate:self];
     } else {
         static NSDateFormatter* formatter = nil;
         if(formatter == nil) {
-            formatter = [[NSDateFormatter alloc] init];
-            [formatter setDateFormat:NSLocalizedString(@"M/d/yy", @"Date format: 7/27/09") ];
-            [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")]];
-            [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+            formatter = [NSDateFormatter new];
+            formatter.dateFormat = NSLocalizedString(@"M/d/yy", @"Date format: 7/27/09") ;
+            formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")];
+            formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         }
         return [formatter stringFromDate:self];
     }
 }
 
 - (NSString*)formatDateTime {
-    NSTimeInterval diff = abs([self timeIntervalSinceNow]);
-    
+    NSTimeInterval diff = abs(self.timeIntervalSinceNow);
     if(diff < MOBILY_DAY) {
         return [self formatTime];
     } else if(diff < MOBILY_5_DAYS) {
         static NSDateFormatter* formatter = nil;
         if(formatter == nil) {
-            formatter = [[NSDateFormatter alloc] init];
-            [formatter setDateFormat:NSLocalizedString(@"EEE h:mm a", @"Date format: Mon 1:05 pm")];
-            [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")]];
-            [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+            formatter = [NSDateFormatter new];
+            formatter.dateFormat = NSLocalizedString(@"EEE h:mm a", @"Date format: Mon 1:05 pm");
+            formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")];
+            formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         }
         return [formatter stringFromDate:self];
     } else {
         static NSDateFormatter* formatter = nil;
         if(formatter == nil) {
-            formatter = [[NSDateFormatter alloc] init];
-            [formatter setDateFormat:NSLocalizedString(@"MMM d h:mm a", @"Date format: Jul 27 1:05 pm")];
-            [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")]];
-            [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+            formatter = [NSDateFormatter new];
+            formatter.dateFormat = NSLocalizedString(@"MMM d h:mm a", @"Date format: Jul 27 1:05 pm");
+            formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")];
+            formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         }
         return [formatter stringFromDate:self];
     }
 }
 
 - (NSString*)formatRelativeTime {
-    NSTimeInterval elapsed = abs([self timeIntervalSinceNow]);
-    
+    NSTimeInterval elapsed = abs(self.timeIntervalSinceNow);
     if(elapsed <= 1.0f) {
         return NSLocalizedString(@"just a moment ago", @"");
     } else if(elapsed < MOBILY_MINUTE) {
@@ -172,8 +169,7 @@
 }
 
 - (NSString*)formatShortRelativeTime {
-    NSTimeInterval elapsed = abs([self timeIntervalSinceNow]);
-    
+    NSTimeInterval elapsed = abs(self.timeIntervalSinceNow);
     if(elapsed < MOBILY_MINUTE) {
         return NSLocalizedString(@"<1m", @"Date format: less than one minute ago");
     } else if(elapsed < MOBILY_HOUR) {
@@ -195,7 +191,7 @@
 }
 
 - (NSUInteger)unixTimestamp {
-    return (NSUInteger)[self timeIntervalSince1970];
+    return (NSUInteger)self.timeIntervalSince1970;
 }
 
 @end
@@ -207,13 +203,13 @@
 @implementation NSDateFormatter (MobilyNS)
 
 + (NSDateFormatter*)dateFormatterWithFormat:(NSString*)format {
-    return [self dateFormatterWithFormat:format locale:[NSLocale currentLocale]];
+    return [self dateFormatterWithFormat:format locale:NSLocale.currentLocale];
 }
 
 + (NSDateFormatter*)dateFormatterWithFormat:(NSString*)format locale:(NSLocale*)locale {
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:[NSDateFormatter dateFormatFromTemplate:format options:0 locale:locale]];
-    [dateFormatter setLocale:locale];
+    NSDateFormatter* dateFormatter = [NSDateFormatter new];
+    dateFormatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:format options:0 locale:locale];
+    dateFormatter.locale = locale;
     return dateFormatter;
 }
 
@@ -230,9 +226,9 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 @implementation NSData (MobilyNS)
 
 - (NSString*)toHex {
-    NSUInteger length = [self length];
-    unsigned char* bytes = (unsigned char*)[self bytes];
-    NSMutableString* hex = [NSMutableString stringWithCapacity:[self length]];
+    NSUInteger length = self.length;
+    unsigned char* bytes = (unsigned char*)self.bytes;
+    NSMutableString* hex = [NSMutableString stringWithCapacity:self.length];
     for(NSUInteger i = 0; i < length; i++) {
         [hex appendFormat:@"%02X", bytes[i]];
     }
@@ -240,13 +236,11 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 }
 
 - (NSString*)toBase64 {
-    NSData* data = [NSData dataWithBytes:[self bytes] length:[self length]];
-    const uint8_t* input = (const uint8_t*)[data bytes];
-    NSInteger length = [data length];
-    
+    NSData* data = [NSData dataWithBytes:self.bytes length:self.length];
+    const uint8_t* input = (const uint8_t*)data.bytes;
+    NSInteger length = data.length;
     NSMutableData* result = [NSMutableData dataWithLength:((length + 2) / 3) * 4];
     uint8_t* output = (uint8_t*)[result mutableBytes];
-    
     for(NSInteger i = 0; i < length; i += 3) {
         NSInteger value = 0;
         for(NSInteger j = i; j < (i + 3); j++) {
@@ -261,7 +255,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
         output[index + 2] = (i + 1) < length ? NSDataBase64Table[(value >> 6) & 0x3F] : '=';
         output[index + 3] = (i + 2) < length ? NSDataBase64Table[(value >> 0) & 0x3F] : '=';
     }
-    return MOBILY_SAFE_AUTORELEASE([[NSString alloc] initWithData:result encoding:NSASCIIStringEncoding]);
+    return [NSString stringWithData:result encoding:NSASCIIStringEncoding];
 }
 
 @end
@@ -272,43 +266,43 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 
 @implementation NSString (MobilyNS)
 
-+ (id)stringWithData:(NSData*)data encoding:(NSStringEncoding)encoding {
-    return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithData:data encoding:encoding]);
++ (instancetype)stringWithData:(NSData*)data encoding:(NSStringEncoding)encoding {
+    return [[self alloc] initWithData:data encoding:encoding];
 }
 
 - (NSString*)stringByUppercaseFirstCharacterString {
-    if([self length] > 0) {
+    if(self.length > 0) {
         return [[[self substringToIndex:1] uppercaseString] stringByAppendingString:[self substringFromIndex:1]];
     }
-    return [NSString string];
+    return NSString.string;
 }
 
 - (NSString*)stringByLowercaseFirstCharacterString {
-    if([self length] > 0) {
+    if(self.length > 0) {
         return [[[self substringToIndex:1] lowercaseString] stringByAppendingString:[self substringFromIndex:1]];
     }
-    return [NSString string];
+    return NSString.string;
 }
 
 - (NSString*)stringByMD5 {
     unsigned char result[16];
-    const char* string = [self UTF8String];
+    const char* string = self.UTF8String;
     CC_MD5(string, (CC_LONG)strlen(string), result);
     return [[NSString stringWithFormat:@"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X", result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10], result[11], result[12], result[13], result[14], result[15]] lowercaseString];
 }
 
 - (NSString*)stringBySHA256 {
     unsigned char result[CC_SHA256_DIGEST_LENGTH];
-    const char* string = [self UTF8String];
+    const char* string = self.UTF8String;
     CC_SHA256(string, (CC_LONG)strlen(string), result);
     return [[NSString  stringWithFormat: @"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X", result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10], result[11], result[12], result[13], result[14], result[15], result[16], result[17], result[18], result[19], result[20], result[21], result[22], result[23], result[24], result[25], result[26], result[27], result[28], result[29], result[30], result[31]] lowercaseString];
 }
 
 - (NSString*)stringByDecodingURLFormat {
     NSString* result = nil;
-    CFStringRef string = CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL, MOBILY_SAFE_BRIDGE(CFStringRef, self), CFSTR(""), kCFStringEncodingUTF8);
+    CFStringRef string = CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL, (__bridge_retained CFStringRef)self, CFSTR(""), kCFStringEncodingUTF8);
     if(string != nil) {
-        result = [NSString stringWithString:MOBILY_SAFE_BRIDGE(NSString*, string)];
+        result = [NSString stringWithString:(__bridge_transfer NSString*)string];
         CFRelease(string);
     }
     return result;
@@ -316,27 +310,27 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 
 - (NSString*)stringByEncodingURLFormat {
     NSString* result = nil;
-    CFStringRef string = CFURLCreateStringByAddingPercentEscapes(NULL, MOBILY_SAFE_BRIDGE(CFStringRef, self), NULL, CFSTR("!*'();:@&=+$,/?%#[]"), kCFStringEncodingUTF8);
+    CFStringRef string = CFURLCreateStringByAddingPercentEscapes(NULL, (__bridge_retained CFStringRef)self, NULL, CFSTR("!*'();:@&=+$,/?%#[]"), kCFStringEncodingUTF8);
     if(string != nil) {
-        result = [NSString stringWithString:MOBILY_SAFE_BRIDGE(NSString*, string)];
+        result = [NSString stringWithString:(__bridge_transfer NSString*)string];
         CFRelease(string);
     }
     return result;
 }
 
 - (NSMutableDictionary*)dictionaryFromQueryComponents {
-    NSMutableDictionary* queryComponents = [NSMutableDictionary dictionary];
+    NSMutableDictionary* queryComponents = NSMutableDictionary.dictionary;
     for(NSString* keyValuePairString in [self componentsSeparatedByString:@"&"]) {
         NSArray* keyValuePairArray = [keyValuePairString componentsSeparatedByString:@"="];
-        if([keyValuePairArray count] < 2) {
+        if(keyValuePairArray.count < 2) {
             continue;
         }
-        NSString* key = [[keyValuePairArray objectAtIndex:0] stringByDecodingURLFormat];
-        NSString* value = [[keyValuePairArray objectAtIndex:1] stringByDecodingURLFormat];
-        NSMutableArray* results = [queryComponents objectForKey:key];
+        NSString* key = [keyValuePairArray[0] stringByDecodingURLFormat];
+        NSString* value = [keyValuePairArray[1] stringByDecodingURLFormat];
+        NSMutableArray* results = queryComponents[key];
         if(results == nil) {
             results = [NSMutableArray arrayWithCapacity:1];
-            [queryComponents setObject:results forKey:key];
+            queryComponents[key] = results;
         }
         [results addObject:value];
     }
@@ -370,7 +364,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
     static NSNumberFormatter* formatter = nil;
     if(formatter == nil) {
         formatter = [NSNumberFormatter new];
-        [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+        formatter.numberStyle = NSNumberFormatterDecimalStyle;
     }
     return [formatter numberFromString:self];
 }
@@ -380,7 +374,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
     if(formatter == nil) {
         formatter = [NSDateFormatter new];
     }
-    [formatter setDateFormat:format];
+    formatter.dateFormat = format;
     return [formatter dateFromString:self];
 }
 
@@ -452,7 +446,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 
 - (NSArray*)arrayByReplaceObject:(id)object atIndex:(NSUInteger)index {
     NSMutableArray* result = [NSMutableArray arrayWithArray:self];
-    [result replaceObjectAtIndex:index withObject:object];
+    result[index] = object;
     return [NSArray arrayWithArray:result];
 }
 
@@ -469,33 +463,33 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 }
 
 - (NSArray*)arrayByObjectClass:(Class)objectClass {
-    NSMutableArray* result = [NSMutableArray array];
-    [self enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
+    NSMutableArray* result = NSMutableArray.array;
+    for(id object in self) {
         if([object isKindOfClass:objectClass] == YES) {
             [result addObject:object];
         }
-    }];
+    }
     return [NSArray arrayWithArray:result];
 }
 
 - (NSArray*)arrayByObjectProtocol:(Protocol*)objectProtocol {
-    NSMutableArray* result = [NSMutableArray array];
-    [self enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
+    NSMutableArray* result = NSMutableArray.array;
+    for(id object in self) {
         if([object conformsToProtocol:objectProtocol] == YES) {
             [result addObject:object];
         }
-    }];
+    }
     return [NSArray arrayWithArray:result];
 }
 
 - (id)firstObjectIsClass:(Class)objectClass {
-    __block id result = nil;
-    [self enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
+    id result = nil;
+    for(id object in self) {
         if([object isKindOfClass:objectClass] == YES) {
             result = object;
-            *stop = YES;
+            break;
         }
-    }];
+    }
     return result;
 }
 
@@ -511,13 +505,13 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 }
 
 - (id)firstObjectIsProtocol:(Protocol*)objectProtocol {
-    __block id result = nil;
-    [self enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
+    id result = nil;
+    for(id object in self) {
         if([object conformsToProtocol:objectProtocol] == YES) {
             result = object;
-            *stop = YES;
+            break;
         }
-    }];
+    }
     return result;
 }
 
@@ -535,7 +529,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 - (NSUInteger)nextIndexOfObject:(id)object {
     NSUInteger index = [self indexOfObject:object];
     if(index != NSNotFound) {
-        if(index == [self count] - 1) {
+        if(index == self.count - 1) {
             index = NSNotFound;
         } else {
             index++;
@@ -559,8 +553,8 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 - (id)nextObjectOfObject:(id)object {
     NSUInteger index = [self indexOfObject:object];
     if(index != NSNotFound) {
-        if(index < [self count] - 1) {
-            return [self objectAtIndex:index + 1];
+        if(index < self.count - 1) {
+            return self[index + 1];
         }
     }
     return nil;
@@ -570,7 +564,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
     NSUInteger index = [self indexOfObject:object];
     if(index != NSNotFound) {
         if(index != 0) {
-            return [self objectAtIndex:index - 1];
+            return self[index - 1];
         }
     }
     return nil;
@@ -593,7 +587,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 }
 
 - (void)removeLastObjectsByCount:(NSUInteger)count {
-    [self removeObjectsInRange:NSMakeRange(([self count] - 1) - count, count)];
+    [self removeObjectsInRange:NSMakeRange((self.count - 1) - count, count)];
 }
 
 @end
@@ -607,7 +601,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 - (BOOL)boolValueForKey:(NSString*)key orDefault:(BOOL)defaultValue {
     NSNumber* number = [self numberValueForKey:key orDefault:nil];
     if(number != nil) {
-        return [number boolValue];
+        return number.boolValue;
     }
     return defaultValue;
 }
@@ -615,7 +609,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 - (NSInteger)integerValueForKey:(NSString*)key orDefault:(NSInteger)defaultValue {
     NSNumber* number = [self numberValueForKey:key orDefault:nil];
     if(number != nil) {
-        return [number integerValue];
+        return number.integerValue;
     }
     return defaultValue;
 }
@@ -623,7 +617,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 - (NSUInteger)unsignedIntegerValueForKey:(NSString*)key orDefault:(NSUInteger)defaultValue {
     NSNumber* number = [self numberValueForKey:key orDefault:nil];
     if(number != nil) {
-        return [number unsignedIntegerValue];
+        return number.unsignedIntegerValue;
     }
     return defaultValue;
 }
@@ -631,7 +625,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 - (float)floatValueForKey:(NSString*)key orDefault:(float)defaultValue {
     NSNumber* number = [self numberValueForKey:key orDefault:nil];
     if(number != nil) {
-        return [number floatValue];
+        return number.floatValue;
     }
     return defaultValue;
 }
@@ -639,38 +633,38 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 - (double)doubleValueForKey:(NSString*)key orDefault:(double)defaultValue {
     NSNumber* number = [self numberValueForKey:key orDefault:nil];
     if(number != nil) {
-        return [number doubleValue];
+        return number.doubleValue;
     }
     return defaultValue;
 }
 
 - (NSNumber*)numberValueForKey:(NSString*)key orDefault:(NSNumber*)defaultValue {
-    id value = [self objectForKey:key];
-    if([value isKindOfClass:[NSNumber class]] == YES) {
+    id value = self[key];
+    if([value isKindOfClass:NSNumber.class] == YES) {
         return value;
     }
     return defaultValue;
 }
 
 - (NSString*)stringValueForKey:(NSString*)key orDefault:(NSString*)defaultValue {
-    id value = [self objectForKey:key];
-    if([value isKindOfClass:[NSString class]] == YES) {
+    id value = self[key];
+    if([value isKindOfClass:NSString.class] == YES) {
         return value;
     }
     return defaultValue;
 }
 
 - (NSArray*)arrayValueForKey:(NSString*)key orDefault:(NSArray*)defaultValue {
-    id value = [self objectForKey:key];
-    if([value isKindOfClass:[NSArray class]] == YES) {
+    id value = self[key];
+    if([value isKindOfClass:NSArray.class] == YES) {
         return value;
     }
     return defaultValue;
 }
 
 - (NSDictionary*)dictionaryValueForKey:(NSString*)key orDefault:(NSDictionary*)defaultValue {
-    id value = [self objectForKey:key];
-    if([value isKindOfClass:[NSDictionary class]] == YES) {
+    id value = self[key];
+    if([value isKindOfClass:NSDictionary.class] == YES) {
         return value;
     }
     return defaultValue;
@@ -678,12 +672,12 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 
 - (NSString*)stringFromQueryComponents {
     NSString* result = nil;
-    for(NSString* dictKey in [self allKeys]) {
+    for(NSString* dictKey in self.allKeys) {
         NSString* key = [dictKey stringByEncodingURLFormat];
-        NSArray* allValues = [self objectForKey:key];
-        if([allValues isKindOfClass:[NSArray class]]) {
+        NSArray* allValues = self[key];
+        if([allValues isKindOfClass:NSArray.class]) {
             for(NSString* dictValue in allValues) {
-                NSString* value = [[dictValue description] stringByEncodingURLFormat];
+                NSString* value = [dictValue.description stringByEncodingURLFormat];
                 if(result == nil) {
                     result = [NSString stringWithFormat:@"%@=%@",key,value];
                 } else {
@@ -691,7 +685,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
                 }
             }
         } else {
-            NSString* value = [[allValues description] stringByEncodingURLFormat];
+            NSString* value = [allValues.description stringByEncodingURLFormat];
             if(result == nil) {
                 result = [NSString stringWithFormat:@"%@=%@",key,value];
             } else {
@@ -711,11 +705,11 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 @implementation NSURL (MobilyNS)
 
 - (NSMutableDictionary*)queryComponents {
-    return [[self query] dictionaryFromQueryComponents];
+    return self.query.dictionaryFromQueryComponents;
 }
 
 - (NSMutableDictionary*)fragmentComponents {
-    return [[self fragment] dictionaryFromQueryComponents];
+    return self.fragment.dictionaryFromQueryComponents;
 }
 
 @end
@@ -730,8 +724,8 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
     static NSString* result = nil;
     if(result == nil) {
         NSArray* directories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        if([directories count] > 0) {
-            result = [directories firstObject];
+        if(directories.count > 0) {
+            result = directories.firstObject;
         }
     }
     return result;
@@ -741,8 +735,8 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
     static NSString* result = nil;
     if(result == nil) {
         NSArray* directories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-        if([directories count] > 0) {
-            result = [directories firstObject];
+        if(directories.count > 0) {
+            result = directories.firstObject;
         }
     }
     return result;
@@ -759,13 +753,13 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 + (void)clearCookieWithDomain:(NSString*)domain {
     NSHTTPCookieStorage* storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     if(storage != nil) {
-        for(NSHTTPCookie* cookie in [storage cookies]) {
-            NSRange range = [[cookie domain] rangeOfString:domain];
+        for(NSHTTPCookie* cookie in storage.cookies) {
+            NSRange range = [cookie.domain rangeOfString:domain];
             if(range.length > 0) {
                 [storage deleteCookie:cookie];
             }
         }
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        [NSUserDefaults.standardUserDefaults synchronize];
     }
 }
 
@@ -796,8 +790,8 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 + (NSString*)fileSystemDirectory {
     static NSString* fileSystemDirectory = nil;
     if(fileSystemDirectory == nil) {
-        NSFileManager* fileManager = [NSFileManager defaultManager];
-        NSString* path = [[NSFileManager cachesDirectory] stringByAppendingPathComponent:[[NSBundle mainBundle] bundleIdentifier]];
+        NSFileManager* fileManager = NSFileManager.defaultManager;
+        NSString* path = [[NSFileManager cachesDirectory] stringByAppendingPathComponent:[NSBundle.mainBundle bundleIdentifier]];
         if([fileManager fileExistsAtPath:path] == NO) {
             if([fileManager createDirectoryAtPath:fileSystemDirectory withIntermediateDirectories:YES attributes:nil error:nil] == YES) {
                 fileSystemDirectory = path;

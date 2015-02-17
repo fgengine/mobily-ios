@@ -52,8 +52,8 @@
 
 - (CGSize)implicitSizeWithFont:(UIFont*)font forSize:(CGSize)size lineBreakMode:(NSLineBreakMode)lineBreakMode {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
-    if([UIDevice systemVersion] >= 7.0) {
-        NSMutableParagraphStyle* paragraphStyle = MOBILY_SAFE_AUTORELEASE([NSMutableParagraphStyle new]);
+    if(UIDevice.systemVersion >= 7.0) {
+        NSMutableParagraphStyle* paragraphStyle = [NSMutableParagraphStyle new];
         paragraphStyle.lineBreakMode = lineBreakMode;
         NSDictionary* attributes = @{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle };
         CGRect textRect = [self boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attributes context:nil];
@@ -82,27 +82,27 @@
     static NSNumberFormatter* formatter = nil;
     if(formatter == nil) {
         formatter = [NSNumberFormatter new];
-        [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+        formatter.numberStyle = NSNumberFormatterDecimalStyle;
     }
     NSArray* array = [self componentsSeparatedByString:separated];
-    switch([array count]) {
+    switch(array.count) {
         case 1: {
-            result.top = [[formatter numberFromString:[array objectAtIndex:0]] floatValue];
+            result.top = [[formatter numberFromString:array[0]] floatValue];
             result.left = result.bottom = result.right = result.top;
             break;
         }
         case 2: {
-            result.top = [[formatter numberFromString:[array objectAtIndex:0]] floatValue];
-            result.left = [[formatter numberFromString:[array objectAtIndex:1]] floatValue];
+            result.top = [[formatter numberFromString:array[0]] floatValue];
+            result.left = [[formatter numberFromString:array[1]] floatValue];
             result.bottom = result.top;
             result.right = result.left;
             break;
         }
         case 4: {
-            result.top = [[formatter numberFromString:[array objectAtIndex:0]] floatValue];
-            result.left = [[formatter numberFromString:[array objectAtIndex:1]] floatValue];
-            result.bottom = [[formatter numberFromString:[array objectAtIndex:2]] floatValue];
-            result.right = [[formatter numberFromString:[array objectAtIndex:3]] floatValue];
+            result.top = [[formatter numberFromString:array[0]] floatValue];
+            result.left = [[formatter numberFromString:array[1]] floatValue];
+            result.bottom = [[formatter numberFromString:array[2]] floatValue];
+            result.right = [[formatter numberFromString:array[3]] floatValue];
             break;
         }
         default:
@@ -126,19 +126,19 @@
 - (UIFont*)convertToFontSeparated:(NSString*)separated {
     UIFont* result = nil;
     NSArray* array = [self componentsSeparatedByString:separated];
-    if([array count] > 0) {
+    if(array.count > 0) {
         static NSNumberFormatter* formatter = nil;
         if(formatter == nil) {
             formatter = [NSNumberFormatter new];
-            [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+            formatter.numberStyle = NSNumberFormatterDecimalStyle;
         }
-        switch([array count]) {
+        switch(array.count) {
             case 1: {
-                result = [UIFont fontWithName:[array objectAtIndex:0] size:[UIFont systemFontSize]];
+                result = [UIFont fontWithName:array[0] size:UIFont.systemFontSize];
                 break;
             }
             case 2: {
-                result = [UIFont fontWithName:[array objectAtIndex:0] size:[[formatter numberFromString:[array objectAtIndex:1]] floatValue]];
+                result = [UIFont fontWithName:array[0] size:[[formatter numberFromString:array[1]] floatValue]];
                 break;
             }
             default:
@@ -155,7 +155,7 @@
 - (UIImage*)convertToImageSeparated:(NSString*)separated edgeInsetsSeparated:(NSString*)edgeInsetsSeparated {
     UIImage* result = nil;
     NSArray* array = [self componentsSeparatedByString:separated];
-    switch([array count]) {
+    switch(array.count) {
         case 1: {
             result = [UIImage imageNamed:self];
             break;
@@ -163,10 +163,10 @@
         default:{
             NSString* pattern = [NSString stringWithFormat:@"([A-Za-z0-9-_]+)[%@]+\\[([0-9%@ ]*)\\]", separated, edgeInsetsSeparated];
             NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:NULL];
-            NSArray* matches = [regex matchesInString:self options:0 range:NSMakeRange(0, [self length])];
-            if([matches count] > 0) {
-                NSTextCheckingResult* match = [matches objectAtIndex:0];
-                if([match numberOfRanges] == 3) {
+            NSArray* matches = [regex matchesInString:self options:0 range:NSMakeRange(0, self.length)];
+            if(matches.count > 0) {
+                NSTextCheckingResult* match = matches[0];
+                if(match.numberOfRanges == 3) {
                     NSString* imageName = [self substringWithRange:[match rangeAtIndex:1]];
                     result = [UIImage imageNamed:imageName];
                     if(result != nil) {
@@ -190,15 +190,15 @@
 }
 
 - (NSArray*)convertToImagesSeparated:(NSString*)separated edgeInsetsSeparated:(NSString*)edgeInsetsSeparated frameSeparated:(NSString*)frameSeparated {
-    NSMutableArray* result = [NSMutableArray array];
+    NSMutableArray* result = NSMutableArray.array;
     NSArray* array = [self componentsSeparatedByString:frameSeparated];
-    if([array count] > 0) {
-        [array enumerateObjectsUsingBlock:^(NSString* frame, NSUInteger index, BOOL* stop) {
+    if(array.count > 0) {
+        for(NSString* frame in array) {
             UIImage* image = [frame convertToImageSeparated:separated edgeInsetsSeparated:edgeInsetsSeparated];
             if(image != nil) {
                 [result addObject:image];
             }
-        }];
+        }
     }
     return result;
 }
@@ -208,13 +208,13 @@
 }
 
 - (UIRemoteNotificationType)convertToRemoteNotificationTypeSeparated:(NSString*)separated {
-    __block UIRemoteNotificationType result = UIRemoteNotificationTypeNone;
+    UIRemoteNotificationType result = UIRemoteNotificationTypeNone;
     NSString* value = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([value isEqualToString:@"all"] == YES) {
         result = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeNewsstandContentAvailability;
     } else {
         NSArray* keys = [value componentsSeparatedByString:separated];
-        [keys enumerateObjectsUsingBlock:^(NSString* key, NSUInteger index, BOOL* stop) {
+        for(NSString* key in keys) {
             NSString* temp = [key stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             if([temp isEqualToString:@"badge"] == YES) {
                 result |= UIRemoteNotificationTypeBadge;
@@ -225,7 +225,7 @@
             } else if([temp isEqualToString:@"news-stand"] == YES) {
                 result |= UIRemoteNotificationTypeNewsstandContentAvailability;
             }
-        }];
+        }
     }
     return result;
 }
@@ -235,13 +235,13 @@
 }
 
 - (UIInterfaceOrientationMask)convertToInterfaceOrientationMaskSeparated:(NSString*)separated {
-    __block UIInterfaceOrientationMask result = 0;
+    UIInterfaceOrientationMask result = 0;
     NSString* value = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([value isEqualToString:@"all"] == YES) {
         result = UIInterfaceOrientationMaskAll;
     } else {
         NSArray* keys = [value componentsSeparatedByString:separated];
-        [keys enumerateObjectsUsingBlock:^(NSString* key, NSUInteger index, BOOL* stop) {
+        for(NSString* key in keys) {
             NSString* temp = [key stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             if([temp isEqualToString:@"portrait"] == YES) {
                 result |= UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
@@ -256,7 +256,7 @@
             } else if([temp isEqualToString:@"landscape-right"] == YES) {
                 result |= UIInterfaceOrientationMaskLandscapeRight;
             }
-        }];
+        }
     }
     return result;
 }
@@ -296,13 +296,13 @@
 }
 
 - (UIViewAutoresizing)convertToViewAutoresizingSeparated:(NSString*)separated {
-    __block UIViewAutoresizing result = UIViewAutoresizingNone;
+    UIViewAutoresizing result = UIViewAutoresizingNone;
     NSString* value = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([value isEqualToString:@"all"] == YES) {
         result = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     } else {
         NSArray* keys = [value componentsSeparatedByString:separated];
-        [keys enumerateObjectsUsingBlock:^(NSString* key, NSUInteger index, BOOL* stop) {
+        for(NSString* key in keys) {
             NSString* temp = [key stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             if([temp isEqualToString:@"size"] == YES) {
                 result |= UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -319,7 +319,7 @@
             } else if([temp isEqualToString:@"right"] == YES) {
                 result |= UIViewAutoresizingFlexibleLeftMargin;
             }
-        }];
+        }
     }
     return result;
 }
@@ -597,7 +597,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     if((range.location != NSNotFound) && (range.length > 0)) {
         CGFloat red = 1.0f, blue = 1.0f, green = 1.0f, alpha = 1.0f;
         NSString* colorString = [[string stringByReplacingOccurrencesOfString:@"#" withString:@""] uppercaseString];
-        switch ([colorString length]) {
+        switch (colorString.length) {
             case 6: // #RRGGBB
                 red = [self colorComponentFromString:colorString start:0 length:2];
                 green = [self colorComponentFromString:colorString start:2 length:2];
@@ -716,10 +716,10 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 + (UINib*)nibWithBaseName:(NSString*)baseName bundle:(NSBundle*)bundle {
     if(bundle == nil) {
-        bundle = [NSBundle mainBundle];
+        bundle = NSBundle.mainBundle;
     }
     NSString* nib = nil;
-    NSFileManager* fileManager = [NSFileManager defaultManager];
+    NSFileManager* fileManager = NSFileManager.defaultManager;
     if([UIDevice isIPhone] == YES) {
         NSString* iPhoneName = [NSString stringWithFormat:@"%@%@", baseName, @"-iPhone"];
         if([fileManager fileExistsAtPath:[bundle pathForResource:iPhoneName ofType:@"nib"]] == YES) {
@@ -747,15 +747,13 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 }
 
 - (id)instantiateWithClass:(Class)class owner:(id)owner options:(NSDictionary*)options {
-    __block id result = nil;
     NSArray* content = [self instantiateWithOwner:owner options:nil];
-    [content enumerateObjectsUsingBlock:^(id item, NSUInteger index, BOOL* stop) {
+    for(id item in content) {
         if([item isKindOfClass:class] == YES) {
-            result = item;
-            *stop = YES;
+            return item;
         }
-    }];
-    return result;
+    }
+    return nil;
 }
 
 @end
@@ -771,8 +769,8 @@ static UIResponder* MOBILY_CURRENT_FIRST_RESPONDER = nil;
 @implementation UIResponder (MobilyUI)
 
 + (id)currentFirstResponderInView:(UIView*)view {
-    id currentFirstResponder = [self currentFirstResponder];
-    if([currentFirstResponder isKindOfClass:[UIView class]] == YES) {
+    id currentFirstResponder = self.currentFirstResponder;
+    if([currentFirstResponder isKindOfClass:UIView.class] == YES) {
         if([view isContainsSubview:currentFirstResponder] == YES) {
             return currentFirstResponder;
         }
@@ -782,7 +780,7 @@ static UIResponder* MOBILY_CURRENT_FIRST_RESPONDER = nil;
 
 + (id)currentFirstResponder {
     MOBILY_CURRENT_FIRST_RESPONDER = nil;
-    [[UIApplication sharedApplication] sendAction:@selector(findFirstResponder:) to:nil from:nil forEvent:nil];
+    [UIApplication.sharedApplication sendAction:@selector(findFirstResponder:) to:nil from:nil forEvent:nil];
     return MOBILY_CURRENT_FIRST_RESPONDER;
 }
 
@@ -796,7 +794,7 @@ static UIResponder* MOBILY_CURRENT_FIRST_RESPONDER = nil;
         NSInteger index = [responders indexOfObject:view];
         if(index != NSNotFound) {
             if(index > 0) {
-                return [responders objectAtIndex:index - 1];
+                return responders[index - 1];
             }
         }
     }
@@ -809,7 +807,7 @@ static UIResponder* MOBILY_CURRENT_FIRST_RESPONDER = nil;
         NSInteger index = [responders indexOfObject:view];
         if(index != NSNotFound) {
             if(index < responders.count - 1) {
-                return [responders objectAtIndex:index + 1];
+                return responders[index + 1];
             }
         }
     }
@@ -1053,7 +1051,7 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 
 - (CGFloat)frameBottom {
     CGRect frame = self.frame;
-    CGRect bounds = [self.superview bounds];
+    CGRect bounds = self.superview.bounds;
     return bounds.size.height - (frame.origin.y + frame.size.height);
 }
 
@@ -1161,15 +1159,15 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 #pragma mark Public
 
 - (NSArray*)responders {
-    NSMutableArray* result = [NSMutableArray array];
-    if([self canBecomeFirstResponder] == YES) {
+    NSMutableArray* result = NSMutableArray.array;
+    if(self.canBecomeFirstResponder == YES) {
         [result addObject:self];
     }
-    [self.subviews enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
+    for(UIView* view in self.subviews) {
         [result addObjectsFromArray:view.responders];
-    }];
+    }
     [result sortWithOptions:0 usingComparator:^NSComparisonResult(UIView* viewA, UIView* viewB) {
-        CGFloat aOrder = [[viewA layer] zPosition], bOrder = [[viewB layer] zPosition];
+        CGFloat aOrder = [viewA.layer zPosition], bOrder = [viewB.layer zPosition];
         CGRect aFrame = [viewA frame], bFrame = [viewB frame];
         if(aOrder < bOrder) {
             return NSOrderedAscending;
@@ -1213,19 +1211,19 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 - (void)setSubviews:(NSArray*)subviews {
     NSArray* currentSubviews = self.subviews;
     if([currentSubviews isEqualToArray:subviews] == NO) {
-        [currentSubviews enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
+        for(UIView* view in currentSubviews) {
             [view removeFromSuperview];
-        }];
-        [subviews enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
+        }
+        for(UIView* view in subviews) {
             [self addSubview:view];
-        }];
+        }
     }
 }
 
 - (void)removeAllSubviews {
-    [self.subviews enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
+    for(UIView* view in self.subviews) {
         [view removeFromSuperview];
-    }];
+    }
 }
 
 - (void)blinkBackgroundColor:(UIColor*)color duration:(NSTimeInterval)duration timeout:(NSTimeInterval)timeout {
@@ -1445,25 +1443,25 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 }
 
 - (void)registerAdjustmentResponder {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustmentNotificationKeyboardShow:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustmentNotificationKeyboardHide:) name:UIKeyboardWillHideNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(adjustmentNotificationKeyboardShow:) name:UIKeyboardWillShowNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(adjustmentNotificationKeyboardHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)unregisterAdjustmentResponder {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [NSNotificationCenter.defaultCenter removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+    [NSNotificationCenter.defaultCenter removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 }
 
 #pragma mark UIKeyboarNotification
 
 - (void)adjustmentNotificationKeyboardShow:(NSNotification*)notification {
-    [self setKeyboardResponder:[UIResponder currentFirstResponderInView:self]];
-    if([[self keyboardResponder] isKindOfClass:[UIView class]] == YES) {
+    self.keyboardResponder = [UIResponder currentFirstResponderInView:self];
+    if([[self keyboardResponder] isKindOfClass:UIView.class] == YES) {
         CGPoint contentOffset = self.contentOffset;
         UIEdgeInsets contentInsets = self.contentInset;
         UIEdgeInsets indicatorInsets = self.scrollIndicatorInsets;
         CGRect scrollRect = [self convertRect:self.bounds toView:nil];
-        CGRect keyboardRect = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+        CGRect keyboardRect = [[notification userInfo][UIKeyboardFrameEndUserInfoKey] CGRectValue];
         CGRect responderRect = [(UIView*)self.keyboardResponder convertRect:((UIView*)self.keyboardResponder).bounds toView:nil];
         CGRect smallRemainderRect = CGRectZero, largeRemainderRect = CGRectZero;
         CGRect intersectionRect = CGRectIntersectionExt(scrollRect, keyboardRect, &smallRemainderRect, &largeRemainderRect);
@@ -1513,9 +1511,9 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
                 }
             }
         }
-        [self setContentInset:contentInsets];
-        [self setScrollIndicatorInsets:indicatorInsets];
-        [self setContentOffset:contentOffset animated:YES];
+        self.contentInset = contentInsets;
+        self.scrollIndicatorInsets = indicatorInsets;
+        [self setContentOffset:contentOffset animated:NO];
     }
 }
 
@@ -1554,7 +1552,7 @@ MOBILY_DEFINE_VALIDATE_NUMBER(SelectedItemIndex)
 #pragma mark Property
 
 - (void)setSelectedItemIndex:(NSUInteger)index {
-    self.selectedItem = [self.items objectAtIndex:index];
+    self.selectedItem = (self.items)[index];
 }
 
 - (NSUInteger)selectedItemIndex {
@@ -1658,7 +1656,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 #pragma mark Property
 
 - (void)setNormalTitle:(NSString*)normalTitle {
-    [self setTitle:normalTitle forState:UIControlStateNormal];
+    [self setTitle:normalTitle forState:NO];
 }
 
 - (NSString*)normalTitle {
@@ -1666,7 +1664,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setNormalTitleColor:(UIColor*)normalTitleColor {
-    [self setTitleColor:normalTitleColor forState:UIControlStateNormal];
+    [self setTitleColor:normalTitleColor forState:NO];
 }
 
 - (UIColor*)normalTitleColor {
@@ -1674,7 +1672,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setNormalTitleShadowColor:(UIColor*)normalTitleShadowColor {
-    [self setTitleShadowColor:normalTitleShadowColor forState:UIControlStateNormal];
+    [self setTitleShadowColor:normalTitleShadowColor forState:NO];
 }
 
 - (UIColor*)normalTitleShadowColor {
@@ -1682,7 +1680,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setNormalImage:(UIImage*)normalImage {
-    [self setImage:normalImage forState:UIControlStateNormal];
+    [self setImage:normalImage forState:NO];
 }
 
 - (UIImage*)normalImage {
@@ -1690,7 +1688,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setNormalBackgroundImage:(UIImage*)normalBackgroundImage {
-    [self setBackgroundImage:normalBackgroundImage forState:UIControlStateNormal];
+    [self setBackgroundImage:normalBackgroundImage forState:NO];
 }
 
 - (UIImage*)normalBackgroundImage {
@@ -1698,7 +1696,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setHighlightedTitle:(NSString*)highlightedTitle {
-    [self setTitle:highlightedTitle forState:UIControlStateHighlighted];
+    [self setTitle:highlightedTitle forState:NO];
 }
 
 - (NSString*)highlightedTitle {
@@ -1706,7 +1704,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setHighlightedTitleColor:(UIColor*)highlightedTitleColor {
-    [self setTitleColor:highlightedTitleColor forState:UIControlStateHighlighted];
+    [self setTitleColor:highlightedTitleColor forState:NO];
 }
 
 - (UIColor*)highlightedTitleColor {
@@ -1714,7 +1712,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setHighlightedTitleShadowColor:(UIColor*)highlightedTitleShadowColor {
-    [self setTitleShadowColor:highlightedTitleShadowColor forState:UIControlStateHighlighted];
+    [self setTitleShadowColor:highlightedTitleShadowColor forState:NO];
 }
 
 - (UIColor*)highlightedTitleShadowColor {
@@ -1722,7 +1720,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setHighlightedImage:(UIImage*)highlightedImage {
-    [self setImage:highlightedImage forState:UIControlStateHighlighted];
+    [self setImage:highlightedImage forState:NO];
 }
 
 - (UIImage*)highlightedImage {
@@ -1730,7 +1728,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setHighlightedBackgroundImage:(UIImage*)highlightedBackgroundImage {
-    [self setBackgroundImage:highlightedBackgroundImage forState:UIControlStateHighlighted];
+    [self setBackgroundImage:highlightedBackgroundImage forState:NO];
 }
 
 - (UIImage*)highlightedBackgroundImage {
@@ -1738,7 +1736,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setDisabledTitle:(NSString*)disabledTitle {
-    [self setTitle:disabledTitle forState:UIControlStateDisabled];
+    [self setTitle:disabledTitle forState:NO];
 }
 
 - (NSString*)disabledTitle {
@@ -1746,7 +1744,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setDisabledTitleColor:(UIColor*)disabledTitleColor {
-    [self setTitleColor:disabledTitleColor forState:UIControlStateDisabled];
+    [self setTitleColor:disabledTitleColor forState:NO];
 }
 
 - (UIColor*)disabledTitleColor {
@@ -1754,7 +1752,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setDisabledTitleShadowColor:(UIColor*)disabledTitleShadowColor {
-    [self setTitleShadowColor:disabledTitleShadowColor forState:UIControlStateDisabled];
+    [self setTitleShadowColor:disabledTitleShadowColor forState:NO];
 }
 
 - (UIColor*)disabledTitleShadowColor {
@@ -1762,7 +1760,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setDisabledImage:(UIImage*)disabledImage {
-    [self setImage:disabledImage forState:UIControlStateDisabled];
+    [self setImage:disabledImage forState:NO];
 }
 
 - (UIImage*)disabledImage {
@@ -1770,7 +1768,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setDisabledBackgroundImage:(UIImage*)disabledBackgroundImage {
-    [self setBackgroundImage:disabledBackgroundImage forState:UIControlStateDisabled];
+    [self setBackgroundImage:disabledBackgroundImage forState:NO];
 }
 
 - (UIImage*)disabledBackgroundImage {
@@ -1778,7 +1776,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setSelectedTitle:(NSString*)selectedTitle {
-    [self setTitle:selectedTitle forState:UIControlStateSelected];
+    [self setTitle:selectedTitle forState:NO];
 }
 
 - (NSString*)selectedTitle {
@@ -1786,7 +1784,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setSelectedTitleColor:(UIColor*)selectedTitleColor {
-    [self setTitleColor:selectedTitleColor forState:UIControlStateSelected];
+    [self setTitleColor:selectedTitleColor forState:NO];
 }
 
 - (UIColor*)selectedTitleColor {
@@ -1794,7 +1792,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setSelectedTitleShadowColor:(UIColor*)selectedTitleShadowColor {
-    [self setTitleShadowColor:selectedTitleShadowColor forState:UIControlStateSelected];
+    [self setTitleShadowColor:selectedTitleShadowColor forState:NO];
 }
 
 - (UIColor*)selectedTitleShadowColor {
@@ -1802,7 +1800,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setSelectedImage:(UIImage*)selectedImage {
-    [self setImage:selectedImage forState:UIControlStateSelected];
+    [self setImage:selectedImage forState:NO];
 }
 
 - (UIImage*)selectedImage {
@@ -1810,7 +1808,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setSelectedBackgroundImage:(UIImage*)selectedBackgroundImage {
-    [self setBackgroundImage:selectedBackgroundImage forState:UIControlStateSelected];
+    [self setBackgroundImage:selectedBackgroundImage forState:NO];
 }
 
 - (UIImage*)selectedBackgroundImage {
@@ -1832,22 +1830,22 @@ MOBILY_DEFINE_VALIDATE_STRING(Title)
 #pragma mark Public
 
 - (void)loadViewIfNeed {
-    if([self isViewLoaded] == NO) {
+    if(self.isViewLoaded == NO) {
         [self loadView];
     }
 }
 
 - (void)unloadViewIfPossible {
-    if([self isViewLoaded] == YES) {
-        if([[self view] window] == nil) {
-            [self setView:nil];
+    if(self.isViewLoaded == YES) {
+        if(self.view.window == nil) {
+            self.view = nil;
         }
     }
 }
 
 - (void)unloadView {
-    if([self isViewLoaded] == YES) {
-        [self setView:nil];
+    if(self.isViewLoaded == YES) {
+        self.view = nil;
     }
 }
 
@@ -1861,12 +1859,12 @@ MOBILY_DEFINE_VALIDATE_STRING(Title)
     if([rootViewController presentedViewController] != nil) {
         return [self currentViewController:[rootViewController presentedViewController]];
     }
-    if([rootViewController isKindOfClass:[UINavigationController class]] == YES) {
+    if([rootViewController isKindOfClass:UINavigationController.class] == YES) {
         UINavigationController* navigationController = (UINavigationController*)rootViewController;
-        return [self currentViewController:[navigationController topViewController]];
-    } else if([rootViewController isKindOfClass:[UITabBarController class]] == YES) {
+        return [self currentViewController:navigationController.topViewController];
+    } else if([rootViewController isKindOfClass:UITabBarController.class] == YES) {
         UITabBarController* tabBarController = (UITabBarController*)rootViewController;
-        return [self currentViewController:[tabBarController selectedViewController]];
+        return [self currentViewController:tabBarController.selectedViewController];
     }
     return rootViewController;
 }
@@ -1950,9 +1948,9 @@ MOBILY_DEFINE_VALIDATE_IMAGE(BackIndicatorTransitionMaskImage)
 }
 
 - (UIViewController*)rootViewController {
-    NSArray* viewControllers = [self viewControllers];
-    if([viewControllers count] > 0) {
-        return [viewControllers objectAtIndex:0];
+    NSArray* viewControllers = self.viewControllers;
+    if(viewControllers.count > 0) {
+        return viewControllers[0];
     }
     return nil;
 }
@@ -1970,13 +1968,11 @@ MOBILY_DEFINE_VALIDATE_IMAGE(BackIndicatorTransitionMaskImage)
 #pragma mark Property
 
 - (void)setLeftBarView:(UIView*)view animated:(BOOL)animated {
-    UIBarButtonItem* item = MOBILY_SAFE_AUTORELEASE([[UIBarButtonItem alloc] initWithCustomView:view]);
-    [self setLeftBarButtonItem:item animated:animated];
+    [self setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:view] animated:animated];
 }
 
 - (void)setRightBarView:(UIView*)view animated:(BOOL)animated {
-    UIBarButtonItem* item = MOBILY_SAFE_AUTORELEASE([[UIBarButtonItem alloc] initWithCustomView:view]);
-    [self setRightBarButtonItem:item animated:animated];
+    [self setRightBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:view] animated:animated];
 }
 
 @end

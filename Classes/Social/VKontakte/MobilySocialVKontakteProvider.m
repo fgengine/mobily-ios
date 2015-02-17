@@ -73,22 +73,20 @@
 - (instancetype)initWithApplicationId:(NSString*)applicationId {
     self = [super initWithName:@"VKontakte"];
     if(self != nil) {
-        [self setApplicationId:applicationId];
+        self.applicationId = applicationId;
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setApplicationId:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.applicationId = nil;
 }
 
 #pragma mark Property
 
 - (void)setApplicationId:(NSString*)applicationId {
     if([_applicationId isEqualToString:applicationId] == NO) {
-        MOBILY_SAFE_SETTER(_applicationId, applicationId);
+        _applicationId = applicationId;
         if(_applicationId != nil) {
             [VKSdk initializeWithDelegate:self andAppId:_applicationId];
         }
@@ -96,24 +94,24 @@
 }
 
 - (void)setSession:(MobilySocialVKontakteSession*)session {
-    [super setSession:session];
+    super.session = session;
 }
 
 - (MobilySocialVKontakteSession*)session {
-    return [super session];
+    return super.session;
 }
 
 #pragma mark Public
 
 - (void)signinWithPermissions:(NSArray*)permissions success:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
-    [self setPermissions:permissions];
-    [self setSuccessBlock:success];
-    [self setFailureBlock:failure];
+    self.permissions = permissions;
+    self.successBlock = success;
+    self.failureBlock = failure;
     
     if([VKSdk wakeUpSession] == NO) {
         [VKSdk authorize:permissions revokeAccess:YES forceOAuth:YES];
-    } else if([self session] != nil) {
-        [self setSession:[[MobilySocialVKontakteSession alloc] initWithAccessToken:[VKSdk getAccessToken]]];
+    } else if(self.session != nil) {
+        self.session = [[MobilySocialVKontakteSession alloc] initWithAccessToken:[VKSdk getAccessToken]];
         if(_successBlock != nil) {
             _successBlock();
         }
@@ -127,13 +125,13 @@
 #pragma mark MobilySocialManager
 
 + (Class)sessionClass {
-    return [MobilySocialVKontakteSession class];
+    return MobilySocialVKontakteSession.class;
 }
 
 - (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
-    if([[self session] isValid] == YES) {
+    if(self.session.isValid == YES) {
         [VKSdk forceLogout];
-        [self setSession:nil];
+        self.session = nil;
         if(success != nil) {
             success();
         }
@@ -162,17 +160,17 @@
 
 - (void)vkSdkUserDeniedAccess:(VKError*)authorizationError {
     if(_failureBlock != nil) {
-        _failureBlock([authorizationError httpError]);
+        _failureBlock(authorizationError.httpError);
     }
 }
 
 - (void)vkSdkShouldPresentViewController:(UIViewController*)controller {
-    [[[[UIApplication sharedApplication] keyWindow] currentViewController] presentViewController:controller animated:YES completion:nil];
+    [[UIApplication.sharedApplication.keyWindow currentViewController] presentViewController:controller animated:YES completion:nil];
 }
 
 - (void)vkSdkReceivedNewToken:(VKAccessToken*)accessToken {
     if(accessToken != nil) {
-        [self setSession:[[MobilySocialVKontakteSession alloc] initWithAccessToken:accessToken]];
+        self.session = [[MobilySocialVKontakteSession alloc] initWithAccessToken:accessToken];
         if(_successBlock != nil) {
             _successBlock();
         }
@@ -204,15 +202,15 @@
 - (instancetype)initWithAccessToken:(VKAccessToken*)accessToken {
     self = [super init];
     if(self != nil) {
-        [self setPermissions:[accessToken permissions]];
-        [self setAccessToken:[accessToken accessToken]];
-        if([[accessToken expiresIn] intValue] > 0) {
-            [self setExpirationDate:[NSDate dateWithTimeIntervalSince1970:[accessToken created] + [[accessToken expiresIn] intValue]]];
+        self.permissions = accessToken.permissions;
+        self.accessToken = accessToken.accessToken;
+        if(accessToken.expiresIn.intValue > 0) {
+            self.expirationDate = [NSDate dateWithTimeIntervalSince1970:accessToken.created + accessToken.expiresIn.intValue];
         } else {
-            [self setExpirationDate:[NSDate dateWithTimeIntervalSince1970:[accessToken created] + MOBILY_YEAR]];
+            self.expirationDate = [NSDate dateWithTimeIntervalSince1970:accessToken.created + MOBILY_YEAR];
         }
-        [self setUserId:[accessToken userId]];
-        [self setEmail:[accessToken email]];
+        self.userId = accessToken.userId;
+        self.email = accessToken.email;
     }
     return self;
 }

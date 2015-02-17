@@ -52,18 +52,18 @@
     static NSNumberFormatter* formatter = nil;
     if(formatter == nil) {
         formatter = [NSNumberFormatter new];
-        [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+        formatter.numberStyle = NSNumberFormatterDecimalStyle;
     }
     NSArray* array = [self componentsSeparatedByString:separated];
-    switch([array count]) {
+    switch(array.count) {
         case 1: {
-            result.x = [[formatter numberFromString:[array objectAtIndex:0]] floatValue];
+            result.x = [[formatter numberFromString:array[0]] floatValue];
             result.y = result.x;
             break;
         }
         case 2: {
-            result.x = [[formatter numberFromString:[array objectAtIndex:0]] floatValue];
-            result.y = [[formatter numberFromString:[array objectAtIndex:1]] floatValue];
+            result.x = [[formatter numberFromString:array[0]] floatValue];
+            result.y = [[formatter numberFromString:array[1]] floatValue];
             break;
         }
         default:
@@ -81,18 +81,18 @@
     static NSNumberFormatter* formatter = nil;
     if(formatter == nil) {
         formatter = [NSNumberFormatter new];
-        [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+        formatter.numberStyle = NSNumberFormatterDecimalStyle;
     }
     NSArray* array = [self componentsSeparatedByString:separated];
-    switch([array count]) {
+    switch(array.count) {
         case 1: {
-            result.width = [[formatter numberFromString:[array objectAtIndex:0]] floatValue];
+            result.width = [[formatter numberFromString:array[0]] floatValue];
             result.height = result.width;
             break;
         }
         case 2: {
-            result.width = [[formatter numberFromString:[array objectAtIndex:0]] floatValue];
-            result.height = [[formatter numberFromString:[array objectAtIndex:1]] floatValue];
+            result.width = [[formatter numberFromString:array[0]] floatValue];
+            result.height = [[formatter numberFromString:array[1]] floatValue];
             break;
         }
         default:
@@ -110,32 +110,32 @@
     static NSNumberFormatter* formatter = nil;
     if(formatter == nil) {
         formatter = [NSNumberFormatter new];
-        [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+        formatter.numberStyle = NSNumberFormatterDecimalStyle;
     }
     NSArray* array = [self componentsSeparatedByString:separated];
-    switch([array count]) {
+    switch(array.count) {
         case 1: {
-            result.size.width = [[formatter numberFromString:[array objectAtIndex:0]] floatValue];
+            result.size.width = [[formatter numberFromString:array[0]] floatValue];
             result.size.height = result.size.width;
             break;
         }
         case 2: {
-            result.size.width = [[formatter numberFromString:[array objectAtIndex:0]] floatValue];
-            result.size.height = [[formatter numberFromString:[array objectAtIndex:1]] floatValue];
+            result.size.width = [[formatter numberFromString:array[0]] floatValue];
+            result.size.height = [[formatter numberFromString:array[1]] floatValue];
             break;
         }
         case 3: {
-            result.origin.x = [[formatter numberFromString:[array objectAtIndex:0]] floatValue];
-            result.origin.y = [[formatter numberFromString:[array objectAtIndex:1]] floatValue];
-            result.size.width = [[formatter numberFromString:[array objectAtIndex:2]] floatValue];
+            result.origin.x = [[formatter numberFromString:array[0]] floatValue];
+            result.origin.y = [[formatter numberFromString:array[1]] floatValue];
+            result.size.width = [[formatter numberFromString:array[2]] floatValue];
             result.size.height = result.size.width;
             break;
         }
         case 4: {
-            result.origin.x = [[formatter numberFromString:[array objectAtIndex:0]] floatValue];
-            result.origin.y = [[formatter numberFromString:[array objectAtIndex:1]] floatValue];
-            result.size.width = [[formatter numberFromString:[array objectAtIndex:2]] floatValue];
-            result.size.height = [[formatter numberFromString:[array objectAtIndex:3]] floatValue];
+            result.origin.x = [[formatter numberFromString:array[0]] floatValue];
+            result.origin.y = [[formatter numberFromString:array[1]] floatValue];
+            result.size.width = [[formatter numberFromString:array[2]] floatValue];
+            result.size.height = [[formatter numberFromString:array[3]] floatValue];
             break;
         }
         default:

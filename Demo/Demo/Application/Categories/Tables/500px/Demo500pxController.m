@@ -54,8 +54,8 @@ static NSString* PXConsumerSecret = @"wMDdVbq28mvbkb0GxbLxBW9UdO8v4NZkMIVFqZWl";
 - (void)setup {
     [super setup];
     
-    [self setTitle:@"500px"];
-    [self setEdgesForExtendedLayout:UIRectEdgeNone];
+    self.title = @"500px";
+    self.edgesForExtendedLayout = UIRectEdgeNone;
     
     [PXRequest setConsumerKey:PXConsumerKey consumerSecret:PXConsumerSecret];
 }
@@ -80,27 +80,27 @@ static NSString* PXConsumerSecret = @"wMDdVbq28mvbkb0GxbLxBW9UdO8v4NZkMIVFqZWl";
                              except:PXPhotoModelCategoryUncategorized
                          completion:^(NSDictionary* results, NSError* error) {
                              if(results != nil) {
-                                 [self setDataSource:[results valueForKey:@"photos"]];
+                                 self.dataSource = [results valueForKey:@"photos"];
                                  [_tableView reloadData];
                              }
-                             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                             UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
                          }];
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_dataSource count];
+    return _dataSource.count;
 }
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
     Demo500pxCell* cell = [_tableView dequeueReusableCellWithClass:[Demo500pxCell class]];
     if(cell != nil) {
-        [cell setModel:[_dataSource objectAtIndex:[indexPath row]]];
+        cell.model = _dataSource[indexPath.row];
     }
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
-    return [Demo500pxCell heightForModel:[_dataSource objectAtIndex:[indexPath row]] tableView:_tableView];
+    return [Demo500pxCell heightForModel:_dataSource[indexPath.row] tableView:_tableView];
 }
 
 @end
@@ -112,8 +112,8 @@ static NSString* PXConsumerSecret = @"wMDdVbq28mvbkb0GxbLxBW9UdO8v4NZkMIVFqZWl";
 @implementation Demo500pxCell
 
 + (CGFloat)heightForModel:(NSDictionary*)model tableView:(UITableView*)tableView {
-    CGFloat width = [[model objectForKey:@"width"] floatValue];
-    CGFloat height = [[model objectForKey:@"height"] floatValue];
+    CGFloat width = [model[@"width"] floatValue];
+    CGFloat height = [model[@"height"] floatValue];
     CGRect rect = CGRectAspectFillFromBoundsAndSize([tableView bounds], CGSizeMake(width, height));
     return rect.size.height;
 }
@@ -126,7 +126,7 @@ static NSString* PXConsumerSecret = @"wMDdVbq28mvbkb0GxbLxBW9UdO8v4NZkMIVFqZWl";
     [super setModel:model];
     
     [_activityView startAnimating];
-    [_photoView setImageUrl:[NSURL URLWithString:[[[model objectForKey:@"images"] lastObject] valueForKey:@"url"]] complete:^() {
+    [_photoView setImageUrl:[NSURL URLWithString:[[model[@"images"] lastObject] valueForKey:@"url"]] complete:^() {
         [_activityView stopAnimating];
     } failure:^(NSURL* url) {
         [_activityView stopAnimating];

@@ -49,7 +49,6 @@
 }
 
 - (void)dealloc {
-    MOBILY_SAFE_DEALLOC;
 }
 
 #pragma mark Property
@@ -128,7 +127,7 @@
     CGPoint offset = CGPointMake(frame.origin.x + margin.left, frame.origin.y + margin.top);
     CGFloat maxWidth = frame.size.width - (margin.left + margin.right);
     CGSize rowSize = CGSizeZero;
-    NSMutableArray* rowItems = [NSMutableArray array];
+    NSMutableArray* rowItems = NSMutableArray.array;
     for(id type in self.items) {
         for(id< MobilyDataItem > item in self.items[type]) {
             CGSize itemSize = [item sizeForAvailableSize:CGSizeMake(maxWidth, FLT_MAX)];
@@ -211,7 +210,7 @@
     CGPoint offset = CGPointMake(frame.origin.x + margin.left, frame.origin.y + margin.top);
     CGFloat maxHeight = frame.size.height - (margin.top + margin.bottom);
     CGSize rowSize = CGSizeZero;
-    NSMutableArray* rowItems = [NSMutableArray array];
+    NSMutableArray* rowItems = NSMutableArray.array;
     for(id type in self.items) {
         for(id< MobilyDataItem > item in self.items[type]) {
             CGSize itemSize = [item sizeForAvailableSize:CGSizeMake(FLT_MAX, maxHeight)];

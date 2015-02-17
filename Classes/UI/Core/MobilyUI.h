@@ -364,17 +364,17 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 #define MOBILY_DEFINE_VALIDATE_STRING(name) \
 - (BOOL)validate##name:(inout id*)value error:(out NSError**)error { \
-    return [*value isKindOfClass:[NSString class]]; \
+    return [*value isKindOfClass:NSString.class]; \
 }
 
 /*--------------------------------------------------*/
 
 #define MOBILY_DEFINE_VALIDATE_STRING_BASED(name, resultClass, convertValue) \
 - (BOOL)validate##name:(inout id*)value error:(out NSError**)error { \
-    if([*value isKindOfClass:[NSString class]] == YES) { \
+    if([*value isKindOfClass:NSString.class] == YES) { \
         *value = convertValue; \
     } \
-    return [*value isKindOfClass:[resultClass class]]; \
+    return [*value isKindOfClass:resultClass.class]; \
 }
 
 #define MOBILY_DEFINE_VALIDATE_BOOL(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithBool:[*value convertToBool]])

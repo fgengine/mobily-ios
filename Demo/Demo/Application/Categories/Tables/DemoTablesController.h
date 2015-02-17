@@ -62,7 +62,7 @@ typedef NS_ENUM(NSUInteger, DemoTablesType) {
 @property(nonatomic, readwrite, assign) DemoTablesType type;
 @property(nonatomic, readwrite, strong) NSString* title;
 
-- (id)initWithType:(DemoTablesType)type title:(NSString*)title;
+- (instancetype)initWithType:(DemoTablesType)type title:(NSString*)title NS_DESIGNATED_INITIALIZER;
 
 @end
 

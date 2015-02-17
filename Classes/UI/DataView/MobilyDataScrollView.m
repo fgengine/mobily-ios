@@ -142,28 +142,28 @@
     self.allowsEditing = YES;
     self.allowsMultipleEditing = YES;
     
-    self.unsafeVisibleItems = [NSMutableArray array];
-    self.unsafeSelectedItems = [NSMutableArray array];
-    self.unsafeHighlightedItems = [NSMutableArray array];
-    self.unsafeEditingItems = [NSMutableArray array];
-    self.registersViews = [NSMutableDictionary dictionary];
-    self.registersEvents = [[MobilyEvents alloc] init];
-    self.queueViews = [NSMutableDictionary dictionary];
-    self.reloadedBeforeItems = [NSMutableArray array];
-    self.reloadedAfterItems = [NSMutableArray array];
-    self.deletedItems = [NSMutableArray array];
-    self.insertedItems = [NSMutableArray array];
+    self.unsafeVisibleItems = NSMutableArray.array;
+    self.unsafeSelectedItems = NSMutableArray.array;
+    self.unsafeHighlightedItems = NSMutableArray.array;
+    self.unsafeEditingItems = NSMutableArray.array;
+    self.registersViews = NSMutableDictionary.dictionary;
+    self.registersEvents = [MobilyEvents new];
+    self.queueViews = NSMutableDictionary.dictionary;
+    self.reloadedBeforeItems = NSMutableArray.array;
+    self.reloadedAfterItems = NSMutableArray.array;
+    self.deletedItems = NSMutableArray.array;
+    self.insertedItems = NSMutableArray.array;
     
     self.pullToRefreshHeight = -1.0f;
     self.pullToLoadHeight = -1.0f;
     
     [self registerAdjustmentResponder];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationReceiveMemoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(notificationReceiveMemoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+    [NSNotificationCenter.defaultCenter removeObserver:self name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     
     [self unregisterAdjustmentResponder];
     
@@ -193,20 +193,18 @@
     self.constraintPullToLoadLeft = nil;
     self.constraintPullToLoadRight = nil;
     self.constraintPullToLoadHeight = nil;
-    
-    MOBILY_SAFE_DEALLOC;
 }
 
 #pragma mark MobilyBuilderObject
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIView class]] == YES) {
+    if([objectChild isKindOfClass:UIView.class] == YES) {
         self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIView class]] == YES) {
+    if([objectChild isKindOfClass:UIView.class] == YES) {
         self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
     }
 }
@@ -264,7 +262,7 @@
             _delegateProxy.dataScrollView = nil;
         }
         super.delegate = nil;
-        MOBILY_SAFE_SETTER(_delegateProxy, delegateProxy);
+        _delegateProxy = delegateProxy;
         super.delegate = _delegateProxy;
         if(_delegateProxy != nil) {
             _delegateProxy.dataScrollView = self;
@@ -297,20 +295,20 @@
             [UIView performWithoutAnimation:^{
                 [self deselectAllItemsAnimated:NO];
                 [self unhighlightAllItemsAnimated:NO];
-                if([_unsafeVisibleItems count] > 0) {
+                if(_unsafeVisibleItems.count > 0) {
                     for(id< MobilyDataItem > item in _unsafeVisibleItems) {
                         [self disappearItem:item];
                     }
                     [_unsafeVisibleItems removeAllObjects];
                 }
             }];
-            [_container setWidget:nil];
+            _container.widget = nil;
             [self validateLayoutIfNeed];
         }
-        MOBILY_SAFE_SETTER(_container, container);
+        _container = container;
         if(_container != nil) {
             [self setNeedValidateLayout];
-            [_container setWidget:self];
+            _container.widget = self;
             [UIView performWithoutAnimation:^{
                 [self validateLayoutIfNeed];
                 [self layoutForVisible];
@@ -324,7 +322,7 @@
 }
 
 - (NSArray*)visibleViews {
-    NSMutableArray* result = [NSMutableArray array];
+    NSMutableArray* result = NSMutableArray.array;
     for(id< MobilyDataItem > item in _unsafeVisibleItems) {
         [result addObject:item.view];
     }
@@ -336,7 +334,7 @@
 }
 
 - (NSArray*)selectedViews {
-    NSMutableArray* result = [NSMutableArray array];
+    NSMutableArray* result = NSMutableArray.array;
     for(id< MobilyDataItem > item in _unsafeSelectedItems) {
         UIView< MobilyDataItemView >* itemView = item.view;
         if(itemView != nil) {
@@ -351,7 +349,7 @@
 }
 
 - (NSArray*)highlightedViews {
-    NSMutableArray* result = [NSMutableArray array];
+    NSMutableArray* result = NSMutableArray.array;
     for(id< MobilyDataItem > item in _unsafeHighlightedItems) {
         UIView< MobilyDataItemView >* itemView = item.view;
         if(itemView != nil) {
@@ -366,7 +364,7 @@
 }
 
 - (NSArray*)editingViews {
-    NSMutableArray* result = [NSMutableArray array];
+    NSMutableArray* result = NSMutableArray.array;
     for(id< MobilyDataItem > item in _unsafeEditingItems) {
         UIView< MobilyDataItemView >* itemView = item.view;
         if(itemView != nil) {
@@ -385,7 +383,7 @@
             self.constraintPullToRefreshHeight = nil;
             [_pullToRefreshView removeFromSuperview];
         }
-        MOBILY_SAFE_SETTER(_pullToRefreshView, pullToRefreshView);
+        _pullToRefreshView = pullToRefreshView;
         if(_pullToRefreshView != nil) {
             _pullToRefreshView.translatesAutoresizingMaskIntoConstraints = NO;
             if(self.superview != nil) {
@@ -401,7 +399,7 @@
         if(_constraintPullToRefreshBottom != nil) {
             [self.superview removeConstraint:_constraintPullToRefreshBottom];
         }
-        MOBILY_SAFE_SETTER(_constraintPullToRefreshBottom, constraintPullToRefreshBottom);
+        _constraintPullToRefreshBottom = constraintPullToRefreshBottom;
         if(_constraintPullToRefreshBottom != nil) {
             [self.superview addConstraint:_constraintPullToRefreshBottom];
         }
@@ -413,7 +411,7 @@
         if(_constraintPullToRefreshLeft != nil) {
             [self.superview removeConstraint:_constraintPullToRefreshLeft];
         }
-        MOBILY_SAFE_SETTER(_constraintPullToRefreshLeft, constraintPullToRefreshLeft);
+        _constraintPullToRefreshLeft = constraintPullToRefreshLeft;
         if(_constraintPullToRefreshLeft != nil) {
             [self.superview addConstraint:_constraintPullToRefreshLeft];
         }
@@ -425,7 +423,7 @@
         if(_constraintPullToRefreshRight != nil) {
             [self.superview removeConstraint:_constraintPullToRefreshRight];
         }
-        MOBILY_SAFE_SETTER(_constraintPullToRefreshRight, constraintPullToRefreshRight);
+        _constraintPullToRefreshRight = constraintPullToRefreshRight;
         if(_constraintPullToRefreshRight != nil) {
             [self.superview addConstraint:_constraintPullToRefreshRight];
         }
@@ -437,7 +435,7 @@
         if(_constraintPullToRefreshHeight != nil) {
             [self.superview removeConstraint:_constraintPullToRefreshHeight];
         }
-        MOBILY_SAFE_SETTER(_constraintPullToRefreshHeight, constraintPullToRefreshHeight);
+        _constraintPullToRefreshHeight = constraintPullToRefreshHeight;
         if(_constraintPullToRefreshHeight != nil) {
             [self.superview addConstraint:_constraintPullToRefreshHeight];
         }
@@ -466,7 +464,7 @@
             self.constraintPullToLoadHeight = nil;
             [_pullToLoadView removeFromSuperview];
         }
-        MOBILY_SAFE_SETTER(_pullToLoadView, pullToLoadView);
+        _pullToLoadView = pullToLoadView;
         if(_pullToLoadView != nil) {
             _pullToLoadView.translatesAutoresizingMaskIntoConstraints = NO;
             if(self.superview != nil) {
@@ -482,7 +480,7 @@
         if(_constraintPullToLoadTop != nil) {
             [self.superview removeConstraint:_constraintPullToLoadTop];
         }
-        MOBILY_SAFE_SETTER(_constraintPullToLoadTop, constraintPullToLoadTop);
+        _constraintPullToLoadTop = constraintPullToLoadTop;
         if(_constraintPullToLoadTop != nil) {
             [self.superview addConstraint:_constraintPullToLoadTop];
         }
@@ -494,7 +492,7 @@
         if(_constraintPullToLoadLeft != nil) {
             [self.superview removeConstraint:_constraintPullToLoadLeft];
         }
-        MOBILY_SAFE_SETTER(_constraintPullToLoadLeft, constraintPullToLoadLeft);
+        _constraintPullToLoadLeft = constraintPullToLoadLeft;
         if(_constraintPullToLoadLeft != nil) {
             [self.superview addConstraint:_constraintPullToLoadLeft];
         }
@@ -506,7 +504,7 @@
         if(_constraintPullToLoadRight != nil) {
             [self.superview removeConstraint:_constraintPullToLoadRight];
         }
-        MOBILY_SAFE_SETTER(_constraintPullToLoadRight, constraintPullToLoadRight);
+        _constraintPullToLoadRight = constraintPullToLoadRight;
         if(_constraintPullToLoadRight != nil) {
             [self.superview addConstraint:_constraintPullToLoadRight];
         }
@@ -518,7 +516,7 @@
         if(_constraintPullToLoadHeight != nil) {
             [self.superview removeConstraint:_constraintPullToLoadHeight];
         }
-        MOBILY_SAFE_SETTER(_constraintPullToLoadHeight, constraintPullToLoadHeight);
+        _constraintPullToLoadHeight = constraintPullToLoadHeight;
         if(_constraintPullToLoadHeight != nil) {
             [self.superview addConstraint:_constraintPullToLoadHeight];
         }
@@ -542,17 +540,17 @@
 
 - (void)registerIdentifier:(NSString*)identifier withViewClass:(Class< MobilyDataItemView >)viewClass {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if([_registersViews objectForKey:identifier] != nil) {
+    if(_registersViews[identifier] != nil) {
         NSLog(@"ERROR: [%@] registerIdentifier:%@ withViewClass:%@", self.class, identifier, viewClass);
         return;
     }
 #endif
-    [_registersViews setObject:viewClass forKey:identifier];
+    _registersViews[identifier] = viewClass;
 }
 
 - (void)unregisterIdentifier:(NSString*)identifier {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if([_registersViews objectForKey:identifier] == nil) {
+    if(_registersViews[identifier] == nil) {
         NSLog(@"ERROR: [%@] unregisterIdentifier:%@", self.class, identifier);
         return;
     }
@@ -605,7 +603,7 @@
 }
 
 - (Class< MobilyDataItemView >)viewClassWithItem:(id< MobilyDataItem >)item {
-    return [_registersViews objectForKey:item.identifier];
+    return _registersViews[item.identifier];
 }
 
 - (void)dequeueViewWithItem:(id< MobilyDataItem >)item {
@@ -616,10 +614,10 @@
     }
 #endif
     NSString* identifier = item.identifier;
-    NSMutableArray* queue = [_queueViews objectForKey:identifier];
+    NSMutableArray* queue = _queueViews[identifier];
     UIView< MobilyDataItemView >* view = [queue lastObject];
     if(view == nil) {
-        view = [[[_registersViews objectForKey:identifier] alloc] initWithIdentifier:identifier];
+        view = [[_registersViews[identifier] alloc] initWithIdentifier:identifier];
     } else {
         [queue removeLastObject];
     }
@@ -627,7 +625,7 @@
 }
 
 - (void)enqueueViewWithItem:(id< MobilyDataItem >)item {
-    UIView< MobilyDataItemView >* view = [item view];
+    UIView< MobilyDataItemView >* view = item.view;
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(view == nil) {
         NSLog(@"ERROR: [%@] enqueueViewWithItem:%@", self.class, item);
@@ -635,9 +633,9 @@
     }
 #endif
     NSString* identifier = item.identifier;
-    NSMutableArray* queue = [_queueViews objectForKey:identifier];
+    NSMutableArray* queue = _queueViews[identifier];
     if(queue == nil) {
-        [_queueViews setObject:[NSMutableArray arrayWithObject:view] forKey:identifier];
+        _queueViews[identifier] = [NSMutableArray arrayWithObject:view];
     } else {
         [queue addObject:view];
     }
@@ -672,16 +670,16 @@
         if([self shouldSelectItem:item] == YES) {
             if(_allowsMultipleSelection == YES) {
                 [_unsafeSelectedItems addObject:item];
-                [item setSelected:YES animated:animated];
+                [item setSelected:YES animated:NO];
             } else {
-                if([_unsafeSelectedItems count] > 0) {
+                if(_unsafeSelectedItems.count > 0) {
                     for(id< MobilyDataItem > item in _unsafeSelectedItems) {
-                        [item setSelected:NO animated:animated];
+                        [item setSelected:NO animated:NO];
                     }
                     [_unsafeSelectedItems removeAllObjects];
                 }
                 [_unsafeSelectedItems addObject:item];
-                [item setSelected:YES animated:animated];
+                [item setSelected:YES animated:NO];
             }
         }
     }
@@ -691,17 +689,17 @@
     if([_unsafeSelectedItems containsObject:item] == YES) {
         if([self shouldDeselectItem:item] == YES) {
             [_unsafeSelectedItems removeObject:item];
-            [item setSelected:NO animated:animated];
+            [item setSelected:NO animated:NO];
         }
     }
 }
 
 - (void)deselectAllItemsAnimated:(BOOL)animated {
-    if([_unsafeSelectedItems count] > 0) {
+    if(_unsafeSelectedItems.count > 0) {
         for(id< MobilyDataItem > item in _unsafeSelectedItems) {
             if([self shouldDeselectItem:item] == YES) {
                 [_unsafeSelectedItems removeObject:item];
-                [item setSelected:NO animated:animated];
+                [item setSelected:NO animated:NO];
             }
         }
         [_unsafeSelectedItems removeAllObjects];
@@ -724,7 +722,7 @@
     if([_unsafeHighlightedItems containsObject:item] == NO) {
         if([self shouldHighlightItem:item] == YES) {
             [_unsafeHighlightedItems addObject:item];
-            [item setHighlighted:YES animated:animated];
+            [item setHighlighted:YES animated:NO];
         }
     }
 }
@@ -733,17 +731,17 @@
     if([_unsafeHighlightedItems containsObject:item] == YES) {
         if([self shouldUnhighlightItem:item] == YES) {
             [_unsafeHighlightedItems removeObject:item];
-            [item setHighlighted:NO animated:animated];
+            [item setHighlighted:NO animated:NO];
         }
     }
 }
 
 - (void)unhighlightAllItemsAnimated:(BOOL)animated {
-    if([_unsafeHighlightedItems count] > 0) {
+    if(_unsafeHighlightedItems.count > 0) {
         for(id< MobilyDataItem > item in _unsafeHighlightedItems) {
             if([self shouldUnhighlightItem:item] == YES) {
                 [_unsafeHighlightedItems removeObject:item];
-                [item setHighlighted:NO animated:animated];
+                [item setHighlighted:NO animated:NO];
             }
         }
         [_unsafeHighlightedItems removeAllObjects];
@@ -770,16 +768,16 @@
         if([self shouldBeganEditItem:item] == YES) {
             if(_allowsMultipleEditing == YES) {
                 [_unsafeEditingItems addObject:item];
-                [item setEditing:YES animated:animated];
+                [item setEditing:YES animated:NO];
             } else {
-                if([_unsafeEditingItems count] > 0) {
+                if(_unsafeEditingItems.count > 0) {
                     for(id< MobilyDataItem > item in _unsafeEditingItems) {
-                        [item setEditing:NO animated:animated];
+                        [item setEditing:NO animated:NO];
                     }
                     [_unsafeEditingItems removeAllObjects];
                 }
                 [_unsafeEditingItems addObject:item];
-                [item setEditing:YES animated:animated];
+                [item setEditing:YES animated:NO];
             }
         }
     }
@@ -789,17 +787,17 @@
     if([_unsafeEditingItems containsObject:item] == YES) {
         if([self shouldEndedEditItem:item] == YES) {
             [_unsafeEditingItems removeObject:item];
-            [item setEditing:NO animated:animated];
+            [item setEditing:NO animated:NO];
         }
     }
 }
 
 - (void)endedEditAllItemsAnimated:(BOOL)animated {
-    if([_unsafeEditingItems count] > 0) {
+    if(_unsafeEditingItems.count > 0) {
         for(id< MobilyDataItem > item in _unsafeEditingItems) {
             if([self shouldEndedEditItem:item] == YES) {
                 [_unsafeEditingItems removeObject:item];
-                [item setEditing:NO animated:animated];
+                [item setEditing:NO animated:NO];
             }
         }
         [_unsafeEditingItems removeAllObjects];
@@ -839,44 +837,44 @@
                          [self validateLayoutIfNeed];
                          [self layoutForVisible];
                          for(id< MobilyDataItem > item in _reloadedBeforeItems) {
-                             UIView< MobilyDataItemView >* view = [item view];
+                             UIView< MobilyDataItemView >* view = item.view;
                              if(view != nil) {
                                  [view animateAction:MobilyDataItemViewActionReplaceOut];
                              }
                          }
                          for(id< MobilyDataItem > item in _reloadedAfterItems) {
-                             UIView< MobilyDataItemView >* view = [item view];
+                             UIView< MobilyDataItemView >* view = item.view;
                              if(view != nil) {
                                  [view animateAction:MobilyDataItemViewActionReplaceIn];
                              }
                          }
                          for(id< MobilyDataItem > item in _insertedItems) {
-                             UIView< MobilyDataItemView >* view = [item view];
+                             UIView< MobilyDataItemView >* view = item.view;
                              if(view != nil) {
                                  [view animateAction:MobilyDataItemViewActionInsert];
                              }
                          }
                          for(id< MobilyDataItem > item in _deletedItems) {
-                             UIView< MobilyDataItemView >* view = [item view];
+                             UIView< MobilyDataItemView >* view = item.view;
                              if(view != nil) {
                                  [view animateAction:MobilyDataItemViewActionDelete];
                              }
                          }
                      }
                      completion:^(BOOL finished) {
-                         if([_reloadedBeforeItems count] > 0) {
+                         if(_reloadedBeforeItems.count > 0) {
                              for(id< MobilyDataItem > item in _reloadedBeforeItems) {
                                  [item disappear];
                              }
                              [_reloadedBeforeItems removeAllObjects];
                          }
-                         if([_reloadedAfterItems count] > 0) {
+                         if(_reloadedAfterItems.count > 0) {
                              [_reloadedAfterItems removeAllObjects];
                          }
-                         if([_insertedItems count] > 0) {
+                         if(_insertedItems.count > 0) {
                              [_insertedItems removeAllObjects];
                          }
-                         if([_deletedItems count] > 0) {
+                         if(_deletedItems.count > 0) {
                              for(id< MobilyDataItem > item in _deletedItems) {
                                  [item disappear];
                              }
@@ -1348,8 +1346,6 @@
 - (void)dealloc {
     self.dataScrollView = nil;
     self.delegate = nil;
-    
-    MOBILY_SAFE_DEALLOC;
 }
 
 #pragma mark NSObject

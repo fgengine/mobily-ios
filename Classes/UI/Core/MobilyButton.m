@@ -78,25 +78,23 @@
 }
 
 - (void)dealloc {
-    [self setObjectName:nil];
-    [self setObjectParent:nil];
-    [self setObjectChilds:nil];
-
-    MOBILY_SAFE_DEALLOC;
+    self.objectName = nil;
+    self.objectParent = nil;
+    self.objectChilds = nil;
 }
 
 #pragma mark MobilyBuilderObject
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIView class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andAddingObject:objectChild]];
+    if([objectChild isKindOfClass:UIView.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
         [self addSubview:(UIView*)objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIView class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild]];
+    if([objectChild isKindOfClass:UIView.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
         [self removeSubview:(UIView*)objectChild];
     }
 }
@@ -130,13 +128,13 @@
     CGSize result = CGSizeZero;
     CGSize titleSize = CGSizeZero;
     CGSize imageSize = CGSizeZero;
-    NSString* title = [self currentTitle];
+    NSString* title = self.currentTitle;
     if(title != nil) {
-        titleSize = [[self titleLabel] implicitSize];
+        titleSize = self.titleLabel.implicitSize;
     }
-    UIImage* image = [self currentImage];
+    UIImage* image = self.currentImage;
     if(image != nil) {
-        imageSize = [image size];
+        imageSize = image.size;
     }
     switch(_imageAlignment) {
         case MobilyButtonImageAlignmentLeft:
@@ -155,9 +153,9 @@
 
 - (CGRect)titleRectForContentRect:(CGRect)contentRect {
     CGRect result = contentRect;
-    UIImage* image = [self currentImage];
+    UIImage* image = self.currentImage;
     if(image != nil) {
-        CGSize imageSize = [image size];
+        CGSize imageSize = image.size;
         CGRect imageRect = CGRectZero;
         CGRect titleRect = CGRectZero;
         switch(_imageAlignment) {
@@ -174,9 +172,9 @@
 
 - (CGRect)imageRectForContentRect:(CGRect)contentRect {
     CGRect result = CGRectZero;
-    UIImage* image = [self currentImage];
+    UIImage* image = self.currentImage;
     if(image != nil) {
-        CGSize imageSize = [image size];
+        CGSize imageSize = image.size;
         CGRect imageRect = CGRectZero;
         CGRect titleRect = CGRectZero;
         switch(_imageAlignment) {
@@ -185,7 +183,7 @@
             case MobilyButtonImageAlignmentTop: CGRectDivide(contentRect, &imageRect, &titleRect, imageSize.height, CGRectMinYEdge); break;
             case MobilyButtonImageAlignmentBottom: CGRectDivide(contentRect, &imageRect, &titleRect, imageSize.height, CGRectMaxYEdge); break;
         }
-        imageRect = UIEdgeInsetsInsetRect(imageRect, [self imageEdgeInsets]);
+        imageRect = UIEdgeInsetsInsetRect(imageRect, self.imageEdgeInsets);
         imageRect = CGRectMakeCenterPoint(CGRectGetCenterPoint(imageRect), imageSize.width, imageSize.height);
         result = imageRect;
     }

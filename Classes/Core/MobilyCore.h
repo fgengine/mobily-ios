@@ -69,29 +69,3 @@
 #endif
 
 /*--------------------------------------------------*/
-
-#if __has_feature(objc_arc)
-#   define MOBILY_SAFE_AUTORELEASE(object)          object
-#   define MOBILY_SAFE_RETAIN(object)               object
-#   define MOBILY_SAFE_RELEASE(object)              object = nil
-#   define MOBILY_SAFE_BRIDGE(class, object)        (__bridge class)object
-#   define MOBILY_SAFE_DEALLOC                      /**/
-#   define MOBILY_WEAK                              __weak
-#   define MOBILY_UNSAFE                            __unsafe_unretained
-#else
-#   define MOBILY_SAFE_AUTORELEASE(object)          [object autorelease]
-#   define MOBILY_SAFE_RETAIN(object)               [object retain]
-#   define MOBILY_SAFE_RELEASE(object)              [object release]; object = nil
-#   define MOBILY_SAFE_BRIDGE(class, object)        (class)object
-#   define MOBILY_SAFE_DEALLOC                      [super dealloc]
-#   define MOBILY_WEAK                              /**/
-#   define MOBILY_UNSAFE                            __unsafe_unretained
-#endif
-#define MOBILY_SAFE_SETTER(object, value)           MOBILY_SAFE_RELEASE(object); object = MOBILY_SAFE_RETAIN(value)
-
-/*--------------------------------------------------*/
-
-#define MOBILY_SWAP(v1, v2)                         { id t = v1; v1 = v2; v2 = t; }
-#define MOBILY_SWAP_SAFE(v1, v2)                    { id t = MOBILY_SAFE_RETAIN(v1); v1 = v2; v2 = t; MOBILY_SAFE_RELEASE(t); }
-
-/*--------------------------------------------------*/

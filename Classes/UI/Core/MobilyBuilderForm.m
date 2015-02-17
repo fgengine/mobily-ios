@@ -73,28 +73,28 @@
 #pragma mark Public
 
 + (id)objectFromFilename:(NSString*)filename owner:(id)owner {
-    MobilyBuilderFormXML* loader = [[MobilyBuilderFormXML alloc] init];
+    MobilyBuilderFormXML* loader = [MobilyBuilderFormXML new];
     if(loader != nil) {
         return [loader objectFromFilename:filename owner:owner];
     }
     return nil;
 }
 
-+ (id< MobilyBuilderObject >)object:(id)object forName:(NSString*)name {
-    __block id< MobilyBuilderObject > result = nil;
++ (id< MobilyBuilderObject >)object:(id< MobilyBuilderObject >)object forName:(NSString*)name {
+    id< MobilyBuilderObject > result = nil;
     if([object respondsToSelector:@selector(objectName)] == YES) {
-        if([[object objectName] isEqualToString:name] == YES) {
+        if([object.objectName isEqualToString:name] == YES) {
             result = object;
         } else {
-            [[object objectChilds] enumerateObjectsUsingBlock:^(id objectChild, NSUInteger objectIndex, BOOL* stop) {
+            for(id objectChild in object.objectChilds) {
                 if([objectChild respondsToSelector:@selector(objectForName:)] == YES) {
                     id tempObjectChild = [objectChild objectForName:name];
                     if(tempObjectChild != nil) {
                         result = tempObjectChild;
-                        *stop = YES;
+                        break;
                     }
                 }
-            }];
+            }
         }
     }
     return result;
@@ -141,17 +141,15 @@
 - (instancetype)init {
     self = [super init];
     if(self != nil) {
-        [self setStackFormObjects:[NSMutableArray array]];
+        self.stackFormObjects = NSMutableArray.array;
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setStackFormObjects:nil];
-    [self setRootFormObject:nil];
-    [self setLastFormObject:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.stackFormObjects = nil;
+    self.rootFormObject = nil;
+    self.lastFormObject = nil;
 }
 
 #pragma mark Private
@@ -160,17 +158,17 @@
     id result = nil;
     
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_INFO) != 0)
-    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+    NSTimeInterval now = NSDate.timeIntervalSinceReferenceDate;
 #endif
-    NSString* filePath = [[NSBundle mainBundle] pathForResource:filename ofType:MOBILY_BUILDER_FORM_FILE_EXTENSION];
-    if([[NSFileManager defaultManager] fileExistsAtPath:filePath] == YES) {
+    NSString* filePath = [NSBundle.mainBundle pathForResource:filename ofType:MOBILY_BUILDER_FORM_FILE_EXTENSION];
+    if([NSFileManager.defaultManager fileExistsAtPath:filePath] == YES) {
         NSData* data = [NSData dataWithContentsOfFile:filePath];
         if(data != nil) {
-            [self setLastFormObject:owner];
+            self.lastFormObject = owner;
             
             NSXMLParser* parser = [[NSXMLParser alloc] initWithData:data];
             if(parser != nil) {
-                [parser setDelegate:self];
+                parser.delegate = self;
                 if([parser parse] == YES) {
                     result = _rootFormObject;
                 }
@@ -178,7 +176,7 @@
         }
     }
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_INFO) != 0)
-    NSTimeInterval delta = [NSDate timeIntervalSinceReferenceDate] - now;
+    NSTimeInterval delta = NSDate.timeIntervalSinceReferenceDate - now;
     NSLog(@"MobilyLoader:%@ (%lu ms)", filename, (unsigned long)(delta * 1000));
 #endif
     return result;
@@ -197,23 +195,23 @@
             targetClass = defaultClass;
         }
     }
-    id target = nil;
+    id< MobilyBuilderObject > target = nil;
     if([targetClass conformsToProtocol:@protocol(MobilyBuilderObject)] == YES) {
-        target = [[targetClass alloc] init];
+        target = [targetClass new];
     }
     if(target != nil) {
         if(_rootFormObject == nil) {
-            [self setRootFormObject:target];
+            self.rootFormObject = target;
         }
-        [target setObjectParent:_lastFormObject];
-        NSString* targetName = [attributes objectForKey:@"name"];
-        if([targetName length] > 0) {
-            [target setObjectName:targetName];
+        target.objectParent = _lastFormObject;
+        NSString* targetName = attributes[@"name"];
+        if(targetName.length > 0) {
+            target.objectName = targetName;
             [MobilyBuilderForm object:target outletName:targetName outletObject:target];
         }
-        if([attributes count] > 0) {
+        if(attributes.count > 0) {
             NSDictionary* mixinAttirutes = [MobilyBuilderPreset mixinAttributes:attributes];
-            if([mixinAttirutes count] > 0) {
+            if(mixinAttirutes.count > 0) {
                 [MobilyBuilderPreset applyPresetAttributes:mixinAttirutes object:target];
             }
         }
@@ -221,10 +219,10 @@
         
         [_lastFormObject addObjectChild:target];
         [_stackFormObjects addObject:target];
-        [self setLastFormObject:target];
+        self.lastFormObject = target;
     } else {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-        NSLog(@"Not found class: '%@'; lineNumber: %ld; columnNumber: %ld", elementName, (long)[parser lineNumber], (long)[parser columnNumber]);
+        NSLog(@"Not found class: '%@'; lineNumber: %ld; columnNumber: %ld", elementName, (long)parser.lineNumber, (long)parser.columnNumber);
 #endif
         [parser abortParsing];
     }

@@ -53,31 +53,29 @@
 - (instancetype)initWithHttpQuery:(MobilyHttpQuery*)httpQuery {
     self = [super init];
     if(self != nil) {
-        [self setValidResponse:[self fromHttpQuery:httpQuery]];
+        self.validResponse = [self fromHttpQuery:httpQuery];
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setHttpError:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.httpError = nil;
 }
 
 #pragma mark Public
 
 - (BOOL)fromHttpQuery:(MobilyHttpQuery*)httpQuery {
-    if([httpQuery error] == nil) {
-        NSString* responseMimeType = [httpQuery responseMimeType];
+    if(httpQuery.error == nil) {
+        NSString* responseMimeType = httpQuery.responseMimeType;
         if(([responseMimeType isEqualToString:@"application/json"] == YES) || ([responseMimeType isEqualToString:@"text/json"] == YES)) {
-            id json = [httpQuery responseJson];
+            id json = httpQuery.responseJson;
             if(json != nil) {
                 [self fromJson:json];
                 return YES;
             }
         }
     } else {
-        [self setHttpError:[httpQuery error]];
+        self.httpError = httpQuery.error;
     }
     return NO;
 }

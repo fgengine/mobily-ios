@@ -56,18 +56,16 @@
 - (void)setup {
     [super setup];
     
-    [self setLocale:[NSLocale currentLocale]];
-    [self setCalendar:[NSCalendar currentCalendar]];
-    [self setDate:[NSDate date]];
+    self.locale = NSLocale.currentLocale;
+    self.calendar = [NSCalendar currentCalendar];
+    self.date = [NSDate date];
 }
 
 - (void)dealloc {
-    [self setPickerView:nil];
+    self.pickerView = nil;
     
-    [self setDateFormatter:nil];
-    [self setDate:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.dateFormatter = nil;
+    self.date = nil;
 }
 
 #pragma mark Public
@@ -76,21 +74,21 @@
     [super didBeginEditing];
     
     if(_pickerView == nil) {
-        [self setPickerView:[[UIDatePicker alloc] init]];
+        self.pickerView = [UIDatePicker new];
         if(_pickerView != nil) {
-            [_pickerView setDatePickerMode:_datePickerMode];
+            _pickerView.datePickerMode = _datePickerMode;
             [_pickerView addTarget:self action:@selector(changedDate:) forControlEvents:UIControlEventValueChanged];
         }
-        [self setInputView:_pickerView];
+        self.inputView = _pickerView;
     }
     if(_pickerView != nil) {
-        [_pickerView setLocale:_locale];
-        [_pickerView setCalendar:_calendar];
-        [_pickerView setTimeZone:_timeZone];
-        [_pickerView setMinimumDate:_minimumDate];
-        [_pickerView setMaximumDate:_maximumDate];
+        _pickerView.locale = _locale;
+        _pickerView.calendar = _calendar;
+        _pickerView.timeZone = _timeZone;
+        _pickerView.minimumDate = _minimumDate;
+        _pickerView.maximumDate = _maximumDate;
         if(_date != nil) {
-            [_pickerView setDate:_date];
+            _pickerView.date = _date;
         }
     }
 }
@@ -98,7 +96,7 @@
 - (void)didEndEditing {
     [super didEndEditing];
     
-    [self setDate:[_pickerView date] animated:YES emitted:YES];
+    [self setDate:_pickerView.date animated:YES emitted:YES];
 }
 
 #pragma mark Property
@@ -108,7 +106,7 @@
         _datePickerMode = datePickerMode;
         
         if(_pickerView != nil) {
-            [_pickerView setDatePickerMode:_datePickerMode];
+            _pickerView.datePickerMode = _datePickerMode;
         }
     }
 }
@@ -119,12 +117,12 @@
         
         if(_date != nil) {
             if(_dateFormatter != nil) {
-                [self setText:[_dateFormatter stringFromDate:_date]];
+                self.text = [_dateFormatter stringFromDate:_date];
             } else {
-                [self setText:[_date description]];
+                self.text = _date.description;
             }
         } else {
-            [self setText:@""];
+            self.text = @"";
         }
     }
 }
@@ -135,7 +133,7 @@
         
         if([self isEditing] == YES) {
             if(_date != nil) {
-                [_pickerView setLocale:_locale];
+                _pickerView.locale = _locale;
             }
         }
     }
@@ -147,7 +145,7 @@
         
         if([self isEditing] == YES) {
             if(_date != nil) {
-                [_pickerView setCalendar:_calendar];
+                _pickerView.calendar = _calendar;
             }
         }
     }
@@ -159,7 +157,7 @@
         
         if([self isEditing] == YES) {
             if(_date != nil) {
-                [_pickerView setTimeZone:_timeZone];
+                _pickerView.timeZone = _timeZone;
             }
         }
     }
@@ -171,7 +169,7 @@
 
         if([self isEditing] == YES) {
             if(_date != nil) {
-                [_pickerView setMinimumDate:_minimumDate];
+                _pickerView.minimumDate = _minimumDate;
             }
         }
     }
@@ -183,7 +181,7 @@
         
         if([self isEditing] == YES) {
             if(_date != nil) {
-                [_pickerView setMaximumDate:_maximumDate];
+                _pickerView.maximumDate = _maximumDate;
             }
         }
     }
@@ -205,16 +203,16 @@
         
         if(_date != nil) {
             if(_dateFormatter != nil) {
-                [self setText:[_dateFormatter stringFromDate:_date]];
+                self.text = [_dateFormatter stringFromDate:_date];
             } else {
-                [self setText:[_date description]];
+                self.text = _date.description;
             }
         } else {
-            [self setText:@""];
+            self.text = @"";
         }
         if([self isEditing] == YES) {
             if(_date != nil) {
-                [_pickerView setDate:_date animated:animated];
+                [_pickerView setDate:_date animated:NO];
             }
         }
         if(emitted == YES) {
@@ -224,7 +222,7 @@
 }
 
 - (void)changedDate:(id)sender {
-    [self setDate:[_pickerView date] animated:YES emitted:YES];
+    [self setDate:_pickerView.date animated:YES emitted:YES];
 }
 
 @end

@@ -155,51 +155,49 @@
 - (instancetype)initWithMethod:(NSString*)method relativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams headers:(NSDictionary*)headers bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries {
     self = [super init];
     if(self != nil) {
-        [self setMethod:method];
-        [self setRelativeUrl:relativeUrl];
-        [self setUrlParams:urlParams];
-        [self setHeaders:headers];
-        [self setBodyParams:bodyParams];
-        [self setAttachments:attachments];
-        [self setNumberOfRetries:numberOfRetries];
+        self.method = method;
+        self.relativeUrl = relativeUrl;
+        self.urlParams = urlParams;
+        self.headers = headers;
+        self.bodyParams = bodyParams;
+        self.attachments = attachments;
+        self.numberOfRetries = numberOfRetries;
         [self setup];
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setMethod:nil];
-    [self setRelativeUrl:nil];
-    [self setUrlParams:nil];
-    [self setHeaders:nil];
-    [self setBodyParams:nil];
-    [self setAttachments:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.method = nil;
+    self.relativeUrl = nil;
+    self.urlParams = nil;
+    self.headers = nil;
+    self.bodyParams = nil;
+    self.attachments = nil;
 }
 
 #pragma mark Public
 
 - (MobilyHttpQuery*)httpQueryByBaseUrl:(NSURL*)baseUrl {
-    MobilyHttpQuery* httpQuery = [[MobilyHttpQuery alloc] init];
-    if([_method length] > 0) {
-        [httpQuery setRequestMethod:_method];
+    MobilyHttpQuery* httpQuery = [MobilyHttpQuery new];
+    if(_method.length > 0) {
+        httpQuery.requestMethod = _method;
     }
-    if([_relativeUrl length] > 0) {
-        NSMutableString* mutableBaseUrl = [NSMutableString stringWithString:[baseUrl absoluteString]];
-        if([mutableBaseUrl characterAtIndex:[mutableBaseUrl length] - 1] != '/') {
+    if(_relativeUrl.length > 0) {
+        NSMutableString* mutableBaseUrl = [NSMutableString stringWithString:baseUrl.absoluteString];
+        if([mutableBaseUrl characterAtIndex:mutableBaseUrl.length - 1] != '/') {
             [mutableBaseUrl appendFormat:@"/%@", _relativeUrl];
         } else {
             [mutableBaseUrl appendString:_relativeUrl];
         }
-        [httpQuery setRequestUrl:[NSURL URLWithString:mutableBaseUrl]];
+        httpQuery.requestUrl = [NSURL URLWithString:mutableBaseUrl];
     } else {
-        [httpQuery setRequestUrl:baseUrl];
+        httpQuery.requestUrl = baseUrl;
     }
-    if([_urlParams count] > 0) {
-        [httpQuery setRequestUrlParams:_urlParams];
+    if(_urlParams.count > 0) {
+        httpQuery.requestUrlParams = _urlParams;
     }
-    if([_attachments count] > 0) {
+    if(_attachments.count > 0) {
         [httpQuery setRequestBodyParams:_bodyParams boundary:@"MobilyBoundary" attachments:_attachments];
     } else {
         [httpQuery setRequestBodyParams:_bodyParams];

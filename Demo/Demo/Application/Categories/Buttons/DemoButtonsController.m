@@ -42,17 +42,17 @@
 - (void)setup {
     [super setup];
     
-    [self setTitle:@"Buttons"];
-    [self setEdgesForExtendedLayout:UIRectEdgeNone];
+    self.title = @"Buttons";
+    self.edgesForExtendedLayout = UIRectEdgeNone;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [_buttonLeftImage setImageAlignment:MobilyButtonImageAlignmentLeft];
-    [_buttonRightImage setImageAlignment:MobilyButtonImageAlignmentRight];
-    [_buttonTopImage setImageAlignment:MobilyButtonImageAlignmentTop];
-    [_buttonBottomImage setImageAlignment:MobilyButtonImageAlignmentBottom];
+    _buttonLeftImage.imageAlignment = MobilyButtonImageAlignmentLeft;
+    _buttonRightImage.imageAlignment = MobilyButtonImageAlignmentRight;
+    _buttonTopImage.imageAlignment = MobilyButtonImageAlignmentTop;
+    _buttonBottomImage.imageAlignment = MobilyButtonImageAlignmentBottom;
 }
 
 @end

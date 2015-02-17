@@ -71,24 +71,22 @@
 }
 
 - (void)dealloc {
-    [self setObjectName:nil];
-    [self setObjectParent:nil];
-    [self setObjectChilds:nil];
-
-    MOBILY_SAFE_DEALLOC;
+    self.objectName = nil;
+    self.objectParent = nil;
+    self.objectChilds = nil;
 }
 
 #pragma mark MobilyBuilderObject
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIWindow class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andAddingObject:objectChild]];
+    if([objectChild isKindOfClass:UIWindow.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIWindow class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild]];
+    if([objectChild isKindOfClass:UIWindow.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
     }
 }
 
@@ -111,15 +109,15 @@
 - (BOOL)launchingWithOptions:(NSDictionary*)options {
     MobilyWindow* window = nil;
     if(_remoteNotificationType != UIRemoteNotificationTypeNone) {
-        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:_remoteNotificationType];
+        [UIApplication.sharedApplication registerForRemoteNotificationTypes:_remoteNotificationType];
     }
-    if([_objectChilds count] < 1) {
-        window = [[MobilyWindow alloc] init];
+    if(_objectChilds.count < 1) {
+        window = [MobilyWindow new];
         if(window != nil) {
-            [window setObjectParent:self];
+            window.objectParent = self;
         }
     } else {
-        window = [_objectChilds firstObject];
+        window = _objectChilds.firstObject;
     }
     if(window != nil) {
         [window makeKeyAndVisible];
@@ -146,7 +144,7 @@
 }
 
 - (void)registerForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken {
-    [self setDeviceToken:deviceToken];
+    self.deviceToken = deviceToken;
 }
 
 - (void)failToRegisterForRemoteNotificationsWithError:(NSError*)error {
@@ -165,7 +163,7 @@
 #pragma mark Property
 
 - (UIApplicationState)applicationState {
-    return [[UIApplication sharedApplication] applicationState];
+    return UIApplication.sharedApplication.applicationState;
 }
 
 @end

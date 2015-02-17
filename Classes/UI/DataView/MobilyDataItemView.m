@@ -77,7 +77,7 @@
 #pragma mark Init / Free
 
 - (instancetype)initWithIdentifier:(NSString*)identifier {
-    return [self initWithIdentifier:identifier nib:[UINib nibWithClass:[self class] bundle:nil]];
+    return [self initWithIdentifier:identifier nib:[UINib nibWithClass:self.class bundle:nil]];
 }
 
 - (instancetype)initWithIdentifier:(NSString*)identifier nib:(UINib*)nib {
@@ -107,8 +107,6 @@
     self.constraintRootViewWidth = nil;
     self.constraintRootViewHeight = nil;
     self.rootView = nil;
-    
-    MOBILY_SAFE_DEALLOC;
 }
 
 #pragma mark UIView
@@ -167,7 +165,7 @@
         if(_pressGestureRecognizer != nil) {
             [self removeGestureRecognizer:_pressGestureRecognizer];
         }
-        MOBILY_SAFE_SETTER(_pressGestureRecognizer, pressGestureRecognizer);
+        _pressGestureRecognizer = pressGestureRecognizer;
         if(_pressGestureRecognizer != nil) {
             _pressGestureRecognizer.minimumPressDuration = 0.01f;
             _pressGestureRecognizer.delegate = self;
@@ -181,7 +179,7 @@
         if(_tapGestureRecognizer != nil) {
             [self removeGestureRecognizer:_tapGestureRecognizer];
         }
-        MOBILY_SAFE_SETTER(_tapGestureRecognizer, tapGestureRecognizer);
+        _tapGestureRecognizer = tapGestureRecognizer;
         if(_tapGestureRecognizer != nil) {
             _tapGestureRecognizer.delegate = self;
             [self addGestureRecognizer:_tapGestureRecognizer];
@@ -194,7 +192,7 @@
         if(_rootView != nil) {
             [_rootView removeFromSuperview];
         }
-        MOBILY_SAFE_SETTER(_rootView, rootView);
+        _rootView = rootView;
         if(_rootView != nil) {
             _rootView.translatesAutoresizingMaskIntoConstraints = NO;
         }
@@ -208,7 +206,7 @@
         if(_constraintRootViewCenterX != nil) {
             [self removeConstraint:_constraintRootViewCenterX];
         }
-        MOBILY_SAFE_SETTER(_constraintRootViewCenterX, constraintRootViewCenterX);
+        _constraintRootViewCenterX = constraintRootViewCenterX;
         if(_constraintRootViewCenterX != nil) {
             [self addConstraint:_constraintRootViewCenterX];
         }
@@ -220,7 +218,7 @@
         if(_constraintRootViewCenterY != nil) {
             [self removeConstraint:_constraintRootViewCenterY];
         }
-        MOBILY_SAFE_SETTER(_constraintRootViewCenterY, constraintRootViewCenterY);
+        _constraintRootViewCenterY = constraintRootViewCenterY;
         if(_constraintRootViewCenterY != nil) {
             [self addConstraint:_constraintRootViewCenterY];
         }
@@ -232,7 +230,7 @@
         if(_constraintRootViewWidth != nil) {
             [self removeConstraint:_constraintRootViewWidth];
         }
-        MOBILY_SAFE_SETTER(_constraintRootViewWidth, constraintRootViewWidth);
+        _constraintRootViewWidth = constraintRootViewWidth;
         if(_constraintRootViewWidth != nil) {
             [self addConstraint:_constraintRootViewWidth];
         }
@@ -244,7 +242,7 @@
         if(_constraintRootViewHeight != nil) {
             [self removeConstraint:_constraintRootViewHeight];
         }
-        MOBILY_SAFE_SETTER(_constraintRootViewHeight, constraintRootViewHeight);
+        _constraintRootViewHeight = constraintRootViewHeight;
         if(_constraintRootViewHeight != nil) {
             [self addConstraint:_constraintRootViewHeight];
         }
@@ -346,10 +344,10 @@
 - (void)handlerPressGestureRecognizer:(UILongPressGestureRecognizer*)gestureRecognizer {
     if(gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         if(_highlighted == NO) {
-            [_item setHighlighted:YES animated:YES];
+            [_item setHighlighted:YES animated:NO];
         }
     } else if(_highlighted == YES) {
-        [_item setHighlighted:NO animated:YES];
+        [_item setHighlighted:NO animated:NO];
     }
 }
 

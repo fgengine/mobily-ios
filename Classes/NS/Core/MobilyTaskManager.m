@@ -84,8 +84,8 @@
 - (instancetype)init {
     self = [super init];
     if(self != nil) {
-        [self setQueueManager:[NSOperationQueue new]];
-        [self setBackgroundTaskId:UIBackgroundTaskInvalid];
+        self.queueManager = [NSOperationQueue new];
+        self.backgroundTaskId = UIBackgroundTaskInvalid;
         [self setup];
     }
     return self;
@@ -95,16 +95,14 @@
 }
 
 - (void)dealloc {
-    [self setQueueManager:nil];
-
-    MOBILY_SAFE_DEALLOC;
+    self.queueManager = nil;
 }
 
 #pragma mark Public
 
 - (void)setMaxConcurrentTask:(NSUInteger)maxConcurrentTask {
     [self updating];
-    [_queueManager setMaxConcurrentOperationCount:maxConcurrentTask];
+    _queueManager.maxConcurrentOperationCount = maxConcurrentTask;
     [self updated];
 }
 
@@ -118,9 +116,9 @@
 
 - (void)addTask:(MobilyTask*)task priority:(MobilyTaskPriority)priority {
     [self updating];
-    MobilyTaskOperation* operation = MOBILY_SAFE_AUTORELEASE([[MobilyTaskOperation alloc] initWithTaskManager:self task:task]);
+    MobilyTaskOperation* operation = [[MobilyTaskOperation alloc] initWithTaskManager:self task:task];
     if(operation != nil) {
-        [operation setQueuePriority:(NSOperationQueuePriority)priority];
+        operation.queuePriority = (NSOperationQueuePriority)priority;
         [_queueManager addOperation:operation];
     }
     [self updated];
@@ -129,7 +127,7 @@
 - (void)cancelTask:(MobilyTask*)task {
     [self updating];
     [[_queueManager operations] enumerateObjectsUsingBlock:^(MobilyTaskOperation* operation, NSUInteger idx, BOOL* stop) {
-        if([task isEqual:[operation task]] == YES) {
+        if([task isEqual:operation.task] == YES) {
             [operation cancel];
             *stop = YES;
         }
@@ -148,40 +146,40 @@
 - (void)enumirateTasksUsingBlock:(MobilyTaskManagerEnumBlock)block {
     [self updating];
     [[_queueManager operations] enumerateObjectsUsingBlock:^(MobilyTaskOperation* operation, NSUInteger idx, BOOL* stop) {
-        block([operation task], stop);
+        block(operation.task, stop);
     }];
     [self updated];
 }
 
 - (NSArray*)tasks {
-    NSMutableArray* result = [NSMutableArray array];
+    NSMutableArray* result = NSMutableArray.array;
     if(result != nil) {
         [self updating];
         [[_queueManager operations] enumerateObjectsUsingBlock:^(MobilyTaskOperation* operation, NSUInteger idx, BOOL* stop) {
-            [result addObject:[operation task]];
+            [result addObject:operation.task];
         }];
         [self updated];
     }
-    return MOBILY_SAFE_AUTORELEASE([result copy]);
+    return [result copy];
 }
 
 - (NSUInteger)countTasks {
     [self updating];
-    NSUInteger result = [_queueManager operationCount];
+    NSUInteger result = _queueManager.operationCount;
     [self updated];
     return result;
 }
 
 - (void)updating {
     if(_updateCount == 0) {
-        [_queueManager setSuspended:YES];
+        _queueManager.suspended = YES;
     }
     _updateCount++;
 }
 
 - (void)updated {
     if(_updateCount == 1) {
-        [_queueManager setSuspended:NO];
+        _queueManager.suspended = NO;
     }
     _updateCount--;
 }
@@ -192,7 +190,7 @@
 
 - (void)startBackgroundSession {
     if(_backgroundTaskId == UIBackgroundTaskInvalid) {
-        _backgroundTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        _backgroundTaskId = [UIApplication.sharedApplication beginBackgroundTaskWithExpirationHandler:^{
             [self cancelAllTasks];
             [self stopBackgroundSession];
         }];
@@ -201,7 +199,7 @@
 
 - (void)stopBackgroundSession {
     if(_backgroundTaskId != UIBackgroundTaskInvalid) {
-        [[UIApplication sharedApplication] endBackgroundTask:_backgroundTaskId];
+        [UIApplication.sharedApplication endBackgroundTask:_backgroundTaskId];
         _backgroundTaskId = UIBackgroundTaskInvalid;
     }
 }
@@ -228,10 +226,8 @@
 }
 
 - (void)dealloc {
-    [self setTaskManager:nil];
-    [self setTaskOperation:nil];
-
-    MOBILY_SAFE_DEALLOC;
+    self.taskManager = nil;
+    self.taskOperation = nil;
 }
 
 #pragma mark Public
@@ -272,12 +268,12 @@
 - (instancetype)initWithTaskManager:(MobilyTaskManager*)taskManager task:(MobilyTask*)task {
     self = [super init];
     if(self != nil) {
-        [self setTaskManager:taskManager];
-        [self setTask:task];
+        self.taskManager = taskManager;
+        self.task = task;
         
-        [_task setTaskOperation:self];
+        _task.taskOperation = self;
         
-        [self setCompletionBlock:^{
+        self.completionBlock = ^{
             if([task isCanceled] == YES) {
                 @autoreleasepool {
                     [task didCancel];
@@ -287,17 +283,15 @@
                     [task didComplete];
                 }
             }
-            [task setTaskOperation:nil];
-        }];
+            task.taskOperation = nil;
+        };
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setTaskManager:nil];
-    [self setTask:nil];
-
-    MOBILY_SAFE_DEALLOC;
+    self.taskManager = nil;
+    self.task = nil;
 }
 
 #pragma mark NSOperation
@@ -324,7 +318,7 @@
 - (void)cancel {
     [super cancel];
     
-    [_task setTaskOperation:nil];
+    _task.taskOperation = nil;
 }
 
 @end
@@ -338,9 +332,7 @@
 #pragma mark Init / Free
 
 - (void)dealloc {
-    [self setHttpQuery:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.httpQuery = nil;
 }
 
 #pragma mark MobilyTask

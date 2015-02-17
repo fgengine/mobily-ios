@@ -46,8 +46,8 @@
 - (void)setup {
     [super setup];
     
-    [self setTitle:@"Tables"];
-    [self setEdgesForExtendedLayout:UIRectEdgeNone];
+    self.title = @"Tables";
+    self.edgesForExtendedLayout = UIRectEdgeNone;
     
     [self setDataSource:@[
         [[DemoTablesModel alloc] initWithType:DemoTablesType500px title:@"500 px"],
@@ -60,7 +60,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [_tableView registerCellClass:[DemoTablesCell class]];
+    [_tableView registerCellClass:DemoTablesCell.class];
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
@@ -70,21 +70,21 @@
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
     DemoTablesCell* cell = [_tableView dequeueReusableCellWithClass:[DemoTablesCell class]];
     if(cell != nil) {
-        [cell setModel:[_dataSource objectAtIndex:[indexPath row]]];
+        cell.model = _dataSource[indexPath.row];
     }
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
-    return [DemoTablesCell heightForModel:[_dataSource objectAtIndex:[indexPath row]] tableView:_tableView];
+    return [DemoTablesCell heightForModel:_dataSource[indexPath.row] tableView:_tableView];
 }
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-    DemoTablesModel* model = [_dataSource objectAtIndex:[indexPath row]];
+    DemoTablesModel* model = _dataSource[indexPath.row];
     if(model != nil) {
         switch([model type]) {
             case DemoTablesType500px: {
-                [[self navigationController] pushViewController:[Demo500pxController new] animated:YES];
+                [self.navigationController pushViewController:[Demo500pxController new] animated:YES];
                 break;
             }
         }
@@ -111,7 +111,7 @@
 - (void)setModel:(DemoTablesModel*)model {
     [super setModel:model];
     
-    [_textView setText:[model title]];
+    _textView.text = model.title;
 }
 
 @end
@@ -122,11 +122,11 @@
 
 @implementation DemoTablesModel
 
-- (id)initWithType:(DemoTablesType)type title:(NSString*)title {
+- (instancetype)initWithType:(DemoTablesType)type title:(NSString*)title {
     self = [super init];
     if(self != nil) {
-        [self setType:type];
-        [self setTitle:title];
+        self.type = type;
+        self.title = title;
     }
     return self;
 }

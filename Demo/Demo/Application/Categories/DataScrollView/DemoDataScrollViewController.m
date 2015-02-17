@@ -45,9 +45,9 @@
     self.title = @"DataScrollView";
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
-    self.dataRootListContainer = [[MobilyDataVerticalListContainer alloc] init];
-    self.dataListContainer1 = [[MobilyDataVerticalListContainer alloc] init];
-    self.dataListContainer2 = [[MobilyDataVerticalListContainer alloc] init];
+    self.dataRootListContainer = [MobilyDataVerticalListContainer new];
+    self.dataListContainer1 = [MobilyDataVerticalListContainer new];
+    self.dataListContainer2 = [MobilyDataVerticalListContainer new];
 }
 
 - (void)dealloc {
@@ -74,12 +74,12 @@
     [_dataRootListContainer appendContainer:_dataListContainer1];
     [_dataRootListContainer appendContainer:_dataListContainer2];
     
-    [_dataScrollView registerIdentifier:@"Static" withViewClass:[DemoDataScrollViewItemView class]];
-    [_dataScrollView registerIdentifier:@"Swipe" withViewClass:[DemoDataScrollViewItemSwipeView class]];
+    [_dataScrollView registerIdentifier:@"Static" withViewClass:DemoDataScrollViewItemView.class];
+    [_dataScrollView registerIdentifier:@"Swipe" withViewClass:DemoDataScrollViewItemSwipeView.class];
 
-    [_dataScrollView setPullToRefreshView:[[MobilyDataScrollRefreshView alloc] init]];
+    [_dataScrollView setPullToRefreshView:[MobilyDataScrollRefreshView new]];
     [_dataScrollView setPullToRefreshHeight:64.0f];
-    [_dataScrollView setPullToLoadView:[[MobilyDataScrollRefreshView alloc] init]];
+    [_dataScrollView setPullToLoadView:[MobilyDataScrollRefreshView new]];
     [_dataScrollView setPullToLoadHeight:64.0f];
     [_dataScrollView registerEventWithBlock:^id(id sender, id object) {
         [_dataScrollView hidePullToRefreshAnimated:YES complete:nil];

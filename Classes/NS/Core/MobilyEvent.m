@@ -56,15 +56,15 @@
 #pragma mark Init / Free
 
 + (id)eventWithTarget:(id)target action:(SEL)action {
-    return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithTarget:target action:action thread:nil]);
+    return [[self alloc] initWithTarget:target action:action thread:nil];
 }
 
 + (id)eventWithTarget:(id)target action:(SEL)action inMainThread:(BOOL)inMainThread {
-    return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithTarget:target action:action thread:(inMainThread == YES) ? [NSThread mainThread] : nil]);
+    return [[self alloc] initWithTarget:target action:action thread:(inMainThread == YES) ? [NSThread mainThread] : nil];
 }
 
 + (id)eventWithTarget:(id)target action:(SEL)action inCurrentThread:(BOOL)inCurrentThread {
-    return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithTarget:target action:action thread:(inCurrentThread == YES) ? [NSThread currentThread] : nil]);
+    return [[self alloc] initWithTarget:target action:action thread:(inCurrentThread == YES) ? [NSThread currentThread] : nil];
 }
 
 - (instancetype)initWithCoder:(NSCoder*)coder {
@@ -93,8 +93,6 @@
 - (void)dealloc {
     self.target = nil;
     self.safeThread = nil;
-    
-    MOBILY_SAFE_DEALLOC;
 }
 
 #pragma mark NSCoding
@@ -109,11 +107,11 @@
     id result = nil;
     NSMethodSignature* signature = [_target methodSignatureForSelector:_action];
     if(signature != nil) {
-        NSUInteger numberOfArguments = [signature numberOfArguments];
+        NSUInteger numberOfArguments = signature.numberOfArguments;
         NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:signature];
         if(invocation != nil) {
-            [invocation setTarget:_target];
-            [invocation setSelector:_action];
+            invocation.target = _target;
+            invocation.selector = _action;
             if(numberOfArguments > 2) {
                 if(sender != nil) {
                     [invocation setArgument:&sender atIndex:2];
@@ -134,7 +132,7 @@
             } else {
                 [invocation invoke];
             }
-            if([signature methodReturnLength] == sizeof(id)) {
+            if(signature.methodReturnLength == sizeof(id)) {
                 [invocation getReturnValue:&result];
             }
         }
@@ -170,15 +168,15 @@
 #pragma mark Init / Free
 
 + (id)eventWithBlock:(MobilyEventBlockType)block {
-    return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithBlock:block queue:nil]);
+    return [[self alloc] initWithBlock:block queue:nil];
 }
 
 + (id)eventWithBlock:(MobilyEventBlockType)block inMainQueue:(BOOL)inMainQueue {
-    return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithBlock:block queue:(inMainQueue == YES) ? dispatch_get_main_queue() : nil]);
+    return [[self alloc] initWithBlock:block queue:(inMainQueue == YES) ? dispatch_get_main_queue() : nil];
 }
 
 + (id)eventWithBlock:(MobilyEventBlockType)block inCurrentQueue:(BOOL)inCurrentQueue {
-    return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithBlock:block queue:(inCurrentQueue == YES) ? dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) : nil]);
+    return [[self alloc] initWithBlock:block queue:(inCurrentQueue == YES) ? dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) : nil];
 }
 
 - (instancetype)initWithCoder:(NSCoder*)coder {
@@ -204,8 +202,6 @@
 
 - (void)dealloc {
     self.block = nil;
-    
-    MOBILY_SAFE_DEALLOC;
 }
 
 #pragma mark NSCoding
@@ -258,13 +254,11 @@
 }
 
 - (void)setup {
-    self.events = [NSMutableDictionary dictionary];
+    self.events = NSMutableDictionary.dictionary;
 }
 
 - (void)dealloc {
     self.events = nil;
-    
-    MOBILY_SAFE_DEALLOC;
 }
 
 #pragma mark Public
@@ -278,7 +272,7 @@
 }
 
 - (void)addEvent:(id< MobilyEvent >)event forKey:(id)key {
-    [_events setObject:event forKey:key];
+    _events[key] = event;
 }
 
 - (void)removeEventForKey:(id)key {
@@ -290,7 +284,7 @@
 }
 
 - (BOOL)containsEventForKey:(id)key {
-    return ([_events objectForKey:key] != nil);
+    return (_events[key] != nil);
 }
 
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
@@ -298,7 +292,7 @@
 }
 
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object defaultResult:(id)defaultResult {
-    id< MobilyEvent > event = [_events objectForKey:key];
+    id< MobilyEvent > event = _events[key];
     if(event != nil) {
         return [event fireSender:sender object:object];
     }

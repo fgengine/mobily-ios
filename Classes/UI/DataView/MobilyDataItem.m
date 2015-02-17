@@ -72,7 +72,7 @@
 #pragma mark Init / Free
 
 + (instancetype)dataItemWithIdentifier:(NSString*)identifier data:(id)data {
-    return MOBILY_SAFE_AUTORELEASE([[self alloc] initWithIdentifier:identifier data:data]);
+    return [[self alloc] initWithIdentifier:identifier data:data];
 }
 
 - (instancetype)initWithIdentifier:(NSString*)identifier data:(id)data {
@@ -99,8 +99,6 @@
 - (void)dealloc {
     self.identifier = nil;
     self.data = nil;
-    
-    MOBILY_SAFE_DEALLOC;
 }
 
 #pragma mark Property
@@ -130,7 +128,7 @@
             [_view removeFromSuperview];
             _view.item = nil;
         }
-        MOBILY_SAFE_SETTER(_view, view);
+        _view = view;
         if(_view != nil) {
             _view.item = self;
             [_widget insertSubview:_view atIndex:0];
@@ -314,7 +312,7 @@
             }
         }
         if(_view != nil) {
-            [_view setEditing:_editing animated:animated];
+            [_view setEditing:_editing animated:NO];
         }
     }
 }

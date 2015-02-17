@@ -170,6 +170,8 @@ typedef void(^MobilyDataWidgetCompleteBlock)(BOOL finished);
 - (void)deleteContainer:(id< MobilyDataContainer >)container;
 - (void)replaceOriginContainer:(id< MobilyDataContainer >)originContainer withContainer:(id< MobilyDataContainer >)container;
 
+- (NSArray*)itemsForType:(id)type;
+
 - (void)prependItem:(id< MobilyDataItem >)item;
 - (void)prependItem:(id< MobilyDataItem >)item forType:(id)type;
 - (void)appendItem:(id< MobilyDataItem >)item;

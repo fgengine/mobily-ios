@@ -49,7 +49,6 @@
 }
 
 - (void)dealloc {
-    MOBILY_SAFE_DEALLOC;
 }
 
 #pragma mark Property
@@ -144,9 +143,9 @@
     if(CGRectIsNull(bounds) == NO) {
         CGFloat boundsBeforeEdge = bounds.origin.y;
         CGFloat boundsAfterEdge = bounds.origin.y + bounds.size.height;
-        NSMutableArray* beforeItems = [NSMutableArray array];
-        NSMutableArray* centerItems = [NSMutableArray array];
-        NSMutableArray* afterItems = [NSMutableArray array];
+        NSMutableArray* beforeItems = NSMutableArray.array;
+        NSMutableArray* centerItems = NSMutableArray.array;
+        NSMutableArray* afterItems = NSMutableArray.array;
         for(id< MobilyDataItem > item in self.snapToEdgeItems) {
             CGRect itemUpdateFrame = item.updateFrame;
             CGFloat itemBeforeEdge = itemUpdateFrame.origin.y;
@@ -271,9 +270,9 @@
     if(CGRectIsNull(bounds) == NO) {
         CGFloat boundsBeforeEdge = bounds.origin.x;
         CGFloat boundsAfterEdge = bounds.origin.x + bounds.size.width;
-        NSMutableArray* beforeItems = [NSMutableArray array];
-        NSMutableArray* centerItems = [NSMutableArray array];
-        NSMutableArray* afterItems = [NSMutableArray array];
+        NSMutableArray* beforeItems = NSMutableArray.array;
+        NSMutableArray* centerItems = NSMutableArray.array;
+        NSMutableArray* afterItems = NSMutableArray.array;
         for(id< MobilyDataItem > item in self.snapToEdgeItems) {
             CGRect itemUpdateFrame = item.updateFrame;
             CGFloat itemBeforeEdge = itemUpdateFrame.origin.x;

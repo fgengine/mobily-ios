@@ -58,7 +58,7 @@
 		407F25B71A65CB4800B0A79C /* DemoAudioPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoAudioPlayerController.m; sourceTree = "<group>"; };
 		407F25B81A65CB4800B0A79C /* DemoAudioPlayerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DemoAudioPlayerController.xib; sourceTree = "<group>"; };
 		408718DC1A5C443900833F0A /* DemoCategoriesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoCategoriesController.h; sourceTree = "<group>"; };
-		408718DD1A5C443900833F0A /* DemoCategoriesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoCategoriesController.m; sourceTree = "<group>"; };
+		408718DD1A5C443900833F0A /* DemoCategoriesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DemoCategoriesController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		408718DE1A5C443900833F0A /* DemoCategoriesController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DemoCategoriesController.xib; sourceTree = "<group>"; };
 		408718DF1A5C443900833F0A /* DemoApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoApplication.h; sourceTree = "<group>"; };
 		408718E01A5C443900833F0A /* DemoApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoApplication.m; sourceTree = "<group>"; };
@@ -82,7 +82,7 @@
 		409829091A712A2600D83152 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		4098290C1A712B0400D83152 /* DemoTablesCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DemoTablesCell.xib; sourceTree = "<group>"; };
 		4098290D1A712B0400D83152 /* DemoTablesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoTablesController.h; sourceTree = "<group>"; };
-		4098290E1A712B0400D83152 /* DemoTablesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoTablesController.m; sourceTree = "<group>"; };
+		4098290E1A712B0400D83152 /* DemoTablesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DemoTablesController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4098290F1A712B0400D83152 /* DemoTablesController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DemoTablesController.xib; sourceTree = "<group>"; };
 		409829141A712B9200D83152 /* Demo500pxCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Demo500pxCell.xib; sourceTree = "<group>"; };
 		409829151A712B9200D83152 /* Demo500pxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Demo500pxController.h; sourceTree = "<group>"; };

@@ -51,8 +51,8 @@
 - (void)setup {
     [super setup];
     
-    [self setTitle:@"Categories"];
-    [self setEdgesForExtendedLayout:UIRectEdgeNone];
+    self.title = @"Categories";
+    self.edgesForExtendedLayout = UIRectEdgeNone;
     
     [self setDataSource:@[
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeButtons title:@"Buttons"],
@@ -70,7 +70,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [_tableView registerCellClass:[DemoCategoriesCell class]];
+    [_tableView registerCellClass:DemoCategoriesCell.class];
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
@@ -80,41 +80,41 @@
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
     DemoCategoriesCell* cell = [_tableView dequeueReusableCellWithClass:[DemoCategoriesCell class]];
     if(cell != nil) {
-        [cell setModel:[_dataSource objectAtIndex:[indexPath row]]];
+        cell.model = _dataSource[indexPath.row];
     }
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
-    return [DemoCategoriesCell heightForModel:[_dataSource objectAtIndex:[indexPath row]] tableView:_tableView];
+    return [DemoCategoriesCell heightForModel:_dataSource[indexPath.row] tableView:_tableView];
 }
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-    DemoCategoriesModel* model = [_dataSource objectAtIndex:[indexPath row]];
+    DemoCategoriesModel* model = _dataSource[indexPath.row];
     if(model != nil) {
         switch([model type]) {
             case DemoCategoriesTypeButtons: {
-                [[self navigationController] pushViewController:[DemoButtonsController new] animated:YES];
+                [self.navigationController pushViewController:[DemoButtonsController new] animated:YES];
                 break;
             }
             case DemoCategoriesTypeFields: {
-                [[self navigationController] pushViewController:[DemoFieldsController new] animated:YES];
+                [self.navigationController pushViewController:[DemoFieldsController new] animated:YES];
                 break;
             }
             case DemoCategoriesTypeTables: {
-                [[self navigationController] pushViewController:[DemoTablesController new] animated:YES];
+                [self.navigationController pushViewController:[DemoTablesController new] animated:YES];
                 break;
             }
             case DemoCategoriesTypeDataScrollView: {
-                [[self navigationController] pushViewController:[DemoDataScrollViewController new] animated:YES];
+                [self.navigationController pushViewController:[DemoDataScrollViewController new] animated:YES];
                 break;
             }
             case DemoCategoriesTypeAudioRecorder: {
-                [[self navigationController] pushViewController:[DemoAudioRecorderController new] animated:YES];
+                [self.navigationController pushViewController:[DemoAudioRecorderController new] animated:YES];
                 break;
             }
             case DemoCategoriesTypeAudioPlayer: {
-                [[self navigationController] pushViewController:[DemoAudioPlayerController new] animated:YES];
+                [self.navigationController pushViewController:[DemoAudioPlayerController new] animated:YES];
                 break;
             }
         }
@@ -134,14 +134,10 @@
     return 44.0f;
 }
 
-- (void)setup {
-    [super setup];
-}
-
 - (void)setModel:(DemoCategoriesModel*)model {
     [super setModel:model];
     
-    [_textView setText:[model title]];
+    _textView.text = model.title;
 }
 
 @end
@@ -152,11 +148,11 @@
 
 @implementation DemoCategoriesModel
 
-- (id)initWithType:(DemoCategoriesType)type title:(NSString*)title {
+- (instancetype)initWithType:(DemoCategoriesType)type title:(NSString*)title {
     self = [super init];
     if(self != nil) {
-        [self setType:type];
-        [self setTitle:title];
+        self.type = type;
+        self.title = title;
     }
     return self;
 }

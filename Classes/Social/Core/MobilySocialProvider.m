@@ -54,11 +54,13 @@
 - (instancetype)initWithName:(NSString*)name {
     self = [super init];
     if(self != nil) {
-        [self setName:name];
-        if([[NSUserDefaults standardUserDefaults] objectForKey:[self userDefaultsKey]] != nil) {
-            [self setSession:[[[[self class] sessionClass] alloc] initWithUserDefaultsKey:[self userDefaultsKey]]];
-            if([_session isValid] == NO) {
-                [self setSession:nil];
+        self.name = name;
+        if([NSUserDefaults.standardUserDefaults objectForKey:self.userDefaultsKey] != nil) {
+            self.session = [[self.class.sessionClass alloc] initWithUserDefaultsKey:self.userDefaultsKey];
+            if([_session isKindOfClass:MobilySocialSession.class] == YES) {
+                if(((MobilySocialSession*)_session).isValid == NO) {
+                    self.session = nil;
+                }
             }
         }
         [self setup];
@@ -70,11 +72,9 @@
 }
 
 - (void)dealloc {
-    [self setManager:nil];
-    [self setName:nil];
-    [self setSession:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.manager = nil;
+    self.name = nil;
+    self.session = nil;
 }
 
 #pragma mark Property
@@ -84,7 +84,7 @@
         if(_manager != nil) {
             [_manager unregisterProvider:self];
         }
-        MOBILY_SAFE_SETTER(_manager, manager);
+        _manager = manager;
         if(_manager != nil) {
             [_manager registerProvider:self];
         }
@@ -96,9 +96,11 @@
         if(_session != nil) {
             [_session erase];
         }
-        MOBILY_SAFE_SETTER(_session, session);
+        _session = session;
         if(_session != nil) {
-            [_session setUserDefaultsKey:[self userDefaultsKey]];
+            if([_session isKindOfClass:MobilyModel.class] == YES) {
+                ((MobilyModel*)_session).userDefaultsKey = self.userDefaultsKey;
+            }
             [_session save];
         }
     }
@@ -111,7 +113,7 @@
 #pragma mark Public
 
 + (Class)sessionClass {
-    return [MobilySocialSession class];
+    return MobilySocialSession.class;
 }
 
 - (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {

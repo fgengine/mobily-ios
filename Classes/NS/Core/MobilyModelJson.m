@@ -146,15 +146,23 @@
 
 #pragma mark Init / Free
 
+- (instancetype)init {
+    self = [super init];
+    if(self != nil) {
+        [self setup];
+    }
+    return self;
+}
+
 - (instancetype)initWithPath:(NSString*)path {
     self = [super init];
     if(self != nil) {
-        [self setPath:path];
+        self.path = path;
         NSMutableArray* subPaths = [NSMutableArray arrayWithArray:[path componentsSeparatedByString:@"|"]];
-        [subPaths enumerateObjectsUsingBlock:^(NSString* subPath, NSUInteger subPathIndex, BOOL* subPathStop) {
-            [subPaths replaceObjectAtIndex:subPathIndex withObject:[subPath componentsSeparatedByString:@"."]];
+        [subPaths enumerateObjectsUsingBlock:^(NSString* subPath, NSUInteger index, BOOL* stop) {
+            subPaths[index] = [subPath componentsSeparatedByString:@"."];
         }];
-        [self setSubPaths:subPaths];
+        self.subPaths = subPaths;
         [self setup];
     }
     return self;
@@ -164,33 +172,31 @@
 }
 
 - (void)dealloc {
-    [self setSubPaths:nil];
-    [self setPath:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.subPaths = nil;
+    self.path = nil;
 }
 
 #pragma mark Public
 
 - (id)parseJson:(id)json {
-    __block id value = json;
-    if([value isKindOfClass:[NSDictionary class]] == YES) {
-        [_subPaths enumerateObjectsUsingBlock:^(NSArray* subPath, NSUInteger subPathIndex, BOOL* subPathStop) {
+    id value = json;
+    if([value isKindOfClass:NSDictionary.class] == YES) {
+        for(NSArray* subPath in _subPaths) {
             value = json;
-            [subPath enumerateObjectsUsingBlock:^(NSString* path, NSUInteger pathIndex, BOOL* pathStop) {
-                if([value isKindOfClass:[NSDictionary class]] == YES) {
-                    value = [value objectForKey:path];
+            for(NSString* path in subPath) {
+                if([value isKindOfClass:NSDictionary.class] == YES) {
+                    value = value[path];
                     if(value == nil) {
-                        *pathStop = YES;
+                        break;
                     }
                 } else {
-                    if(pathIndex != ([subPath count] - 1)) {
+                    if(path != subPath.lastObject) {
                         value = nil;
                     }
-                    *pathStop = YES;
+                    break;
                 }
-            }];
-        }];
+            }
+        }
     }
     return [self convertValue:value];
 }
@@ -214,7 +220,7 @@
 - (instancetype)initWithJsonConverter:(MobilyModelJson*)jsonConverter {
     self = [super init];
     if(self != nil) {
-        [self setJsonConverter:jsonConverter];
+        self.jsonConverter = jsonConverter;
     }
     return self;
 }
@@ -222,7 +228,7 @@
 - (instancetype)initWithJsonModelClass:(Class)jsonModelClass {
     self = [super init];
     if(self != nil) {
-        [self setJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:jsonModelClass]];
+        self.jsonConverter = [[MobilyModelJsonCustomClass alloc] initWithCustomClass:jsonModelClass];
     }
     return self;
 }
@@ -230,7 +236,7 @@
 - (instancetype)initWithPath:(NSString*)path jsonConverter:(MobilyModelJson*)jsonConverter {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setJsonConverter:jsonConverter];
+        self.jsonConverter = jsonConverter;
     }
     return self;
 }
@@ -238,21 +244,21 @@
 - (instancetype)initWithPath:(NSString*)path jsonModelClass:(Class)jsonModelClass {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:jsonModelClass]];
+        self.jsonConverter = [[MobilyModelJsonCustomClass alloc] initWithCustomClass:jsonModelClass];
     }
     return self;
 }
 
 - (id)convertValue:(id)value {
-    if([value isKindOfClass:[NSArray class]] == YES) {
-        NSMutableArray* result = [NSMutableArray array];
+    if([value isKindOfClass:NSArray.class] == YES) {
+        NSMutableArray* result = NSMutableArray.array;
         if(result != nil) {
-            [value enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL* stop) {
+            for(id object in value) {
                 id convertedValue = [_jsonConverter convertValue:object];
                 if(convertedValue != nil) {
                     [result addObject:convertedValue];
                 }
-            }];
+            }
             return result;
         }
     }
@@ -274,7 +280,7 @@
 - (instancetype)initWithValueJsonConverter:(MobilyModelJson*)valueJsonConverter {
     self = [super init];
     if(self != nil) {
-        [self setValueJsonConverter:valueJsonConverter];
+        self.valueJsonConverter = valueJsonConverter;
     }
     return self;
 }
@@ -282,7 +288,25 @@
 - (instancetype)initWithValueJsonModelClass:(Class)valueJsonModelClass {
     self = [super init];
     if(self != nil) {
-        [self setValueJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass]];
+        self.valueJsonConverter = [[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass];
+    }
+    return self;
+}
+
+- (instancetype)initWithKeyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter {
+    self = [super init];
+    if(self != nil) {
+        self.keyJsonConverter = keyJsonConverter;
+        self.valueJsonConverter = valueJsonConverter;
+    }
+    return self;
+}
+
+- (instancetype)initWithKeyJsonModelClass:(Class)keyJsonModelClass valueJsonModelClass:(Class)valueJsonModelClass {
+    self = [super init];
+    if(self != nil) {
+        self.keyJsonConverter = [[MobilyModelJsonCustomClass alloc] initWithCustomClass:keyJsonModelClass];
+        self.valueJsonConverter = [[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass];
     }
     return self;
 }
@@ -290,7 +314,7 @@
 - (instancetype)initWithPath:(NSString*)path valueJsonConverter:(MobilyModelJson*)valueJsonConverter {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setValueJsonConverter:valueJsonConverter];
+        self.valueJsonConverter = valueJsonConverter;
     }
     return self;
 }
@@ -298,7 +322,7 @@
 - (instancetype)initWithPath:(NSString*)path valueJsonModelClass:(Class)valueJsonModelClass {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setValueJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass]];
+        self.valueJsonConverter = [[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass];
     }
     return self;
 }
@@ -306,8 +330,8 @@
 - (instancetype)initWithPath:(NSString*)path keyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setKeyJsonConverter:keyJsonConverter];
-        [self setValueJsonConverter:valueJsonConverter];
+        self.keyJsonConverter = keyJsonConverter;
+        self.valueJsonConverter = valueJsonConverter;
     }
     return self;
 }
@@ -315,8 +339,8 @@
 - (instancetype)initWithPath:(NSString*)path keyJsonModelClass:(Class)keyJsonModelClass valueJsonModelClass:(Class)valueJsonModelClass {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setKeyJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:keyJsonModelClass]];
-        [self setValueJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass]];
+        self.keyJsonConverter = [[MobilyModelJsonCustomClass alloc] initWithCustomClass:keyJsonModelClass];
+        self.valueJsonConverter = [[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass];
     }
     return self;
 }
@@ -324,15 +348,15 @@
 #pragma mark MobilyModelJson
 
 - (id)convertValue:(id)value {
-    if([value isKindOfClass:[NSDictionary class]] == YES) {
-        NSMutableDictionary* result = [NSMutableDictionary dictionary];
+    if([value isKindOfClass:NSDictionary.class] == YES) {
+        NSMutableDictionary* result = NSMutableDictionary.dictionary;
         if(result != nil) {
             [value enumerateKeysAndObjectsUsingBlock:^(id jsonKey, id jsonObject, BOOL* stop) {
                 id key = (_keyJsonConverter != nil) ? [_keyJsonConverter convertValue:jsonKey] : jsonKey;
                 if(key != nil) {
                     id value = [_valueJsonConverter convertValue:jsonObject];
                     if(value != nil) {
-                        [result setObject:value forKey:key];
+                        result[key] = value;
                     }
                 }
             }];
@@ -355,7 +379,7 @@
 - (instancetype)initWithPath:(NSString*)path defaultValue:(BOOL)defaultValue {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setDefaultValue:defaultValue];
+        self.defaultValue = defaultValue;
     }
     return self;
 }
@@ -363,13 +387,13 @@
 #pragma mark MobilyModelJson
 
 - (id)convertValue:(id)value {
-    if([value isKindOfClass:[NSString class]] == YES) {
+    if([value isKindOfClass:NSString.class] == YES) {
         NSString* lowercaseString = [value lowercaseString];
         if(([lowercaseString isEqualToString:@"true"] == YES) || ([lowercaseString isEqualToString:@"yes"] == YES) || ([lowercaseString isEqualToString:@"on"] == YES)) {
             return @YES;
         }
         return @NO;
-    } else if([value isKindOfClass:[NSNumber class]] == YES) {
+    } else if([value isKindOfClass:NSNumber.class] == YES) {
         return value;
     }
     return @(_defaultValue);
@@ -388,29 +412,27 @@
 - (instancetype)initWithPath:(NSString*)path defaultValue:(NSString*)defaultValue {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setDefaultValue:defaultValue];
+        self.defaultValue = defaultValue;
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setDefaultValue:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.defaultValue = nil;
 }
 
 #pragma mark MobilyModelJson
 
 - (id)convertValue:(id)value {
-    if([value isKindOfClass:[NSString class]] == YES) {
+    if([value isKindOfClass:NSString.class] == YES) {
         return value;
-    } else if([value isKindOfClass:[NSNumber class]] == YES) {
+    } else if([value isKindOfClass:NSNumber.class] == YES) {
         static NSNumberFormatter* numberFormat = nil;
         if(numberFormat == nil) {
-            numberFormat = [[NSNumberFormatter alloc] init];
-            [numberFormat setLocale:[NSLocale currentLocale]];
-            [numberFormat setFormatterBehavior:NSNumberFormatterBehavior10_4];
-            [numberFormat setNumberStyle:NSNumberFormatterDecimalStyle];
+            numberFormat = [NSNumberFormatter new];
+            numberFormat.locale = NSLocale.currentLocale;
+            numberFormat.formatterBehavior = NSNumberFormatterBehavior10_4;
+            numberFormat.numberStyle = NSNumberFormatterDecimalStyle;
         }
         return [numberFormat stringFromNumber:value];
     }
@@ -430,21 +452,19 @@
 - (instancetype)initWithPath:(NSString*)path defaultValue:(NSURL*)defaultValue {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setDefaultValue:defaultValue];
+        self.defaultValue = defaultValue;
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setDefaultValue:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.defaultValue = nil;
 }
 
 #pragma mark MobilyModelJson
 
 - (id)convertValue:(id)value {
-    if([value isKindOfClass:[NSString class]] == YES) {
+    if([value isKindOfClass:NSString.class] == YES) {
         return [NSURL URLWithString:value];
     }
     return _defaultValue;
@@ -463,35 +483,33 @@
 - (instancetype)initWithPath:(NSString*)path defaultValue:(NSNumber*)defaultValue {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setDefaultValue:defaultValue];
+        self.defaultValue = defaultValue;
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setDefaultValue:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.defaultValue = nil;
 }
 
 #pragma mark MobilyModelJson
 
 - (id)convertValue:(id)value {
-    if([value isKindOfClass:[NSNumber class]] == YES) {
+    if([value isKindOfClass:NSNumber.class] == YES) {
         return value;
-    } else if([value isKindOfClass:[NSString class]] == YES) {
+    } else if([value isKindOfClass:NSString.class] == YES) {
         static NSNumberFormatter* numberFormat = nil;
         if(numberFormat == nil) {
-            numberFormat = [[NSNumberFormatter alloc] init];
+            numberFormat = [NSNumberFormatter new];
         }
-        [numberFormat setLocale:[NSLocale currentLocale]];
-        [numberFormat setFormatterBehavior:NSNumberFormatterBehavior10_4];
-        [numberFormat setNumberStyle:NSNumberFormatterDecimalStyle];
+        numberFormat.locale = NSLocale.currentLocale;
+        numberFormat.formatterBehavior = NSNumberFormatterBehavior10_4;
+        numberFormat.numberStyle = NSNumberFormatterDecimalStyle;
         
         NSNumber* number = [numberFormat numberFromString:value];
         if(number == nil) {
             if([[numberFormat decimalSeparator] isEqualToString:@"."] == YES) {
-                [numberFormat setDecimalSeparator:@","];
+                numberFormat.decimalSeparator = @",";
             }
             number = [numberFormat numberFromString:value];
         }
@@ -515,7 +533,7 @@
 - (instancetype)initWithFormat:(NSString*)format {
     self = [super init];
     if(self != nil) {
-        [self setFormats:@[ format ]];
+        self.formats = @[ format ];
     }
     return self;
 }
@@ -523,7 +541,7 @@
 - (instancetype)initWithFormats:(NSArray*)formats {
     self = [super init];
     if(self != nil) {
-        [self setFormats:formats];
+        self.formats = formats;
     }
     return self;
 }
@@ -531,8 +549,8 @@
 - (instancetype)initWithFormat:(NSString*)format defaultValue:(NSDate*)defaultValue {
     self = [super init];
     if(self != nil) {
-        [self setFormats:@[ format ]];
-        [self setDefaultValue:defaultValue];
+        self.formats = @[ format ];
+        self.defaultValue = defaultValue;
     }
     return self;
 }
@@ -540,8 +558,8 @@
 - (instancetype)initWithFormats:(NSArray*)formats defaultValue:(NSDate*)defaultValue {
     self = [super init];
     if(self != nil) {
-        [self setFormats:formats];
-        [self setDefaultValue:defaultValue];
+        self.formats = formats;
+        self.defaultValue = defaultValue;
     }
     return self;
 }
@@ -549,7 +567,7 @@
 - (instancetype)initWithPath:(NSString*)path format:(NSString*)format {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setFormats:@[ format ]];
+        self.formats = @[ format ];
     }
     return self;
 }
@@ -557,7 +575,7 @@
 - (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setFormats:formats];
+        self.formats = formats;
     }
     return self;
 }
@@ -565,8 +583,8 @@
 - (instancetype)initWithPath:(NSString*)path format:(NSString*)format defaultValue:(NSDate*)defaultValue {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setFormats:@[ format ]];
-        [self setDefaultValue:defaultValue];
+        self.formats = @[ format ];
+        self.defaultValue = defaultValue;
     }
     return self;
 }
@@ -574,8 +592,8 @@
 - (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats defaultValue:(NSDate*)defaultValue {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setFormats:formats];
-        [self setDefaultValue:defaultValue];
+        self.formats = formats;
+        self.defaultValue = defaultValue;
     }
     return self;
 }
@@ -583,39 +601,37 @@
 - (instancetype)initWithPath:(NSString*)path defaultValue:(NSDate*)defaultValue {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setDefaultValue:defaultValue];
+        self.defaultValue = defaultValue;
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setFormats:nil];
-    [self setDefaultValue:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.formats = nil;
+    self.defaultValue = nil;
 }
 
 #pragma mark MobilyModelJson
 
 - (id)convertValue:(id)value {
-    if([value isKindOfClass:[NSString class]] == YES) {
+    if([value isKindOfClass:NSString.class] == YES) {
         static NSDateFormatter* dateFormatter = nil;
         if(dateFormatter == nil) {
-            dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter = [NSDateFormatter new];
         }
-        __block NSDate* resultValue = nil;
-        [_formats enumerateObjectsUsingBlock:^(NSString* format, NSUInteger index, BOOL* stop) {
-            if([format isKindOfClass:[NSString class]] == true) {
-                [dateFormatter setDateFormat:format];
+        NSDate* resultValue = nil;
+        for(NSString* format in _formats) {
+            if([format isKindOfClass:NSString.class] == true) {
+                dateFormatter.dateFormat = format;
             }
             NSDate* date = [dateFormatter dateFromString:value];
             if(date != nil) {
                 resultValue = date;
-                *stop = YES;
+                break;
             }
-        }];
+        }
         return resultValue;
-    } else if([value isKindOfClass:[NSNumber class]] == YES) {
+    } else if([value isKindOfClass:NSNumber.class] == YES) {
         return [NSDate dateWithTimeIntervalSince1970:[value longValue]];
     }
     return _defaultValue;
@@ -634,7 +650,7 @@
 - (instancetype)initWithEnums:(NSDictionary*)enums {
     self = [super init];
     if(self != nil) {
-        [self setEnums:enums];
+        self.enums = enums;
     }
     return self;
 }
@@ -642,8 +658,8 @@
 - (instancetype)initWithEnums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue {
     self = [super init];
     if(self != nil) {
-        [self setEnums:enums];
-        [self setDefaultValue:defaultValue];
+        self.enums = enums;
+        self.defaultValue = defaultValue;
     }
     return self;
 }
@@ -651,7 +667,7 @@
 - (instancetype)initWithPath:(NSString*)path enums:(NSDictionary*)enums {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setEnums:enums];
+        self.enums = enums;
     }
     return self;
 }
@@ -659,29 +675,27 @@
 - (instancetype)initWithPath:(NSString*)path enums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setEnums:enums];
-        [self setDefaultValue:defaultValue];
+        self.enums = enums;
+        self.defaultValue = defaultValue;
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setEnums:nil];
-    [self setDefaultValue:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.enums = nil;
+    self.defaultValue = nil;
 }
 
 #pragma mark MobilyModelJson
 
 - (id)convertValue:(id)value {
-    if([value isKindOfClass:[NSString class]] == YES) {
-        if([[_enums allKeys] containsObject:value] == YES) {
-            return [_enums objectForKey:value];
+    if([value isKindOfClass:NSString.class] == YES) {
+        if([_enums.allKeys containsObject:value] == YES) {
+            return _enums[value];
         }
-    } else if([value isKindOfClass:[NSNumber class]] == YES) {
-        if([[_enums allKeys] containsObject:value] == YES) {
-            return [_enums objectForKey:value];
+    } else if([value isKindOfClass:NSNumber.class] == YES) {
+        if([_enums.allKeys containsObject:value] == YES) {
+            return _enums[value];
         }
     }
     return _defaultValue;
@@ -700,7 +714,7 @@
 - (instancetype)initWithCustomClass:(Class)customClass {
     self = [super init];
     if(self != nil) {
-        [self setCustomClass:customClass];
+        self.customClass = customClass;
     }
     return self;
 }
@@ -708,21 +722,19 @@
 - (instancetype)initWithPath:(NSString*)path customClass:(Class)customClass {
     self = [super initWithPath:path];
     if(self != nil) {
-        [self setCustomClass:customClass];
+        self.customClass = customClass;
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setCustomClass:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.customClass = nil;
 }
 
 #pragma mark MobilyModelJson
 
 - (id)convertValue:(id)value {
-    if([value isKindOfClass:[NSDictionary class]] == YES) {
+    if([value isKindOfClass:NSDictionary.class] == YES) {
         return [[_customClass alloc] initWithJson:value];
     }
     return nil;

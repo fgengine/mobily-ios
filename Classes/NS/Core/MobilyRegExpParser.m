@@ -73,7 +73,7 @@
 - (instancetype)init {
     self = [super init];
     if(self != nil) {
-        [self setNeedApplyParser:NO];
+        self.needApplyParser = NO;
         [self setup];
     }
     return self;
@@ -82,9 +82,9 @@
 - (instancetype)initWithExpression:(NSString*)expression pattern:(NSString*)pattern {
     self = [super init];
     if(self != nil) {
-        MOBILY_SAFE_SETTER(_expression, expression);
-        MOBILY_SAFE_SETTER(_pattern, pattern);
-        [self setNeedApplyParser:NO];
+        self.expression = expression;
+        self.pattern = pattern;
+        self.needApplyParser = NO;
         [self setup];
     }
     return self;
@@ -93,10 +93,10 @@
 - (instancetype)initWithSting:(NSString*)string expression:(NSString*)expression pattern:(NSString*)pattern {
     self = [super init];
     if(self != nil) {
-        MOBILY_SAFE_SETTER(_string, string);
-        MOBILY_SAFE_SETTER(_expression, expression);
-        MOBILY_SAFE_SETTER(_pattern, pattern);
-        [self setNeedApplyParser:YES];
+        self.string = string;
+        self.expression = expression;
+        self.pattern = pattern;
+        self.needApplyParser = YES;
         [self setup];
     }
     return self;
@@ -106,35 +106,33 @@
 }
 
 - (void)dealloc {
-    [self setString:nil];
-    [self setExpression:nil];
-    [self setPattern:nil];
-    [self setMatches:nil];
-    [self setResult:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.string = nil;
+    self.expression = nil;
+    self.pattern = nil;
+    self.matches = nil;
+    self.result = nil;
 }
 
 #pragma mark Property
 
 - (void)setString:(NSString*)string {
     if([_string isEqualToString:string] == NO) {
-        MOBILY_SAFE_SETTER(_string, string);
-        [self setNeedApplyParser:YES];
+        _string = string;
+        self.needApplyParser = YES;
     }
 }
 
 - (void)setExpression:(NSString*)expression {
     if([_expression isEqualToString:expression] == NO) {
-        MOBILY_SAFE_SETTER(_expression, expression);
-        [self setNeedApplyParser:YES];
+        _expression = expression;
+        self.needApplyParser = YES;
     }
 }
 
 - (void)setPattern:(NSString*)pattern {
     if([_pattern isEqualToString:pattern] == NO) {
-        MOBILY_SAFE_SETTER(_pattern, pattern);
-        [self setNeedApplyParser:YES];
+        _pattern = pattern;
+        self.needApplyParser = YES;
     }
 }
 
@@ -152,22 +150,22 @@
 
 - (void)applyParserIfNeed {
     if(_needApplyParser == YES) {
-        [self setNeedApplyParser:NO];
+        self.needApplyParser = NO;
         [self applyParser];
     }
 }
 
 - (void)applyParser {
-    if([_string length] > 0) {
-        NSMutableArray* resultMatches = [NSMutableArray array];
+    if(_string.length > 0) {
+        NSMutableArray* resultMatches = NSMutableArray.array;
         NSMutableString* resultString = [NSMutableString stringWithString:_string];
         NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:_expression options:0 error:nil];
         if(regex != nil) {
             __block NSInteger offset = 0;
-            [regex enumerateMatchesInString:_string options:0 range:NSMakeRange(0, [_string length]) usingBlock:^(NSTextCheckingResult* checkingResult, NSMatchingFlags flags, BOOL* stop) {
-                NSUInteger numberOfRanges = [checkingResult numberOfRanges];
+            [regex enumerateMatchesInString:_string options:0 range:NSMakeRange(0, _string.length) usingBlock:^(NSTextCheckingResult* checkingResult, NSMatchingFlags flags, BOOL* stop) {
+                NSUInteger numberOfRanges = checkingResult.numberOfRanges;
                 
-                NSString* matchOriginalString = [_string substringWithRange:[checkingResult range]];
+                NSString* matchOriginalString = [_string substringWithRange:checkingResult.range];
                 NSMutableArray* matchOriginalSubStrings = [NSMutableArray arrayWithCapacity:numberOfRanges];
                 for(NSUInteger rangeIndex = 1; rangeIndex < numberOfRanges; rangeIndex++) {
                     NSRange range = [checkingResult rangeAtIndex:rangeIndex];
@@ -175,20 +173,20 @@
                     
                     [matchOriginalSubStrings addObject:substring];
                 }
-                NSRange matchOriginalRange = [checkingResult range];
+                NSRange matchOriginalRange = checkingResult.range;
                 
                 NSString* matchResultString = [regex replacementStringForResult:checkingResult inString:_string offset:0 template:(_pattern != nil) ? _pattern : @""];
-                NSRange matchResultRange = NSMakeRange(matchOriginalRange.location + offset, [matchResultString length]);
+                NSRange matchResultRange = NSMakeRange(matchOriginalRange.location + offset, matchResultString.length);
                 
                 [resultString replaceCharactersInRange:NSMakeRange(matchOriginalRange.location + offset, matchOriginalRange.length) withString:matchResultString];
                 
-                MobilyRegExpMatch* match = [[MobilyRegExpMatch alloc] init];
+                MobilyRegExpMatch* match = [MobilyRegExpMatch new];
                 if(match != nil) {
-                    [match setOriginalString:matchOriginalString];
-                    [match setOriginalSubStrings:matchOriginalSubStrings];
-                    [match setOriginalRange:matchOriginalRange];
-                    [match setResultString:matchResultString];
-                    [match setResultRange:matchResultRange];
+                    match.originalString = matchOriginalString;
+                    match.originalSubStrings = matchOriginalSubStrings;
+                    match.originalRange = matchOriginalRange;
+                    match.resultString = matchResultString;
+                    match.resultRange = matchResultRange;
                     
                     [resultMatches addObject:match];
                 }
@@ -196,11 +194,11 @@
                 offset += (matchResultRange.length - matchOriginalRange.length);
             }];
         }
-        [self setMatches:[resultMatches copy]];
-        [self setResult:[resultString copy]];
+        self.matches = [resultMatches copy];
+        self.result = [resultString copy];
     } else {
-        [self setMatches:nil];
-        [self setResult:nil];
+        self.matches = nil;
+        self.result = nil;
     }
 }
 
@@ -226,11 +224,9 @@
 }
 
 - (void)dealloc {
-    [self setOriginalString:nil];
-    [self setOriginalSubStrings:nil];
-    [self setResultString:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.originalString = nil;
+    self.originalSubStrings = nil;
+    self.resultString = nil;
 }
 
 @end

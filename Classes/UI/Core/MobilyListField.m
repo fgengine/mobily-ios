@@ -52,12 +52,10 @@
 #pragma mark Init / Free
 
 - (void)dealloc {
-    [self setPickerView:nil];
+    self.pickerView = nil;
     
-    [self setItems:nil];
-    [self setSelectedItem:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.items = nil;
+    self.selectedItem = nil;
 }
 
 #pragma mark Public
@@ -66,11 +64,11 @@
     [super didBeginEditing];
     
     if(_pickerView == nil) {
-        [self setPickerView:[[UIPickerView alloc] init]];
+        self.pickerView = [UIPickerView new];
         if(_pickerView != nil) {
-            [_pickerView setDelegate:self];
+            _pickerView.delegate = self;
         }
-        [self setInputView:_pickerView];
+        self.inputView = _pickerView;
     }
     if(_pickerView != nil) {
         [_pickerView reloadAllComponents];
@@ -83,7 +81,7 @@
 - (void)didEndEditing {
     [super didEndEditing];
     
-    [self setSelectedItem:[_items objectAtIndex:[_pickerView selectedRowInComponent:0]] animated:YES emitted:YES];
+    [self setSelectedItem:_items[[_pickerView selectedRowInComponent:0]] animated:YES emitted:YES];
 }
 
 #pragma mark Property
@@ -95,14 +93,14 @@
         if([self isEditing] == YES) {
             [_pickerView reloadAllComponents];
         }
-        if((_selectedItem == nil) && ([_items count] > 0)) {
-            _selectedItem = [_items objectAtIndex:0];
-            [self setText:[_selectedItem title]];
+        if((_selectedItem == nil) && (_items.count > 0)) {
+            _selectedItem = _items[0];
+            self.text = [_selectedItem title];
             if([self isEditing] == YES) {
                 [_pickerView selectRow:[_items indexOfObject:_selectedItem] inComponent:0 animated:NO];
             }
         } else {
-            [self setText:@""];
+            self.text = @"";
         }
     }
 }
@@ -122,9 +120,9 @@
         _selectedItem = selectedItem;
         
         if(_selectedItem != nil) {
-            [self setText:[_selectedItem title]];
+            self.text = [_selectedItem title];
         } else {
-            [self setText:@""];
+            self.text = @"";
         }
         if([self isEditing] == YES) {
             [_pickerView selectRow:[_items indexOfObject:_selectedItem] inComponent:0 animated:animated];
@@ -142,17 +140,17 @@
 }
 
 - (NSInteger)pickerView:(UIPickerView*)pickerView numberOfRowsInComponent:(NSInteger)component {
-    return [_items count];
+    return _items.count;
 }
 
 #pragma mark UIPickerViewDelegate
 
 - (NSString*)pickerView:(UIPickerView*)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    return [[_items objectAtIndex:row] title];
+    return [_items[row] title];
 }
 
 - (NSAttributedString*)pickerView:(UIPickerView*)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    MobilyListFieldItem* listItem = [_items objectAtIndex:row];
+    MobilyListFieldItem* listItem = _items[row];
     return [[NSAttributedString alloc] initWithString:[listItem title] attributes:@{
         NSFontAttributeName : [listItem font],
         NSForegroundColorAttributeName: [listItem color]
@@ -160,7 +158,7 @@
 }
 
 - (void)pickerView:(UIPickerView*)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    [self setSelectedItem:[_items objectAtIndex:row] animated:YES emitted:YES];
+    [self setSelectedItem:_items[row] animated:YES emitted:YES];
 }
 
 @end
@@ -176,10 +174,10 @@
 - (instancetype)initWithTitle:(NSString*)title value:(id)value {
     self = [super init];
     if(self != nil) {
-        [self setTitle:title];
-        [self setFont:[UIFont systemFontOfSize:[UIFont systemFontSize]]];
-        [self setColor:[UIColor blackColor]];
-        [self setValue:value];
+        self.title = title;
+        self.font = [UIFont systemFontOfSize:UIFont.systemFontSize];
+        self.color = UIColor.blackColor;
+        self.value = value;
     }
     return self;
 }
@@ -187,10 +185,10 @@
 - (instancetype)initWithTitle:(NSString*)title color:(UIColor*)color value:(id)value {
     self = [super init];
     if(self != nil) {
-        [self setTitle:title];
-        [self setFont:[UIFont systemFontOfSize:[UIFont systemFontSize]]];
-        [self setColor:color];
-        [self setValue:value];
+        self.title = title;
+        self.font = [UIFont systemFontOfSize:UIFont.systemFontSize];
+        self.color = color;
+        self.value = value;
     }
     return self;
 }
@@ -198,21 +196,19 @@
 - (instancetype)initWithTitle:(NSString*)title font:(UIFont*)font color:(UIColor*)color value:(id)value {
     self = [super init];
     if(self != nil) {
-        [self setTitle:title];
-        [self setFont:font];
-        [self setColor:color];
-        [self setValue:value];
+        self.title = title;
+        self.font = font;
+        self.color = color;
+        self.value = value;
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setTitle:nil];
-    [self setFont:nil];
-    [self setColor:nil];
-    [self setValue:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.title = nil;
+    self.font = nil;
+    self.color = nil;
+    self.value = nil;
 }
 
 @end

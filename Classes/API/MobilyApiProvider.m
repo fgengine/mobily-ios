@@ -78,8 +78,8 @@
 - (instancetype)initWithName:(NSString*)name url:(NSURL*)url {
     self = [super init];
     if(self != nil) {
-        [self setName:name];
-        [self setUrl:url];
+        self.name = name;
+        self.url = url;
         [self setup];
     }
     return self;
@@ -89,13 +89,11 @@
 }
 
 - (void)dealloc {
-    [self setManager:nil];
-    [self setTaskManager:nil];
-    [self setCache:nil];
-    [self setName:nil];
-    [self setUrl:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.manager = nil;
+    self.taskManager = nil;
+    self.cache = nil;
+    self.name = nil;
+    self.url = nil;
 }
 
 #pragma mark Property
@@ -105,7 +103,7 @@
         if(_manager != nil) {
             [_manager unregisterProvider:self];
         }
-        MOBILY_SAFE_SETTER(_manager, manager);
+        _manager = manager;
         if(_manager != nil) {
             [_manager registerProvider:self];
         }
@@ -114,14 +112,14 @@
 
 - (MobilyTaskManager*)taskManager {
     if((_manager != nil) && (_taskManager == nil)) {
-        [self setTaskManager:[_manager taskManager]];
+        self.taskManager = _manager.taskManager;
     }
     return _taskManager;
 }
 
 - (MobilyCache*)cache {
     if((_manager != nil) && (_cache == nil)) {
-        [self setCache:[_manager cache]];
+        self.cache = _manager.cache;
     }
     return _cache;
 }
@@ -129,24 +127,24 @@
 #pragma mark Public
 
 - (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target completeSelector:(SEL)completeSelector {
-    [[self taskManager] addTask:[[MobilyApiProviderTask alloc] initWithProvider:self request:request target:target completeSelector:completeSelector]];
+    [self.taskManager addTask:[[MobilyApiProviderTask alloc] initWithProvider:self request:request target:target completeSelector:completeSelector]];
 }
 
 - (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target completeBlock:(MobilyApiProviderCompleteBlock)completeBlock {
-    [[self taskManager] addTask:[[MobilyApiProviderTask alloc] initWithProvider:self request:request target:target completeBlock:completeBlock]];
+    [self.taskManager addTask:[[MobilyApiProviderTask alloc] initWithProvider:self request:request target:target completeBlock:completeBlock]];
 }
 
 - (void)cancelByRequest:(MobilyApiRequest*)request {
-    [[self taskManager] enumirateTasksUsingBlock:^(MobilyApiProviderTask* task, BOOL* stop) {
-        if([[task request] isEqual:request] == YES) {
+    [self.taskManager enumirateTasksUsingBlock:^(MobilyApiProviderTask* task, BOOL* stop) {
+        if([task.request isEqual:request] == YES) {
             [task cancel];
         }
     }];
 }
 
 - (void)cancelByTarget:(id)target {
-    [[self taskManager] enumirateTasksUsingBlock:^(MobilyApiProviderTask* task, BOOL* stop) {
-        if([task target] == target) {
+    [self.taskManager enumirateTasksUsingBlock:^(MobilyApiProviderTask* task, BOOL* stop) {
+        if(task.target == target) {
             [task cancel];
         }
     }];
@@ -165,9 +163,9 @@
 - (instancetype)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target {
     self = [super init];
     if(self != nil) {
-        [self setProvider:provider];
-        [self setRequest:request];
-        [self setTarget:target];
+        self.provider = provider;
+        self.request = request;
+        self.target = target;
     }
     return self;
 }
@@ -175,7 +173,7 @@
 - (instancetype)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target completeSelector:(SEL)completeSelector {
     self = [self initWithProvider:provider request:request target:target];
     if(self != nil) {
-        [self setCompleteEvent:[MobilyEventSelector eventWithTarget:target action:completeSelector inMainThread:YES]];
+        self.completeEvent = [MobilyEventSelector eventWithTarget:target action:completeSelector inMainThread:YES];
     }
     return self;
 }
@@ -183,29 +181,27 @@
 - (instancetype)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target completeBlock:(MobilyApiProviderCompleteBlock)completeBlock {
     self = [self initWithProvider:provider request:request target:target];
     if(self != nil) {
-        [self setCompleteEvent:[MobilyEventBlock eventWithBlock:^id(id sender, id object) {
+        self.completeEvent = [MobilyEventBlock eventWithBlock:^id(id sender, id object) {
             if(completeBlock != nil) {
                 completeBlock(_request, _response);
             }
             return nil;
-        } inMainQueue:YES]];
+        } inMainQueue:YES];
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setTarget:nil];
-    [self setCompleteEvent:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.target = nil;
+    self.completeEvent = nil;
 }
 
 #pragma mark MobilyTaskHttpQuery
 
 - (BOOL)willStart {
-    MobilyHttpQuery* httpQuery = [_request httpQueryByBaseUrl:[_provider url]];
+    MobilyHttpQuery* httpQuery = [_request httpQueryByBaseUrl:_provider.url];
     if(httpQuery != nil) {
-        [self setHttpQuery:httpQuery];
+        self.httpQuery = httpQuery;
     }
     return [super willStart];
 }
@@ -213,14 +209,14 @@
 - (void)working {
     [super working];
     
-    [self setResponse:[_request responseByHttpQuery:[self httpQuery]]];
-    if([_response isValidResponse] == NO) {
-        if([_request numberOfRetries] == NSNotFound) {
-            [self setNeedRework:YES];
+    self.response = [_request responseByHttpQuery:self.httpQuery];
+    if(_response.isValidResponse == NO) {
+        if(_request.numberOfRetries == NSNotFound) {
+            self.needRework = YES;
         } else {
-            if(_numberOfErrors != [_request numberOfRetries]) {
-                [self setNumberOfErrors:_numberOfErrors + 1];
-                [self setNeedRework:YES];
+            if(_numberOfErrors != _request.numberOfRetries) {
+                self.numberOfErrors = _numberOfErrors + 1;
+                self.needRework = YES;
             }
         }
     }

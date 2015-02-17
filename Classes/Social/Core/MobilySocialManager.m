@@ -62,7 +62,7 @@
     if(shared == nil) {
         @synchronized(self) {
             if(shared == nil) {
-                shared = [[self alloc] init];
+                shared = [self new];
             }
         }
     }
@@ -74,7 +74,7 @@
 - (instancetype)init {
     self = [super init];
     if(self != nil) {
-        [self setMutableProviders:[NSMutableArray array]];
+        self.mutableProviders = NSMutableArray.array;
         [self setup];
     }
     return self;
@@ -84,9 +84,7 @@
 }
 
 - (void)dealloc {
-    [self setMutableProviders:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.mutableProviders = nil;
 }
 
 #pragma mark Property
@@ -100,38 +98,36 @@
 - (void)registerProvider:(MobilySocialProvider*)provider {
     if([_mutableProviders containsObject:provider] == NO) {
         [_mutableProviders addObject:provider];
-        [provider setManager:self];
+        provider.manager = self;
     }
 }
 
 - (void)unregisterProvider:(MobilySocialProvider*)provider {
     if([_mutableProviders containsObject:provider] == YES) {
         [_mutableProviders removeObject:provider];
-        [provider setManager:nil];
+        provider.manager = nil;
     }
 }
 
 - (void)didBecomeActive {
-    [_mutableProviders enumerateObjectsUsingBlock:^(MobilySocialProvider* provider, NSUInteger index, BOOL* stop) {
+    for(MobilySocialProvider* provider in _mutableProviders) {
         [provider didBecomeActive];
-    }];
+    }
 }
 
 - (void)willResignActive {
-    [_mutableProviders enumerateObjectsUsingBlock:^(MobilySocialProvider* provider, NSUInteger index, BOOL* stop) {
+    for(MobilySocialProvider* provider in _mutableProviders) {
         [provider willResignActive];
-    }];
+    }
 }
 
 - (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation {
-    __block BOOL result = NO;
-    [_mutableProviders enumerateObjectsUsingBlock:^(MobilySocialProvider* provider, NSUInteger index, BOOL* stop) {
+    for(MobilySocialProvider* provider in _mutableProviders) {
         if([provider openURL:url sourceApplication:sourceApplication annotation:annotation] == YES) {
-            result = YES;
-            *stop = YES;
+            return YES;
         }
-    }];
-    return result;
+    }
+    return NO;
 }
 
 @end

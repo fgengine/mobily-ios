@@ -47,17 +47,17 @@
 - (void)setup {
     [super setup];
     
-    [self setTitle:@"AudioRecorder"];
-    [self setEdgesForExtendedLayout:UIRectEdgeNone];
+    self.title = @"AudioRecorder";
+    self.edgesForExtendedLayout = UIRectEdgeNone;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     NSError* error = nil;
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
+    [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
     if(error != nil) {
-        NSLog(@"AVAudioSession: %@", [error localizedDescription]);
+        NSLog(@"AVAudioSession: %@", error.localizedDescription);
     }
     
     [self setAudioRecorder:[[MobilyAudioRecorder alloc] init]];
@@ -71,9 +71,9 @@
         [_audioRecorder prepareWithName:@"Test.m4a"];
 #endif
     }
-    [self setTimer:[MobilyTimer timerWithInterval:UPDATE_INTERVAL repeat:MAXIMUM_DURATION / UPDATE_INTERVAL]];
+    self.timer = [MobilyTimer timerWithInterval:UPDATE_INTERVAL repeat:MAXIMUM_DURATION / UPDATE_INTERVAL];
     if(_timer != nil) {
-        [_timer setDelegate:self];
+        _timer.delegate = self;
     }
     [self updateButtonState];
 }
@@ -81,17 +81,16 @@
 #pragma mark Private
 
 - (void)updateLabelState {
-    NSDictionary* attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:[[_audioRecorder url] absoluteString] error:nil];
-    
-    [_elapsedTimeLabel setText:[NSString stringWithFormat:@"%d s", (int)[_audioRecorder duration]]];
-    [_fileSizeLabel setText:[NSString stringWithFormat:@"%d kb", (int)([attrs fileSize] / 1024)]];
+    NSDictionary* attrs = [NSFileManager.defaultManager attributesOfItemAtPath:_audioRecorder.url.absoluteString error:nil];
+    _elapsedTimeLabel.text = [NSString stringWithFormat:@"%d s", (int)_audioRecorder.duration];
+    _fileSizeLabel.text = [NSString stringWithFormat:@"%d kb", (int)(attrs.fileSize / 1024)];
 }
 
 - (void)updateButtonState {
-    [_startButton setEnabled:([_audioRecorder isPrepared] == YES) && ([_audioRecorder isStarted] == NO)];
-    [_stopButton setEnabled:([_audioRecorder isPrepared] == YES) && ([_audioRecorder isStarted] == YES)];
-    [_pauseButton setEnabled:([_audioRecorder isPrepared] == YES) && ([_audioRecorder isStarted] == YES) && ([_audioRecorder isPaused] == NO)];
-    [_resumeButton setEnabled:([_audioRecorder isPrepared] == YES) && ([_audioRecorder isStarted] == YES) && ([_audioRecorder isPaused] == YES)];
+    _startButton.enabled = (_audioRecorder.isPrepared == YES) && (_audioRecorder.isStarted == NO);
+    _stopButton.enabled = (_audioRecorder.isPrepared == YES) && (_audioRecorder.isStarted == YES);
+    _pauseButton.enabled = (_audioRecorder.isPrepared == YES) && (_audioRecorder.isStarted == YES) && (_audioRecorder.isPaused == NO);
+    _resumeButton.enabled = (_audioRecorder.isPrepared == YES) && (_audioRecorder.isStarted == YES) && (_audioRecorder.isPaused == YES);
 }
 
 #pragma mark MobilyTimerDelegate

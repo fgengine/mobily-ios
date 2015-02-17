@@ -62,9 +62,9 @@
 - (instancetype)init {
     self = [super init];
     if(self != nil) {
-        [self setRequest:[NSMutableURLRequest new]];
-        [_request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
-        [_request setNetworkServiceType:NSURLNetworkServiceTypeDefault];
+        self.request = [NSMutableURLRequest new];
+        _request.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+        _request.networkServiceType = NSURLNetworkServiceTypeDefault;
         [self setup];
     }
     return self;
@@ -76,77 +76,75 @@
 - (void)dealloc {
     [self cancel];
     
-    [self setCertificateFilename:nil];
-    [self setError:nil];
-    [self setRequest:nil];
-    [self setResponse:nil];
-    [self setMutableResponseData:nil];
-    [self setStartCallback:nil];
-    [self setCancelCallback:nil];
-    [self setFinishCallback:nil];
-    [self setErrorCallback:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.certificateFilename = nil;
+    self.error = nil;
+    self.request = nil;
+    self.response = nil;
+    self.mutableResponseData = nil;
+    self.startCallback = nil;
+    self.cancelCallback = nil;
+    self.finishCallback = nil;
+    self.errorCallback = nil;
 }
 
 #pragma mark Public
 
 - (void)setRequestUrl:(NSURL*)url params:(NSDictionary*)params {
     NSURLComponents* urlComponents = [NSURLComponents componentsWithString:[url absoluteString]];
-    NSMutableDictionary* queryParams = [NSMutableDictionary dictionary];
-    if([[urlComponents query] length] > 0) {
-        [queryParams addEntriesFromDictionary:[[urlComponents query] dictionaryFromQueryComponents]];
+    NSMutableDictionary* queryParams = NSMutableDictionary.dictionary;
+    if([urlComponents.query length] > 0) {
+        [queryParams addEntriesFromDictionary:urlComponents.query.dictionaryFromQueryComponents];
     }
     [queryParams addEntriesFromDictionary:[self formDataFromDictionary:params]];
-    NSMutableString* queryString = [NSMutableString string];
-    [queryParams enumerateKeysAndObjectsUsingBlock:^(NSString* key, id value, BOOL* stop) {
-        if([queryString length] > 0) {
+    NSMutableString* queryString = NSMutableString.string;
+    [queryParams enumerateKeysAndObjectsUsingBlock:^(NSString* key, id< NSObject > value, BOOL* stop) {
+        if(queryString.length > 0) {
             [queryString appendString:@"&"];
         }
-        [queryString appendFormat:@"%@=%@", key, [value description]];
+        [queryString appendFormat:@"%@=%@", key, value.description];
     }];
-    [urlComponents setQuery:queryString];
-    [self setRequestUrl:[NSURL URLWithString:[urlComponents string]]];
+    urlComponents.query = queryString;
+    self.requestUrl = [NSURL URLWithString:urlComponents.string];
 }
 
 - (void)setRequestUrlParams:(NSDictionary*)params {
-    [self setRequestUrl:[_request URL] params:params];
+    [self setRequestUrl:_request.URL params:params];
 }
 
 - (void)setRequestBodyParams:(NSDictionary*)params {
-    NSMutableData* body = [NSMutableData data];
+    NSMutableData* body = NSMutableData.data;
     NSDictionary* formData = [self formDataFromDictionary:params];
-    [formData enumerateKeysAndObjectsUsingBlock:^(NSString* key, id value, BOOL* stop) {
-        if([body length] > 0) {
+    [formData enumerateKeysAndObjectsUsingBlock:^(NSString* key, id< NSObject > value, BOOL* stop) {
+        if(body.length > 0) {
             [body appendData:[@"&" dataUsingEncoding:NSUTF8StringEncoding]];
         }
-        [body appendData:[[NSString stringWithFormat:@"%@=%@", key, [value description]] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"%@=%@", key, value.description] dataUsingEncoding:NSUTF8StringEncoding]];
     }];
     
-    [self addRequestHeader:@"Content-Length" value:[NSString stringWithFormat:@"%lu", (unsigned long)[body length]]];
-    [self setRequestBody:body];
+    [self addRequestHeader:@"Content-Length" value:[NSString stringWithFormat:@"%lu", (unsigned long)body.length]];
+    self.requestBody = body;
 }
 
 - (void)setRequestBodyParams:(NSDictionary*)params boundary:(NSString*)boundary attachments:(NSArray*)attachments {
-    NSMutableData* body = [NSMutableData data];
+    NSMutableData* body = NSMutableData.data;
     NSDictionary* formData = [self formDataFromDictionary:params];
-    [formData enumerateKeysAndObjectsUsingBlock:^(NSString* key, id value, BOOL* stop) {
+    [formData enumerateKeysAndObjectsUsingBlock:^(NSString* key, id< NSObject > value, BOOL* stop) {
         [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"%@\r\n", [value description]] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"%@\r\n", value.description] dataUsingEncoding:NSUTF8StringEncoding]];
     }];
-    [attachments enumerateObjectsUsingBlock:^(NSDictionary* attachment, NSUInteger index, BOOL* stop) {
+    for(NSDictionary* attachment in attachments) {
         [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", [attachment objectForKey:@"name"], [attachment objectForKey:@"filename"]] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", [attachment objectForKey:@"type"]] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[attachment objectForKey:@"data"]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", attachment[@"name"], attachment[@"filename"]] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", attachment[@"type"]] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:attachment[@"data"]];
         [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    }];
+    }
     [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     
     [self addRequestHeader:@"Content-Type" value:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary]];
-    [self addRequestHeader:@"Content-Length" value:[NSString stringWithFormat:@"%lu", (unsigned long)[body length]]];
-    [self setRequestBody:body];
+    [self addRequestHeader:@"Content-Length" value:[NSString stringWithFormat:@"%lu", (unsigned long)body.length]];
+    self.requestBody = body;
 }
 
 - (void)addRequestHeader:(NSString*)header value:(NSString*)value {
@@ -156,8 +154,8 @@
 - (void)addRequestHeaders:(NSDictionary*)headers {
     NSMutableDictionary* mutableHeaders = [NSMutableDictionary dictionaryWithDictionary:[_request allHTTPHeaderFields]];
     if(mutableHeaders != nil) {
-        [mutableHeaders setValuesForKeysWithDictionary:headers];
-        [_request setAllHTTPHeaderFields:mutableHeaders];
+        mutableHeaders.valuesForKeysWithDictionary = headers;
+        _request.allHTTPHeaderFields = mutableHeaders;
     }
 }
 
@@ -165,7 +163,7 @@
     NSMutableDictionary* headers = [NSMutableDictionary dictionaryWithDictionary:[_request allHTTPHeaderFields]];
     if(headers != nil) {
         [headers removeObjectForKey:header];
-        [_request setAllHTTPHeaderFields:headers];
+        _request.allHTTPHeaderFields = headers;
     }
 }
 
@@ -173,20 +171,20 @@
     NSMutableDictionary* mutableHeaders = [NSMutableDictionary dictionaryWithDictionary:[_request allHTTPHeaderFields]];
     if(mutableHeaders != nil) {
         [mutableHeaders removeObjectsForKeys:headers];
-        [_request setAllHTTPHeaderFields:mutableHeaders];
+        _request.allHTTPHeaderFields = mutableHeaders;
     }
 }
 
 - (void)start {
     if(_connection == nil) {
-        [self setResponse:nil];
-        [self setMutableResponseData:nil];
+        self.response = nil;
+        self.mutableResponseData = nil;
         
-        [self setConnection:[[NSURLConnection alloc] initWithRequest:_request delegate:self startImmediately:NO]];
+        self.connection = [[NSURLConnection alloc] initWithRequest:_request delegate:self startImmediately:NO];
         if(_connection != nil) {
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+            UIApplication.sharedApplication.networkActivityIndicatorVisible = YES;
             
-            [_connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+            [_connection scheduleInRunLoop:NSRunLoop.currentRunLoop forMode:NSDefaultRunLoopMode];
             [_connection start];
             
             if([_delegate respondsToSelector:@selector(didStartHttpQuery:)] == YES) {
@@ -195,7 +193,7 @@
                 _startCallback(self);
             }
             
-            [[NSRunLoop currentRunLoop] run];
+            [NSRunLoop.currentRunLoop run];
         }
     }
 }
@@ -204,9 +202,9 @@
     if(_connection != nil) {
         [_connection cancel];
         
-        [self setConnection:nil];
-        [self setResponse:nil];
-        [self setMutableResponseData:nil];
+        self.connection = nil;
+        self.response = nil;
+        self.mutableResponseData = nil;
         
         if([_delegate respondsToSelector:@selector(didCancelHttpQuery:)] == YES) {
             [_delegate didCancelHttpQuery:self];
@@ -214,14 +212,14 @@
             _cancelCallback(self);
         }
         
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
     }
 }
 
 #pragma mark Property
 
 - (void)setRequestUrl:(NSURL*)requestUrl {
-    [_request setURL:requestUrl];
+    _request.uRL = requestUrl;
 }
 
 - (NSURL*)requestUrl {
@@ -229,7 +227,7 @@
 }
 
 - (void)setRequestTimeout:(NSTimeInterval)requestTimeout {
-    [_request setTimeoutInterval:requestTimeout];
+    _request.timeoutInterval = requestTimeout;
 }
 
 - (NSTimeInterval)requestTimeout {
@@ -237,7 +235,7 @@
 }
 
 - (void)setRequestMethod:(NSString*)requestMethod {
-    [_request setHTTPMethod:requestMethod];
+    _request.hTTPMethod = requestMethod;
 }
 
 - (NSString*)requestMethod {
@@ -245,7 +243,7 @@
 }
 
 - (void)setRequestHeaders:(NSDictionary*)requestHeaders {
-    [_request setAllHTTPHeaderFields:requestHeaders];
+    _request.allHTTPHeaderFields = requestHeaders;
 }
 
 - (NSDictionary*)requestHeaders {
@@ -253,7 +251,7 @@
 }
 
 - (void)setRequestBody:(NSData*)requestBody {
-    [_request setHTTPBody:requestBody];
+    _request.hTTPBody = requestBody;
 }
 
 - (NSData*)requestBody {
@@ -286,7 +284,7 @@
 
 - (NSDictionary*)responseJsonObject {
     id json = [self responseJson];
-    if([json isKindOfClass:[NSDictionary class]] == YES) {
+    if([json isKindOfClass:NSDictionary.class] == YES) {
         return json;
     }
     return nil;
@@ -294,14 +292,14 @@
 
 - (NSArray*)responseJsonArray {
     id json = [self responseJson];
-    if([json isKindOfClass:[NSArray class]] == YES) {
+    if([json isKindOfClass:NSArray.class] == YES) {
         return json;
     }
     return nil;
 }
 
 - (id)responseJson {
-    if([_mutableResponseData length] < 1) {
+    if(_mutableResponseData.length < 1) {
         return nil;
     }
     NSError* parseError = nil;
@@ -315,7 +313,7 @@
 #pragma mark Private
 
 - (NSDictionary*)formDataFromDictionary:(NSDictionary*)dictionary {
-    NSMutableDictionary* result = [NSMutableDictionary dictionary];
+    NSMutableDictionary* result = NSMutableDictionary.dictionary;
     [dictionary enumerateKeysAndObjectsUsingBlock:^(id keyPath, id value, BOOL* stop) {
         [self formDataFromDictionary:result value:value keyPath:keyPath];
     }];
@@ -323,26 +321,26 @@
 }
 
 - (void)formDataFromDictionary:(NSMutableDictionary*)dictionary value:(id)value keyPath:(NSString*)keyPath {
-    if([value isKindOfClass:[NSDictionary class]] == YES) {
+    if([value isKindOfClass:NSDictionary.class] == YES) {
         [value enumerateKeysAndObjectsUsingBlock:^(id dictKey, id dictValue, BOOL* stop) {
             [self formDataFromDictionary:dictionary value:dictValue keyPath:[NSString stringWithFormat:@"%@[%@]", keyPath, dictKey]];
         }];
-    } else if([value isKindOfClass:[NSArray class]] == YES) {
+    } else if([value isKindOfClass:NSArray.class] == YES) {
         [value enumerateObjectsUsingBlock:^(id arrayValue, NSUInteger arrayIndex, BOOL* stop) {
             [self formDataFromDictionary:dictionary value:arrayValue keyPath:[NSString stringWithFormat:@"%@[%lu]", keyPath, (unsigned long)arrayIndex]];
         }];
     } else {
-        [dictionary setObject:value forKey:keyPath];
+        dictionary[keyPath] = value;
     }
 }
 
 #pragma mark NSURLConnectionDelegate
 
 - (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error {
-    [self setConnection:nil];
-    [self setResponse:nil];
-    [self setMutableResponseData:nil];
-    [self setError:error];
+    self.connection = nil;
+    self.response = nil;
+    self.mutableResponseData = nil;
+    self.error = error;
     
     if([_delegate respondsToSelector:@selector(httpQuery:didError:)] == YES) {
         [_delegate httpQuery:self didError:_error];
@@ -350,17 +348,17 @@
         _errorCallback(_error);
     }
     
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
 }
 
 - (void)connection:(NSURLConnection*)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge {
-    id< NSURLAuthenticationChallengeSender > sender = [challenge sender];
-    SecTrustRef serverTrust = [[challenge protectionSpace] serverTrust];
+    id< NSURLAuthenticationChallengeSender > sender = challenge.sender;
+    SecTrustRef serverTrust = challenge.protectionSpace.serverTrust;
     
     if(_certificateFilename != nil) {
         SecCertificateRef localCertificate = NULL;
         SecTrustResultType serverTrustResult = kSecTrustResultOtherError;
-        NSString* path = [[NSBundle mainBundle] pathForResource:_certificateFilename ofType:@"der"];
+        NSString* path = [NSBundle.mainBundle pathForResource:_certificateFilename ofType:@"der"];
         if(path != nil) {
             NSData* data = [NSData dataWithContentsOfFile:path];
             if(data != nil) {
@@ -427,28 +425,26 @@
 }
 
 - (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response {
-    if([response isKindOfClass:[NSHTTPURLResponse class]] == YES) {
-        [self setResponse:(NSHTTPURLResponse*)response];
+    if([response isKindOfClass:NSHTTPURLResponse.class] == YES) {
+        self.response = (NSHTTPURLResponse*)response;
     }
 }
 
 - (void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data {
     if(_mutableResponseData == nil) {
-        [self setMutableResponseData:[NSMutableData data]];
+        self.mutableResponseData = NSMutableData.data;
     }
     [_mutableResponseData appendData:data];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection*)connection {
-    [self setConnection:nil];
-    
+    self.connection = nil;
     if([_delegate respondsToSelector:@selector(didFinishHttpQuery:)] == YES) {
         [_delegate didFinishHttpQuery:self];
     } else if(_finishCallback != nil) {
         _finishCallback(self);
     }
-    
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
 }
 
 @end

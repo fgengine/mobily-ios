@@ -75,25 +75,23 @@
 }
 
 - (void)setup {
-    [self setFormat:kAudioFormatAppleIMA4];
-    [self setQuality:AVAudioQualityMin];
-    [self setBitRate:16];
-    [self setNumberOfChannels:1];
+    self.format = kAudioFormatAppleIMA4;
+    self.quality = AVAudioQualityMin;
+    self.bitRate = 16;
+    self.numberOfChannels = 1;
     [self setSampleRate:44100.0f];
 }
 
 - (void)dealloc {
-    [self setRecorder:nil];
-    [self setPreparedBlock:nil];
-    [self setCleanedBlock:nil];
-    [self setStartedBlock:nil];
-    [self setStopedBlock:nil];
-    [self setFinishedBlock:nil];
-    [self setResumedBlock:nil];
-    [self setPausedBlock:nil];
-    [self setEncodeErrorBlock:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.recorder = nil;
+    self.preparedBlock = nil;
+    self.cleanedBlock = nil;
+    self.startedBlock = nil;
+    self.stopedBlock = nil;
+    self.finishedBlock = nil;
+    self.resumedBlock = nil;
+    self.pausedBlock = nil;
+    self.encodeErrorBlock = nil;
 }
 
 #pragma mark Property
@@ -101,26 +99,26 @@
 - (void)setRecorder:(AVAudioRecorder*)recorder {
     if(_recorder != recorder) {
         if(_recorder != nil) {
-            [_recorder setDelegate:nil];
+            _recorder.delegate = nil;
         }
-        MOBILY_SAFE_SETTER(_recorder, recorder);
+        _recorder = recorder;
         if(_recorder != nil) {
-            [_recorder setDelegate:self];
+            _recorder.delegate = self;
         }
     }
 }
 
 - (BOOL)isRecording {
-    return [_recorder isRecording];
+    return _recorder.isRecording;
 }
 
 - (NSURL*)url {
-    return [_recorder url];
+    return _recorder.url;
 }
 
 - (NSTimeInterval)duration {
-    if([_recorder isRecording] == YES) {
-        [self setDuration:[_recorder currentTime]];
+    if(_recorder.isRecording == YES) {
+        self.duration = _recorder.currentTime;
     }
     return _duration;
 }
@@ -128,7 +126,7 @@
 #pragma mark Public
 
 - (BOOL)prepareWithName:(NSString*)name {
-    return [self prepareWithPath:[NSFileManager documentDirectory] name:name];
+    return [self prepareWithPath:NSFileManager.documentDirectory name:name];
 }
 
 - (BOOL)prepareWithPath:(NSString*)path name:(NSString*)name {
@@ -138,10 +136,10 @@
 - (BOOL)prepareWithUrl:(NSURL*)url {
     if(_prepared == NO) {
         NSError* error = nil;
-        [self setRecorder:[[AVAudioRecorder alloc] initWithURL:url settings:[self recorderSettings] error:&error]];
+        self.recorder = [[AVAudioRecorder alloc] initWithURL:url settings:[self recorderSettings] error:&error];
         if(_recorder != nil) {
             if([_recorder prepareToRecord] == YES) {
-                [self setPrepared:YES];
+                self.prepared = YES;
                 if([_delegate respondsToSelector:@selector(audioRecorderDidPrepared:)] == YES) {
                     [_delegate audioRecorderDidPrepared:self];
                 } else if(_preparedBlock != nil) {
@@ -149,7 +147,7 @@
                 }
             }
         } else if(error != nil) {
-            NSLog(@"MobilyAudioRecorder::prepareWithUrl:%@ Error=%@", url, [error localizedDescription]);
+            NSLog(@"MobilyAudioRecorder::prepareWithUrl:%@ Error=%@", url, error.localizedDescription);
         }
     }
     return _prepared;
@@ -158,8 +156,8 @@
 - (void)clean {
     if(_prepared == YES) {
         [self stop];
-        [self setPrepared:NO];
-        [self setRecorder:nil];
+        self.prepared = NO;
+        self.recorder = nil;
         if([_delegate respondsToSelector:@selector(audioRecorderDidCleaned:)] == YES) {
             [_delegate audioRecorderDidCleaned:self];
         } else if(_cleanedBlock != nil) {
@@ -171,7 +169,7 @@
 - (BOOL)start {
     if((_prepared == YES) && (_started == NO)) {
         if([_recorder record] == YES) {
-            [self setStarted:YES];
+            self.started = YES;
             if([_delegate respondsToSelector:@selector(audioRecorderDidStarted:)] == YES) {
                 [_delegate audioRecorderDidStarted:self];
             } else if(_startedBlock != nil) {
@@ -184,8 +182,8 @@
 
 - (void)stop {
     if((_prepared == YES) && (_started == YES) && (_waitFinished == NO)) {
-        [self setDuration:[_recorder currentTime]];
-        [self setWaitFinished:YES];
+        self.duration = _recorder.currentTime;
+        self.waitFinished = YES;
         [_recorder stop];
         if([_delegate respondsToSelector:@selector(audioRecorderDidStoped:)] == YES) {
             [_delegate audioRecorderDidStoped:self];
@@ -197,8 +195,8 @@
 
 - (void)pause {
     if((_prepared == YES) && (_started == YES) && (_paused == NO)) {
-        [self setPaused:YES];
-        [self setDuration:[_recorder currentTime]];
+        self.paused = YES;
+        self.duration = _recorder.currentTime;
         [_recorder pause];
         if([_delegate respondsToSelector:@selector(audioRecorderDidPaused:)] == YES) {
             [_delegate audioRecorderDidPaused:self];
@@ -210,7 +208,7 @@
 
 - (void)resume {
     if((_prepared == YES) && (_started == YES) && (_paused == YES)) {
-        [self setPaused:NO];
+        self.paused = NO;
         [_recorder record];
         if([_delegate respondsToSelector:@selector(audioRecorderDidResumed:)] == YES) {
             [_delegate audioRecorderDidResumed:self];
@@ -235,8 +233,8 @@
 #pragma mark AVAudioRecorderDelegate
 
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder*)recorder successfully:(BOOL)successfully {
-    [self setWaitFinished:NO];
-    [self setStarted:NO];
+    self.waitFinished = NO;
+    self.started = NO;
     if([_delegate respondsToSelector:@selector(audioRecorderDidFinished:)] == YES) {
         [_delegate audioRecorderDidFinished:self];
     } else if(_finishedBlock != nil) {

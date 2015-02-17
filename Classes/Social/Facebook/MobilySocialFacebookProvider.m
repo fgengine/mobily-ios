@@ -83,7 +83,6 @@
 }
 
 - (void)dealloc {
-    MOBILY_SAFE_DEALLOC;
 }
 
 #pragma mark Property
@@ -113,7 +112,7 @@
 #pragma mark MobilySocialManager
 
 + (Class)sessionClass {
-    return [MobilySocialFacebookSession class];
+    return MobilySocialFacebookSession.class;
 }
 
 - (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
@@ -175,9 +174,9 @@
 - (instancetype)initWithReadPermissions:(NSArray*)readPermissions facebookSession:(FBSession*)facebookSession {
     self = [super init];
     if(self != nil) {
-        [self setReadPermissions:readPermissions];
-        [self setAccessToken:facebookSession.accessTokenData.accessToken];
-        [self setExpirationDate:facebookSession.accessTokenData.expirationDate];
+        self.readPermissions = readPermissions;
+        self.accessToken = facebookSession.accessTokenData.accessToken;
+        self.expirationDate = facebookSession.accessTokenData.expirationDate;
     }
     return self;
 }

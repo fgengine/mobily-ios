@@ -71,37 +71,35 @@
 - (instancetype)initWithConsumerKey:(NSString*)consumerKey consumerSecret:(NSString*)consumerSecret {
     self = [super initWithName:@"Twitter"];
     if(self != nil) {
-        [self setConsumerKey:consumerKey];
-        [self setConsumerSecret:consumerSecret];
+        self.consumerKey = consumerKey;
+        self.consumerSecret = consumerSecret;
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setConsumerKey:nil];
-    [self setConsumerSecret:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.consumerKey = nil;
+    self.consumerSecret = nil;
 }
 
 #pragma mark Property
 
 - (void)setSession:(MobilySocialTwitterSession*)session {
-    [super setSession:session];
+    super.session = session;
 }
 
 - (MobilySocialTwitterSession*)session {
-    return [super session];
+    return super.session;
 }
 
 #pragma mark Public
 
 - (void)signinSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
-    [[Twitter sharedInstance] startWithConsumerKey:_consumerKey consumerSecret:_consumerSecret];
-    [[Twitter sharedInstance] logInWithCompletion:^(TWTRSession* session, NSError* error) {
+    [Twitter.sharedInstance startWithConsumerKey:_consumerKey consumerSecret:_consumerSecret];
+    [Twitter.sharedInstance logInWithCompletion:^(TWTRSession* session, NSError* error) {
         if(session != nil) {
-            [self setSession:[[MobilySocialTwitterSession alloc] initWithSession:session]];
-            if([[self session] isValid] == YES) {
+            self.session = [[MobilySocialTwitterSession alloc] initWithSession:session];
+            if(self.session.isValid == YES) {
                 if(success != nil) {
                     success();
                 }
@@ -119,11 +117,11 @@
 }
 
 - (void)requestEmailSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
-    if([[self session] isValid] == YES) {
+    if(self.session.isValid == YES) {
         TWTRShareEmailViewController* shareEmailViewController = [[TWTRShareEmailViewController alloc] initWithCompletion:^(NSString* email, NSError* error) {
             if(error == nil) {
-                [[self session] setEmail:email];
-                [[self session] save];
+                self.session.email = email;
+                [self.session save];
                 if(success != nil) {
                     success();
                 }
@@ -133,7 +131,7 @@
                 }
             }
         }];
-        [[[[UIApplication sharedApplication] keyWindow] currentViewController] presentViewController:shareEmailViewController animated:YES completion:nil];
+        [[UIApplication.sharedApplication.keyWindow currentViewController] presentViewController:shareEmailViewController animated:YES completion:nil];
     } else {
         if(failure != nil) {
             failure(nil);
@@ -144,13 +142,13 @@
 #pragma mark MobilySocialManager
 
 + (Class)sessionClass {
-    return [MobilySocialTwitterSession class];
+    return MobilySocialTwitterSession.class;
 }
 
 - (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
-    if([[self session] isValid] == YES) {
-        [[Twitter sharedInstance] logOut];
-        [self setSession:nil];
+    if(self.session.isValid == YES) {
+        [Twitter.sharedInstance logOut];
+        self.session = nil;
         if(success != nil) {
             success();
         }
@@ -178,10 +176,10 @@
 - (instancetype)initWithSession:(TWTRSession*)session {
     self = [super init];
     if(self != nil) {
-        [self setAuthToken:[session authToken]];
-        [self setAuthTokenSecret:[session authTokenSecret]];
-        [self setUserId:[session userID]];
-        [self setUserName:[session userName]];
+        self.authToken = session.authToken;
+        self.authTokenSecret = session.authTokenSecret;
+        self.userId = session.userID;
+        self.userName = session.userName;
     }
     return self;
 }
@@ -201,7 +199,7 @@
 #pragma mark MobilySocialSession
 
 - (BOOL)isValid {
-    return ([_authToken length] > 0) && ([_authTokenSecret length] > 0) && ([_userId length] > 0);
+    return (_authToken.length > 0) && (_authTokenSecret.length > 0) && (_userId.length > 0);
 }
 
 @end

@@ -77,18 +77,16 @@
 }
 
 - (void)dealloc {
-    [self setUrl:nil];
-    [self setPlayer:nil];
-    [self setPreparedBlock:nil];
-    [self setCleanedBlock:nil];
-    [self setPlayingBlock:nil];
-    [self setStopedBlock:nil];
-    [self setFinishedBlock:nil];
-    [self setResumedBlock:nil];
-    [self setPausedBlock:nil];
-    [self setDecodeErrorBlock:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.url = nil;
+    self.player = nil;
+    self.preparedBlock = nil;
+    self.cleanedBlock = nil;
+    self.playingBlock = nil;
+    self.stopedBlock = nil;
+    self.finishedBlock = nil;
+    self.resumedBlock = nil;
+    self.pausedBlock = nil;
+    self.decodeErrorBlock = nil;
 }
 
 #pragma mark Property
@@ -96,11 +94,11 @@
 - (void)setPlayer:(AVAudioPlayer*)player {
     if(_player != player) {
         if(_player != nil) {
-            [_player setDelegate:nil];
+            _player.delegate = nil;
         }
-        MOBILY_SAFE_SETTER(_player, player);
+        _player = player;
         if(_player != nil) {
-            [_player setDelegate:self];
+            _player.delegate = self;
         }
     }
 }
@@ -110,61 +108,61 @@
 }
 
 - (void)setCurrentTime:(NSTimeInterval)currentTime {
-    [_player setCurrentTime:currentTime];
+    _player.currentTime = currentTime;
 }
 
 - (NSTimeInterval)currentTime {
-    return [_player currentTime];
+    return _player.currentTime;
 }
 
 - (NSTimeInterval)duration {
-    return [_player duration];
+    return _player.duration;
 }
 
 - (void)setVolume:(CGFloat)volume {
-    [_player setVolume:volume];
+    _player.volume = volume;
 }
 
 - (CGFloat)volume {
-    return [_player volume];
+    return _player.volume;
 }
 
 - (void)setPan:(CGFloat)pan {
-    [_player setPan:pan];
+    _player.pan = pan;
 }
 
 - (CGFloat)pan {
-    return [_player pan];
+    return _player.pan;
 }
 
 - (void)setEnableRate:(BOOL)enableRate {
-    [_player setEnableRate:enableRate];
+    _player.enableRate = enableRate;
 }
 
 - (BOOL)enableRate {
-    return [_player enableRate];
+    return _player.enableRate;
 }
 
 - (void)setRate:(CGFloat)rate {
-    [_player setRate:rate];
+    _player.rate = rate;
 }
 
 - (CGFloat)rate {
-    return [_player rate];
+    return _player.rate;
 }
 
 - (void)setNumberOfLoops:(NSInteger)numberOfLoops {
-    [_player setNumberOfLoops:numberOfLoops];
+    _player.numberOfLoops = numberOfLoops;
 }
 
 - (NSInteger)numberOfLoops {
-    return [_player numberOfLoops];
+    return _player.numberOfLoops;
 }
 
 #pragma mark Public
 
 - (BOOL)prepareWithName:(NSString*)name {
-    return [self prepareWithPath:[[NSBundle mainBundle] resourcePath] name:name];
+    return [self prepareWithPath:NSBundle.mainBundle.resourcePath name:name];
 }
 
 - (BOOL)prepareWithPath:(NSString*)path name:(NSString*)name {
@@ -174,21 +172,21 @@
 - (BOOL)prepareWithUrl:(NSURL*)url {
     if(_prepared == NO) {
         NSError* error = nil;
-        [self setPlayer:[[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error]];
+        self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
         if(_player != nil) {
             if([_player prepareToPlay] == YES) {
-                [self setUrl:url];
-                [self setPrepared:YES];
+                self.url = url;
+                self.prepared = YES;
                 if([_delegate respondsToSelector:@selector(audioPlayerDidPrepared:)] == YES) {
                     [_delegate audioPlayerDidPrepared:self];
                 } else if(_preparedBlock != nil) {
                     _preparedBlock();
                 }
             } else {
-                [self setPlayer:nil];
+                self.player = nil;
             }
         } else if(error != nil) {
-            NSLog(@"MobilyAudioPlayer::prepareWithUrl:%@ Error=%@", url, [error localizedDescription]);
+            NSLog(@"MobilyAudioPlayer::prepareWithUrl:%@ Error=%@", url, error.localizedDescription);
         }
     }
     return _prepared;
@@ -196,16 +194,16 @@
 
 - (void)prepareWithUrl:(NSURL*)url success:(MobilyAudioPlayerBlock)success failure:(MobilyAudioPlayerBlock)failure {
     if((_prepared == NO) && ([_url isEqual:url] == NO)) {
-        if([_player url] != nil) {
+        if(_player.url != nil) {
             [[MobilyDownloader shared] cancelByTarget:self];
         }
         [[MobilyDownloader shared] downloadWithUrl:url byTarget:self completeBlock:^(NSData* data, NSURL* url) {
             NSError* error = nil;
-            [self setPlayer:[[AVAudioPlayer alloc] initWithData:data error:&error]];
+            self.player = [[AVAudioPlayer alloc] initWithData:data error:&error];
             if(_player != nil) {
                 if([_player prepareToPlay] == YES) {
-                    [self setUrl:url];
-                    [self setPrepared:YES];
+                    self.url = url;
+                    self.prepared = YES;
                     if([_delegate respondsToSelector:@selector(audioPlayerDidPrepared:)] == YES) {
                         [_delegate audioPlayerDidPrepared:self];
                     } else if(_preparedBlock != nil) {
@@ -215,10 +213,10 @@
                         success();
                     }
                 } else {
-                    [self setPlayer:nil];
+                    self.player = nil;
                 }
             } else if(error != nil) {
-                NSLog(@"MobilyAudioPlayer::prepareWithUrl:%@ Error=%@", url, [error localizedDescription]);
+                NSLog(@"MobilyAudioPlayer::prepareWithUrl:%@ Error=%@", url, error.localizedDescription);
             }
             if((_prepared == NO) && (failure != nil)) {
                 failure();
@@ -234,8 +232,8 @@
 - (void)clean {
     if(_prepared == YES) {
         [self stop];
-        [self setPrepared:NO];
-        [self setPlayer:nil];
+        self.prepared = NO;
+        self.player = nil;
         if([_delegate respondsToSelector:@selector(audioPlayerDidCleaned:)] == YES) {
             [_delegate audioPlayerDidCleaned:self];
         } else if(_cleanedBlock != nil) {
@@ -247,7 +245,7 @@
 - (BOOL)play {
     if((_prepared == YES) && (_playing == NO)) {
         if([_player play] == YES) {
-            [self setPlaying:YES];
+            self.playing = YES;
             if([_delegate respondsToSelector:@selector(audioPlayerDidPlaying:)] == YES) {
                 [_delegate audioPlayerDidPlaying:self];
             } else if(_playingBlock != nil) {
@@ -255,13 +253,13 @@
             }
         }
     }
-    return [_player isPlaying];
+    return _player.isPlaying;
 }
 
 - (void)stop {
     if((_prepared == YES) && (_playing == YES)) {
-        [self setPlaying:NO];
-        [_player setCurrentTime:0.0f];
+        self.playing = NO;
+        _player.currentTime = 0.0f;
         [_player stop];
         if([_delegate respondsToSelector:@selector(audioPlayerDidStoped:)] == YES) {
             [_delegate audioPlayerDidStoped:self];
@@ -273,7 +271,7 @@
 
 - (void)pause {
     if((_prepared == YES) && (_playing == YES) && (_paused == NO)) {
-        [self setPaused:YES];
+        self.paused = YES;
         [_player pause];
         if([_delegate respondsToSelector:@selector(audioPlayerDidPaused:)] == YES) {
             [_delegate audioPlayerDidPaused:self];
@@ -286,7 +284,7 @@
 - (void)resume {
     if((_prepared == YES) && (_playing == YES) && (_paused == YES)) {
         if([_player play] == YES) {
-            [self setPaused:NO];
+            self.paused = NO;
             if([_delegate respondsToSelector:@selector(audioPlayerDidResumed:)] == YES) {
                 [_delegate audioPlayerDidResumed:self];
             } else if(_resumedBlock != nil) {
@@ -299,7 +297,7 @@
 #pragma mark AVAudioPlayerDelegate
 
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer*)player successfully:(BOOL)successfully {
-    [self setPlaying:NO];
+    self.playing = NO;
     if([_delegate respondsToSelector:@selector(audioPlayerDidFinished:)] == YES) {
         [_delegate audioPlayerDidFinished:self];
     } else if(_finishedBlock != nil) {

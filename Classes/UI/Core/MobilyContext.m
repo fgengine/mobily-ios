@@ -86,22 +86,20 @@ static NSString* MOBILY_ACCESS_KEY = nil;
 }
 
 - (void)dealloc {
-    [self setApplication:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.application = nil;
 }
 
 #pragma mark MobilyBuilderObject
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIViewController class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andAddingObject:objectChild]];
+    if([objectChild isKindOfClass:UIViewController.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIViewController class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild]];
+    if([objectChild isKindOfClass:UIViewController.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
     }
 }
 
@@ -123,7 +121,7 @@ static NSString* MOBILY_ACCESS_KEY = nil;
 
 - (void)setApplication:(MobilyApplication*)application {
     if(_application != application) {
-        MOBILY_SAFE_SETTER(_application, application);
+        _application = application;
         MOBILY_APPLICATION = _application;
     }
 }
@@ -136,11 +134,11 @@ static NSString* MOBILY_ACCESS_KEY = nil;
 }
 
 + (void)setAccessKey:(NSString*)accessKey {
-    MOBILY_SAFE_SETTER(MOBILY_ACCESS_KEY, accessKey);
+    MOBILY_ACCESS_KEY = accessKey;
 }
 
 + (int)run {
-    return UIApplicationMain(MOBILY_YARG_COUNT, MOBILY_YARG_VALUE, nil, NSStringFromClass([MobilyContext class]));
+    return UIApplicationMain(MOBILY_YARG_COUNT, MOBILY_YARG_VALUE, nil, NSStringFromClass(MobilyContext.class));
 }
 
 + (id)application {
@@ -148,16 +146,16 @@ static NSString* MOBILY_ACCESS_KEY = nil;
 }
 
 + (BOOL)loadWithOptions:(NSDictionary*)options {
-    id appDelegate = [[UIApplication sharedApplication] delegate];
-    if([appDelegate isKindOfClass:[MobilyContext class]] == YES) {
+    id appDelegate = [UIApplication.sharedApplication delegate];
+    if([appDelegate isKindOfClass:MobilyContext.class] == YES) {
         return [(MobilyContext*)appDelegate loadWithOptions:options];
     }
     return NO;
 }
 
 + (void)unload {
-    id appDelegate = [[UIApplication sharedApplication] delegate];
-    if([appDelegate isKindOfClass:[MobilyContext class]] == YES) {
+    id appDelegate = [UIApplication.sharedApplication delegate];
+    if([appDelegate isKindOfClass:MobilyContext.class] == YES) {
         [(MobilyContext*)appDelegate unload];
     }
 }
@@ -168,8 +166,8 @@ static NSString* MOBILY_ACCESS_KEY = nil;
     [MobilyBuilderPreset loadFromFilename:MOBILY_FILE_PRESETS];
     
     id mobilyApplication = [MobilyBuilderForm objectFromFilename:MOBILY_FILE_APPLICATION owner:self];
-    if([mobilyApplication isKindOfClass:[MobilyApplication class]] == YES) {
-        [self setApplication:mobilyApplication];
+    if([mobilyApplication isKindOfClass:MobilyApplication.class] == YES) {
+        self.application = mobilyApplication;
         if(_application != nil) {
             [_application launchingWithOptions:options];
         }
@@ -184,7 +182,7 @@ static NSString* MOBILY_ACCESS_KEY = nil;
 - (void)unload {
     if(_application != nil) {
         [_application terminate];
-        [self setApplication:nil];
+        self.application = nil;
     }
 }
 
@@ -195,7 +193,7 @@ static NSString* MOBILY_ACCESS_KEY = nil;
 }
 
 - (UIWindow*)window {
-    return [[UIApplication sharedApplication] keyWindow];
+    return UIApplication.sharedApplication.keyWindow;
 }
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)options {

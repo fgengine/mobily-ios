@@ -77,32 +77,30 @@
 }
 
 - (void)setup {
-    [[self layer] setMasksToBounds:YES];
+    self.layer.masksToBounds = YES;
 }
 
 - (void)dealloc {
-    [self setObjectName:nil];
-    [self setObjectParent:nil];
-    [self setObjectChilds:nil];
+    self.objectName = nil;
+    self.objectParent = nil;
+    self.objectChilds = nil;
     
-    [self setDefaultImage:nil];
-    [self setImageUrl:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.defaultImage = nil;
+    self.imageUrl = nil;
 }
 
 #pragma mark MobilyBuilderObject
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIView class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andAddingObject:objectChild]];
+    if([objectChild isKindOfClass:UIView.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
         [self addSubview:(UIView*)objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
-    if([objectChild isKindOfClass:[UIView class]] == YES) {
-        [self setObjectChilds:[NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild]];
+    if([objectChild isKindOfClass:UIView.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
         [self removeSubview:(UIView*)objectChild];
     }
 }
@@ -127,7 +125,7 @@
     if(image == nil) {
         image = _defaultImage;
     }
-    [super setImage:image];
+    super.image = image;
 }
 
 - (void)setImageUrl:(NSURL*)imageUrl {
@@ -140,9 +138,9 @@
             [[MobilyImageDownloader shared] cancelByTarget:self];
         }
         _imageUrl = imageUrl;
-        [super setImage:_defaultImage];
+        super.image = _defaultImage;
         [[MobilyImageDownloader shared] downloadWithUrl:_imageUrl byTarget:self completeBlock:^(UIImage* image, NSURL* url) {
-            [super setImage:image];
+            super.image = image;
             if(complete != nil) {
                 complete();
             }
@@ -171,15 +169,13 @@
 - (instancetype)init {
     self = [super init];
     if(self != nil) {
-        [self setDownloader:[[MobilyDownloader alloc] initWithDelegate:self]];
+        self.downloader = [[MobilyDownloader alloc] initWithDelegate:self];
     }
     return self;
 }
 
 - (void)dealloc {
-    [self setDownloader:nil];
-    
-    MOBILY_SAFE_DEALLOC;
+    self.downloader = nil;
 }
 
 #pragma mark Public
@@ -189,7 +185,7 @@
     if(shared == nil) {
         @synchronized(self) {
             if(shared == nil) {
-                shared = [[self alloc] init];
+                shared = [self new];
             }
         }
     }
@@ -205,7 +201,7 @@
 }
 
 - (void)setImage:(UIImage*)image byUrl:(NSURL*)url {
-    [_downloader setEntry:image byUrl:url];
+    [_downloader setEntry:image byUrl:nil];
 }
 
 - (void)removeByUrl:(NSURL*)url {

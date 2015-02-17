@@ -74,10 +74,10 @@
 
 #define MOBILY_DEFINE_VALIDATE_TRANSITION_CONTROLLER(name) \
 - (BOOL)validate##name:(inout id*)value error:(out NSError**)error { \
-    if([*value isKindOfClass:[NSString class]] == YES) { \
+    if([*value isKindOfClass:NSString.class] == YES) { \
         *value = [*value convertToTransitionController]; \
     } \
-    return [*value isKindOfClass:[MobilyTransitionController class]]; \
+    return [*value isKindOfClass:MobilyTransitionController.class]; \
 }
 
 /*--------------------------------------------------*/

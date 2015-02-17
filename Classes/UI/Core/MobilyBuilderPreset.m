@@ -80,14 +80,13 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
 }
 
 - (void)dealloc {
-    MOBILY_SAFE_DEALLOC;
 }
 
 #pragma mark Public
 
 + (void)registerAttributes:(NSDictionary*)attributes {
-    NSString* name = [attributes objectForKey:@"name"];
-    if([name isKindOfClass:[NSString class]] == YES) {
+    NSString* name = attributes[@"name"];
+    if([name isKindOfClass:NSString.class] == YES) {
         NSMutableDictionary* presetAttributes = [NSMutableDictionary dictionaryWithDictionary:attributes];
         [presetAttributes removeObjectForKey:@"name"];
         
@@ -100,34 +99,34 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
 }
 
 + (void)registerByName:(NSString*)name attributes:(NSDictionary*)attributes {
-    NSMutableDictionary* finalAttributes = [NSMutableDictionary dictionary];
+    NSMutableDictionary* finalAttributes = NSMutableDictionary.dictionary;
     [attributes enumerateKeysAndObjectsUsingBlock:^(NSString* key, NSString* value, BOOL* stop) {
         if(([value hasPrefix:@"${"] == YES) && ([value hasSuffix:@"}"] == YES)) {
-            NSString* path = [value substringWithRange:NSMakeRange(2, [value length] - 3)];
+            NSString* path = [value substringWithRange:NSMakeRange(2, value.length - 3)];
             NSArray* partPath = [path componentsSeparatedByString:@"."];
-            if([partPath count] == 2) {
+            if(partPath.count == 2) {
                 if(MOBILY_BUILDER_PRESET != nil) {
-                    NSDictionary* preset = [MOBILY_BUILDER_PRESET objectForKey:[partPath objectAtIndex:0]];
-                    NSString* presetValue = [preset objectForKey:[partPath objectAtIndex:1]];
+                    NSDictionary* preset = MOBILY_BUILDER_PRESET[partPath[0]];
+                    NSString* presetValue = preset[partPath[1]];
                     if(presetValue != nil) {
-                        [finalAttributes setObject:presetValue forKey:key];
+                        finalAttributes[key] = presetValue;
                     } else {
-                        [finalAttributes setObject:value forKey:key];
+                        finalAttributes[key] = value;
                     }
                 } else {
-                    [finalAttributes setObject:value forKey:key];
+                    finalAttributes[key] = value;
                 }
             } else {
-                [finalAttributes setObject:value forKey:key];
+                finalAttributes[key] = value;
             }
         } else {
-            [finalAttributes setObject:value forKey:key];
+            finalAttributes[key] = value;
         }
     }];
     if(MOBILY_BUILDER_PRESET == nil) {
-        MOBILY_SAFE_SETTER(MOBILY_BUILDER_PRESET, [NSMutableDictionary dictionaryWithObject:finalAttributes forKey:name]);
+        MOBILY_BUILDER_PRESET = [NSMutableDictionary dictionaryWithObject:finalAttributes forKey:name];
     } else {
-        [MOBILY_BUILDER_PRESET setObject:finalAttributes forKey:name];
+        MOBILY_BUILDER_PRESET[name] = finalAttributes;
     }
 }
 
@@ -138,21 +137,21 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
 }
 
 + (NSDictionary*)mixinAttributes:(NSDictionary*)attributes {
-    __block NSMutableDictionary* result = [NSMutableDictionary dictionaryWithDictionary:attributes];
-    NSString* name = [result objectForKey:@"name"];
-    if([name isKindOfClass:[NSString class]] == YES) {
+    NSMutableDictionary* result = [NSMutableDictionary dictionaryWithDictionary:attributes];
+    NSString* name = result[@"name"];
+    if([name isKindOfClass:NSString.class] == YES) {
         [result removeObjectForKey:@"name"];
     }
-    NSString* preset = [result objectForKey:@"preset"];
-    if([preset isKindOfClass:[NSString class]] == YES) {
+    NSString* preset = result[@"preset"];
+    if([preset isKindOfClass:NSString.class] == YES) {
         if(MOBILY_BUILDER_PRESET != nil) {
             NSArray* presets = [preset componentsSeparatedByString:@"|"];
-            [presets enumerateObjectsUsingBlock:^(NSString* name, NSUInteger index, BOOL* stop) {
-                NSDictionary* presetAttributes = [MOBILY_BUILDER_PRESET objectForKey:name];
+            for(NSString* name in presets) {
+                NSDictionary* presetAttributes = MOBILY_BUILDER_PRESET[name];
                 if(presetAttributes != nil) {
                     [result addEntriesFromDictionary:presetAttributes];
                 }
-            }];
+            }
         }
         [result removeObjectForKey:@"preset"];
     }
@@ -161,7 +160,7 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
 
 + (NSDictionary*)mixinByName:(NSString*)name attributes:(NSDictionary*)attributes {
     if(MOBILY_BUILDER_PRESET != nil) {
-        NSDictionary* preset = [MOBILY_BUILDER_PRESET objectForKey:name];
+        NSDictionary* preset = MOBILY_BUILDER_PRESET[name];
         if(preset != nil) {
             NSMutableDictionary* result = [NSMutableDictionary dictionaryWithDictionary:preset];
             if(result != nil) {
@@ -175,7 +174,7 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
 
 + (BOOL)loadFromFilename:(NSString*)filename {
     BOOL result = NO;
-    MobilyBuilderPresetXML* preset = [[MobilyBuilderPresetXML alloc] init];
+    MobilyBuilderPresetXML* preset = [MobilyBuilderPresetXML new];
     if(preset != nil) {
         result = [preset loadFromFilename:filename];
     }
@@ -183,8 +182,8 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
 }
 
 + (void)applyPreset:(NSString*)preset object:(id)object {
-    NSDictionary* presetAttributes = [MOBILY_BUILDER_PRESET objectForKey:preset];
-    if([presetAttributes count] > 0) {
+    NSDictionary* presetAttributes = MOBILY_BUILDER_PRESET[preset];
+    if(presetAttributes.count > 0) {
         [self applyPresetAttributes:presetAttributes object:object];
     }
 }
@@ -195,17 +194,17 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
         characterSet = [NSCharacterSet characterSetWithCharactersInString:@":-"];
     }
     [presetAttributes enumerateKeysAndObjectsUsingBlock:^(NSString* key, id value, BOOL* stop) {
-        __block NSString* validKey = [NSString string];
+        NSString* validKey = NSString.string;
         NSArray* components = [key componentsSeparatedByCharactersInSet:characterSet];
-        if([components count] > 1) {
-            [components enumerateObjectsUsingBlock:^(NSString* component, NSUInteger index, BOOL* stop) {
+        if(components.count > 1) {
+            for(NSString* component in components) {
                 validKey = [validKey stringByAppendingString:[component stringByUppercaseFirstCharacterString]];
-            }];
+            }
             validKey = [validKey stringByLowercaseFirstCharacterString];
         } else {
             validKey = [key stringByLowercaseFirstCharacterString];
         }
-        if([validKey length] > 0) {
+        if(validKey.length > 0) {
             if([object validateValue:&value forKey:validKey error:nil] == YES) {
                 @try {
                     [object setValue:value forKey:validKey];
@@ -242,7 +241,6 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
 }
 
 - (void)dealloc {
-    MOBILY_SAFE_DEALLOC;
 }
 
 #pragma mark Private
@@ -250,18 +248,18 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
 - (BOOL)loadFromFilename:(NSString*)filename {
     BOOL result = NO;
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_INFO) != 0)
-    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+    NSTimeInterval now = NSDate.timeIntervalSinceReferenceDate;
 #endif
-    NSURL* url = [[NSBundle mainBundle] URLForResource:filename withExtension:MOBILY_BUILDER_PRESET_FILE_EXTENSION];
+    NSURL* url = [NSBundle.mainBundle URLForResource:filename withExtension:MOBILY_BUILDER_PRESET_FILE_EXTENSION];
     if(url != nil) {
         NSXMLParser* parser = [[NSXMLParser alloc] initWithContentsOfURL:url];
         if(parser != nil) {
-            [parser setDelegate:self];
+            parser.delegate = self;
             result = [parser parse];
         }
     }
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_INFO) != 0)
-    NSTimeInterval delta = [NSDate timeIntervalSinceReferenceDate] - now;
+    NSTimeInterval delta = NSDate.timeIntervalSinceReferenceDate - now;
     NSLog(@"MobilyLoader:%@ (%lu ms)", filename, (unsigned long)(delta * 1000));
 #endif
     return result;
@@ -275,7 +273,7 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
             _isFoundedRoot = YES;
         } else {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-            NSLog(@"Unsupported element name: '%@'; lineNumber: %ld; columnNumber: %ld", elementName, (long)[parser lineNumber], (long)[parser columnNumber]);
+            NSLog(@"Unsupported element name: '%@'; lineNumber: %ld; columnNumber: %ld", elementName, (long)parser.lineNumber, (long)parser.columnNumber);
 #endif
             [parser abortParsing];
         }
@@ -284,7 +282,7 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
             [MobilyBuilderPreset registerAttributes:attributes];
         } else {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-            NSLog(@"Unsupported element name: '%@'; lineNumber: %ld; columnNumber: %ld", elementName, (long)[parser lineNumber], (long)[parser columnNumber]);
+            NSLog(@"Unsupported element name: '%@'; lineNumber: %ld; columnNumber: %ld", elementName, (long)parser.lineNumber, (long)parser.columnNumber);
 #endif
             [parser abortParsing];
         }

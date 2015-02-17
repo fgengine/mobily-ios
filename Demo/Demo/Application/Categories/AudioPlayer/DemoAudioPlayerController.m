@@ -46,26 +46,26 @@
 - (void)setup {
     [super setup];
     
-    [self setTitle:@"AudioPlayer"];
-    [self setEdgesForExtendedLayout:UIRectEdgeNone];
+    self.title = @"AudioPlayer";
+    self.edgesForExtendedLayout = UIRectEdgeNone;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     NSError* error = nil;
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
+    [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
     if(error != nil) {
-        NSLog(@"AVAudioSession: %@", [error localizedDescription]);
+        NSLog(@"AVAudioSession: %@", error.localizedDescription);
     }
     
-    [self setTimer:[MobilyTimer timerWithInterval:UPDATE_INTERVAL]];
+    self.timer = [MobilyTimer timerWithInterval:UPDATE_INTERVAL];
     if(_timer != nil) {
-        [_timer setDelegate:self];
+        _timer.delegate = self;
     }
-    [self setAudioPlayer:[[MobilyAudioPlayer alloc] init]];
+    self.audioPlayer = [MobilyAudioPlayer new];
     if(_audioPlayer != nil) {
-        [_audioPlayer setDelegate:self];
+        _audioPlayer.delegate = self;
         [_audioPlayer prepareWithName:@"TestMusic.m4a"];
     }
     [self updateButtonState];
@@ -74,15 +74,15 @@
 #pragma mark Private
 
 - (void)updateLabelState {
-    [_currentTimeLabel setText:[NSString stringWithFormat:@"%0.2f s", [_audioPlayer currentTime]]];
-    [_currentTimeSlider setValue:[_audioPlayer currentTime]];
+    _currentTimeLabel.text = [NSString stringWithFormat:@"%0.2f s", _audioPlayer.currentTime];
+    _currentTimeSlider.value = _audioPlayer.currentTime;
 }
 
 - (void)updateButtonState {
-    [_playButton setEnabled:([_audioPlayer isPrepared] == YES) && ([_audioPlayer isPlaying] == NO)];
-    [_stopButton setEnabled:([_audioPlayer isPrepared] == YES) && ([_audioPlayer isPlaying] == YES)];
-    [_pauseButton setEnabled:([_audioPlayer isPrepared] == YES) && ([_audioPlayer isPlaying] == YES) && ([_audioPlayer isPaused] == NO)];
-    [_resumeButton setEnabled:([_audioPlayer isPrepared] == YES) && ([_audioPlayer isPlaying] == YES) && ([_audioPlayer isPaused] == YES)];
+    _playButton.enabled = (_audioPlayer.isPrepared == YES) && (_audioPlayer.isPlaying == NO);
+    _stopButton.enabled = (_audioPlayer.isPrepared == YES) && (_audioPlayer.isPlaying == YES);
+    _pauseButton.enabled = (_audioPlayer.isPrepared == YES) && (_audioPlayer.isPlaying == YES) && (_audioPlayer.isPaused == NO);
+    _resumeButton.enabled = (_audioPlayer.isPrepared == YES) && (_audioPlayer.isPlaying == YES) && (_audioPlayer.isPaused == YES);
 }
 
 #pragma mark MobilyTimerDelegate
@@ -103,14 +103,14 @@
 #pragma mark MobilyAudioPlayerDelegate
 
 -(void)audioPlayerDidPrepared:(MobilyAudioPlayer*)audioPlayer {
-    [_timer setRepeat:[_audioPlayer duration] / UPDATE_INTERVAL];
-    [_currentTimeSlider setMaximumValue:[_audioPlayer duration]];
-    [_currentTimeSlider setValue:[_audioPlayer currentTime]];
-    [_durationLabel setText:[NSString stringWithFormat:@"%0.2f s", [_audioPlayer duration]]];
-    [_volumeSlider setValue:[_audioPlayer volume]];
-    [_volumeLabel setText:[NSString stringWithFormat:@"%0.1f s", [_audioPlayer volume]]];
-    [_panSlider setValue:[_audioPlayer pan]];
-    [_panLabel setText:[NSString stringWithFormat:@"%0.1f s", [_audioPlayer pan]]];
+    _timer.repeat = _audioPlayer.duration / UPDATE_INTERVAL;
+    _currentTimeSlider.maximumValue = _audioPlayer.duration;
+    _currentTimeSlider.value = _audioPlayer.currentTime;
+    _durationLabel.text = [NSString stringWithFormat:@"%0.2f s", _audioPlayer.duration];
+    _volumeSlider.value = _audioPlayer.volume;
+    _volumeLabel.text = [NSString stringWithFormat:@"%0.1f s", _audioPlayer.volume];
+    _panSlider.value = _audioPlayer.pan;
+    _panLabel.text = [NSString stringWithFormat:@"%0.1f s", _audioPlayer.pan];
 }
 
 -(void)audioPlayerDidCleaned:(MobilyAudioPlayer*)audioPlayer {
@@ -165,18 +165,18 @@
 }
 
 - (IBAction)changedCurrentTimeSlider:(id)sender {
-    [_audioPlayer setCurrentTime:[_currentTimeSlider value]];
-    [_currentTimeLabel setText:[NSString stringWithFormat:@"%0.2f s", [_audioPlayer currentTime]]];
+    _audioPlayer.currentTime = _currentTimeSlider.value;
+    _currentTimeLabel.text = [NSString stringWithFormat:@"%0.2f s", _audioPlayer.currentTime];
 }
 
 - (IBAction)changedVolumeSlider:(id)sender {
-    [_audioPlayer setVolume:[_volumeSlider value]];
-    [_volumeLabel setText:[NSString stringWithFormat:@"%0.1f s", [_audioPlayer volume]]];
+    _audioPlayer.volume = _volumeSlider.value;
+    _volumeLabel.text = [NSString stringWithFormat:@"%0.1f s", _audioPlayer.volume];
 }
 
 - (IBAction)changedPanSlider:(id)sender {
-    [_audioPlayer setPan:[_panSlider value]];
-    [_panLabel setText:[NSString stringWithFormat:@"%0.1f s", [_audioPlayer pan]]];
+    _audioPlayer.pan = _panSlider.value;
+    _panLabel.text = [NSString stringWithFormat:@"%0.1f s", _audioPlayer.pan];
 }
 
 @end
