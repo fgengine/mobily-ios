@@ -33,58 +33,59 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_CORE
-#   import "MobilyCore.h"
-#   import "MobilyNS.h"
-#   import "MobilyCG.h"
-#   import "MobilyEvent.h"
-#   import "MobilyTimer.h"
-#   import "MobilyModel.h"
-#   import "MobilyModelJson.h"
-#   import "MobilyCache.h"
-#   import "MobilyTaskManager.h"
-#   import "MobilyHttpQuery.h"
-#   import "MobilyDownloader.h"
-#   import "MobilyRegExpParser.h"
-#   import "MobilyKVO.h"
-#   import "MobilyApiManager.h"
-#   import "MobilyApiProvider.h"
-#   import "MobilyApiRequest.h"
-#   import "MobilyApiResponse.h"
-#   import "MobilyUI.h"
-#   import "MobilyContext.h"
-#   import "MobilyApplication.h"
-#   import "MobilyWindow.h"
-#   import "MobilyController.h"
-#   import "MobilyNavigationController.h"
-#   import "MobilyTabBarController.h"
-#   import "MobilySlideController.h"
-#   import "MobilyViewController.h"
-#   import "MobilyButton.h"
-#   import "MobilyTextField.h"
-#   import "MobilyDateField.h"
-#   import "MobilyListField.h"
-#   import "MobilyImageView.h"
-#   import "MobilyScrollView.h"
-#   import "MobilyTableView.h"
-#   import "MobilyFieldValidation.h"
-#   import "MobilyDataScrollView.h"
-#   import "MobilyDataContainer.h"
-#   import "MobilyDataItem.h"
-#   import "MobilyDataItemView.h"
-#   import "MobilyAV.h"
-#   import "MobilyAudioRecorder.h"
-#   import "MobilyAudioPlayer.h"
-#endif
+#import "MobilyUI.h"
 
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_SOCIAL
-#   import "MobilySocialManager.h"
-#   import "MobilySocialProvider.h"
-#   import "MobilySocialFacebookProvider.h"
-#   import "MobilySocialVKontakteProvider.h"
-#   import "MobilySocialTwitterProvider.h"
-#endif
+@protocol MobilyBuilderObject;
+
+/*--------------------------------------------------*/
+
+@interface MobilyBuilderPreset : NSObject
+
++ (void)registerAttributes:(NSDictionary*)attributes;
++ (void)registerByName:(NSString*)name attributes:(NSDictionary*)attributes;
++ (void)unregisterByName:(NSString*)name;
+
++ (NSDictionary*)mixinAttributes:(NSDictionary*)attributes;
++ (NSDictionary*)mixinByName:(NSString*)name attributes:(NSDictionary*)attributes;
+
++ (BOOL)loadFromFilename:(NSString*)filename;
+
++ (void)applyPreset:(NSString*)preset object:(id)object;
++ (void)applyPresetAttributes:(NSDictionary*)attributes object:(id)object;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyBuilderForm : NSObject
+
++ (id)objectFromFilename:(NSString*)filename owner:(id)owner;
+
++ (id< MobilyBuilderObject >)object:(id< MobilyBuilderObject >)object forName:(NSString*)name;
++ (id< MobilyBuilderObject >)object:(id< MobilyBuilderObject >)object forSelector:(SEL)selector;
+
+@end
+
+/*--------------------------------------------------*/
+
+@protocol MobilyBuilderObject < MobilyObject >
+
+@property(nonatomic, readwrite, strong) NSString* objectName;
+
+@property(nonatomic, readwrite, weak) id objectParent;
+@property(nonatomic, readwrite, strong) NSArray* objectChilds;
+
+- (void)addObjectChild:(id< MobilyBuilderObject >)objectChild;
+- (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild;
+
+- (void)willLoadObjectChilds;
+- (void)didLoadObjectChilds;
+
+- (id< MobilyBuilderObject >)objectForName:(NSString*)name;
+- (id< MobilyBuilderObject >)objectForSelector:(SEL)selector;
+
+@end
 
 /*--------------------------------------------------*/

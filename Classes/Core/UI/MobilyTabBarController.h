@@ -33,58 +33,25 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_CORE
-#   import "MobilyCore.h"
-#   import "MobilyNS.h"
-#   import "MobilyCG.h"
-#   import "MobilyEvent.h"
-#   import "MobilyTimer.h"
-#   import "MobilyModel.h"
-#   import "MobilyModelJson.h"
-#   import "MobilyCache.h"
-#   import "MobilyTaskManager.h"
-#   import "MobilyHttpQuery.h"
-#   import "MobilyDownloader.h"
-#   import "MobilyRegExpParser.h"
-#   import "MobilyKVO.h"
-#   import "MobilyApiManager.h"
-#   import "MobilyApiProvider.h"
-#   import "MobilyApiRequest.h"
-#   import "MobilyApiResponse.h"
-#   import "MobilyUI.h"
-#   import "MobilyContext.h"
-#   import "MobilyApplication.h"
-#   import "MobilyWindow.h"
-#   import "MobilyController.h"
-#   import "MobilyNavigationController.h"
-#   import "MobilyTabBarController.h"
-#   import "MobilySlideController.h"
-#   import "MobilyViewController.h"
-#   import "MobilyButton.h"
-#   import "MobilyTextField.h"
-#   import "MobilyDateField.h"
-#   import "MobilyListField.h"
-#   import "MobilyImageView.h"
-#   import "MobilyScrollView.h"
-#   import "MobilyTableView.h"
-#   import "MobilyFieldValidation.h"
-#   import "MobilyDataScrollView.h"
-#   import "MobilyDataContainer.h"
-#   import "MobilyDataItem.h"
-#   import "MobilyDataItemView.h"
-#   import "MobilyAV.h"
-#   import "MobilyAudioRecorder.h"
-#   import "MobilyAudioPlayer.h"
-#endif
+#import "MobilyBuilder.h"
+#import "MobilyTransitionController.h"
 
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_SOCIAL
-#   import "MobilySocialManager.h"
-#   import "MobilySocialProvider.h"
-#   import "MobilySocialFacebookProvider.h"
-#   import "MobilySocialVKontakteProvider.h"
-#   import "MobilySocialTwitterProvider.h"
-#endif
+@interface MobilyTabBarController : UITabBarController< MobilyBuilderObject >
+
+@property(nonatomic, readonly, assign, getter=isAppeared) BOOL appeared;
+@property(nonatomic, readwrite, assign, getter=isNavigationBarHidden) BOOL navigationBarHidden;
+@property(nonatomic, readwrite, strong) MobilyTransitionController* transitionModal;
+@property(nonatomic, readwrite, strong) MobilyTransitionController* transitionNavigation;
+
+@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidLoad;
+@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidUnload;
+@property(nonatomic, readwrite, strong) id< MobilyEvent > eventWillAppear;
+@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidAppear;
+@property(nonatomic, readwrite, strong) id< MobilyEvent > eventWillDisappear;
+@property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidDisappear;
+
+@end
 
 /*--------------------------------------------------*/

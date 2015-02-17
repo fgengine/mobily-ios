@@ -33,58 +33,64 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_CORE
-#   import "MobilyCore.h"
-#   import "MobilyNS.h"
-#   import "MobilyCG.h"
-#   import "MobilyEvent.h"
-#   import "MobilyTimer.h"
-#   import "MobilyModel.h"
-#   import "MobilyModelJson.h"
-#   import "MobilyCache.h"
-#   import "MobilyTaskManager.h"
-#   import "MobilyHttpQuery.h"
-#   import "MobilyDownloader.h"
-#   import "MobilyRegExpParser.h"
-#   import "MobilyKVO.h"
-#   import "MobilyApiManager.h"
-#   import "MobilyApiProvider.h"
-#   import "MobilyApiRequest.h"
-#   import "MobilyApiResponse.h"
-#   import "MobilyUI.h"
-#   import "MobilyContext.h"
-#   import "MobilyApplication.h"
-#   import "MobilyWindow.h"
-#   import "MobilyController.h"
-#   import "MobilyNavigationController.h"
-#   import "MobilyTabBarController.h"
-#   import "MobilySlideController.h"
-#   import "MobilyViewController.h"
-#   import "MobilyButton.h"
-#   import "MobilyTextField.h"
-#   import "MobilyDateField.h"
-#   import "MobilyListField.h"
-#   import "MobilyImageView.h"
-#   import "MobilyScrollView.h"
-#   import "MobilyTableView.h"
-#   import "MobilyFieldValidation.h"
-#   import "MobilyDataScrollView.h"
-#   import "MobilyDataContainer.h"
-#   import "MobilyDataItem.h"
-#   import "MobilyDataItemView.h"
-#   import "MobilyAV.h"
-#   import "MobilyAudioRecorder.h"
-#   import "MobilyAudioPlayer.h"
-#endif
+@protocol MobilyValidatedObject;
+@class MobilyFieldForm;
 
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_SOCIAL
-#   import "MobilySocialManager.h"
-#   import "MobilySocialProvider.h"
-#   import "MobilySocialFacebookProvider.h"
-#   import "MobilySocialVKontakteProvider.h"
-#   import "MobilySocialTwitterProvider.h"
-#endif
+@protocol MobilyFieldValidator <NSObject>
+
+@required
+- (BOOL)validate:(NSString*)value;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyFieldForm : NSObject
+
+@property(nonatomic, readonly, assign, getter=isValid) BOOL valid;
+@property(nonatomic, readwrite, strong) IBOutletCollection(NSObject< MobilyValidatedObject >) NSArray* controls;
+
+- (void)validatedSuccess:(id<MobilyValidatedObject>)control;
+- (void)validatedFail:(id<MobilyValidatedObject>)control;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyFieldEmptyValidator : NSObject < MobilyFieldValidator >
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyFieldRegExpValidator : NSObject < MobilyFieldValidator >
+
+@property(nonatomic, readwrite, strong) NSString* regExp;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyFieldMinLengthValidator : NSObject < MobilyFieldValidator >
+
+@property(nonatomic, readwrite, assign) NSInteger minLength;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyFieldMaxLengthValidator : NSObject < MobilyFieldValidator >
+
+@property(nonatomic, readwrite, assign) NSInteger maxLength;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyFieldDigitValidator : NSObject < MobilyFieldValidator >
+
+@end
 
 /*--------------------------------------------------*/

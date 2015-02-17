@@ -33,58 +33,51 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_CORE
-#   import "MobilyCore.h"
-#   import "MobilyNS.h"
-#   import "MobilyCG.h"
-#   import "MobilyEvent.h"
-#   import "MobilyTimer.h"
-#   import "MobilyModel.h"
-#   import "MobilyModelJson.h"
-#   import "MobilyCache.h"
-#   import "MobilyTaskManager.h"
-#   import "MobilyHttpQuery.h"
-#   import "MobilyDownloader.h"
-#   import "MobilyRegExpParser.h"
-#   import "MobilyKVO.h"
-#   import "MobilyApiManager.h"
-#   import "MobilyApiProvider.h"
-#   import "MobilyApiRequest.h"
-#   import "MobilyApiResponse.h"
-#   import "MobilyUI.h"
-#   import "MobilyContext.h"
-#   import "MobilyApplication.h"
-#   import "MobilyWindow.h"
-#   import "MobilyController.h"
-#   import "MobilyNavigationController.h"
-#   import "MobilyTabBarController.h"
-#   import "MobilySlideController.h"
-#   import "MobilyViewController.h"
-#   import "MobilyButton.h"
-#   import "MobilyTextField.h"
-#   import "MobilyDateField.h"
-#   import "MobilyListField.h"
-#   import "MobilyImageView.h"
-#   import "MobilyScrollView.h"
-#   import "MobilyTableView.h"
-#   import "MobilyFieldValidation.h"
-#   import "MobilyDataScrollView.h"
-#   import "MobilyDataContainer.h"
-#   import "MobilyDataItem.h"
-#   import "MobilyDataItemView.h"
-#   import "MobilyAV.h"
-#   import "MobilyAudioRecorder.h"
-#   import "MobilyAudioPlayer.h"
-#endif
+#import "MobilyBuilder.h"
 
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_SOCIAL
-#   import "MobilySocialManager.h"
-#   import "MobilySocialProvider.h"
-#   import "MobilySocialFacebookProvider.h"
-#   import "MobilySocialVKontakteProvider.h"
-#   import "MobilySocialTwitterProvider.h"
-#endif
+@class MobilyTransitionController;
+
+/*--------------------------------------------------*/
+
+@interface NSString (MobilyTransitionController)
+
+- (MobilyTransitionController*)convertToTransitionController;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyTransitionController : NSObject < UIViewControllerAnimatedTransitioning >
+
+@property(nonatomic, readwrite, assign) NSTimeInterval duration;
+@property(nonatomic, readwrite, assign, getter=isReverse) BOOL reverse;
+
+- (void)animateTransition:(id< UIViewControllerContextTransitioning >)transitionContext fromVC:(UIViewController*)fromVC toVC:(UIViewController*)toVC fromView:(UIView*)fromView toView:(UIView*)toView;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyTransitionControllerCrossFade : MobilyTransitionController
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyTransitionControllerCards : MobilyTransitionController
+
+@end
+
+/*--------------------------------------------------*/
+
+#define MOBILY_DEFINE_VALIDATE_TRANSITION_CONTROLLER(name) \
+- (BOOL)validate##name:(inout id*)value error:(out NSError**)error { \
+    if([*value isKindOfClass:NSString.class] == YES) { \
+        *value = [*value convertToTransitionController]; \
+    } \
+    return [*value isKindOfClass:MobilyTransitionController.class]; \
+}
 
 /*--------------------------------------------------*/

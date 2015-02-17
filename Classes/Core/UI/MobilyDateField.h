@@ -33,58 +33,23 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_CORE
-#   import "MobilyCore.h"
-#   import "MobilyNS.h"
-#   import "MobilyCG.h"
-#   import "MobilyEvent.h"
-#   import "MobilyTimer.h"
-#   import "MobilyModel.h"
-#   import "MobilyModelJson.h"
-#   import "MobilyCache.h"
-#   import "MobilyTaskManager.h"
-#   import "MobilyHttpQuery.h"
-#   import "MobilyDownloader.h"
-#   import "MobilyRegExpParser.h"
-#   import "MobilyKVO.h"
-#   import "MobilyApiManager.h"
-#   import "MobilyApiProvider.h"
-#   import "MobilyApiRequest.h"
-#   import "MobilyApiResponse.h"
-#   import "MobilyUI.h"
-#   import "MobilyContext.h"
-#   import "MobilyApplication.h"
-#   import "MobilyWindow.h"
-#   import "MobilyController.h"
-#   import "MobilyNavigationController.h"
-#   import "MobilyTabBarController.h"
-#   import "MobilySlideController.h"
-#   import "MobilyViewController.h"
-#   import "MobilyButton.h"
-#   import "MobilyTextField.h"
-#   import "MobilyDateField.h"
-#   import "MobilyListField.h"
-#   import "MobilyImageView.h"
-#   import "MobilyScrollView.h"
-#   import "MobilyTableView.h"
-#   import "MobilyFieldValidation.h"
-#   import "MobilyDataScrollView.h"
-#   import "MobilyDataContainer.h"
-#   import "MobilyDataItem.h"
-#   import "MobilyDataItemView.h"
-#   import "MobilyAV.h"
-#   import "MobilyAudioRecorder.h"
-#   import "MobilyAudioPlayer.h"
-#endif
+#import "MobilyTextField.h"
 
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_SOCIAL
-#   import "MobilySocialManager.h"
-#   import "MobilySocialProvider.h"
-#   import "MobilySocialFacebookProvider.h"
-#   import "MobilySocialVKontakteProvider.h"
-#   import "MobilySocialTwitterProvider.h"
-#endif
+@interface MobilyDateField : MobilyTextField< MobilyBuilderObject >
+
+@property(nonatomic, readwrite, assign) IBInspectable UIDatePickerMode datePickerMode;
+@property(nonatomic, readwrite, strong) IBInspectable NSDateFormatter* dateFormatter;
+@property(nonatomic, readwrite, strong) IBInspectable NSLocale* locale;
+@property(nonatomic, readwrite, copy) IBInspectable NSCalendar* calendar;
+@property(nonatomic, readwrite, strong) IBInspectable NSTimeZone* timeZone;
+@property(nonatomic, readwrite, strong) IBInspectable NSDate* minimumDate;
+@property(nonatomic, readwrite, strong) IBInspectable NSDate* maximumDate;
+@property(nonatomic, readwrite, strong) IBInspectable NSDate* date;
+
+- (void)setDate:(NSDate*)date animated:(BOOL)animated;
+
+@end
 
 /*--------------------------------------------------*/
