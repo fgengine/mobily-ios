@@ -174,14 +174,24 @@ typedef void(^MobilyDataWidgetCompleteBlock)(BOOL finished);
 
 - (void)prependItem:(id< MobilyDataItem >)item;
 - (void)prependItem:(id< MobilyDataItem >)item forType:(id)type;
+- (void)prependItems:(NSArray*)items;
+- (void)prependItems:(NSArray*)items forType:(id)type;
 - (void)appendItem:(id< MobilyDataItem >)item;
 - (void)appendItem:(id< MobilyDataItem >)item forType:(id)type;
+- (void)appendItems:(NSArray*)items;
+- (void)appendItems:(NSArray*)items forType:(id)type;
 - (void)insertItem:(id< MobilyDataItem >)item atIndex:(NSUInteger)index;
 - (void)insertItem:(id< MobilyDataItem >)item atIndex:(NSUInteger)index forType:(id)type;
+- (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index;
+- (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index forType:(id)type;
 - (void)deleteItem:(id< MobilyDataItem >)item;
 - (void)deleteItem:(id< MobilyDataItem >)item forType:(id)type;
+- (void)deleteItems:(NSArray*)items;
+- (void)deleteItems:(NSArray*)items forType:(id)type;
 - (void)replaceOriginItem:(id< MobilyDataItem >)originItem withItem:(id< MobilyDataItem >)item;
 - (void)replaceOriginItem:(id< MobilyDataItem >)originItem withItem:(id< MobilyDataItem >)item forType:(id)type;
+- (void)replaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items;
+- (void)replaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items forType:(id)type;
 
 - (BOOL)containsEventForKey:(id)key;
 

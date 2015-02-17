@@ -246,8 +246,8 @@
     NSUInteger containerIndex = [_unsafeContainers indexOfObject:originContainer];
     if(containerIndex != NSNotFound) {
         container.parentContainer = self;
-        originContainer.parentContainer = nil;
         _unsafeContainers[containerIndex] = container;
+        originContainer.parentContainer = nil;
         if(_widget != nil) {
             [_widget didReplaceOriginItems:originContainer.allItems withItems:container.allItems];
         }
@@ -277,12 +277,30 @@
     if(unsafeItems == nil) {
         _unsafeItems[type] = [NSMutableArray arrayWithObject:item];
     } else {
-        [unsafeItems addObject:item];
+        [unsafeItems insertObject:item atIndex:0];
     }
-    [unsafeItems insertObject:item atIndex:0];
     item.parentContainer = self;
     if(_widget != nil) {
         [_widget didInsertItems:@[ item ]];
+    }
+}
+
+- (void)prependItems:(NSArray*)items {
+    [self prependItems:items forType:MobilyDataContainerDefaultType];
+}
+
+- (void)prependItems:(NSArray*)items forType:(id)type {
+    NSMutableArray* unsafeItems = _unsafeItems[type];
+    if(unsafeItems == nil) {
+        _unsafeItems[type] = [NSMutableArray arrayWithArray:items];
+    } else {
+        [unsafeItems insertObjects:items atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, items.count)]];
+    }
+    for(id< MobilyDataItem > item in unsafeItems) {
+        item.parentContainer = self;
+    }
+    if(_widget != nil) {
+        [_widget didInsertItems:items];
     }
 }
 
@@ -309,6 +327,25 @@
     }
 }
 
+- (void)appendItems:(NSArray*)items {
+    [self appendItems:items forType:MobilyDataContainerDefaultType];
+}
+
+- (void)appendItems:(NSArray*)items forType:(id)type {
+    NSMutableArray* unsafeItems = _unsafeItems[type];
+    if(unsafeItems == nil) {
+        _unsafeItems[type] = [NSMutableArray arrayWithArray:items];
+    } else {
+        [unsafeItems addObjectsFromArray:items];
+    }
+    for(id< MobilyDataItem > item in unsafeItems) {
+        item.parentContainer = self;
+    }
+    if(_widget != nil) {
+        [_widget didInsertItems:items];
+    }
+}
+
 - (void)insertItem:(id< MobilyDataItem >)item atIndex:(NSUInteger)index {
     [self insertItem:item atIndex:index forType:MobilyDataContainerDefaultType];
 }
@@ -332,6 +369,25 @@
     }
 }
 
+- (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index {
+    [self insertItems:items atIndex:index forType:MobilyDataContainerDefaultType];
+}
+
+- (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index forType:(id)type {
+    NSMutableArray* unsafeItems = _unsafeItems[type];
+    if(unsafeItems == nil) {
+        _unsafeItems[type] = [NSMutableArray arrayWithArray:items];
+    } else {
+        [unsafeItems insertObjects:items atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, items.count)]];
+    }
+    for(id< MobilyDataItem > item in unsafeItems) {
+        item.parentContainer = self;
+    }
+    if(_widget != nil) {
+        [_widget didInsertItems:items];
+    }
+}
+
 - (void)deleteItem:(id< MobilyDataItem >)item {
     [self deleteItem:item forType:MobilyDataContainerDefaultType];
 }
@@ -349,6 +405,23 @@
         item.parentContainer = nil;
         if(_widget != nil) {
             [_widget didDeleteItems:@[ item ]];
+        }
+    }
+}
+
+- (void)deleteItems:(NSArray*)items {
+    [self deleteItems:items forType:MobilyDataContainerDefaultType];
+}
+
+- (void)deleteItems:(NSArray*)items forType:(id)type {
+    NSMutableArray* unsafeItems = _unsafeItems[type];
+    if(unsafeItems != nil) {
+        [unsafeItems removeObjectsInArray:items];
+        for(id< MobilyDataItem > item in unsafeItems) {
+            item.parentContainer = nil;
+        }
+        if(_widget != nil) {
+            [_widget didDeleteItems:items];
         }
     }
 }
@@ -377,6 +450,31 @@
             originItem.parentContainer = nil;
             if(_widget != nil) {
                 [_widget didReplaceOriginItems:@[ originItem ] withItems:@[ item ]];
+            }
+        }
+    }
+}
+
+- (void)replaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items {
+    [self replaceOriginItems:originItems withItems:items forType:MobilyDataContainerDefaultType];
+}
+
+- (void)replaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items forType:(id)type {
+    NSMutableArray* unsafeItems = _unsafeItems[type];
+    if(unsafeItems != nil) {
+        NSIndexSet* originIndexSet = [unsafeItems indexesOfObjectsPassingTest:^BOOL(id< MobilyDataItem > originItem, NSUInteger index, BOOL* stop) {
+            return [originItems containsObject:originItem];
+        }];
+        if(originIndexSet.count == items.count) {
+            for(id< MobilyDataItem > item in unsafeItems) {
+                item.parentContainer = self;
+            }
+            [unsafeItems replaceObjectsAtIndexes:originIndexSet withObjects:items];
+            for(id< MobilyDataItem > originItem in originItems) {
+                originItem.parentContainer = nil;
+            }
+            if(_widget != nil) {
+                [_widget didReplaceOriginItems:originItems withItems:items];
             }
         }
     }
