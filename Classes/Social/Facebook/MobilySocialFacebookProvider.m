@@ -40,6 +40,12 @@
 
 @interface MobilySocialFacebookProvider ()
 
+@property(nonatomic, readwrite, strong) NSArray* signinReadPermissions;
+@property(nonatomic, readwrite, copy) MobilySocialProviderSuccessBlock signinSuccessBlock;
+@property(nonatomic, readwrite, copy) MobilySocialProviderFailureBlock signinFailureBlock;
+
+- (void)sessionStateChanged:(FBSession*)session state:(FBSessionState) state error:(NSError*)error;
+
 @end
 
 /*--------------------------------------------------*/
@@ -71,7 +77,7 @@
 - (instancetype)initWithName:(NSString*)name {
     self = [super initWithName:name];
     if(self != nil) {
-        [self setAllowLoginUI:YES];
+        self.allowLoginUI = YES;
     }
     return self;
 }
@@ -83,41 +89,24 @@
 #pragma mark Property
 
 - (void)setSession:(MobilySocialFacebookSession*)session {
-    [super setSession:session];
+    super.session = session;
 }
 
 - (MobilySocialFacebookSession*)session {
-    return [super session];
+    return super.session;
 }
 
 #pragma mark Public
 
 - (void)signinWithReadPermissions:(NSArray*)readPermissions success:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
+    if((FBSession.activeSession.state == FBSessionStateOpen) || (FBSession.activeSession.state == FBSessionStateOpenTokenExtended)) {
+        [FBSession.activeSession closeAndClearTokenInformation];
+    }
+    self.signinReadPermissions = readPermissions;
+    self.signinSuccessBlock = success;
+    self.signinFailureBlock = failure;
     [FBSession openActiveSessionWithReadPermissions:readPermissions allowLoginUI:_allowLoginUI completionHandler:^(FBSession* session, FBSessionState state, NSError* error) {
-        if(error == nil) {
-            switch(state) {
-                case FBSessionStateOpen:
-                case FBSessionStateClosed: {
-                    [self setSession:[[MobilySocialFacebookSession alloc] initWithReadPermissions:readPermissions facebookSession:session]];
-                    if([[self session] isValid] == YES) {
-                        if(success != nil) {
-                            success();
-                        }
-                    } else {
-                        if(failure != nil) {
-                            failure(error);
-                        }
-                    }
-                    break;
-                }
-                default:
-                    break;
-            }
-        } else {
-            if(failure != nil) {
-                failure(error);
-            }
-        }
+        [self sessionStateChanged:session state:state error:error];
     }];
 }
 
@@ -128,9 +117,8 @@
 }
 
 - (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
-    if([[self session] isValid] == YES) {
-        [[FBSession activeSession] closeAndClearTokenInformation];
-        [self setSession:nil];
+    if(self.session.isValid == YES) {
+        [FBSession.activeSession closeAndClearTokenInformation];
         if(success != nil) {
             success();
         }
@@ -142,11 +130,36 @@
 }
 
 - (void)didBecomeActive {
-    [[FBSession activeSession] handleDidBecomeActive];
+    [FBSession.activeSession handleDidBecomeActive];
 }
 
 - (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation {
-    return [[FBSession activeSession] handleOpenURL:url];
+    [FBSession.activeSession setStateChangeHandler:^(FBSession *session, FBSessionState state, NSError *error) {
+         [self sessionStateChanged:session state:state error:error];
+     }];
+    return [FBSession.activeSession handleOpenURL:url];
+}
+
+#pragma mark Private
+
+- (void)sessionStateChanged:(FBSession*)session state:(FBSessionState) state error:(NSError*)error {
+    if((error == nil) && (state == FBSessionStateOpen)) {
+        self.session = [[MobilySocialFacebookSession alloc] initWithReadPermissions:_signinReadPermissions facebookSession:session];
+        if(_signinSuccessBlock != nil) {
+            _signinSuccessBlock();
+        }
+        self.signinReadPermissions = nil;
+        self.signinSuccessBlock = nil;
+        self.signinFailureBlock = nil;
+    } else if((state == FBSessionStateClosed) || (state == FBSessionStateClosedLoginFailed)) {
+        self.session = nil;
+    } else if(error != nil) {
+        if(_signinFailureBlock != nil) {
+            _signinFailureBlock(error);
+        }
+        self.signinSuccessBlock = nil;
+        self.signinFailureBlock = nil;
+    }
 }
 
 @end
@@ -163,8 +176,8 @@
     self = [super init];
     if(self != nil) {
         [self setReadPermissions:readPermissions];
-        [self setAccessToken:[[facebookSession accessTokenData] accessToken]];
-        [self setExpirationDate:[[facebookSession accessTokenData] expirationDate]];
+        [self setAccessToken:facebookSession.accessTokenData.accessToken];
+        [self setExpirationDate:facebookSession.accessTokenData.expirationDate];
     }
     return self;
 }
@@ -182,7 +195,7 @@
 #pragma mark MobilySocialSession
 
 - (BOOL)isValid {
-    return ([_expirationDate compare:[NSDate date]] == NSOrderedDescending);
+    return ([_expirationDate compare:NSDate.date] == NSOrderedDescending);
 }
 
 @end
