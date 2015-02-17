@@ -33,7 +33,8 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyFieldValidation.h"
+@protocol MobilyFieldValidator;
+@class MobilyFieldForm;
 
 /*--------------------------------------------------*/
 

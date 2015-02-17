@@ -63,6 +63,8 @@
 @synthesize objectName = _objectName;
 @synthesize objectParent = _objectParent;
 @synthesize objectChilds = _objectChilds;
+@synthesize validator = _validator;
+@synthesize form = _form;
 
 #pragma mark NSKeyValueCoding
 
@@ -199,9 +201,9 @@
 - (void)didValueChanged {
     if(_validator != nil) {
         if([_validator validate:[self text]] == YES) {
-            [_form validateSuccess:self];
+            [_form validatedSuccess:self];
         } else {
-            [_form validateFail:self];
+            [_form validatedFail:self];
         }
     }
 }

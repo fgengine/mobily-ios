@@ -33,13 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
-
-#import "MobilyValidatedObject.h"
-
-/*--------------------------------------------------*/
-
+@protocol MobilyValidatedObject;
 @class MobilyFieldForm;
 
 /*--------------------------------------------------*/
