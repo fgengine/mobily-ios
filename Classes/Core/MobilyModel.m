@@ -109,7 +109,7 @@
         for(NSString* field in self.serializeMap) {
             id value = [coder decodeObjectForKey:field];
             if(value != nil) {
-                [self setValue:value forKey:nil];
+                [self setValue:value forKey:field];
             }
         }
         [self setup];
@@ -245,7 +245,7 @@
     [self.jsonMap enumerateKeysAndObjectsUsingBlock:^(NSString* field, MobilyModelJson* converter, BOOL* stop) {
         id value = [converter parseJson:json];
         if(value != nil) {
-            [self setValue:value forKey:nil];
+            [self setValue:value forKey:field];
         }
     }];
 }
@@ -328,7 +328,7 @@
                         id unarchive = [NSKeyedUnarchiver unarchiveObjectWithData:value];
                         if(unarchive != nil) {
                             @try {
-                                [self setValue:unarchive forKey:nil];
+                                [self setValue:unarchive forKey:field];
                             }
                             @catch(NSException *exception) {
                             }

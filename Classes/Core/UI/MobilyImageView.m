@@ -201,7 +201,7 @@
 }
 
 - (void)setImage:(UIImage*)image byUrl:(NSURL*)url {
-    [_downloader setEntry:image byUrl:nil];
+    [_downloader setEntry:image byUrl:url];
 }
 
 - (void)removeByUrl:(NSURL*)url {
