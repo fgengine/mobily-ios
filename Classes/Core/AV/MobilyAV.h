@@ -33,46 +33,10 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyBuilder.h"
+#import "MobilyObject.h"
 
 /*--------------------------------------------------*/
 
-typedef void (^MobilyImageViewBlock)();
-
-/*--------------------------------------------------*/
-
-@interface MobilyImageView : UIImageView< MobilyBuilderObject >
-
-@property(nonatomic, readwrite, strong) IBInspectable UIImage* defaultImage;
-@property(nonatomic, readwrite, strong) IBInspectable NSURL* imageUrl;
-
-- (void)setImageUrl:(NSURL*)imageUrl complete:(MobilyImageViewBlock)complete failure:(MobilyImageViewBlock)failure;
-
-@end
-
-/*--------------------------------------------------*/
-
-typedef void (^MobilyImageDownloaderCompleteBlock)(UIImage* image, NSURL* url);
-typedef void (^MobilyImageDownloaderFailureBlock)(NSURL* url);
-
-/*--------------------------------------------------*/
-
-@interface MobilyImageDownloader : NSObject
-
-+ (instancetype)shared;
-
-- (BOOL)isExistImageWithUrl:(NSURL*)url;
-- (void)setImage:(UIImage*)image byUrl:(NSURL*)url;
-- (void)removeByUrl:(NSURL*)url;
-- (void)cleanup;
-
-- (UIImage*)imageWithUrl:(NSURL*)url;
-
-- (void)downloadWithUrl:(NSURL*)url byTarget:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
-- (void)downloadWithUrl:(NSURL*)url byTarget:(id)target completeBlock:(MobilyImageDownloaderCompleteBlock)completeBlock failureBlock:(MobilyImageDownloaderFailureBlock)failureBlock;
-- (void)cancelByUrl:(NSURL*)url;
-- (void)cancelByTarget:(id)target;
-
-@end
+#import <AVFoundation/AVFoundation.h>
 
 /*--------------------------------------------------*/
