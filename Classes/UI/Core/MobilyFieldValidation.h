@@ -33,24 +33,79 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyBuilder.h"
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 #import "MobilyValidatedObject.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyTextField : UITextField< MobilyBuilderObject, MobilyValidatedObject >
+@class MobilyFieldForm;
 
-@property(nonatomic, readwrite, assign) IBInspectable BOOL hiddenToolbar;
-@property(nonatomic, readwrite, strong) UIToolbar* toolbar;
-@property(nonatomic, readwrite, strong) UIBarButtonItem* prevButton;
-@property(nonatomic, readwrite, strong) UIBarButtonItem* nextButton;
-@property(nonatomic, readwrite, strong) UIBarButtonItem* flexButton;
-@property(nonatomic, readwrite, strong) UIBarButtonItem* doneButton;
+/*--------------------------------------------------*/
 
-- (void)setHiddenToolbar:(BOOL)hiddenToolbar animated:(BOOL)animated;
+@protocol MobilyFieldValidator <NSObject>
 
-- (void)didBeginEditing;
-- (void)didEndEditing;
+@required
+- (BOOL)validate:(NSString*)value;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyFieldForm : NSObject
+
+@property(nonatomic, readonly, assign, getter=isValid) BOOL valid;
+@property(nonatomic, readwrite, strong) IBOutletCollection(NSObject<MobilyValidatedObject>) NSArray* controls;
+
+- (void)validatedSuccess:(id<MobilyValidatedObject>)control;
+- (void)validatedFail:(id<MobilyValidatedObject>)control;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyFieldEmptyValidator : NSObject <MobilyFieldValidator>
+
+- (BOOL)validate:(NSString*)value;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyFieldRegExpValidator : NSObject <MobilyFieldValidator>
+
+@property(nonatomic, readwrite, strong) NSString* regExp;
+
+- (BOOL)validate:(NSString*)value;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyFieldMinLengthValidator : NSObject <MobilyFieldValidator>
+
+@property(nonatomic, readwrite, assign) NSInteger minLength;
+
+- (BOOL)validate:(NSString*)value;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyFieldMaxLengthValidator : NSObject <MobilyFieldValidator>
+
+@property(nonatomic, readwrite, assign) NSInteger maxLength;
+
+- (BOOL)validate:(NSString*)value;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyFieldDigitValidator : NSObject <MobilyFieldValidator>
+
+- (BOOL)validate:(NSString*)value;
 
 @end
 

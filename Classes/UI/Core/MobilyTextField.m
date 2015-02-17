@@ -34,6 +34,7 @@
 /*--------------------------------------------------*/
 
 #import "MobilyTextField.h"
+#import "MobilyFieldValidation.h"
 
 /*--------------------------------------------------*/
 
@@ -86,6 +87,7 @@
 - (void)setup {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBeginEditing) name:UITextFieldTextDidBeginEditingNotification object:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEndEditing) name:UITextFieldTextDidEndEditingNotification object:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didValueChanged) name:UITextFieldTextDidChangeNotification object:self];
 }
 
 - (void)dealloc {
@@ -192,6 +194,16 @@
 - (void)didEndEditing {
     _prevInputResponder = nil;
     _nextInputResponder = nil;
+}
+
+- (void)didValueChanged {
+    if(_validator != nil) {
+        if([_validator validate:[self text]] == YES) {
+            [_form validateSuccess:self];
+        } else {
+            [_form validateFail:self];
+        }
+    }
 }
 
 #pragma mark Private

@@ -33,24 +33,14 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyBuilder.h"
-#import "MobilyValidatedObject.h"
+#import "MobilyFieldValidation.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyTextField : UITextField< MobilyBuilderObject, MobilyValidatedObject >
+@protocol MobilyValidatedObject <NSObject>
 
-@property(nonatomic, readwrite, assign) IBInspectable BOOL hiddenToolbar;
-@property(nonatomic, readwrite, strong) UIToolbar* toolbar;
-@property(nonatomic, readwrite, strong) UIBarButtonItem* prevButton;
-@property(nonatomic, readwrite, strong) UIBarButtonItem* nextButton;
-@property(nonatomic, readwrite, strong) UIBarButtonItem* flexButton;
-@property(nonatomic, readwrite, strong) UIBarButtonItem* doneButton;
-
-- (void)setHiddenToolbar:(BOOL)hiddenToolbar animated:(BOOL)animated;
-
-- (void)didBeginEditing;
-- (void)didEndEditing;
+@property(nonatomic, readwrite, strong) id<MobilyFieldValidator> validator;
+@property(nonatomic, readwrite, weak) MobilyFieldForm* form;
 
 @end
 
