@@ -42,10 +42,6 @@
 
 /*--------------------------------------------------*/
 
-extern NSString* MobilyDataContainerDefaultType;
-
-/*--------------------------------------------------*/
-
 @interface MobilyDataListContainer : MobilyDataContainer
 
 @property(nonatomic, readwrite, assign) UIEdgeInsets margin;

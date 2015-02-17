@@ -154,7 +154,7 @@ typedef void(^MobilyDataWidgetCompleteBlock)(BOOL finished);
 @property(nonatomic, readonly, strong) NSArray* containers;
 @property(nonatomic, readwrite, assign) CGRect containersFrame;
 @property(nonatomic, readonly, strong) NSArray* snapToEdgeItems;
-@property(nonatomic, readonly, strong) NSDictionary* items;
+@property(nonatomic, readonly, strong) NSArray* items;
 @property(nonatomic, readwrite, assign) CGRect itemsFrame;
 @property(nonatomic, readonly, strong) NSArray* allItems;
 
@@ -170,28 +170,16 @@ typedef void(^MobilyDataWidgetCompleteBlock)(BOOL finished);
 - (void)deleteContainer:(id< MobilyDataContainer >)container;
 - (void)replaceOriginContainer:(id< MobilyDataContainer >)originContainer withContainer:(id< MobilyDataContainer >)container;
 
-- (NSArray*)itemsForType:(id)type;
-
 - (void)prependItem:(id< MobilyDataItem >)item;
-- (void)prependItem:(id< MobilyDataItem >)item forType:(id)type;
 - (void)prependItems:(NSArray*)items;
-- (void)prependItems:(NSArray*)items forType:(id)type;
 - (void)appendItem:(id< MobilyDataItem >)item;
-- (void)appendItem:(id< MobilyDataItem >)item forType:(id)type;
 - (void)appendItems:(NSArray*)items;
-- (void)appendItems:(NSArray*)items forType:(id)type;
 - (void)insertItem:(id< MobilyDataItem >)item atIndex:(NSUInteger)index;
-- (void)insertItem:(id< MobilyDataItem >)item atIndex:(NSUInteger)index forType:(id)type;
 - (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index;
-- (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index forType:(id)type;
 - (void)deleteItem:(id< MobilyDataItem >)item;
-- (void)deleteItem:(id< MobilyDataItem >)item forType:(id)type;
 - (void)deleteItems:(NSArray*)items;
-- (void)deleteItems:(NSArray*)items forType:(id)type;
 - (void)replaceOriginItem:(id< MobilyDataItem >)originItem withItem:(id< MobilyDataItem >)item;
-- (void)replaceOriginItem:(id< MobilyDataItem >)originItem withItem:(id< MobilyDataItem >)item forType:(id)type;
 - (void)replaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items;
-- (void)replaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items forType:(id)type;
 
 - (BOOL)containsEventForKey:(id)key;
 
@@ -259,7 +247,7 @@ typedef void(^MobilyDataWidgetCompleteBlock)(BOOL finished);
 
 - (void)appear;
 - (void)disappear;
-- (void)validateLayoutForVisibleBounds:(CGRect)bounds forType:(id)type;
+- (void)validateLayoutForVisibleBounds:(CGRect)bounds;
 - (void)invalidateLayoutForVisibleBounds:(CGRect)bounds;
 
 @end

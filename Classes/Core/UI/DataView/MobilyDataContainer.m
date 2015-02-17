@@ -41,7 +41,7 @@
 
 @property(nonatomic, readwrite, strong) NSMutableArray* unsafeSnapToEdgeItems;
 @property(nonatomic, readwrite, strong) NSMutableArray* unsafeContainers;
-@property(nonatomic, readwrite, strong) NSMutableDictionary* unsafeItems;
+@property(nonatomic, readwrite, strong) NSMutableArray* unsafeItems;
 
 @end
 
@@ -71,7 +71,7 @@
 - (void)setup {
     self.unsafeSnapToEdgeItems = NSMutableArray.array;
     self.unsafeContainers = NSMutableArray.array;
-    self.unsafeItems = NSMutableDictionary.dictionary;
+    self.unsafeItems = NSMutableArray.array;
 }
 
 - (void)dealloc {
@@ -88,11 +88,9 @@
         for(id< MobilyDataContainer > container in _unsafeContainers) {
             container.widget = widget;
         }
-        [_unsafeItems enumerateKeysAndObjectsUsingBlock:^(id type, NSArray* items, BOOL* stop) {
-            for(id< MobilyDataItem > item in items) {
-                item.widget = widget;
-            }
-        }];
+        for(id< MobilyDataItem > item in _unsafeItems) {
+            item.widget = widget;
+        }
     }
 }
 
@@ -121,7 +119,7 @@
     return _unsafeSnapToEdgeItems;
 }
 
-- (NSDictionary*)items {
+- (NSArray*)items {
     return _unsafeItems;
 }
 
@@ -130,7 +128,7 @@
     for(id< MobilyDataContainer > container in _unsafeContainers) {
         [result addObjectsFromArray:container.allItems];
     }
-    [result addObjectsFromArray:[_unsafeItems allValues]];
+    [result addObjectsFromArray:_unsafeItems];
     return result;
 }
 
@@ -143,12 +141,10 @@
             return itemInContainer;
         }
     }
-    for(id type in _unsafeItems) {
-        for(id< MobilyDataItem > item in _unsafeItems[type]) {
-            id itemData = item.data;
-            if(itemData == data) {
-                return itemData;
-            }
+    for(id< MobilyDataItem > item in _unsafeItems) {
+        id itemData = item.data;
+        if(itemData == data) {
+            return itemData;
         }
     }
     return nil;
@@ -254,58 +250,28 @@
     }
 }
 
-- (NSArray*)itemsForType:(id)type {
-    NSMutableArray* unsafeItems = _unsafeItems[type];
-    if(unsafeItems != nil) {
-        return unsafeItems;
-    }
-    return @[];
-}
-
 - (void)prependItem:(id< MobilyDataItem >)item {
-    [self prependItem:item forType:MobilyDataContainerDefaultType];
-}
-
-- (void)prependItem:(id< MobilyDataItem >)item forType:(id)type {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(item.parentContainer != nil) {
         NSLog(@"ERROR: [%@] prependItem:%@", self.class, item);
         return;
     }
 #endif
-    NSMutableArray* unsafeItems = _unsafeItems[type];
-    if(unsafeItems == nil) {
-        _unsafeItems[type] = [NSMutableArray arrayWithObject:item];
-    } else {
-        [unsafeItems insertObject:item atIndex:0];
-    }
+    [_unsafeItems insertObject:item atIndex:0];
     item.parentContainer = self;
     if(_widget != nil) {
         [_widget didInsertItems:@[ item ]];
     }
 }
 
-- (void)prependItems:(NSArray*)items {
-    [self prependItems:items forType:MobilyDataContainerDefaultType];
-}
-
 - (void)prependItems:(NSArray*)items forType:(id)type {
-    NSMutableArray* unsafeItems = _unsafeItems[type];
-    if(unsafeItems == nil) {
-        _unsafeItems[type] = [NSMutableArray arrayWithArray:items];
-    } else {
-        [unsafeItems insertObjects:items atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, items.count)]];
-    }
-    for(id< MobilyDataItem > item in unsafeItems) {
+    [_unsafeItems insertObjects:items atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, items.count)]];
+    for(id< MobilyDataItem > item in items) {
         item.parentContainer = self;
     }
     if(_widget != nil) {
         [_widget didInsertItems:items];
     }
-}
-
-- (void)appendItem:(id< MobilyDataItem >)item {
-    [self appendItem:item forType:MobilyDataContainerDefaultType];
 }
 
 - (void)appendItem:(id< MobilyDataItem >)item forType:(id)type {
@@ -315,39 +281,21 @@
         return;
     }
 #endif
-    NSMutableArray* unsafeItems = _unsafeItems[type];
-    if(unsafeItems == nil) {
-        _unsafeItems[type] = [NSMutableArray arrayWithObject:item];
-    } else {
-        [unsafeItems addObject:item];
-    }
+    [_unsafeItems addObject:item];
     item.parentContainer = self;
     if(_widget != nil) {
         [_widget didInsertItems:@[ item ]];
     }
 }
 
-- (void)appendItems:(NSArray*)items {
-    [self appendItems:items forType:MobilyDataContainerDefaultType];
-}
-
 - (void)appendItems:(NSArray*)items forType:(id)type {
-    NSMutableArray* unsafeItems = _unsafeItems[type];
-    if(unsafeItems == nil) {
-        _unsafeItems[type] = [NSMutableArray arrayWithArray:items];
-    } else {
-        [unsafeItems addObjectsFromArray:items];
-    }
-    for(id< MobilyDataItem > item in unsafeItems) {
+    [_unsafeItems addObjectsFromArray:items];
+    for(id< MobilyDataItem > item in items) {
         item.parentContainer = self;
     }
     if(_widget != nil) {
         [_widget didInsertItems:items];
     }
-}
-
-- (void)insertItem:(id< MobilyDataItem >)item atIndex:(NSUInteger)index {
-    [self insertItem:item atIndex:index forType:MobilyDataContainerDefaultType];
 }
 
 - (void)insertItem:(id< MobilyDataItem >)item atIndex:(NSUInteger)index forType:(id)type {
@@ -357,39 +305,21 @@
         return;
     }
 #endif
-    NSMutableArray* unsafeItems = _unsafeItems[type];
-    if(unsafeItems == nil) {
-        _unsafeItems[type] = [NSMutableArray arrayWithObject:item];
-    } else {
-        [unsafeItems insertObject:item atIndex:index];
-    }
+    [_unsafeItems insertObject:item atIndex:index];
     item.parentContainer = self;
     if(_widget != nil) {
         [_widget didInsertItems:@[ item ]];
     }
 }
 
-- (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index {
-    [self insertItems:items atIndex:index forType:MobilyDataContainerDefaultType];
-}
-
 - (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index forType:(id)type {
-    NSMutableArray* unsafeItems = _unsafeItems[type];
-    if(unsafeItems == nil) {
-        _unsafeItems[type] = [NSMutableArray arrayWithArray:items];
-    } else {
-        [unsafeItems insertObjects:items atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, items.count)]];
-    }
-    for(id< MobilyDataItem > item in unsafeItems) {
+    [_unsafeItems insertObjects:items atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, items.count)]];
+    for(id< MobilyDataItem > item in items) {
         item.parentContainer = self;
     }
     if(_widget != nil) {
         [_widget didInsertItems:items];
     }
-}
-
-- (void)deleteItem:(id< MobilyDataItem >)item {
-    [self deleteItem:item forType:MobilyDataContainerDefaultType];
 }
 
 - (void)deleteItem:(id< MobilyDataItem >)item forType:(id)type {
@@ -399,35 +329,21 @@
         return;
     }
 #endif
-    NSMutableArray* unsafeItems = _unsafeItems[type];
-    if(unsafeItems != nil) {
-        [unsafeItems removeObject:item];
-        item.parentContainer = nil;
-        if(_widget != nil) {
-            [_widget didDeleteItems:@[ item ]];
-        }
+    [_unsafeItems removeObject:item];
+    item.parentContainer = nil;
+    if(_widget != nil) {
+        [_widget didDeleteItems:@[ item ]];
     }
-}
-
-- (void)deleteItems:(NSArray*)items {
-    [self deleteItems:items forType:MobilyDataContainerDefaultType];
 }
 
 - (void)deleteItems:(NSArray*)items forType:(id)type {
-    NSMutableArray* unsafeItems = _unsafeItems[type];
-    if(unsafeItems != nil) {
-        [unsafeItems removeObjectsInArray:items];
-        for(id< MobilyDataItem > item in unsafeItems) {
-            item.parentContainer = nil;
-        }
-        if(_widget != nil) {
-            [_widget didDeleteItems:items];
-        }
+    [_unsafeItems removeObjectsInArray:items];
+    for(id< MobilyDataItem > item in items) {
+        item.parentContainer = nil;
     }
-}
-
-- (void)replaceOriginItem:(id< MobilyDataItem >)originItem withItem:(id< MobilyDataItem >)item {
-    [self replaceOriginItem:originItem withItem:item forType:MobilyDataContainerDefaultType];
+    if(_widget != nil) {
+        [_widget didDeleteItems:items];
+    }
 }
 
 - (void)replaceOriginItem:(id< MobilyDataItem >)originItem withItem:(id< MobilyDataItem >)item forType:(id)type {
@@ -441,41 +357,31 @@
         return;
     }
 #endif
-    NSMutableArray* unsafeItems = _unsafeItems[type];
-    if(unsafeItems != nil) {
-        NSUInteger itemIndex = [unsafeItems indexOfObject:originItem];
-        if(itemIndex != NSNotFound) {
-            item.parentContainer = self;
-            unsafeItems[itemIndex] = item;
-            originItem.parentContainer = nil;
-            if(_widget != nil) {
-                [_widget didReplaceOriginItems:@[ originItem ] withItems:@[ item ]];
-            }
+    NSUInteger itemIndex = [_unsafeItems indexOfObject:originItem];
+    if(itemIndex != NSNotFound) {
+        item.parentContainer = self;
+        _unsafeItems[itemIndex] = item;
+        originItem.parentContainer = nil;
+        if(_widget != nil) {
+            [_widget didReplaceOriginItems:@[ originItem ] withItems:@[ item ]];
         }
     }
 }
 
-- (void)replaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items {
-    [self replaceOriginItems:originItems withItems:items forType:MobilyDataContainerDefaultType];
-}
-
 - (void)replaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items forType:(id)type {
-    NSMutableArray* unsafeItems = _unsafeItems[type];
-    if(unsafeItems != nil) {
-        NSIndexSet* originIndexSet = [unsafeItems indexesOfObjectsPassingTest:^BOOL(id< MobilyDataItem > originItem, NSUInteger index, BOOL* stop) {
-            return [originItems containsObject:originItem];
-        }];
-        if(originIndexSet.count == items.count) {
-            for(id< MobilyDataItem > item in unsafeItems) {
-                item.parentContainer = self;
-            }
-            [unsafeItems replaceObjectsAtIndexes:originIndexSet withObjects:items];
-            for(id< MobilyDataItem > originItem in originItems) {
-                originItem.parentContainer = nil;
-            }
-            if(_widget != nil) {
-                [_widget didReplaceOriginItems:originItems withItems:items];
-            }
+    NSIndexSet* originIndexSet = [_unsafeItems indexesOfObjectsPassingTest:^BOOL(id< MobilyDataItem > originItem, NSUInteger index, BOOL* stop) {
+        return [originItems containsObject:originItem];
+    }];
+    if(originIndexSet.count == items.count) {
+        for(id< MobilyDataItem > item in items) {
+            item.parentContainer = self;
+        }
+        [_unsafeItems replaceObjectsAtIndexes:originIndexSet withObjects:items];
+        for(id< MobilyDataItem > originItem in originItems) {
+            originItem.parentContainer = nil;
+        }
+        if(_widget != nil) {
+            [_widget didReplaceOriginItems:originItems withItems:items];
         }
     }
 }
@@ -504,22 +410,18 @@
     for(id< MobilyDataContainer > container in _unsafeContainers) {
         [container didBeginUpdate];
     };
-    [_unsafeItems enumerateKeysAndObjectsUsingBlock:^(id type, NSArray* items, BOOL* stop) {
-        for(id< MobilyDataItem > item in items) {
-            [item didBeginUpdate];
-        }
-    }];
+    for(id< MobilyDataItem > item in _unsafeItems) {
+        [item didBeginUpdate];
+    }
 }
 
 - (void)didEndUpdate {
     for(id< MobilyDataContainer > container in _unsafeContainers) {
         [container didEndUpdate];
     }
-    [_unsafeItems enumerateKeysAndObjectsUsingBlock:^(id type, NSArray* items, BOOL* stop) {
-        for(id< MobilyDataItem > item in items) {
-            [item didEndUpdate];
-        }
-    }];
+    for(id< MobilyDataItem > item in _unsafeItems) {
+        [item didEndUpdate];
+    }
 }
 
 - (CGRect)validateLayoutForAvailableFrame:(CGRect)frame {
@@ -570,11 +472,9 @@
 }
 
 - (void)layoutItemsForVisibleBounds:(CGRect)bounds snapBounds:(CGRect)snapBounds {
-    [_unsafeItems enumerateKeysAndObjectsUsingBlock:^(id type, NSArray* items, BOOL* stop) {
-        for(id< MobilyDataItem > item in items) {
-            [item validateLayoutForVisibleBounds:bounds forType:type];
-        }
-    }];
+    for(id< MobilyDataItem > item in _unsafeItems) {
+        [item validateLayoutForVisibleBounds:bounds];
+    }
 }
 
 - (void)layoutItemsForSnapBounds:(CGRect)bounds {
@@ -584,9 +484,5 @@
 }
 
 @end
-
-/*--------------------------------------------------*/
-
-NSString* MobilyDataContainerDefaultType = @"MobilyDataContainerDefaultType";
 
 /*--------------------------------------------------*/
