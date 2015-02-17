@@ -36,6 +36,7 @@ xcuserdata
 *.user
 
 # CocoaPods
+Demo/Podfile.lock
 Demo/Pods/
 
 # Project
