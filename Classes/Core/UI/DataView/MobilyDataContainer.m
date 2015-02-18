@@ -264,7 +264,7 @@
     }
 }
 
-- (void)prependItems:(NSArray*)items forType:(id)type {
+- (void)prependItems:(NSArray*)items {
     [_unsafeItems insertObjects:items atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, items.count)]];
     for(id< MobilyDataItem > item in items) {
         item.parentContainer = self;
@@ -274,7 +274,7 @@
     }
 }
 
-- (void)appendItem:(id< MobilyDataItem >)item forType:(id)type {
+- (void)appendItem:(id< MobilyDataItem >)item {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(item.parentContainer != nil) {
         NSLog(@"ERROR: [%@] appendItem:%@", self.class, item);
@@ -288,7 +288,7 @@
     }
 }
 
-- (void)appendItems:(NSArray*)items forType:(id)type {
+- (void)appendItems:(NSArray*)items {
     [_unsafeItems addObjectsFromArray:items];
     for(id< MobilyDataItem > item in items) {
         item.parentContainer = self;
@@ -298,7 +298,7 @@
     }
 }
 
-- (void)insertItem:(id< MobilyDataItem >)item atIndex:(NSUInteger)index forType:(id)type {
+- (void)insertItem:(id< MobilyDataItem >)item atIndex:(NSUInteger)index {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(item.parentContainer != nil) {
         NSLog(@"ERROR: [%@] insertItem:%@ atIndex:%d", self.class, item, (int)index);
@@ -312,7 +312,7 @@
     }
 }
 
-- (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index forType:(id)type {
+- (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index {
     [_unsafeItems insertObjects:items atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, items.count)]];
     for(id< MobilyDataItem > item in items) {
         item.parentContainer = self;
@@ -322,7 +322,7 @@
     }
 }
 
-- (void)deleteItem:(id< MobilyDataItem >)item forType:(id)type {
+- (void)deleteItem:(id< MobilyDataItem >)item {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(item.parentContainer != self) {
         NSLog(@"ERROR: [%@] deleteItem:%@", self.class, item);
@@ -336,7 +336,7 @@
     }
 }
 
-- (void)deleteItems:(NSArray*)items forType:(id)type {
+- (void)deleteItems:(NSArray*)items {
     [_unsafeItems removeObjectsInArray:items];
     for(id< MobilyDataItem > item in items) {
         item.parentContainer = nil;
@@ -346,7 +346,7 @@
     }
 }
 
-- (void)replaceOriginItem:(id< MobilyDataItem >)originItem withItem:(id< MobilyDataItem >)item forType:(id)type {
+- (void)replaceOriginItem:(id< MobilyDataItem >)originItem withItem:(id< MobilyDataItem >)item {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(originItem.parentContainer != self) {
         NSLog(@"ERROR: [%@] replaceOriginItem:%@ withItem:%@", self.class, originItem, item);
@@ -368,7 +368,7 @@
     }
 }
 
-- (void)replaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items forType:(id)type {
+- (void)replaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items {
     NSIndexSet* originIndexSet = [_unsafeItems indexesOfObjectsPassingTest:^BOOL(id< MobilyDataItem > originItem, NSUInteger index, BOOL* stop) {
         return [originItems containsObject:originItem];
     }];
