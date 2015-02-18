@@ -63,6 +63,17 @@
 + (NSDate*)dateWithUnixTimestamp:(NSUInteger)timestamp;
 - (NSUInteger)unixTimestamp;
 
+- (NSDate*)beginningOfYear;
+- (NSDate*)endOfYear;
+- (NSDate*)beginningOfMonth;
+- (NSDate*)endOfMonth;
+- (NSDate*)beginningOfWeek;
+- (NSDate*)endOfWeek;
+- (NSDate*)beginningOfDay;
+- (NSDate*)endOfDay;
+
+- (NSDate*)withOutTime;
+
 @end
 
 /*--------------------------------------------------*/
