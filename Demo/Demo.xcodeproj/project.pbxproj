@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2426F3A31A94702C004F11C7 /* Classes in Resources */ = {isa = PBXBuildFile; fileRef = 2426F3A21A94702C004F11C7 /* Classes */; };
 		401FEE5318A3F92800B445EB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401FEE5218A3F92800B445EB /* Foundation.framework */; };
 		401FEE5518A3F92800B445EB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401FEE5418A3F92800B445EB /* CoreGraphics.framework */; };
 		401FEE5718A3F92800B445EB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401FEE5618A3F92800B445EB /* UIKit.framework */; };
@@ -44,6 +45,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2426F3A21A94702C004F11C7 /* Classes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Classes; path = ../../Classes; sourceTree = "<group>"; };
 		2BBC62D562492FDF2CDB1707 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		401FEE4F18A3F92800B445EB /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		401FEE5218A3F92800B445EB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -181,6 +183,7 @@
 		408718D91A5C443900833F0A /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				2426F3A21A94702C004F11C7 /* Classes */,
 				408718DA1A5C443900833F0A /* Application */,
 				408718E71A5C443900833F0A /* Mobily */,
 				408718E31A5C443900833F0A /* Locale */,
@@ -376,6 +379,7 @@
 				409829121A712B0400D83152 /* DemoTablesController.xib in Resources */,
 				4091AD1A1A8B650400EBA11C /* DemoDataScrollViewItemView.xib in Resources */,
 				4091AD181A8B63C200EBA11C /* DemoDataScrollViewController.xib in Resources */,
+				2426F3A31A94702C004F11C7 /* Classes in Resources */,
 				408718F91A5D315D00833F0A /* DemoButtonsController.xib in Resources */,
 				409829101A712B0400D83152 /* DemoTablesCell.xib in Resources */,
 			);

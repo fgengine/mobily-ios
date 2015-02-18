@@ -50,7 +50,11 @@
 @interface MobilyFieldForm : NSObject
 
 @property(nonatomic, readonly, assign, getter=isValid) BOOL valid;
-@property(nonatomic, readwrite, strong) IBOutletCollection(NSObject< MobilyValidatedObject >) NSArray* controls;
+@property(nonatomic, readwrite, strong) IBOutletCollection(NSObject) NSArray* controls;
+
+- (void)addControl:(id<MobilyValidatedObject>)control;
+- (void)removeControl:(id<MobilyValidatedObject>)control;
+- (void)removeAllControls;
 
 - (void)validatedSuccess:(id<MobilyValidatedObject>)control;
 - (void)validatedFail:(id<MobilyValidatedObject>)control;
@@ -90,6 +94,22 @@
 /*--------------------------------------------------*/
 
 @interface MobilyFieldDigitValidator : NSObject < MobilyFieldValidator >
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyFieldANDValidator : NSObject < MobilyFieldValidator >
+
+@property(nonatomic, readwrite, strong) NSArray* validators;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyFieldORValidator : NSObject < MobilyFieldValidator >
+
+@property(nonatomic, readwrite, strong) NSArray* validators;
 
 @end
 
