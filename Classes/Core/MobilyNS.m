@@ -248,7 +248,7 @@
     return [[calendar dateByAddingComponents:components toDate:self.beginningOfDay options:0] dateByAddingTimeInterval:-1];
 }
 
-- (NSDate*)withOutTime {
+- (NSDate*)withoutTime {
     NSCalendar* calendar = NSCalendar.currentCalendar;
     NSDateComponents* components = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:self];
     return [calendar dateFromComponents:components];

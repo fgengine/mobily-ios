@@ -72,7 +72,7 @@
 - (NSDate*)beginningOfDay;
 - (NSDate*)endOfDay;
 
-- (NSDate*)withOutTime;
+- (NSDate*)withoutTime;
 
 @end
 
