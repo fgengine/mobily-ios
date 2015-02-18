@@ -194,6 +194,122 @@
     return (NSUInteger)self.timeIntervalSince1970;
 }
 
+- (NSDate*)withoutTime {
+    NSCalendar* calendar = NSCalendar.currentCalendar;
+    NSDateComponents* components = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:self];
+    return [calendar dateFromComponents:components];
+}
+
+- (NSDate*)beginningOfYear {
+    NSCalendar* calendar = NSCalendar.currentCalendar;
+    NSDateComponents* components = [calendar components:NSCalendarUnitYear fromDate:self];
+    return [calendar dateFromComponents:components];
+}
+
+- (NSDate*)endOfYear {
+    NSCalendar* calendar = NSCalendar.currentCalendar;
+    NSDateComponents* components = NSDateComponents.new;
+    components.year = 1;
+    return [[calendar dateByAddingComponents:components toDate:[self beginningOfYear] options:0] dateByAddingTimeInterval:-1];
+}
+
+- (NSDate*)beginningOfMonth {
+    NSCalendar* calendar = NSCalendar.currentCalendar;
+    NSDateComponents* components = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth fromDate:self];
+    return [calendar dateFromComponents:components];
+}
+
+- (NSDate*)endOfMonth {
+    NSCalendar* calendar = NSCalendar.currentCalendar;
+    NSDateComponents* components = NSDateComponents.new;
+    components.month = 1;
+    return [[calendar dateByAddingComponents:components toDate:self.beginningOfMonth options:0] dateByAddingTimeInterval:-1];
+}
+
+- (NSDate*)beginningOfWeek {
+    NSCalendar* calendar = NSCalendar.currentCalendar;
+    NSDateComponents* components = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitWeekday|NSCalendarUnitDay fromDate:self];
+    NSInteger offset = components.weekday - (NSInteger)calendar.firstWeekday;
+    components.day = components.day - offset;
+    return [calendar dateFromComponents:components];
+}
+
+- (NSDate*)endOfWeek {
+    NSCalendar* calendar = NSCalendar.currentCalendar;
+    NSDateComponents* components = NSDateComponents.new;
+    components.weekOfMonth = 1;
+    return [[calendar dateByAddingComponents:components toDate:self.beginningOfWeek options:0] dateByAddingTimeInterval:-1];
+}
+
+- (NSDate*)beginningOfDay {
+    NSCalendar* calendar = NSCalendar.currentCalendar;
+    NSDateComponents* components = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:self];
+    return [calendar dateFromComponents:components];
+}
+
+- (NSDate*)endOfDay {
+    NSCalendar* calendar = NSCalendar.currentCalendar;
+    NSDateComponents* components = NSDateComponents.new;
+    components.day = 1;
+    return [[calendar dateByAddingComponents:components toDate:self.beginningOfDay options:0] dateByAddingTimeInterval:-1];
+}
+
+- (NSDate*)previousYear {
+    NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents* component = [NSDateComponents new];
+    component.year = -1;
+    return [calendar dateByAddingComponents:component toDate:self options:0];
+}
+
+- (NSDate*)nextYear {
+    NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents* component = [NSDateComponents new];
+    component.year = 1;
+    return [calendar dateByAddingComponents:component toDate:self options:0];
+}
+
+- (NSDate*)previousMonth {
+    NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents* component = [NSDateComponents new];
+    component.month = -1;
+    return [calendar dateByAddingComponents:component toDate:self options:0];
+}
+
+- (NSDate*)nextMonth {
+    NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents* component = [NSDateComponents new];
+    component.month = 1;
+    return [calendar dateByAddingComponents:component toDate:self options:0];
+}
+
+- (NSDate*)previousWeek {
+    NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents* component = [NSDateComponents new];
+    component.day = -7;
+    return [calendar dateByAddingComponents:component toDate:self options:0];
+}
+
+- (NSDate*)nextWeek {
+    NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents* component = [NSDateComponents new];
+    component.day = 7;
+    return [calendar dateByAddingComponents:component toDate:self options:0];
+}
+
+- (NSDate*)previousDay {
+    NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents* component = [NSDateComponents new];
+    component.day = -1;
+    return [calendar dateByAddingComponents:component toDate:self options:0];
+}
+
+- (NSDate*)nextDay {
+    NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents* component = [NSDateComponents new];
+    component.day = 1;
+    return [calendar dateByAddingComponents:component toDate:self options:0];
+}
+
 @end
 
 /*--------------------------------------------------*/
@@ -202,13 +318,24 @@
 
 @implementation NSDateFormatter (MobilyNS)
 
-+ (NSDateFormatter*)dateFormatterWithFormat:(NSString*)format {
++ (instancetype)dateFormatterWithFormat:(NSString*)format {
     return [self dateFormatterWithFormat:format locale:NSLocale.currentLocale];
 }
 
-+ (NSDateFormatter*)dateFormatterWithFormat:(NSString*)format locale:(NSLocale*)locale {
++ (instancetype)dateFormatterWithFormat:(NSString*)format locale:(NSLocale*)locale {
     NSDateFormatter* dateFormatter = [NSDateFormatter new];
-    dateFormatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:format options:0 locale:locale];
+    dateFormatter.dateFormat = format;
+    dateFormatter.locale = locale;
+    return dateFormatter;
+}
+
++ (instancetype)dateFormatterWithFormatTemplate:(NSString*)formatTemplate {
+    return [self dateFormatterWithFormat:formatTemplate locale:NSLocale.currentLocale];
+}
+
++ (instancetype)dateFormatterWithFormatTemplate:(NSString*)formatTemplate locale:(NSLocale*)locale {
+    NSDateFormatter* dateFormatter = [NSDateFormatter new];
+    dateFormatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:formatTemplate options:0 locale:locale];
     dateFormatter.locale = locale;
     return dateFormatter;
 }
@@ -570,87 +697,83 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
     return nil;
 }
 
-- (void)enumerateObjectsAtRange:(NSRange)range options:(NSEnumerationOptions)options usingBlock:(void (^)(id obj, NSUInteger idx, BOOL *stop))block {
+- (void)enumerateObjectsAtRange:(NSRange)range options:(NSEnumerationOptions)options usingBlock:(void(^)(id obj, NSUInteger idx, BOOL *stop))block {
     [self enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:options usingBlock:block];
 }
 
-- (void)each:(void (^)(id object))block {
+- (void)each:(void(^)(id object))block {
     [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         block(obj);
     }];
 }
 
-- (void)eachWithIndex:(void (^)(id object, NSUInteger index))block {
+- (void)eachWithIndex:(void(^)(id object, NSUInteger index))block {
     [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         block(obj, idx);
     }];
 }
 
-- (void)each:(void (^)(id object))block options:(NSEnumerationOptions)options {
+- (void)each:(void(^)(id object))block options:(NSEnumerationOptions)options {
     [self enumerateObjectsWithOptions:options usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         block(obj);
     }];
 }
 
-- (void)eachWithIndex:(void (^)(id object, NSUInteger index))block options:(NSEnumerationOptions)options {
+- (void)eachWithIndex:(void(^)(id object, NSUInteger index))block options:(NSEnumerationOptions)options {
     [self enumerateObjectsWithOptions:options usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         block(obj, idx);
     }];
 }
 
-- (NSArray *)map:(id (^)(id object))block {
-    NSMutableArray *array = [NSMutableArray arrayWithCapacity:self.count];
-    
+- (NSArray*)map:(id(^)(id object))block {
+    NSMutableArray* array = [NSMutableArray arrayWithCapacity:self.count];
     for(id object in self) {
-        [array addObject:block(object) ?: [NSNull null]];
+        [array addObject:block(object)];
     }
-    
     return array;
 }
 
-- (NSArray *)select:(BOOL (^)(id object))block {
+- (NSArray*)select:(BOOL(^)(id object))block {
     return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         return block(evaluatedObject);
     }]];
 }
 
-- (NSArray *)reject:(BOOL (^)(id object))block {
+- (NSArray*)reject:(BOOL(^)(id object))block {
     return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-        return !block(evaluatedObject);
+        return block(evaluatedObject);
     }]];
 }
 
-- (id)find:(BOOL (^)(id object))block {
-    for (id object in self) {
-        if (block(object))
+- (id)find:(BOOL(^)(id object))block {
+    for(id object in self) {
+        if(block(object))
             return object;
     }
     return nil;
 }
 
-- (NSArray *)reverse {
+- (NSArray*)reverse {
     return self.reverseObjectEnumerator.allObjects;
 }
 
-- (NSArray *)intersectionWithArray:(NSArray *)array {
-    NSPredicate *intersectPredicate = [NSPredicate predicateWithFormat:@"SELF IN %@", array];
-    return [self filteredArrayUsingPredicate:intersectPredicate];
+- (NSArray*)intersectionWithArray:(NSArray*)array {
+    return [self filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", array]];
 }
 
-- (NSArray *)unionWithArray:(NSArray *)array {
-    NSArray *complement = [self relativeComplement:array];
-    return [complement arrayByAddingObjectsFromArray:array];
+- (NSArray*)unionWithArray:(NSArray*)array {
+    return [[self relativeComplement:array] arrayByAddingObjectsFromArray:array];
 }
 
-- (NSArray *)relativeComplement:(NSArray *)array {
-    NSPredicate *relativeComplementPredicate = [NSPredicate predicateWithFormat:@"NOT SELF IN %@", array];
+- (NSArray*)relativeComplement:(NSArray*)array {
+    NSPredicate* relativeComplementPredicate = [NSPredicate predicateWithFormat:@"NOT SELF IN %@", array];
     return [self filteredArrayUsingPredicate:relativeComplementPredicate];
 }
 
-- (NSArray *)symmetricDifference:(NSArray *)array {
-    NSArray *aSubtractB = [self relativeComplement:array];
-    NSArray *bSubtractA = [array relativeComplement:self];
-    return [aSubtractB unionWithArray:bSubtractA];
+- (NSArray*)symmetricDifference:(NSArray*)array {
+    NSArray* subA = [array relativeComplement:self];
+    NSArray* subB = [self relativeComplement:array];
+    return [subB unionWithArray:subA];
 }
 
 @end
@@ -775,30 +898,29 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
     return result;
 }
 
-- (void)each:(void (^)(id k, id v))block {
+- (void)each:(void(^)(id k, id v))block {
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         block(key, obj);
     }];
 }
 
-- (void)eachKey:(void (^)(id k))block {
+- (void)eachKey:(void(^)(id k))block {
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         block(key);
     }];
 }
 
-- (void)eachValue:(void (^)(id v))block {
+- (void)eachValue:(void(^)(id v))block {
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         block(obj);
     }];
 }
 
-- (NSArray *)map:(id (^)(id key, id value))block {
-    NSMutableArray *array = [NSMutableArray array];
-    
+- (NSArray*)map:(id(^)(id key, id value))block {
+    NSMutableArray* array = [NSMutableArray array];
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         id object = block(key, obj);
-        if (object) {
+        if(object) {
             [array addObject:object];
         }
     }];
@@ -807,7 +929,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 }
 
 - (BOOL)hasKey:(id)key {
-    return !!self[key];
+    return (self[key] != nil);
 }
 
 @end

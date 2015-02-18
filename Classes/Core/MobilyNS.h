@@ -63,14 +63,36 @@
 + (NSDate*)dateWithUnixTimestamp:(NSUInteger)timestamp;
 - (NSUInteger)unixTimestamp;
 
+- (NSDate*)withoutTime;
+
+- (NSDate*)beginningOfYear;
+- (NSDate*)endOfYear;
+- (NSDate*)beginningOfMonth;
+- (NSDate*)endOfMonth;
+- (NSDate*)beginningOfWeek;
+- (NSDate*)endOfWeek;
+- (NSDate*)beginningOfDay;
+- (NSDate*)endOfDay;
+
+- (NSDate*)previousYear;
+- (NSDate*)nextYear;
+- (NSDate*)previousMonth;
+- (NSDate*)nextMonth;
+- (NSDate*)previousWeek;
+- (NSDate*)nextWeek;
+- (NSDate*)previousDay;
+- (NSDate*)nextDay;
+
 @end
 
 /*--------------------------------------------------*/
 
 @interface NSDateFormatter (MobilyNS)
 
-+ (NSDateFormatter*)dateFormatterWithFormat:(NSString*)format;
-+ (NSDateFormatter*)dateFormatterWithFormat:(NSString*)format locale:(NSLocale*)locale;
++ (instancetype)dateFormatterWithFormat:(NSString*)format;
++ (instancetype)dateFormatterWithFormat:(NSString*)format locale:(NSLocale*)locale;
++ (instancetype)dateFormatterWithFormatTemplate:(NSString*)formatTemplate;
++ (instancetype)dateFormatterWithFormatTemplate:(NSString*)formatTemplate locale:(NSLocale*)locale;
 
 @end
 
@@ -142,21 +164,21 @@
 - (id)nextObjectOfObject:(id)object;
 - (id)prevObjectOfObject:(id)object;
 
-- (void)enumerateObjectsAtRange:(NSRange)range options:(NSEnumerationOptions)options usingBlock:(void (^)(id obj, NSUInteger idx, BOOL *stop))block NS_AVAILABLE(10_6, 4_0);
+- (void)enumerateObjectsAtRange:(NSRange)range options:(NSEnumerationOptions)options usingBlock:(void(^)(id obj, NSUInteger idx, BOOL *stop))block NS_AVAILABLE(10_6, 4_0);
 
-- (void)each:(void (^)(id object))block;
-- (void)eachWithIndex:(void (^)(id object, NSUInteger index))block;
-- (void)each:(void (^)(id object))block options:(NSEnumerationOptions)options;
-- (void)eachWithIndex:(void (^)(id object, NSUInteger index))block options:(NSEnumerationOptions)options;
-- (NSArray *)map:(id (^)(id object))block;
-- (NSArray *)select:(BOOL (^)(id object))block;
-- (NSArray *)reject:(BOOL (^)(id object))block;
-- (id)find:(BOOL (^)(id object))block;
-- (NSArray *)reverse;
-- (NSArray *)intersectionWithArray:(NSArray *)array;
-- (NSArray *)unionWithArray:(NSArray *)array;
-- (NSArray *)relativeComplement:(NSArray *)array;
-- (NSArray *)symmetricDifference:(NSArray *)array;
+- (void)each:(void(^)(id object))block;
+- (void)eachWithIndex:(void(^)(id object, NSUInteger index))block;
+- (void)each:(void(^)(id object))block options:(NSEnumerationOptions)options;
+- (void)eachWithIndex:(void(^)(id object, NSUInteger index))block options:(NSEnumerationOptions)options;
+- (NSArray*)map:(id(^)(id object))block;
+- (NSArray*)select:(BOOL(^)(id object))block;
+- (NSArray*)reject:(BOOL(^)(id object))block;
+- (id)find:(BOOL(^)(id object))block;
+- (NSArray*)reverse;
+- (NSArray*)intersectionWithArray:(NSArray*)array;
+- (NSArray*)unionWithArray:(NSArray*)array;
+- (NSArray*)relativeComplement:(NSArray*)array;
+- (NSArray*)symmetricDifference:(NSArray*)array;
 
 @end
 
@@ -185,10 +207,10 @@
 
 - (NSString*)stringFromQueryComponents;
 
-- (void)each:(void (^)(id k, id v))block;
-- (void)eachKey:(void (^)(id k))block;
-- (void)eachValue:(void (^)(id v))block;
-- (NSArray *)map:(id (^)(id key, id value))block;
+- (void)each:(void(^)(id k, id v))block;
+- (void)eachKey:(void(^)(id k))block;
+- (void)eachValue:(void(^)(id v))block;
+- (NSArray*)map:(id(^)(id key, id value))block;
 - (BOOL)hasKey:(id)key;
 
 @end
