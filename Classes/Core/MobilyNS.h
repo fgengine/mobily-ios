@@ -63,17 +63,6 @@
 + (NSDate*)dateWithUnixTimestamp:(NSUInteger)timestamp;
 - (NSUInteger)unixTimestamp;
 
-- (NSDate*)beginningOfYear;
-- (NSDate*)endOfYear;
-- (NSDate*)beginningOfMonth;
-- (NSDate*)endOfMonth;
-- (NSDate*)beginningOfWeek;
-- (NSDate*)endOfWeek;
-- (NSDate*)beginningOfDay;
-- (NSDate*)endOfDay;
-
-- (NSDate*)withoutTime;
-
 @end
 
 /*--------------------------------------------------*/
@@ -155,6 +144,20 @@
 
 - (void)enumerateObjectsAtRange:(NSRange)range options:(NSEnumerationOptions)options usingBlock:(void (^)(id obj, NSUInteger idx, BOOL *stop))block NS_AVAILABLE(10_6, 4_0);
 
+- (void)each:(void (^)(id object))block;
+- (void)eachWithIndex:(void (^)(id object, NSUInteger index))block;
+- (void)each:(void (^)(id object))block options:(NSEnumerationOptions)options;
+- (void)eachWithIndex:(void (^)(id object, NSUInteger index))block options:(NSEnumerationOptions)options;
+- (NSArray *)map:(id (^)(id object))block;
+- (NSArray *)select:(BOOL (^)(id object))block;
+- (NSArray *)reject:(BOOL (^)(id object))block;
+- (id)find:(BOOL (^)(id object))block;
+- (NSArray *)reverse;
+- (NSArray *)intersectionWithArray:(NSArray *)array;
+- (NSArray *)unionWithArray:(NSArray *)array;
+- (NSArray *)relativeComplement:(NSArray *)array;
+- (NSArray *)symmetricDifference:(NSArray *)array;
+
 @end
 
 /*--------------------------------------------------*/
@@ -181,6 +184,12 @@
 - (NSDictionary*)dictionaryValueForKey:(NSString*)key orDefault:(NSDictionary*)defaultValue;
 
 - (NSString*)stringFromQueryComponents;
+
+- (void)each:(void (^)(id k, id v))block;
+- (void)eachKey:(void (^)(id k))block;
+- (void)eachValue:(void (^)(id v))block;
+- (NSArray *)map:(id (^)(id key, id value))block;
+- (BOOL)hasKey:(id)key;
 
 @end
 

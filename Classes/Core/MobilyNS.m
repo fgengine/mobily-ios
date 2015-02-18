@@ -153,15 +153,15 @@
     } else if(elapsed < MOBILY_MINUTE) {
         int seconds = (int)(elapsed);
         return [NSString stringWithFormat:NSLocalizedString(@"%d seconds ago", @""), seconds];
-    } else if(elapsed < 2.0f*  MOBILY_MINUTE) {
+    } else if(elapsed < 2.0f * MOBILY_MINUTE) {
         return NSLocalizedString(@"about a minute ago", @"");
     } else if(elapsed < MOBILY_HOUR) {
         int mins = (int)(elapsed / MOBILY_MINUTE);
         return [NSString stringWithFormat:NSLocalizedString(@"%d minutes ago", @""), mins];
-    } else if(elapsed < MOBILY_HOUR*  1.5f) {
+    } else if(elapsed < MOBILY_HOUR * 1.5f) {
         return NSLocalizedString(@"about an hour ago", @"");
     } else if(elapsed < MOBILY_DAY) {
-        int hours = (int)((elapsed + MOBILY_HOUR*  0.5f) / MOBILY_HOUR);
+        int hours = (int)((elapsed + MOBILY_HOUR * 0.5f) / MOBILY_HOUR);
         return [NSString stringWithFormat:NSLocalizedString(@"%d hours ago", @""), hours];
     } else {
         return [self formatDateTime];
@@ -192,66 +192,6 @@
 
 - (NSUInteger)unixTimestamp {
     return (NSUInteger)self.timeIntervalSince1970;
-}
-
-- (NSDate*)beginningOfYear {
-    NSCalendar* calendar = NSCalendar.currentCalendar;
-    NSDateComponents* components = [calendar components:NSCalendarUnitYear fromDate:self];
-    return [calendar dateFromComponents:components];
-}
-
-- (NSDate*)endOfYear {
-    NSCalendar* calendar = NSCalendar.currentCalendar;
-    NSDateComponents* components = NSDateComponents.new;
-    components.year = 1;
-    return [[calendar dateByAddingComponents:components toDate:[self beginningOfYear] options:0] dateByAddingTimeInterval:-1];
-}
-
-- (NSDate*)beginningOfMonth {
-    NSCalendar* calendar = NSCalendar.currentCalendar;
-    NSDateComponents* components = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth fromDate:self];
-    return [calendar dateFromComponents:components];
-}
-
-- (NSDate*)endOfMonth {
-    NSCalendar* calendar = NSCalendar.currentCalendar;
-    NSDateComponents* components = NSDateComponents.new;
-    components.month = 1;
-    return [[calendar dateByAddingComponents:components toDate:self.beginningOfMonth options:0] dateByAddingTimeInterval:-1];
-}
-
-- (NSDate*)beginningOfWeek {
-    NSCalendar* calendar = NSCalendar.currentCalendar;
-    NSDateComponents* components = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitWeekday|NSCalendarUnitDay fromDate:self];
-    NSInteger offset = components.weekday - (NSInteger)calendar.firstWeekday;
-    components.day = components.day - offset;
-    return [calendar dateFromComponents:components];
-}
-
-- (NSDate*)endOfWeek {
-    NSCalendar* calendar = NSCalendar.currentCalendar;
-    NSDateComponents* components = NSDateComponents.new;
-    components.weekOfMonth = 1;
-    return [[calendar dateByAddingComponents:components toDate:self.beginningOfWeek options:0] dateByAddingTimeInterval:-1];
-}
-
-- (NSDate*)beginningOfDay {
-    NSCalendar* calendar = NSCalendar.currentCalendar;
-    NSDateComponents* components = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:self];
-    return [calendar dateFromComponents:components];
-}
-
-- (NSDate*)endOfDay {
-    NSCalendar* calendar = NSCalendar.currentCalendar;
-    NSDateComponents* components = NSDateComponents.new;
-    components.day = 1;
-    return [[calendar dateByAddingComponents:components toDate:self.beginningOfDay options:0] dateByAddingTimeInterval:-1];
-}
-
-- (NSDate*)withoutTime {
-    NSCalendar* calendar = NSCalendar.currentCalendar;
-    NSDateComponents* components = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:self];
-    return [calendar dateFromComponents:components];
 }
 
 @end
@@ -299,7 +239,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
     NSData* data = [NSData dataWithBytes:self.bytes length:self.length];
     const uint8_t* input = (const uint8_t*)data.bytes;
     NSInteger length = data.length;
-    NSMutableData* result = [NSMutableData dataWithLength:((length + 2) / 3)*  4];
+    NSMutableData* result = [NSMutableData dataWithLength:((length + 2) / 3) * 4];
     uint8_t* output = (uint8_t*)[result mutableBytes];
     for(NSInteger i = 0; i < length; i += 3) {
         NSInteger value = 0;
@@ -309,7 +249,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
                 value |= (0xFF & input[j]);
             }
         }
-        NSInteger index = (i / 3)*  4;
+        NSInteger index = (i / 3) * 4;
         output[index + 0] = NSDataBase64Table[(value >> 18) & 0x3F];
         output[index + 1] = NSDataBase64Table[(value >> 12) & 0x3F];
         output[index + 2] = (i + 1) < length ? NSDataBase64Table[(value >> 6) & 0x3F] : '=';
@@ -555,10 +495,10 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 
 - (id)lastObjectIsClass:(Class)objectClass {
     __block id result = nil;
-    [self enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id object, NSUInteger index, BOOL* stop) {
+    [self enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id object, NSUInteger index, BOOL *stop) {
         if([object isKindOfClass:objectClass] == YES) {
             result = object;
-           * stop = YES;
+            *stop = YES;
         }
     }];
     return result;
@@ -577,10 +517,10 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 
 - (id)lastObjectIsProtocol:(Protocol*)objectProtocol {
     __block id result = nil;
-    [self enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id object, NSUInteger index, BOOL* stop) {
+    [self enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id object, NSUInteger index, BOOL *stop) {
         if([object conformsToProtocol:objectProtocol] == YES) {
             result = object;
-           * stop = YES;
+            *stop = YES;
         }
     }];
     return result;
@@ -630,8 +570,87 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
     return nil;
 }
 
-- (void)enumerateObjectsAtRange:(NSRange)range options:(NSEnumerationOptions)options usingBlock:(void (^)(id obj, NSUInteger idx, BOOL* stop))block {
+- (void)enumerateObjectsAtRange:(NSRange)range options:(NSEnumerationOptions)options usingBlock:(void (^)(id obj, NSUInteger idx, BOOL *stop))block {
     [self enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:options usingBlock:block];
+}
+
+- (void)each:(void (^)(id object))block {
+    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        block(obj);
+    }];
+}
+
+- (void)eachWithIndex:(void (^)(id object, NSUInteger index))block {
+    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        block(obj, idx);
+    }];
+}
+
+- (void)each:(void (^)(id object))block options:(NSEnumerationOptions)options {
+    [self enumerateObjectsWithOptions:options usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        block(obj);
+    }];
+}
+
+- (void)eachWithIndex:(void (^)(id object, NSUInteger index))block options:(NSEnumerationOptions)options {
+    [self enumerateObjectsWithOptions:options usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        block(obj, idx);
+    }];
+}
+
+- (NSArray *)map:(id (^)(id object))block {
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:self.count];
+    
+    for(id object in self) {
+        [array addObject:block(object) ?: [NSNull null]];
+    }
+    
+    return array;
+}
+
+- (NSArray *)select:(BOOL (^)(id object))block {
+    return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        return block(evaluatedObject);
+    }]];
+}
+
+- (NSArray *)reject:(BOOL (^)(id object))block {
+    return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        return !block(evaluatedObject);
+    }]];
+}
+
+- (id)find:(BOOL (^)(id object))block {
+    for (id object in self) {
+        if (block(object))
+            return object;
+    }
+    return nil;
+}
+
+- (NSArray *)reverse {
+    return self.reverseObjectEnumerator.allObjects;
+}
+
+- (NSArray *)intersectionWithArray:(NSArray *)array {
+    NSPredicate *intersectPredicate = [NSPredicate predicateWithFormat:@"SELF IN %@", array];
+    return [self filteredArrayUsingPredicate:intersectPredicate];
+}
+
+- (NSArray *)unionWithArray:(NSArray *)array {
+    NSArray *complement = [self relativeComplement:array];
+    return [complement arrayByAddingObjectsFromArray:array];
+}
+
+- (NSArray *)relativeComplement:(NSArray *)array {
+    NSPredicate *relativeComplementPredicate = [NSPredicate predicateWithFormat:@"NOT SELF IN %@", array];
+    return [self filteredArrayUsingPredicate:relativeComplementPredicate];
+}
+
+- (NSArray *)symmetricDifference:(NSArray *)array {
+    NSArray *aSubtractB = [self relativeComplement:array];
+    NSArray *bSubtractA = [array relativeComplement:self];
+    return [aSubtractB unionWithArray:bSubtractA];
 }
 
 @end
@@ -754,6 +773,41 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
         }
     }
     return result;
+}
+
+- (void)each:(void (^)(id k, id v))block {
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        block(key, obj);
+    }];
+}
+
+- (void)eachKey:(void (^)(id k))block {
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        block(key);
+    }];
+}
+
+- (void)eachValue:(void (^)(id v))block {
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        block(obj);
+    }];
+}
+
+- (NSArray *)map:(id (^)(id key, id value))block {
+    NSMutableArray *array = [NSMutableArray array];
+    
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        id object = block(key, obj);
+        if (object) {
+            [array addObject:object];
+        }
+    }];
+    
+    return array;
+}
+
+- (BOOL)hasKey:(id)key {
+    return !!self[key];
 }
 
 @end
