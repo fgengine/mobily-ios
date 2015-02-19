@@ -151,12 +151,12 @@ typedef void(^MobilyDataWidgetCompleteBlock)(BOOL finished);
 @protocol MobilyDataContainer < MobilyDataObject >
 
 @property(nonatomic, readonly, strong) NSArray* snapToEdgeContainers;
-@property(nonatomic, readonly, strong) NSArray* containers;
+@property(nonatomic, readonly, copy) NSArray* containers;
 @property(nonatomic, readwrite, assign) CGRect containersFrame;
 @property(nonatomic, readonly, strong) NSArray* snapToEdgeItems;
-@property(nonatomic, readonly, strong) NSArray* items;
+@property(nonatomic, readonly, copy) NSArray* items;
 @property(nonatomic, readwrite, assign) CGRect itemsFrame;
-@property(nonatomic, readonly, strong) NSArray* allItems;
+@property(nonatomic, readonly, copy) NSArray* allItems;
 
 - (id< MobilyDataItem >)itemForData:(id)data;
 - (UIView< MobilyDataItemView >*)itemViewForData:(id)data;
@@ -167,8 +167,8 @@ typedef void(^MobilyDataWidgetCompleteBlock)(BOOL finished);
 - (void)prependContainer:(id< MobilyDataContainer >)container;
 - (void)appendContainer:(id< MobilyDataContainer >)container;
 - (void)insertContainer:(id< MobilyDataContainer >)container atIndex:(NSUInteger)index;
-- (void)deleteContainer:(id< MobilyDataContainer >)container;
 - (void)replaceOriginContainer:(id< MobilyDataContainer >)originContainer withContainer:(id< MobilyDataContainer >)container;
+- (void)deleteContainer:(id< MobilyDataContainer >)container;
 
 - (void)prependItem:(id< MobilyDataItem >)item;
 - (void)prependItems:(NSArray*)items;
@@ -176,10 +176,11 @@ typedef void(^MobilyDataWidgetCompleteBlock)(BOOL finished);
 - (void)appendItems:(NSArray*)items;
 - (void)insertItem:(id< MobilyDataItem >)item atIndex:(NSUInteger)index;
 - (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index;
-- (void)deleteItem:(id< MobilyDataItem >)item;
-- (void)deleteItems:(NSArray*)items;
 - (void)replaceOriginItem:(id< MobilyDataItem >)originItem withItem:(id< MobilyDataItem >)item;
 - (void)replaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items;
+- (void)deleteItem:(id< MobilyDataItem >)item;
+- (void)deleteItems:(NSArray*)items;
+- (void)deleteAllItems;
 
 - (BOOL)containsEventForKey:(id)key;
 

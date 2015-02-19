@@ -207,9 +207,12 @@
 
 - (NSString*)stringFromQueryComponents;
 
-- (void)each:(void(^)(id k, id v))block;
-- (void)eachKey:(void(^)(id k))block;
-- (void)eachValue:(void(^)(id v))block;
+- (void)each:(void(^)(id key, id value))block;
+- (void)eachWithIndex:(void(^)(id key, id value, NSUInteger index))block;
+- (void)eachKey:(void(^)(id key))block;
+- (void)eachKeyWithIndex:(void(^)(id key, NSUInteger index))block;
+- (void)eachValue:(void(^)(id value))block;
+- (void)eachValueWithIndex:(void(^)(id value, NSUInteger index))block;
 - (NSArray*)map:(id(^)(id key, id value))block;
 - (BOOL)hasKey:(id)key;
 

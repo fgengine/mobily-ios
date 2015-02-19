@@ -1085,7 +1085,7 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 }
 
 - (void)setZPosition:(CGFloat)zPosition {
-    [self.layer setZPosition:zPosition];
+    self.layer.zPosition = zPosition;
 }
 
 - (CGFloat)zPosition {

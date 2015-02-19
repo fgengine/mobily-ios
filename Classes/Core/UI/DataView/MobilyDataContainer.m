@@ -175,7 +175,7 @@
 - (void)prependContainer:(id< MobilyDataContainer >)container {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(container.parentContainer != nil) {
-        NSLog(@"ERROR: [%@] prependContainer:%@", self.class, container);
+        NSLog(@"ERROR: [%@:%@] prependContainer:%@", self.class, NSStringFromSelector(_cmd), container);
         return;
     }
 #endif
@@ -189,7 +189,7 @@
 - (void)appendContainer:(id< MobilyDataContainer >)container {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(container.parentContainer != nil) {
-        NSLog(@"ERROR: [%@] appendContainer:%@", self.class, container);
+        NSLog(@"ERROR: [%@:%@] appendContainer:%@", self.class, NSStringFromSelector(_cmd), container);
         return;
     }
 #endif
@@ -203,7 +203,7 @@
 - (void)insertContainer:(id< MobilyDataContainer >)container atIndex:(NSUInteger)index {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(container.parentContainer != nil) {
-        NSLog(@"ERROR: [%@] insertContainer:%@ atIndex:%d", self.class, container, (int)index);
+        NSLog(@"ERROR: [%@:%@] insertContainer:%@ atIndex:%d", self.class, NSStringFromSelector(_cmd), container, (int)index);
         return;
     }
 #endif
@@ -214,28 +214,14 @@
     }
 }
 
-- (void)deleteContainer:(id< MobilyDataContainer >)container {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(container.parentContainer != self) {
-        NSLog(@"ERROR: [%@] deleteContainer:%@", self.class, container);
-        return;
-    }
-#endif
-    container.parentContainer = nil;
-    [_unsafeContainers removeObject:container];
-    if(_widget != nil) {
-        [_widget didDeleteItems:container.allItems];
-    }
-}
-
 - (void)replaceOriginContainer:(id< MobilyDataContainer >)originContainer withContainer:(id< MobilyDataContainer >)container {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(originContainer.parentContainer != self) {
-        NSLog(@"ERROR: [%@] replaceOriginContainer:%@ withContainer:%@", self.class, originContainer, container);
+        NSLog(@"ERROR: [%@:%@] replaceOriginContainer:%@ withContainer:%@", self.class, NSStringFromSelector(_cmd), originContainer, container);
         return;
     }
     if(container.parentContainer != nil) {
-        NSLog(@"ERROR: [%@] replaceOriginContainer:%@ withContainer:%@", self.class, originContainer, container);
+        NSLog(@"ERROR: [%@:%@] replaceOriginContainer:%@ withContainer:%@", self.class, NSStringFromSelector(_cmd), originContainer, container);
         return;
     }
 #endif
@@ -250,10 +236,24 @@
     }
 }
 
+- (void)deleteContainer:(id< MobilyDataContainer >)container {
+#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
+    if(container.parentContainer != self) {
+        NSLog(@"ERROR: [%@:%@] deleteContainer:%@", self.class, NSStringFromSelector(_cmd), container);
+        return;
+    }
+#endif
+    container.parentContainer = nil;
+    [_unsafeContainers removeObject:container];
+    if(_widget != nil) {
+        [_widget didDeleteItems:container.allItems];
+    }
+}
+
 - (void)prependItem:(id< MobilyDataItem >)item {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(item.parentContainer != nil) {
-        NSLog(@"ERROR: [%@] prependItem:%@", self.class, item);
+        NSLog(@"ERROR: [%@:%@] prependItem:%@", self.class, NSStringFromSelector(_cmd), item);
         return;
     }
 #endif
@@ -277,7 +277,7 @@
 - (void)appendItem:(id< MobilyDataItem >)item {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(item.parentContainer != nil) {
-        NSLog(@"ERROR: [%@] appendItem:%@", self.class, item);
+        NSLog(@"ERROR: [%@:%@] appendItem:%@", self.class, NSStringFromSelector(_cmd), item);
         return;
     }
 #endif
@@ -301,7 +301,7 @@
 - (void)insertItem:(id< MobilyDataItem >)item atIndex:(NSUInteger)index {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(item.parentContainer != nil) {
-        NSLog(@"ERROR: [%@] insertItem:%@ atIndex:%d", self.class, item, (int)index);
+        NSLog(@"ERROR: [%@:%@] insertItem:%@ atIndex:%d", self.class, NSStringFromSelector(_cmd), item, (int)index);
         return;
     }
 #endif
@@ -322,38 +322,14 @@
     }
 }
 
-- (void)deleteItem:(id< MobilyDataItem >)item {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(item.parentContainer != self) {
-        NSLog(@"ERROR: [%@] deleteItem:%@", self.class, item);
-        return;
-    }
-#endif
-    [_unsafeItems removeObject:item];
-    item.parentContainer = nil;
-    if(_widget != nil) {
-        [_widget didDeleteItems:@[ item ]];
-    }
-}
-
-- (void)deleteItems:(NSArray*)items {
-    [_unsafeItems removeObjectsInArray:items];
-    for(id< MobilyDataItem > item in items) {
-        item.parentContainer = nil;
-    }
-    if(_widget != nil) {
-        [_widget didDeleteItems:items];
-    }
-}
-
 - (void)replaceOriginItem:(id< MobilyDataItem >)originItem withItem:(id< MobilyDataItem >)item {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(originItem.parentContainer != self) {
-        NSLog(@"ERROR: [%@] replaceOriginItem:%@ withItem:%@", self.class, originItem, item);
+        NSLog(@"ERROR: [%@:%@] replaceOriginItem:%@ withItem:%@", self.class, NSStringFromSelector(_cmd), originItem, item);
         return;
     }
     if(item.parentContainer != nil) {
-        NSLog(@"ERROR: [%@] replaceOriginItem:%@ withItem:%@", self.class, originItem, item);
+        NSLog(@"ERROR: [%@:%@] replaceOriginItem:%@ withItem:%@", self.class, NSStringFromSelector(_cmd), originItem, item);
         return;
     }
 #endif
@@ -384,6 +360,34 @@
             [_widget didReplaceOriginItems:originItems withItems:items];
         }
     }
+}
+
+- (void)deleteItem:(id< MobilyDataItem >)item {
+#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
+    if(item.parentContainer != self) {
+        NSLog(@"ERROR: [%@:%@] deleteItem:%@", self.class, NSStringFromSelector(_cmd), item);
+        return;
+    }
+#endif
+    [_unsafeItems removeObject:item];
+    item.parentContainer = nil;
+    if(_widget != nil) {
+        [_widget didDeleteItems:@[ item ]];
+    }
+}
+
+- (void)deleteItems:(NSArray*)items {
+    [_unsafeItems removeObjectsInArray:items];
+    for(id< MobilyDataItem > item in items) {
+        item.parentContainer = nil;
+    }
+    if(_widget != nil) {
+        [_widget didDeleteItems:items];
+    }
+}
+
+- (void)deleteAllItems {
+    [self deleteItems:[_unsafeItems copy]];
 }
 
 - (BOOL)containsEventForKey:(id)key {

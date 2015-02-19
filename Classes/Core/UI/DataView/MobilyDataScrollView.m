@@ -82,6 +82,9 @@
 - (void)internalDidScroll;
 - (void)internalDidEndDraggingWillDecelerate:(BOOL)decelerate;
 
+- (void)internalBatchUpdate:(MobilyDataWidgetUpdateBlock)update;
+- (void)internalBatchComplete:(MobilyDataWidgetUpdateBlock)complete;
+
 @end
 
 /*--------------------------------------------------*/
@@ -285,7 +288,7 @@
 - (void)setContainer:(id< MobilyDataContainer >)container {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_updating != NO) {
-        NSLog(@"ERROR: [%@] setContainer:%@", self.class, container);
+        NSLog(@"ERROR: [%@:%@] setContainer:%@", self.class, NSStringFromSelector(_cmd), container);
         return;
     }
 #endif
@@ -541,7 +544,7 @@
 - (void)registerIdentifier:(NSString*)identifier withViewClass:(Class< MobilyDataItemView >)viewClass {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_registersViews[identifier] != nil) {
-        NSLog(@"ERROR: [%@] registerIdentifier:%@ withViewClass:%@", self.class, identifier, viewClass);
+        NSLog(@"ERROR: [%@:%@] registerIdentifier:%@ withViewClass:%@", self.class, NSStringFromSelector(_cmd), identifier, viewClass);
         return;
     }
 #endif
@@ -551,7 +554,7 @@
 - (void)unregisterIdentifier:(NSString*)identifier {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_registersViews[identifier] == nil) {
-        NSLog(@"ERROR: [%@] unregisterIdentifier:%@", self.class, identifier);
+        NSLog(@"ERROR: [%@:%@] unregisterIdentifier:%@", self.class, NSStringFromSelector(_cmd), identifier);
         return;
     }
 #endif
@@ -607,39 +610,31 @@
 }
 
 - (void)dequeueViewWithItem:(id< MobilyDataItem >)item {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(item.view != nil) {
-        NSLog(@"ERROR: [%@] dequeueViewWithItem:%@", self.class, item);
-        return;
+    if(item.view == nil) {
+        NSString* identifier = item.identifier;
+        NSMutableArray* queue = _queueViews[identifier];
+        UIView< MobilyDataItemView >* view = [queue lastObject];
+        if(view == nil) {
+            view = [[_registersViews[identifier] alloc] initWithIdentifier:identifier];
+        } else {
+            [queue removeLastObject];
+        }
+        item.view = view;
     }
-#endif
-    NSString* identifier = item.identifier;
-    NSMutableArray* queue = _queueViews[identifier];
-    UIView< MobilyDataItemView >* view = [queue lastObject];
-    if(view == nil) {
-        view = [[_registersViews[identifier] alloc] initWithIdentifier:identifier];
-    } else {
-        [queue removeLastObject];
-    }
-    item.view = view;
 }
 
 - (void)enqueueViewWithItem:(id< MobilyDataItem >)item {
     UIView< MobilyDataItemView >* view = item.view;
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(view == nil) {
-        NSLog(@"ERROR: [%@] enqueueViewWithItem:%@", self.class, item);
-        return;
+    if(view != nil) {
+        NSString* identifier = item.identifier;
+        NSMutableArray* queue = _queueViews[identifier];
+        if(queue == nil) {
+            _queueViews[identifier] = [NSMutableArray arrayWithObject:view];
+        } else {
+            [queue addObject:view];
+        }
+        item.view = nil;
     }
-#endif
-    NSString* identifier = item.identifier;
-    NSMutableArray* queue = _queueViews[identifier];
-    if(queue == nil) {
-        _queueViews[identifier] = [NSMutableArray arrayWithObject:view];
-    } else {
-        [queue addObject:view];
-    }
-    item.view = nil;
 }
 
 - (id< MobilyDataItem >)itemForData:(id)data {
@@ -815,13 +810,28 @@
 }
 
 - (void)performBatchUpdate:(MobilyDataWidgetUpdateBlock)update complete:(MobilyDataWidgetCompleteBlock)complete {
-    [self performBatchDuration:0.33f update:update complete:complete];
+#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
+    if(_updating != NO) {
+        NSLog(@"ERROR: [%@:%@] performBatchUpdate:%@ complete:%@", self.class, NSStringFromSelector(_cmd), update, complete);
+        return;
+    }
+#endif
+    [self internalBatchUpdate:^{
+        if(update != nil) {
+            update();
+        }
+        [self internalBatchComplete:^() {
+            if(complete != nil) {
+                complete(YES);
+            }
+        }];
+    }];
 }
 
 - (void)performBatchDuration:(NSTimeInterval)duration update:(MobilyDataWidgetUpdateBlock)update complete:(MobilyDataWidgetCompleteBlock)complete {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_updating != NO) {
-        NSLog(@"ERROR: [%@] performBatchDuration:%0.2f update:%@ complete:%@", self.class, duration, update, complete);
+        NSLog(@"ERROR: [%@:%@] performBatchDuration:%0.2f update:%@ complete:%@", self.class, NSStringFromSelector(_cmd), duration, update, complete);
         return;
     }
 #endif
@@ -829,74 +839,36 @@
                           delay:0.0f
                         options:0
                      animations:^{
-                         self.updating = YES;
-                         [_container didBeginUpdate];
-                         if(update != nil) {
-                             update();
-                         }
-                         [self validateLayoutIfNeed];
-                         [self layoutForVisible];
-                         for(id< MobilyDataItem > item in _reloadedBeforeItems) {
-                             UIView< MobilyDataItemView >* view = item.view;
-                             if(view != nil) {
-                                 [view animateAction:MobilyDataItemViewActionReplaceOut];
-                             }
-                         }
-                         for(id< MobilyDataItem > item in _reloadedAfterItems) {
-                             UIView< MobilyDataItemView >* view = item.view;
-                             if(view != nil) {
-                                 [view animateAction:MobilyDataItemViewActionReplaceIn];
-                             }
-                         }
-                         for(id< MobilyDataItem > item in _insertedItems) {
-                             UIView< MobilyDataItemView >* view = item.view;
-                             if(view != nil) {
-                                 [view animateAction:MobilyDataItemViewActionInsert];
-                             }
-                         }
-                         for(id< MobilyDataItem > item in _deletedItems) {
-                             UIView< MobilyDataItemView >* view = item.view;
-                             if(view != nil) {
-                                 [view animateAction:MobilyDataItemViewActionDelete];
-                             }
-                         }
+                         [self internalBatchUpdate:update];
                      }
                      completion:^(BOOL finished) {
-                         if(_reloadedBeforeItems.count > 0) {
-                             for(id< MobilyDataItem > item in _reloadedBeforeItems) {
-                                 [item disappear];
+                         [self internalBatchComplete:^() {
+                             if(complete != nil) {
+                                 complete(finished);
                              }
-                             [_reloadedBeforeItems removeAllObjects];
-                         }
-                         if(_reloadedAfterItems.count > 0) {
-                             [_reloadedAfterItems removeAllObjects];
-                         }
-                         if(_insertedItems.count > 0) {
-                             [_insertedItems removeAllObjects];
-                         }
-                         if(_deletedItems.count > 0) {
-                             for(id< MobilyDataItem > item in _deletedItems) {
-                                 [item disappear];
-                             }
-                             [_deletedItems removeAllObjects];
-                         }
-                         [_container didEndUpdate];
-                         self.updating = NO;
-                         [self layoutForVisible];
-                         
-                         if(complete != nil) {
-                             complete(finished);
-                         }
+                         }];
                      }];
 }
 
 
 - (void)didInsertItems:(NSArray*)items {
+#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
+    if(_updating != NO) {
+        NSLog(@"ERROR: [%@:%@] didInsertItems:%@", self.class, NSStringFromSelector(_cmd), items);
+        return;
+    }
+#endif
     [_insertedItems addObjectsFromArray:items];
     [self setNeedValidateLayout];
 }
 
 - (void)didDeleteItems:(NSArray*)items {
+#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
+    if(_updating != NO) {
+        NSLog(@"ERROR: [%@:%@] didDeleteItems:%@", self.class, NSStringFromSelector(_cmd), items);
+        return;
+    }
+#endif
     [_unsafeVisibleItems removeObjectsInArray:items];
     [_unsafeSelectedItems removeObjectsInArray:items];
     [_unsafeHighlightedItems removeObjectsInArray:items];
@@ -906,12 +878,18 @@
 }
 
 - (void)didReplaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items {
+#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
+    if(_updating != NO) {
+        NSLog(@"ERROR: [%@:%@] didReplaceOriginItems:%@ withItems:%@", self.class, NSStringFromSelector(_cmd), originItems, items);
+        return;
+    }
+#endif
     [_unsafeVisibleItems removeObjectsInArray:originItems];
     [_unsafeSelectedItems removeObjectsInArray:originItems];
     [_unsafeHighlightedItems removeObjectsInArray:originItems];
     [_unsafeEditingItems removeObjectsInArray:originItems];
-    [_reloadedAfterItems addObjectsFromArray:originItems];
-    [_reloadedBeforeItems addObjectsFromArray:items];
+    [_reloadedBeforeItems addObjectsFromArray:originItems];
+    [_reloadedAfterItems addObjectsFromArray:items];
     [self setNeedValidateLayout];
 }
 
@@ -1322,6 +1300,70 @@
             }
         }
         self.pullDragging = NO;
+    }
+}
+
+#pragma mark Private
+
+- (void)internalBatchUpdate:(MobilyDataWidgetUpdateBlock)update {
+    self.updating = YES;
+    [_container didBeginUpdate];
+    if(update != nil) {
+        update();
+    }
+    [self validateLayoutIfNeed];
+    [self layoutForVisible];
+    for(id< MobilyDataItem > item in _reloadedBeforeItems) {
+        UIView< MobilyDataItemView >* view = item.view;
+        if(view != nil) {
+            [view animateAction:MobilyDataItemViewActionReplaceOut];
+        }
+    }
+    for(id< MobilyDataItem > item in _reloadedAfterItems) {
+        UIView< MobilyDataItemView >* view = item.view;
+        if(view != nil) {
+            [view animateAction:MobilyDataItemViewActionReplaceIn];
+        }
+    }
+    for(id< MobilyDataItem > item in _insertedItems) {
+        UIView< MobilyDataItemView >* view = item.view;
+        if(view != nil) {
+            [view animateAction:MobilyDataItemViewActionInsert];
+        }
+    }
+    for(id< MobilyDataItem > item in _deletedItems) {
+        UIView< MobilyDataItemView >* view = item.view;
+        if(view != nil) {
+            [view animateAction:MobilyDataItemViewActionDelete];
+        }
+    }
+}
+
+- (void)internalBatchComplete:(MobilyDataWidgetUpdateBlock)complete {
+    if(_reloadedBeforeItems.count > 0) {
+        for(id< MobilyDataItem > item in _reloadedBeforeItems) {
+            [item disappear];
+        }
+        [_reloadedBeforeItems removeAllObjects];
+    }
+    if(_reloadedAfterItems.count > 0) {
+        [_reloadedAfterItems removeAllObjects];
+    }
+    if(_insertedItems.count > 0) {
+        [_insertedItems removeAllObjects];
+    }
+    if(_deletedItems.count > 0) {
+        for(id< MobilyDataItem > item in _deletedItems) {
+            [item disappear];
+        }
+        [_deletedItems removeAllObjects];
+    }
+    [_container didEndUpdate];
+    self.updating = NO;
+    [self layoutForVisible];
+    
+    if(complete != nil) {
+        complete();
     }
 }
 

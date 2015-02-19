@@ -693,7 +693,7 @@
     }
     @catch(NSException* exception) {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-        NSLog(@"MobilyModelCollection::saveItems: Exception = %@", exception);
+        NSLog(@"ERROR: [%@:%@]: Exception = %@", self.class, NSStringFromSelector(_cmd), exception);
 #endif
     }
     return NO;
@@ -736,7 +736,7 @@
     }
     @catch(NSException* exception) {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-        NSLog(@"MobilyModelCollection::loadItems: Exception = %@", exception);
+        NSLog(@"ERROR: [%@:%@]: Exception = %@", self.class, NSStringFromSelector(_cmd), exception);
 #endif
         [_unsafeModels removeAllObjects];
     }
