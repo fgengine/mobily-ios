@@ -133,6 +133,8 @@
 - (NSTextAlignment)convertToTextAlignment;
 - (NSLineBreakMode)convertToLineBreakMode;
 
++ (NSString*)rightWordFormByCount:(NSInteger)count andForms:(NSArray*)forms;
+
 @end
 
 /*--------------------------------------------------*/

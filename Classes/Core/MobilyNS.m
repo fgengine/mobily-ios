@@ -542,6 +542,16 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
     return NSLineBreakByWordWrapping;
 }
 
++ (NSString*)rightWordFormByCount:(NSInteger)count andForms:(NSArray*)forms {
+    NSInteger count100 = (ABS(count) % 100);
+    NSInteger count10 = count100 % 10;
+    
+    if(count100 > 10 && count100 < 20) return forms[2];
+    if(count10 > 1 && count10 < 5) return forms[1];
+    if(count10 == 1) return forms[0];
+    return forms[2];
+}
+
 @end
 
 /*--------------------------------------------------*/
