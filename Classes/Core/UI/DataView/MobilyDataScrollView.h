@@ -56,6 +56,11 @@ typedef NS_OPTIONS(NSUInteger, MobilyDataScrollViewPosition) {
 
 @interface MobilyDataScrollView : UIScrollView< MobilyDataWidget, MobilyBuilderObject >
 
+@property(nonatomic, readwrite, assign) BOOL bouncesTop;
+@property(nonatomic, readwrite, assign) BOOL bouncesLeft;
+@property(nonatomic, readwrite, assign) BOOL bouncesRight;
+@property(nonatomic, readwrite, assign) BOOL bouncesBottom;
+
 @property(nonatomic, readwrite, strong) IBOutlet UIView< MobilyDataScrollRefreshView >* pullToRefreshView;
 @property(nonatomic, readwrite, assign) CGFloat pullToRefreshHeight;
 

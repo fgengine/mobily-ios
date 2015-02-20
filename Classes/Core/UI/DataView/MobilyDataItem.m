@@ -338,6 +338,8 @@
         if(CGRectIntersectsRect(bounds, CGRectUnion(_originFrame, self.frame)) == YES) {
             [self appear];
         }
+    } else {
+        [_view validateLayoutForVisibleBounds:bounds];
     }
 }
 
@@ -345,6 +347,8 @@
     if(_view != nil) {
         if(CGRectIntersectsRect(bounds, self.frame) == NO) {
             [self disappear];
+        } else {
+            [_view invalidateLayoutForVisibleBounds:bounds];
         }
     }
 }

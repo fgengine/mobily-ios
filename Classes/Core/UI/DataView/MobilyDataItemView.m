@@ -93,6 +93,7 @@
 }
 
 - (void)setup {
+    self.clipsToBounds = YES;
     self.pressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handlerPressGestureRecognizer:)];
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handlerTapGestureRecognizer:)];
 }
@@ -337,6 +338,12 @@
             break;
         }
     }
+}
+
+- (void)validateLayoutForVisibleBounds:(CGRect)bounds {
+}
+
+- (void)invalidateLayoutForVisibleBounds:(CGRect)bounds {
 }
 
 #pragma mark Private

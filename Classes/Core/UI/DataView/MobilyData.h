@@ -289,6 +289,9 @@ typedef NS_ENUM(NSUInteger, MobilyDataItemViewAction) {
 
 - (void)animateAction:(MobilyDataItemViewAction)action;
 
+- (void)validateLayoutForVisibleBounds:(CGRect)bounds;
+- (void)invalidateLayoutForVisibleBounds:(CGRect)bounds;
+
 @end
 
 /*--------------------------------------------------*/
