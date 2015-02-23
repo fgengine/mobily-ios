@@ -40,6 +40,8 @@
 
 @interface MobilyController : UIViewController< MobilyBuilderObject >
 
+@property(nonatomic, readonly, weak) id app;
+
 @property(nonatomic, readonly, assign, getter=isAppeared) BOOL appeared;
 @property(nonatomic, readwrite, assign) UIStatusBarStyle statusBarStyle;
 @property(nonatomic, readwrite, assign) UIStatusBarAnimation statusBarAnimation;

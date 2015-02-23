@@ -6,7 +6,7 @@
     
     <!-- Controllers -->
     
-    <Preset name="controller" orientation="portrait-down"/>
+    <Preset name="controller" orientation="all"/>
     <Preset name="controller-without-navbar" preset="controller" navigationBarHidden="true"/>
     
     <!-- Navigations -->

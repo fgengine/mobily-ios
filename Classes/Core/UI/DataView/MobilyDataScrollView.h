@@ -81,8 +81,8 @@ typedef NS_OPTIONS(NSUInteger, MobilyDataScrollViewPosition) {
 
 /*--------------------------------------------------*/
 
-extern NSString* MobilyDataScrollViewTriggeredPullToRefresh;
-extern NSString* MobilyDataScrollViewTriggeredPullToLoad;
+extern NSString* MobilyDataScrollViewPullToRefreshTriggered;
+extern NSString* MobilyDataScrollViewPullToLoadTriggered;
 
 /*--------------------------------------------------*/
 

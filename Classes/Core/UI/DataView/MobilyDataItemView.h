@@ -95,6 +95,6 @@ typedef NS_ENUM(NSUInteger, MobilyDataItemSwipeViewStyle) {
 
 /*--------------------------------------------------*/
 
-extern NSString* MobilyDataItemViewPressedRow;
+extern NSString* MobilyDataItemViewPressed;
 
 /*--------------------------------------------------*/

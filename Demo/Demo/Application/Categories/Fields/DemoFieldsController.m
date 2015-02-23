@@ -49,10 +49,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self.navigationItem addLeftBarFixedSpace:-16.0f animated:NO];
+    [self.navigationItem addLeftBarButtonNormalImage:[UIImage imageNamed:@"menu-back.png"] target:self action:@selector(pressedBack) animated:NO];
+    
     _dateField.datePickerMode = UIDatePickerModeDate;
     _dateField.dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"d MMM yyyy"];
     _timeField.datePickerMode = UIDatePickerModeTime;
     _timeField.dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"HH:mm:ss"];
+}
+
+#pragma mark Action
+
+- (IBAction)pressedBack {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

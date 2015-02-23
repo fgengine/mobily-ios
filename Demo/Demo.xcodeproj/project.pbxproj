@@ -41,6 +41,9 @@
 		4098291A1A712B9200D83152 /* Demo500pxController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 409829171A712B9200D83152 /* Demo500pxController.xib */; };
 		40BB5C3F1A8D4BB100060482 /* DemoDataScrollViewItemSwipeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40BB5C3E1A8D4BB100060482 /* DemoDataScrollViewItemSwipeView.xib */; };
 		40C01D661A893CBC00FD41B2 /* Mobily.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 40C01D651A893CBC00FD41B2 /* Mobily.podspec */; };
+		40FDAE361A9B290100A17A98 /* menu-back.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FDAE331A9B290100A17A98 /* menu-back.png */; };
+		40FDAE371A9B290100A17A98 /* menu-back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FDAE341A9B290100A17A98 /* menu-back@2x.png */; };
+		40FDAE381A9B290100A17A98 /* menu-back@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FDAE351A9B290100A17A98 /* menu-back@3x.png */; };
 		C13E78B87D644CF2A6696DA8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F16AA68F9FE04603B1D99102 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -92,6 +95,9 @@
 		409829171A712B9200D83152 /* Demo500pxController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Demo500pxController.xib; sourceTree = "<group>"; };
 		40BB5C3E1A8D4BB100060482 /* DemoDataScrollViewItemSwipeView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DemoDataScrollViewItemSwipeView.xib; sourceTree = "<group>"; };
 		40C01D651A893CBC00FD41B2 /* Mobily.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Mobily.podspec; path = ../Mobily.podspec; sourceTree = "<group>"; };
+		40FDAE331A9B290100A17A98 /* menu-back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-back.png"; sourceTree = "<group>"; };
+		40FDAE341A9B290100A17A98 /* menu-back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-back@2x.png"; sourceTree = "<group>"; };
+		40FDAE351A9B290100A17A98 /* menu-back@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-back@3x.png"; sourceTree = "<group>"; };
 		5A2438BFA45DA754D1C37067 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		F16AA68F9FE04603B1D99102 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -157,6 +163,7 @@
 		407F25B11A65864C00B0A79C /* Media */ = {
 			isa = PBXGroup;
 			children = (
+				40FDAE321A9B290100A17A98 /* Icons */,
 				407F25B21A65864C00B0A79C /* Audio */,
 			);
 			path = Media;
@@ -294,6 +301,16 @@
 			path = 500px;
 			sourceTree = "<group>";
 		};
+		40FDAE321A9B290100A17A98 /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				40FDAE331A9B290100A17A98 /* menu-back.png */,
+				40FDAE341A9B290100A17A98 /* menu-back@2x.png */,
+				40FDAE351A9B290100A17A98 /* menu-back@3x.png */,
+			);
+			path = Icons;
+			sourceTree = "<group>";
+		};
 		4F1F86033CDFF14E4568271C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -364,6 +381,7 @@
 			files = (
 				4098291A1A712B9200D83152 /* Demo500pxController.xib in Resources */,
 				408718EB1A5C443900833F0A /* DemoCategoriesController.xib in Resources */,
+				40FDAE371A9B290100A17A98 /* menu-back@2x.png in Resources */,
 				408718FF1A5D491600833F0A /* DemoFieldsController.xib in Resources */,
 				407F25B41A65864C00B0A79C /* TestMusic.m4a in Resources */,
 				407F25BA1A65CB4800B0A79C /* DemoAudioPlayerController.xib in Resources */,
@@ -379,8 +397,10 @@
 				409829121A712B0400D83152 /* DemoTablesController.xib in Resources */,
 				4091AD1A1A8B650400EBA11C /* DemoDataScrollViewItemView.xib in Resources */,
 				4091AD181A8B63C200EBA11C /* DemoDataScrollViewController.xib in Resources */,
+				40FDAE361A9B290100A17A98 /* menu-back.png in Resources */,
 				2426F3A31A94702C004F11C7 /* Classes in Resources */,
 				408718F91A5D315D00833F0A /* DemoButtonsController.xib in Resources */,
+				40FDAE381A9B290100A17A98 /* menu-back@3x.png in Resources */,
 				409829101A712B0400D83152 /* DemoTablesCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

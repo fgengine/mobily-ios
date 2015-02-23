@@ -1041,14 +1041,17 @@
         if(animated == YES) {
             [UIView animateWithDuration:0.3f
                              animations:^{
-                                 self.scrollIndicatorInsets = contentInset;
-                                 self.contentInset = contentInset;
+                                 self.scrollIndicatorInsets = self.contentInset = contentInset;
                                  [self.superview layoutIfNeeded];
                              }
-                             completion:complete];
+                             completion:^(BOOL finished) {
+                                 self.contentInset = self.scrollIndicatorInsets = contentInset;
+                                 if(complete != nil) {
+                                     complete(finished);
+                                 }
+                             }];
         } else {
-            self.scrollIndicatorInsets = contentInset;
-            self.contentInset = contentInset;
+            self.scrollIndicatorInsets = self.contentInset = contentInset;
             if(complete != nil) {
                 complete(YES);
             }
@@ -1064,19 +1067,18 @@
         if(animated == YES) {
             [UIView animateWithDuration:0.3f
                              animations:^{
-                                 self.scrollIndicatorInsets = contentInset;
-                                 self.contentInset = contentInset;
+                                 self.contentInset = self.scrollIndicatorInsets = contentInset;
                                  [self.superview layoutIfNeeded];
                              }
                              completion:^(BOOL finished) {
+                                 self.contentInset = self.scrollIndicatorInsets = contentInset;
                                  _pullToRefreshView.state = MobilyDataScrollRefreshViewStateIdle;
                                  if(complete != nil) {
                                      complete(finished);
                                  }
                              }];
         } else {
-            self.scrollIndicatorInsets = contentInset;
-            self.contentInset = contentInset;
+            self.scrollIndicatorInsets = self.contentInset = contentInset;
             _pullToRefreshView.state = MobilyDataScrollRefreshViewStateIdle;
             if(complete != nil) {
                 complete(YES);
@@ -1094,14 +1096,17 @@
         if(animated == YES) {
             [UIView animateWithDuration:0.3f
                              animations:^{
-                                 self.scrollIndicatorInsets = contentInset;
-                                 self.contentInset = contentInset;
+                                 self.scrollIndicatorInsets = self.contentInset = contentInset;
                                  [self.superview layoutIfNeeded];
                              }
-                             completion:complete];
+                             completion:^(BOOL finished) {
+                                 self.contentInset = self.scrollIndicatorInsets = contentInset;
+                                 if(complete != nil) {
+                                     complete(finished);
+                                 }
+                             }];
         } else {
-            self.scrollIndicatorInsets = contentInset;
-            self.contentInset = contentInset;
+            self.scrollIndicatorInsets = self.contentInset = contentInset;
             if(complete != nil) {
                 complete(YES);
             }
@@ -1117,19 +1122,18 @@
         if(animated == YES) {
             [UIView animateWithDuration:0.3f
                              animations:^{
-                                 self.scrollIndicatorInsets = contentInset;
-                                 self.contentInset = contentInset;
+                                 self.scrollIndicatorInsets = self.contentInset = contentInset;
                                  [self.superview layoutIfNeeded];
                              }
                              completion:^(BOOL finished) {
+                                 self.contentInset = self.scrollIndicatorInsets = contentInset;
                                  _pullToLoadView.state = MobilyDataScrollRefreshViewStateIdle;
                                  if(complete != nil) {
                                      complete(finished);
                                  }
                              }];
         } else {
-            self.scrollIndicatorInsets = contentInset;
-            self.contentInset = contentInset;
+            self.scrollIndicatorInsets = self.contentInset = contentInset;
             _pullToLoadView.state = MobilyDataScrollRefreshViewStateIdle;
             if(complete != nil) {
                 complete(YES);
@@ -1231,8 +1235,7 @@
                         break;
                 }
             }
-            if(_canPullToLoad == YES) {
-                CGSize contentSize = self.contentSize;
+            if((_canPullToLoad == YES) && (contentSize.height > frameSize.height)) {
                 CGFloat contentBottom = contentSize.height - bounds.size.height;
                 CGFloat pullToLoadSize = (_pullToLoadHeight < 0.0f) ? _pullToLoadView.frameHeight : _pullToLoadHeight;
                 if(contentOffset.y >= contentBottom) {
@@ -1294,9 +1297,9 @@
         if(_canPullToRefresh == YES) {
             switch(_pullToRefreshView.state) {
                 case MobilyDataScrollRefreshViewStateRelease: {
-                    if([self containsEventForKey:MobilyDataScrollViewTriggeredPullToRefresh] == YES) {
+                    if([self containsEventForKey:MobilyDataScrollViewPullToRefreshTriggered] == YES) {
                         [self showPullToRefreshAnimated:YES complete:^(BOOL finished) {
-                            [self performEventForKey:MobilyDataScrollViewTriggeredPullToRefresh byObject:_pullToRefreshView];
+                            [self performEventForKey:MobilyDataScrollViewPullToRefreshTriggered byObject:_pullToRefreshView];
                         }];
                     } else {
                         [self hidePullToRefreshAnimated:YES complete:nil];
@@ -1312,9 +1315,9 @@
         if(_canPullToLoad == YES) {
             switch(_pullToLoadView.state) {
                 case MobilyDataScrollRefreshViewStateRelease: {
-                    if([self containsEventForKey:MobilyDataScrollViewTriggeredPullToLoad] == YES) {
+                    if([self containsEventForKey:MobilyDataScrollViewPullToLoadTriggered] == YES) {
                         [self showPullToLoadAnimated:YES complete:^(BOOL finished) {
-                            [self performEventForKey:MobilyDataScrollViewTriggeredPullToLoad byObject:_pullToLoadView];
+                            [self performEventForKey:MobilyDataScrollViewPullToLoadTriggered byObject:_pullToLoadView];
                         }];
                     } else {
                         [self hidePullToLoadAnimated:YES complete:nil];
@@ -1457,7 +1460,7 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-NSString* MobilyDataScrollViewTriggeredPullToRefresh = @"MobilyDataScrollViewTriggeredPullToRefresh";
-NSString* MobilyDataScrollViewTriggeredPullToLoad = @"MobilyDataScrollViewTriggeredPullToLoad";
+NSString* MobilyDataScrollViewPullToRefreshTriggered = @"MobilyDataScrollViewPullToRefreshTriggered";
+NSString* MobilyDataScrollViewPullToLoadTriggered = @"MobilyDataScrollViewPullToLoadTriggered";
 
 /*--------------------------------------------------*/

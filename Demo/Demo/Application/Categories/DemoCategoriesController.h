@@ -33,41 +33,24 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-@interface DemoCategoriesController : MobilyViewController < UITableViewDataSource, UITableViewDelegate >
+@class DemoApplication;
 
-@property(nonatomic, readwrite, strong) NSArray* dataSource;
-@property(nonatomic, readwrite, weak) IBOutlet MobilyTableView* tableView;
+/*--------------------------------------------------*/
+
+@interface DemoCategoriesController : MobilyViewController
+
+@property(nonatomic, readonly, weak) DemoApplication* app;
+
+@property(nonatomic, readwrite, weak) IBOutlet MobilyDataScrollView* dataScrollView;
+@property(nonatomic, readwrite, strong) MobilyDataVerticalListContainer* dataListContainer;
 
 @end
 
 /*--------------------------------------------------*/
 
-@class DemoCategoriesModel;
+@interface DemoCategoriesCell : MobilyDataItemView
 
-@interface DemoCategoriesCell : MobilyTableCell
-
-@property(nonatomic, readwrite, weak) DemoCategoriesModel* model;
 @property(nonatomic, readwrite, weak) IBOutlet UILabel* textView;
-
-@end
-
-/*--------------------------------------------------*/
-
-typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
-    DemoCategoriesTypeButtons,
-    DemoCategoriesTypeFields,
-    DemoCategoriesTypeTables,
-    DemoCategoriesTypeDataScrollView,
-    DemoCategoriesTypeAudioRecorder,
-    DemoCategoriesTypeAudioPlayer
-};
-
-@interface DemoCategoriesModel : MobilyModel
-
-@property(nonatomic, readwrite, assign) DemoCategoriesType type;
-@property(nonatomic, readwrite, strong) NSString* title;
-
-- (instancetype)initWithType:(DemoCategoriesType)type title:(NSString*)title NS_DESIGNATED_INITIALIZER;
 
 @end
 

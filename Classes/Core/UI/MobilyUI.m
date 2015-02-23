@@ -1656,7 +1656,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 #pragma mark Property
 
 - (void)setNormalTitle:(NSString*)normalTitle {
-    [self setTitle:normalTitle forState:NO];
+    [self setTitle:normalTitle forState:UIControlStateNormal];
 }
 
 - (NSString*)normalTitle {
@@ -1664,7 +1664,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setNormalTitleColor:(UIColor*)normalTitleColor {
-    [self setTitleColor:normalTitleColor forState:NO];
+    [self setTitleColor:normalTitleColor forState:UIControlStateNormal];
 }
 
 - (UIColor*)normalTitleColor {
@@ -1672,7 +1672,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setNormalTitleShadowColor:(UIColor*)normalTitleShadowColor {
-    [self setTitleShadowColor:normalTitleShadowColor forState:NO];
+    [self setTitleShadowColor:normalTitleShadowColor forState:UIControlStateNormal];
 }
 
 - (UIColor*)normalTitleShadowColor {
@@ -1680,7 +1680,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setNormalImage:(UIImage*)normalImage {
-    [self setImage:normalImage forState:NO];
+    [self setImage:normalImage forState:UIControlStateNormal];
 }
 
 - (UIImage*)normalImage {
@@ -1688,7 +1688,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setNormalBackgroundImage:(UIImage*)normalBackgroundImage {
-    [self setBackgroundImage:normalBackgroundImage forState:NO];
+    [self setBackgroundImage:normalBackgroundImage forState:UIControlStateNormal];
 }
 
 - (UIImage*)normalBackgroundImage {
@@ -1696,7 +1696,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setHighlightedTitle:(NSString*)highlightedTitle {
-    [self setTitle:highlightedTitle forState:NO];
+    [self setTitle:highlightedTitle forState:UIControlStateHighlighted];
 }
 
 - (NSString*)highlightedTitle {
@@ -1704,7 +1704,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setHighlightedTitleColor:(UIColor*)highlightedTitleColor {
-    [self setTitleColor:highlightedTitleColor forState:NO];
+    [self setTitleColor:highlightedTitleColor forState:UIControlStateHighlighted];
 }
 
 - (UIColor*)highlightedTitleColor {
@@ -1712,7 +1712,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setHighlightedTitleShadowColor:(UIColor*)highlightedTitleShadowColor {
-    [self setTitleShadowColor:highlightedTitleShadowColor forState:NO];
+    [self setTitleShadowColor:highlightedTitleShadowColor forState:UIControlStateHighlighted];
 }
 
 - (UIColor*)highlightedTitleShadowColor {
@@ -1720,7 +1720,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setHighlightedImage:(UIImage*)highlightedImage {
-    [self setImage:highlightedImage forState:NO];
+    [self setImage:highlightedImage forState:UIControlStateHighlighted];
 }
 
 - (UIImage*)highlightedImage {
@@ -1728,7 +1728,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setHighlightedBackgroundImage:(UIImage*)highlightedBackgroundImage {
-    [self setBackgroundImage:highlightedBackgroundImage forState:NO];
+    [self setBackgroundImage:highlightedBackgroundImage forState:UIControlStateHighlighted];
 }
 
 - (UIImage*)highlightedBackgroundImage {
@@ -1736,7 +1736,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setDisabledTitle:(NSString*)disabledTitle {
-    [self setTitle:disabledTitle forState:NO];
+    [self setTitle:disabledTitle forState:UIControlStateDisabled];
 }
 
 - (NSString*)disabledTitle {
@@ -1744,7 +1744,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setDisabledTitleColor:(UIColor*)disabledTitleColor {
-    [self setTitleColor:disabledTitleColor forState:NO];
+    [self setTitleColor:disabledTitleColor forState:UIControlStateDisabled];
 }
 
 - (UIColor*)disabledTitleColor {
@@ -1752,7 +1752,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setDisabledTitleShadowColor:(UIColor*)disabledTitleShadowColor {
-    [self setTitleShadowColor:disabledTitleShadowColor forState:NO];
+    [self setTitleShadowColor:disabledTitleShadowColor forState:UIControlStateDisabled];
 }
 
 - (UIColor*)disabledTitleShadowColor {
@@ -1760,7 +1760,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setDisabledImage:(UIImage*)disabledImage {
-    [self setImage:disabledImage forState:NO];
+    [self setImage:disabledImage forState:UIControlStateDisabled];
 }
 
 - (UIImage*)disabledImage {
@@ -1768,7 +1768,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setDisabledBackgroundImage:(UIImage*)disabledBackgroundImage {
-    [self setBackgroundImage:disabledBackgroundImage forState:NO];
+    [self setBackgroundImage:disabledBackgroundImage forState:UIControlStateDisabled];
 }
 
 - (UIImage*)disabledBackgroundImage {
@@ -1776,7 +1776,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setSelectedTitle:(NSString*)selectedTitle {
-    [self setTitle:selectedTitle forState:NO];
+    [self setTitle:selectedTitle forState:UIControlStateSelected];
 }
 
 - (NSString*)selectedTitle {
@@ -1784,7 +1784,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setSelectedTitleColor:(UIColor*)selectedTitleColor {
-    [self setTitleColor:selectedTitleColor forState:NO];
+    [self setTitleColor:selectedTitleColor forState:UIControlStateSelected];
 }
 
 - (UIColor*)selectedTitleColor {
@@ -1792,7 +1792,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setSelectedTitleShadowColor:(UIColor*)selectedTitleShadowColor {
-    [self setTitleShadowColor:selectedTitleShadowColor forState:NO];
+    [self setTitleShadowColor:selectedTitleShadowColor forState:UIControlStateSelected];
 }
 
 - (UIColor*)selectedTitleShadowColor {
@@ -1800,7 +1800,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setSelectedImage:(UIImage*)selectedImage {
-    [self setImage:selectedImage forState:NO];
+    [self setImage:selectedImage forState:UIControlStateSelected];
 }
 
 - (UIImage*)selectedImage {
@@ -1808,7 +1808,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 }
 
 - (void)setSelectedBackgroundImage:(UIImage*)selectedBackgroundImage {
-    [self setBackgroundImage:selectedBackgroundImage forState:NO];
+    [self setBackgroundImage:selectedBackgroundImage forState:UIControlStateSelected];
 }
 
 - (UIImage*)selectedBackgroundImage {
@@ -1967,12 +1967,166 @@ MOBILY_DEFINE_VALIDATE_IMAGE(BackIndicatorTransitionMaskImage)
 
 #pragma mark Property
 
-- (void)setLeftBarView:(UIView*)view animated:(BOOL)animated {
-    [self setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:view] animated:animated];
+- (UIBarButtonItem*)addLeftBarFixedSpace:(CGFloat)fixedSpaceWidth animated:(BOOL)animated {
+    UIBarButtonItem* fixedSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    [fixedSpaceItem setWidth:fixedSpaceWidth];
+    [self addLeftBarButtonItem:fixedSpaceItem animated:animated];
+    return fixedSpaceItem;
 }
 
-- (void)setRightBarView:(UIView*)view animated:(BOOL)animated {
-    [self setRightBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:view] animated:animated];
+- (UIBarButtonItem*)addRightBarFixedSpace:(CGFloat)fixedSpaceWidth animated:(BOOL)animated {
+    UIBarButtonItem* fixedSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    [fixedSpaceItem setWidth:fixedSpaceWidth];
+    [self addRightBarButtonItem:fixedSpaceItem animated:animated];
+    return fixedSpaceItem;
+}
+
+- (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addLeftBarButtonNormalImage:normalImage highlightedImage:nil selectedImage:nil disabledImage:nil target:target action:action animated:animated];
+}
+
+- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addRightBarButtonNormalImage:normalImage highlightedImage:nil selectedImage:nil disabledImage:nil target:target action:action animated:animated];
+}
+
+- (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addLeftBarButtonNormalImage:normalImage highlightedImage:highlightedImage selectedImage:nil disabledImage:nil target:target action:action animated:animated];
+}
+
+- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addRightBarButtonNormalImage:normalImage highlightedImage:highlightedImage selectedImage:nil disabledImage:nil target:target action:action animated:animated];
+}
+
+- (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addLeftBarButtonNormalImage:normalImage highlightedImage:highlightedImage selectedImage:nil disabledImage:disabledImage target:target action:action animated:animated];
+}
+
+- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addRightBarButtonNormalImage:normalImage highlightedImage:highlightedImage selectedImage:nil disabledImage:disabledImage target:target action:action animated:animated];
+}
+
+- (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage selectedImage:(UIImage*)selectedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+    UIButton* button = [[UIButton alloc] initWithFrame:CGRectZero];
+    button.normalImage = normalImage;
+    button.highlightedImage = highlightedImage;
+    button.selectedImage = selectedImage;
+    button.disabledImage = disabledImage;
+    [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+    [button sizeToFit];
+    [self addLeftBarView:button animated:animated];
+    return button;
+}
+
+- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage selectedImage:(UIImage*)selectedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+    UIButton* button = [[UIButton alloc] initWithFrame:CGRectZero];
+    button.normalImage = normalImage;
+    button.highlightedImage = highlightedImage;
+    button.selectedImage = selectedImage;
+    button.disabledImage = disabledImage;
+    [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+    [button sizeToFit];
+    [self addRightBarView:button animated:animated];
+    return button;
+}
+
+- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil target:target action:action animated:animated];
+}
+
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil target:target action:action animated:animated];
+}
+
+- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:nil target:target action:action animated:animated];
+}
+
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:nil target:target action:action animated:animated];
+}
+
+- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:disabledTitle target:target action:action animated:animated];
+}
+
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:disabledTitle target:target action:action animated:animated];
+}
+
+- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle selectedTitle:(NSString*)selectedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    UIButton* button = [[UIButton alloc] initWithFrame:CGRectZero];
+    button.normalTitle = normalTitle;
+    button.highlightedTitle = highlightedTitle;
+    button.selectedTitle = selectedTitle;
+    button.disabledTitle = disabledTitle;
+    [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+    [button sizeToFit];
+    [self addLeftBarView:button animated:animated];
+    return button;
+}
+
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle selectedTitle:(NSString*)selectedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    UIButton* button = [[UIButton alloc] initWithFrame:CGRectZero];
+    button.normalTitle = normalTitle;
+    button.highlightedTitle = highlightedTitle;
+    button.selectedTitle = selectedTitle;
+    button.disabledTitle = disabledTitle;
+    [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+    [button sizeToFit];
+    [self addRightBarView:button animated:animated];
+    return button;
+}
+
+- (UIBarButtonItem*)addLeftBarView:(UIView*)view animated:(BOOL)animated {
+    UIBarButtonItem* barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:view];
+    [self addLeftBarButtonItem:barButtonItem animated:animated];
+    return barButtonItem;
+}
+
+- (UIBarButtonItem*)addRightBarView:(UIView*)view animated:(BOOL)animated {
+    UIBarButtonItem* barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:view];
+    [self addRightBarButtonItem:barButtonItem animated:animated];
+    return barButtonItem;
+}
+
+- (void)addLeftBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated {
+    [self setLeftBarButtonItems:[NSArray arrayWithArray:self.leftBarButtonItems andAddingObject:barButtonItem] animated:animated];
+}
+
+- (void)addRightBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated {
+    [self setRightBarButtonItems:[NSArray arrayWithArray:self.rightBarButtonItems andAddingObject:barButtonItem] animated:animated];
+}
+
+- (void)removeLeftBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated {
+    [self setLeftBarButtonItems:[NSArray arrayWithArray:self.leftBarButtonItems andRemovingObject:barButtonItem] animated:animated];
+}
+
+- (void)removeRightBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated {
+    [self setRightBarButtonItems:[NSArray arrayWithArray:self.rightBarButtonItems andRemovingObject:barButtonItem] animated:animated];
+}
+
+- (void)removeAllLeftBarButtonItemsAnimated:(BOOL)animated {
+    [self setLeftBarButtonItems:@[] animated:animated];
+}
+
+- (void)removeAllRightBarButtonItemsAnimated:(BOOL)animated {
+    [self setRightBarButtonItems:@[] animated:animated];
+}
+
+- (void)setLeftBarAutomaticAlignmentAnimated:(BOOL)animated {
+    __block CGFloat rightWidth = 0.0f;
+    [self.rightBarButtonItems each:^(UIBarButtonItem* barButtonItem) {
+        rightWidth += barButtonItem.width;
+    }];
+    [self setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:[[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, rightWidth, 0.0f)]] animated:animated];
+}
+
+- (void)setRightBarAutomaticAlignmentAnimated:(BOOL)animated {
+    __block CGFloat leftWidth = 0.0f;
+    [self.leftBarButtonItems each:^(UIBarButtonItem* barButtonItem) {
+        leftWidth += barButtonItem.width;
+    }];
+    [self setRightBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:[[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, leftWidth, 0.0f)]] animated:animated];
 }
 
 @end

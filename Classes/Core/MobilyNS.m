@@ -42,6 +42,16 @@
 
 /*--------------------------------------------------*/
 
+@implementation NSObject (MobilyNS)
+
++ (NSString*)className {
+    return NSStringFromClass(self.class);
+}
+
+@end
+
+/*--------------------------------------------------*/
+
 @implementation NSDate (MobilyNS)
 
 + (NSDate*)dateOffsetYears:(NSInteger)years months:(NSInteger)months days:(NSInteger)days toDate:(NSDate*)date {

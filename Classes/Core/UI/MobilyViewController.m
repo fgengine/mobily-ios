@@ -62,6 +62,11 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
     [super setup];
     
     self.automaticallyHideKeyboard = YES;
+    if([UIDevice isIPhone] == YES) {
+        self.orientation = UIInterfaceOrientationMaskAllButUpsideDown;
+    } else {
+        self.orientation = UIInterfaceOrientationMaskAll;
+    }
     self.needUpdate = YES;
 }
 

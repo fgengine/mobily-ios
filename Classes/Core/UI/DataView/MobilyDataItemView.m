@@ -362,7 +362,7 @@
     if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
         [_item setSelected:(_selected != YES) animated:YES];
     }
-    [_item performEventForKey:MobilyDataItemViewPressedRow bySender:self byObject:_item];
+    [_item performEventForKey:MobilyDataItemViewPressed bySender:self byObject:_item];
 }
 
 #pragma mark UIGestureRecognizerDelegate
@@ -387,6 +387,6 @@
 
 /*--------------------------------------------------*/
 
-NSString* MobilyDataItemViewPressedRow = @"MobilyDataItemViewPressedRow";
+NSString* MobilyDataItemViewPressed = @"MobilyDataItemViewPressed";
 
 /*--------------------------------------------------*/

@@ -60,8 +60,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self.navigationItem addLeftBarFixedSpace:-16.0f animated:NO];
+    [self.navigationItem addLeftBarButtonNormalImage:[UIImage imageNamed:@"menu-back.png"] target:self action:@selector(pressedBack) animated:NO];
+    
     [_tableView registerCellClass:DemoTablesCell.class];
 }
+
+#pragma mark Action
+
+- (IBAction)pressedBack {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark UITableViewDataSource / UITableViewDelegate
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
     return [_dataSource count];

@@ -46,8 +46,8 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
     self.dataRootListContainer = [MobilyDataVerticalListContainer new];
-    self.dataListContainer1 = [MobilyDataVerticalListContainer new];
-    self.dataListContainer2 = [MobilyDataVerticalListContainer new];
+    self.dataListContainer1 = [MobilyDataVerticalFlowContainer new];
+    self.dataListContainer2 = [MobilyDataVerticalFlowContainer new];
 }
 
 - (void)dealloc {
@@ -56,15 +56,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self.navigationItem addLeftBarFixedSpace:-16.0f animated:NO];
+    [self.navigationItem addLeftBarButtonNormalImage:[UIImage imageNamed:@"menu-back.png"] target:self action:@selector(pressedBack) animated:NO];
+    
     for(NSUInteger i = 0; i < 21; i++) {
-        MobilyDataItem* hItem = [MobilyDataItem dataItemWithIdentifier:@"Static" data:[NSString stringWithFormat:@"S1 #%d", (int)i]];
+        MobilyDataItem* hItem = [MobilyDataItem dataItemWithIdentifier:DemoDataScrollViewItemView.className data:[NSString stringWithFormat:@"S1 #%d", (int)i]];
         if((i % 4) == 0) {
             hItem.allowsSnapToEdge = YES;
             hItem.zOrder = 1.0f;
         }
         [_dataListContainer1 appendItem:hItem];
         
-        MobilyDataItem* svItem = [MobilyDataItem dataItemWithIdentifier:@"Swipe" data:[NSString stringWithFormat:@"S2 #%d", (int)i]];
+        MobilyDataItem* svItem = [MobilyDataItem dataItemWithIdentifier:DemoDataScrollViewItemSwipeView.className data:[NSString stringWithFormat:@"S2 #%d", (int)i]];
         if((i % 4) == 0) {
             svItem.allowsSnapToEdge = YES;
             svItem.zOrder = 1.0f;
@@ -74,8 +77,8 @@
     [_dataRootListContainer appendContainer:_dataListContainer1];
     [_dataRootListContainer appendContainer:_dataListContainer2];
     
-    [_dataScrollView registerIdentifier:@"Static" withViewClass:DemoDataScrollViewItemView.class];
-    [_dataScrollView registerIdentifier:@"Swipe" withViewClass:DemoDataScrollViewItemSwipeView.class];
+    [_dataScrollView registerIdentifier:DemoDataScrollViewItemView.className withViewClass:DemoDataScrollViewItemView.class];
+    [_dataScrollView registerIdentifier:DemoDataScrollViewItemSwipeView.className withViewClass:DemoDataScrollViewItemSwipeView.class];
 
     [_dataScrollView setPullToRefreshView:[MobilyDataScrollRefreshView new]];
     [_dataScrollView setPullToRefreshHeight:64.0f];
@@ -84,14 +87,20 @@
     [_dataScrollView registerEventWithBlock:^id(id sender, id object) {
         [_dataScrollView hidePullToRefreshAnimated:YES complete:nil];
         return nil;
-    } forKey:MobilyDataScrollViewTriggeredPullToRefresh];
+    } forKey:MobilyDataScrollViewPullToRefreshTriggered];
     
     [_dataScrollView registerEventWithBlock:^id(id sender, id object) {
         [_dataScrollView hidePullToLoadAnimated:YES complete:nil];
         return nil;
-    } forKey:MobilyDataScrollViewTriggeredPullToLoad];
+    } forKey:MobilyDataScrollViewPullToLoadTriggered];
 
     [_dataScrollView setContainer:_dataRootListContainer];
+}
+
+#pragma mark Action
+
+- (IBAction)pressedBack {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end
@@ -103,10 +112,7 @@
 @implementation DemoDataScrollViewItemView
 
 + (CGSize)sizeForItem:(id< MobilyDataItem >)item availableSize:(CGSize)size {
-    if(size.width < size.height) {
-        return CGSizeMake(size.width, 50.0f);
-    }
-    return CGSizeMake(50.0f, size.height);
+    return CGSizeMake(50.0f, 50.0f);
 }
 
 - (void)prepareForUse {
@@ -149,10 +155,7 @@
 @implementation DemoDataScrollViewItemSwipeView
 
 + (CGSize)sizeForItem:(id< MobilyDataItem >)item availableSize:(CGSize)size {
-    if(size.width < size.height) {
-        return CGSizeMake(size.width, 50.0f);
-    }
-    return CGSizeMake(50.0f, size.height);
+    return CGSizeMake(50.0f, 50.0f);
 }
 
 - (void)prepareForUse {

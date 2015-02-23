@@ -130,24 +130,17 @@
         }
         _view = view;
         if(_view != nil) {
-            _view.item = self;
-            [_widget insertSubview:_view atIndex:0];
-            if(_widget.isUpdating == YES) {
-                [UIView performWithoutAnimation:^{
-                    if(CGRectIsNull(_originFrame) == NO) {
-                        _view.frame = _originFrame;
-                    }
-                    _view.zPosition = _zOrder;
-                    _view.selected = _selected;
-                    _view.highlighted = _highlighted;
-                }];
-                _view.frame = self.frame;
-            } else {
-                _view.frame = self.frame;
+            [UIView performWithoutAnimation:^{
+                _view.item = self;
+                [_widget insertSubview:_view atIndex:0];
+                if(CGRectIsNull(_originFrame) == NO) {
+                    _view.frame = _originFrame;
+                }
                 _view.zPosition = _zOrder;
                 _view.selected = _selected;
                 _view.highlighted = _highlighted;
-            }
+            }];
+            _view.frame = self.frame;
         }
     }
 }

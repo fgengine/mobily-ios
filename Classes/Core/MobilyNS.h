@@ -37,6 +37,14 @@
 
 /*--------------------------------------------------*/
 
+@interface NSObject (MobilyNS)
+
++ (NSString*)className;
+
+@end
+
+/*--------------------------------------------------*/
+
 #define MOBILY_MINUTE                               60.0f
 #define MOBILY_HOUR                                 (60.0f * MOBILY_MINUTE)
 #define MOBILY_DAY                                  (24.0f * MOBILY_HOUR)

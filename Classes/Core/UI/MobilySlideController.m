@@ -72,14 +72,14 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 - (CGRect)rightViewFrameByPercent:(CGFloat)percent;
 - (CGRect)rightViewFrameFromBounds:(CGRect)bounds byPercent:(CGFloat)percent;
 
-- (void)appendBackgroundController;
-- (void)removeBackgroundController;
-- (void)appendLeftController;
-- (void)removeLeftController;
-- (void)appendCenterController;
-- (void)removeCenterController;
-- (void)appendRightController;
-- (void)removeRightController;
+- (void)appearBackgroundController;
+- (void)disappearBackgroundController;
+- (void)appearLeftController;
+- (void)disappearLeftController;
+- (void)appearCenterController;
+- (void)disappearCenterController;
+- (void)appearRightController;
+- (void)disappearRightController;
 
 - (void)tapGestureHandle:(UITapGestureRecognizer*)tapGesture;
 - (void)panGestureHandle:(UIPanGestureRecognizer*)panGesture;
@@ -108,6 +108,9 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
     self.swipeThreshold = 2.0f;
     self.swipeSpeed = 1050.0f;
     self.swipeVelocity = 570.0f;
+    
+    self.leftControllerWidth = 280.0f;
+    self.rightControllerWidth = 280.0f;
 }
 
 - (void)dealloc {
@@ -154,43 +157,107 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
     self.view.clipsToBounds = YES;
     
     self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureHandle:)];
-    if(_panGesture != nil) {
-        _panGesture.delegate = self;
-        [self.view addGestureRecognizer:_panGesture];
-    }
     self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureHandle:)];
-    if(_tapGesture != nil) {
-        _tapGesture.delegate = self;
-        [self.view addGestureRecognizer:_tapGesture];
-    }
+    self.leftView = [[UIView alloc] initWithFrame:[self leftViewFrameByPercent:0.0f]];
     self.centerView = [[UIView alloc] initWithFrame:[self centerViewFrameByPercent:0.0f]];
-    if(_centerView != nil) {
-        _centerView.translatesAutoresizingMaskIntoConstraints = NO;
-        _centerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        _centerView.layer.masksToBounds = YES;
-        
-        [self.view addSubview:_centerView];
-    }
+    self.rightView = [[UIView alloc] initWithFrame:[self rightViewFrameByPercent:0.0f]];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     if(_backgroundController != nil) {
-        [self appendBackgroundController];
+        [self appearBackgroundController];
     }
     if(_leftController != nil) {
-        [self appendLeftController];
+        [self appearLeftController];
     }
     if(_centerController != nil) {
-        [self appendCenterController];
+        [self appearCenterController];
     }
     if(_rightController != nil) {
-        [self appendRightController];
+        [self appearRightController];
     }
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    CGRect bounds = self.view.bounds;
+    _leftView.frame = [self leftViewFrameFromBounds:bounds byPercent:_swipeProgress];
+    _centerView.frame = [self centerViewFrameFromBounds:bounds byPercent:_swipeProgress];
+    _rightView.frame = [self rightViewFrameFromBounds:bounds byPercent:_swipeProgress];
+}
+
 #pragma mark Property
+
+- (void)setTapGesture:(UITapGestureRecognizer*)tapGesture {
+    if(_tapGesture != tapGesture) {
+        if(_tapGesture != nil) {
+            [self.view removeGestureRecognizer:_tapGesture];
+        }
+        _tapGesture = tapGesture;
+        if(_tapGesture != nil) {
+            _tapGesture.delegate = self;
+            [self.view addGestureRecognizer:_tapGesture];
+        }
+    }
+}
+
+- (void)setPanGesture:(UIPanGestureRecognizer*)panGesture {
+    if(_panGesture != panGesture) {
+        if(_panGesture != nil) {
+            [self.view removeGestureRecognizer:_panGesture];
+        }
+        _panGesture = panGesture;
+        if(_panGesture != nil) {
+            _panGesture.delegate = self;
+            [self.view addGestureRecognizer:_panGesture];
+        }
+    }
+}
+
+- (void)setLeftView:(UIView*)leftView {
+    if(_leftView != leftView) {
+        if(_leftView != nil) {
+            [_leftView removeFromSuperview];
+        }
+        _leftView = leftView;
+        if(_leftView != nil) {
+            _leftView.translatesAutoresizingMaskIntoConstraints = NO;
+            _leftView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+            [self.view addSubview:_leftView];
+        }
+    }
+}
+
+- (void)setCenterView:(UIView*)centerView {
+    if(_centerView != centerView) {
+        if(_centerView != nil) {
+            [_centerView removeFromSuperview];
+        }
+        _centerView = centerView;
+        if(_centerView != nil) {
+            _centerView.translatesAutoresizingMaskIntoConstraints = NO;
+            _centerView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+            [self.view addSubview:_centerView];
+        }
+    }
+}
+
+- (void)setRightView:(UIView*)rightView {
+    if(_rightView != rightView) {
+        if(_rightView != nil) {
+            [_rightView removeFromSuperview];
+        }
+        _rightView = rightView;
+        if(_rightView != nil) {
+            _rightView.translatesAutoresizingMaskIntoConstraints = NO;
+            _rightView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+            [self.view addSubview:_rightView];
+        }
+    }
+}
 
 - (void)setBackgroundController:(UIViewController*)backgroundController {
     [self setBackgroundController:backgroundController animated:NO completed:nil];
@@ -218,11 +285,11 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         if(animated == YES) {
         } else {
             if(_backgroundController != nil) {
-                [self removeBackgroundController];
+                [self disappearBackgroundController];
             }
             _backgroundController = backgroundController;
             if((_backgroundController != nil) && (self.isViewLoaded == YES)) {
-                [self appendBackgroundController];
+                [self appearBackgroundController];
             }
             if(completed != nil) {
                 completed();
@@ -239,11 +306,11 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         if(animated == YES) {
         } else {
             if(_leftController != nil) {
-                [self removeLeftController];
+                [self disappearLeftController];
             }
-            _centerController = leftController;
+            _leftController = leftController;
             if((_leftController != nil) && (self.isViewLoaded == YES)) {
-                [self appendLeftController];
+                [self appearLeftController];
             }
             if(completed != nil) {
                 completed();
@@ -260,11 +327,11 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         if(animated == YES) {
         } else {
             if(_centerController != nil) {
-                [self removeCenterController];
+                [self disappearCenterController];
             }
             _centerController = centerController;
             if((_centerController != nil) && (self.isViewLoaded == YES)) {
-                [self appendCenterController];
+                [self appearCenterController];
             }
             if(completed != nil) {
                 completed();
@@ -281,11 +348,11 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         if(animated == YES) {
         } else {
             if(_rightController != nil) {
-                [self removeRightController];
+                [self disappearRightController];
             }
-            _centerController = rightController;
+            _rightController = rightController;
             if((_rightController != nil) && (self.isViewLoaded == YES)) {
-                [self appendRightController];
+                [self appearRightController];
             }
             if(completed != nil) {
                 completed();
@@ -313,7 +380,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (CGRect)leftViewFrameFromBounds:(CGRect)bounds byPercent:(CGFloat)percent {
-    return CGRectMake((bounds.origin.x - _leftControllerWidth) + (_leftControllerWidth * percent), bounds.origin.y, _leftControllerWidth, bounds.size.height);
+    return CGRectMake((bounds.origin.x - _leftControllerWidth) + (_leftControllerWidth * -percent), bounds.origin.y, _leftControllerWidth, bounds.size.height);
 }
 
 - (CGRect)centerViewFrameByPercent:(CGFloat)percent {
@@ -321,10 +388,10 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (CGRect)centerViewFrameFromBounds:(CGRect)bounds byPercent:(CGFloat)percent {
-    if(percent > FLT_EPSILON) {
-        return CGRectMake(bounds.origin.x + (_leftControllerWidth * percent), bounds.origin.y, bounds.size.width, bounds.size.height);
-    } else if(percent < FLT_EPSILON) {
-        return CGRectMake((bounds.origin.x + bounds.size.width) - (_leftControllerWidth * (1.0f - percent)), bounds.origin.y, bounds.size.width, bounds.size.height);
+    if(percent < -FLT_EPSILON) {
+        return CGRectMake(bounds.origin.x + (_leftControllerWidth * -percent), bounds.origin.y, bounds.size.width, bounds.size.height);
+    } else if(percent > FLT_EPSILON) {
+        return CGRectMake(bounds.origin.x - (_rightControllerWidth * percent), bounds.origin.y, bounds.size.width, bounds.size.height);
     }
     return bounds;
 }
@@ -334,10 +401,10 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (CGRect)rightViewFrameFromBounds:(CGRect)bounds byPercent:(CGFloat)percent {
-    return CGRectMake((bounds.origin.x + bounds.size.width) - (bounds.size.width * percent), bounds.origin.y, _rightControllerWidth, bounds.size.height);
+    return CGRectMake((bounds.origin.x + bounds.size.width) - (_rightControllerWidth * percent), bounds.origin.y, _rightControllerWidth, bounds.size.height);
 }
 
-- (void)appendBackgroundController {
+- (void)appearBackgroundController {
     _backgroundController.slideNavigation = self;
     
     [_backgroundController willMoveToParentViewController:self];
@@ -345,14 +412,14 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
     [_backgroundController didMoveToParentViewController:self];
     
     [_backgroundController viewWillAppear:NO];
-    _backgroundController.view.translatesAutoresizingMaskIntoConstraints = NO;
-    _backgroundController.view.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+    // _backgroundController.view.translatesAutoresizingMaskIntoConstraints = NO;
+    // _backgroundController.view.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     _backgroundController.view.frame = self.view.bounds;
     [self.view addSubview:_backgroundController.view];
     [_backgroundController viewDidAppear:NO];
 }
 
-- (void)removeBackgroundController {
+- (void)disappearBackgroundController {
     _backgroundController.slideNavigation = nil;
     
     [_backgroundController viewWillDisappear:NO];
@@ -364,85 +431,61 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
     [_backgroundController didMoveToParentViewController:nil];
 }
 
-- (void)appendLeftController {
+- (void)appearLeftController {
     _leftController.slideNavigation = self;
     
-    [_leftController willMoveToParentViewController:self];
     [self addChildViewController:_leftController];
-    [_leftController didMoveToParentViewController:self];
-    
-    [_leftController viewWillAppear:NO];
-    _leftController.view.translatesAutoresizingMaskIntoConstraints = NO;
-    _leftController.view.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-    _leftController.view.frame = self.view.bounds;
+    // _leftController.view.translatesAutoresizingMaskIntoConstraints = NO;
+    // _leftController.view.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+    _leftController.view.frame = _leftView.bounds;
     [_leftView addSubview:_leftController.view];
-    [_leftController viewDidAppear:NO];
+    [_leftController didMoveToParentViewController:self];
 }
 
-- (void)removeLeftController {
+- (void)disappearLeftController {
     _leftController.slideNavigation = nil;
     
-    [_leftController viewWillDisappear:NO];
-    [_leftController.view removeFromSuperview];
-    [_leftController viewDidDisappear:NO];
-    
     [_leftController willMoveToParentViewController:nil];
+    [_leftController.view removeFromSuperview];
     [_leftController removeFromParentViewController];
-    [_leftController didMoveToParentViewController:nil];
 }
 
-- (void)appendCenterController {
+- (void)appearCenterController {
     _centerController.slideNavigation = self;
     
-    [_centerController willMoveToParentViewController:self];
     [self addChildViewController:_centerController];
-    [_centerController didMoveToParentViewController:self];
-    
-    [_centerController viewWillAppear:NO];
-    _centerController.view.translatesAutoresizingMaskIntoConstraints = NO;
-    _centerController.view.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-    _centerController.view.frame = self.view.bounds;
+    // _centerController.view.translatesAutoresizingMaskIntoConstraints = NO;
+    // _centerController.view.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+    _centerController.view.frame = _centerView.bounds;
     [_centerView addSubview:_centerController.view];
-    [_centerController viewDidAppear:NO];
+    [_centerController didMoveToParentViewController:self];
 }
 
-- (void)removeCenterController {
+- (void)disappearCenterController {
     _centerController.slideNavigation = nil;
     
-    [_centerController viewWillDisappear:NO];
-    [_centerController.view removeFromSuperview];
-    [_centerController viewDidDisappear:NO];
-    
     [_centerController willMoveToParentViewController:nil];
+    [_centerController.view removeFromSuperview];
     [_centerController removeFromParentViewController];
-    [_centerController didMoveToParentViewController:nil];
 }
 
-- (void)appendRightController {
+- (void)appearRightController {
     _rightController.slideNavigation = self;
     
-    [_rightController willMoveToParentViewController:self];
     [self addChildViewController:_rightController];
-    [_rightController didMoveToParentViewController:self];
-    
-    [_rightController viewWillAppear:NO];
-    _rightController.view.translatesAutoresizingMaskIntoConstraints = NO;
-    _rightController.view.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-    _rightController.view.frame = self.view.bounds;
+    // _rightController.view.translatesAutoresizingMaskIntoConstraints = NO;
+    // _rightController.view.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+    _rightController.view.frame = _rightView.bounds;
     [_rightView addSubview:_rightController.view];
-    [_rightController viewDidAppear:NO];
+    [_rightController didMoveToParentViewController:self];
 }
 
-- (void)removeRightController {
+- (void)disappearRightController {
     _rightController.slideNavigation = nil;
     
-    [_rightController viewWillDisappear:NO];
-    [_rightController.view removeFromSuperview];
-    [_rightController viewDidDisappear:NO];
-    
     [_rightController willMoveToParentViewController:nil];
+    [_rightController.view removeFromSuperview];
     [_rightController removeFromParentViewController];
-    [_rightController didMoveToParentViewController:nil];
 }
 
 - (void)tapGestureHandle:(UITapGestureRecognizer*)tapGesture {
@@ -549,9 +592,9 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         CGRect bounds = self.view.bounds;
         [UIView animateWithDuration:ABS(speed) / _swipeSpeed
                          animations:^{
-                             _leftView.frame = [self leftViewFrameFromBounds:bounds byPercent:normalizedSwipeProgress];
-                             _centerView.frame = [self centerViewFrameFromBounds:bounds byPercent:normalizedSwipeProgress];
-                             _rightView.frame = [self rightViewFrameFromBounds:bounds byPercent:normalizedSwipeProgress];
+                             _leftView.frame = [self leftViewFrameFromBounds:bounds byPercent:_swipeProgress];
+                             _centerView.frame = [self centerViewFrameFromBounds:bounds byPercent:_swipeProgress];
+                             _rightView.frame = [self rightViewFrameFromBounds:bounds byPercent:_swipeProgress];
                          } completion:^(BOOL finished) {
                              if(endedSwipe == YES) {
                                  [self didEndedSwipe];
@@ -634,7 +677,7 @@ static char const* const slideNavigationKey = "slideNavigationKey";
 - (MobilySlideController*)slideNavigation {
     MobilySlideController* slideNavigation = objc_getAssociatedObject(self, slideNavigationKey);
     if(slideNavigation == nil) {
-        slideNavigation = [[self parentViewController] slideNavigation];
+        slideNavigation = self.parentViewController.slideNavigation;
     }
     return slideNavigation;
 }

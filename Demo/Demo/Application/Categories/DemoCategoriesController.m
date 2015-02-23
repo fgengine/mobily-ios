@@ -34,6 +34,7 @@
 /*--------------------------------------------------*/
 
 #import "DemoCategoriesController.h"
+#import "DemoApplication.h"
 
 /*--------------------------------------------------*/
 
@@ -46,6 +47,28 @@
 
 /*--------------------------------------------------*/
 
+typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
+    DemoCategoriesTypeButtons,
+    DemoCategoriesTypeFields,
+    DemoCategoriesTypeTables,
+    DemoCategoriesTypeDataScrollView,
+    DemoCategoriesTypeAudioRecorder,
+    DemoCategoriesTypeAudioPlayer
+};
+
+/*--------------------------------------------------*/
+
+@interface DemoCategoriesModel : MobilyModel
+
+@property(nonatomic, readwrite, assign) DemoCategoriesType type;
+@property(nonatomic, readwrite, strong) NSString* title;
+
+- (instancetype)initWithType:(DemoCategoriesType)type title:(NSString*)title;
+
+@end
+
+/*--------------------------------------------------*/
+
 @implementation DemoCategoriesController
 
 - (void)setup {
@@ -54,13 +77,14 @@
     self.title = @"Categories";
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
-    [self setDataSource:@[
-        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeButtons title:@"Buttons"],
-        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeFields title:@"Fields"],
-        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeTables title:@"Tables"],
-        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeDataScrollView title:@"DataScrollView"],
-        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioRecorder title:@"AudioRecorder"],
-        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioPlayer title:@"AudioPlayer"],
+    self.dataListContainer = MobilyDataVerticalListContainer.new;
+    [_dataListContainer appendItems:@[
+        [MobilyDataItem dataItemWithIdentifier:DemoCategoriesCell.className data:[[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeButtons title:@"Buttons"]],
+        [MobilyDataItem dataItemWithIdentifier:DemoCategoriesCell.className data:[[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeFields title:@"Fields"]],
+        [MobilyDataItem dataItemWithIdentifier:DemoCategoriesCell.className data:[[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeTables title:@"Tables"]],
+        [MobilyDataItem dataItemWithIdentifier:DemoCategoriesCell.className data:[[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeDataScrollView title:@"DataScrollView"]],
+        [MobilyDataItem dataItemWithIdentifier:DemoCategoriesCell.className data:[[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioRecorder title:@"AudioRecorder"]],
+        [MobilyDataItem dataItemWithIdentifier:DemoCategoriesCell.className data:[[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioPlayer title:@"AudioPlayer"]],
     ]];
 }
 
@@ -70,56 +94,21 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [_tableView registerCellClass:DemoCategoriesCell.class];
+    [_dataScrollView registerIdentifier:DemoCategoriesCell.className withViewClass:DemoCategoriesCell.class];
+    [_dataScrollView registerEventWithTarget:self action:@selector(pressedDataItemView:dataItem:) forKey:MobilyDataItemViewPressed];
+    _dataScrollView.container = _dataListContainer;
 }
 
-- (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_dataSource count];
-}
-
-- (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
-    DemoCategoriesCell* cell = [_tableView dequeueReusableCellWithClass:[DemoCategoriesCell class]];
-    if(cell != nil) {
-        cell.model = _dataSource[indexPath.row];
+- (IBAction)pressedDataItemView:(MobilyDataItemView*)dataItemView dataItem:(MobilyDataItem*)dataItem {
+    DemoCategoriesModel* model = dataItem.data;
+    switch(model.type) {
+        case DemoCategoriesTypeButtons: [self.app.slideCenterController pushViewController:DemoButtonsController.new animated:YES]; break;
+        case DemoCategoriesTypeFields: [self.app.slideCenterController pushViewController:DemoFieldsController.new animated:YES]; break;
+        case DemoCategoriesTypeTables: [self.app.slideCenterController pushViewController:DemoTablesController.new animated:YES]; break;
+        case DemoCategoriesTypeDataScrollView: [self.app.slideCenterController pushViewController:DemoDataScrollViewController.new animated:YES]; break;
+        case DemoCategoriesTypeAudioRecorder: [self.app.slideCenterController pushViewController:DemoAudioRecorderController.new animated:YES]; break;
+        case DemoCategoriesTypeAudioPlayer: [self.app.slideCenterController pushViewController:DemoAudioPlayerController.new animated:YES]; break;
     }
-    return cell;
-}
-
-- (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
-    return [DemoCategoriesCell heightForModel:_dataSource[indexPath.row] tableView:_tableView];
-}
-
-- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-    DemoCategoriesModel* model = _dataSource[indexPath.row];
-    if(model != nil) {
-        switch([model type]) {
-            case DemoCategoriesTypeButtons: {
-                [self.navigationController pushViewController:[DemoButtonsController new] animated:YES];
-                break;
-            }
-            case DemoCategoriesTypeFields: {
-                [self.navigationController pushViewController:[DemoFieldsController new] animated:YES];
-                break;
-            }
-            case DemoCategoriesTypeTables: {
-                [self.navigationController pushViewController:[DemoTablesController new] animated:YES];
-                break;
-            }
-            case DemoCategoriesTypeDataScrollView: {
-                [self.navigationController pushViewController:[DemoDataScrollViewController new] animated:YES];
-                break;
-            }
-            case DemoCategoriesTypeAudioRecorder: {
-                [self.navigationController pushViewController:[DemoAudioRecorderController new] animated:YES];
-                break;
-            }
-            case DemoCategoriesTypeAudioPlayer: {
-                [self.navigationController pushViewController:[DemoAudioPlayerController new] animated:YES];
-                break;
-            }
-        }
-    }
-    [_tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end
@@ -130,13 +119,14 @@
 
 @implementation DemoCategoriesCell
 
-+ (CGFloat)heightForModel:(DemoCategoriesModel*)model tableView:(UITableView*)tableView {
-    return 44.0f;
++ (CGSize)sizeForItem:(id< MobilyDataItem >)item availableSize:(CGSize)size {
+    return CGSizeMake(size.width, 44.0f);
 }
 
-- (void)setModel:(DemoCategoriesModel*)model {
-    [super setModel:model];
+- (void)prepareForUse {
+    [super prepareForUse];
     
+    DemoCategoriesModel* model = self.item.data;
     _textView.text = model.title;
 }
 

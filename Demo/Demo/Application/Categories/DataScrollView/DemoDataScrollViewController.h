@@ -37,8 +37,8 @@
 
 @property(nonatomic, readwrite, weak) IBOutlet MobilyDataScrollView* dataScrollView;
 @property(nonatomic, readwrite, strong) MobilyDataListContainer* dataRootListContainer;
-@property(nonatomic, readwrite, strong) MobilyDataListContainer* dataListContainer1;
-@property(nonatomic, readwrite, strong) MobilyDataListContainer* dataListContainer2;
+@property(nonatomic, readwrite, strong) MobilyDataContainer* dataListContainer1;
+@property(nonatomic, readwrite, strong) MobilyDataContainer* dataListContainer2;
 
 @end
 

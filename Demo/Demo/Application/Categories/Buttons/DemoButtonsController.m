@@ -49,10 +49,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self.navigationItem addLeftBarFixedSpace:-16.0f animated:NO];
+    [self.navigationItem addLeftBarButtonNormalImage:[UIImage imageNamed:@"menu-back.png"] target:self action:@selector(pressedBack) animated:NO];
+    
     _buttonLeftImage.imageAlignment = MobilyButtonImageAlignmentLeft;
     _buttonRightImage.imageAlignment = MobilyButtonImageAlignmentRight;
     _buttonTopImage.imageAlignment = MobilyButtonImageAlignmentTop;
     _buttonBottomImage.imageAlignment = MobilyButtonImageAlignmentBottom;
+}
+
+#pragma mark Action
+
+- (IBAction)pressedBack {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

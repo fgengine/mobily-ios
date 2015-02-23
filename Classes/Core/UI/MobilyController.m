@@ -36,6 +36,7 @@
 #import "MobilyController.h"
 #import "MobilyNavigationController.h"
 #import "MobilyTabBarController.h"
+#import "MobilyContext.h"
 #import "MobilyEvent.h"
 
 /*--------------------------------------------------*/
@@ -127,6 +128,10 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 #pragma mark Property
+
+- (id)app {
+    return MobilyContext.application;
+}
 
 - (BOOL)isAppeared {
     return (_appeared > 0);

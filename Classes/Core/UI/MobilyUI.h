@@ -342,8 +342,38 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 @interface UINavigationItem (MobilyUI)
 
-- (void)setLeftBarView:(UIView*)view animated:(BOOL)animated;
-- (void)setRightBarView:(UIView*)view animated:(BOOL)animated;
+- (UIBarButtonItem*)addLeftBarFixedSpace:(CGFloat)fixedSpaceWidth animated:(BOOL)animated;
+- (UIBarButtonItem*)addRightBarFixedSpace:(CGFloat)fixedSpaceWidth animated:(BOOL)animated;
+
+- (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage selectedImage:(UIImage*)selectedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage selectedImage:(UIImage*)selectedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+
+- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle selectedTitle:(NSString*)selectedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle selectedTitle:(NSString*)selectedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+
+- (UIBarButtonItem*)addLeftBarView:(UIView*)view animated:(BOOL)animated;
+- (UIBarButtonItem*)addRightBarView:(UIView*)view animated:(BOOL)animated;
+- (void)addLeftBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated;
+- (void)addRightBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated;
+- (void)removeLeftBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated;
+- (void)removeRightBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated;
+- (void)removeAllLeftBarButtonItemsAnimated:(BOOL)animated;
+- (void)removeAllRightBarButtonItemsAnimated:(BOOL)animated;
+
+- (void)setLeftBarAutomaticAlignmentAnimated:(BOOL)animated;
+- (void)setRightBarAutomaticAlignmentAnimated:(BOOL)animated;
 
 @end
 

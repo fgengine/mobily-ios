@@ -126,7 +126,7 @@
     for(id< MobilyDataItem > item in self.items) {
         CGSize itemSize = [item sizeForAvailableSize:CGSizeMake(restriction, FLT_MAX)];
         if((itemSize.width >= 0.0f) && (itemSize.height >= 0.0f)) {
-            if((countOfRow > 0) && (cumulative.width + itemSize.width > restriction)) {
+            if((countOfRow > 0) && (cumulativeRow.width + itemSize.width > restriction)) {
                 offset.x = 0.0f;
                 offset.y += cumulativeRow.height + spacing.vertical;
                 cumulative.width = MAX(restriction, margin.left + cumulativeRow.width + margin.right);
@@ -201,7 +201,7 @@
     for(id< MobilyDataItem > item in self.items) {
         CGSize itemSize = [item sizeForAvailableSize:CGSizeMake(FLT_MAX, restriction)];
         if((itemSize.width >= 0.0f) && (itemSize.height >= 0.0f)) {
-            if((countOfRow > 0) && (cumulative.height + itemSize.height > restriction)) {
+            if((countOfRow > 0) && (cumulativeRow.height + itemSize.height > restriction)) {
                 offset.x += cumulativeRow.width + spacing.horizontal;
                 offset.y = 0.0f;
                 cumulative.width = cumulativeRow.width + spacing.horizontal;

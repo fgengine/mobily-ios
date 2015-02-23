@@ -54,6 +54,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self.navigationItem addLeftBarFixedSpace:-16.0f animated:NO];
+    [self.navigationItem addLeftBarButtonNormalImage:[UIImage imageNamed:@"menu-back.png"] target:self action:@selector(pressedBack) animated:NO];
+    
     NSError* error = nil;
     [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
     if(error != nil) {
@@ -76,6 +79,12 @@
         _timer.delegate = self;
     }
     [self updateButtonState];
+}
+
+#pragma mark Action
+
+- (IBAction)pressedBack {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark Private
