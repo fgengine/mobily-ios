@@ -314,6 +314,7 @@
     }
     [_objects insertObject:columnObjects atIndex:column];
     _numberOfColumns++;
+    _count = _numberOfColumns * _numberOfRows;
 }
 
 - (void)insertRow:(NSUInteger)row objects:(NSArray*)objects {
@@ -331,6 +332,7 @@
         }
     }
     _numberOfRows--;
+    _count = _numberOfColumns * _numberOfRows;
 }
 
 - (void)removeColumn:(NSUInteger)column {
@@ -342,6 +344,7 @@
 #endif
     [_objects removeObjectAtIndex:column];
     _numberOfColumns--;
+    _count = _numberOfColumns * _numberOfRows;
 }
 
 - (void)removeRow:(NSUInteger)row {
@@ -355,12 +358,14 @@
         [_objects[ic] removeObjectAtIndex:row];
     }
     _numberOfRows--;
+    _count = _numberOfColumns * _numberOfRows;
 }
 
 - (void)removeAllObjects {
     [_objects removeAllObjects];
     _numberOfColumns = 0;
     _numberOfRows = 0;
+    _count = _numberOfColumns * _numberOfRows;
 }
 
 @end
