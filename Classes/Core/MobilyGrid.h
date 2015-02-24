@@ -39,22 +39,30 @@
 
 @interface MobilyGrid : NSObject< NSCopying >
 
-@property(nonatomic, readonly, assign) NSUInteger width;
-@property(nonatomic, readonly, assign) NSUInteger height;
+@property(nonatomic, readonly, assign) NSUInteger columns;
+@property(nonatomic, readonly, assign) NSUInteger rows;
 
 - (instancetype)initWithColumns:(NSUInteger)columns rows:(NSUInteger)rows;
 - (instancetype)initWithColumns:(NSUInteger)columns rows:(NSUInteger)rows objects:(NSArray*)objects;
+- (instancetype)initWithGrid:(MobilyGrid*)grid;
 
 - (BOOL)containsColumn:(NSUInteger)column row:(NSUInteger)row;
 - (BOOL)isEmptyColumn:(NSInteger)column;
 - (BOOL)isEmptyRow:(NSInteger)row;
 
-- (void)setObject:(id)object atColumn:(NSUInteger)column atRow:(NSUInteger)row;
 - (id)objectAtColumn:(NSUInteger)column atRow:(NSUInteger)row;
-- (void)setObjects:(NSArray*)objects;
 - (NSArray*)objects;
 
 - (void)eachWithIndex:(void(^)(id object, NSUInteger column, NSUInteger row))block;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyMutableGrid : MobilyGrid
+
+- (void)setObject:(id)object atColumn:(NSUInteger)column atRow:(NSUInteger)row;
+- (void)setObjects:(NSArray*)objects;
 
 @end
 

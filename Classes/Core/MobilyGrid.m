@@ -50,6 +50,11 @@
 
 @implementation MobilyGrid
 
+#pragma mark Synthesize
+
+@synthesize columns = _columns;
+@synthesize rows = _rows;
+
 #pragma mark Init / Free
 
 - (instancetype)initWithColumns:(NSUInteger)columns rows:(NSUInteger)rows {
@@ -68,8 +73,19 @@
         _columns = columns;
         _rows = rows;
         _objects = [NSMutableArray arrayWithCapacity:_columns * _rows];
-        
-        [self setObjects:objects];
+        if((_columns * _rows) == objects.count) {
+            [_objects setArray:objects];
+        }
+    }
+    return self;
+}
+
+- (instancetype)initWithGrid:(MobilyGrid*)grid {
+    self = [super init];
+    if(self != nil) {
+        _columns = grid.columns;
+        _rows = grid.rows;
+        _objects = [NSMutableArray arrayWithArray:grid->_objects];
     }
     return self;
 }
@@ -105,28 +121,11 @@
     return YES;
 }
 
-- (void)setObject:(id)object atColumn:(NSUInteger)column atRow:(NSUInteger)row {
-    if((column >= _columns) && (row >= _rows)) {
-        return;
-    }
-    _objects[(_columns * column) + row] = object;
-}
-
 - (id)objectAtColumn:(NSUInteger)column atRow:(NSUInteger)row {
     if((column >= _columns) && (row >= _rows)) {
         return nil;
     }
     return _objects[(_columns * column) + row];
-}
-
-- (void)setObjects:(NSArray*)objects {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if((_columns * _rows) != objects.count) {
-        NSLog(@"ERROR: [%@:%@] %d", self.class, NSStringFromSelector(_cmd), (int)objects.count);
-        return;
-    }
-#endif
-    [_objects setArray:objects];
 }
 
 - (NSArray*)objects {
@@ -143,6 +142,52 @@
             row = 0;
         }
     }];
+}
+
+#pragma mark NSCopying
+
+- (id)copy {
+    return [self copyWithZone:NSDefaultMallocZone()];
+}
+
+- (id)copyWithZone:(NSZone*)zone {
+    return [[MobilyGrid alloc] initWithGrid:self];
+}
+
+- (id)mutableCopy {
+    return [self mutableCopyWithZone:NSDefaultMallocZone()];
+}
+
+- (id)mutableCopyWithZone:(NSZone*)zone {
+    return [[MobilyMutableGrid alloc] initWithGrid:self];
+}
+
+@end
+
+/*--------------------------------------------------*/
+
+@implementation MobilyMutableGrid
+
+#pragma mark Public
+
+- (void)setObject:(id)object atColumn:(NSUInteger)column atRow:(NSUInteger)row {
+#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
+    if((column >= _columns) && (row >= _rows)) {
+        NSLog(@"ERROR: [%@:%@] %@ - %d - %d", self.class, NSStringFromSelector(_cmd), object, (int)column, (int)row);
+        return;
+    }
+#endif
+    _objects[(_columns * column) + row] = object;
+}
+
+- (void)setObjects:(NSArray*)objects {
+#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
+    if((_columns * _rows) != objects.count) {
+        NSLog(@"ERROR: [%@:%@] %d", self.class, NSStringFromSelector(_cmd), (int)objects.count);
+        return;
+    }
+#endif
+    [_objects setArray:objects];
 }
 
 @end
