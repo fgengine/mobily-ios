@@ -69,6 +69,8 @@
 
 @interface MobilyMutableGrid : MobilyGrid
 
+- (void)setNumberOfColumns:(NSUInteger)numberOfColumns numberOfRows:(NSUInteger)numberOfRows;
+
 - (void)setObject:(id)object atColumn:(NSUInteger)column atRow:(NSUInteger)row;
 - (void)setObjects:(NSArray*)objects;
 

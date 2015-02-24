@@ -78,6 +78,14 @@
     return [[self alloc] gridWithGrid:grid];
 }
 
+- (instancetype)init {
+    self = [super init];
+    if(self != nil) {
+        _objects = NSMutableArray.array;
+    }
+    return self;
+}
+
 - (instancetype)initWithColumns:(NSUInteger)columns rows:(NSUInteger)rows {
     self = [super init];
     if(self != nil) {
@@ -238,6 +246,22 @@
 
 #pragma mark Public
 
+- (void)setNumberOfColumns:(NSUInteger)numberOfColumns numberOfRows:(NSUInteger)numberOfRows {
+    if((_numberOfColumns != numberOfColumns) || (_numberOfRows != numberOfRows)) {
+        _numberOfColumns = numberOfColumns;
+        _numberOfRows = numberOfRows;
+        _count = _numberOfColumns * _numberOfRows;
+        [_objects removeAllObjects];
+        for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
+            NSMutableArray* columnObjects = [NSMutableArray arrayWithCapacity:_numberOfRows];
+            for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
+                [columnObjects addObject:[NSNull null]];
+            }
+            [_objects addObject:columnObjects];
+        }
+    }
+}
+
 - (void)setObject:(id)object atColumn:(NSUInteger)column atRow:(NSUInteger)row {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if((column >= _numberOfColumns) && (row >= _numberOfRows)) {
@@ -335,6 +359,8 @@
 
 - (void)removeAllObjects {
     [_objects removeAllObjects];
+    _numberOfColumns = 0;
+    _numberOfRows = 0;
 }
 
 @end

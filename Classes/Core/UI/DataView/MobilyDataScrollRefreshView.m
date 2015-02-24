@@ -90,7 +90,7 @@
 #pragma mark MobilyBuilderObject
 
 - (NSArray*)relatedObjects {
-    return [_objectChilds intersectionWithArray:self.subviews];
+    return [_objectChilds unionWithArray:self.subviews];
 }
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {

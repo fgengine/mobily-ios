@@ -42,8 +42,8 @@
 
 @interface MobilyNavigationController () < UIViewControllerTransitioningDelegate, UINavigationControllerDelegate >
 
-@property(nonatomic, readwrite, assign, getter=isAppeared) BOOL appeared;
-@property(nonatomic, readwrite, assign, getter = isNeedUpdate) BOOL needUpdate;
+@property(nonatomic, readwrite, assign) NSUInteger appearedCount;
+@property(nonatomic, readwrite, assign, getter=isNeedUpdate) BOOL needUpdate;
 
 @end
 
@@ -118,7 +118,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 #pragma mark MobilyBuilderObject
 
 - (NSArray*)relatedObjects {
-    return [_objectChilds intersectionWithArrays:self.childViewControllers, self.viewControllers, nil];
+    return [_objectChilds unionWithArrays:self.childViewControllers, self.viewControllers, nil];
 }
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
@@ -167,13 +167,14 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (BOOL)isAppeared {
-    return (_appeared > 0);
+    return (_appearedCount > 0);
 }
 
 #pragma mark Public
 
 - (void)setNeedUpdate {
-    if((self.isViewLoaded == YES) && ([self isAppeared] == YES)) {
+    if((self.isViewLoaded == YES) && (self.isAppeared == YES)) {
+        [self clear];
         [self update];
     } else {
         self.needUpdate = YES;
@@ -189,13 +190,6 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)clear {
-    [self setNeedUpdate];
-    
-    [self.relatedObjects each:^(id object) {
-        if([object respondsToSelector:@selector(clear)] == YES) {
-            [object clear];
-        }
-    }];
 }
 
 #pragma mark UIViewController
@@ -247,9 +241,10 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     [super viewWillAppear:animated];
     
     [_eventWillAppear fireSender:self object:nil];
-    self.appeared = _appeared + 1;
+    self.appearedCount = _appearedCount + 1;
     if(self.isNeedUpdate == YES) {
         self.needUpdate = NO;
+        [self clear];
         [self update];
     }
 }
@@ -267,7 +262,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-    self.appeared = _appeared - 1;
+    self.appearedCount = _appearedCount - 1;
     [_eventDidDisappear fireSender:self object:nil];
     
     [super viewDidDisappear:animated];
