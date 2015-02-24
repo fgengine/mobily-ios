@@ -761,13 +761,13 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 
 - (NSArray*)select:(BOOL(^)(id object))block {
     return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings) {
-        return block(evaluatedObject);
+        return (block(evaluatedObject) == YES);
     }]];
 }
 
 - (NSArray*)reject:(BOOL(^)(id object))block {
     return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings) {
-        return block(evaluatedObject);
+        return (block(evaluatedObject) == NO);
     }]];
 }
 
@@ -788,13 +788,63 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
     return [self filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", array]];
 }
 
+- (NSArray*)intersectionWithArrays:(NSArray*)firstArray, ... {
+    NSArray* resultArray = nil;
+    if(firstArray != nil) {
+        NSArray* eachArray = nil;
+        resultArray = [self intersectionWithArray:firstArray];
+        va_list argumentList;
+        va_start(argumentList, firstArray);
+        while((eachArray = va_arg(argumentList, id)) != nil) {
+            resultArray = [resultArray intersectionWithArray:eachArray];
+        }
+        va_end(argumentList);
+    } else {
+        resultArray = @[];
+    }
+    return resultArray;
+}
+
 - (NSArray*)unionWithArray:(NSArray*)array {
     return [[self relativeComplement:array] arrayByAddingObjectsFromArray:array];
 }
 
+- (NSArray*)unionWithArrays:(NSArray*)firstArray, ... {
+    NSArray* resultArray = nil;
+    if(firstArray != nil) {
+        NSArray* eachArray = nil;
+        resultArray = [self unionWithArray:firstArray];
+        va_list argumentList;
+        va_start(argumentList, firstArray);
+        while((eachArray = va_arg(argumentList, id)) != nil) {
+            resultArray = [resultArray unionWithArray:eachArray];
+        }
+        va_end(argumentList);
+    } else {
+        resultArray = @[];
+    }
+    return resultArray;
+}
+
 - (NSArray*)relativeComplement:(NSArray*)array {
-    NSPredicate* relativeComplementPredicate = [NSPredicate predicateWithFormat:@"NOT SELF IN %@", array];
-    return [self filteredArrayUsingPredicate:relativeComplementPredicate];
+    return [self filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT SELF IN %@", array]];
+}
+
+- (NSArray*)relativeComplements:(NSArray*)firstArray, ... {
+    NSArray* resultArray = nil;
+    if(firstArray != nil) {
+        NSArray* eachArray = nil;
+        resultArray = [self relativeComplement:firstArray];
+        va_list argumentList;
+        va_start(argumentList, firstArray);
+        while((eachArray = va_arg(argumentList, id)) != nil) {
+            resultArray = [resultArray relativeComplement:eachArray];
+        }
+        va_end(argumentList);
+    } else {
+        resultArray = @[];
+    }
+    return resultArray;
 }
 
 - (NSArray*)symmetricDifference:(NSArray*)array {

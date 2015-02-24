@@ -76,6 +76,7 @@
 
 @property(nonatomic, readwrite, weak) id objectParent;
 @property(nonatomic, readwrite, strong) NSArray* objectChilds;
+@property(nonatomic, readonly, strong) NSArray* relatedObjects;
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild;
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild;

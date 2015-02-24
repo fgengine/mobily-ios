@@ -186,8 +186,11 @@
 - (id)find:(BOOL(^)(id object))block;
 - (NSArray*)reverse;
 - (NSArray*)intersectionWithArray:(NSArray*)array;
+- (NSArray*)intersectionWithArrays:(NSArray*)firstArray, ... NS_REQUIRES_NIL_TERMINATION;
 - (NSArray*)unionWithArray:(NSArray*)array;
+- (NSArray*)unionWithArrays:(NSArray*)firstArray, ... NS_REQUIRES_NIL_TERMINATION;
 - (NSArray*)relativeComplement:(NSArray*)array;
+- (NSArray*)relativeComplements:(NSArray*)firstArray, ... NS_REQUIRES_NIL_TERMINATION;
 - (NSArray*)symmetricDifference:(NSArray*)array;
 
 @end

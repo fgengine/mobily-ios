@@ -78,6 +78,10 @@
 
 #pragma mark MobilyBuilderObject
 
+- (NSArray*)relatedObjects {
+    return _objectChilds;
+}
+
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIWindow.class] == YES) {
         self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];

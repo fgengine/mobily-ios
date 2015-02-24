@@ -91,6 +91,10 @@ static NSString* MOBILY_ACCESS_KEY = nil;
 
 #pragma mark MobilyBuilderObject
 
+- (NSArray*)relatedObjects {
+    return _objectChilds;
+}
+
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIViewController.class] == YES) {
         self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];

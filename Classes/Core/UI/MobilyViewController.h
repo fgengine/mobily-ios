@@ -44,10 +44,6 @@
 @property(nonatomic, readwrite, assign) UIInterfaceOrientationMask orientation;
 @property(nonatomic, readonly, strong) NSString* mobilyName;
 
-- (void)setNeedUpdate;
-- (void)update;
-- (void)clear;
-
 @end
 
 /*--------------------------------------------------*/

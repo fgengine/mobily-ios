@@ -51,6 +51,10 @@
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventWillDisappear;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidDisappear;
 
+- (void)setNeedUpdate;
+- (void)update;
+- (void)clear;
+
 @end
 
 /*--------------------------------------------------*/

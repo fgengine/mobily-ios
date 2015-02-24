@@ -42,7 +42,7 @@
     NSUInteger _numberOfColumns;
     NSUInteger _numberOfRows;
     NSUInteger _count;
-    NSMutableArray* _columns;
+    NSMutableArray* _objects;
 }
 
 @property(nonatomic, readonly, copy) NSArray* columns;
@@ -58,7 +58,7 @@
 @synthesize numberOfColumns = _numberOfColumns;
 @synthesize numberOfRows = _numberOfRows;
 @synthesize count = _count;
-@synthesize columns = _columns;
+@synthesize columns = _objects;
 
 #pragma mark Init / Free
 
@@ -84,13 +84,13 @@
         _numberOfColumns = columns;
         _numberOfRows = rows;
         _count = _numberOfColumns * _numberOfRows;
-        _columns = [NSMutableArray arrayWithCapacity:_numberOfColumns];
-        for(NSUInteger c = 0; c < _numberOfColumns; c++) {
-            NSMutableArray* rows = [NSMutableArray arrayWithCapacity:_numberOfColumns];
-            for(NSUInteger r = 0; r < _numberOfRows; r++) {
-                [rows addObject:[NSNull null]];
+        _objects = [NSMutableArray arrayWithCapacity:_numberOfColumns];
+        for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
+            NSMutableArray* columnObjects = [NSMutableArray arrayWithCapacity:_numberOfRows];
+            for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
+                [columnObjects addObject:[NSNull null]];
             }
-            [_columns addObject:rows];
+            [_objects addObject:columnObjects];
         }
     }
     return self;
@@ -102,20 +102,20 @@
         _numberOfColumns = columns;
         _numberOfRows = rows;
         _count = _numberOfColumns * _numberOfRows;
-        _columns = [NSMutableArray arrayWithCapacity:_numberOfColumns];
+        _objects = [NSMutableArray arrayWithCapacity:_numberOfColumns];
         if(objects.count > 0) {
             NSUInteger index = 0;
-            for(NSUInteger c = 0; c < _numberOfColumns; c++) {
-                NSMutableArray* rows = [NSMutableArray arrayWithCapacity:_numberOfColumns];
-                for(NSUInteger r = 0; r < _numberOfRows; r++) {
-                    if(index < _count) {
-                        [rows addObject:objects[index]];
+            for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
+                NSMutableArray* columnObjects = [NSMutableArray arrayWithCapacity:_numberOfRows];
+                for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
+                    if(index < objects.count) {
+                        [columnObjects addObject:objects[index]];
                     } else {
-                        [rows addObject:[NSNull null]];
+                        [columnObjects addObject:[NSNull null]];
                     }
                     index++;
                 }
-                [_columns addObject:rows];
+                [_objects addObject:columnObjects];
             }
         }
     }
@@ -128,28 +128,28 @@
         _numberOfColumns = grid.numberOfColumns;
         _numberOfRows = grid.numberOfRows;
         _count = grid.count;
-        _columns = [NSMutableArray arrayWithArray:grid.columns];
+        _objects = [NSMutableArray arrayWithArray:grid.columns];
     }
     return self;
 }
 
 - (void)dealloc {
-    _columns = nil;
+    _objects = nil;
 }
 
 #pragma mark Public
 
 - (BOOL)containsColumn:(NSUInteger)column row:(NSUInteger)row {
     if((column < _numberOfColumns) && (row < _numberOfRows)) {
-        return ([_columns[column][row] isKindOfClass:NSNull.class] == NO);
+        return ([_objects[column][row] isKindOfClass:NSNull.class] == NO);
     }
     return NO;
 }
 
 - (BOOL)isEmptyColumn:(NSInteger)column {
     if(column < _numberOfColumns) {
-        for(NSUInteger row = 0; row < _numberOfRows; row++) {
-            if([_columns[column][row] isKindOfClass:NSNull.class] == NO) {
+        for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
+            if([_objects[column][ir] isKindOfClass:NSNull.class] == NO) {
                 return NO;
             }
         }
@@ -159,8 +159,8 @@
 
 - (BOOL)isEmptyRow:(NSInteger)row {
     if(row < _numberOfRows) {
-        for(NSUInteger column = 0; column < _numberOfColumns; column++) {
-            if([_columns[column][row] isKindOfClass:NSNull.class] == NO) {
+        for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
+            if([_objects[ic][row] isKindOfClass:NSNull.class] == NO) {
                 return NO;
             }
         }
@@ -172,41 +172,43 @@
     if((column >= _numberOfColumns) && (row >= _numberOfRows)) {
         return nil;
     }
-    return _columns[column][row];
+    id object = _objects[column][row];
+    if([object isKindOfClass:NSNull.class] == NO) {
+        return nil;
+    }
+    return object;
 }
 
 - (NSArray*)objects {
     NSMutableArray* result = [NSMutableArray array];
-    for(NSUInteger c = 0; c < _numberOfColumns; c++) {
-        NSMutableArray* rows = _columns[c];
-        for(NSUInteger r = 0; r < _numberOfRows; r++) {
-            [result addObject:rows[r]];
+    for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
+        NSMutableArray* columnObjects = _objects[ic];
+        for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
+            [result addObject:columnObjects[ir]];
         }
     }
     return result;
 }
 
 - (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block {
-    for(NSUInteger c = 0; c < _numberOfColumns; c++) {
-        NSMutableArray* rows = _columns[c];
-        for(NSUInteger r = 0; r < _numberOfRows; r++) {
-            block(rows[r], c, r);
+    for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
+        NSMutableArray* columnObjects = _objects[ic];
+        for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
+            block(columnObjects[ir], ic, ir);
         }
     }
 }
 
 - (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block byColumn:(NSInteger)column {
-    NSMutableArray* rows = _columns[column];
-    for(NSUInteger r = 0; r < _numberOfRows; r++) {
-        block(rows[r], column, r);
+    NSMutableArray* columnObjects = _objects[column];
+    for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
+        block(columnObjects[column][ir], column, ir);
     }
 }
 
 - (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block byRow:(NSInteger)row {
-    for(NSUInteger c = 0; c < _numberOfColumns; c++) {
-        for(NSUInteger r = 0; r < _numberOfRows; r++) {
-            block(_columns[c][row], c, row);
-        }
+    for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
+        block(_objects[ic][row], ic, row);
     }
 }
 
@@ -243,7 +245,7 @@
         return;
     }
 #endif
-    _columns[column][row] = object;
+    _objects[column][row] = (object != nil) ? object : [NSNull null];
 }
 
 - (void)setObjects:(NSArray*)objects {
@@ -253,48 +255,86 @@
         return;
     }
 #endif
-    [_columns removeAllObjects];
+    [_objects removeAllObjects];
     if(objects.count > 0) {
         NSUInteger index = 0;
-        for(NSUInteger c = 0; c < _numberOfColumns; c++) {
-            NSMutableArray* rows = [NSMutableArray arrayWithCapacity:_numberOfColumns];
-            for(NSUInteger r = 0; r < _numberOfRows; r++) {
-                if(index < _count) {
-                    [rows addObject:objects[index]];
+        for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
+            NSMutableArray* columnObjects = [NSMutableArray arrayWithCapacity:_numberOfRows];
+            for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
+                if(index < objects.count) {
+                    [columnObjects addObject:objects[index]];
                 } else {
-                    [rows addObject:[NSNull null]];
+                    [columnObjects addObject:[NSNull null]];
                 }
                 index++;
             }
-            [_columns addObject:rows];
+            [_objects addObject:columnObjects];
         }
     }
 }
 
-- (void)removeObjectAtColumn:(NSUInteger)column atRow:(NSUInteger)row {
-    if((column < _numberOfColumns) && (row < _numberOfRows)) {
-        _columns[column][row] = [NSNull null];
-    }
-}
-
-- (void)removeObjectsForColumn:(NSUInteger)column {
+- (void)insertColumn:(NSUInteger)column objects:(NSArray*)objects {
+#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(column < _numberOfColumns) {
-        for(NSUInteger row = 0; row < _numberOfRows; row++) {
-            _columns[column][row] = [NSNull null];
+        NSLog(@"ERROR: [%@:%@] %d - %@", self.class, NSStringFromSelector(_cmd), (int)column, objects);
+        return;
+    }
+#endif
+    NSMutableArray* columnObjects = [NSMutableArray arrayWithCapacity:_numberOfRows];
+    for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
+        if(ir < objects.count) {
+            [columnObjects addObject:objects[ir]];
+        } else {
+            [columnObjects addObject:[NSNull null]];
         }
     }
+    [_objects insertObject:columnObjects atIndex:column];
+    _numberOfColumns++;
 }
 
-- (void)removeObjectsForRow:(NSUInteger)row {
+- (void)insertRow:(NSUInteger)row objects:(NSArray*)objects {
+#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(row < _numberOfRows) {
-        for(NSUInteger column = 0; column < _numberOfColumns; column++) {
-            _columns[column][row] = [NSNull null];
+        NSLog(@"ERROR: [%@:%@] %d - %@", self.class, NSStringFromSelector(_cmd), (int)row, objects);
+        return;
+    }
+#endif
+    for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
+        if(ic < objects.count) {
+            [_objects[ic][row] insertObject:objects[ic] atIndex:row];
+        } else {
+            [_objects[ic][row] insertObject:[NSNull null] atIndex:row];
         }
     }
+    _numberOfRows--;
+}
+
+- (void)removeColumn:(NSUInteger)column {
+#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
+    if(column < _numberOfColumns) {
+        NSLog(@"ERROR: [%@:%@] %d", self.class, NSStringFromSelector(_cmd), (int)column);
+        return;
+    }
+#endif
+    [_objects removeObjectAtIndex:column];
+    _numberOfColumns--;
+}
+
+- (void)removeRow:(NSUInteger)row {
+#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
+    if(row < _numberOfRows) {
+        NSLog(@"ERROR: [%@:%@] %d", self.class, NSStringFromSelector(_cmd), (int)row);
+        return;
+    }
+#endif
+    for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
+        [_objects[ic] removeObjectAtIndex:row];
+    }
+    _numberOfRows--;
 }
 
 - (void)removeAllObjects {
-    [_columns removeAllObjects];
+    [_objects removeAllObjects];
 }
 
 @end

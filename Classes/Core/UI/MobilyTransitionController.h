@@ -49,12 +49,35 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyTransitionController : NSObject < UIViewControllerAnimatedTransitioning >
+@interface MobilyTransitionController : NSObject < UIViewControllerAnimatedTransitioning, UIViewControllerInteractiveTransitioning >
 
+@property(nonatomic, readwrite, weak) id< UIViewControllerContextTransitioning > transitionContext;
 @property(nonatomic, readwrite, assign) NSTimeInterval duration;
+@property(nonatomic, readwrite, assign) CGFloat interactiveCompletionSpeed;
+@property(nonatomic, readwrite, assign) UIViewAnimationCurve interactiveCompletionCurve;
 @property(nonatomic, readwrite, assign, getter=isReverse) BOOL reverse;
 
-- (void)animateTransition:(id< UIViewControllerContextTransitioning >)transitionContext fromVC:(UIViewController*)fromVC toVC:(UIViewController*)toVC fromView:(UIView*)fromView toView:(UIView*)toView;
+@property(nonatomic, readonly, weak) UIViewController* fromViewController;
+@property(nonatomic, readonly, assign) CGRect initialFrameFromViewController;
+@property(nonatomic, readonly, assign) CGRect finalFrameFromViewController;
+@property(nonatomic, readonly, weak) UIViewController* toViewController;
+@property(nonatomic, readonly, assign) CGRect initialFrameToViewController;
+@property(nonatomic, readonly, assign) CGRect finalFrameToViewController;
+@property(nonatomic, readonly, weak) UIView* containerView;
+@property(nonatomic, readonly, weak) UIView* fromView;
+@property(nonatomic, readonly, weak) UIView* toView;
+
+- (BOOL)isAnimated;
+- (BOOL)isInteractive;
+- (BOOL)transitionWasCancelled;
+
+- (void)startTransition;
+- (void)completeTransition;
+
+- (void)startInteractive;
+- (void)updateInteractive:(CGFloat)percentComplete;
+- (void)finishInteractive;
+- (void)cancelInteractive;
 
 @end
 

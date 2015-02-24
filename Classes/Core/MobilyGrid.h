@@ -72,9 +72,10 @@
 - (void)setObject:(id)object atColumn:(NSUInteger)column atRow:(NSUInteger)row;
 - (void)setObjects:(NSArray*)objects;
 
-- (void)removeObjectAtColumn:(NSUInteger)column atRow:(NSUInteger)row;
-- (void)removeObjectsForColumn:(NSUInteger)column;
-- (void)removeObjectsForRow:(NSUInteger)row;
+- (void)insertColumn:(NSUInteger)column objects:(NSArray*)objects;
+- (void)insertRow:(NSUInteger)row objects:(NSArray*)objects;
+- (void)removeColumn:(NSUInteger)column;
+- (void)removeRow:(NSUInteger)row;
 - (void)removeAllObjects;
 
 @end

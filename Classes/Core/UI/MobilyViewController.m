@@ -40,7 +40,6 @@
 
 @interface MobilyViewController ()
 
-@property(nonatomic, readwrite, assign, getter = isNeedUpdate) BOOL needUpdate;
 @property(nonatomic, readwrite, strong) NSString* mobilyName;
 
 @end
@@ -67,7 +66,6 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
     } else {
         self.orientation = UIInterfaceOrientationMaskAll;
     }
-    self.needUpdate = YES;
 }
 
 - (void)dealloc {
@@ -109,9 +107,6 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
         if([view isKindOfClass:UIView.class] == YES) {
             self.view = view;
         } else {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-            NSLog(@"Failure load view mobily '%@' object '%@'", _mobilyName, NSStringFromClass(view.class));
-#endif
             [super loadView];
         }
     } else {
@@ -125,44 +120,9 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
         if(nib != nil) {
             [nib instantiateWithOwner:self options:nil];
         } else {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-            NSLog(@"Failure load view nib '%@'", NSStringFromClass(self.class));
-#endif
             [super loadView];
         }
     }
-}
-
-- (void)viewDidUnload {
-    [self setNeedUpdate];
-    
-    [super viewDidUnload];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    if([self isNeedUpdate] == YES) {
-        self.needUpdate = NO;
-        [self update];
-    }
-}
-
-#pragma mark Public
-
-- (void)setNeedUpdate {
-    if((self.isViewLoaded == YES) && ([self isAppeared] == YES)) {
-        [self update];
-    } else {
-        self.needUpdate = YES;
-    }
-}
-
-- (void)update {
-}
-
-- (void)clear {
-    [self setNeedUpdate];
 }
 
 @end

@@ -57,6 +57,10 @@
 
 - (void)setNavigationBarHidden:(BOOL)navigationBarHidden animated:(BOOL)animated;
 
+- (void)setNeedUpdate;
+- (void)update;
+- (void)clear;
+
 @end
 
 /*--------------------------------------------------*/

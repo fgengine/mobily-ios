@@ -82,6 +82,24 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
+@interface MobilyTransitionController ()
+
+@property(nonatomic, readwrite, weak) UIViewController* fromViewController;
+@property(nonatomic, readwrite, assign) CGRect initialFrameFromViewController;
+@property(nonatomic, readwrite, assign) CGRect finalFrameFromViewController;
+@property(nonatomic, readwrite, weak) UIViewController* toViewController;
+@property(nonatomic, readwrite, assign) CGRect initialFrameToViewController;
+@property(nonatomic, readwrite, assign) CGRect finalFrameToViewController;
+@property(nonatomic, readwrite, weak) UIView* containerView;
+@property(nonatomic, readwrite, weak) UIView* fromView;
+@property(nonatomic, readwrite, weak) UIView* toView;
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
 @implementation MobilyTransitionController
 
 #pragma mark Init / Free
@@ -96,14 +114,80 @@
 
 - (void)setup {
     self.duration = 1.0f;
+    self.interactiveCompletionSpeed = 720.0f;
+    self.interactiveCompletionSpeed = UIViewAnimationCurveEaseOut;
 }
 
 - (void)dealloc {
 }
 
+#pragma mark Property
+
+- (void)setTransitionContext:(id< UIViewControllerContextTransitioning >)transitionContext {
+    if(_transitionContext != transitionContext) {
+        _transitionContext = transitionContext;
+        
+        self.fromViewController = [_transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+        self.toViewController = [_transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+        self.containerView = _transitionContext.containerView;
+        self.fromView = (UIDevice.systemVersion >= 8.0f) ? [_transitionContext viewForKey:UITransitionContextFromViewKey] : _fromViewController.view;
+        self.toView = (UIDevice.systemVersion >= 8.0f) ? [_transitionContext viewForKey:UITransitionContextToViewKey] : _toViewController.view;
+    }
+}
+
+- (void)setFromViewController:(UIViewController*)fromViewController {
+    if(_fromViewController != fromViewController) {
+        _fromViewController = fromViewController;
+        
+        self.initialFrameFromViewController = [_transitionContext initialFrameForViewController:_fromViewController];
+        self.finalFrameFromViewController = [_transitionContext finalFrameForViewController:_fromViewController];
+    }
+}
+
+- (void)setToViewController:(UIViewController*)toViewController {
+    if(_toViewController != toViewController) {
+        _toViewController = toViewController;
+        
+        self.initialFrameToViewController = [_transitionContext initialFrameForViewController:_toViewController];
+        self.finalFrameToViewController = [_transitionContext finalFrameForViewController:_toViewController];
+    }
+}
+
 #pragma mark Public
 
-- (void)animateTransition:(id< UIViewControllerContextTransitioning >)transitionContext fromVC:(UIViewController*)fromVC toVC:(UIViewController*)toVC fromView:(UIView*)fromView toView:(UIView*)toView {
+- (BOOL)isAnimated {
+    return [_transitionContext isAnimated];
+}
+
+- (BOOL)isInteractive {
+    return [_transitionContext isInteractive];
+}
+
+- (BOOL)transitionWasCancelled {
+    return [_transitionContext transitionWasCancelled];
+}
+
+- (void)startTransition {
+}
+
+- (void)completeTransition {
+    [_transitionContext completeTransition:(_transitionContext.transitionWasCancelled == NO)];
+}
+
+- (void)startInteractive {
+    [self startInteractive];
+}
+
+- (void)updateInteractive:(CGFloat)percentComplete {
+    [_transitionContext updateInteractiveTransition:percentComplete];
+}
+
+- (void)finishInteractive {
+    [_transitionContext finishInteractiveTransition];
+}
+
+- (void)cancelInteractive {
+    [_transitionContext cancelInteractiveTransition];
 }
 
 #pragma mark UIViewControllerAnimatedTransitioning
@@ -113,9 +197,22 @@
 }
 
 - (void)animateTransition:(id< UIViewControllerContextTransitioning >)transitionContext {
-    UIViewController* fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    UIViewController* toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
-    [self animateTransition:transitionContext fromVC:fromVC toVC:toVC fromView:fromVC.view toView:toVC.view];
+    self.transitionContext = transitionContext;
+    [self startTransition];
+}
+
+#pragma mark UIViewControllerInteractiveTransitioning
+
+- (void)startInteractiveTransition:(id< UIViewControllerContextTransitioning >)transitionContext {
+    self.transitionContext = transitionContext;
+}
+
+- (CGFloat)completionSpeed {
+    return _interactiveCompletionSpeed;
+}
+
+- (UIViewAnimationCurve)completionCurve {
+    return _interactiveCompletionSpeed;
 }
 
 @end

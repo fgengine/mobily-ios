@@ -128,6 +128,10 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 
 #pragma mark MobilyBuilderObject
 
+- (NSArray*)relatedObjects {
+    return [_objectChilds relativeComplement:self.subviews];
+}
+
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIView.class] == YES) {
         self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];

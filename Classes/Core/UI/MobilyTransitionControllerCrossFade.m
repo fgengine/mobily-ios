@@ -41,21 +41,20 @@
 
 #pragma mark MobilyTransitionController
 
-- (void)animateTransition:(id< UIViewControllerContextTransitioning >)transitionContext fromVC:(UIViewController*)fromVC toVC:(UIViewController*)toVC fromView:(UIView*)fromView toView:(UIView*)toView {
-    UIView* containerView = transitionContext.containerView;
-    [containerView addSubview:toView];
-    [containerView sendSubviewToBack:toView];
+- (void)startTransition {
+    [self.containerView addSubview:self.toView];
+    [self.containerView sendSubviewToBack:self.toView];
     
-    [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
-        fromView.alpha = 0.0f;
+    [UIView animateWithDuration:self.duration animations:^{
+        self.fromView.alpha = 0.0f;
     } completion:^(BOOL finished) {
-        if(transitionContext.transitionWasCancelled) {
-            fromView.alpha = 1.0;
+        if(self.transitionWasCancelled == YES) {
+            self.fromView.alpha = 1.0;
         } else {
-            [fromView removeFromSuperview];
-            fromView.alpha = 1.0f;
+            [self.fromView removeFromSuperview];
+            self.fromView.alpha = 1.0f;
         }
-        [transitionContext completeTransition:(transitionContext.transitionWasCancelled == NO)];
+        [self completeTransition];
     }];
 }
 

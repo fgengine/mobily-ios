@@ -109,6 +109,10 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 
 #pragma mark MobilyBuilderObject
 
+- (NSArray*)relatedObjects {
+    return [_objectChilds relativeComplement:[NSArray arrayWithObject:self.rootViewController]];
+}
+
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIViewController.class] == YES) {
         self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];

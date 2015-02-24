@@ -44,6 +44,7 @@
 @interface MobilyController () < UIViewControllerTransitioningDelegate >
 
 @property(nonatomic, readwrite, assign, getter=isAppeared) BOOL appeared;
+@property(nonatomic, readwrite, assign, getter = isNeedUpdate) BOOL needUpdate;
 
 @end
 
@@ -91,6 +92,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)setup {
+    self.needUpdate = YES;
 }
 
 - (void)dealloc {
@@ -100,6 +102,10 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 #pragma mark MobilyBuilderObject
+
+- (NSArray*)relatedObjects {
+    return [_objectChilds relativeComplements:self.childViewControllers, nil];
+}
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIViewController.class] == YES) {
@@ -129,6 +135,17 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 #pragma mark Property
 
+- (void)setView:(UIView*)view {
+    super.view = view;
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    if((UIDevice.systemVersion >= 6.0f) && (view == nil)) {
+        [self viewDidUnload];
+    }
+#pragma clang diagnostic pop
+}
+
 - (id)app {
     return MobilyContext.application;
 }
@@ -141,6 +158,8 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     [self setNavigationBarHidden:navigationBarHidden animated:NO];
 }
 
+#pragma mark Public
+
 - (void)setNavigationBarHidden:(BOOL)navigationBarHidden animated:(BOOL)animated {
     if(_navigationBarHidden != navigationBarHidden) {
         _navigationBarHidden = navigationBarHidden;
@@ -149,6 +168,36 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
             [self.navigationController setNavigationBarHidden:_navigationBarHidden animated:animated];
         }
     }
+}
+
+- (void)setNeedUpdate {
+    if((self.isViewLoaded == YES) && ([self isAppeared] == YES)) {
+        [self update];
+    } else {
+        self.needUpdate = YES;
+    }
+    [self.relatedObjects each:^(id object) {
+        if([object respondsToSelector:@selector(setNeedUpdate)] == YES) {
+            [object setNeedUpdate];
+        }
+    }];
+}
+
+- (void)update {
+    [self.relatedObjects each:^(id object) {
+        if([object respondsToSelector:@selector(update)] == YES) {
+            [object update];
+        }
+    }];
+}
+
+- (void)clear {
+    [self.relatedObjects each:^(id object) {
+        if([object respondsToSelector:@selector(clear)] == YES) {
+            [object clear];
+        }
+    }];
+    [self setNeedUpdate];
 }
 
 #pragma mark UIViewController
@@ -173,6 +222,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (void)viewDidUnload {
     [_eventDidUnload fireSender:self object:nil];
+    [self setNeedUpdate];
     
     [super viewDidUnload];
 }
@@ -182,6 +232,10 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     
     [_eventWillAppear fireSender:self object:nil];
     self.appeared = _appeared + 1;
+    if([self isNeedUpdate] == YES) {
+        self.needUpdate = NO;
+        [self update];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -209,17 +263,6 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     [self unloadViewIfPossible];
 }
 
-- (void)setView:(UIView*)view {
-    super.view = view;
-    
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    if((UIDevice.systemVersion >= 6.0f) && (view == nil)) {
-        [self viewDidUnload];
-    }
-#pragma clang diagnostic pop
-}
-
 #pragma mark UIViewControllerTransitioningDelegate
 
 - (id< UIViewControllerAnimatedTransitioning >)animationControllerForPresentedController:(UIViewController*)presented presentingController:(UIViewController*)presenting sourceController:(UIViewController*)source {
@@ -230,6 +273,20 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (id< UIViewControllerAnimatedTransitioning >)animationControllerForDismissedController:(UIViewController*)dismissed {
+    if(_transitionModal != nil) {
+        _transitionModal.reverse = YES;
+    }
+    return _transitionModal;
+}
+
+- (id< UIViewControllerInteractiveTransitioning >)interactionControllerForPresentation:(id< UIViewControllerAnimatedTransitioning >)animator {
+    if(_transitionModal != nil) {
+        _transitionModal.reverse = NO;
+    }
+    return _transitionModal;
+}
+
+- (id< UIViewControllerInteractiveTransitioning >)interactionControllerForDismissal:(id< UIViewControllerAnimatedTransitioning >)animator {
     if(_transitionModal != nil) {
         _transitionModal.reverse = YES;
     }

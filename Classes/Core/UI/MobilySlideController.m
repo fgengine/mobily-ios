@@ -184,6 +184,9 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
     [super viewDidLayoutSubviews];
     
     CGRect bounds = self.view.bounds;
+    if(_backgroundController != nil) {
+        _backgroundController.view.frame = self.view.bounds;
+    }
     _leftView.frame = [self leftViewFrameFromBounds:bounds byPercent:_swipeProgress];
     _centerView.frame = [self centerViewFrameFromBounds:bounds byPercent:_swipeProgress];
     _rightView.frame = [self rightViewFrameFromBounds:bounds byPercent:_swipeProgress];
@@ -284,7 +287,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         }
         if(animated == YES) {
         } else {
-            if(_backgroundController != nil) {
+            if((_backgroundController != nil) && (self.isViewLoaded == YES)) {
                 [self disappearBackgroundController];
             }
             _backgroundController = backgroundController;
@@ -305,7 +308,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         }
         if(animated == YES) {
         } else {
-            if(_leftController != nil) {
+            if((_leftController != nil) && (self.isViewLoaded == YES)) {
                 [self disappearLeftController];
             }
             _leftController = leftController;
@@ -326,7 +329,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         }
         if(animated == YES) {
         } else {
-            if(_centerController != nil) {
+            if((_centerController != nil) && (self.isViewLoaded == YES)) {
                 [self disappearCenterController];
             }
             _centerController = centerController;
@@ -347,7 +350,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         }
         if(animated == YES) {
         } else {
-            if(_rightController != nil) {
+            if((_rightController != nil) && (self.isViewLoaded == YES)) {
                 [self disappearRightController];
             }
             _rightController = rightController;
@@ -362,15 +365,135 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (void)showLeftControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
+    if(_showedLeftController == NO) {
+        if(self.isViewLoaded == NO) {
+            animated = NO;
+        }
+        CGRect leftFrame = [self leftViewFrameByPercent:1.0f];
+        CGRect centerFrame = [self centerViewFrameByPercent:-1.0f];
+        CGFloat diffX = ABS(leftFrame.origin.x - centerFrame.origin.x);
+        CGFloat diffY = ABS(leftFrame.origin.y - centerFrame.origin.y);
+        CGFloat diffW = ABS(leftFrame.size.width - centerFrame.size.width);
+        CGFloat diffH = ABS(leftFrame.size.height - centerFrame.size.height);
+        CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
+        if(animated == YES) {
+            [UIView animateWithDuration:speed / _swipeSpeed animations:^{
+                _leftView.frame = leftFrame;
+                _centerView.frame = centerFrame;
+            } completion:^(BOOL finished) {
+                _showedLeftController = YES;
+                if(completed != nil) {
+                    completed();
+                }
+            }];
+        } else {
+            _leftView.frame = leftFrame;
+            _centerView.frame = centerFrame;
+            _showedLeftController = YES;
+            if(completed != nil) {
+                completed();
+            }
+        }
+    }
 }
 
 - (void)hideLeftControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
+    if(_showedLeftController == YES) {
+        if(self.isViewLoaded == NO) {
+            animated = NO;
+        }
+        CGRect leftFrame = [self leftViewFrameByPercent:0.0f];
+        CGRect centerFrame = [self centerViewFrameByPercent:0.0f];
+        CGFloat diffX = ABS(leftFrame.origin.x - centerFrame.origin.x);
+        CGFloat diffY = ABS(leftFrame.origin.y - centerFrame.origin.y);
+        CGFloat diffW = ABS(leftFrame.size.width - centerFrame.size.width);
+        CGFloat diffH = ABS(leftFrame.size.height - centerFrame.size.height);
+        CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
+        if(animated == YES) {
+            [UIView animateWithDuration:speed / _swipeSpeed animations:^{
+                _leftView.frame = leftFrame;
+                _centerView.frame = centerFrame;
+            } completion:^(BOOL finished) {
+                _showedLeftController = NO;
+                if(completed != nil) {
+                    completed();
+                }
+            }];
+        } else {
+            _leftView.frame = leftFrame;
+            _centerView.frame = centerFrame;
+            _showedLeftController = NO;
+            if(completed != nil) {
+                completed();
+            }
+        }
+    }
 }
 
 - (void)showRightControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
+    if(_showedRightController == NO) {
+        if(self.isViewLoaded == NO) {
+            animated = NO;
+        }
+        CGRect centerFrame = [self centerViewFrameByPercent:1.0f];
+        CGRect rightFrame = [self rightViewFrameByPercent:1.0f];
+        CGFloat diffX = ABS(centerFrame.origin.x - rightFrame.origin.x);
+        CGFloat diffY = ABS(centerFrame.origin.y - rightFrame.origin.y);
+        CGFloat diffW = ABS(centerFrame.size.width - rightFrame.size.width);
+        CGFloat diffH = ABS(centerFrame.size.height - rightFrame.size.height);
+        CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
+        if(animated == YES) {
+            [UIView animateWithDuration:speed / _swipeSpeed animations:^{
+                _centerView.frame = centerFrame;
+                _rightView.frame = rightFrame;
+            } completion:^(BOOL finished) {
+                _showedRightController = YES;
+                if(completed != nil) {
+                    completed();
+                }
+            }];
+        } else {
+            _centerView.frame = centerFrame;
+            _rightView.frame = rightFrame;
+            _showedRightController = YES;
+            if(completed != nil) {
+                completed();
+            }
+        }
+    }
 }
 
 - (void)hideRightControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
+    if(_showedRightController == YES) {
+        if(self.isViewLoaded == NO) {
+            animated = NO;
+        }
+        CGRect centerFrame = [self centerViewFrameByPercent:0.0f];
+        CGRect rightFrame = [self rightViewFrameByPercent:0.0f];
+        CGFloat diffX = ABS(centerFrame.origin.x - rightFrame.origin.x);
+        CGFloat diffY = ABS(centerFrame.origin.y - rightFrame.origin.y);
+        CGFloat diffW = ABS(centerFrame.size.width - rightFrame.size.width);
+        CGFloat diffH = ABS(centerFrame.size.height - rightFrame.size.height);
+        CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
+        if(animated == YES) {
+            [UIView animateWithDuration:speed / _swipeSpeed animations:^{
+                _centerView.frame = centerFrame;
+                _rightView.frame = rightFrame;
+            } completion:^(BOOL finished) {
+                _showedRightController = NO;
+                if(completed != nil) {
+                    completed();
+                }
+            }];
+        } else {
+            _centerView.frame = centerFrame;
+            _rightView.frame = rightFrame;
+            _showedRightController = NO;
+            if(completed != nil) {
+                completed();
+            }
+        }
+    }
 }
 
 #pragma mark Private
@@ -412,8 +535,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
     [_backgroundController didMoveToParentViewController:self];
     
     [_backgroundController viewWillAppear:NO];
-    // _backgroundController.view.translatesAutoresizingMaskIntoConstraints = NO;
-    // _backgroundController.view.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     _backgroundController.view.frame = self.view.bounds;
     [self.view addSubview:_backgroundController.view];
     [_backgroundController viewDidAppear:NO];
@@ -435,8 +556,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
     _leftController.slideNavigation = self;
     
     [self addChildViewController:_leftController];
-    // _leftController.view.translatesAutoresizingMaskIntoConstraints = NO;
-    // _leftController.view.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     _leftController.view.frame = _leftView.bounds;
     [_leftView addSubview:_leftController.view];
     [_leftController didMoveToParentViewController:self];
@@ -454,8 +573,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
     _centerController.slideNavigation = self;
     
     [self addChildViewController:_centerController];
-    // _centerController.view.translatesAutoresizingMaskIntoConstraints = NO;
-    // _centerController.view.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     _centerController.view.frame = _centerView.bounds;
     [_centerView addSubview:_centerController.view];
     [_centerController didMoveToParentViewController:self];
@@ -473,8 +590,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
     _rightController.slideNavigation = self;
     
     [self addChildViewController:_rightController];
-    // _rightController.view.translatesAutoresizingMaskIntoConstraints = NO;
-    // _rightController.view.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     _rightController.view.frame = _rightView.bounds;
     [_rightView addSubview:_rightController.view];
     [_rightController didMoveToParentViewController:self];
