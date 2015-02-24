@@ -858,7 +858,7 @@
 
 - (void)didInsertItems:(NSArray*)items {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(_updating != NO) {
+    if(_updating != YES) {
         NSLog(@"ERROR: [%@:%@] didInsertItems:%@", self.class, NSStringFromSelector(_cmd), items);
         return;
     }
@@ -869,7 +869,7 @@
 
 - (void)didDeleteItems:(NSArray*)items {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(_updating != NO) {
+    if(_updating != YES) {
         NSLog(@"ERROR: [%@:%@] didDeleteItems:%@", self.class, NSStringFromSelector(_cmd), items);
         return;
     }
@@ -884,7 +884,7 @@
 
 - (void)didReplaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(_updating != NO) {
+    if(_updating != YES) {
         NSLog(@"ERROR: [%@:%@] didReplaceOriginItems:%@ withItems:%@", self.class, NSStringFromSelector(_cmd), originItems, items);
         return;
     }
