@@ -39,8 +39,14 @@
 
 @interface MobilyGrid : NSObject< NSCopying >
 
-@property(nonatomic, readonly, assign) NSUInteger columns;
-@property(nonatomic, readonly, assign) NSUInteger rows;
+@property(nonatomic, readonly, assign) NSUInteger numberOfColumns;
+@property(nonatomic, readonly, assign) NSUInteger numberOfRows;
+@property(nonatomic, readonly, assign) NSUInteger count;
+
++ (instancetype)grid;
++ (instancetype)gridWithColumns:(NSUInteger)columns rows:(NSUInteger)rows;
++ (instancetype)gridWithColumns:(NSUInteger)columns rows:(NSUInteger)rows objects:(NSArray*)objects;
++ (instancetype)gridWithGrid:(MobilyGrid*)grid;
 
 - (instancetype)initWithColumns:(NSUInteger)columns rows:(NSUInteger)rows;
 - (instancetype)initWithColumns:(NSUInteger)columns rows:(NSUInteger)rows objects:(NSArray*)objects;
@@ -53,7 +59,9 @@
 - (id)objectAtColumn:(NSUInteger)column atRow:(NSUInteger)row;
 - (NSArray*)objects;
 
-- (void)eachWithIndex:(void(^)(id object, NSUInteger column, NSUInteger row))block;
+- (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block;
+- (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block byColumn:(NSInteger)column;
+- (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block byRow:(NSInteger)row;
 
 @end
 
@@ -63,6 +71,11 @@
 
 - (void)setObject:(id)object atColumn:(NSUInteger)column atRow:(NSUInteger)row;
 - (void)setObjects:(NSArray*)objects;
+
+- (void)removeObjectAtColumn:(NSUInteger)column atRow:(NSUInteger)row;
+- (void)removeObjectsForColumn:(NSUInteger)column;
+- (void)removeObjectsForRow:(NSUInteger)row;
+- (void)removeAllObjects;
 
 @end
 
