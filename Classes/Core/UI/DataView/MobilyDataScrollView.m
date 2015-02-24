@@ -293,7 +293,7 @@
 - (void)setContainer:(id< MobilyDataContainer >)container {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_updating != NO) {
-        NSLog(@"ERROR: [%@:%@] setContainer:%@", self.class, NSStringFromSelector(_cmd), container);
+        NSLog(@"ERROR: [%@:%@] %@", self.class, NSStringFromSelector(_cmd), container);
         return;
     }
 #endif
@@ -549,7 +549,7 @@
 - (void)registerIdentifier:(NSString*)identifier withViewClass:(Class< MobilyDataItemView >)viewClass {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_registersViews[identifier] != nil) {
-        NSLog(@"ERROR: [%@:%@] registerIdentifier:%@ withViewClass:%@", self.class, NSStringFromSelector(_cmd), identifier, viewClass);
+        NSLog(@"ERROR: [%@:%@] %@ - %@", self.class, NSStringFromSelector(_cmd), identifier, viewClass);
         return;
     }
 #endif
@@ -559,7 +559,7 @@
 - (void)unregisterIdentifier:(NSString*)identifier {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_registersViews[identifier] == nil) {
-        NSLog(@"ERROR: [%@:%@] unregisterIdentifier:%@", self.class, NSStringFromSelector(_cmd), identifier);
+        NSLog(@"ERROR: [%@:%@] %@", self.class, NSStringFromSelector(_cmd), identifier);
         return;
     }
 #endif
@@ -817,7 +817,7 @@
 - (void)performBatchUpdate:(MobilyDataWidgetUpdateBlock)update complete:(MobilyDataWidgetCompleteBlock)complete {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_updating != NO) {
-        NSLog(@"ERROR: [%@:%@] performBatchUpdate:%@ complete:%@", self.class, NSStringFromSelector(_cmd), update, complete);
+        NSLog(@"ERROR: [%@:%@] %@ - %@", self.class, NSStringFromSelector(_cmd), update, complete);
         return;
     }
 #endif
@@ -836,7 +836,7 @@
 - (void)performBatchDuration:(NSTimeInterval)duration update:(MobilyDataWidgetUpdateBlock)update complete:(MobilyDataWidgetCompleteBlock)complete {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_updating != NO) {
-        NSLog(@"ERROR: [%@:%@] performBatchDuration:%0.2f update:%@ complete:%@", self.class, NSStringFromSelector(_cmd), duration, update, complete);
+        NSLog(@"ERROR: [%@:%@] %0.2f - %@ - %@", self.class, NSStringFromSelector(_cmd), duration, update, complete);
         return;
     }
 #endif
@@ -859,7 +859,7 @@
 - (void)didInsertItems:(NSArray*)items {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_updating != YES) {
-        NSLog(@"ERROR: [%@:%@] didInsertItems:%@", self.class, NSStringFromSelector(_cmd), items);
+        NSLog(@"ERROR: [%@:%@] %@", self.class, NSStringFromSelector(_cmd), items);
         return;
     }
 #endif
@@ -870,7 +870,7 @@
 - (void)didDeleteItems:(NSArray*)items {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_updating != YES) {
-        NSLog(@"ERROR: [%@:%@] didDeleteItems:%@", self.class, NSStringFromSelector(_cmd), items);
+        NSLog(@"ERROR: [%@:%@] %@", self.class, NSStringFromSelector(_cmd), items);
         return;
     }
 #endif
@@ -885,7 +885,7 @@
 - (void)didReplaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_updating != YES) {
-        NSLog(@"ERROR: [%@:%@] didReplaceOriginItems:%@ withItems:%@", self.class, NSStringFromSelector(_cmd), originItems, items);
+        NSLog(@"ERROR: [%@:%@] %@ - %@", self.class, NSStringFromSelector(_cmd), originItems, items);
         return;
     }
 #endif

@@ -33,60 +33,29 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_CORE
-#   import "MobilyCore.h"
-#   import "MobilyNS.h"
-#   import "MobilyCG.h"
-#   import "MobilyMap.h"
-#   import "MobilyGrid.h"
-#   import "MobilyEvent.h"
-#   import "MobilyTimer.h"
-#   import "MobilyModel.h"
-#   import "MobilyModelJson.h"
-#   import "MobilyCache.h"
-#   import "MobilyTaskManager.h"
-#   import "MobilyHttpQuery.h"
-#   import "MobilyDownloader.h"
-#   import "MobilyRegExpParser.h"
-#   import "MobilyKVO.h"
-#   import "MobilyApiManager.h"
-#   import "MobilyApiProvider.h"
-#   import "MobilyApiRequest.h"
-#   import "MobilyApiResponse.h"
-#   import "MobilyUI.h"
-#   import "MobilyContext.h"
-#   import "MobilyApplication.h"
-#   import "MobilyWindow.h"
-#   import "MobilyController.h"
-#   import "MobilyNavigationController.h"
-#   import "MobilyTabBarController.h"
-#   import "MobilySlideController.h"
-#   import "MobilyViewController.h"
-#   import "MobilyButton.h"
-#   import "MobilyTextField.h"
-#   import "MobilyDateField.h"
-#   import "MobilyListField.h"
-#   import "MobilyImageView.h"
-#   import "MobilyScrollView.h"
-#   import "MobilyTableView.h"
-#   import "MobilyFieldValidation.h"
-#   import "MobilyDataScrollView.h"
-#   import "MobilyDataContainer.h"
-#   import "MobilyDataItem.h"
-#   import "MobilyDataItemView.h"
-#   import "MobilyAV.h"
-#   import "MobilyAudioRecorder.h"
-#   import "MobilyAudioPlayer.h"
-#endif
+#import "MobilyNS.h"
 
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_SOCIAL
-#   import "MobilySocialManager.h"
-#   import "MobilySocialProvider.h"
-#   import "MobilySocialFacebookProvider.h"
-#   import "MobilySocialVKontakteProvider.h"
-#   import "MobilySocialTwitterProvider.h"
-#endif
+@interface MobilyGrid : NSObject< NSCopying >
+
+@property(nonatomic, readonly, assign) NSUInteger width;
+@property(nonatomic, readonly, assign) NSUInteger height;
+
+- (instancetype)initWithColumns:(NSUInteger)columns rows:(NSUInteger)rows;
+- (instancetype)initWithColumns:(NSUInteger)columns rows:(NSUInteger)rows objects:(NSArray*)objects;
+
+- (BOOL)containsColumn:(NSUInteger)column row:(NSUInteger)row;
+- (BOOL)isEmptyColumn:(NSInteger)column;
+- (BOOL)isEmptyRow:(NSInteger)row;
+
+- (void)setObject:(id)object atColumn:(NSUInteger)column atRow:(NSUInteger)row;
+- (id)objectAtColumn:(NSUInteger)column atRow:(NSUInteger)row;
+- (void)setObjects:(NSArray*)objects;
+- (NSArray*)objects;
+
+- (void)eachWithIndex:(void(^)(id object, NSUInteger column, NSUInteger row))block;
+
+@end
 
 /*--------------------------------------------------*/
