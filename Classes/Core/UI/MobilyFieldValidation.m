@@ -99,13 +99,13 @@
 }
 
 - (NSArray*)getInvalidControls {
-    return [_controls relativeComplement:[_validatedControls allObjects]];
+    return [_controls intersectionWithArray:[_validatedControls allObjects]];
 }
 
 - (NSString*)output {
     __block NSString* output = @"";
     NSArray* results = @[];
-    NSArray* invalidControls = [_controls relativeComplement:[_validatedControls allObjects]];
+    NSArray* invalidControls = [_controls intersectionWithArray:[_validatedControls allObjects]];
     for(id<MobilyValidatedObject> control in invalidControls) {
         results = [results unionWithArray:[control.validator messages]];
     }

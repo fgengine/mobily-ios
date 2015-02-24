@@ -369,7 +369,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         if(self.isViewLoaded == NO) {
             animated = NO;
         }
-        CGRect leftFrame = [self leftViewFrameByPercent:1.0f];
+        CGRect leftFrame = [self leftViewFrameByPercent:-1.0f];
         CGRect centerFrame = [self centerViewFrameByPercent:-1.0f];
         CGFloat diffX = ABS(leftFrame.origin.x - centerFrame.origin.x);
         CGFloat diffY = ABS(leftFrame.origin.y - centerFrame.origin.y);

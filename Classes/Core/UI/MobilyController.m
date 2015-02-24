@@ -104,7 +104,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 #pragma mark MobilyBuilderObject
 
 - (NSArray*)relatedObjects {
-    return [_objectChilds relativeComplements:self.childViewControllers, nil];
+    return [_objectChilds intersectionWithArrays:self.childViewControllers, nil];
 }
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
@@ -184,20 +184,16 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)update {
-    [self.relatedObjects each:^(id object) {
-        if([object respondsToSelector:@selector(update)] == YES) {
-            [object update];
-        }
-    }];
 }
 
 - (void)clear {
+    [self setNeedUpdate];
+    
     [self.relatedObjects each:^(id object) {
         if([object respondsToSelector:@selector(clear)] == YES) {
             [object clear];
         }
     }];
-    [self setNeedUpdate];
 }
 
 #pragma mark UIViewController
@@ -232,16 +228,16 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     
     [_eventWillAppear fireSender:self object:nil];
     self.appeared = _appeared + 1;
-    if([self isNeedUpdate] == YES) {
+    if(self.isNeedUpdate == YES) {
         self.needUpdate = NO;
         [self update];
     }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-
     [_eventDidAppear fireSender:self object:nil];
+    
+    [super viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
