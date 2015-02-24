@@ -35,6 +35,7 @@
 
 #import "MobilyFieldValidation.h"
 #import "MobilyValidatedObject.h"
+#import "MobilyNS.h"
 
 /*--------------------------------------------------*/
 
@@ -97,6 +98,26 @@
     _controls = [NSArray array];
 }
 
+- (NSArray*)getInvalidControls {
+    return [_controls relativeComplement:[_validatedControls allObjects]];
+}
+
+- (NSString*)output {
+    __block NSString* output = @"";
+    NSArray* results = @[];
+    NSArray* invalidControls = [_controls relativeComplement:[_validatedControls allObjects]];
+    for(id<MobilyValidatedObject> control in invalidControls) {
+        results = [results unionWithArray:[control.validator messages]];
+    }
+    [results eachWithIndex:^(NSString* r, NSUInteger index) {
+        output = [output stringByAppendingString:r];
+        if(index != results.count-1) {
+            output = [output stringByAppendingString:@"\n"];
+        }
+    }];
+    return output;
+}
+
 - (void)validatedSuccess:(id<MobilyValidatedObject>)control {
     [_validatedControls addObject:control];
     NSLog(@"success");
@@ -125,6 +146,15 @@
 
 @implementation MobilyFieldEmptyValidator
 
+@synthesize msg = _msg;
+
+- (instancetype)initWithMessage:(NSString*)msg {
+    if(self = [super init]) {
+        self.msg = msg;
+    }
+    return self;
+}
+
 - (BOOL)validate:(NSString*)value {
     NSCharacterSet* whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
     NSString* trimmed = [value stringByTrimmingCharactersInSet:whitespace];
@@ -132,6 +162,10 @@
         return YES;
     }
     return NO;
+}
+
+- (NSArray*)messages {
+    return @[(_msg == nil) ? @"Заполните все поля" : _msg];
 }
 
 @end
@@ -142,12 +176,30 @@
 
 @implementation MobilyFieldRegExpValidator
 
+@synthesize msg = _msg;
+
+- (instancetype)initWithRegExp:(NSString*)regExp andMessage:(NSString*)msg {
+    if(self = [super init]) {
+        self.regExp = regExp;
+        self.msg = msg;
+    }
+    return self;
+}
+
 - (BOOL)validate:(NSString*)value {
     NSPredicate* test = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", _regExp];
     if([test evaluateWithObject:value] == YES) {
         return YES;
     }
     return NO;
+}
+
+- (NSArray*)messages {
+    if(_msg != nil) {
+        return @[_msg];
+    }
+    
+    return @[];
 }
 
 @end
@@ -158,11 +210,17 @@
 
 @implementation MobilyFieldMinLengthValidator
 
+@synthesize msg = _msg;
+
 - (BOOL)validate:(NSString*)value {
     if([value length] >= _minLength) {
         return YES;
     }
     return NO;
+}
+
+- (NSArray*)messages {
+    return @[];
 }
 
 @end
@@ -171,11 +229,17 @@
 
 @implementation MobilyFieldMaxLengthValidator
 
+@synthesize msg = _msg;
+
 - (BOOL)validate:(NSString*)value {
     if([value length] <= _maxLength) {
         return YES;
     }
     return NO;
+}
+
+- (NSArray*)messages {
+    return @[];
 }
 
 @end
@@ -186,12 +250,18 @@
 
 @implementation MobilyFieldDigitValidator
 
+@synthesize msg = _msg;
+
 - (BOOL)validate:(NSString*)value {
     NSPredicate* test = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", @"[0-9]+"];
     if([test evaluateWithObject:value] == YES) {
         return YES;
     }
     return NO;
+}
+
+- (NSArray*)messages {
+    return @[];
 }
 
 @end
@@ -201,6 +271,16 @@
 /*--------------------------------------------------*/
 
 @implementation MobilyFieldANDValidator
+
+@synthesize msg = _msg;
+
+- (instancetype)initWithValidators:(NSArray*)validators andMessage:(NSString*)msg {
+    if(self = [super init]) {
+        self.validators = validators;
+        self.msg = msg;
+    }
+    return self;
+}
 
 - (BOOL)validate:(NSString*)value {
     BOOL result = YES;
@@ -213,6 +293,14 @@
     return result;
 }
 
+- (NSArray*)messages {
+    NSArray* results = @[];
+    for(id<MobilyFieldValidator> val in _validators) {
+        results = [results unionWithArray:[val messages]];
+    }
+    return results;
+}
+
 @end
 
 /*--------------------------------------------------*/
@@ -220,6 +308,8 @@
 /*--------------------------------------------------*/
 
 @implementation MobilyFieldORValidator
+
+@synthesize msg = _msg;
 
 - (BOOL)validate:(NSString*)value {
     BOOL result = NO;
@@ -230,6 +320,10 @@
         }
     }
     return result;
+}
+
+- (NSArray*)messages {
+    return @[];
 }
 
 @end

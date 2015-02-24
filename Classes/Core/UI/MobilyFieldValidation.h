@@ -40,8 +40,11 @@
 
 @protocol MobilyFieldValidator <NSObject>
 
+@property(nonatomic, readwrite, strong) NSString* msg;
+
 @required
 - (BOOL)validate:(NSString*)value;
+- (NSArray*)messages;
 
 @end
 
@@ -56,6 +59,9 @@
 - (void)removeControl:(id<MobilyValidatedObject>)control;
 - (void)removeAllControls;
 
+- (NSArray*)getInvalidControls;
+- (NSString*)output;
+
 - (void)validatedSuccess:(id<MobilyValidatedObject>)control;
 - (void)validatedFail:(id<MobilyValidatedObject>)control;
 
@@ -65,6 +71,8 @@
 
 @interface MobilyFieldEmptyValidator : NSObject < MobilyFieldValidator >
 
+- (instancetype)initWithMessage:(NSString*)msg;
+
 @end
 
 /*--------------------------------------------------*/
@@ -72,6 +80,8 @@
 @interface MobilyFieldRegExpValidator : NSObject < MobilyFieldValidator >
 
 @property(nonatomic, readwrite, strong) NSString* regExp;
+
+- (instancetype)initWithRegExp:(NSString*)regExp andMessage:(NSString*)msg;
 
 @end
 
@@ -102,6 +112,8 @@
 @interface MobilyFieldANDValidator : NSObject < MobilyFieldValidator >
 
 @property(nonatomic, readwrite, strong) NSArray* validators;
+
+- (instancetype)initWithValidators:(NSArray*)validators andMessage:(NSString*)msg;
 
 @end
 
