@@ -99,15 +99,15 @@
 }
 
 - (NSArray*)getInvalidControls {
-    return [_controls intersectionWithArray:[_validatedControls allObjects]];
+    return [_controls relativeComplement:[_validatedControls allObjects]];
 }
 
 - (NSString*)output {
     __block NSString* output = @"";
     NSArray* results = @[];
-    NSArray* invalidControls = [_controls intersectionWithArray:[_validatedControls allObjects]];
+    NSArray* invalidControls = [_controls relativeComplement:[_validatedControls allObjects]];
     for(id<MobilyValidatedObject> control in invalidControls) {
-        results = [results unionWithArray:[control.validator messages]];
+        results = [results unionWithArray:[control.validator messages:nil]];
     }
     [results eachWithIndex:^(NSString* r, NSUInteger index) {
         output = [output stringByAppendingString:r];
@@ -118,12 +118,12 @@
     return output;
 }
 
-- (void)validatedSuccess:(id<MobilyValidatedObject>)control {
+- (void)validatedSuccess:(id<MobilyValidatedObject>)control andValue:(NSString*)value {
     [_validatedControls addObject:control];
     NSLog(@"success");
 }
 
-- (void)validatedFail:(id<MobilyValidatedObject>)control {
+- (void)validatedFail:(id<MobilyValidatedObject>)control andValue:(NSString*)value {
     [_validatedControls removeObject:control];
     NSLog(@"fail");
 }
@@ -164,7 +164,7 @@
     return NO;
 }
 
-- (NSArray*)messages {
+- (NSArray*)messages:(NSString*)value {
     return @[(_msg == nil) ? @"Заполните все поля" : _msg];
 }
 
@@ -194,7 +194,7 @@
     return NO;
 }
 
-- (NSArray*)messages {
+- (NSArray*)messages:(NSString*)value {
     if(_msg != nil) {
         return @[_msg];
     }
@@ -219,7 +219,7 @@
     return NO;
 }
 
-- (NSArray*)messages {
+- (NSArray*)messages:(NSString*)value {
     return @[];
 }
 
@@ -238,7 +238,7 @@
     return NO;
 }
 
-- (NSArray*)messages {
+- (NSArray*)messages:(NSString*)value {
     return @[];
 }
 
@@ -260,7 +260,7 @@
     return NO;
 }
 
-- (NSArray*)messages {
+- (NSArray*)messages:(NSString*)value {
     return @[];
 }
 
@@ -293,10 +293,10 @@
     return result;
 }
 
-- (NSArray*)messages {
+- (NSArray*)messages:(NSString*)value {
     NSArray* results = @[];
     for(id<MobilyFieldValidator> val in _validators) {
-        results = [results unionWithArray:[val messages]];
+        results = [results unionWithArray:[val messages:nil]];
     }
     return results;
 }
@@ -322,7 +322,7 @@
     return result;
 }
 
-- (NSArray*)messages {
+- (NSArray*)messages:(NSString*)value {
     return @[];
 }
 

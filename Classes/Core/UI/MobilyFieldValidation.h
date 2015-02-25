@@ -44,7 +44,7 @@
 
 @required
 - (BOOL)validate:(NSString*)value;
-- (NSArray*)messages;
+- (NSArray*)messages:(NSString*)value;
 
 @end
 
@@ -62,8 +62,8 @@
 - (NSArray*)getInvalidControls;
 - (NSString*)output;
 
-- (void)validatedSuccess:(id<MobilyValidatedObject>)control;
-- (void)validatedFail:(id<MobilyValidatedObject>)control;
+- (void)validatedSuccess:(id<MobilyValidatedObject>)control andValue:(NSString*)value;
+- (void)validatedFail:(id<MobilyValidatedObject>)control andValue:(NSString*)value;
 
 @end
 

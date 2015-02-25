@@ -202,9 +202,9 @@
 - (void)didValueChanged {
     if(_validator != nil) {
         if([_validator validate:self.text] == YES) {
-            [_form validatedSuccess:self];
+            [_form validatedSuccess:self andValue:self.text];
         } else {
-            [_form validatedFail:self];
+            [_form validatedFail:self andValue:self.text];
         }
     }
 }
