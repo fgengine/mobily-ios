@@ -631,6 +631,9 @@
         UIView< MobilyDataItemView >* view = [queue lastObject];
         if(view == nil) {
             view = [[_registersViews[identifier] alloc] initWithIdentifier:identifier];
+            if(view != nil) {
+                [self insertSubview:view atIndex:0];
+            }
         } else {
             [queue removeLastObject];
         }
@@ -1158,6 +1161,9 @@
 #pragma mark NSNotificationCenter
 
 - (void)notificationReceiveMemoryWarning:(NSNotification*)notification {
+    for(UIView< MobilyDataItemView >* itemView in _queueViews) {
+        [itemView removeFromSuperview];
+    }
     [_queueViews removeAllObjects];
 }
 

@@ -93,6 +93,7 @@
 }
 
 - (void)setup {
+    self.hidden = YES;
     self.clipsToBounds = YES;
     self.pressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handlerPressGestureRecognizer:)];
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handlerTapGestureRecognizer:)];
@@ -141,9 +142,11 @@
     if(_item != item) {
         if(_item != nil) {
             [self prepareForUnuse];
+            self.hidden = YES;
         }
         _item = item;
         if(_item != nil) {
+            self.hidden = NO;
             [self prepareForUse];
         }
     }

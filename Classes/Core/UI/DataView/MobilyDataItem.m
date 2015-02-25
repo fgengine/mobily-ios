@@ -125,7 +125,6 @@
 - (void)setView:(UIView< MobilyDataItemView >*)view {
     if(_view != view) {
         if(_view != nil) {
-            [_view removeFromSuperview];
             _view.item = nil;
         }
         _view = view;
@@ -135,7 +134,6 @@
                 [UIView setAnimationsEnabled:NO];
             }
             _view.item = self;
-            [_widget insertSubview:_view atIndex:0];
             if(CGRectIsNull(_originFrame) == NO) {
                 _view.frame = _originFrame;
             }
