@@ -148,16 +148,10 @@
 #pragma mark Public
 
 - (BOOL)containsColumn:(NSUInteger)column row:(NSUInteger)row {
-    if((column >= _numberOfColumns) || (row >= _numberOfRows)) {
-        return NO;
-    }
     return ([_objects[column][row] isKindOfClass:NSNull.class] == NO);
 }
 
 - (BOOL)isEmptyColumn:(NSInteger)column {
-    if(column >= _numberOfColumns) {
-        return nil;
-    }
     for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
         if([_objects[column][ir] isKindOfClass:NSNull.class] == NO) {
             return NO;
@@ -167,9 +161,6 @@
 }
 
 - (BOOL)isEmptyRow:(NSInteger)row {
-    if(row >= _numberOfRows) {
-        return nil;
-    }
     for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
         if([_objects[ic][row] isKindOfClass:NSNull.class] == NO) {
             return NO;
@@ -179,9 +170,6 @@
 }
 
 - (id)objectAtColumn:(NSUInteger)column atRow:(NSUInteger)row {
-    if((column >= _numberOfColumns) || (row >= _numberOfRows)) {
-        return nil;
-    }
     id object = _objects[column][row];
     if([object isKindOfClass:NSNull.class] == YES) {
         return nil;
@@ -265,22 +253,10 @@
 }
 
 - (void)setObject:(id)object atColumn:(NSUInteger)column atRow:(NSUInteger)row {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if((column >= _numberOfColumns) && (row >= _numberOfRows)) {
-        NSLog(@"ERROR: [%@:%@] %@ - %d - %d", self.class, NSStringFromSelector(_cmd), object, (int)column, (int)row);
-        return;
-    }
-#endif
     _objects[column][row] = (object != nil) ? object : [NSNull null];
 }
 
 - (void)setObjects:(NSArray*)objects {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if((_numberOfColumns * _numberOfRows) != objects.count) {
-        NSLog(@"ERROR: [%@:%@] %d", self.class, NSStringFromSelector(_cmd), (int)objects.count);
-        return;
-    }
-#endif
     [_objects removeAllObjects];
     if(objects.count > 0) {
         NSUInteger index = 0;
@@ -300,12 +276,6 @@
 }
 
 - (void)insertColumn:(NSUInteger)column objects:(NSArray*)objects {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(column < _numberOfColumns) {
-        NSLog(@"ERROR: [%@:%@] %d - %@", self.class, NSStringFromSelector(_cmd), (int)column, objects);
-        return;
-    }
-#endif
     NSMutableArray* columnObjects = [NSMutableArray arrayWithCapacity:_numberOfRows];
     for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
         if(ir < objects.count) {
@@ -320,12 +290,6 @@
 }
 
 - (void)insertRow:(NSUInteger)row objects:(NSArray*)objects {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(row < _numberOfRows) {
-        NSLog(@"ERROR: [%@:%@] %d - %@", self.class, NSStringFromSelector(_cmd), (int)row, objects);
-        return;
-    }
-#endif
     for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
         if(ic < objects.count) {
             [_objects[ic][row] insertObject:objects[ic] atIndex:row];
@@ -338,24 +302,12 @@
 }
 
 - (void)removeColumn:(NSUInteger)column {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(column < _numberOfColumns) {
-        NSLog(@"ERROR: [%@:%@] %d", self.class, NSStringFromSelector(_cmd), (int)column);
-        return;
-    }
-#endif
     [_objects removeObjectAtIndex:column];
     _numberOfColumns--;
     _count = _numberOfColumns * _numberOfRows;
 }
 
 - (void)removeRow:(NSUInteger)row {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(row < _numberOfRows) {
-        NSLog(@"ERROR: [%@:%@] %d", self.class, NSStringFromSelector(_cmd), (int)row);
-        return;
-    }
-#endif
     for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
         [_objects[ic] removeObjectAtIndex:row];
     }
@@ -367,7 +319,7 @@
     [_objects removeAllObjects];
     _numberOfColumns = 0;
     _numberOfRows = 0;
-    _count = _numberOfColumns * _numberOfRows;
+    _count = 0;
 }
 
 @end
