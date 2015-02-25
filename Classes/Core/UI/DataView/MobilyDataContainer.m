@@ -377,33 +377,42 @@
     return CGRectNull;
 }
 
-- (void)layoutForVisibleBounds:(CGRect)bounds snapBounds:(CGRect)snapBounds {
+- (void)snapForBounds:(CGRect)bounds {
     if(_unsafeContainers.count > 0) {
-        [self layoutContainersForVisibleBounds:bounds snapBounds:snapBounds];
+        [self snapContainersForBounds:bounds];
     }
     if(_unsafeItems.count > 0) {
-        if(_unsafeSnapToEdgeItems.count > 0) {
-            [self layoutItemsForSnapBounds:CGRectIntersection(snapBounds, _itemsFrame)];
-        }
-        [self layoutItemsForVisibleBounds:bounds snapBounds:snapBounds];
+        [self snapItemsForBounds:CGRectIntersection(bounds, _itemsFrame)];
     }
 }
 
-- (void)layoutContainersForVisibleBounds:(CGRect)bounds snapBounds:(CGRect)snapBounds {
+- (void)snapContainersForBounds:(CGRect)bounds {
+}
+
+- (void)snapItemsForBounds:(CGRect)bounds {
+    for(id< MobilyDataItem > item in self.snapToEdgeItems) {
+        item.displayFrame = item.updateFrame;
+    }
+}
+
+- (void)layoutForBounds:(CGRect)bounds {
+    if(_unsafeContainers.count > 0) {
+        [self layoutContainersForBounds:bounds];
+    }
+    if(_unsafeItems.count > 0) {
+        [self layoutItemsForBounds:bounds];
+    }
+}
+
+- (void)layoutContainersForBounds:(CGRect)bounds {
     for(id< MobilyDataContainer > container in _unsafeContainers) {
-        [container layoutForVisibleBounds:bounds snapBounds:snapBounds];
+        [container layoutForBounds:bounds];
     };
 }
 
-- (void)layoutItemsForVisibleBounds:(CGRect)bounds snapBounds:(CGRect)snapBounds {
+- (void)layoutItemsForBounds:(CGRect)bounds {
     for(id< MobilyDataItem > item in _unsafeItems) {
-        [item validateLayoutForVisibleBounds:bounds];
-    }
-}
-
-- (void)layoutItemsForSnapBounds:(CGRect)bounds {
-    for(id< MobilyDataItem > item in self.snapToEdgeItems) {
-        item.displayFrame = item.updateFrame;
+        [item validateLayoutForBounds:bounds];
     }
 }
 

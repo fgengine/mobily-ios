@@ -329,22 +329,22 @@
     [_widget disappearItem:self];
 }
 
-- (void)validateLayoutForVisibleBounds:(CGRect)bounds {
+- (void)validateLayoutForBounds:(CGRect)bounds {
     if(_view == nil) {
         if(CGRectIntersectsRect(bounds, CGRectUnion(_originFrame, self.frame)) == YES) {
             [self appear];
         }
     } else {
-        [_view validateLayoutForVisibleBounds:bounds];
+        [_view validateLayoutForBounds:bounds];
     }
 }
 
-- (void)invalidateLayoutForVisibleBounds:(CGRect)bounds {
+- (void)invalidateLayoutForBounds:(CGRect)bounds {
     if(_view != nil) {
         if(CGRectIntersectsRect(bounds, self.frame) == NO) {
             [self disappear];
         } else {
-            [_view invalidateLayoutForVisibleBounds:bounds];
+            [_view invalidateLayoutForBounds:bounds];
         }
     }
 }

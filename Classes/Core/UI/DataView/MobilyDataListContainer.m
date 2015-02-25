@@ -133,62 +133,58 @@
     return CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, margin.top + cumulative + margin.bottom);
 }
 
-- (void)layoutItemsForSnapBounds:(CGRect)bounds {
-    if(CGRectIsNull(bounds) == NO) {
-        CGFloat boundsBeforeEdge = bounds.origin.y;
-        CGFloat boundsAfterEdge = bounds.origin.y + bounds.size.height;
-        NSMutableArray* beforeItems = NSMutableArray.array;
-        NSMutableArray* centerItems = NSMutableArray.array;
-        NSMutableArray* afterItems = NSMutableArray.array;
-        for(id< MobilyDataItem > item in self.snapToEdgeItems) {
-            CGRect itemUpdateFrame = item.updateFrame;
-            CGFloat itemBeforeEdge = itemUpdateFrame.origin.y;
-            CGFloat itemAfterEdge = itemUpdateFrame.origin.y + itemUpdateFrame.size.height;
-            if(itemBeforeEdge < boundsBeforeEdge) {
-                [beforeItems addObject:item];
-            } else if(itemAfterEdge > boundsAfterEdge) {
-                [afterItems addObject:item];
-            } else {
-                [centerItems addObject:item];
+- (void)snapForBounds:(CGRect)bounds {
+    CGFloat boundsBeforeEdge = bounds.origin.y;
+    CGFloat boundsAfterEdge = bounds.origin.y + bounds.size.height;
+    NSMutableArray* beforeItems = NSMutableArray.array;
+    NSMutableArray* centerItems = NSMutableArray.array;
+    NSMutableArray* afterItems = NSMutableArray.array;
+    for(id< MobilyDataItem > item in self.snapToEdgeItems) {
+        CGRect itemUpdateFrame = item.updateFrame;
+        CGFloat itemBeforeEdge = itemUpdateFrame.origin.y;
+        CGFloat itemAfterEdge = itemUpdateFrame.origin.y + itemUpdateFrame.size.height;
+        if(itemBeforeEdge < boundsBeforeEdge) {
+            [beforeItems addObject:item];
+        } else if(itemAfterEdge > boundsAfterEdge) {
+            [afterItems addObject:item];
+        } else {
+            [centerItems addObject:item];
+        }
+    }
+    id< MobilyDataItem > beforeItem = beforeItems.lastObject;
+    if(beforeItem != nil) {
+        CGRect beforeItemFrame = beforeItem.updateFrame;
+        beforeItemFrame.origin.y = boundsBeforeEdge;
+        id< MobilyDataItem > centerFirstItem = centerItems.firstObject;
+        if(centerFirstItem != nil) {
+            CGRect centerFirstItemFrame = centerFirstItem.updateFrame;
+            CGFloat centerFirstItemBeforeEdge = centerFirstItemFrame.origin.y - self.spacing;
+            if(beforeItemFrame.origin.y + beforeItemFrame.size.height > centerFirstItemBeforeEdge) {
+                beforeItemFrame.origin.y = centerFirstItemBeforeEdge - beforeItemFrame.size.height;
+            }
+        } else {
+            beforeItemFrame.origin.y = MIN(boundsBeforeEdge, boundsAfterEdge - beforeItemFrame.size.height);
+        }
+        beforeItem.displayFrame = beforeItemFrame;
+    }
+    for(id< MobilyDataItem > centerItem in centerItems) {
+        centerItem.displayFrame = centerItem.updateFrame;
+    }
+    id< MobilyDataItem > afterItem = afterItems.firstObject;
+    if(afterItem != nil) {
+        CGRect afterItemFrame = afterItem.updateFrame;
+        if(boundsAfterEdge - boundsBeforeEdge > afterItemFrame.size.height) {
+            afterItemFrame.origin.y = boundsAfterEdge - afterItemFrame.size.height;
+        }
+        id< MobilyDataItem > centerLastItem = centerItems.lastObject;
+        if(centerLastItem != nil) {
+            CGRect centerLastItemFrame = centerLastItem.updateFrame;
+            CGFloat centerLastItemAfterEdge = (centerLastItemFrame.origin.y + centerLastItemFrame.size.height) + self.spacing;
+            if(afterItemFrame.origin.y < centerLastItemAfterEdge) {
+                afterItemFrame.origin.y = centerLastItemAfterEdge;
             }
         }
-        id< MobilyDataItem > beforeItem = beforeItems.lastObject;
-        if(beforeItem != nil) {
-            CGRect beforeItemFrame = beforeItem.updateFrame;
-            beforeItemFrame.origin.y = boundsBeforeEdge;
-            id< MobilyDataItem > centerFirstItem = centerItems.firstObject;
-            if(centerFirstItem != nil) {
-                CGRect centerFirstItemFrame = centerFirstItem.updateFrame;
-                CGFloat centerFirstItemBeforeEdge = centerFirstItemFrame.origin.y - self.spacing;
-                if(beforeItemFrame.origin.y + beforeItemFrame.size.height > centerFirstItemBeforeEdge) {
-                    beforeItemFrame.origin.y = centerFirstItemBeforeEdge - beforeItemFrame.size.height;
-                }
-            } else {
-                beforeItemFrame.origin.y = MIN(boundsBeforeEdge, boundsAfterEdge - beforeItemFrame.size.height);
-            }
-            beforeItem.displayFrame = beforeItemFrame;
-        }
-        for(id< MobilyDataItem > centerItem in centerItems) {
-            centerItem.displayFrame = centerItem.updateFrame;
-        }
-        id< MobilyDataItem > afterItem = afterItems.firstObject;
-        if(afterItem != nil) {
-            CGRect afterItemFrame = afterItem.updateFrame;
-            if(boundsAfterEdge - boundsBeforeEdge > afterItemFrame.size.height) {
-                afterItemFrame.origin.y = boundsAfterEdge - afterItemFrame.size.height;
-            }
-            id< MobilyDataItem > centerLastItem = centerItems.lastObject;
-            if(centerLastItem != nil) {
-                CGRect centerLastItemFrame = centerLastItem.updateFrame;
-                CGFloat centerLastItemAfterEdge = (centerLastItemFrame.origin.y + centerLastItemFrame.size.height) + self.spacing;
-                if(afterItemFrame.origin.y < centerLastItemAfterEdge) {
-                    afterItemFrame.origin.y = centerLastItemAfterEdge;
-                }
-            }
-            afterItem.displayFrame = afterItemFrame;
-        }
-    } else {
-        [super layoutItemsForSnapBounds:bounds];
+        afterItem.displayFrame = afterItemFrame;
     }
 }
 
@@ -254,62 +250,58 @@
     return CGRectMake(frame.origin.x, frame.origin.y, margin.left + cumulative + margin.right, frame.size.height);
 }
 
-- (void)layoutItemsForSnapBounds:(CGRect)bounds {
-    if(CGRectIsNull(bounds) == NO) {
-        CGFloat boundsBeforeEdge = bounds.origin.x;
-        CGFloat boundsAfterEdge = bounds.origin.x + bounds.size.width;
-        NSMutableArray* beforeItems = NSMutableArray.array;
-        NSMutableArray* centerItems = NSMutableArray.array;
-        NSMutableArray* afterItems = NSMutableArray.array;
-        for(id< MobilyDataItem > item in self.snapToEdgeItems) {
-            CGRect itemUpdateFrame = item.updateFrame;
-            CGFloat itemBeforeEdge = itemUpdateFrame.origin.x;
-            CGFloat itemAfterEdge = itemUpdateFrame.origin.x + itemUpdateFrame.size.width;
-            if(itemBeforeEdge < boundsBeforeEdge) {
-                [beforeItems addObject:item];
-            } else if(itemAfterEdge > boundsAfterEdge) {
-                [afterItems addObject:item];
-            } else {
-                [centerItems addObject:item];
+- (void)snapForBounds:(CGRect)bounds {
+    CGFloat boundsBeforeEdge = bounds.origin.x;
+    CGFloat boundsAfterEdge = bounds.origin.x + bounds.size.width;
+    NSMutableArray* beforeItems = NSMutableArray.array;
+    NSMutableArray* centerItems = NSMutableArray.array;
+    NSMutableArray* afterItems = NSMutableArray.array;
+    for(id< MobilyDataItem > item in self.snapToEdgeItems) {
+        CGRect itemUpdateFrame = item.updateFrame;
+        CGFloat itemBeforeEdge = itemUpdateFrame.origin.x;
+        CGFloat itemAfterEdge = itemUpdateFrame.origin.x + itemUpdateFrame.size.width;
+        if(itemBeforeEdge < boundsBeforeEdge) {
+            [beforeItems addObject:item];
+        } else if(itemAfterEdge > boundsAfterEdge) {
+            [afterItems addObject:item];
+        } else {
+            [centerItems addObject:item];
+        }
+    }
+    id< MobilyDataItem > beforeItem = beforeItems.lastObject;
+    if(beforeItem != nil) {
+        CGRect beforeItemFrame = beforeItem.updateFrame;
+        beforeItemFrame.origin.x = boundsBeforeEdge;
+        id< MobilyDataItem > centerFirstItem = centerItems.firstObject;
+        if(centerFirstItem != nil) {
+            CGRect centerFirstItemFrame = centerFirstItem.updateFrame;
+            CGFloat centerFirstItemBeforeEdge = centerFirstItemFrame.origin.x - self.spacing;
+            if(beforeItemFrame.origin.x + beforeItemFrame.size.width > centerFirstItemBeforeEdge) {
+                beforeItemFrame.origin.x = centerFirstItemBeforeEdge - beforeItemFrame.size.width;
+            }
+        } else {
+            beforeItemFrame.origin.x = MIN(boundsBeforeEdge, boundsAfterEdge - beforeItemFrame.size.width);
+        }
+        beforeItem.displayFrame = beforeItemFrame;
+    }
+    for(id< MobilyDataItem > centerItem in centerItems) {
+        centerItem.displayFrame = centerItem.updateFrame;
+    }
+    id< MobilyDataItem > afterItem = afterItems.firstObject;
+    if(afterItem != nil) {
+        CGRect afterItemFrame = afterItem.updateFrame;
+        if(boundsAfterEdge - boundsBeforeEdge > afterItemFrame.size.width) {
+            afterItemFrame.origin.x = boundsAfterEdge - afterItemFrame.size.width;
+        }
+        id< MobilyDataItem > centerLastItem = centerItems.lastObject;
+        if(centerLastItem != nil) {
+            CGRect centerLastItemFrame = centerLastItem.updateFrame;
+            CGFloat centerLastItemAfterEdge = (centerLastItemFrame.origin.x + centerLastItemFrame.size.width) + self.spacing;
+            if(afterItemFrame.origin.x < centerLastItemAfterEdge) {
+                afterItemFrame.origin.x = centerLastItemAfterEdge;
             }
         }
-        id< MobilyDataItem > beforeItem = beforeItems.lastObject;
-        if(beforeItem != nil) {
-            CGRect beforeItemFrame = beforeItem.updateFrame;
-            beforeItemFrame.origin.x = boundsBeforeEdge;
-            id< MobilyDataItem > centerFirstItem = centerItems.firstObject;
-            if(centerFirstItem != nil) {
-                CGRect centerFirstItemFrame = centerFirstItem.updateFrame;
-                CGFloat centerFirstItemBeforeEdge = centerFirstItemFrame.origin.x - self.spacing;
-                if(beforeItemFrame.origin.x + beforeItemFrame.size.width > centerFirstItemBeforeEdge) {
-                    beforeItemFrame.origin.x = centerFirstItemBeforeEdge - beforeItemFrame.size.width;
-                }
-            } else {
-                beforeItemFrame.origin.x = MIN(boundsBeforeEdge, boundsAfterEdge - beforeItemFrame.size.width);
-            }
-            beforeItem.displayFrame = beforeItemFrame;
-        }
-        for(id< MobilyDataItem > centerItem in centerItems) {
-            centerItem.displayFrame = centerItem.updateFrame;
-        }
-        id< MobilyDataItem > afterItem = afterItems.firstObject;
-        if(afterItem != nil) {
-            CGRect afterItemFrame = afterItem.updateFrame;
-            if(boundsAfterEdge - boundsBeforeEdge > afterItemFrame.size.width) {
-                afterItemFrame.origin.x = boundsAfterEdge - afterItemFrame.size.width;
-            }
-            id< MobilyDataItem > centerLastItem = centerItems.lastObject;
-            if(centerLastItem != nil) {
-                CGRect centerLastItemFrame = centerLastItem.updateFrame;
-                CGFloat centerLastItemAfterEdge = (centerLastItemFrame.origin.x + centerLastItemFrame.size.width) + self.spacing;
-                if(afterItemFrame.origin.x < centerLastItemAfterEdge) {
-                    afterItemFrame.origin.x = centerLastItemAfterEdge;
-                }
-            }
-            afterItem.displayFrame = afterItemFrame;
-        }
-    } else {
-        [super layoutItemsForSnapBounds:bounds];
+        afterItem.displayFrame = afterItemFrame;
     }
 }
 

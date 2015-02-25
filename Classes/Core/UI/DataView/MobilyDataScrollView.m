@@ -938,12 +938,15 @@
 
 - (void)layoutForVisible {
     CGRect bounds = self.bounds;
-    if(_updating == NO) {
-        [_unsafeVisibleItems enumerateObjectsUsingBlock:^(id< MobilyDataItem > item, NSUInteger itemIndex, BOOL* itemStop) {
-            [item invalidateLayoutForVisibleBounds:bounds];
-        }];
-    }
-    [_container layoutForVisibleBounds:bounds snapBounds:UIEdgeInsetsInsetRect(bounds, self.contentInset)];
+    [_container snapForBounds:UIEdgeInsetsInsetRect(bounds, self.contentInset)];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if(_updating == NO) {
+            [_unsafeVisibleItems enumerateObjectsUsingBlock:^(id< MobilyDataItem > item, NSUInteger itemIndex, BOOL* itemStop) {
+                [item invalidateLayoutForBounds:bounds];
+            }];
+        }
+        [_container layoutForBounds:bounds];
+    });
 }
 
 - (void)scrollToItem:(id< MobilyDataItem >)item scrollPosition:(MobilyDataScrollViewPosition)scrollPosition animated:(BOOL)animated {
@@ -1179,127 +1182,125 @@
 }
 
 - (void)internalDidScroll {
-    if(self.isDragging == YES) {
-        CGRect bounds = self.bounds;
-        CGSize frameSize = self.frameSize;
-        CGSize contentSize = self.contentSize;
-        CGPoint contentOffset = self.contentOffset;
-        UIEdgeInsets contentInset = self.contentInset;
-        if([self bounces] == YES) {
-            if([self alwaysBounceHorizontal] == YES) {
-                if(_bouncesLeft == NO) {
-                    contentOffset.x = MAX(0.0f, contentOffset.x);
-                }
-                if(_bouncesRight == NO) {
-                    contentOffset.x = MIN(contentSize.width - frameSize.width, contentOffset.x);
-                }
+    CGRect bounds = self.bounds;
+    CGSize frameSize = self.frameSize;
+    CGSize contentSize = self.contentSize;
+    CGPoint contentOffset = self.contentOffset;
+    UIEdgeInsets contentInset = self.contentInset;
+    if([self bounces] == YES) {
+        if([self alwaysBounceHorizontal] == YES) {
+            if(_bouncesLeft == NO) {
+                contentOffset.x = MAX(0.0f, contentOffset.x);
             }
-            if([self alwaysBounceVertical] == YES) {
-                if(_bouncesTop == NO) {
-                    contentOffset.y = MAX(0.0f, contentOffset.y);
-                }
-                if(_bouncesBottom == NO) {
-                    contentOffset.y = MIN(contentSize.height - frameSize.height, contentOffset.y);
-                }
+            if(_bouncesRight == NO) {
+                contentOffset.x = MIN(contentSize.width - frameSize.width, contentOffset.x);
             }
         }
-        if((_pullDragging == YES) && (self.isDecelerating == NO)) {
-            if(_canPullToRefresh == YES) {
-                CGFloat pullToRefreshSize = (_pullToRefreshHeight < 0.0f) ? _pullToRefreshView.frameHeight : _pullToRefreshHeight;
-                CGFloat offset = MIN(pullToRefreshSize, -contentOffset.y);
-                switch(_pullToRefreshView.state) {
+        if([self alwaysBounceVertical] == YES) {
+            if(_bouncesTop == NO) {
+                contentOffset.y = MAX(0.0f, contentOffset.y);
+            }
+            if(_bouncesBottom == NO) {
+                contentOffset.y = MIN(contentSize.height - frameSize.height, contentOffset.y);
+            }
+        }
+    }
+    if((_pullDragging == YES) && (self.isDragging == YES) && (self.isDecelerating == NO)) {
+        if(_canPullToRefresh == YES) {
+            CGFloat pullToRefreshSize = (_pullToRefreshHeight < 0.0f) ? _pullToRefreshView.frameHeight : _pullToRefreshHeight;
+            CGFloat offset = MIN(pullToRefreshSize, -contentOffset.y);
+            switch(_pullToRefreshView.state) {
+                case MobilyDataScrollRefreshViewStateIdle:
+                    if(offset > 0.0f) {
+                        if(_constraintPullToRefreshBottom != nil) {
+                            _constraintPullToRefreshBottom.constant = 0.0f;
+                        }
+                        _pullToRefreshView.state = MobilyDataScrollRefreshViewStatePull;
+                        contentInset.top = 0.0f;
+                    }
+                    break;
+                case MobilyDataScrollRefreshViewStatePull:
+                case MobilyDataScrollRefreshViewStateRelease:
+                    if(offset < 0.0f) {
+                        if(_constraintPullToRefreshBottom != nil) {
+                            _constraintPullToRefreshBottom.constant = 0.0f;
+                        }
+                        _pullToRefreshView.state = MobilyDataScrollRefreshViewStateIdle;
+                        contentInset.top = 0.0f;
+                    } else if(offset >= pullToRefreshSize) {
+                        if(_constraintPullToRefreshBottom != nil) {
+                            _constraintPullToRefreshBottom.constant = pullToRefreshSize;
+                        }
+                        if(_pullToRefreshView.state != MobilyDataScrollRefreshViewStateRelease) {
+                            _pullToRefreshView.state = MobilyDataScrollRefreshViewStateRelease;
+                            contentInset.top = offset;
+                        }
+                    } else {
+                        if(_constraintPullToRefreshBottom != nil) {
+                            _constraintPullToRefreshBottom.constant = offset;
+                        }
+                        _pullToRefreshView.state = MobilyDataScrollRefreshViewStatePull;
+                        contentInset.top = offset;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        if((_canPullToLoad == YES) && (contentSize.height > frameSize.height)) {
+            CGFloat contentBottom = contentSize.height - bounds.size.height;
+            CGFloat pullToLoadSize = (_pullToLoadHeight < 0.0f) ? _pullToLoadView.frameHeight : _pullToLoadHeight;
+            if(contentOffset.y >= contentBottom) {
+                CGFloat offset = MIN(pullToLoadSize, contentOffset.y - contentBottom);
+                switch(_pullToLoadView.state) {
                     case MobilyDataScrollRefreshViewStateIdle:
                         if(offset > 0.0f) {
-                            if(_constraintPullToRefreshBottom != nil) {
-                                _constraintPullToRefreshBottom.constant = 0.0f;
+                            if(_constraintPullToLoadTop != nil) {
+                                _constraintPullToLoadTop.constant = -offset;
                             }
-                            _pullToRefreshView.state = MobilyDataScrollRefreshViewStatePull;
-                            contentInset.top = 0.0f;
+                            _pullToLoadView.state = MobilyDataScrollRefreshViewStatePull;
+                            contentInset.bottom = offset;
                         }
                         break;
                     case MobilyDataScrollRefreshViewStatePull:
                     case MobilyDataScrollRefreshViewStateRelease:
                         if(offset < 0.0f) {
-                            if(_constraintPullToRefreshBottom != nil) {
-                                _constraintPullToRefreshBottom.constant = 0.0f;
+                            if(_constraintPullToLoadTop != nil) {
+                                _constraintPullToLoadTop.constant = 0.0f;
                             }
-                            _pullToRefreshView.state = MobilyDataScrollRefreshViewStateIdle;
-                            contentInset.top = 0.0f;
-                        } else if(offset >= pullToRefreshSize) {
-                            if(_constraintPullToRefreshBottom != nil) {
-                                _constraintPullToRefreshBottom.constant = pullToRefreshSize;
+                            _pullToLoadView.state = MobilyDataScrollRefreshViewStateIdle;
+                            contentInset.bottom = 0.0f;
+                        } else if(offset >= pullToLoadSize) {
+                            if(_constraintPullToLoadTop != nil) {
+                                _constraintPullToLoadTop.constant = -pullToLoadSize;
                             }
-                            if(_pullToRefreshView.state != MobilyDataScrollRefreshViewStateRelease) {
-                                _pullToRefreshView.state = MobilyDataScrollRefreshViewStateRelease;
-                                contentInset.top = offset;
+                            if(_pullToLoadView.state != MobilyDataScrollRefreshViewStateRelease) {
+                                _pullToLoadView.state = MobilyDataScrollRefreshViewStateRelease;
+                                contentInset.bottom = offset;
                             }
                         } else {
-                            if(_constraintPullToRefreshBottom != nil) {
-                                _constraintPullToRefreshBottom.constant = offset;
+                            if(_constraintPullToLoadTop != nil) {
+                                _constraintPullToLoadTop.constant = -offset;
                             }
-                            _pullToRefreshView.state = MobilyDataScrollRefreshViewStatePull;
-                            contentInset.top = offset;
+                            _pullToLoadView.state = MobilyDataScrollRefreshViewStatePull;
+                            contentInset.bottom = offset;
                         }
                         break;
                     default:
                         break;
                 }
-            }
-            if((_canPullToLoad == YES) && (contentSize.height > frameSize.height)) {
-                CGFloat contentBottom = contentSize.height - bounds.size.height;
-                CGFloat pullToLoadSize = (_pullToLoadHeight < 0.0f) ? _pullToLoadView.frameHeight : _pullToLoadHeight;
-                if(contentOffset.y >= contentBottom) {
-                    CGFloat offset = MIN(pullToLoadSize, contentOffset.y - contentBottom);
-                    switch(_pullToLoadView.state) {
-                        case MobilyDataScrollRefreshViewStateIdle:
-                            if(offset > 0.0f) {
-                                if(_constraintPullToLoadTop != nil) {
-                                    _constraintPullToLoadTop.constant = -offset;
-                                }
-                                _pullToLoadView.state = MobilyDataScrollRefreshViewStatePull;
-                                contentInset.bottom = offset;
-                            }
-                            break;
-                        case MobilyDataScrollRefreshViewStatePull:
-                        case MobilyDataScrollRefreshViewStateRelease:
-                            if(offset < 0.0f) {
-                                if(_constraintPullToLoadTop != nil) {
-                                    _constraintPullToLoadTop.constant = 0.0f;
-                                }
-                                _pullToLoadView.state = MobilyDataScrollRefreshViewStateIdle;
-                                contentInset.bottom = 0.0f;
-                            } else if(offset >= pullToLoadSize) {
-                                if(_constraintPullToLoadTop != nil) {
-                                    _constraintPullToLoadTop.constant = -pullToLoadSize;
-                                }
-                                if(_pullToLoadView.state != MobilyDataScrollRefreshViewStateRelease) {
-                                    _pullToLoadView.state = MobilyDataScrollRefreshViewStateRelease;
-                                    contentInset.bottom = offset;
-                                }
-                            } else {
-                                if(_constraintPullToLoadTop != nil) {
-                                    _constraintPullToLoadTop.constant = -offset;
-                                }
-                                _pullToLoadView.state = MobilyDataScrollRefreshViewStatePull;
-                                contentInset.bottom = offset;
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                } else {
-                    if(_constraintPullToLoadTop != nil) {
-                        _constraintPullToLoadTop.constant = 0.0f;
-                    }
-                    _pullToLoadView.state = MobilyDataScrollRefreshViewStateIdle;
-                    contentInset.bottom = 0.0f;
+            } else {
+                if(_constraintPullToLoadTop != nil) {
+                    _constraintPullToLoadTop.constant = 0.0f;
                 }
+                _pullToLoadView.state = MobilyDataScrollRefreshViewStateIdle;
+                contentInset.bottom = 0.0f;
             }
         }
-        self.scrollIndicatorInsets = contentInset;
-        self.contentInset = contentInset;
-        self.contentOffset = contentOffset;
     }
+    self.scrollIndicatorInsets = contentInset;
+    self.contentInset = contentInset;
+    self.contentOffset = contentOffset;
 }
 
 - (void)internalDidEndDraggingWillDecelerate:(BOOL)decelerate {

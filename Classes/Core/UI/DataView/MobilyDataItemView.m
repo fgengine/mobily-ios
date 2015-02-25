@@ -346,10 +346,10 @@
     }
 }
 
-- (void)validateLayoutForVisibleBounds:(CGRect)bounds {
+- (void)validateLayoutForBounds:(CGRect)bounds {
 }
 
-- (void)invalidateLayoutForVisibleBounds:(CGRect)bounds {
+- (void)invalidateLayoutForBounds:(CGRect)bounds {
 }
 
 #pragma mark Private

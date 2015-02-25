@@ -196,10 +196,13 @@ typedef void(^MobilyDataWidgetCompleteBlock)(BOOL finished);
 - (CGRect)validateContainersLayoutForAvailableFrame:(CGRect)frame;
 - (CGRect)validateItemsLayoutForAvailableFrame:(CGRect)frame;
 
-- (void)layoutForVisibleBounds:(CGRect)bounds snapBounds:(CGRect)snapBounds;
-- (void)layoutContainersForVisibleBounds:(CGRect)bounds snapBounds:(CGRect)snapBounds;
-- (void)layoutItemsForVisibleBounds:(CGRect)bounds snapBounds:(CGRect)snapBounds;
-- (void)layoutItemsForSnapBounds:(CGRect)bounds;
+- (void)snapForBounds:(CGRect)bounds;
+- (void)snapContainersForBounds:(CGRect)bounds;
+- (void)snapItemsForBounds:(CGRect)bounds;
+
+- (void)layoutForBounds:(CGRect)bounds;
+- (void)layoutContainersForBounds:(CGRect)bounds;
+- (void)layoutItemsForBounds:(CGRect)bounds;
 
 @end
 
@@ -248,8 +251,8 @@ typedef void(^MobilyDataWidgetCompleteBlock)(BOOL finished);
 
 - (void)appear;
 - (void)disappear;
-- (void)validateLayoutForVisibleBounds:(CGRect)bounds;
-- (void)invalidateLayoutForVisibleBounds:(CGRect)bounds;
+- (void)validateLayoutForBounds:(CGRect)bounds;
+- (void)invalidateLayoutForBounds:(CGRect)bounds;
 
 @end
 
@@ -289,8 +292,8 @@ typedef NS_ENUM(NSUInteger, MobilyDataItemViewAction) {
 
 - (void)animateAction:(MobilyDataItemViewAction)action;
 
-- (void)validateLayoutForVisibleBounds:(CGRect)bounds;
-- (void)invalidateLayoutForVisibleBounds:(CGRect)bounds;
+- (void)validateLayoutForBounds:(CGRect)bounds;
+- (void)invalidateLayoutForBounds:(CGRect)bounds;
 
 @end
 
