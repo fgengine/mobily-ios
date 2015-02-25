@@ -148,40 +148,42 @@
 #pragma mark Public
 
 - (BOOL)containsColumn:(NSUInteger)column row:(NSUInteger)row {
-    if((column < _numberOfColumns) && (row < _numberOfRows)) {
-        return ([_objects[column][row] isKindOfClass:NSNull.class] == NO);
+    if((column >= _numberOfColumns) || (row >= _numberOfRows)) {
+        return NO;
     }
-    return NO;
+    return ([_objects[column][row] isKindOfClass:NSNull.class] == NO);
 }
 
 - (BOOL)isEmptyColumn:(NSInteger)column {
-    if(column < _numberOfColumns) {
-        for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
-            if([_objects[column][ir] isKindOfClass:NSNull.class] == NO) {
-                return NO;
-            }
+    if(column >= _numberOfColumns) {
+        return nil;
+    }
+    for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
+        if([_objects[column][ir] isKindOfClass:NSNull.class] == NO) {
+            return NO;
         }
     }
     return YES;
 }
 
 - (BOOL)isEmptyRow:(NSInteger)row {
-    if(row < _numberOfRows) {
-        for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
-            if([_objects[ic][row] isKindOfClass:NSNull.class] == NO) {
-                return NO;
-            }
+    if(row >= _numberOfRows) {
+        return nil;
+    }
+    for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
+        if([_objects[ic][row] isKindOfClass:NSNull.class] == NO) {
+            return NO;
         }
     }
     return YES;
 }
 
 - (id)objectAtColumn:(NSUInteger)column atRow:(NSUInteger)row {
-    if((column >= _numberOfColumns) && (row >= _numberOfRows)) {
+    if((column >= _numberOfColumns) || (row >= _numberOfRows)) {
         return nil;
     }
     id object = _objects[column][row];
-    if([object isKindOfClass:NSNull.class] == NO) {
+    if([object isKindOfClass:NSNull.class] == YES) {
         return nil;
     }
     return object;
