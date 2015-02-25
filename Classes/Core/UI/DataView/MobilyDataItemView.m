@@ -312,9 +312,12 @@
 - (void)animateAction:(MobilyDataItemViewAction)action {
     switch(action) {
         case MobilyDataItemViewActionInsert: {
-            [UIView performWithoutAnimation:^{
-                self.alpha = 0.0f;
-            }];
+            BOOL animationsEnabled = [UIView areAnimationsEnabled];
+            if(animationsEnabled == YES) {
+                [UIView setAnimationsEnabled:NO];
+            }
+            self.alpha = 0.0f;
+            [UIView setAnimationsEnabled:animationsEnabled];
             self.zPosition = _item.zOrder;
             self.alpha = 1.0f;
             break;
@@ -330,9 +333,12 @@
             break;
         }
         case MobilyDataItemViewActionReplaceIn: {
-            [UIView performWithoutAnimation:^{
-                self.alpha = 0.0f;
-            }];
+            BOOL animationsEnabled = [UIView areAnimationsEnabled];
+            if(animationsEnabled == YES) {
+                [UIView setAnimationsEnabled:NO];
+            }
+            self.alpha = 0.0f;
+            [UIView setAnimationsEnabled:animationsEnabled];
             self.zPosition = _item.zOrder;
             self.alpha = 1.0f;
             break;

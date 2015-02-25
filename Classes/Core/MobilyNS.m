@@ -1129,7 +1129,7 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
         NSFileManager* fileManager = NSFileManager.defaultManager;
         NSString* path = [[NSFileManager cachesDirectory] stringByAppendingPathComponent:[NSBundle.mainBundle bundleIdentifier]];
         if([fileManager fileExistsAtPath:path] == NO) {
-            if([fileManager createDirectoryAtPath:fileSystemDirectory withIntermediateDirectories:YES attributes:nil error:nil] == YES) {
+            if([fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil] == YES) {
                 fileSystemDirectory = path;
             }
         } else {

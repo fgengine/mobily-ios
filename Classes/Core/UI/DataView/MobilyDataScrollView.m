@@ -304,16 +304,19 @@
     if(_container != container) {
         if(_container != nil) {
             [self setNeedValidateLayout];
-            [UIView performWithoutAnimation:^{
-                [self deselectAllItemsAnimated:NO];
-                [self unhighlightAllItemsAnimated:NO];
-                if(_unsafeVisibleItems.count > 0) {
-                    for(id< MobilyDataItem > item in _unsafeVisibleItems) {
-                        [self disappearItem:item];
-                    }
-                    [_unsafeVisibleItems removeAllObjects];
+            BOOL animationsEnabled = [UIView areAnimationsEnabled];
+            if(animationsEnabled == YES) {
+                [UIView setAnimationsEnabled:NO];
+            }
+            [self deselectAllItemsAnimated:NO];
+            [self unhighlightAllItemsAnimated:NO];
+            if(_unsafeVisibleItems.count > 0) {
+                for(id< MobilyDataItem > item in _unsafeVisibleItems) {
+                    [self disappearItem:item];
                 }
-            }];
+                [_unsafeVisibleItems removeAllObjects];
+            }
+            [UIView setAnimationsEnabled:animationsEnabled];
             _container.widget = nil;
             [self validateLayoutIfNeed];
         }
@@ -321,10 +324,13 @@
         if(_container != nil) {
             [self setNeedValidateLayout];
             _container.widget = self;
-            [UIView performWithoutAnimation:^{
-                [self validateLayoutIfNeed];
-                [self layoutForVisible];
-            }];
+            BOOL animationsEnabled = [UIView areAnimationsEnabled];
+            if(animationsEnabled == YES) {
+                [UIView setAnimationsEnabled:NO];
+            }
+            [self validateLayoutIfNeed];
+            [self layoutForVisible];
+            [UIView setAnimationsEnabled:animationsEnabled];
         }
     }
 }
