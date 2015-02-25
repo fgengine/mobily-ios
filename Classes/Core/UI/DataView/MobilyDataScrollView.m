@@ -1173,7 +1173,7 @@
 }
 
 - (void)internalDidScroll {
-    if((self.isDragging == YES) && (self.isDecelerating == NO)) {
+    if(self.isDragging == YES) {
         CGRect bounds = self.bounds;
         CGSize frameSize = self.frameSize;
         CGSize contentSize = self.contentSize;
@@ -1197,7 +1197,7 @@
                 }
             }
         }
-        if(_pullDragging == YES) {
+        if((_pullDragging == YES) && (self.isDecelerating == NO)) {
             if(_canPullToRefresh == YES) {
                 CGFloat pullToRefreshSize = (_pullToRefreshHeight < 0.0f) ? _pullToRefreshView.frameHeight : _pullToRefreshHeight;
                 CGFloat offset = MIN(pullToRefreshSize, -contentOffset.y);
