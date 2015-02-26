@@ -59,7 +59,7 @@
     [self.navigationItem addLeftBarFixedSpace:-16.0f animated:NO];
     [self.navigationItem addLeftBarButtonNormalImage:[UIImage imageNamed:@"menu-back.png"] target:self action:@selector(pressedBack) animated:NO];
     
-    for(NSUInteger i = 0; i < 21; i++) {
+    for(NSUInteger i = 0; i < 400; i++) {
         MobilyDataItem* hItem = [MobilyDataItem dataItemWithIdentifier:DemoDataScrollViewItemView.className data:[NSString stringWithFormat:@"S1 #%d", (int)i]];
         if((i % 4) == 0) {
             hItem.allowsSnapToEdge = YES;

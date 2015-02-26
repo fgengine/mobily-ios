@@ -80,7 +80,11 @@
 
 - (void)internalWillBeginDragging;
 - (void)internalDidScroll;
+- (void)internalWillEndDraggingWithVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset;
 - (void)internalDidEndDraggingWillDecelerate:(BOOL)decelerate;
+- (void)internalWillBeginDecelerating;
+- (void)internalDidEndDecelerating;
+- (void)internalDidEndScrollingAnimation;
 
 - (void)internalBatchUpdate:(MobilyDataWidgetUpdateBlock)update;
 - (void)internalBatchComplete:(MobilyDataWidgetUpdateBlock)complete;
@@ -1185,6 +1189,7 @@
     } else {
         self.pullDragging = NO;
     }
+    [self performEventForKey:MobilyDataScrollViewWillBeginDragging byObject:nil];
 }
 
 - (void)internalDidScroll {
@@ -1193,6 +1198,7 @@
     CGSize contentSize = self.contentSize;
     CGPoint contentOffset = self.contentOffset;
     UIEdgeInsets contentInset = self.contentInset;
+    
     if([self bounces] == YES) {
         if([self alwaysBounceHorizontal] == YES) {
             if(_bouncesLeft == NO) {
@@ -1211,6 +1217,7 @@
             }
         }
     }
+    
     if((_pullDragging == YES) && (self.isDragging == YES) && (self.isDecelerating == NO)) {
         if(_canPullToRefresh == YES) {
             CGFloat pullToRefreshSize = (_pullToRefreshHeight < 0.0f) ? _pullToRefreshView.frameHeight : _pullToRefreshHeight;
@@ -1304,9 +1311,24 @@
             }
         }
     }
+    
     self.scrollIndicatorInsets = contentInset;
     self.contentInset = contentInset;
     self.contentOffset = contentOffset;
+    
+    [self performEventForKey:MobilyDataScrollViewDidScroll byObject:nil];
+}
+
+- (void)internalWillEndDraggingWithVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset {
+    NSValue* newTargetContentOffset = [self performEventForKey:MobilyDataScrollViewWillEndDragging byObject:@{
+        @"velocity" : [NSValue valueWithCGPoint:velocity],
+        @"targetContentOffset" : [NSValue valueWithCGPoint:*targetContentOffset]
+    }];
+    if(newTargetContentOffset != nil) {
+        if(strcmp(newTargetContentOffset.objCType, @encode(CGPoint)) == 0) {
+            [newTargetContentOffset getValue:targetContentOffset];
+        }
+    }
 }
 
 - (void)internalDidEndDraggingWillDecelerate:(BOOL)decelerate {
@@ -1349,6 +1371,19 @@
         }
         self.pullDragging = NO;
     }
+    [self performEventForKey:MobilyDataScrollViewDidEndDragging byObject:@(decelerate)];
+}
+
+- (void)internalWillBeginDecelerating {
+    [self performEventForKey:MobilyDataScrollViewWillBeginDecelerating byObject:nil];
+}
+
+- (void)internalDidEndDecelerating {
+    [self performEventForKey:MobilyDataScrollViewDidEndDecelerating byObject:nil];
+}
+
+- (void)internalDidEndScrollingAnimation {
+    [self performEventForKey:MobilyDataScrollViewDidEndScrollingAnimation byObject:nil];
 }
 
 #pragma mark Private
@@ -1464,10 +1499,38 @@
     }
 }
 
+- (void)scrollViewWillEndDragging:(UIScrollView*)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset {
+    [_dataScrollView internalWillEndDraggingWithVelocity:velocity targetContentOffset:targetContentOffset];
+    if([_delegate respondsToSelector:_cmd] == YES) {
+        [_delegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+    }
+}
+
 - (void)scrollViewDidEndDragging:(UIScrollView*)scrollView willDecelerate:(BOOL)decelerate {
     [_dataScrollView internalDidEndDraggingWillDecelerate:decelerate];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+    }
+}
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView*)scrollView {
+    [_dataScrollView internalWillBeginDecelerating];
+    if([_delegate respondsToSelector:_cmd] == YES) {
+        [_delegate scrollViewDidScroll:scrollView];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView*)scrollView {
+    [_dataScrollView internalDidEndDecelerating];
+    if([_delegate respondsToSelector:_cmd] == YES) {
+        [_delegate scrollViewDidEndDecelerating:scrollView];
+    }
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView*)scrollView {
+    [_dataScrollView internalDidEndScrollingAnimation];
+    if([_delegate respondsToSelector:_cmd] == YES) {
+        [_delegate scrollViewDidEndScrollingAnimation:scrollView];
     }
 }
 
@@ -1477,6 +1540,13 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
+NSString* MobilyDataScrollViewWillBeginDragging = @"MobilyDataScrollViewWillBeginDragging";
+NSString* MobilyDataScrollViewDidScroll = @"MobilyDataScrollViewDidScroll";
+NSString* MobilyDataScrollViewWillEndDragging = @"MobilyDataScrollViewWillEndDragging";
+NSString* MobilyDataScrollViewDidEndDragging = @"MobilyDataScrollViewDidEndDragging";
+NSString* MobilyDataScrollViewWillBeginDecelerating = @"MobilyDataScrollViewWillBeginDecelerating";
+NSString* MobilyDataScrollViewDidEndDecelerating = @"MobilyDataScrollViewDidEndDecelerating";
+NSString* MobilyDataScrollViewDidEndScrollingAnimation = @"MobilyDataScrollViewDidEndScrollingAnimation";
 NSString* MobilyDataScrollViewPullToRefreshTriggered = @"MobilyDataScrollViewPullToRefreshTriggered";
 NSString* MobilyDataScrollViewPullToLoadTriggered = @"MobilyDataScrollViewPullToLoadTriggered";
 

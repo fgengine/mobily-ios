@@ -35,6 +35,7 @@
 
 #import "MobilyUI.h"
 #import "MobilyEvent.h"
+#import "MobilyBuilder.h"
 
 /*--------------------------------------------------*/
 
@@ -50,7 +51,7 @@ typedef void(^MobilyDataWidgetCompleteBlock)(BOOL finished);
 
 /*--------------------------------------------------*/
 
-@protocol MobilyDataWidget < MobilyObject >
+@protocol MobilyDataWidget < MobilyBuilderObject >
 
 @property(nonatomic, readwrite, assign) IBInspectable BOOL allowsSelection;
 @property(nonatomic, readwrite, assign) IBInspectable BOOL allowsMultipleSelection;

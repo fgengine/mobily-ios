@@ -43,6 +43,7 @@
 
 @property(nonatomic, readwrite, strong) UILongPressGestureRecognizer* pressGestureRecognizer;
 @property(nonatomic, readwrite, strong) UITapGestureRecognizer* tapGestureRecognizer;
+@property(nonatomic, readwrite, strong) UILongPressGestureRecognizer* longPressGestureRecognizer;
 
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintRootViewCenterX;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintRootViewCenterY;
@@ -51,6 +52,7 @@
 
 - (void)handlerPressGestureRecognizer:(UILongPressGestureRecognizer*)gestureRecognizer;
 - (void)handlerTapGestureRecognizer:(UITapGestureRecognizer*)gestureRecognizer;
+- (void)handlerLongPressGestureRecognizer:(UILongPressGestureRecognizer*)gestureRecognizer;
 
 @end
 
@@ -97,6 +99,7 @@
     self.clipsToBounds = YES;
     self.pressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handlerPressGestureRecognizer:)];
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handlerTapGestureRecognizer:)];
+    self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handlerLongPressGestureRecognizer:)];
 }
 
 - (void)dealloc {
@@ -187,6 +190,19 @@
         if(_tapGestureRecognizer != nil) {
             _tapGestureRecognizer.delegate = self;
             [self addGestureRecognizer:_tapGestureRecognizer];
+        }
+    }
+}
+
+- (void)setLongPressGestureRecognizer:(UILongPressGestureRecognizer*)longPressGestureRecognizer {
+    if(_longPressGestureRecognizer != longPressGestureRecognizer) {
+        if(_longPressGestureRecognizer != nil) {
+            [self removeGestureRecognizer:_longPressGestureRecognizer];
+        }
+        _longPressGestureRecognizer = longPressGestureRecognizer;
+        if(_longPressGestureRecognizer != nil) {
+            _longPressGestureRecognizer.delegate = self;
+            [self addGestureRecognizer:_longPressGestureRecognizer];
         }
     }
 }
@@ -374,6 +390,12 @@
     [_item performEventForKey:MobilyDataItemViewPressed bySender:self byObject:_item];
 }
 
+- (void)handlerLongPressGestureRecognizer:(UILongPressGestureRecognizer*)gestureRecognizer {
+    if(gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        [_item performEventForKey:MobilyDataItemViewLongPressed bySender:self byObject:_item];
+    }
+}
+
 #pragma mark UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
@@ -397,5 +419,6 @@
 /*--------------------------------------------------*/
 
 NSString* MobilyDataItemViewPressed = @"MobilyDataItemViewPressed";
+NSString* MobilyDataItemViewLongPressed = @"MobilyDataItemViewLongPressed";
 
 /*--------------------------------------------------*/

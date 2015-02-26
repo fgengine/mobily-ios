@@ -41,6 +41,7 @@
 
 @property(nonatomic, readonly, strong) UILongPressGestureRecognizer* pressGestureRecognizer;
 @property(nonatomic, readonly, strong) UITapGestureRecognizer* tapGestureRecognizer;
+@property(nonatomic, readonly, strong) UILongPressGestureRecognizer* longPressGestureRecognizer;
 
 @property(nonatomic, readwrite, strong) IBOutlet UIView* rootView;
 @property(nonatomic, readwrite, assign) UIOffset rootOffsetOfCenter;
@@ -96,5 +97,6 @@ typedef NS_ENUM(NSUInteger, MobilyDataItemSwipeViewStyle) {
 /*--------------------------------------------------*/
 
 extern NSString* MobilyDataItemViewPressed;
+extern NSString* MobilyDataItemViewLongPressed;
 
 /*--------------------------------------------------*/

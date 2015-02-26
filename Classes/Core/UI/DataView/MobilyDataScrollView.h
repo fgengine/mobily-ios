@@ -34,7 +34,6 @@
 /*--------------------------------------------------*/
 
 #import "MobilyData.h"
-#import "MobilyBuilder.h"
 
 /*--------------------------------------------------*/
 
@@ -54,18 +53,18 @@ typedef NS_OPTIONS(NSUInteger, MobilyDataScrollViewPosition) {
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataScrollView : UIScrollView< MobilyDataWidget, MobilyBuilderObject >
+@interface MobilyDataScrollView : UIScrollView< MobilyDataWidget >
 
-@property(nonatomic, readwrite, assign) BOOL bouncesTop;
-@property(nonatomic, readwrite, assign) BOOL bouncesLeft;
-@property(nonatomic, readwrite, assign) BOOL bouncesRight;
-@property(nonatomic, readwrite, assign) BOOL bouncesBottom;
+@property(nonatomic, readwrite, assign) IBInspectable BOOL bouncesTop;
+@property(nonatomic, readwrite, assign) IBInspectable BOOL bouncesLeft;
+@property(nonatomic, readwrite, assign) IBInspectable BOOL bouncesRight;
+@property(nonatomic, readwrite, assign) IBInspectable BOOL bouncesBottom;
 
 @property(nonatomic, readwrite, strong) IBOutlet UIView< MobilyDataScrollRefreshView >* pullToRefreshView;
-@property(nonatomic, readwrite, assign) CGFloat pullToRefreshHeight;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat pullToRefreshHeight;
 
 @property(nonatomic, readwrite, strong) IBOutlet UIView< MobilyDataScrollRefreshView >* pullToLoadView;
-@property(nonatomic, readwrite, assign) CGFloat pullToLoadHeight;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat pullToLoadHeight;
 
 - (void)scrollToItem:(id< MobilyDataItem >)item scrollPosition:(MobilyDataScrollViewPosition)scrollPosition animated:(BOOL)animated;
 
@@ -81,6 +80,13 @@ typedef NS_OPTIONS(NSUInteger, MobilyDataScrollViewPosition) {
 
 /*--------------------------------------------------*/
 
+extern NSString* MobilyDataScrollViewWillBeginDragging;
+extern NSString* MobilyDataScrollViewDidScroll;
+extern NSString* MobilyDataScrollViewWillEndDragging;
+extern NSString* MobilyDataScrollViewDidEndDragging;
+extern NSString* MobilyDataScrollViewWillBeginDecelerating;
+extern NSString* MobilyDataScrollViewDidEndDecelerating;
+extern NSString* MobilyDataScrollViewDidEndScrollingAnimation;
 extern NSString* MobilyDataScrollViewPullToRefreshTriggered;
 extern NSString* MobilyDataScrollViewPullToLoadTriggered;
 
