@@ -44,6 +44,7 @@
 
 @property(nonatomic, readwrite, assign) NSUInteger appearedCount;
 @property(nonatomic, readwrite, assign, getter=isNeedUpdate) BOOL needUpdate;
+@property(nonatomic, readwrite, assign) BOOL updating;
 
 @end
 
@@ -173,17 +174,21 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 #pragma mark Public
 
 - (void)setNeedUpdate {
-    if((self.isViewLoaded == YES) && (self.isAppeared == YES)) {
-        [self clear];
-        [self update];
-    } else {
-        self.needUpdate = YES;
-    }
-    [self.relatedObjects each:^(id object) {
-        if([object respondsToSelector:@selector(setNeedUpdate)] == YES) {
-            [object setNeedUpdate];
+    if(_updating == NO) {
+        self.updating = YES;
+        if((self.isViewLoaded == YES) && (self.isAppeared == YES)) {
+            [self clear];
+            [self update];
+        } else {
+            self.needUpdate = YES;
         }
-    }];
+        [self.relatedObjects each:^(id object) {
+            if([object respondsToSelector:@selector(setNeedUpdate)] == YES) {
+                [object setNeedUpdate];
+            }
+        }];
+        self.updating = NO;
+    }
 }
 
 - (void)update {
