@@ -42,6 +42,7 @@
 
 @property(nonatomic, readwrite, strong) id<MobilyFieldValidator> validator;
 @property(nonatomic, readwrite, weak) MobilyFieldForm* form;
+@property(nonatomic, readwrite, strong) NSString* text;
 
 @end
 

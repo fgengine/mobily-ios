@@ -105,9 +105,9 @@
 - (NSString*)output {
     __block NSString* output = @"";
     NSArray* results = @[];
-    NSArray* invalidControls = [_controls relativeComplement:[_validatedControls allObjects]];
+    NSArray* invalidControls = [self getInvalidControls];
     for(id<MobilyValidatedObject> control in invalidControls) {
-        results = [results unionWithArray:[control.validator messages:nil]];
+        results = [results unionWithArray:[control.validator messages:control.text]];
     }
     [results eachWithIndex:^(NSString* r, NSUInteger index) {
         output = [output stringByAppendingString:r];
@@ -120,12 +120,10 @@
 
 - (void)validatedSuccess:(id<MobilyValidatedObject>)control andValue:(NSString*)value {
     [_validatedControls addObject:control];
-    NSLog(@"success");
 }
 
 - (void)validatedFail:(id<MobilyValidatedObject>)control andValue:(NSString*)value {
     [_validatedControls removeObject:control];
-    NSLog(@"fail");
 }
 
 - (BOOL)isValid {
@@ -165,7 +163,10 @@
 }
 
 - (NSArray*)messages:(NSString*)value {
-    return @[(_msg == nil) ? @"Заполните все поля" : _msg];
+    if([self validate:value] == NO) {
+        return @[(_msg == nil) ? @"Заполните все поля" : _msg];
+    }
+    return @[];
 }
 
 @end
@@ -195,8 +196,10 @@
 }
 
 - (NSArray*)messages:(NSString*)value {
-    if(_msg != nil) {
-        return @[_msg];
+    if([self validate:value] == NO) {
+        if(_msg != nil) {
+            return @[_msg];
+        }
     }
     
     return @[];
@@ -296,7 +299,7 @@
 - (NSArray*)messages:(NSString*)value {
     NSArray* results = @[];
     for(id<MobilyFieldValidator> val in _validators) {
-        results = [results unionWithArray:[val messages:nil]];
+        results = [results unionWithArray:[val messages:value]];
     }
     return results;
 }
