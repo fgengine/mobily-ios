@@ -489,7 +489,7 @@
 }
 
 - (NSInteger)hoursToDate:(NSDate*)date byCalendar:(NSCalendar*)calendar {
-    return [[calendar components:NSCalendarUnitMonth fromDate:self toDate:date options:0] hour];
+    return [[calendar components:NSCalendarUnitHour fromDate:self toDate:date options:0] hour];
 }
 
 - (NSInteger)minutesToDate:(NSDate*)date {
