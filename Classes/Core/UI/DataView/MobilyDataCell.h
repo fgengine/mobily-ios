@@ -37,7 +37,26 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataItemView : UIView< MobilyDataItemView, UIGestureRecognizerDelegate >
+@class MobilyDataItem;
+
+/*--------------------------------------------------*/
+
+typedef NS_ENUM(NSUInteger, MobilyDataCellAction) {
+    MobilyDataCellActionInsert,
+    MobilyDataCellActionDelete,
+    MobilyDataCellActionReplaceOut,
+    MobilyDataCellActionReplaceIn
+};
+
+/*--------------------------------------------------*/
+
+@interface MobilyDataCell : UIView< MobilyObject, UIGestureRecognizerDelegate >
+
+@property(nonatomic, readonly, strong) NSString* identifier;
+@property(nonatomic, readwrite, weak) MobilyDataItem* item;
+@property(nonatomic, readwrite, assign, getter=isSelected) BOOL selected;
+@property(nonatomic, readwrite, assign, getter=isHighlighted) BOOL highlighted;
+@property(nonatomic, readwrite, assign, getter=isEditing) BOOL editing;
 
 @property(nonatomic, readonly, strong) UILongPressGestureRecognizer* pressGestureRecognizer;
 @property(nonatomic, readonly, strong) UITapGestureRecognizer* tapGestureRecognizer;
@@ -49,23 +68,43 @@
 
 @property(nonatomic, readonly, strong) NSArray* orderedSubviews;
 
++ (CGSize)sizeForItem:(id)item availableSize:(CGSize)size;
+
+- (instancetype)initWithIdentifier:(NSString*)identifier;
+- (instancetype)initWithIdentifier:(NSString*)identifier nib:(UINib*)nib;
+
+- (void)prepareForUse;
+- (void)prepareForUnuse;
+
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated;
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated;
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated;
+
+- (void)animateAction:(MobilyDataCellAction)action;
+
+- (void)validateLayoutForBounds:(CGRect)bounds;
+- (void)invalidateLayoutForBounds:(CGRect)bounds;
+
 @end
 
 /*--------------------------------------------------*/
 
-typedef NS_ENUM(NSUInteger, MobilyDataItemSwipeViewStyle) {
-    MobilyDataItemSwipeViewStyleStands,
-    MobilyDataItemSwipeViewStyleLeaves,
-    MobilyDataItemSwipeViewStylePushes
+typedef NS_ENUM(NSUInteger, MobilyDataSwipeCellStyle) {
+    MobilyDataSwipeCellStyleStands,
+    MobilyDataSwipeCellStyleLeaves,
+    MobilyDataSwipeCellStylePushes
 };
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataItemSwipeView : MobilyDataItemView
+@interface MobilyDataCellSwipe : MobilyDataCell
 
 @property(nonatomic, readonly, strong) UIPanGestureRecognizer* panGestureRecognizer;
 
-@property(nonatomic, readwrite, assign) IBInspectable MobilyDataItemSwipeViewStyle swipeStyle;
+@property(nonatomic, readwrite, assign) IBInspectable MobilyDataSwipeCellStyle swipeStyle;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeThreshold;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeVelocity;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeSpeed;
@@ -96,7 +135,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataItemSwipeViewStyle) {
 
 /*--------------------------------------------------*/
 
-extern NSString* MobilyDataItemViewPressed;
-extern NSString* MobilyDataItemViewLongPressed;
+extern NSString* MobilyDataCellPressed;
+extern NSString* MobilyDataCellLongPressed;
 
 /*--------------------------------------------------*/

@@ -33,25 +33,19 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "DemoTablesController.h"
+#import "DemoCalendarController.h"
 
 /*--------------------------------------------------*/
 
-#import "Demo500pxController.h"
-
-/*--------------------------------------------------*/
-
-@implementation DemoTablesController
+@implementation DemoCalendarController
 
 - (void)setup {
     [super setup];
     
-    self.title = @"Tables";
+    self.title = @"Calendar";
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
-    self.dataSource = @[
-        [[DemoTablesModel alloc] initWithType:DemoTablesType500px title:@"500 px"],
-    ];
+    self.dataCalendar = [MobilyDataContainerCalendar containerWithCalendar:NSCalendar.currentCalendar];
 }
 
 - (void)dealloc {
@@ -63,7 +57,13 @@
     [self.navigationItem addLeftBarFixedSpace:-16.0f animated:NO];
     [self.navigationItem addLeftBarButtonNormalImage:[UIImage imageNamed:@"menu-back.png"] target:self action:@selector(pressedBack) animated:NO];
     
-    [_tableView registerCellClass:DemoTablesCell.class];
+    [_dataView registerIdentifier:MobilyDataCalendarMonthIdentifier withViewClass:DemoCalendarMonthCell.class];
+    [_dataView registerIdentifier:MobilyDataCalendarWeekdayIdentifier withViewClass:DemoCalendarWeekdayCell.class];
+    [_dataView registerIdentifier:MobilyDataCalendarDayIdentifier withViewClass:DemoCalendarDayCell.class];
+
+    [_dataCalendar prepareBeginDate:NSDate.date.previousWeek endDate:NSDate.date.nextWeek];
+    
+    [_dataView setContainer:_dataCalendar];
 }
 
 #pragma mark Action
@@ -72,57 +72,30 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-#pragma mark UITableViewDataSource / UITableViewDelegate
-
-- (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_dataSource count];
-}
-
-- (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
-    DemoTablesCell* cell = [_tableView dequeueReusableCellWithClass:[DemoTablesCell class]];
-    if(cell != nil) {
-        cell.model = _dataSource[indexPath.row];
-    }
-    return cell;
-}
-
-- (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
-    return [DemoTablesCell heightForModel:_dataSource[indexPath.row] tableView:_tableView];
-}
-
-- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-    DemoTablesModel* model = _dataSource[indexPath.row];
-    if(model != nil) {
-        switch([model type]) {
-            case DemoTablesType500px: {
-                [self.navigationController pushViewController:[Demo500pxController new] animated:YES];
-                break;
-            }
-        }
-    }
-    [_tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
 @end
 
 /*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation DemoTablesCell
+@implementation DemoCalendarMonthCell
 
-+ (CGFloat)heightForModel:(DemoTablesModel*)model tableView:(UITableView*)tableView {
-    return 44.0f;
-}
-
-- (void)setup {
-    [super setup];
-}
-
-- (void)setModel:(DemoTablesModel*)model {
-    [super setModel:model];
+- (void)prepareForUse {
+    [super prepareForUse];
     
-    _textView.text = model.title;
+    static NSDateFormatter* dateFormatter = nil;
+    if(dateFormatter == nil) {
+        dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MMMM"];
+    }
+    
+    MobilyDataItemCalendarMonth* calendarItem = (MobilyDataItemCalendarMonth*)self.item;
+    _textView.text = [dateFormatter stringFromDate:calendarItem.beginDate];
+}
+
+- (void)prepareForUnuse {
+    _textView.text = @"";
+    
+    [super prepareForUnuse];
 }
 
 @end
@@ -131,15 +104,50 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation DemoTablesModel
+@implementation DemoCalendarWeekdayCell
 
-- (instancetype)initWithType:(DemoTablesType)type title:(NSString*)title {
-    self = [super init];
-    if(self != nil) {
-        self.type = type;
-        self.title = title;
+- (void)prepareForUse {
+    [super prepareForUse];
+    
+    static NSDateFormatter* dateFormatter = nil;
+    if(dateFormatter == nil) {
+        dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"EEE"];
     }
-    return self;
+    
+    MobilyDataItemCalendarWeekday* calendarItem = (MobilyDataItemCalendarWeekday*)self.item;
+    _textView.text = [dateFormatter stringFromDate:calendarItem.date];
+}
+
+- (void)prepareForUnuse {
+    _textView.text = @"";
+    
+    [super prepareForUnuse];
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation DemoCalendarDayCell
+
+- (void)prepareForUse {
+    [super prepareForUse];
+    
+    static NSDateFormatter* dateFormatter = nil;
+    if(dateFormatter == nil) {
+        dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"dd"];
+    }
+    
+    MobilyDataItemCalendarDay* calendarItem = (MobilyDataItemCalendarDay*)self.item;
+    _textView.text = [dateFormatter stringFromDate:calendarItem.date];
+}
+
+- (void)prepareForUnuse {
+    _textView.text = @"";
+    
+    [super prepareForUnuse];
 }
 
 @end

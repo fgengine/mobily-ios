@@ -33,28 +33,19 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-@interface DemoDataScrollViewController : MobilyViewController
-
-@property(nonatomic, readwrite, weak) IBOutlet MobilyDataScrollView* dataScrollView;
-@property(nonatomic, readwrite, strong) MobilyDataListContainer* dataRootListContainer;
-@property(nonatomic, readwrite, strong) MobilyDataContainer* dataListContainer1;
-@property(nonatomic, readwrite, strong) MobilyDataContainer* dataListContainer2;
-
-@end
+#import "MobilyDataRefreshView.h"
+#import "MobilyDataView+Private.h"
 
 /*--------------------------------------------------*/
 
-@interface DemoDataScrollViewItemView : MobilyDataItemView
+@interface MobilyDataRefreshView () {
+@protected
+    __weak MobilyDataView* _view;
+    MobilyDataRefreshViewState _state;
+}
 
-@property(nonatomic, readwrite, weak) IBOutlet UILabel* textView;
-
-@end
-
-/*--------------------------------------------------*/
-
-@interface DemoDataScrollViewItemSwipeView : MobilyDataItemSwipeView
-
-@property(nonatomic, readwrite, weak) IBOutlet UILabel* textView;
+@property(nonatomic, readwrite, weak) MobilyDataView* view;
+@property(nonatomic, readwrite, assign) MobilyDataRefreshViewState state;
 
 @end
 

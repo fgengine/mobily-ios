@@ -33,30 +33,16 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyDataContainer.h"
+#import "MobilyDataContainer+Private.h"
 
-/*--------------------------------------------------*/
-
-@interface MobilyDataContainer ()
-
-@property(nonatomic, readwrite, strong) NSMutableArray* unsafeSnapToEdgeItems;
-@property(nonatomic, readwrite, strong) NSMutableArray* unsafeContainers;
-@property(nonatomic, readwrite, strong) NSMutableArray* unsafeItems;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
 /*--------------------------------------------------*/
 
 @implementation MobilyDataContainer
 
 #pragma mark Synthesize
 
-@synthesize widget = _widget;
-@synthesize parentContainer = _parentContainer;
-@synthesize containersFrame = _containersFrame;
-@synthesize itemsFrame = _itemsFrame;
+@synthesize view = _view;
+@synthesize parent = _parent;
 
 #pragma mark Init / Free
 
@@ -69,351 +55,94 @@
 }
 
 - (void)setup {
-    self.unsafeSnapToEdgeItems = NSMutableArray.array;
-    self.unsafeContainers = NSMutableArray.array;
-    self.unsafeItems = NSMutableArray.array;
 }
 
 - (void)dealloc {
-    self.unsafeSnapToEdgeItems = nil;
-    self.unsafeContainers = nil;
-    self.unsafeItems = nil;
 }
 
 #pragma mark Property
 
-- (void)setWidget:(UIView< MobilyDataWidget >*)widget {
-    if(_widget != widget) {
-        _widget = widget;
-        for(id< MobilyDataContainer > container in _unsafeContainers) {
-            container.widget = widget;
-        }
-        for(id< MobilyDataItem > item in _unsafeItems) {
-            item.widget = widget;
-        }
+- (void)setView:(MobilyDataView*)view {
+    if(_view != view) {
+        [self _willChangeView];
+        _view = view;
+        [self _didChangeView];
     }
 }
 
-- (void)setParentContainer:(id< MobilyDataContainer >)parentContainer {
-    if(_parentContainer != parentContainer) {
-        _parentContainer = parentContainer;
-        if(_parentContainer != nil) {
-            self.widget = parentContainer.widget;
-        }
+- (void)setParent:(MobilyDataContainer*)parent {
+    if(_parent != parent) {
+        [self _willChangeParent];
+        _parent = parent;
+        [self _didChangeParent];
     }
 }
 
-- (NSArray*)snapToEdgeContainers {
-    return _unsafeSnapToEdgeItems;
+#pragma mark Property private
+
+- (void)_willChangeView {
 }
 
-- (NSArray*)containers {
-    return _unsafeContainers;
+- (void)_didChangeView {
 }
 
-- (NSArray*)snapToEdgeItems {
-    return _unsafeSnapToEdgeItems;
+- (void)_willChangeParent {
 }
 
-- (NSArray*)items {
-    return _unsafeItems;
-}
-
-- (NSArray*)allItems {
-    NSMutableArray* result = NSMutableArray.array;
-    for(id< MobilyDataContainer > container in _unsafeContainers) {
-        [result addObjectsFromArray:container.allItems];
+- (void)_didChangeParent {
+    if(_parent != nil) {
+        self.view = _parent.view;
     }
-    [result addObjectsFromArray:_unsafeItems];
-    return result;
+}
+
+- (void)_didBeginUpdate {
+}
+
+- (void)_didEndUpdate {
+}
+
+- (CGRect)_validateLayoutForAvailableFrame:(CGRect)frame {
+    return CGRectNull;
+}
+
+- (void)_willLayoutForBounds:(CGRect)bounds {
+}
+
+- (void)_didLayoutForBounds:(CGRect)bounds {
 }
 
 #pragma mark Public
 
-- (id< MobilyDataItem >)itemForData:(id)data {
-    for(id< MobilyDataContainer > container in _unsafeContainers) {
-        id< MobilyDataItem > itemInContainer = [container itemForData:data];
-        if(itemInContainer != nil) {
-            return itemInContainer;
-        }
-    }
-    for(id< MobilyDataItem > item in _unsafeItems) {
-        id itemData = item.data;
-        if(itemData == data) {
-            return itemData;
-        }
-    }
+- (NSArray*)allItems {
+    return @[];
+}
+
+- (MobilyDataItem*)itemForData:(id)data {
     return nil;
 }
 
-- (UIView< MobilyDataItemView >*)itemViewForData:(id)data {
-    id< MobilyDataItem > item = [self itemForData:data];
-    if(item != nil) {
-        return item.view;
-    }
+- (MobilyDataCell*)cellForData:(id)data {
     return nil;
-}
-
-- (void)addSnapToEdgeItem:(id< MobilyDataItem >)item {
-    if([_unsafeSnapToEdgeItems containsObject:item] == NO) {
-        [_unsafeSnapToEdgeItems addObject:item];
-        item.allowsSnapToEdge = YES;
-    }
-}
-
-- (void)removeSnapToEdgeItem:(id< MobilyDataItem >)item {
-    if([_unsafeSnapToEdgeItems containsObject:item] == YES) {
-        [_unsafeSnapToEdgeItems removeObject:item];
-        item.allowsSnapToEdge = NO;
-    }
-}
-
-- (void)prependContainer:(id< MobilyDataContainer >)container {
-    container.parentContainer = self;
-    [_unsafeContainers insertObject:container atIndex:0];
-    if(_widget != nil) {
-        [_widget didInsertItems:container.allItems];
-    }
-}
-
-- (void)appendContainer:(id< MobilyDataContainer >)container {
-    container.parentContainer = self;
-    [_unsafeContainers addObject:container];
-    if(_widget != nil) {
-        [_widget didInsertItems:container.allItems];
-    }
-}
-
-- (void)insertContainer:(id< MobilyDataContainer >)container atIndex:(NSUInteger)index {
-    container.parentContainer = self;
-    [_unsafeContainers insertObject:container atIndex:index];
-    if(_widget != nil) {
-        [_widget didInsertItems:container.allItems];
-    }
-}
-
-- (void)replaceOriginContainer:(id< MobilyDataContainer >)originContainer withContainer:(id< MobilyDataContainer >)container {
-    NSUInteger containerIndex = [_unsafeContainers indexOfObject:originContainer];
-    if(containerIndex != NSNotFound) {
-        container.parentContainer = self;
-        _unsafeContainers[containerIndex] = container;
-        if(_widget != nil) {
-            [_widget didReplaceOriginItems:originContainer.allItems withItems:container.allItems];
-        }
-    }
-}
-
-- (void)deleteContainer:(id< MobilyDataContainer >)container {
-    [_unsafeContainers removeObject:container];
-    if(_widget != nil) {
-        [_widget didDeleteItems:container.allItems];
-    }
-}
-
-- (void)prependItem:(id< MobilyDataItem >)item {
-    [_unsafeItems insertObject:item atIndex:0];
-    item.parentContainer = self;
-    if(_widget != nil) {
-        [_widget didInsertItems:@[ item ]];
-    }
-}
-
-- (void)prependItems:(NSArray*)items {
-    [_unsafeItems insertObjects:items atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, items.count)]];
-    for(id< MobilyDataItem > item in items) {
-        item.parentContainer = self;
-    }
-    if(_widget != nil) {
-        [_widget didInsertItems:items];
-    }
-}
-
-- (void)appendItem:(id< MobilyDataItem >)item {
-    [_unsafeItems addObject:item];
-    item.parentContainer = self;
-    if(_widget != nil) {
-        [_widget didInsertItems:@[ item ]];
-    }
-}
-
-- (void)appendItems:(NSArray*)items {
-    [_unsafeItems addObjectsFromArray:items];
-    for(id< MobilyDataItem > item in items) {
-        item.parentContainer = self;
-    }
-    if(_widget != nil) {
-        [_widget didInsertItems:items];
-    }
-}
-
-- (void)insertItem:(id< MobilyDataItem >)item atIndex:(NSUInteger)index {
-    [_unsafeItems insertObject:item atIndex:index];
-    item.parentContainer = self;
-    if(_widget != nil) {
-        [_widget didInsertItems:@[ item ]];
-    }
-}
-
-- (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index {
-    [_unsafeItems insertObjects:items atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, items.count)]];
-    for(id< MobilyDataItem > item in items) {
-        item.parentContainer = self;
-    }
-    if(_widget != nil) {
-        [_widget didInsertItems:items];
-    }
-}
-
-- (void)replaceOriginItem:(id< MobilyDataItem >)originItem withItem:(id< MobilyDataItem >)item {
-    NSUInteger itemIndex = [_unsafeItems indexOfObject:originItem];
-    if(itemIndex != NSNotFound) {
-        item.parentContainer = self;
-        _unsafeItems[itemIndex] = item;
-        if(_widget != nil) {
-            [_widget didReplaceOriginItems:@[ originItem ] withItems:@[ item ]];
-        }
-    }
-}
-
-- (void)replaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items {
-    NSIndexSet* originIndexSet = [_unsafeItems indexesOfObjectsPassingTest:^BOOL(id< MobilyDataItem > originItem, NSUInteger index, BOOL* stop) {
-        return [originItems containsObject:originItem];
-    }];
-    if(originIndexSet.count == items.count) {
-        for(id< MobilyDataItem > item in items) {
-            item.parentContainer = self;
-        }
-        [_unsafeItems replaceObjectsAtIndexes:originIndexSet withObjects:items];
-        if(_widget != nil) {
-            [_widget didReplaceOriginItems:originItems withItems:items];
-        }
-    }
-}
-
-- (void)deleteItem:(id< MobilyDataItem >)item {
-    [_unsafeSnapToEdgeItems removeObject:item];
-    [_unsafeItems removeObject:item];
-    if(_widget != nil) {
-        [_widget didDeleteItems:@[ item ]];
-    }
-}
-
-- (void)deleteItems:(NSArray*)items {
-    [_unsafeSnapToEdgeItems removeObjectsInArray:items];
-    [_unsafeItems removeObjectsInArray:items];
-    if(_widget != nil) {
-        [_widget didDeleteItems:items];
-    }
-}
-
-- (void)deleteAllItems {
-    [self deleteItems:[_unsafeItems copy]];
 }
 
 - (BOOL)containsEventForKey:(id)key {
-    return [_widget containsEventForKey:key];
+    return [_view containsEventForKey:key];
 }
 
-- (id)performEventForKey:(id)key byObject:(id)object {
-    return [_widget performEventForKey:key bySender:self byObject:object];
+- (id)fireEventForKey:(id)key byObject:(id)object {
+    return [_view fireEventForKey:key bySender:self byObject:object];
 }
 
-- (id)performEventForKey:(id)key byObject:(id)object defaultResult:(id)defaultResult {
-    return [_widget performEventForKey:key bySender:self byObject:object defaultResult:defaultResult];
+- (id)fireEventForKey:(id)key byObject:(id)object orDefault:(id)orDefault {
+    return [_view fireEventForKey:key bySender:self byObject:object orDefault:orDefault];
 }
 
-- (id)performEventForKey:(id)key bySender:(id)sender byObject:(id)object {
-    return [_widget performEventForKey:key bySender:sender byObject:object];
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
+    return [_view fireEventForKey:key bySender:sender byObject:object];
 }
 
-- (id)performEventForKey:(id)key bySender:(id)sender byObject:(id)object defaultResult:(id)defaultResult {
-    return [_widget performEventForKey:key bySender:sender byObject:object defaultResult:defaultResult];
-}
-
-- (void)didBeginUpdate {
-    for(id< MobilyDataContainer > container in _unsafeContainers) {
-        [container didBeginUpdate];
-    };
-    for(id< MobilyDataItem > item in _unsafeItems) {
-        [item didBeginUpdate];
-    }
-}
-
-- (void)didEndUpdate {
-    for(id< MobilyDataContainer > container in _unsafeContainers) {
-        [container didEndUpdate];
-    }
-    for(id< MobilyDataItem > item in _unsafeItems) {
-        [item didEndUpdate];
-    }
-}
-
-- (CGRect)validateLayoutForAvailableFrame:(CGRect)frame {
-    CGRect result = CGRectNull;
-    if(_unsafeContainers.count > 0) {
-        self.containersFrame = [self validateContainersLayoutForAvailableFrame:frame];
-        if(CGRectIsNull(_containersFrame) == NO) {
-            result = _containersFrame;
-        }
-    }
-    if(_unsafeItems.count > 0) {
-        self.itemsFrame = [self validateItemsLayoutForAvailableFrame:frame];
-        if(CGRectIsNull(_itemsFrame) == NO) {
-            if(CGRectIsNull(result) == NO) {
-                result = CGRectUnion(result, _itemsFrame);
-            } else {
-                result = _itemsFrame;
-            }
-        }
-    }
-    return result;
-}
-
-- (CGRect)validateContainersLayoutForAvailableFrame:(CGRect)frame {
-    return CGRectNull;
-}
-
-- (CGRect)validateItemsLayoutForAvailableFrame:(CGRect)frame {
-    return CGRectNull;
-}
-
-- (void)snapForBounds:(CGRect)bounds {
-    if(_unsafeContainers.count > 0) {
-        [self snapContainersForBounds:bounds];
-    }
-    if(_unsafeItems.count > 0) {
-        [self snapItemsForBounds:CGRectIntersection(bounds, _itemsFrame)];
-    }
-}
-
-- (void)snapContainersForBounds:(CGRect)bounds {
-}
-
-- (void)snapItemsForBounds:(CGRect)bounds {
-    for(id< MobilyDataItem > item in self.snapToEdgeItems) {
-        item.displayFrame = item.updateFrame;
-    }
-}
-
-- (void)layoutForBounds:(CGRect)bounds {
-    if(_unsafeContainers.count > 0) {
-        [self layoutContainersForBounds:bounds];
-    }
-    if(_unsafeItems.count > 0) {
-        [self layoutItemsForBounds:bounds];
-    }
-}
-
-- (void)layoutContainersForBounds:(CGRect)bounds {
-    for(id< MobilyDataContainer > container in _unsafeContainers) {
-        [container layoutForBounds:bounds];
-    };
-}
-
-- (void)layoutItemsForBounds:(CGRect)bounds {
-    for(id< MobilyDataItem > item in _unsafeItems) {
-        [item validateLayoutForBounds:bounds];
-    }
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
+    return [_view fireEventForKey:key bySender:sender byObject:object orDefault:orDefault];
 }
 
 @end

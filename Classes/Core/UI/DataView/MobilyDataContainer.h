@@ -37,38 +37,59 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataContainer : NSObject< MobilyDataContainer >
+@class MobilyDataView;
+@class MobilyDataContainer;
+@class MobilyDataItem;
+@class MobilyDataCell;
+
+/*--------------------------------------------------*/
+
+typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
+    MobilyDataContainerOrientationVertical,
+    MobilyDataContainerOrientationHorizontal,
+};
+
+/*--------------------------------------------------*/
+
+@interface MobilyDataContainer : NSObject< MobilyObject >
+
+@property(nonatomic, readonly, weak) MobilyDataView* view;
+@property(nonatomic, readonly, weak) MobilyDataContainer* parent;
+
+- (NSArray*)allItems;
+
+- (id)itemForData:(id)data;
+- (MobilyDataCell*)cellForData:(id)data;
+
+- (BOOL)containsEventForKey:(id)key;
+
+- (id)fireEventForKey:(id)key byObject:(id)object;
+- (id)fireEventForKey:(id)key byObject:(id)object orDefault:(id)orDefault;
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
+
 @end
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataListContainer : MobilyDataContainer
+@interface MobilyDataContainerSections : MobilyDataContainer
 
-@property(nonatomic, readwrite, assign) UIEdgeInsets margin;
-@property(nonatomic, readwrite, assign) CGFloat spacing;
+@property(nonatomic, readonly, strong) NSArray* sections;
+@property(nonatomic, readonly, assign) CGRect sectionsFrame;
 
-@end
-
-/*--------------------------------------------------*/
-
-@interface MobilyDataVerticalListContainer : MobilyDataListContainer
-
-@property(nonatomic, readwrite, assign) CGFloat containersHeight;
+- (void)prependSection:(MobilyDataContainer*)section;
+- (void)appendSection:(MobilyDataContainer*)section;
+- (void)insertSection:(MobilyDataContainer*)section atIndex:(NSUInteger)index;
+- (void)replaceOriginSection:(MobilyDataContainer*)originSection withSection:(MobilyDataContainer*)section;
+- (void)deleteSection:(MobilyDataContainer*)section;
 
 @end
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataHorizontalListContainer : MobilyDataListContainer
+@interface MobilyDataContainerSectionsList : MobilyDataContainerSections
 
-@property(nonatomic, readwrite, assign) CGFloat containersWidth;
-
-@end
-
-/*--------------------------------------------------*/
-
-@interface MobilyDataFlowContainer : MobilyDataContainer
-
+@property(nonatomic, readwrite, assign) MobilyDataContainerOrientation orientation;
 @property(nonatomic, readwrite, assign) UIEdgeInsets margin;
 @property(nonatomic, readwrite, assign) UIOffset spacing;
 
@@ -76,18 +97,101 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataVerticalFlowContainer : MobilyDataFlowContainer
+@interface MobilyDataContainerItems : MobilyDataContainer
 
-@property(nonatomic, readwrite, assign) CGFloat containersHeight;
+@property(nonatomic, readonly, strong) NSArray* entries;
+@property(nonatomic, readonly, assign) CGRect entriesFrame;
 
 @end
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataHorizontalFlowContainer : MobilyDataFlowContainer
+@interface MobilyDataContainerItemsList : MobilyDataContainerItems
 
-@property(nonatomic, readwrite, assign) CGFloat containersWidth;
+@property(nonatomic, readwrite, assign) MobilyDataContainerOrientation orientation;
+@property(nonatomic, readwrite, assign) UIEdgeInsets margin;
+@property(nonatomic, readwrite, assign) UIOffset spacing;
+@property(nonatomic, readwrite, assign) MobilyDataItem* header;
+@property(nonatomic, readwrite, assign) MobilyDataItem* footer;
+@property(nonatomic, readonly, strong) NSArray* items;
+
+- (void)prependItem:(MobilyDataItem*)item;
+- (void)prependItems:(NSArray*)items;
+- (void)appendItem:(MobilyDataItem*)item;
+- (void)appendItems:(NSArray*)items;
+- (void)insertItem:(MobilyDataItem*)item atIndex:(NSUInteger)index;
+- (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index;
+- (void)replaceOriginItem:(MobilyDataItem*)originItem withItem:(MobilyDataItem*)item;
+- (void)replaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items;
+- (void)deleteItem:(MobilyDataItem*)item;
+- (void)deleteItems:(NSArray*)items;
+- (void)deleteAllItems;
 
 @end
+
+/*--------------------------------------------------*/
+
+@interface MobilyDataContainerItemsFlow : MobilyDataContainerItems
+
+@property(nonatomic, readwrite, assign) MobilyDataContainerOrientation orientation;
+@property(nonatomic, readwrite, assign) UIEdgeInsets margin;
+@property(nonatomic, readwrite, assign) UIOffset spacing;
+@property(nonatomic, readwrite, assign) MobilyDataItem* header;
+@property(nonatomic, readwrite, assign) MobilyDataItem* footer;
+@property(nonatomic, readonly, strong) NSArray* items;
+
+- (void)prependItem:(MobilyDataItem*)item;
+- (void)prependItems:(NSArray*)items;
+- (void)appendItem:(MobilyDataItem*)item;
+- (void)appendItems:(NSArray*)items;
+- (void)insertItem:(MobilyDataItem*)item atIndex:(NSUInteger)index;
+- (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index;
+- (void)replaceOriginItem:(MobilyDataItem*)originItem withItem:(MobilyDataItem*)item;
+- (void)replaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items;
+- (void)deleteItem:(MobilyDataItem*)item;
+- (void)deleteItems:(NSArray*)items;
+- (void)deleteAllItems;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyDataContainerCalendar : MobilyDataContainerItems
+
+@property(nonatomic, readonly, strong) NSCalendar* calendar;
+@property(nonatomic, readonly, strong) NSDate* beginDate;
+@property(nonatomic, readonly, strong) NSDate* endDate;
+
+@property(nonatomic, readwrite, assign) BOOL canShowMonth;
+@property(nonatomic, readwrite, assign) UIEdgeInsets monthMargin;
+@property(nonatomic, readwrite, assign) CGFloat monthHeight;
+@property(nonatomic, readwrite, assign) CGFloat monthSpacing;
+@property(nonatomic, readwrite, assign) BOOL canSnapToEdgeMonth;
+
+@property(nonatomic, readwrite, assign) BOOL canShowWeekdays;
+@property(nonatomic, readwrite, assign) UIEdgeInsets weekdaysMargin;
+@property(nonatomic, readwrite, assign) CGFloat weekdaysHeight;
+@property(nonatomic, readwrite, assign) UIOffset weekdaysSpacing;
+@property(nonatomic, readwrite, assign) BOOL canSnapToEdgeWeekdays;
+
+@property(nonatomic, readwrite, assign) BOOL canShowDays;
+@property(nonatomic, readwrite, assign) UIEdgeInsets daysMargin;
+@property(nonatomic, readwrite, assign) CGFloat daysHeight;
+@property(nonatomic, readwrite, assign) UIOffset daysSpacing;
+
++ (instancetype)containerWithCalendar:(NSCalendar*)calendar;
+
+- (instancetype)initWithCalendar:(NSCalendar*)calendar;
+
+- (void)prepareBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate;
+- (void)cleanup;
+
+@end
+
+/*--------------------------------------------------*/
+
+extern NSString* MobilyDataCalendarMonthIdentifier;
+extern NSString* MobilyDataCalendarWeekdayIdentifier;
+extern NSString* MobilyDataCalendarDayIdentifier;
 
 /*--------------------------------------------------*/

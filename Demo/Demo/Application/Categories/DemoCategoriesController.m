@@ -41,7 +41,7 @@
 #import "DemoButtonsController.h"
 #import "DemoFieldsController.h"
 #import "DemoTablesController.h"
-#import "DemoDataScrollViewController.h"
+#import "DemoCalendarController.h"
 #import "DemoAudioRecorderController.h"
 #import "DemoAudioPlayerController.h"
 
@@ -51,7 +51,7 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
     DemoCategoriesTypeButtons,
     DemoCategoriesTypeFields,
     DemoCategoriesTypeTables,
-    DemoCategoriesTypeDataScrollView,
+    DemoCategoriesTypeCalendar,
     DemoCategoriesTypeAudioRecorder,
     DemoCategoriesTypeAudioPlayer
 };
@@ -63,6 +63,7 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
 @property(nonatomic, readwrite, assign) DemoCategoriesType type;
 @property(nonatomic, readwrite, strong) NSString* title;
 
+- (instancetype)initWithTitle:(NSString*)title;
 - (instancetype)initWithType:(DemoCategoriesType)type title:(NSString*)title;
 
 @end
@@ -77,15 +78,33 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
     self.title = @"Categories";
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
-    self.dataListContainer = MobilyDataVerticalListContainer.new;
-    [_dataListContainer appendItems:@[
-        [MobilyDataItem dataItemWithIdentifier:DemoCategoriesCell.className data:[[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeButtons title:@"Buttons"]],
-        [MobilyDataItem dataItemWithIdentifier:DemoCategoriesCell.className data:[[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeFields title:@"Fields"]],
-        [MobilyDataItem dataItemWithIdentifier:DemoCategoriesCell.className data:[[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeTables title:@"Tables"]],
-        [MobilyDataItem dataItemWithIdentifier:DemoCategoriesCell.className data:[[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeDataScrollView title:@"DataScrollView"]],
-        [MobilyDataItem dataItemWithIdentifier:DemoCategoriesCell.className data:[[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioRecorder title:@"AudioRecorder"]],
-        [MobilyDataItem dataItemWithIdentifier:DemoCategoriesCell.className data:[[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioPlayer title:@"AudioPlayer"]],
-    ]];
+    self.sections = MobilyDataContainerSectionsList.new;
+    
+    self.commonItems = MobilyDataContainerItemsList.new;
+    self.commonItems.header = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier data:@"COMMON"];
+    [self.commonItems appendItems:[MobilyDataItem dataItemsWithIdentifier:DemoCategoriesIdentifier dataArray:@[
+        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeButtons title:@"Buttons"],
+        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeFields title:@"Fields"],
+    ]]];
+    self.commonItems.footer = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier data:@"common"];
+    [self.sections appendSection:self.commonItems];
+    
+    self.collectionItems = MobilyDataContainerItemsList.new;
+    self.collectionItems.header = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier data:@"COLLECTION"];
+    [self.collectionItems appendItems:[MobilyDataItem dataItemsWithIdentifier:DemoCategoriesIdentifier dataArray:@[
+        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeCalendar title:@"Calendar"],
+        ]]];
+    self.collectionItems.footer = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier data:@"collection"];
+    [self.sections appendSection:self.collectionItems];
+    
+    self.audioVideoItems = MobilyDataContainerItemsList.new;
+    self.audioVideoItems.header = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier data:@"AUDIO / VIDEO"];
+    [self.audioVideoItems appendItems:[MobilyDataItem dataItemsWithIdentifier:DemoCategoriesIdentifier dataArray:@[
+        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioRecorder title:@"AudioRecorder"],
+        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioPlayer title:@"AudioPlayer"],
+        ]]];
+    self.audioVideoItems.footer = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier data:@"audio / video"];
+    [self.sections appendSection:self.audioVideoItems];
 }
 
 - (void)dealloc {
@@ -94,18 +113,19 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [_dataScrollView registerIdentifier:DemoCategoriesCell.className withViewClass:DemoCategoriesCell.class];
-    [_dataScrollView registerEventWithTarget:self action:@selector(pressedDataItemView:dataItem:) forKey:MobilyDataItemViewPressed];
-    _dataScrollView.container = _dataListContainer;
+    [self.dataView registerIdentifier:DemoCategoriesHeaderIdentifier withViewClass:DemoCategoriesHeaderCell.class];
+    [self.dataView registerIdentifier:DemoCategoriesIdentifier withViewClass:DemoCategoriesCell.class];
+    [self.dataView registerEventWithTarget:self action:@selector(pressedDataCell:dataItem:) forKey:MobilyDataCellPressed];
+    self.dataView.container = self.sections;
 }
 
-- (IBAction)pressedDataItemView:(MobilyDataItemView*)dataItemView dataItem:(MobilyDataItem*)dataItem {
+- (IBAction)pressedDataCell:(MobilyDataCell*)dataCell dataItem:(MobilyDataItem*)dataItem {
     DemoCategoriesModel* model = dataItem.data;
     switch(model.type) {
         case DemoCategoriesTypeButtons: [self.app.slideCenterController pushViewController:DemoButtonsController.new animated:YES]; break;
         case DemoCategoriesTypeFields: [self.app.slideCenterController pushViewController:DemoFieldsController.new animated:YES]; break;
         case DemoCategoriesTypeTables: [self.app.slideCenterController pushViewController:DemoTablesController.new animated:YES]; break;
-        case DemoCategoriesTypeDataScrollView: [self.app.slideCenterController pushViewController:DemoDataScrollViewController.new animated:YES]; break;
+        case DemoCategoriesTypeCalendar: [self.app.slideCenterController pushViewController:DemoCalendarController.new animated:YES]; break;
         case DemoCategoriesTypeAudioRecorder: [self.app.slideCenterController pushViewController:DemoAudioRecorderController.new animated:YES]; break;
         case DemoCategoriesTypeAudioPlayer: [self.app.slideCenterController pushViewController:DemoAudioPlayerController.new animated:YES]; break;
     }
@@ -117,17 +137,35 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation DemoCategoriesCell
+@implementation DemoCategoriesHeaderCell
 
-+ (CGSize)sizeForItem:(id< MobilyDataItem >)item availableSize:(CGSize)size {
++ (CGSize)sizeForItem:(MobilyDataItem*)item availableSize:(CGSize)size {
     return CGSizeMake(size.width, 44.0f);
 }
 
 - (void)prepareForUse {
     [super prepareForUse];
     
+    self.textView.text = self.item.data;
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation DemoCategoriesCell
+
++ (CGSize)sizeForItem:(MobilyDataItem*)item availableSize:(CGSize)size {
+    return CGSizeMake(size.width, 88.0f);
+}
+
+- (void)prepareForUse {
+    [super prepareForUse];
+    
     DemoCategoriesModel* model = self.item.data;
-    _textView.text = model.title;
+    self.textView.text = model.title;
 }
 
 @end
@@ -137,6 +175,15 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
 /*--------------------------------------------------*/
 
 @implementation DemoCategoriesModel
+
+
+- (instancetype)initWithTitle:(NSString*)title {
+    self = [super init];
+    if(self != nil) {
+        self.title = title;
+    }
+    return self;
+}
 
 - (instancetype)initWithType:(DemoCategoriesType)type title:(NSString*)title {
     self = [super init];
@@ -148,5 +195,10 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
 }
 
 @end
+
+/*--------------------------------------------------*/
+
+NSString* DemoCategoriesHeaderIdentifier = @"DemoCategoriesHeaderIdentifier";
+NSString* DemoCategoriesIdentifier = @"DemoCategoriesIdentifier";
 
 /*--------------------------------------------------*/

@@ -188,11 +188,19 @@
     return result;
 }
 
-- (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block {
+- (void)eachColumnsRows:(void(^)(id object, NSUInteger column, NSUInteger row))block {
     for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
         NSMutableArray* columnObjects = _objects[ic];
         for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
             block(columnObjects[ir], ic, ir);
+        }
+    }
+}
+
+- (void)eachRowsColumns:(void(^)(id object, NSUInteger column, NSUInteger row))block {
+    for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
+        for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
+            block(_objects[ic][ir], ic, ir);
         }
     }
 }

@@ -87,7 +87,7 @@ typedef id (^MobilyEventBlockType)(id sender, id object);
 - (BOOL)containsEventForKey:(id)key;
 
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
-- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object defaultResult:(id)defaultResult;
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
 
 @end
 

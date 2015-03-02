@@ -33,53 +33,81 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyNS.h"
+#import "MobilyDataItem.h"
+#import "MobilyDataView+Private.h"
+#import "MobilyDataContainer+Private.h"
+#import "MobilyDataCell+Private.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyGrid : NSObject< NSCopying >
+@interface MobilyDataItem () {
+@protected
+    __weak MobilyDataView* _view;
+    __weak MobilyDataContainer* _parent;
+    NSString* _identifier;
+    id _data;
+    MobilyDataCell* _cell;
+    CGRect _originFrame;
+    CGRect _updateFrame;
+    CGRect _displayFrame;
+    CGRect _frame;
+    CGFloat _zOrder;
+    BOOL _allowsSelection;
+    BOOL _allowsHighlighting;
+    BOOL _allowsEditing;
+    BOOL _selected;
+    BOOL _highlighted;
+    BOOL _editing;
+}
 
-@property(nonatomic, readonly, assign) NSUInteger numberOfColumns;
-@property(nonatomic, readonly, assign) NSUInteger numberOfRows;
-@property(nonatomic, readonly, assign) NSUInteger count;
-
-+ (instancetype)grid;
-+ (instancetype)gridWithColumns:(NSUInteger)columns rows:(NSUInteger)rows;
-+ (instancetype)gridWithColumns:(NSUInteger)columns rows:(NSUInteger)rows objects:(NSArray*)objects;
-+ (instancetype)gridWithGrid:(MobilyGrid*)grid;
-
-- (instancetype)initWithColumns:(NSUInteger)columns rows:(NSUInteger)rows;
-- (instancetype)initWithColumns:(NSUInteger)columns rows:(NSUInteger)rows objects:(NSArray*)objects;
-- (instancetype)initWithGrid:(MobilyGrid*)grid;
-
-- (BOOL)containsColumn:(NSUInteger)column row:(NSUInteger)row;
-- (BOOL)isEmptyColumn:(NSInteger)column;
-- (BOOL)isEmptyRow:(NSInteger)row;
-
-- (id)objectAtColumn:(NSUInteger)column atRow:(NSUInteger)row;
-- (NSArray*)objects;
-
-- (void)eachColumnsRows:(void(^)(id object, NSUInteger column, NSUInteger row))block;
-- (void)eachRowsColumns:(void(^)(id object, NSUInteger column, NSUInteger row))block;
-- (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block byColumn:(NSInteger)column;
-- (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block byRow:(NSInteger)row;
+@property(nonatomic, readwrite, weak) MobilyDataView* view;
+@property(nonatomic, readwrite, weak) MobilyDataContainer* parent;
+@property(nonatomic, readwrite, strong) NSString* identifier;
+@property(nonatomic, readwrite, strong) id data;
+@property(nonatomic, readwrite, strong) MobilyDataCell* cell;
 
 @end
 
 /*--------------------------------------------------*/
 
-@interface MobilyMutableGrid : MobilyGrid
+@interface MobilyDataItemCalendarMonth  () {
+@protected
+    __weak NSCalendar* _calendar;
+    NSDate* _beginDate;
+    NSDate* _endDate;
+}
 
-- (void)setNumberOfColumns:(NSUInteger)numberOfColumns numberOfRows:(NSUInteger)numberOfRows;
++ (instancetype)dataItemWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate data:(id)data;
 
-- (void)setObject:(id)object atColumn:(NSUInteger)column atRow:(NSUInteger)row;
-- (void)setObjects:(NSArray*)objects;
+- (instancetype)initWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate data:(id)data;
 
-- (void)insertColumn:(NSUInteger)column objects:(NSArray*)objects;
-- (void)insertRow:(NSUInteger)row objects:(NSArray*)objects;
-- (void)removeColumn:(NSUInteger)column;
-- (void)removeRow:(NSUInteger)row;
-- (void)removeAllObjects;
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyDataItemCalendarWeekday () {
+@protected
+    __weak NSCalendar* _calendar;
+    NSDate* _date;
+}
+
++ (instancetype)dataItemWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data;
+
+- (instancetype)initWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyDataItemCalendarDay () {
+@protected
+    __weak NSCalendar* _calendar;
+    NSDate* _date;
+}
+
++ (instancetype)dataItemWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data;
+
+- (instancetype)initWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data;
 
 @end
 

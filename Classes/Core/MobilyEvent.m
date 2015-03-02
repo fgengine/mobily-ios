@@ -288,15 +288,15 @@
 }
 
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
-    return [self fireEventForKey:key bySender:sender byObject:object defaultResult:nil];
+    return [self fireEventForKey:key bySender:sender byObject:object orDefault:nil];
 }
 
-- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object defaultResult:(id)defaultResult {
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
     id< MobilyEvent > event = _events[key];
     if(event != nil) {
         return [event fireSender:sender object:object];
     }
-    return defaultResult;
+    return orDefault;
 }
 
 @end

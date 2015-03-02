@@ -33,34 +33,11 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyDataItemView.h"
+#import "MobilyDataCell+Private.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataItemView ()
-
-@property(nonatomic, readwrite, strong) NSString* identifier;
-
-@property(nonatomic, readwrite, strong) UILongPressGestureRecognizer* pressGestureRecognizer;
-@property(nonatomic, readwrite, strong) UITapGestureRecognizer* tapGestureRecognizer;
-@property(nonatomic, readwrite, strong) UILongPressGestureRecognizer* longPressGestureRecognizer;
-
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintRootViewCenterX;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintRootViewCenterY;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintRootViewWidth;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintRootViewHeight;
-
-- (void)handlerPressGestureRecognizer:(UILongPressGestureRecognizer*)gestureRecognizer;
-- (void)handlerTapGestureRecognizer:(UITapGestureRecognizer*)gestureRecognizer;
-- (void)handlerLongPressGestureRecognizer:(UILongPressGestureRecognizer*)gestureRecognizer;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@implementation MobilyDataItemView
+@implementation MobilyDataCell
 
 #pragma mark Synthesize
 
@@ -69,10 +46,20 @@
 @synthesize selected = _selected;
 @synthesize highlighted = _highlighted;
 @synthesize editing = _editing;
+@synthesize pressGestureRecognizer = _pressGestureRecognizer;
+@synthesize tapGestureRecognizer = _tapGestureRecognizer;
+@synthesize longPressGestureRecognizer = _longPressGestureRecognizer;
+@synthesize rootView = _rootView;
+@synthesize rootOffsetOfCenter = _rootOffsetOfCenter;
+@synthesize rootMarginSize = _rootMarginSize;
+@synthesize constraintRootViewCenterX = _constraintRootViewCenterX;
+@synthesize constraintRootViewCenterY = _constraintRootViewCenterY;
+@synthesize constraintRootViewWidth = _constraintRootViewWidth;
+@synthesize constraintRootViewHeight = _constraintRootViewHeight;
 
 #pragma mark Calculating size
 
-+ (CGSize)sizeForItem:(id< MobilyDataItem >)item availableSize:(CGSize)size {
++ (CGSize)sizeForItem:(MobilyDataItem*)item availableSize:(CGSize)size {
     return CGSizeZero;
 }
 
@@ -85,7 +72,7 @@
 - (instancetype)initWithIdentifier:(NSString*)identifier nib:(UINib*)nib {
     self = [super init];
     if(self != nil) {
-        self.identifier = identifier;
+        _identifier = identifier;
         if(nib != nil) {
             [nib instantiateWithOwner:self options:nil];
         }
@@ -97,21 +84,9 @@
 - (void)setup {
     self.hidden = YES;
     self.clipsToBounds = YES;
-    self.pressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handlerPressGestureRecognizer:)];
-    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handlerTapGestureRecognizer:)];
-    self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handlerLongPressGestureRecognizer:)];
-}
-
-- (void)dealloc {
-    self.identifier = nil;
-    self.item = nil;
-    self.pressGestureRecognizer = nil;
-    self.tapGestureRecognizer = nil;
-    self.constraintRootViewCenterX = nil;
-    self.constraintRootViewCenterY = nil;
-    self.constraintRootViewWidth = nil;
-    self.constraintRootViewHeight = nil;
-    self.rootView = nil;
+    self.pressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_handlerPressGestureRecognizer:)];
+    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_handlerTapGestureRecognizer:)];
+    self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_handlerLongPressGestureRecognizer:)];
 }
 
 #pragma mark UIView
@@ -141,7 +116,7 @@
 
 #pragma mark Property
 
-- (void)setItem:(id< MobilyDataItem >)item {
+- (void)setItem:(MobilyDataItem*)item {
     if(_item != item) {
         if(_item != nil) {
             [self prepareForUnuse];
@@ -308,12 +283,12 @@
 - (void)prepareForUnuse {
 }
 
-- (id)performEventForKey:(id)key bySender:(id)sender byObject:(id)object {
-    return [_item performEventForKey:key bySender:sender byObject:object];
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
+    return [_item fireEventForKey:key bySender:sender byObject:object];
 }
 
-- (id)performEventForKey:(id)key bySender:(id)sender byObject:(id)object defaultResult:(id)defaultResult {
-    return [_item performEventForKey:key bySender:sender byObject:object defaultResult:defaultResult];
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
+    return [_item fireEventForKey:key bySender:sender byObject:object orDefault:orDefault];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -328,9 +303,9 @@
     _editing = editing;
 }
 
-- (void)animateAction:(MobilyDataItemViewAction)action {
+- (void)animateAction:(MobilyDataCellAction)action {
     switch(action) {
-        case MobilyDataItemViewActionInsert: {
+        case MobilyDataCellActionInsert: {
             BOOL animationsEnabled = [UIView areAnimationsEnabled];
             if(animationsEnabled == YES) {
                 [UIView setAnimationsEnabled:NO];
@@ -341,17 +316,17 @@
             self.alpha = 1.0f;
             break;
         }
-        case MobilyDataItemViewActionDelete: {
+        case MobilyDataCellActionDelete: {
             self.zPosition = -1.0f;
             self.alpha = 0.0f;
             break;
         }
-        case MobilyDataItemViewActionReplaceOut: {
+        case MobilyDataCellActionReplaceOut: {
             self.zPosition = -1.0f;
             self.alpha = 0.0f;
             break;
         }
-        case MobilyDataItemViewActionReplaceIn: {
+        case MobilyDataCellActionReplaceIn: {
             BOOL animationsEnabled = [UIView areAnimationsEnabled];
             if(animationsEnabled == YES) {
                 [UIView setAnimationsEnabled:NO];
@@ -373,7 +348,7 @@
 
 #pragma mark Private
 
-- (void)handlerPressGestureRecognizer:(UILongPressGestureRecognizer*)gestureRecognizer {
+- (void)_handlerPressGestureRecognizer:(UILongPressGestureRecognizer*)gestureRecognizer {
     if(gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         if(_highlighted == NO) {
             [_item setHighlighted:YES animated:NO];
@@ -383,16 +358,16 @@
     }
 }
 
-- (void)handlerTapGestureRecognizer:(UITapGestureRecognizer*)gestureRecognizer {
+- (void)_handlerTapGestureRecognizer:(UITapGestureRecognizer*)gestureRecognizer {
     if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
         [_item setSelected:(_selected != YES) animated:YES];
     }
-    [_item performEventForKey:MobilyDataItemViewPressed bySender:self byObject:_item];
+    [_item fireEventForKey:MobilyDataCellPressed bySender:self byObject:_item];
 }
 
-- (void)handlerLongPressGestureRecognizer:(UILongPressGestureRecognizer*)gestureRecognizer {
+- (void)_handlerLongPressGestureRecognizer:(UILongPressGestureRecognizer*)gestureRecognizer {
     if(gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        [_item performEventForKey:MobilyDataItemViewLongPressed bySender:self byObject:_item];
+        [_item fireEventForKey:MobilyDataCellLongPressed bySender:self byObject:_item];
     }
 }
 
@@ -407,9 +382,9 @@
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer {
     if(gestureRecognizer == _pressGestureRecognizer) {
-        return [_item.widget shouldHighlightItem:_item];
+        return [_item.view shouldHighlightItem:_item];
     } else if(gestureRecognizer == _tapGestureRecognizer) {
-        return [_item.widget shouldSelectItem:_item];
+        return [_item.view shouldSelectItem:_item];
     }
     return NO;
 }
@@ -418,7 +393,7 @@
 
 /*--------------------------------------------------*/
 
-NSString* MobilyDataItemViewPressed = @"MobilyDataItemViewPressed";
-NSString* MobilyDataItemViewLongPressed = @"MobilyDataItemViewLongPressed";
+NSString* MobilyDataCellPressed = @"MobilyDataCellPressed";
+NSString* MobilyDataCellLongPressed = @"MobilyDataCellLongPressed";
 
 /*--------------------------------------------------*/

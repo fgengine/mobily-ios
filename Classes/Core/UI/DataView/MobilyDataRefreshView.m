@@ -33,28 +33,18 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyDataScrollView.h"
+#import "MobilyDataRefreshView+Private.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataScrollRefreshView ()
-
-
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@implementation MobilyDataScrollRefreshView
+@implementation MobilyDataRefreshView
 
 #pragma mark Synthesize
 
 @synthesize objectName = _objectName;
 @synthesize objectParent = _objectParent;
 @synthesize objectChilds = _objectChilds;
-@synthesize widget = _widget;
+@synthesize view = _view;
 @synthesize state = _state;
 
 #pragma mark NSKeyValueCoding
@@ -125,15 +115,15 @@
 
 #pragma mark Property
 
-- (void)setState:(MobilyDataScrollRefreshViewState)state {
+- (void)setState:(MobilyDataRefreshViewState)state {
     if(_state != state) {
         _state = state;
         
         switch(_state) {
-            case MobilyDataScrollRefreshViewStateIdle: [self didIdle]; break;
-            case MobilyDataScrollRefreshViewStatePull: [self didPull]; break;
-            case MobilyDataScrollRefreshViewStateRelease: [self didRelease]; break;
-            case MobilyDataScrollRefreshViewStateLoading: [self didLoading]; break;
+            case MobilyDataRefreshViewStateIdle: [self didIdle]; break;
+            case MobilyDataRefreshViewStatePull: [self didPull]; break;
+            case MobilyDataRefreshViewStateRelease: [self didRelease]; break;
+            case MobilyDataRefreshViewStateLoading: [self didLoading]; break;
         }
     }
 }
@@ -153,5 +143,9 @@
 }
 
 @end
+
+/*--------------------------------------------------*/
+
+NSString* MobilyDataRefreshViewTriggered = @"MobilyDataRefreshViewTriggered";
 
 /*--------------------------------------------------*/

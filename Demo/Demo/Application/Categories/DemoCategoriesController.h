@@ -41,17 +41,37 @@
 
 @property(nonatomic, readonly, weak) DemoApplication* app;
 
-@property(nonatomic, readwrite, weak) IBOutlet MobilyDataScrollView* dataScrollView;
-@property(nonatomic, readwrite, strong) MobilyDataVerticalListContainer* dataListContainer;
+@property(nonatomic, readwrite, weak) IBOutlet MobilyDataView* dataView;
+@property(nonatomic, readwrite, strong) MobilyDataContainerSectionsList* sections;
+@property(nonatomic, readwrite, strong) MobilyDataContainerItemsList* commonItems;
+@property(nonatomic, readwrite, strong) MobilyDataContainerItemsList* collectionItems;
+@property(nonatomic, readwrite, strong) MobilyDataContainerItemsList* audioVideoItems;
 
 @end
 
 /*--------------------------------------------------*/
 
-@interface DemoCategoriesCell : MobilyDataItemView
+@interface DemoCategoriesHeaderCell : MobilyDataCell
 
 @property(nonatomic, readwrite, weak) IBOutlet UILabel* textView;
 
 @end
+
+/*--------------------------------------------------*/
+
+
+
+/*--------------------------------------------------*/
+
+@interface DemoCategoriesCell : MobilyDataCell
+
+@property(nonatomic, readwrite, weak) IBOutlet UILabel* textView;
+
+@end
+
+/*--------------------------------------------------*/
+
+extern NSString* DemoCategoriesHeaderIdentifier;
+extern NSString* DemoCategoriesIdentifier;
 
 /*--------------------------------------------------*/

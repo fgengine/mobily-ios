@@ -12,7 +12,7 @@
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="lUL-MD-0aZ">
+        <view alpha="0.49999999999999961" contentMode="scaleToFill" id="lUL-MD-0aZ">
             <rect key="frame" x="0.0" y="0.0" width="311" height="80"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
@@ -22,11 +22,21 @@
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fmL-gx-ZUv">
+                    <rect key="frame" x="0.0" y="79" width="311" height="1"/>
+                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="bKn-8c-09l"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="fmL-gx-ZUv" firstAttribute="leading" secondItem="lUL-MD-0aZ" secondAttribute="leading" id="9T3-nF-1Zy"/>
+                <constraint firstAttribute="trailing" secondItem="fmL-gx-ZUv" secondAttribute="trailing" id="LQq-E6-3vV"/>
                 <constraint firstAttribute="bottom" secondItem="CQR-jM-dxK" secondAttribute="bottom" constant="8" id="SAX-DT-yJV"/>
                 <constraint firstAttribute="trailing" secondItem="CQR-jM-dxK" secondAttribute="trailing" constant="8" id="UPu-d4-dPs"/>
+                <constraint firstAttribute="bottom" secondItem="fmL-gx-ZUv" secondAttribute="bottom" id="nlA-6e-cZK"/>
                 <constraint firstItem="CQR-jM-dxK" firstAttribute="leading" secondItem="lUL-MD-0aZ" secondAttribute="leading" constant="8" id="oXA-0s-CXw"/>
                 <constraint firstItem="CQR-jM-dxK" firstAttribute="top" secondItem="lUL-MD-0aZ" secondAttribute="top" constant="8" id="ruv-vu-F4N"/>
             </constraints>

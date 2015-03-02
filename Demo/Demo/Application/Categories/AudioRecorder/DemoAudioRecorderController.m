@@ -63,14 +63,14 @@
         NSLog(@"AVAudioSession: %@", error.localizedDescription);
     }
     
-    [self setAudioRecorder:[[MobilyAudioRecorder alloc] init]];
+    self.audioRecorder = MobilyAudioRecorder.new;
     if(_audioRecorder != nil) {
-        [_audioRecorder setDelegate:self];
+        _audioRecorder.delegate = self;
 #if defined(MOBILY_SIMULATOR)
-        [_audioRecorder setFormat:kAudioFormatAppleIMA4];
+        _audioRecorder.format = kAudioFormatAppleIMA4;
         [_audioRecorder prepareWithName:@"Test.caf"];
 #elif defined(MOBILY_DEVICE)
-        [_audioRecorder setFormat:kAudioFormatMPEG4AAC];
+        _audioRecorder.format = kAudioFormatMPEG4AAC;
         [_audioRecorder prepareWithName:@"Test.m4a"];
 #endif
     }

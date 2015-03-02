@@ -33,93 +33,55 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyDataScrollView.h"
+#import "MobilyDataView+Private.h"
 
 /*--------------------------------------------------*/
 
-@class MobilyDataScrollViewDelegateProxy;
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@interface MobilyDataScrollView ()
-
-@property(nonatomic, readwrite, strong) MobilyDataScrollViewDelegateProxy* delegateProxy;
-
-@property(nonatomic, readwrite, assign, getter=isUpdating) BOOL updating;
-@property(nonatomic, readwrite, assign) BOOL invalidLayout;
-
-@property(nonatomic, readwrite, strong) NSMutableArray* unsafeVisibleItems;
-@property(nonatomic, readwrite, strong) NSMutableArray* unsafeSelectedItems;
-@property(nonatomic, readwrite, strong) NSMutableArray* unsafeHighlightedItems;
-@property(nonatomic, readwrite, strong) NSMutableArray* unsafeEditingItems;
-@property(nonatomic, readwrite, strong) NSMutableDictionary* registersViews;
-@property(nonatomic, readwrite, strong) MobilyEvents* registersEvents;
-@property(nonatomic, readwrite, strong) NSMutableDictionary* queueViews;
-@property(nonatomic, readwrite, strong) NSMutableArray* reloadedBeforeItems;
-@property(nonatomic, readwrite, strong) NSMutableArray* reloadedAfterItems;
-@property(nonatomic, readwrite, strong) NSMutableArray* deletedItems;
-@property(nonatomic, readwrite, strong) NSMutableArray* insertedItems;
-
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintPullToRefreshBottom;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintPullToRefreshLeft;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintPullToRefreshRight;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintPullToRefreshHeight;
-
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintPullToLoadTop;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintPullToLoadLeft;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintPullToLoadRight;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintPullToLoadHeight;
-
-@property(nonatomic, readwrite, assign, getter=isPullDragging) BOOL pullDragging;
-@property(nonatomic, readwrite, assign) BOOL canPullToRefresh;
-@property(nonatomic, readwrite, assign) BOOL canPullToLoad;
-
-- (void)notificationReceiveMemoryWarning:(NSNotification*)notification;
-
-- (void)internalWillBeginDragging;
-- (void)internalDidScroll;
-- (void)internalWillEndDraggingWithVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset;
-- (void)internalDidEndDraggingWillDecelerate:(BOOL)decelerate;
-- (void)internalWillBeginDecelerating;
-- (void)internalDidEndDecelerating;
-- (void)internalDidEndScrollingAnimation;
-
-- (void)internalBatchUpdate:(MobilyDataWidgetUpdateBlock)update;
-- (void)internalBatchComplete:(MobilyDataWidgetUpdateBlock)complete;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@interface MobilyDataScrollViewDelegateProxy : NSObject< UIScrollViewDelegate >
-
-@property(nonatomic, readwrite, weak) MobilyDataScrollView* dataScrollView;
-@property(nonatomic, readwrite, weak) id< UIScrollViewDelegate > delegate;
-
-- (instancetype)initWithDataScrollView:(MobilyDataScrollView*)dataScrollView;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@implementation MobilyDataScrollView
+@implementation MobilyDataView
 
 #pragma mark Synthesize
 
 @synthesize objectName = _objectName;
 @synthesize objectParent = _objectParent;
 @synthesize objectChilds = _objectChilds;
+@synthesize delegateProxy = _delegateProxy;
 @synthesize allowsSelection = _allowsSelection;
 @synthesize allowsMultipleSelection = _allowsMultipleSelection;
 @synthesize allowsEditing = _allowsEditing;
 @synthesize allowsMultipleEditing = _allowsMultipleEditing;
+@synthesize bouncesTop = _bouncesTop;
+@synthesize bouncesLeft = _bouncesLeft;
+@synthesize bouncesRight = _bouncesRight;
+@synthesize bouncesBottom = _bouncesBottom;
 @synthesize container = _container;
+@synthesize visibleItems = _visibleItems;
+@synthesize selectedItems = _selectedItems;
+@synthesize highlightedItems = _highlightedItems;
+@synthesize editingItems = _editingItems;
+@synthesize registersViews = _registersViews;
+@synthesize registersEvents = _registersEvents;
+@synthesize queueCells = _queueCells;
+@synthesize reloadedBeforeItems = _reloadedBeforeItems;
+@synthesize reloadedAfterItems = _reloadedAfterItems;
+@synthesize deletedItems = _deletedItems;
+@synthesize insertedItems = _insertedItems;
+@synthesize updating = _updating;
+@synthesize invalidLayout = _invalidLayout;
+@synthesize pullToRefreshView = _pullToRefreshView;
+@synthesize pullToRefreshHeight = _pullToRefreshHeight;
+@synthesize constraintPullToRefreshBottom = _constraintPullToRefreshBottom;
+@synthesize constraintPullToRefreshLeft = _constraintPullToRefreshLeft;
+@synthesize constraintPullToRefreshRight = _constraintPullToRefreshRight;
+@synthesize constraintPullToRefreshHeight = _constraintPullToRefreshHeight;
+@synthesize pullToLoadView = _pullToLoadView;
+@synthesize pullToLoadHeight = _pullToLoadHeight;
+@synthesize constraintPullToLoadTop = _constraintPullToLoadTop;
+@synthesize constraintPullToLoadLeft = _constraintPullToLoadLeft;
+@synthesize constraintPullToLoadRight = _constraintPullToLoadRight;
+@synthesize constraintPullToLoadHeight = _constraintPullToLoadHeight;
+@synthesize pullDragging = _pullDragging;
+@synthesize canPullToRefresh = _canPullToRefresh;
+@synthesize canPullToLoad = _canPullToLoad;
 
 #pragma mark NSKeyValueCoding
 
@@ -128,7 +90,7 @@
 - (instancetype)initWithCoder:(NSCoder*)coder {
     self = [super initWithCoder:coder];
     if(self != nil) {
-        self.delegateProxy = [MobilyDataScrollViewDelegateProxy new];
+        self.delegateProxy = [MobilyDataViewDelegateProxy new];
         [self setup];
     }
     return self;
@@ -137,37 +99,37 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self != nil) {
-        self.delegateProxy = [MobilyDataScrollViewDelegateProxy new];
+        self.delegateProxy = [MobilyDataViewDelegateProxy new];
         [self setup];
     }
     return self;
 }
 
 - (void)setup {
-    self.bouncesTop = YES;
-    self.bouncesLeft = YES;
-    self.bouncesRight = YES;
-    self.bouncesBottom = YES;
+    _bouncesTop = YES;
+    _bouncesLeft = YES;
+    _bouncesRight = YES;
+    _bouncesBottom = YES;
     
-    self.allowsSelection = YES;
-    self.allowsMultipleSelection = YES;
-    self.allowsEditing = YES;
-    self.allowsMultipleEditing = YES;
+    _allowsSelection = YES;
+    _allowsMultipleSelection = YES;
+    _allowsEditing = YES;
+    _allowsMultipleEditing = YES;
     
-    self.unsafeVisibleItems = NSMutableArray.array;
-    self.unsafeSelectedItems = NSMutableArray.array;
-    self.unsafeHighlightedItems = NSMutableArray.array;
-    self.unsafeEditingItems = NSMutableArray.array;
-    self.registersViews = NSMutableDictionary.dictionary;
-    self.registersEvents = [MobilyEvents new];
-    self.queueViews = NSMutableDictionary.dictionary;
-    self.reloadedBeforeItems = NSMutableArray.array;
-    self.reloadedAfterItems = NSMutableArray.array;
-    self.deletedItems = NSMutableArray.array;
-    self.insertedItems = NSMutableArray.array;
+    _visibleItems = NSMutableArray.array;
+    _selectedItems = NSMutableArray.array;
+    _highlightedItems = NSMutableArray.array;
+    _editingItems = NSMutableArray.array;
+    _registersViews = NSMutableDictionary.dictionary;
+    _registersEvents = [MobilyEvents new];
+    _queueCells = NSMutableDictionary.dictionary;
+    _reloadedBeforeItems = NSMutableArray.array;
+    _reloadedAfterItems = NSMutableArray.array;
+    _deletedItems = NSMutableArray.array;
+    _insertedItems = NSMutableArray.array;
     
-    self.pullToRefreshHeight = -1.0f;
-    self.pullToLoadHeight = -1.0f;
+    _pullToRefreshHeight = -1.0f;
+    _pullToLoadHeight = -1.0f;
     
     [self registerAdjustmentResponder];
     
@@ -178,33 +140,6 @@
     [NSNotificationCenter.defaultCenter removeObserver:self name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     
     [self unregisterAdjustmentResponder];
-    
-    self.objectName = nil;
-    self.objectParent = nil;
-    self.objectChilds = nil;
-    
-    self.delegateProxy = nil;
-    
-    self.unsafeVisibleItems = nil;
-    self.unsafeSelectedItems = nil;
-    self.unsafeHighlightedItems = nil;
-    self.unsafeEditingItems = nil;
-    self.registersViews = nil;
-    self.registersEvents = nil;
-    self.queueViews = nil;
-    self.reloadedBeforeItems = nil;
-    self.reloadedAfterItems = nil;
-    self.deletedItems = nil;
-    self.insertedItems = nil;
-    
-    self.constraintPullToRefreshBottom = nil;
-    self.constraintPullToRefreshLeft = nil;
-    self.constraintPullToRefreshRight = nil;
-    self.constraintPullToRefreshHeight = nil;
-    self.constraintPullToLoadTop = nil;
-    self.constraintPullToLoadLeft = nil;
-    self.constraintPullToLoadRight = nil;
-    self.constraintPullToLoadHeight = nil;
 }
 
 #pragma mark MobilyBuilderObject
@@ -272,16 +207,16 @@
     }
 }
 
-- (void)setDelegateProxy:(MobilyDataScrollViewDelegateProxy*)delegateProxy {
+- (void)setDelegateProxy:(MobilyDataViewDelegateProxy*)delegateProxy {
     if(_delegateProxy != delegateProxy) {
         if(_delegateProxy != nil) {
-            _delegateProxy.dataScrollView = nil;
+            _delegateProxy.view = nil;
         }
         super.delegate = nil;
         _delegateProxy = delegateProxy;
         super.delegate = _delegateProxy;
         if(_delegateProxy != nil) {
-            _delegateProxy.dataScrollView = self;
+            _delegateProxy.view = self;
         }
     }
 }
@@ -298,7 +233,7 @@
     return _delegateProxy.delegate;
 }
 
-- (void)setContainer:(id< MobilyDataContainer >)container {
+- (void)setContainer:(MobilyDataContainer*)container {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_updating != NO) {
         NSLog(@"ERROR: [%@:%@] %@", self.class, NSStringFromSelector(_cmd), container);
@@ -314,20 +249,20 @@
             }
             [self deselectAllItemsAnimated:NO];
             [self unhighlightAllItemsAnimated:NO];
-            if(_unsafeVisibleItems.count > 0) {
-                for(id< MobilyDataItem > item in _unsafeVisibleItems) {
+            if(_visibleItems.count > 0) {
+                for(MobilyDataItem* item in _visibleItems) {
                     [self disappearItem:item];
                 }
-                [_unsafeVisibleItems removeAllObjects];
+                [_visibleItems removeAllObjects];
             }
             [UIView setAnimationsEnabled:animationsEnabled];
-            _container.widget = nil;
+            _container.view = nil;
             [self validateLayoutIfNeed];
         }
         _container = container;
         if(_container != nil) {
             [self setNeedValidateLayout];
-            _container.widget = self;
+            _container.view = self;
             BOOL animationsEnabled = [UIView areAnimationsEnabled];
             if(animationsEnabled == YES) {
                 [UIView setAnimationsEnabled:NO];
@@ -340,63 +275,63 @@
 }
 
 - (NSArray*)visibleItems {
-    return _unsafeVisibleItems;
+    return _visibleItems;
 }
 
-- (NSArray*)visibleViews {
+- (NSArray*)visibleCells {
     NSMutableArray* result = NSMutableArray.array;
-    for(id< MobilyDataItem > item in _unsafeVisibleItems) {
+    for(MobilyDataItem* item in _visibleItems) {
         [result addObject:item.view];
     }
     return [NSArray arrayWithArray:result];
 }
 
 - (NSArray*)selectedItems {
-    return _unsafeSelectedItems;
+    return _selectedItems;
 }
 
-- (NSArray*)selectedViews {
+- (NSArray*)selectedCells {
     NSMutableArray* result = NSMutableArray.array;
-    for(id< MobilyDataItem > item in _unsafeSelectedItems) {
-        UIView< MobilyDataItemView >* itemView = item.view;
-        if(itemView != nil) {
-            [result addObject:itemView];
+    for(MobilyDataItem* item in _selectedItems) {
+        MobilyDataCell* cell = item.cell;
+        if(cell != nil) {
+            [result addObject:cell];
         }
     }
     return result;
 }
 
 - (NSArray*)highlightedItems {
-    return _unsafeHighlightedItems;
+    return _highlightedItems;
 }
 
-- (NSArray*)highlightedViews {
+- (NSArray*)highlightedCells {
     NSMutableArray* result = NSMutableArray.array;
-    for(id< MobilyDataItem > item in _unsafeHighlightedItems) {
-        UIView< MobilyDataItemView >* itemView = item.view;
-        if(itemView != nil) {
-            [result addObject:itemView];
+    for(MobilyDataItem* item in _highlightedItems) {
+        MobilyDataCell* cell = item.cell;
+        if(cell != nil) {
+            [result addObject:cell];
         }
     }
     return result;
 }
 
 - (NSArray*)editingItems {
-    return _unsafeEditingItems;
+    return _editingItems;
 }
 
-- (NSArray*)editingViews {
+- (NSArray*)editingCells {
     NSMutableArray* result = NSMutableArray.array;
-    for(id< MobilyDataItem > item in _unsafeEditingItems) {
-        UIView< MobilyDataItemView >* itemView = item.view;
-        if(itemView != nil) {
-            [result addObject:itemView];
+    for(MobilyDataItem* item in _editingItems) {
+        MobilyDataCell* cell = item.cell;
+        if(cell != nil) {
+            [result addObject:cell];
         }
     }
     return result;
 }
 
-- (void)setPullToRefreshView:(UIView< MobilyDataScrollRefreshView >*)pullToRefreshView {
+- (void)setPullToRefreshView:(MobilyDataRefreshView*)pullToRefreshView {
     if(_pullToRefreshView != pullToRefreshView) {
         if(_pullToRefreshView != nil) {
             self.constraintPullToRefreshBottom = nil;
@@ -477,7 +412,7 @@
     }
 }
 
-- (void)setPullToLoadView:(UIView< MobilyDataScrollRefreshView >*)pullToLoadView {
+- (void)setPullToLoadView:(MobilyDataRefreshView*)pullToLoadView {
     if(_pullToLoadView != pullToLoadView) {
         if(_pullToLoadView != nil) {
             self.constraintPullToLoadTop = nil;
@@ -560,14 +495,29 @@
 
 #pragma mark Public
 
-- (void)registerIdentifier:(NSString*)identifier withViewClass:(Class< MobilyDataItemView >)viewClass {
+- (void)registerIdentifier:(NSString*)identifier withViewClass:(Class)viewClass {
+    [self registerIdentifier:identifier withViewClass:viewClass preload:0];
+}
+
+- (void)registerIdentifier:(NSString*)identifier withViewClass:(Class)viewClass preload:(NSUInteger)preload {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_registersViews[identifier] != nil) {
-        NSLog(@"ERROR: [%@:%@] %@ - %@", self.class, NSStringFromSelector(_cmd), identifier, viewClass);
+        NSLog(@"ERROR: [%@:%@] %@ - %@ - %d", self.class, NSStringFromSelector(_cmd), identifier, viewClass, (int)preload);
         return;
     }
 #endif
     _registersViews[identifier] = viewClass;
+    if(preload > 0) {
+        NSMutableArray* queue = [NSMutableArray array];
+        for(NSUInteger i = 0; i < preload; i++) {
+            MobilyDataCell* cell = [[_registersViews[identifier] alloc] initWithIdentifier:identifier];
+            if(cell != nil) {
+                [self insertSubview:cell atIndex:0];
+                [queue addObject:cell];
+            }
+        }
+        _queueCells[identifier] = queue;
+    }
 }
 
 - (void)unregisterIdentifier:(NSString*)identifier {
@@ -608,230 +558,230 @@
     return [_registersEvents containsEventForKey:key];
 }
 
-- (id)performEventForKey:(id)key byObject:(id)object {
+- (id)fireEventForKey:(id)key byObject:(id)object {
     return [_registersEvents fireEventForKey:key bySender:self byObject:object];
 }
 
-- (id)performEventForKey:(id)key byObject:(id)object defaultResult:(id)defaultResult {
-    return [_registersEvents fireEventForKey:key bySender:self byObject:object defaultResult:defaultResult];
+- (id)fireEventForKey:(id)key byObject:(id)object orDefault:(id)orDefault {
+    return [_registersEvents fireEventForKey:key bySender:self byObject:object orDefault:orDefault];
 }
 
-- (id)performEventForKey:(id)key bySender:(id)sender byObject:(id)object {
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
     return [_registersEvents fireEventForKey:key bySender:sender byObject:object];
 }
 
-- (id)performEventForKey:(id)key bySender:(id)sender byObject:(id)object defaultResult:(id)defaultResult {
-    return [_registersEvents fireEventForKey:key bySender:sender byObject:object defaultResult:defaultResult];
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
+    return [_registersEvents fireEventForKey:key bySender:sender byObject:object orDefault:orDefault];
 }
 
-- (Class< MobilyDataItemView >)viewClassWithItem:(id< MobilyDataItem >)item {
+- (Class)cellClassWithItem:(MobilyDataItem*)item {
     return _registersViews[item.identifier];
 }
 
-- (void)dequeueViewWithItem:(id< MobilyDataItem >)item {
-    if(item.view == nil) {
+- (void)dequeueCellWithItem:(MobilyDataItem*)item {
+    if(item.cell == nil) {
         NSString* identifier = item.identifier;
-        NSMutableArray* queue = _queueViews[identifier];
-        UIView< MobilyDataItemView >* view = [queue lastObject];
-        if(view == nil) {
-            view = [[_registersViews[identifier] alloc] initWithIdentifier:identifier];
-            if(view != nil) {
-                [self insertSubview:view atIndex:0];
+        NSMutableArray* queue = _queueCells[identifier];
+        MobilyDataCell* cell = [queue lastObject];
+        if(cell == nil) {
+            cell = [[_registersViews[identifier] alloc] initWithIdentifier:identifier];
+            if(cell != nil) {
+                [self insertSubview:cell atIndex:0];
             }
         } else {
             [queue removeLastObject];
         }
-        item.view = view;
+        item.cell = cell;
     }
 }
 
-- (void)enqueueViewWithItem:(id< MobilyDataItem >)item {
-    UIView< MobilyDataItemView >* view = item.view;
-    if(view != nil) {
+- (void)enqueueCellWithItem:(MobilyDataItem*)item {
+    MobilyDataCell* cell = item.cell;
+    if(cell != nil) {
         NSString* identifier = item.identifier;
-        NSMutableArray* queue = _queueViews[identifier];
+        NSMutableArray* queue = _queueCells[identifier];
         if(queue == nil) {
-            _queueViews[identifier] = [NSMutableArray arrayWithObject:view];
+            _queueCells[identifier] = [NSMutableArray arrayWithObject:cell];
         } else {
-            [queue addObject:view];
+            [queue addObject:cell];
         }
-        item.view = nil;
+        item.cell = nil;
     }
 }
 
-- (id< MobilyDataItem >)itemForData:(id)data {
+- (MobilyDataItem*)itemForData:(id)data {
     return [_container itemForData:data];
 }
 
-- (UIView< MobilyDataItemView >*)itemViewForData:(id)data {
-    return [_container itemViewForData:data];
+- (MobilyDataCell*)cellForData:(id)data {
+    return [_container cellForData:data];
 }
 
-- (BOOL)isSelectedItem:(id< MobilyDataItem >)item {
-    return [_unsafeSelectedItems containsObject:item];
+- (BOOL)isSelectedItem:(MobilyDataItem*)item {
+    return [_selectedItems containsObject:item];
 }
 
-- (BOOL)shouldSelectItem:(id< MobilyDataItem >)item {
+- (BOOL)shouldSelectItem:(MobilyDataItem*)item {
     if(_allowsSelection == YES) {
         return item.allowsSelection;
     }
     return _allowsSelection;
 }
 
-- (BOOL)shouldDeselectItem:(id< MobilyDataItem >)item {
+- (BOOL)shouldDeselectItem:(MobilyDataItem*)item {
     return YES;
 }
 
-- (void)selectItem:(id< MobilyDataItem >)item animated:(BOOL)animated {
-    if([_unsafeSelectedItems containsObject:item] == NO) {
+- (void)selectItem:(MobilyDataItem*)item animated:(BOOL)animated {
+    if([_selectedItems containsObject:item] == NO) {
         if([self shouldSelectItem:item] == YES) {
             if(_allowsMultipleSelection == YES) {
-                [_unsafeSelectedItems addObject:item];
+                [_selectedItems addObject:item];
                 [item setSelected:YES animated:NO];
             } else {
-                if(_unsafeSelectedItems.count > 0) {
-                    for(id< MobilyDataItem > item in _unsafeSelectedItems) {
+                if(_selectedItems.count > 0) {
+                    for(MobilyDataItem* item in _selectedItems) {
                         [item setSelected:NO animated:NO];
                     }
-                    [_unsafeSelectedItems removeAllObjects];
+                    [_selectedItems removeAllObjects];
                 }
-                [_unsafeSelectedItems addObject:item];
+                [_selectedItems addObject:item];
                 [item setSelected:YES animated:NO];
             }
         }
     }
 }
 
-- (void)deselectItem:(id< MobilyDataItem >)item animated:(BOOL)animated {
-    if([_unsafeSelectedItems containsObject:item] == YES) {
+- (void)deselectItem:(MobilyDataItem*)item animated:(BOOL)animated {
+    if([_selectedItems containsObject:item] == YES) {
         if([self shouldDeselectItem:item] == YES) {
-            [_unsafeSelectedItems removeObject:item];
+            [_selectedItems removeObject:item];
             [item setSelected:NO animated:NO];
         }
     }
 }
 
 - (void)deselectAllItemsAnimated:(BOOL)animated {
-    if(_unsafeSelectedItems.count > 0) {
-        for(id< MobilyDataItem > item in _unsafeSelectedItems) {
+    if(_selectedItems.count > 0) {
+        for(MobilyDataItem* item in _selectedItems) {
             if([self shouldDeselectItem:item] == YES) {
-                [_unsafeSelectedItems removeObject:item];
+                [_selectedItems removeObject:item];
                 [item setSelected:NO animated:NO];
             }
         }
-        [_unsafeSelectedItems removeAllObjects];
+        [_selectedItems removeAllObjects];
     }
 }
 
-- (BOOL)isHighlightedItem:(id< MobilyDataItem >)item {
-    return [_unsafeHighlightedItems containsObject:item];
+- (BOOL)isHighlightedItem:(MobilyDataItem*)item {
+    return [_highlightedItems containsObject:item];
 }
 
-- (BOOL)shouldHighlightItem:(id< MobilyDataItem >)item {
+- (BOOL)shouldHighlightItem:(MobilyDataItem*)item {
     return item.allowsHighlighting;
 }
 
-- (BOOL)shouldUnhighlightItem:(id< MobilyDataItem >)item {
+- (BOOL)shouldUnhighlightItem:(MobilyDataItem*)item {
     return YES;
 }
 
-- (void)highlightItem:(id< MobilyDataItem >)item animated:(BOOL)animated {
-    if([_unsafeHighlightedItems containsObject:item] == NO) {
+- (void)highlightItem:(MobilyDataItem*)item animated:(BOOL)animated {
+    if([_highlightedItems containsObject:item] == NO) {
         if([self shouldHighlightItem:item] == YES) {
-            [_unsafeHighlightedItems addObject:item];
+            [_highlightedItems addObject:item];
             [item setHighlighted:YES animated:NO];
         }
     }
 }
 
-- (void)unhighlightItem:(id< MobilyDataItem >)item animated:(BOOL)animated {
-    if([_unsafeHighlightedItems containsObject:item] == YES) {
+- (void)unhighlightItem:(MobilyDataItem*)item animated:(BOOL)animated {
+    if([_highlightedItems containsObject:item] == YES) {
         if([self shouldUnhighlightItem:item] == YES) {
-            [_unsafeHighlightedItems removeObject:item];
+            [_highlightedItems removeObject:item];
             [item setHighlighted:NO animated:NO];
         }
     }
 }
 
 - (void)unhighlightAllItemsAnimated:(BOOL)animated {
-    if(_unsafeHighlightedItems.count > 0) {
-        for(id< MobilyDataItem > item in _unsafeHighlightedItems) {
+    if(_highlightedItems.count > 0) {
+        for(MobilyDataItem* item in _highlightedItems) {
             if([self shouldUnhighlightItem:item] == YES) {
-                [_unsafeHighlightedItems removeObject:item];
+                [_highlightedItems removeObject:item];
                 [item setHighlighted:NO animated:NO];
             }
         }
-        [_unsafeHighlightedItems removeAllObjects];
+        [_highlightedItems removeAllObjects];
     }
 }
 
-- (BOOL)isEditingItem:(id< MobilyDataItem >)item {
-    return [_unsafeEditingItems containsObject:item];
+- (BOOL)isEditingItem:(MobilyDataItem*)item {
+    return [_editingItems containsObject:item];
 }
 
-- (BOOL)shouldBeganEditItem:(id< MobilyDataItem >)item {
+- (BOOL)shouldBeganEditItem:(MobilyDataItem*)item {
     if(_allowsEditing == YES) {
         return item.allowsEditing;
     }
     return NO;
 }
 
-- (BOOL)shouldEndedEditItem:(id< MobilyDataItem >)item {
+- (BOOL)shouldEndedEditItem:(MobilyDataItem*)item {
     return _allowsEditing;
 }
 
-- (void)beganEditItem:(id< MobilyDataItem >)item animated:(BOOL)animated {
-    if([_unsafeEditingItems containsObject:item] == NO) {
+- (void)beganEditItem:(MobilyDataItem*)item animated:(BOOL)animated {
+    if([_editingItems containsObject:item] == NO) {
         if([self shouldBeganEditItem:item] == YES) {
             if(_allowsMultipleEditing == YES) {
-                [_unsafeEditingItems addObject:item];
+                [_editingItems addObject:item];
                 [item setEditing:YES animated:NO];
             } else {
-                if(_unsafeEditingItems.count > 0) {
-                    for(id< MobilyDataItem > item in _unsafeEditingItems) {
+                if(_editingItems.count > 0) {
+                    for(MobilyDataItem* item in _editingItems) {
                         [item setEditing:NO animated:NO];
                     }
-                    [_unsafeEditingItems removeAllObjects];
+                    [_editingItems removeAllObjects];
                 }
-                [_unsafeEditingItems addObject:item];
+                [_editingItems addObject:item];
                 [item setEditing:YES animated:NO];
             }
         }
     }
 }
 
-- (void)endedEditItem:(id< MobilyDataItem >)item animated:(BOOL)animated {
-    if([_unsafeEditingItems containsObject:item] == YES) {
+- (void)endedEditItem:(MobilyDataItem*)item animated:(BOOL)animated {
+    if([_editingItems containsObject:item] == YES) {
         if([self shouldEndedEditItem:item] == YES) {
-            [_unsafeEditingItems removeObject:item];
+            [_editingItems removeObject:item];
             [item setEditing:NO animated:NO];
         }
     }
 }
 
 - (void)endedEditAllItemsAnimated:(BOOL)animated {
-    if(_unsafeEditingItems.count > 0) {
-        for(id< MobilyDataItem > item in _unsafeEditingItems) {
+    if(_editingItems.count > 0) {
+        for(MobilyDataItem* item in _editingItems) {
             if([self shouldEndedEditItem:item] == YES) {
-                [_unsafeEditingItems removeObject:item];
+                [_editingItems removeObject:item];
                 [item setEditing:NO animated:NO];
             }
         }
-        [_unsafeEditingItems removeAllObjects];
+        [_editingItems removeAllObjects];
     }
 }
 
-- (void)appearItem:(id< MobilyDataItem >)item {
-    [_unsafeVisibleItems addObject:item];
-    [self dequeueViewWithItem:item];
+- (void)appearItem:(MobilyDataItem*)item {
+    [_visibleItems addObject:item];
+    [self dequeueCellWithItem:item];
 }
 
-- (void)disappearItem:(id< MobilyDataItem >)item {
-    [_unsafeVisibleItems removeObject:item];
-    [self enqueueViewWithItem:item];
+- (void)disappearItem:(MobilyDataItem*)item {
+    [_visibleItems removeObject:item];
+    [self enqueueCellWithItem:item];
 }
 
-- (void)performBatchUpdate:(MobilyDataWidgetUpdateBlock)update complete:(MobilyDataWidgetCompleteBlock)complete {
+- (void)batchUpdate:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_updating != NO) {
         NSLog(@"ERROR: [%@:%@] %@ - %@", self.class, NSStringFromSelector(_cmd), update, complete);
@@ -850,7 +800,7 @@
     }];
 }
 
-- (void)performBatchDuration:(NSTimeInterval)duration update:(MobilyDataWidgetUpdateBlock)update complete:(MobilyDataWidgetCompleteBlock)complete {
+- (void)batchDuration:(NSTimeInterval)duration update:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_updating != NO) {
         NSLog(@"ERROR: [%@:%@] %0.2f - %@ - %@", self.class, NSStringFromSelector(_cmd), duration, update, complete);
@@ -891,10 +841,10 @@
         return;
     }
 #endif
-    [_unsafeVisibleItems removeObjectsInArray:items];
-    [_unsafeSelectedItems removeObjectsInArray:items];
-    [_unsafeHighlightedItems removeObjectsInArray:items];
-    [_unsafeEditingItems removeObjectsInArray:items];
+    [_visibleItems removeObjectsInArray:items];
+    [_selectedItems removeObjectsInArray:items];
+    [_highlightedItems removeObjectsInArray:items];
+    [_editingItems removeObjectsInArray:items];
     [_deletedItems addObjectsFromArray:items];
     [self setNeedValidateLayout];
 }
@@ -906,10 +856,10 @@
         return;
     }
 #endif
-    [_unsafeVisibleItems removeObjectsInArray:originItems];
-    [_unsafeSelectedItems removeObjectsInArray:originItems];
-    [_unsafeHighlightedItems removeObjectsInArray:originItems];
-    [_unsafeEditingItems removeObjectsInArray:originItems];
+    [_visibleItems removeObjectsInArray:originItems];
+    [_selectedItems removeObjectsInArray:originItems];
+    [_highlightedItems removeObjectsInArray:originItems];
+    [_editingItems removeObjectsInArray:originItems];
     [_reloadedBeforeItems addObjectsFromArray:originItems];
     [_reloadedAfterItems addObjectsFromArray:items];
     [self setNeedValidateLayout];
@@ -930,7 +880,7 @@
 - (void)validateLayout {
     CGRect layoutRect = CGRectZero;
     if(_container != nil) {
-        layoutRect = [_container validateLayoutForAvailableFrame:CGRectMakeOriginAndSize(CGPointZero, self.boundsSize)];
+        layoutRect = [_container _validateLayoutForAvailableFrame:CGRectMakeOriginAndSize(CGPointZero, self.boundsSize)];
     }
     self.contentSize = layoutRect.size;
 }
@@ -945,56 +895,54 @@
 
 - (void)layoutForVisible {
     CGRect bounds = self.bounds;
-    [_container snapForBounds:UIEdgeInsetsInsetRect(bounds, self.contentInset)];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if(_updating == NO) {
-            [_unsafeVisibleItems enumerateObjectsUsingBlock:^(id< MobilyDataItem > item, NSUInteger itemIndex, BOOL* itemStop) {
-                [item invalidateLayoutForBounds:bounds];
-            }];
-        }
-        [_container layoutForBounds:bounds];
-    });
+    [_container _willLayoutForBounds:UIEdgeInsetsInsetRect(bounds, self.contentInset)];
+    if(_updating == NO) {
+        [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex, BOOL* itemStop) {
+            [item invalidateLayoutForBounds:bounds];
+        }];
+    }
+    [_container _didLayoutForBounds:bounds];
 }
 
-- (void)scrollToItem:(id< MobilyDataItem >)item scrollPosition:(MobilyDataScrollViewPosition)scrollPosition animated:(BOOL)animated {
-    NSUInteger vPosition = scrollPosition & (MobilyDataScrollViewPositionTop | MobilyDataScrollViewPositionCenteredVertically | MobilyDataScrollViewPositionBottom);
-    NSUInteger hPosition = scrollPosition & (MobilyDataScrollViewPositionLeft | MobilyDataScrollViewPositionCenteredHorizontally | MobilyDataScrollViewPositionRight);
-    if((vPosition != MobilyDataScrollViewPositionNone) && (vPosition != MobilyDataScrollViewPositionTop) && (vPosition != MobilyDataScrollViewPositionCenteredVertically) && (vPosition != MobilyDataScrollViewPositionBottom)) {
-        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"MobilyDataScrollViewPosition: attempt to use a scroll position with multiple vertical positioning styles" userInfo:nil];
+- (void)scrollToItem:(MobilyDataItem*)item scrollPosition:(MobilyDataViewPosition)scrollPosition animated:(BOOL)animated {
+    NSUInteger vPosition = scrollPosition & (MobilyDataViewPositionTop | MobilyDataViewPositionCenteredVertically | MobilyDataViewPositionBottom);
+    NSUInteger hPosition = scrollPosition & (MobilyDataViewPositionLeft | MobilyDataViewPositionCenteredHorizontally | MobilyDataViewPositionRight);
+    if((vPosition != MobilyDataViewPositionNone) && (vPosition != MobilyDataViewPositionTop) && (vPosition != MobilyDataViewPositionCenteredVertically) && (vPosition != MobilyDataViewPositionBottom)) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"MobilyDataViewPosition: attempt to use a scroll position with multiple vertical positioning styles" userInfo:nil];
     }
-    if((hPosition != MobilyDataScrollViewPositionNone) && (hPosition != MobilyDataScrollViewPositionLeft) && (hPosition != MobilyDataScrollViewPositionCenteredHorizontally) && (hPosition != MobilyDataScrollViewPositionRight)) {
-        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"MobilyDataScrollViewPosition: attempt to use a scroll position with multiple horizontal positioning styles" userInfo:nil];
+    if((hPosition != MobilyDataViewPositionNone) && (hPosition != MobilyDataViewPositionLeft) && (hPosition != MobilyDataViewPositionCenteredHorizontally) && (hPosition != MobilyDataViewPositionRight)) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"MobilyDataViewPosition: attempt to use a scroll position with multiple horizontal positioning styles" userInfo:nil];
     }
     CGRect visibleRect = self.bounds;
     UIEdgeInsets contentInset = self.contentInset;
     CGRect itemFrame = [item updateFrame];
     switch(vPosition) {
-        case MobilyDataScrollViewPositionCenteredVertically: {
+        case MobilyDataViewPositionCenteredVertically: {
             CGFloat offset = fmax(itemFrame.origin.y - ((visibleRect.size.height * 0.5f) - (itemFrame.size.height * 0.5f)), -contentInset.top);
             itemFrame = CGRectMake(itemFrame.origin.x, offset, itemFrame.size.width, visibleRect.size.height);
             break;
         }
-        case MobilyDataScrollViewPositionTop: {
+        case MobilyDataViewPositionTop: {
             itemFrame = CGRectMake(itemFrame.origin.x, itemFrame.origin.y, itemFrame.size.width, visibleRect.size.height);
             break;
         }
-        case MobilyDataScrollViewPositionBottom: {
+        case MobilyDataViewPositionBottom: {
             CGFloat offset = fmax(itemFrame.origin.y - (visibleRect.size.height - itemFrame.size.height), -contentInset.top);
             itemFrame = CGRectMake(itemFrame.origin.x, offset, itemFrame.size.width, visibleRect.size.height);
             break;
         }
     }
     switch(hPosition) {
-        case MobilyDataScrollViewPositionLeft: {
+        case MobilyDataViewPositionLeft: {
             itemFrame = CGRectMake(itemFrame.origin.x, itemFrame.origin.y, visibleRect.size.width, itemFrame.size.height);
             break;
         }
-        case MobilyDataScrollViewPositionCenteredHorizontally: {
+        case MobilyDataViewPositionCenteredHorizontally: {
             CGFloat offset = itemFrame.origin.x - ((visibleRect.size.width * 0.5f) - (itemFrame.size.width * 0.5f));
             itemFrame = CGRectMake(offset, itemFrame.origin.y, visibleRect.size.width, itemFrame.size.height);
             break;
         }
-        case MobilyDataScrollViewPositionRight: {
+        case MobilyDataViewPositionRight: {
             CGFloat offset = itemFrame.origin.x - (visibleRect.size.width - itemFrame.size.width);
             itemFrame = CGRectMake(offset, itemFrame.origin.y, visibleRect.size.width, itemFrame.size.height);
             break;
@@ -1052,12 +1000,12 @@
     }
 }
 
-- (void)showPullToRefreshAnimated:(BOOL)animated complete:(MobilyDataWidgetCompleteBlock)complete {
-    if(_pullToRefreshView.state == MobilyDataScrollRefreshViewStateRelease) {
+- (void)showPullToRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
+    if(_pullToRefreshView.state == MobilyDataRefreshViewStateRelease) {
         UIEdgeInsets contentInset = self.contentInset;
         contentInset.top = (_pullToRefreshHeight < 0.0f) ? _pullToRefreshView.frameHeight : _pullToRefreshHeight;
         _constraintPullToRefreshBottom.constant = contentInset.top;
-        _pullToRefreshView.state = MobilyDataScrollRefreshViewStateLoading;
+        _pullToRefreshView.state = MobilyDataRefreshViewStateLoading;
         if(animated == YES) {
             [UIView animateWithDuration:0.3f
                              animations:^{
@@ -1079,8 +1027,8 @@
     }
 }
 
-- (void)hidePullToRefreshAnimated:(BOOL)animated complete:(MobilyDataWidgetCompleteBlock)complete {
-    if(_pullToRefreshView.state != MobilyDataScrollRefreshViewStateIdle) {
+- (void)hidePullToRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
+    if(_pullToRefreshView.state != MobilyDataRefreshViewStateIdle) {
         UIEdgeInsets contentInset = self.contentInset;
         contentInset.top = 0.0f;
         _constraintPullToRefreshBottom.constant = contentInset.top;
@@ -1092,14 +1040,14 @@
                              }
                              completion:^(BOOL finished) {
                                  self.contentInset = self.scrollIndicatorInsets = contentInset;
-                                 _pullToRefreshView.state = MobilyDataScrollRefreshViewStateIdle;
+                                 _pullToRefreshView.state = MobilyDataRefreshViewStateIdle;
                                  if(complete != nil) {
                                      complete(finished);
                                  }
                              }];
         } else {
             self.scrollIndicatorInsets = self.contentInset = contentInset;
-            _pullToRefreshView.state = MobilyDataScrollRefreshViewStateIdle;
+            _pullToRefreshView.state = MobilyDataRefreshViewStateIdle;
             if(complete != nil) {
                 complete(YES);
             }
@@ -1107,12 +1055,12 @@
     }
 }
 
-- (void)showPullToLoadAnimated:(BOOL)animated complete:(MobilyDataWidgetCompleteBlock)complete {
-    if(_pullToLoadView.state == MobilyDataScrollRefreshViewStateRelease) {
+- (void)showPullToLoadAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
+    if(_pullToLoadView.state == MobilyDataRefreshViewStateRelease) {
         UIEdgeInsets contentInset = self.contentInset;
         contentInset.bottom = (_pullToLoadHeight < 0.0f) ? _pullToLoadView.frameHeight : _pullToLoadHeight;
         _constraintPullToLoadTop.constant = -contentInset.bottom;
-        _pullToLoadView.state = MobilyDataScrollRefreshViewStateLoading;
+        _pullToLoadView.state = MobilyDataRefreshViewStateLoading;
         if(animated == YES) {
             [UIView animateWithDuration:0.3f
                              animations:^{
@@ -1134,8 +1082,8 @@
     }
 }
 
-- (void)hidePullToLoadAnimated:(BOOL)animated complete:(MobilyDataWidgetCompleteBlock)complete {
-    if(_pullToLoadView.state != MobilyDataScrollRefreshViewStateIdle) {
+- (void)hidePullToLoadAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
+    if(_pullToLoadView.state != MobilyDataRefreshViewStateIdle) {
         UIEdgeInsets contentInset = self.contentInset;
         contentInset.bottom = 0.0f;
         _constraintPullToLoadTop.constant = contentInset.bottom;
@@ -1147,14 +1095,14 @@
                              }
                              completion:^(BOOL finished) {
                                  self.contentInset = self.scrollIndicatorInsets = contentInset;
-                                 _pullToLoadView.state = MobilyDataScrollRefreshViewStateIdle;
+                                 _pullToLoadView.state = MobilyDataRefreshViewStateIdle;
                                  if(complete != nil) {
                                      complete(finished);
                                  }
                              }];
         } else {
             self.scrollIndicatorInsets = self.contentInset = contentInset;
-            _pullToLoadView.state = MobilyDataScrollRefreshViewStateIdle;
+            _pullToLoadView.state = MobilyDataRefreshViewStateIdle;
             if(complete != nil) {
                 complete(YES);
             }
@@ -1165,162 +1113,166 @@
 #pragma mark NSNotificationCenter
 
 - (void)notificationReceiveMemoryWarning:(NSNotification*)notification {
-    for(UIView< MobilyDataItemView >* itemView in _queueViews) {
-        [itemView removeFromSuperview];
+    for(MobilyDataCell* cell in _queueCells) {
+        [cell removeFromSuperview];
     }
-    [_queueViews removeAllObjects];
+    [_queueCells removeAllObjects];
 }
 
 #pragma mark UIScrollViewDelegate
 
-- (void)internalWillBeginDragging {
-    if(_pullToRefreshView != nil) {
-        self.canPullToRefresh = ([_pullToRefreshView state] != MobilyDataScrollRefreshViewStateLoading);
-    } else {
-        self.canPullToRefresh = NO;
+- (void)willBeginDragging {
+    if(self.pagingEnabled == NO) {
+        if(_pullToRefreshView != nil) {
+            self.canPullToRefresh = ([_pullToRefreshView state] != MobilyDataRefreshViewStateLoading);
+        } else {
+            self.canPullToRefresh = NO;
+        }
+        if(_pullToLoadView != nil) {
+            self.canPullToLoad = ([_pullToLoadView state] != MobilyDataRefreshViewStateLoading);
+        } else {
+            self.canPullToLoad = NO;
+        }
+        if((_canPullToRefresh == YES) || (_canPullToLoad == YES)) {
+            self.pullDragging = YES;
+        } else {
+            self.pullDragging = NO;
+        }
     }
-    if(_pullToLoadView != nil) {
-        self.canPullToLoad = ([_pullToLoadView state] != MobilyDataScrollRefreshViewStateLoading);
-    } else {
-        self.canPullToLoad = NO;
-    }
-    if((_canPullToRefresh == YES) || (_canPullToLoad == YES)) {
-        self.pullDragging = YES;
-    } else {
-        self.pullDragging = NO;
-    }
-    [self performEventForKey:MobilyDataScrollViewWillBeginDragging byObject:nil];
+    [self fireEventForKey:MobilyDataViewWillBeginDragging byObject:nil];
 }
 
-- (void)internalDidScroll {
-    CGRect bounds = self.bounds;
-    CGSize frameSize = self.frameSize;
-    CGSize contentSize = self.contentSize;
-    CGPoint contentOffset = self.contentOffset;
-    UIEdgeInsets contentInset = self.contentInset;
-    
-    if([self bounces] == YES) {
-        if([self alwaysBounceHorizontal] == YES) {
-            if(_bouncesLeft == NO) {
-                contentOffset.x = MAX(0.0f, contentOffset.x);
+- (void)didScroll {
+    if(self.pagingEnabled == NO) {
+        
+        CGRect bounds = self.bounds;
+        CGSize frameSize = self.frameSize;
+        CGSize contentSize = self.contentSize;
+        CGPoint contentOffset = self.contentOffset;
+        UIEdgeInsets contentInset = self.contentInset;
+        
+        if(self.bounces == YES) {
+            if(self.alwaysBounceHorizontal == YES) {
+                if(_bouncesLeft == NO) {
+                    contentOffset.x = MAX(0.0f, contentOffset.x);
+                }
+                if(_bouncesRight == NO) {
+                    contentOffset.x = MIN(contentSize.width - frameSize.width, contentOffset.x);
+                }
             }
-            if(_bouncesRight == NO) {
-                contentOffset.x = MIN(contentSize.width - frameSize.width, contentOffset.x);
-            }
-        }
-        if([self alwaysBounceVertical] == YES) {
-            if(_bouncesTop == NO) {
-                contentOffset.y = MAX(0.0f, contentOffset.y);
-            }
-            if(_bouncesBottom == NO) {
-                contentOffset.y = MIN(contentSize.height - frameSize.height, contentOffset.y);
-            }
-        }
-    }
-    
-    if((_pullDragging == YES) && (self.isDragging == YES) && (self.isDecelerating == NO)) {
-        if(_canPullToRefresh == YES) {
-            CGFloat pullToRefreshSize = (_pullToRefreshHeight < 0.0f) ? _pullToRefreshView.frameHeight : _pullToRefreshHeight;
-            CGFloat offset = MIN(pullToRefreshSize, -contentOffset.y);
-            switch(_pullToRefreshView.state) {
-                case MobilyDataScrollRefreshViewStateIdle:
-                    if(offset > 0.0f) {
-                        if(_constraintPullToRefreshBottom != nil) {
-                            _constraintPullToRefreshBottom.constant = 0.0f;
-                        }
-                        _pullToRefreshView.state = MobilyDataScrollRefreshViewStatePull;
-                        contentInset.top = 0.0f;
-                    }
-                    break;
-                case MobilyDataScrollRefreshViewStatePull:
-                case MobilyDataScrollRefreshViewStateRelease:
-                    if(offset < 0.0f) {
-                        if(_constraintPullToRefreshBottom != nil) {
-                            _constraintPullToRefreshBottom.constant = 0.0f;
-                        }
-                        _pullToRefreshView.state = MobilyDataScrollRefreshViewStateIdle;
-                        contentInset.top = 0.0f;
-                    } else if(offset >= pullToRefreshSize) {
-                        if(_constraintPullToRefreshBottom != nil) {
-                            _constraintPullToRefreshBottom.constant = pullToRefreshSize;
-                        }
-                        if(_pullToRefreshView.state != MobilyDataScrollRefreshViewStateRelease) {
-                            _pullToRefreshView.state = MobilyDataScrollRefreshViewStateRelease;
-                            contentInset.top = offset;
-                        }
-                    } else {
-                        if(_constraintPullToRefreshBottom != nil) {
-                            _constraintPullToRefreshBottom.constant = offset;
-                        }
-                        _pullToRefreshView.state = MobilyDataScrollRefreshViewStatePull;
-                        contentInset.top = offset;
-                    }
-                    break;
-                default:
-                    break;
+            if(self.alwaysBounceVertical == YES) {
+                if(_bouncesTop == NO) {
+                    contentOffset.y = MAX(0.0f, contentOffset.y);
+                }
+                if(_bouncesBottom == NO) {
+                    contentOffset.y = MIN(contentSize.height - frameSize.height, contentOffset.y);
+                }
             }
         }
-        if((_canPullToLoad == YES) && (contentSize.height > frameSize.height)) {
-            CGFloat contentBottom = contentSize.height - bounds.size.height;
-            CGFloat pullToLoadSize = (_pullToLoadHeight < 0.0f) ? _pullToLoadView.frameHeight : _pullToLoadHeight;
-            if(contentOffset.y >= contentBottom) {
-                CGFloat offset = MIN(pullToLoadSize, contentOffset.y - contentBottom);
-                switch(_pullToLoadView.state) {
-                    case MobilyDataScrollRefreshViewStateIdle:
+        
+        if((_pullDragging == YES) && (self.isDragging == YES) && (self.isDecelerating == NO)) {
+            if(_canPullToRefresh == YES) {
+                CGFloat pullToRefreshSize = (_pullToRefreshHeight < 0.0f) ? _pullToRefreshView.frameHeight : _pullToRefreshHeight;
+                CGFloat offset = MIN(pullToRefreshSize, -contentOffset.y);
+                switch(_pullToRefreshView.state) {
+                    case MobilyDataRefreshViewStateIdle:
                         if(offset > 0.0f) {
-                            if(_constraintPullToLoadTop != nil) {
-                                _constraintPullToLoadTop.constant = -offset;
+                            if(_constraintPullToRefreshBottom != nil) {
+                                _constraintPullToRefreshBottom.constant = 0.0f;
                             }
-                            _pullToLoadView.state = MobilyDataScrollRefreshViewStatePull;
-                            contentInset.bottom = offset;
+                            _pullToRefreshView.state = MobilyDataRefreshViewStatePull;
+                            contentInset.top = 0.0f;
                         }
                         break;
-                    case MobilyDataScrollRefreshViewStatePull:
-                    case MobilyDataScrollRefreshViewStateRelease:
+                    case MobilyDataRefreshViewStatePull:
+                    case MobilyDataRefreshViewStateRelease:
                         if(offset < 0.0f) {
-                            if(_constraintPullToLoadTop != nil) {
-                                _constraintPullToLoadTop.constant = 0.0f;
+                            if(_constraintPullToRefreshBottom != nil) {
+                                _constraintPullToRefreshBottom.constant = 0.0f;
                             }
-                            _pullToLoadView.state = MobilyDataScrollRefreshViewStateIdle;
-                            contentInset.bottom = 0.0f;
-                        } else if(offset >= pullToLoadSize) {
-                            if(_constraintPullToLoadTop != nil) {
-                                _constraintPullToLoadTop.constant = -pullToLoadSize;
+                            _pullToRefreshView.state = MobilyDataRefreshViewStateIdle;
+                            contentInset.top = 0.0f;
+                        } else if(offset >= pullToRefreshSize) {
+                            if(_constraintPullToRefreshBottom != nil) {
+                                _constraintPullToRefreshBottom.constant = pullToRefreshSize;
                             }
-                            if(_pullToLoadView.state != MobilyDataScrollRefreshViewStateRelease) {
-                                _pullToLoadView.state = MobilyDataScrollRefreshViewStateRelease;
-                                contentInset.bottom = offset;
+                            if(_pullToRefreshView.state != MobilyDataRefreshViewStateRelease) {
+                                _pullToRefreshView.state = MobilyDataRefreshViewStateRelease;
+                                contentInset.top = offset;
                             }
                         } else {
-                            if(_constraintPullToLoadTop != nil) {
-                                _constraintPullToLoadTop.constant = -offset;
+                            if(_constraintPullToRefreshBottom != nil) {
+                                _constraintPullToRefreshBottom.constant = offset;
                             }
-                            _pullToLoadView.state = MobilyDataScrollRefreshViewStatePull;
-                            contentInset.bottom = offset;
+                            _pullToRefreshView.state = MobilyDataRefreshViewStatePull;
+                            contentInset.top = offset;
                         }
                         break;
                     default:
                         break;
                 }
-            } else {
-                if(_constraintPullToLoadTop != nil) {
-                    _constraintPullToLoadTop.constant = 0.0f;
+            }
+            if((_canPullToLoad == YES) && (contentSize.height > frameSize.height)) {
+                CGFloat contentBottom = contentSize.height - bounds.size.height;
+                CGFloat pullToLoadSize = (_pullToLoadHeight < 0.0f) ? _pullToLoadView.frameHeight : _pullToLoadHeight;
+                if(contentOffset.y >= contentBottom) {
+                    CGFloat offset = MIN(pullToLoadSize, contentOffset.y - contentBottom);
+                    switch(_pullToLoadView.state) {
+                        case MobilyDataRefreshViewStateIdle:
+                            if(offset > 0.0f) {
+                                if(_constraintPullToLoadTop != nil) {
+                                    _constraintPullToLoadTop.constant = -offset;
+                                }
+                                _pullToLoadView.state = MobilyDataRefreshViewStatePull;
+                                contentInset.bottom = offset;
+                            }
+                            break;
+                        case MobilyDataRefreshViewStatePull:
+                        case MobilyDataRefreshViewStateRelease:
+                            if(offset < 0.0f) {
+                                if(_constraintPullToLoadTop != nil) {
+                                    _constraintPullToLoadTop.constant = 0.0f;
+                                }
+                                _pullToLoadView.state = MobilyDataRefreshViewStateIdle;
+                                contentInset.bottom = 0.0f;
+                            } else if(offset >= pullToLoadSize) {
+                                if(_constraintPullToLoadTop != nil) {
+                                    _constraintPullToLoadTop.constant = -pullToLoadSize;
+                                }
+                                if(_pullToLoadView.state != MobilyDataRefreshViewStateRelease) {
+                                    _pullToLoadView.state = MobilyDataRefreshViewStateRelease;
+                                    contentInset.bottom = offset;
+                                }
+                            } else {
+                                if(_constraintPullToLoadTop != nil) {
+                                    _constraintPullToLoadTop.constant = -offset;
+                                }
+                                _pullToLoadView.state = MobilyDataRefreshViewStatePull;
+                                contentInset.bottom = offset;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    if(_constraintPullToLoadTop != nil) {
+                        _constraintPullToLoadTop.constant = 0.0f;
+                    }
+                    _pullToLoadView.state = MobilyDataRefreshViewStateIdle;
+                    contentInset.bottom = 0.0f;
                 }
-                _pullToLoadView.state = MobilyDataScrollRefreshViewStateIdle;
-                contentInset.bottom = 0.0f;
             }
         }
+        
+        self.scrollIndicatorInsets = contentInset;
+        self.contentInset = contentInset;
+        self.contentOffset = contentOffset;
     }
-    
-    self.scrollIndicatorInsets = contentInset;
-    self.contentInset = contentInset;
-    self.contentOffset = contentOffset;
-    
-    [self performEventForKey:MobilyDataScrollViewDidScroll byObject:nil];
+    [self fireEventForKey:MobilyDataViewDidScroll byObject:nil];
 }
 
-- (void)internalWillEndDraggingWithVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset {
-    NSValue* newTargetContentOffset = [self performEventForKey:MobilyDataScrollViewWillEndDragging byObject:@{
+- (void)willEndDraggingWithVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset {
+    NSValue* newTargetContentOffset = [self fireEventForKey:MobilyDataViewWillEndDragging byObject:@{
         @"velocity" : [NSValue valueWithCGPoint:velocity],
         @"targetContentOffset" : [NSValue valueWithCGPoint:*targetContentOffset]
     }];
@@ -1331,100 +1283,102 @@
     }
 }
 
-- (void)internalDidEndDraggingWillDecelerate:(BOOL)decelerate {
-    if(_pullDragging == YES) {
-        if(_canPullToRefresh == YES) {
-            switch(_pullToRefreshView.state) {
-                case MobilyDataScrollRefreshViewStateRelease: {
-                    if([self containsEventForKey:MobilyDataScrollViewPullToRefreshTriggered] == YES) {
-                        [self showPullToRefreshAnimated:YES complete:^(BOOL finished) {
-                            [self performEventForKey:MobilyDataScrollViewPullToRefreshTriggered byObject:_pullToRefreshView];
-                        }];
-                    } else {
+- (void)didEndDraggingWillDecelerate:(BOOL)decelerate {
+    if(self.pagingEnabled == NO) {
+        if(_pullDragging == YES) {
+            if(_canPullToRefresh == YES) {
+                switch(_pullToRefreshView.state) {
+                    case MobilyDataRefreshViewStateRelease: {
+                        if([self containsEventForKey:MobilyDataViewPullToRefreshTriggered] == YES) {
+                            [self showPullToRefreshAnimated:YES complete:^(BOOL finished) {
+                                [self fireEventForKey:MobilyDataViewPullToRefreshTriggered byObject:_pullToRefreshView];
+                            }];
+                        } else {
+                            [self hidePullToRefreshAnimated:YES complete:nil];
+                        }
+                        break;
+                    }
+                    default: {
                         [self hidePullToRefreshAnimated:YES complete:nil];
+                        break;
                     }
-                    break;
-                }
-                default: {
-                    [self hidePullToRefreshAnimated:YES complete:nil];
-                    break;
                 }
             }
-        }
-        if(_canPullToLoad == YES) {
-            switch(_pullToLoadView.state) {
-                case MobilyDataScrollRefreshViewStateRelease: {
-                    if([self containsEventForKey:MobilyDataScrollViewPullToLoadTriggered] == YES) {
-                        [self showPullToLoadAnimated:YES complete:^(BOOL finished) {
-                            [self performEventForKey:MobilyDataScrollViewPullToLoadTriggered byObject:_pullToLoadView];
-                        }];
-                    } else {
+            if(_canPullToLoad == YES) {
+                switch(_pullToLoadView.state) {
+                    case MobilyDataRefreshViewStateRelease: {
+                        if([self containsEventForKey:MobilyDataViewPullToLoadTriggered] == YES) {
+                            [self showPullToLoadAnimated:YES complete:^(BOOL finished) {
+                                [self fireEventForKey:MobilyDataViewPullToLoadTriggered byObject:_pullToLoadView];
+                            }];
+                        } else {
+                            [self hidePullToLoadAnimated:YES complete:nil];
+                        }
+                        break;
+                    }
+                    default: {
                         [self hidePullToLoadAnimated:YES complete:nil];
+                        break;
                     }
-                    break;
-                }
-                default: {
-                    [self hidePullToLoadAnimated:YES complete:nil];
-                    break;
                 }
             }
+            self.pullDragging = NO;
         }
-        self.pullDragging = NO;
     }
-    [self performEventForKey:MobilyDataScrollViewDidEndDragging byObject:@(decelerate)];
+    [self fireEventForKey:MobilyDataViewDidEndDragging byObject:@(decelerate)];
 }
 
-- (void)internalWillBeginDecelerating {
-    [self performEventForKey:MobilyDataScrollViewWillBeginDecelerating byObject:nil];
+- (void)willBeginDecelerating {
+    [self fireEventForKey:MobilyDataViewWillBeginDecelerating byObject:nil];
 }
 
-- (void)internalDidEndDecelerating {
-    [self performEventForKey:MobilyDataScrollViewDidEndDecelerating byObject:nil];
+- (void)didEndDecelerating {
+    [self fireEventForKey:MobilyDataViewDidEndDecelerating byObject:nil];
 }
 
-- (void)internalDidEndScrollingAnimation {
-    [self performEventForKey:MobilyDataScrollViewDidEndScrollingAnimation byObject:nil];
+- (void)didEndScrollingAnimation {
+    [self fireEventForKey:MobilyDataViewDidEndScrollingAnimation byObject:nil];
 }
 
 #pragma mark Private
 
-- (void)internalBatchUpdate:(MobilyDataWidgetUpdateBlock)update {
+- (void)internalBatchUpdate:(MobilyDataViewUpdateBlock)update {
     self.updating = YES;
-    [_container didBeginUpdate];
+    [_container _didBeginUpdate];
     if(update != nil) {
         update();
     }
     [self validateLayoutIfNeed];
     [self layoutForVisible];
-    for(id< MobilyDataItem > item in _reloadedBeforeItems) {
-        UIView< MobilyDataItemView >* view = item.view;
-        if(view != nil) {
-            [view animateAction:MobilyDataItemViewActionReplaceOut];
+    for(MobilyDataItem* item in _reloadedBeforeItems) {
+        MobilyDataCell* cell = item.cell;
+        if(cell != nil) {
+            [cell animateAction:MobilyDataCellActionReplaceOut];
         }
     }
-    for(id< MobilyDataItem > item in _reloadedAfterItems) {
-        UIView< MobilyDataItemView >* view = item.view;
-        if(view != nil) {
-            [view animateAction:MobilyDataItemViewActionReplaceIn];
+    for(MobilyDataItem* item in _reloadedAfterItems) {
+        MobilyDataCell* cell = item.cell;
+        if(cell != nil) {
+            [cell animateAction:MobilyDataCellActionReplaceIn];
         }
     }
-    for(id< MobilyDataItem > item in _insertedItems) {
-        UIView< MobilyDataItemView >* view = item.view;
-        if(view != nil) {
-            [view animateAction:MobilyDataItemViewActionInsert];
+    for(MobilyDataItem* item in _insertedItems) {
+        MobilyDataCell* cell = item.cell;
+        if(cell != nil) {
+            [cell animateAction:MobilyDataCellActionInsert];
         }
     }
-    for(id< MobilyDataItem > item in _deletedItems) {
-        UIView< MobilyDataItemView >* view = item.view;
-        if(view != nil) {
-            [view animateAction:MobilyDataItemViewActionDelete];
+    for(MobilyDataItem* item in _deletedItems) {
+        MobilyDataCell* cell = item.cell;
+        if(cell != nil) {
+            [cell animateAction:MobilyDataCellActionDelete];
         }
     }
 }
 
-- (void)internalBatchComplete:(MobilyDataWidgetUpdateBlock)complete {
+- (void)internalBatchComplete:(MobilyDataViewUpdateBlock)complete {
     if(_reloadedBeforeItems.count > 0) {
-        for(id< MobilyDataItem > item in _reloadedBeforeItems) {
+        for(MobilyDataItem* item in _reloadedBeforeItems) {
             [item disappear];
         }
         [_reloadedBeforeItems removeAllObjects];
@@ -1436,12 +1390,12 @@
         [_insertedItems removeAllObjects];
     }
     if(_deletedItems.count > 0) {
-        for(id< MobilyDataItem > item in _deletedItems) {
+        for(MobilyDataItem* item in _deletedItems) {
             [item disappear];
         }
         [_deletedItems removeAllObjects];
     }
-    [_container didEndUpdate];
+    [_container _didEndUpdate];
     self.updating = NO;
     [self layoutForVisible];
     
@@ -1456,20 +1410,20 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation MobilyDataScrollViewDelegateProxy
+@implementation MobilyDataViewDelegateProxy
 
 #pragma mark Init / Free
 
-- (instancetype)initWithDataScrollView:(MobilyDataScrollView*)dataScrollView {
+- (instancetype)initWithDataView:(MobilyDataView*)view {
     self = [super init];
     if(self != nil) {
-        self.dataScrollView = dataScrollView;
+        self.view = view;
     }
     return self;
 }
 
 - (void)dealloc {
-    self.dataScrollView = nil;
+    self.view = nil;
     self.delegate = nil;
 }
 
@@ -1486,49 +1440,49 @@
 #pragma mark UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView*)scrollView {
-    [_dataScrollView internalWillBeginDragging];
+    [_view willBeginDragging];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewDidEndDecelerating:scrollView];
     }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView {
-    [_dataScrollView internalDidScroll];
+    [_view didScroll];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewDidScroll:scrollView];
     }
 }
 
 - (void)scrollViewWillEndDragging:(UIScrollView*)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset {
-    [_dataScrollView internalWillEndDraggingWithVelocity:velocity targetContentOffset:targetContentOffset];
+    [_view willEndDraggingWithVelocity:velocity targetContentOffset:targetContentOffset];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView*)scrollView willDecelerate:(BOOL)decelerate {
-    [_dataScrollView internalDidEndDraggingWillDecelerate:decelerate];
+    [_view didEndDraggingWillDecelerate:decelerate];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
     }
 }
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView*)scrollView {
-    [_dataScrollView internalWillBeginDecelerating];
+    [_view willBeginDecelerating];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewDidScroll:scrollView];
     }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView*)scrollView {
-    [_dataScrollView internalDidEndDecelerating];
+    [_view didEndDecelerating];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewDidEndDecelerating:scrollView];
     }
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView*)scrollView {
-    [_dataScrollView internalDidEndScrollingAnimation];
+    [_view didEndScrollingAnimation];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewDidEndScrollingAnimation:scrollView];
     }
@@ -1540,14 +1494,14 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-NSString* MobilyDataScrollViewWillBeginDragging = @"MobilyDataScrollViewWillBeginDragging";
-NSString* MobilyDataScrollViewDidScroll = @"MobilyDataScrollViewDidScroll";
-NSString* MobilyDataScrollViewWillEndDragging = @"MobilyDataScrollViewWillEndDragging";
-NSString* MobilyDataScrollViewDidEndDragging = @"MobilyDataScrollViewDidEndDragging";
-NSString* MobilyDataScrollViewWillBeginDecelerating = @"MobilyDataScrollViewWillBeginDecelerating";
-NSString* MobilyDataScrollViewDidEndDecelerating = @"MobilyDataScrollViewDidEndDecelerating";
-NSString* MobilyDataScrollViewDidEndScrollingAnimation = @"MobilyDataScrollViewDidEndScrollingAnimation";
-NSString* MobilyDataScrollViewPullToRefreshTriggered = @"MobilyDataScrollViewPullToRefreshTriggered";
-NSString* MobilyDataScrollViewPullToLoadTriggered = @"MobilyDataScrollViewPullToLoadTriggered";
+NSString* MobilyDataViewWillBeginDragging = @"MobilyDataViewWillBeginDragging";
+NSString* MobilyDataViewDidScroll = @"MobilyDataViewDidScroll";
+NSString* MobilyDataViewWillEndDragging = @"MobilyDataViewWillEndDragging";
+NSString* MobilyDataViewDidEndDragging = @"MobilyDataViewDidEndDragging";
+NSString* MobilyDataViewWillBeginDecelerating = @"MobilyDataViewWillBeginDecelerating";
+NSString* MobilyDataViewDidEndDecelerating = @"MobilyDataViewDidEndDecelerating";
+NSString* MobilyDataViewDidEndScrollingAnimation = @"MobilyDataViewDidEndScrollingAnimation";
+NSString* MobilyDataViewPullToRefreshTriggered = @"MobilyDataViewPullToRefreshTriggered";
+NSString* MobilyDataViewPullToLoadTriggered = @"MobilyDataViewPullToLoadTriggered";
 
 /*--------------------------------------------------*/

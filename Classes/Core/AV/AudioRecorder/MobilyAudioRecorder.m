@@ -79,7 +79,7 @@
     self.quality = AVAudioQualityMin;
     self.bitRate = 16;
     self.numberOfChannels = 1;
-    [self setSampleRate:44100.0f];
+    self.sampleRate = 44100.0f;
 }
 
 - (void)dealloc {

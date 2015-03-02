@@ -33,53 +33,34 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyNS.h"
+@interface DemoCalendarController : MobilyViewController
 
-/*--------------------------------------------------*/
-
-@interface MobilyGrid : NSObject< NSCopying >
-
-@property(nonatomic, readonly, assign) NSUInteger numberOfColumns;
-@property(nonatomic, readonly, assign) NSUInteger numberOfRows;
-@property(nonatomic, readonly, assign) NSUInteger count;
-
-+ (instancetype)grid;
-+ (instancetype)gridWithColumns:(NSUInteger)columns rows:(NSUInteger)rows;
-+ (instancetype)gridWithColumns:(NSUInteger)columns rows:(NSUInteger)rows objects:(NSArray*)objects;
-+ (instancetype)gridWithGrid:(MobilyGrid*)grid;
-
-- (instancetype)initWithColumns:(NSUInteger)columns rows:(NSUInteger)rows;
-- (instancetype)initWithColumns:(NSUInteger)columns rows:(NSUInteger)rows objects:(NSArray*)objects;
-- (instancetype)initWithGrid:(MobilyGrid*)grid;
-
-- (BOOL)containsColumn:(NSUInteger)column row:(NSUInteger)row;
-- (BOOL)isEmptyColumn:(NSInteger)column;
-- (BOOL)isEmptyRow:(NSInteger)row;
-
-- (id)objectAtColumn:(NSUInteger)column atRow:(NSUInteger)row;
-- (NSArray*)objects;
-
-- (void)eachColumnsRows:(void(^)(id object, NSUInteger column, NSUInteger row))block;
-- (void)eachRowsColumns:(void(^)(id object, NSUInteger column, NSUInteger row))block;
-- (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block byColumn:(NSInteger)column;
-- (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block byRow:(NSInteger)row;
+@property(nonatomic, readwrite, weak) IBOutlet MobilyDataView* dataView;
+@property(nonatomic, readwrite, strong) MobilyDataContainerCalendar* dataCalendar;
 
 @end
 
 /*--------------------------------------------------*/
 
-@interface MobilyMutableGrid : MobilyGrid
+@interface DemoCalendarMonthCell : MobilyDataCell
 
-- (void)setNumberOfColumns:(NSUInteger)numberOfColumns numberOfRows:(NSUInteger)numberOfRows;
+@property(nonatomic, readwrite, weak) IBOutlet UILabel* textView;
 
-- (void)setObject:(id)object atColumn:(NSUInteger)column atRow:(NSUInteger)row;
-- (void)setObjects:(NSArray*)objects;
+@end
 
-- (void)insertColumn:(NSUInteger)column objects:(NSArray*)objects;
-- (void)insertRow:(NSUInteger)row objects:(NSArray*)objects;
-- (void)removeColumn:(NSUInteger)column;
-- (void)removeRow:(NSUInteger)row;
-- (void)removeAllObjects;
+/*--------------------------------------------------*/
+
+@interface DemoCalendarWeekdayCell : MobilyDataCell
+
+@property(nonatomic, readwrite, weak) IBOutlet UILabel* textView;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface DemoCalendarDayCell : MobilyDataCell
+
+@property(nonatomic, readwrite, weak) IBOutlet UILabel* textView;
 
 @end
 

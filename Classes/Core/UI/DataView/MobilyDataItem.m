@@ -33,35 +33,23 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyDataItem.h"
+#import "MobilyDataItem+Private.h"
 
-/*--------------------------------------------------*/
-
-@interface MobilyDataItem ()
-
-@property(nonatomic, readwrite, strong) NSString* identifier;
-@property(nonatomic, readwrite, strong) id data;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
 /*--------------------------------------------------*/
 
 @implementation MobilyDataItem
 
 #pragma mark Synthesize
 
-@synthesize widget = _widget;
-@synthesize parentContainer = _parentContainer;
+@synthesize view = _view;
+@synthesize parent = _parent;
 @synthesize identifier = _identifier;
 @synthesize data = _data;
-@synthesize view = _view;
+@synthesize cell = _cell;
 @synthesize originFrame = _originFrame;
 @synthesize updateFrame = _updateFrame;
 @synthesize displayFrame = _displayFrame;
 @synthesize zOrder = _zOrder;
-@synthesize allowsSnapToEdge = _allowsSnapToEdge;
 @synthesize allowsSelection = _allowsSelection;
 @synthesize allowsHighlighting = _allowsHighlighting;
 @synthesize allowsEditing = _allowsEditing;
@@ -75,18 +63,25 @@
     return [[self alloc] initWithIdentifier:identifier data:data];
 }
 
++ (NSArray*)dataItemsWithIdentifier:(NSString*)identifier dataArray:(NSArray*)dataArray {
+    NSMutableArray* items = [NSMutableArray arrayWithCapacity:dataArray.count];
+    for(id data in dataArray) {
+        [items addObject:[self dataItemWithIdentifier:identifier data:data]];
+    }
+    return items;
+}
+
 - (instancetype)initWithIdentifier:(NSString*)identifier data:(id)data {
     self = [super init];
     if(self != nil) {
+        _identifier = identifier;
+        _data = data;
         _originFrame = CGRectNull;
         _updateFrame = CGRectNull;
         _displayFrame = CGRectNull;
         _allowsSelection = YES;
         _allowsHighlighting = YES;
         _allowsEditing = YES;
-        
-        self.identifier = identifier;
-        self.data = data;
         
         [self setup];
     }
@@ -97,51 +92,41 @@
 }
 
 - (void)dealloc {
-    self.identifier = nil;
-    self.data = nil;
 }
 
 #pragma mark Property
 
-- (void)setParentContainer:(id< MobilyDataContainer >)parentContainer {
-    if(_parentContainer != parentContainer) {
-        if(_parentContainer != nil) {
-            if(_allowsSnapToEdge == YES) {
-                [_parentContainer removeSnapToEdgeItem:self];
-            }
-        }
-        _parentContainer = parentContainer;
-        if(_parentContainer != nil) {
-            self.widget = parentContainer.widget;
-            if(_allowsSnapToEdge == YES) {
-                [_parentContainer addSnapToEdgeItem:self];
-            }
+- (void)setParent:(MobilyDataContainer*)parent {
+    if(_parent != parent) {
+        _parent = parent;
+        if(_parent != nil) {
+            self.view = parent.view;
         } else {
-            self.widget = nil;
+            self.view = nil;
         }
     }
 }
 
-- (void)setView:(UIView< MobilyDataItemView >*)view {
-    if(_view != view) {
-        if(_view != nil) {
-            _view.item = nil;
+- (void)setCell:(MobilyDataCell*)cell {
+    if(_cell != cell) {
+        if(_cell != nil) {
+            _cell.item = nil;
         }
-        _view = view;
-        if(_view != nil) {
+        _cell = cell;
+        if(_cell != nil) {
             BOOL animationsEnabled = [UIView areAnimationsEnabled];
             if(animationsEnabled == YES) {
                 [UIView setAnimationsEnabled:NO];
             }
-            _view.item = self;
+            _cell.item = self;
             if(CGRectIsNull(_originFrame) == NO) {
-                _view.frame = _originFrame;
+                _cell.frame = _originFrame;
             }
-            _view.zPosition = _zOrder;
-            _view.selected = _selected;
-            _view.highlighted = _highlighted;
+            _cell.zPosition = _zOrder;
+            _cell.selected = _selected;
+            _cell.highlighted = _highlighted;
             [UIView setAnimationsEnabled:animationsEnabled];
-            _view.frame = self.frame;
+            _cell.frame = self.frame;
         }
     }
 }
@@ -152,8 +137,8 @@
         if(CGRectIsNull(_originFrame) == YES) {
             _originFrame = _updateFrame;
         }
-        if((_view != nil) && ((CGRectIsNull(_updateFrame) == NO) && (CGRectIsNull(_displayFrame) == YES))) {
-            _view.frame = _updateFrame;
+        if((_cell != nil) && ((CGRectIsNull(_updateFrame) == NO) && (CGRectIsNull(_displayFrame) == YES))) {
+            _cell.frame = _updateFrame;
         }
     }
 }
@@ -161,8 +146,8 @@
 - (void)setDisplayFrame:(CGRect)displayFrame {
     if(CGRectEqualToRect(_displayFrame, displayFrame) == NO) {
         _displayFrame = displayFrame;
-        if((_view != nil) && (CGRectIsNull(_displayFrame) == NO)) {
-            _view.frame = _displayFrame;
+        if((_cell != nil) && (CGRectIsNull(_displayFrame) == NO)) {
+            _cell.frame = _displayFrame;
         }
     }
 }
@@ -186,23 +171,8 @@
 - (void)setZOrder:(CGFloat)zOrder {
     if(_zOrder != zOrder) {
         _zOrder = zOrder;
-        if(_view != nil) {
-            _view.zPosition = zOrder;
-        }
-    }
-}
-
-- (void)setAllowsSnapToEdge:(BOOL)allowsSnapToEdge {
-    if(_allowsSnapToEdge != allowsSnapToEdge) {
-        if((_parentContainer != nil) && (_allowsSnapToEdge == YES)) {
-            [_parentContainer removeSnapToEdgeItem:self];
-        }
-        _allowsSnapToEdge = allowsSnapToEdge;
-        if((_parentContainer != nil) && (_allowsSnapToEdge == YES)) {
-            [_parentContainer addSnapToEdgeItem:self];
-        }
-        if(_widget != nil) {
-            [_widget setNeedLayoutForVisible];
+        if(_cell != nil) {
+            _cell.zPosition = zOrder;
         }
     }
 }
@@ -222,23 +192,23 @@
 #pragma mark Public
 
 - (BOOL)containsEventForKey:(id)key {
-    return [_widget containsEventForKey:key];
+    return [_view containsEventForKey:key];
 }
 
-- (id)performEventForKey:(id)key byObject:(id)object {
-    return [_widget performEventForKey:key bySender:self byObject:object];
+- (id)fireEventForKey:(id)key byObject:(id)object {
+    return [_view fireEventForKey:key bySender:self byObject:object];
 }
 
-- (id)performEventForKey:(id)key byObject:(id)object defaultResult:(id)defaultResult {
-    return [_widget performEventForKey:key bySender:self byObject:object defaultResult:defaultResult];
+- (id)fireEventForKey:(id)key byObject:(id)object orDefault:(id)orDefault {
+    return [_view fireEventForKey:key bySender:self byObject:object orDefault:orDefault];
 }
 
-- (id)performEventForKey:(id)key bySender:(id)sender byObject:(id)object {
-    return [_widget performEventForKey:key bySender:sender byObject:object];
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
+    return [_view fireEventForKey:key bySender:sender byObject:object];
 }
 
-- (id)performEventForKey:(id)key bySender:(id)sender byObject:(id)object defaultResult:(id)defaultResult {
-    return [_widget performEventForKey:key bySender:sender byObject:object defaultResult:defaultResult];
+- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
+    return [_view fireEventForKey:key bySender:sender byObject:object orDefault:orDefault];
 }
 
 - (void)didBeginUpdate {
@@ -246,27 +216,27 @@
 
 - (void)didEndUpdate {
     self.originFrame = _updateFrame;
-    if(_view != nil) {
-        _view.frame = self.frame;
+    if(_cell != nil) {
+        _cell.frame = self.frame;
     }
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     if(_selected != selected) {
         _selected = selected;
-        if(_widget != nil) {
+        if(_cell != nil) {
             if(_selected == YES) {
-                if([_widget isSelectedItem:self] == NO) {
-                    [_widget selectItem:self animated:animated];
+                if([_view isSelectedItem:self] == NO) {
+                    [_view selectItem:self animated:animated];
                 }
             } else {
-                if([_widget isSelectedItem:self] == YES) {
-                    [_widget deselectItem:self animated:animated];
+                if([_view isSelectedItem:self] == YES) {
+                    [_view deselectItem:self animated:animated];
                 }
             }
         }
-        if(_view != nil) {
-            [_view setSelected:_selected animated:animated];
+        if(_cell != nil) {
+            [_cell setSelected:_selected animated:animated];
         }
     }
 }
@@ -274,19 +244,19 @@
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
     if(_highlighted != highlighted) {
         _highlighted = highlighted;
-        if(_widget != nil) {
+        if(_cell != nil) {
             if(_highlighted == YES) {
-                if([_widget isHighlightedItem:self] == NO) {
-                    [_widget highlightItem:self animated:animated];
+                if([_view isHighlightedItem:self] == NO) {
+                    [_view highlightItem:self animated:animated];
                 }
             } else {
-                if([_widget isHighlightedItem:self] == YES) {
-                    [_widget unhighlightItem:self animated:animated];
+                if([_view isHighlightedItem:self] == YES) {
+                    [_view unhighlightItem:self animated:animated];
                 }
             }
         }
-        if(_view != nil) {
-            [_view setHighlighted:_highlighted animated:animated];
+        if(_cell != nil) {
+            [_cell setHighlighted:_highlighted animated:animated];
         }
     }
 }
@@ -294,57 +264,137 @@
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
     if(_editing != editing) {
         _editing = editing;
-        if(_widget != nil) {
+        if(_cell != nil) {
             if(_editing == YES) {
-                if([_widget isEditingItem:self] == NO) {
-                    [_widget beganEditItem:self animated:animated];
+                if([_view isEditingItem:self] == NO) {
+                    [_view beganEditItem:self animated:animated];
                 }
             } else {
-                if([_widget isEditingItem:self] == YES) {
-                    [_widget endedEditItem:self animated:animated];
+                if([_view isEditingItem:self] == YES) {
+                    [_view endedEditItem:self animated:animated];
                 }
             }
         }
-        if(_view != nil) {
-            [_view setEditing:_editing animated:NO];
+        if(_cell != nil) {
+            [_cell setEditing:_editing animated:NO];
         }
     }
 }
 
 - (CGSize)sizeForAvailableSize:(CGSize)size {
-    Class< MobilyDataItemView > viewClass = [_widget viewClassWithItem:self];
-    if(viewClass != nil) {
-        return [viewClass sizeForItem:_data availableSize:size];
+    Class cellClass = [_view cellClassWithItem:self];
+    if(cellClass != nil) {
+        return [cellClass sizeForItem:_data availableSize:size];
     }
     return CGSizeZero;
 }
 
 - (void)appear {
-    [_widget appearItem:self];
+    [_view appearItem:self];
 }
 
 - (void)disappear {
-    [_widget disappearItem:self];
+    [_view disappearItem:self];
 }
 
 - (void)validateLayoutForBounds:(CGRect)bounds {
-    if(_view == nil) {
+    if(_cell == nil) {
         if(CGRectIntersectsRect(bounds, CGRectUnion(_originFrame, self.frame)) == YES) {
             [self appear];
         }
     } else {
-        [_view validateLayoutForBounds:bounds];
+        [_cell validateLayoutForBounds:bounds];
     }
 }
 
 - (void)invalidateLayoutForBounds:(CGRect)bounds {
-    if(_view != nil) {
+    if(_cell != nil) {
         if(CGRectIntersectsRect(bounds, self.frame) == NO) {
             [self disappear];
         } else {
-            [_view invalidateLayoutForBounds:bounds];
+            [_cell invalidateLayoutForBounds:bounds];
         }
     }
+}
+
+@end
+
+/*--------------------------------------------------*/
+
+@implementation MobilyDataItemCalendarMonth
+
+#pragma mark Synthesize
+
+@synthesize calendar = _calendar;
+@synthesize beginDate = _beginDate;
+@synthesize endDate = _endDate;
+
+#pragma mark Init / Free
+
++ (instancetype)dataItemWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate data:(id)data {
+    return [[self alloc] initWithCalendar:calendar beginDate:beginDate endDate:endDate data:data];
+}
+
+- (instancetype)initWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate data:(id)data {
+    self = [super initWithIdentifier:MobilyDataCalendarMonthIdentifier data:data];
+    if(self != nil) {
+        _calendar = calendar;
+        _beginDate = beginDate;
+        _endDate = endDate;
+    }
+    return self;
+}
+
+@end
+
+/*--------------------------------------------------*/
+
+@implementation MobilyDataItemCalendarWeekday
+
+#pragma mark Synthesize
+
+@synthesize calendar = _calendar;
+@synthesize date = _date;
+
+#pragma mark Init / Free
+
++ (instancetype)dataItemWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data {
+    return [[self alloc] initWithCalendar:calendar date:date data:data];
+}
+
+- (instancetype)initWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data {
+    self = [super initWithIdentifier:MobilyDataCalendarWeekdayIdentifier data:data];
+    if(self != nil) {
+        _calendar = calendar;
+        _date = date;
+    }
+    return self;
+}
+
+@end
+
+/*--------------------------------------------------*/
+
+@implementation MobilyDataItemCalendarDay
+
+#pragma mark Synthesize
+
+@synthesize calendar = _calendar;
+@synthesize date = _date;
+
+#pragma mark Init / Free
+
++ (instancetype)dataItemWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data {
+    return [[self alloc] initWithCalendar:calendar date:date data:data];
+}
+
+- (instancetype)initWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data {
+    self = [super initWithIdentifier:MobilyDataCalendarDayIdentifier data:data];
+    if(self != nil) {
+        _calendar = calendar;
+        _date = date;
+    }
+    return self;
 }
 
 @end

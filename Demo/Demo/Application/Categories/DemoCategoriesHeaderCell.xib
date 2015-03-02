@@ -5,7 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DemoDataScrollViewItemView">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DemoCategoriesHeaderCell">
             <connections>
                 <outlet property="rootView" destination="lUL-MD-0aZ" id="ChF-38-KVW"/>
                 <outlet property="textView" destination="CQR-jM-dxK" id="sCP-Te-cNh"/>
@@ -16,24 +16,32 @@
             <rect key="frame" x="0.0" y="0.0" width="311" height="80"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CQR-jM-dxK">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CQR-jM-dxK">
                     <rect key="frame" x="8" y="8" width="295" height="64"/>
-                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gXG-YQ-Cwm">
+                    <rect key="frame" x="0.0" y="79" width="311" height="1"/>
+                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="Xbm-hE-Dg4"/>
+                    </constraints>
+                </view>
             </subviews>
-            <color key="backgroundColor" red="0.43137254899999999" green="0.74509803919999995" blue="0.27450980390000002" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" white="0.80052287581699344" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstAttribute="trailing" secondItem="gXG-YQ-Cwm" secondAttribute="trailing" id="7cZ-Mn-F6f"/>
+                <constraint firstItem="gXG-YQ-Cwm" firstAttribute="leading" secondItem="lUL-MD-0aZ" secondAttribute="leading" id="Bbj-yR-pqJ"/>
+                <constraint firstAttribute="bottom" secondItem="gXG-YQ-Cwm" secondAttribute="bottom" id="PP1-ks-ZWB"/>
                 <constraint firstAttribute="bottom" secondItem="CQR-jM-dxK" secondAttribute="bottom" constant="8" id="SAX-DT-yJV"/>
                 <constraint firstAttribute="trailing" secondItem="CQR-jM-dxK" secondAttribute="trailing" constant="8" id="UPu-d4-dPs"/>
                 <constraint firstItem="CQR-jM-dxK" firstAttribute="leading" secondItem="lUL-MD-0aZ" secondAttribute="leading" constant="8" id="oXA-0s-CXw"/>
                 <constraint firstItem="CQR-jM-dxK" firstAttribute="top" secondItem="lUL-MD-0aZ" secondAttribute="top" constant="8" id="ruv-vu-F4N"/>
             </constraints>
-            <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-99.5" y="97"/>
+            <point key="canvasLocation" x="31.5" y="204"/>
         </view>
     </objects>
 </document>

@@ -33,90 +33,63 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyDataItemView.h"
+#import "MobilyDataCell+Private.h"
 
 /*--------------------------------------------------*/
 
-typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
-    MobilyTableSwipeCellDirectionUnknown,
-    MobilyTableSwipeCellDirectionLeft,
-    MobilyTableSwipeCellDirectionRight
-};
+@implementation MobilyDataCellSwipe
 
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
+#pragma mark Synthesize
 
-@interface MobilyDataItemSwipeView ()
-
-@property(nonatomic, readwrite, strong) UIPanGestureRecognizer* panGestureRecognizer;
-@property(nonatomic, readwrite, getter=isSwipeDragging) BOOL swipeDragging;
-@property(nonatomic, readwrite, getter=isSwipeDecelerating) BOOL swipeDecelerating;
-
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintLeftSwipeViewOffsetX;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintLeftSwipeViewCenterY;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintLeftSwipeViewWidth;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintLeftSwipeViewHeight;
-
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintRightSwipeViewOffsetX;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintRightSwipeViewCenterY;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintRightSwipeViewWidth;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintRightSwipeViewHeight;
-
-@property(nonatomic, readwrite, assign) CGFloat panSwipeLastOffset;
-@property(nonatomic, readwrite, assign) CGFloat panSwipeLastVelocity;
-@property(nonatomic, readwrite, assign) CGFloat panSwipeProgress;
-@property(nonatomic, readwrite, assign) CGFloat panSwipeLeftWidth;
-@property(nonatomic, readwrite, assign) CGFloat panSwipeRightWidth;
-@property(nonatomic, readwrite, assign) MobilyTableSwipeCellDirection panSwipeDirection;
-
-- (UIOffset)rootOffsetOfCenterBySwipeProgress:(CGFloat)swipeProgress;
-- (CGFloat)leftOffsetBySwipeProgress:(CGFloat)swipeProgress;
-- (CGFloat)rightOffsetBySwipeProgress:(CGFloat)swipeProgress;
-
-- (void)setSwipeProgress:(CGFloat)swipeProgress speed:(CGFloat)speed endedSwipe:(BOOL)endedSwipe;
-
-- (void)handlerPanGestureRecognizer:(UIPanGestureRecognizer*)gestureRecognizer;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@implementation MobilyDataItemSwipeView
+@synthesize panGestureRecognizer = _panGestureRecognizer;
+@synthesize swipeStyle = _swipeStyle;
+@synthesize swipeThreshold = _swipeThreshold;
+@synthesize swipeVelocity = _swipeVelocity;
+@synthesize swipeSpeed = _swipeSpeed;
+@synthesize swipeDragging = _swipeDragging;
+@synthesize swipeDecelerating = _swipeDecelerating;
+@synthesize showedLeftSwipeView = _showedLeftSwipeView;
+@synthesize leftSwipeView = _leftSwipeView;
+@synthesize leftSwipeOffset = _leftSwipeOffset;
+@synthesize leftSwipeSize = _leftSwipeSize;
+@synthesize showedRightSwipeView = _showedRightSwipeView;
+@synthesize rightSwipeView = _rightSwipeView;
+@synthesize rightSwipeOffset = _rightSwipeOffset;
+@synthesize rightSwipeSize = _rightSwipeSize;
+@synthesize constraintLeftSwipeViewOffsetX = _constraintLeftSwipeViewOffsetX;
+@synthesize constraintLeftSwipeViewCenterY = _constraintLeftSwipeViewCenterY;
+@synthesize constraintLeftSwipeViewWidth = _constraintLeftSwipeViewWidth;
+@synthesize constraintLeftSwipeViewHeight = _constraintLeftSwipeViewHeight;
+@synthesize constraintRightSwipeViewOffsetX = _constraintRightSwipeViewOffsetX;
+@synthesize constraintRightSwipeViewCenterY = _constraintRightSwipeViewCenterY;
+@synthesize constraintRightSwipeViewWidth = _constraintRightSwipeViewWidth;
+@synthesize constraintRightSwipeViewHeight = _constraintRightSwipeViewHeight;
+@synthesize panSwipeLastOffset = _panSwipeLastOffset;
+@synthesize panSwipeLastVelocity = _panSwipeLastVelocity;
+@synthesize panSwipeProgress = _panSwipeProgress;
+@synthesize panSwipeLeftWidth = _panSwipeLeftWidth;
+@synthesize panSwipeRightWidth = _panSwipeRightWidth;
+@synthesize panSwipeDirection = _panSwipeDirection;
 
 #pragma mark Init / Free
 
 - (void)setup {
     [super setup];
     
-    self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlerPanGestureRecognizer:)];
+    self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_handlerPanGestureRecognizer:)];
     
-    self.swipeStyle = MobilyDataItemSwipeViewStyleLeaves;
-    self.swipeThreshold = 2.0f;
-    self.swipeSpeed = 1050.0f;
-    self.swipeVelocity = 570.0f;
-    self.leftSwipeSize = -1.0f;
-    self.rightSwipeSize = -1.0f;
-    self.rootOffsetOfCenter = [self rootOffsetOfCenterBySwipeProgress:0.0f];
-    self.leftSwipeOffset = [self leftOffsetBySwipeProgress:0.0f];
-    self.rightSwipeOffset = [self rightOffsetBySwipeProgress:0.0f];
+    _swipeStyle = MobilyDataSwipeCellStyleLeaves;
+    _swipeThreshold = 2.0f;
+    _swipeSpeed = 1050.0f;
+    _swipeVelocity = 570.0f;
+    _leftSwipeSize = -1.0f;
+    _rightSwipeSize = -1.0f;
+    _rootOffsetOfCenter = [self _rootViewOffsetOfCenterBySwipeProgress:0.0f];
+    _leftSwipeOffset = [self _leftViewOffsetBySwipeProgress:0.0f];
+    _rightSwipeOffset = [self _rightViewOffsetBySwipeProgress:0.0f];
 }
 
 - (void)dealloc {
-    self.rootView = nil;
-    self.panGestureRecognizer = nil;
-    self.constraintLeftSwipeViewOffsetX = nil;
-    self.constraintLeftSwipeViewCenterY = nil;
-    self.constraintLeftSwipeViewWidth = nil;
-    self.constraintLeftSwipeViewHeight = nil;
-    self.leftSwipeView = nil;
-    self.constraintRightSwipeViewOffsetX = nil;
-    self.constraintRightSwipeViewCenterY = nil;
-    self.constraintRightSwipeViewWidth = nil;
-    self.constraintRightSwipeViewHeight = nil;
-    self.rightSwipeView = nil;
 }
 
 #pragma mark UIView
@@ -176,7 +149,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 - (NSArray*)orderedSubviews {
     NSMutableArray* result = NSMutableArray.array;
     switch(_swipeStyle) {
-        case MobilyDataItemSwipeViewStyleStands: {
+        case MobilyDataSwipeCellStyleStands: {
             if(_leftSwipeView != nil) {
                 [result addObject:_leftSwipeView];
             }
@@ -188,8 +161,8 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
             }
             break;
         }
-        case MobilyDataItemSwipeViewStyleLeaves:
-        case MobilyDataItemSwipeViewStylePushes: {
+        case MobilyDataSwipeCellStyleLeaves:
+        case MobilyDataSwipeCellStylePushes: {
             if(self.rootView != nil) {
                 [result addObject:self.rootView];
             }
@@ -216,7 +189,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 - (void)setRootView:(UIView*)rootView {
     super.rootView = rootView;
     
-    self.rootOffsetOfCenter = [self rootOffsetOfCenterBySwipeProgress:0.0f];
+    self.rootOffsetOfCenter = [self _rootViewOffsetOfCenterBySwipeProgress:0.0f];
 }
 
 - (void)setPanGestureRecognizer:(UIPanGestureRecognizer*)panGestureRecognizer {
@@ -232,7 +205,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
     }
 }
 
-- (void)setSwipeStyle:(MobilyDataItemSwipeViewStyle)swipeStyle {
+- (void)setSwipeStyle:(MobilyDataSwipeCellStyle)swipeStyle {
     if(_swipeStyle != swipeStyle) {
         self.constraintLeftSwipeViewOffsetX = nil;
         self.constraintLeftSwipeViewCenterY = nil;
@@ -244,9 +217,9 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
         self.constraintRightSwipeViewHeight = nil;
         _swipeStyle = swipeStyle;
         [self setSubviews:self.orderedSubviews];
-        self.rootOffsetOfCenter = [self rootOffsetOfCenterBySwipeProgress:0.0f];
-        self.leftSwipeOffset = [self leftOffsetBySwipeProgress:0.0f];
-        self.rightSwipeOffset = [self rightOffsetBySwipeProgress:0.0f];
+        self.rootOffsetOfCenter = [self _rootViewOffsetOfCenterBySwipeProgress:0.0f];
+        self.leftSwipeOffset = [self _leftViewOffsetBySwipeProgress:0.0f];
+        self.rightSwipeOffset = [self _rightViewOffsetBySwipeProgress:0.0f];
         [self setNeedsUpdateConstraints];
     }
 }
@@ -265,7 +238,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
             _leftSwipeView.translatesAutoresizingMaskIntoConstraints = NO;
             [self setSubviews:self.orderedSubviews];
         }
-        self.leftSwipeOffset = [self leftOffsetBySwipeProgress:0.0f];
+        self.leftSwipeOffset = [self _leftViewOffsetBySwipeProgress:0.0f];
         [self setNeedsUpdateConstraints];
     }
 }
@@ -352,7 +325,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
             _rightSwipeView.translatesAutoresizingMaskIntoConstraints = NO;
             [self setSubviews:self.orderedSubviews];
         }
-        self.rightSwipeOffset = [self rightOffsetBySwipeProgress:0.0f];
+        self.rightSwipeOffset = [self _rightViewOffsetBySwipeProgress:0.0f];
         [self setNeedsUpdateConstraints];
     }
 }
@@ -433,7 +406,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
         _showedRightSwipeView = NO;
         
         CGFloat needSwipeProgress = (showedLeftSwipeView == YES) ? -1.0f : 0.0f;
-        [self setSwipeProgress:needSwipeProgress
+        [self _updateSwipeProgress:needSwipeProgress
                          speed:(animated == YES) ? [_leftSwipeView frameWidth] * ABS(needSwipeProgress - _panSwipeProgress) : FLT_EPSILON
                     endedSwipe:NO];
     }
@@ -445,7 +418,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
         _showedLeftSwipeView = NO;
         
         CGFloat needSwipeProgress = (_showedRightSwipeView == YES) ? 1.0f : 0.0f;
-        [self setSwipeProgress:needSwipeProgress
+        [self _updateSwipeProgress:needSwipeProgress
                          speed:(animated == YES) ? [_rightSwipeView frameWidth] * ABS(needSwipeProgress - _panSwipeProgress) : FLT_EPSILON
                     endedSwipe:NO];
     }
@@ -481,10 +454,10 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 
 #pragma mark Private
 
-- (UIOffset)rootOffsetOfCenterBySwipeProgress:(CGFloat)swipeProgress {
+- (UIOffset)_rootViewOffsetOfCenterBySwipeProgress:(CGFloat)swipeProgress {
     switch(_swipeStyle) {
-        case MobilyDataItemSwipeViewStyleStands:
-        case MobilyDataItemSwipeViewStyleLeaves: {
+        case MobilyDataSwipeCellStyleStands:
+        case MobilyDataSwipeCellStyleLeaves: {
             if(swipeProgress < 0.0f) {
                 return UIOffsetMake(_leftSwipeView.frameWidth * (-swipeProgress), 0.0f);
             } else if(swipeProgress > 0.0f) {
@@ -492,19 +465,19 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
             }
             break;
         }
-        case MobilyDataItemSwipeViewStylePushes:
+        case MobilyDataSwipeCellStylePushes:
             break;
     }
     return UIOffsetMake(0.0f, 0.0f);
 }
 
-- (CGFloat)leftOffsetBySwipeProgress:(CGFloat)swipeProgress {
+- (CGFloat)_leftViewOffsetBySwipeProgress:(CGFloat)swipeProgress {
     CGFloat leftSwipeWidth = _leftSwipeView.frameWidth;
     switch(_swipeStyle) {
-        case MobilyDataItemSwipeViewStyleStands:
+        case MobilyDataSwipeCellStyleStands:
             return 0.0f;
-        case MobilyDataItemSwipeViewStyleLeaves:
-        case MobilyDataItemSwipeViewStylePushes:
+        case MobilyDataSwipeCellStyleLeaves:
+        case MobilyDataSwipeCellStylePushes:
             if(swipeProgress < 0.0f) {
                 return -leftSwipeWidth + (leftSwipeWidth * (-swipeProgress));
             }
@@ -513,13 +486,13 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
     return -leftSwipeWidth;
 }
 
-- (CGFloat)rightOffsetBySwipeProgress:(CGFloat)swipeProgress {
+- (CGFloat)_rightViewOffsetBySwipeProgress:(CGFloat)swipeProgress {
     CGFloat rightSwipeWidth = _rightSwipeView.frameWidth;
     switch(_swipeStyle) {
-        case MobilyDataItemSwipeViewStyleStands:
+        case MobilyDataSwipeCellStyleStands:
             return 0.0f;
-        case MobilyDataItemSwipeViewStyleLeaves:
-        case MobilyDataItemSwipeViewStylePushes:
+        case MobilyDataSwipeCellStyleLeaves:
+        case MobilyDataSwipeCellStylePushes:
             if(swipeProgress > 0.0f) {
                 return rightSwipeWidth * (1.0f - swipeProgress);
             }
@@ -528,15 +501,15 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
     return rightSwipeWidth;
 }
 
-- (void)setSwipeProgress:(CGFloat)swipeProgress speed:(CGFloat)speed endedSwipe:(BOOL)endedSwipe {
+- (void)_updateSwipeProgress:(CGFloat)swipeProgress speed:(CGFloat)speed endedSwipe:(BOOL)endedSwipe {
     CGFloat minSwipeProgress = (_panSwipeDirection == MobilyTableSwipeCellDirectionLeft) ? -1.0f : 0.0f;
     CGFloat maxSwipeProgress = (_panSwipeDirection == MobilyTableSwipeCellDirectionRight) ? 1.0f :0.0f;
     CGFloat normalizedSwipeProgress = MIN(MAX(minSwipeProgress, swipeProgress), maxSwipeProgress);
     if(_panSwipeProgress != normalizedSwipeProgress) {
         _panSwipeProgress = normalizedSwipeProgress;
-        self.rootOffsetOfCenter = [self rootOffsetOfCenterBySwipeProgress:_panSwipeProgress];
-        self.leftSwipeOffset = [self leftOffsetBySwipeProgress:_panSwipeProgress];
-        self.rightSwipeOffset = [self rightOffsetBySwipeProgress:_panSwipeProgress];
+        self.rootOffsetOfCenter = [self _rootViewOffsetOfCenterBySwipeProgress:_panSwipeProgress];
+        self.leftSwipeOffset = [self _leftViewOffsetBySwipeProgress:_panSwipeProgress];
+        self.rightSwipeOffset = [self _rightViewOffsetBySwipeProgress:_panSwipeProgress];
         [self setNeedsUpdateConstraints];
         
         [UIView animateWithDuration:ABS(speed) / _swipeSpeed
@@ -554,7 +527,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
     }
 }
 
-- (void)handlerPanGestureRecognizer:(UIPanGestureRecognizer*)gestureRecognizer {
+- (void)_handlerPanGestureRecognizer:(UIPanGestureRecognizer*)gestureRecognizer {
     if(_swipeDecelerating == NO) {
         CGPoint translation = [gestureRecognizer translationInView:self];
         CGPoint velocity = [gestureRecognizer velocityInView:self];
@@ -592,13 +565,13 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
                         }
                         case MobilyTableSwipeCellDirectionLeft: {
                             CGFloat localDelta = MIN(MAX(_panSwipeLeftWidth, delta), -_panSwipeLeftWidth);
-                            [self setSwipeProgress:_panSwipeProgress - (localDelta / _panSwipeLeftWidth) speed:localDelta endedSwipe:NO];
+                            [self _updateSwipeProgress:_panSwipeProgress - (localDelta / _panSwipeLeftWidth) speed:localDelta endedSwipe:NO];
                             [self movingSwipe:_panSwipeProgress];
                             break;
                         }
                         case MobilyTableSwipeCellDirectionRight: {
                             CGFloat localDelta = MIN(MAX(-_panSwipeRightWidth, delta), _panSwipeRightWidth);
-                            [self setSwipeProgress:_panSwipeProgress + (localDelta / _panSwipeRightWidth) speed:localDelta endedSwipe:NO];
+                            [self _updateSwipeProgress:_panSwipeProgress + (localDelta / _panSwipeRightWidth) speed:localDelta endedSwipe:NO];
                             [self movingSwipe:_panSwipeProgress];
                             break;
                         }
@@ -617,11 +590,11 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
                 CGFloat needSwipeProgress = MIN(MAX(minSwipeProgress, swipeProgress), maxSwipeProgress);
                 switch(_panSwipeDirection) {
                     case MobilyTableSwipeCellDirectionLeft: {
-                        [self setSwipeProgress:needSwipeProgress speed:_panSwipeLeftWidth * ABS(needSwipeProgress - _panSwipeProgress) endedSwipe:YES];
+                        [self _updateSwipeProgress:needSwipeProgress speed:_panSwipeLeftWidth * ABS(needSwipeProgress - _panSwipeProgress) endedSwipe:YES];
                         break;
                     }
                     case MobilyTableSwipeCellDirectionRight: {
-                        [self setSwipeProgress:needSwipeProgress speed:_panSwipeRightWidth * ABS(needSwipeProgress - _panSwipeProgress) endedSwipe:YES];
+                        [self _updateSwipeProgress:needSwipeProgress speed:_panSwipeRightWidth * ABS(needSwipeProgress - _panSwipeProgress) endedSwipe:YES];
                         break;
                     }
                     default: {
@@ -643,7 +616,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer {
     if(gestureRecognizer == _panGestureRecognizer) {
         if((_swipeDragging == NO) && (_swipeDecelerating == NO)) {
-            if([self.item.widget shouldBeganEditItem:self.item] == YES) {
+            if([self.item.view shouldBeganEditItem:self.item] == YES) {
                 CGPoint translation = [_panGestureRecognizer translationInView:self];
                 if(fabs(translation.x) >= fabs(translation.y)) {
                     if((_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (translation.x < 0.0f)) {

@@ -33,53 +33,32 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyNS.h"
+#import "MobilyData.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyGrid : NSObject< NSCopying >
-
-@property(nonatomic, readonly, assign) NSUInteger numberOfColumns;
-@property(nonatomic, readonly, assign) NSUInteger numberOfRows;
-@property(nonatomic, readonly, assign) NSUInteger count;
-
-+ (instancetype)grid;
-+ (instancetype)gridWithColumns:(NSUInteger)columns rows:(NSUInteger)rows;
-+ (instancetype)gridWithColumns:(NSUInteger)columns rows:(NSUInteger)rows objects:(NSArray*)objects;
-+ (instancetype)gridWithGrid:(MobilyGrid*)grid;
-
-- (instancetype)initWithColumns:(NSUInteger)columns rows:(NSUInteger)rows;
-- (instancetype)initWithColumns:(NSUInteger)columns rows:(NSUInteger)rows objects:(NSArray*)objects;
-- (instancetype)initWithGrid:(MobilyGrid*)grid;
-
-- (BOOL)containsColumn:(NSUInteger)column row:(NSUInteger)row;
-- (BOOL)isEmptyColumn:(NSInteger)column;
-- (BOOL)isEmptyRow:(NSInteger)row;
-
-- (id)objectAtColumn:(NSUInteger)column atRow:(NSUInteger)row;
-- (NSArray*)objects;
-
-- (void)eachColumnsRows:(void(^)(id object, NSUInteger column, NSUInteger row))block;
-- (void)eachRowsColumns:(void(^)(id object, NSUInteger column, NSUInteger row))block;
-- (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block byColumn:(NSInteger)column;
-- (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block byRow:(NSInteger)row;
-
-@end
+@class MobilyDataView;
 
 /*--------------------------------------------------*/
 
-@interface MobilyMutableGrid : MobilyGrid
+typedef NS_ENUM(NSUInteger, MobilyDataRefreshViewState) {
+    MobilyDataRefreshViewStateIdle = 0,
+    MobilyDataRefreshViewStatePull,
+    MobilyDataRefreshViewStateRelease,
+    MobilyDataRefreshViewStateLoading
+};
 
-- (void)setNumberOfColumns:(NSUInteger)numberOfColumns numberOfRows:(NSUInteger)numberOfRows;
+/*----------------------------------------------*/
 
-- (void)setObject:(id)object atColumn:(NSUInteger)column atRow:(NSUInteger)row;
-- (void)setObjects:(NSArray*)objects;
+@interface MobilyDataRefreshView : UIView< MobilyBuilderObject >
 
-- (void)insertColumn:(NSUInteger)column objects:(NSArray*)objects;
-- (void)insertRow:(NSUInteger)row objects:(NSArray*)objects;
-- (void)removeColumn:(NSUInteger)column;
-- (void)removeRow:(NSUInteger)row;
-- (void)removeAllObjects;
+@property(nonatomic, readonly, weak) MobilyDataView* view;
+@property(nonatomic, readonly, assign) MobilyDataRefreshViewState state;
+
+- (void)didIdle;
+- (void)didPull;
+- (void)didRelease;
+- (void)didLoading;
 
 @end
 
