@@ -113,10 +113,30 @@
 @property(nonatomic, readwrite, assign) BOOL canPullToRefresh;
 @property(nonatomic, readwrite, assign) BOOL canPullToLoad;
 
-- (void)notificationReceiveMemoryWarning:(NSNotification*)notification;
+- (void)_receiveMemoryWarning;
 
-- (void)internalBatchUpdate:(MobilyDataViewUpdateBlock)update;
-- (void)internalBatchComplete:(MobilyDataViewUpdateBlock)complete;
+- (void)_appearItem:(MobilyDataItem*)item;
+- (void)_disappearItem:(MobilyDataItem*)item;
+
+- (void)_didInsertItems:(NSArray*)items;
+- (void)_didDeleteItems:(NSArray*)items;
+- (void)_didReplaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items;
+
+- (void)_validateLayout;
+- (void)_layoutForVisible;
+
+- (void)_updateSuperviewConstraints;
+
+- (void)_willBeginDragging;
+- (void)_didScroll;
+- (void)_willEndDraggingWithVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset;
+- (void)_didEndDraggingWillDecelerate:(BOOL)decelerate;
+- (void)_willBeginDecelerating;
+- (void)_didEndDecelerating;
+- (void)_didEndScrollingAnimation;
+
+- (void)_batchUpdate:(MobilyDataViewUpdateBlock)update;
+- (void)_batchComplete:(MobilyDataViewUpdateBlock)complete;
 
 @end
 

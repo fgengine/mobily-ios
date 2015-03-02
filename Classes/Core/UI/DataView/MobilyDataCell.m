@@ -82,8 +82,8 @@
 }
 
 - (void)setup {
-    self.hidden = YES;
     self.clipsToBounds = YES;
+    self.hidden = YES;
     self.pressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_handlerPressGestureRecognizer:)];
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_handlerTapGestureRecognizer:)];
     self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_handlerLongPressGestureRecognizer:)];
@@ -305,13 +305,15 @@
 
 - (void)animateAction:(MobilyDataCellAction)action {
     switch(action) {
+        case MobilyDataCellActionRestore: {
+            self.zPosition = _item.zOrder;
+            self.alpha = 1.0f;
+            break;
+        }
         case MobilyDataCellActionInsert: {
-            BOOL animationsEnabled = [UIView areAnimationsEnabled];
-            if(animationsEnabled == YES) {
-                [UIView setAnimationsEnabled:NO];
-            }
-            self.alpha = 0.0f;
-            [UIView setAnimationsEnabled:animationsEnabled];
+            [UIView performWithoutAnimation:^{
+                self.alpha = 0.0f;
+            }];
             self.zPosition = _item.zOrder;
             self.alpha = 1.0f;
             break;
@@ -327,12 +329,9 @@
             break;
         }
         case MobilyDataCellActionReplaceIn: {
-            BOOL animationsEnabled = [UIView areAnimationsEnabled];
-            if(animationsEnabled == YES) {
-                [UIView setAnimationsEnabled:NO];
-            }
-            self.alpha = 0.0f;
-            [UIView setAnimationsEnabled:animationsEnabled];
+            [UIView performWithoutAnimation:^{
+                self.alpha = 0.0f;
+            }];
             self.zPosition = _item.zOrder;
             self.alpha = 1.0f;
             break;
@@ -374,7 +373,7 @@
 #pragma mark UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
-    if((gestureRecognizer != _pressGestureRecognizer) && (otherGestureRecognizer != _tapGestureRecognizer)) {
+    if((gestureRecognizer != _pressGestureRecognizer) && (otherGestureRecognizer != _tapGestureRecognizer) && (otherGestureRecognizer != _longPressGestureRecognizer)) {
         return NO;
     }
     return YES;
@@ -385,6 +384,8 @@
         return [_item.view shouldHighlightItem:_item];
     } else if(gestureRecognizer == _tapGestureRecognizer) {
         return [_item.view shouldSelectItem:_item];
+    } else if(gestureRecognizer == _longPressGestureRecognizer) {
+        return YES;
     }
     return NO;
 }

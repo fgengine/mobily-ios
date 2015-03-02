@@ -42,6 +42,7 @@
 /*--------------------------------------------------*/
 
 typedef NS_ENUM(NSUInteger, MobilyDataCellAction) {
+    MobilyDataCellActionRestore,
     MobilyDataCellActionInsert,
     MobilyDataCellActionDelete,
     MobilyDataCellActionReplaceOut,

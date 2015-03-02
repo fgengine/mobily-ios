@@ -110,22 +110,21 @@
 - (void)setCell:(MobilyDataCell*)cell {
     if(_cell != cell) {
         if(_cell != nil) {
-            _cell.item = nil;
+            [UIView performWithoutAnimation:^{
+                _cell.item = nil;
+            }];
         }
         _cell = cell;
         if(_cell != nil) {
-            BOOL animationsEnabled = [UIView areAnimationsEnabled];
-            if(animationsEnabled == YES) {
-                [UIView setAnimationsEnabled:NO];
-            }
-            _cell.item = self;
-            if(CGRectIsNull(_originFrame) == NO) {
-                _cell.frame = _originFrame;
-            }
-            _cell.zPosition = _zOrder;
-            _cell.selected = _selected;
-            _cell.highlighted = _highlighted;
-            [UIView setAnimationsEnabled:animationsEnabled];
+            [UIView performWithoutAnimation:^{
+                _cell.item = self;
+                if(CGRectIsNull(_originFrame) == NO) {
+                    _cell.frame = _originFrame;
+                }
+                _cell.zPosition = _zOrder;
+                _cell.selected = _selected;
+                _cell.highlighted = _highlighted;
+            }];
             _cell.frame = self.frame;
         }
     }
@@ -290,11 +289,11 @@
 }
 
 - (void)appear {
-    [_view appearItem:self];
+    [_view _appearItem:self];
 }
 
 - (void)disappear {
-    [_view disappearItem:self];
+    [_view _disappearItem:self];
 }
 
 - (void)validateLayoutForBounds:(CGRect)bounds {

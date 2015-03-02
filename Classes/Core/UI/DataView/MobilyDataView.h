@@ -143,41 +143,22 @@ typedef NS_OPTIONS(NSUInteger, MobilyDataViewPosition) {
 - (void)endedEditItem:(MobilyDataItem*)item animated:(BOOL)animated;
 - (void)endedEditAllItemsAnimated:(BOOL)animated;
 
-- (void)appearItem:(MobilyDataItem*)item;
-- (void)disappearItem:(MobilyDataItem*)item;
-
 - (void)batchUpdate:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete;
 - (void)batchDuration:(NSTimeInterval)duration update:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete;
 
-- (void)didInsertItems:(NSArray*)items;
-- (void)didDeleteItems:(NSArray*)items;
-- (void)didReplaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items;
-
 - (void)setNeedValidateLayout;
 - (void)validateLayoutIfNeed;
-- (void)validateLayout;
 
 - (void)setNeedLayoutForVisible;
 - (void)layoutForVisibleIfNeed;
-- (void)layoutForVisible;
 
 - (void)scrollToItem:(MobilyDataItem*)item scrollPosition:(MobilyDataViewPosition)scrollPosition animated:(BOOL)animated;
-
-- (void)updateSuperviewConstraints;
 
 - (void)showPullToRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
 - (void)hidePullToRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
 
 - (void)showPullToLoadAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
 - (void)hidePullToLoadAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
-
-- (void)willBeginDragging;
-- (void)didScroll;
-- (void)willEndDraggingWithVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset;
-- (void)didEndDraggingWillDecelerate:(BOOL)decelerate;
-- (void)willBeginDecelerating;
-- (void)didEndDecelerating;
-- (void)didEndScrollingAnimation;
 
 @end
 

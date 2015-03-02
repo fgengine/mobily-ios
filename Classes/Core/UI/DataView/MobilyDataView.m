@@ -133,7 +133,7 @@
     
     [self registerAdjustmentResponder];
     
-    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(notificationReceiveMemoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(_receiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 }
 
 - (void)dealloc {
@@ -180,13 +180,13 @@
     [super layoutSubviews];
     
     [self validateLayoutIfNeed];
-    [self layoutForVisible];
+    [self _layoutForVisible];
 }
 
 - (void)didMoveToSuperview {
     [super didMoveToSuperview];
     
-    [self updateSuperviewConstraints];
+    [self _updateSuperviewConstraints];
 }
 
 #pragma mark Property
@@ -234,28 +234,19 @@
 }
 
 - (void)setContainer:(MobilyDataContainer*)container {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(_updating != NO) {
-        NSLog(@"ERROR: [%@:%@] %@", self.class, NSStringFromSelector(_cmd), container);
-        return;
-    }
-#endif
     if(_container != container) {
         if(_container != nil) {
             [self setNeedValidateLayout];
-            BOOL animationsEnabled = [UIView areAnimationsEnabled];
-            if(animationsEnabled == YES) {
-                [UIView setAnimationsEnabled:NO];
-            }
-            [self deselectAllItemsAnimated:NO];
-            [self unhighlightAllItemsAnimated:NO];
-            if(_visibleItems.count > 0) {
-                for(MobilyDataItem* item in _visibleItems) {
-                    [self disappearItem:item];
+            [UIView performWithoutAnimation:^{
+                [self deselectAllItemsAnimated:NO];
+                [self unhighlightAllItemsAnimated:NO];
+                if(_visibleItems.count > 0) {
+                    for(MobilyDataItem* item in _visibleItems) {
+                        [self _disappearItem:item];
+                    }
+                    [_visibleItems removeAllObjects];
                 }
-                [_visibleItems removeAllObjects];
-            }
-            [UIView setAnimationsEnabled:animationsEnabled];
+            }];
             _container.view = nil;
             [self validateLayoutIfNeed];
         }
@@ -263,13 +254,10 @@
         if(_container != nil) {
             [self setNeedValidateLayout];
             _container.view = self;
-            BOOL animationsEnabled = [UIView areAnimationsEnabled];
-            if(animationsEnabled == YES) {
-                [UIView setAnimationsEnabled:NO];
-            }
-            [self validateLayoutIfNeed];
-            [self layoutForVisible];
-            [UIView setAnimationsEnabled:animationsEnabled];
+            [UIView performWithoutAnimation:^{
+                [self validateLayoutIfNeed];
+                [self _layoutForVisible];
+            }];
         }
     }
 }
@@ -345,7 +333,7 @@
             _pullToRefreshView.translatesAutoresizingMaskIntoConstraints = NO;
             if(self.superview != nil) {
                 [self.superview insertSubview:_pullToRefreshView aboveSubview:self];
-                [self updateSuperviewConstraints];
+                [self _updateSuperviewConstraints];
             }
         }
     }
@@ -407,7 +395,7 @@
         } else if(_constraintPullToRefreshHeight != nil) {
             _constraintPullToRefreshHeight.constant = _pullToRefreshHeight;
         } else if(self.superview != nil) {
-            [self updateSuperviewConstraints];
+            [self _updateSuperviewConstraints];
         }
     }
 }
@@ -426,7 +414,7 @@
             _pullToLoadView.translatesAutoresizingMaskIntoConstraints = NO;
             if(self.superview != nil) {
                 [self.superview insertSubview:_pullToLoadView aboveSubview:self];
-                [self updateSuperviewConstraints];
+                [self _updateSuperviewConstraints];
             }
         }
     }
@@ -488,7 +476,7 @@
         } else if(_constraintPullToLoadHeight != nil) {
             _constraintPullToLoadHeight.constant = _pullToLoadHeight;
         } else if(self.superview != nil) {
-            [self updateSuperviewConstraints];
+            [self _updateSuperviewConstraints];
         }
     }
 }
@@ -771,16 +759,6 @@
     }
 }
 
-- (void)appearItem:(MobilyDataItem*)item {
-    [_visibleItems addObject:item];
-    [self dequeueCellWithItem:item];
-}
-
-- (void)disappearItem:(MobilyDataItem*)item {
-    [_visibleItems removeObject:item];
-    [self enqueueCellWithItem:item];
-}
-
 - (void)batchUpdate:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_updating != NO) {
@@ -788,11 +766,11 @@
         return;
     }
 #endif
-    [self internalBatchUpdate:^{
+    [self _batchUpdate:^{
         if(update != nil) {
             update();
         }
-        [self internalBatchComplete:^() {
+        [self _batchComplete:^() {
             if(complete != nil) {
                 complete(YES);
             }
@@ -811,58 +789,15 @@
                           delay:0.0f
                         options:0
                      animations:^{
-                         [self internalBatchUpdate:update];
+                         [self _batchUpdate:update];
                      }
                      completion:^(BOOL finished) {
-                         [self internalBatchComplete:^() {
+                         [self _batchComplete:^() {
                              if(complete != nil) {
                                  complete(finished);
                              }
                          }];
                      }];
-}
-
-
-- (void)didInsertItems:(NSArray*)items {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(_updating != YES) {
-        NSLog(@"ERROR: [%@:%@] %@", self.class, NSStringFromSelector(_cmd), items);
-        return;
-    }
-#endif
-    [_insertedItems addObjectsFromArray:items];
-    [self setNeedValidateLayout];
-}
-
-- (void)didDeleteItems:(NSArray*)items {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(_updating != YES) {
-        NSLog(@"ERROR: [%@:%@] %@", self.class, NSStringFromSelector(_cmd), items);
-        return;
-    }
-#endif
-    [_visibleItems removeObjectsInArray:items];
-    [_selectedItems removeObjectsInArray:items];
-    [_highlightedItems removeObjectsInArray:items];
-    [_editingItems removeObjectsInArray:items];
-    [_deletedItems addObjectsFromArray:items];
-    [self setNeedValidateLayout];
-}
-
-- (void)didReplaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(_updating != YES) {
-        NSLog(@"ERROR: [%@:%@] %@ - %@", self.class, NSStringFromSelector(_cmd), originItems, items);
-        return;
-    }
-#endif
-    [_visibleItems removeObjectsInArray:originItems];
-    [_selectedItems removeObjectsInArray:originItems];
-    [_highlightedItems removeObjectsInArray:originItems];
-    [_editingItems removeObjectsInArray:originItems];
-    [_reloadedBeforeItems addObjectsFromArray:originItems];
-    [_reloadedAfterItems addObjectsFromArray:items];
-    [self setNeedValidateLayout];
 }
 
 - (void)setNeedValidateLayout {
@@ -872,17 +807,9 @@
 
 - (void)validateLayoutIfNeed {
     if(_invalidLayout == YES) {
-        [self validateLayout];
+        [self _validateLayout];
         self.invalidLayout = NO;
     }
-}
-
-- (void)validateLayout {
-    CGRect layoutRect = CGRectZero;
-    if(_container != nil) {
-        layoutRect = [_container _validateLayoutForAvailableFrame:CGRectMakeOriginAndSize(CGPointZero, self.boundsSize)];
-    }
-    self.contentSize = layoutRect.size;
 }
 
 - (void)setNeedLayoutForVisible {
@@ -891,17 +818,6 @@
 
 - (void)layoutForVisibleIfNeed {
     [self layoutIfNeeded];
-}
-
-- (void)layoutForVisible {
-    CGRect bounds = self.bounds;
-    [_container _willLayoutForBounds:UIEdgeInsetsInsetRect(bounds, self.contentInset)];
-    if(_updating == NO) {
-        [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex, BOOL* itemStop) {
-            [item invalidateLayoutForBounds:bounds];
-        }];
-    }
-    [_container _didLayoutForBounds:bounds];
 }
 
 - (void)scrollToItem:(MobilyDataItem*)item scrollPosition:(MobilyDataViewPosition)scrollPosition animated:(BOOL)animated {
@@ -949,55 +865,6 @@
         }
     }
     [self scrollRectToVisible:itemFrame animated:animated];
-}
-
-- (void)updateSuperviewConstraints {
-    if(_pullToRefreshView != nil) {
-        if(_constraintPullToRefreshBottom == nil) {
-            self.constraintPullToRefreshBottom = [NSLayoutConstraint constraintWithItem:_pullToRefreshView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
-        }
-        if(_constraintPullToRefreshLeft == nil) {
-            self.constraintPullToRefreshLeft = [NSLayoutConstraint constraintWithItem:_pullToRefreshView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
-        }
-        if(_constraintPullToRefreshRight == nil) {
-            self.constraintPullToRefreshRight = [NSLayoutConstraint constraintWithItem:_pullToRefreshView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
-        }
-        if(_pullToRefreshHeight >= 0.0f) {
-            if(_constraintPullToRefreshHeight == nil) {
-                self.constraintPullToRefreshHeight = [NSLayoutConstraint constraintWithItem:_pullToRefreshView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:_pullToRefreshHeight];
-            }
-        } else {
-            self.constraintPullToRefreshHeight = nil;
-        }
-    } else {
-        self.constraintPullToRefreshBottom = nil;
-        self.constraintPullToRefreshLeft = nil;
-        self.constraintPullToRefreshRight = nil;
-        self.constraintPullToRefreshHeight = nil;
-    }
-    if(_pullToLoadView != nil) {
-        if(_constraintPullToLoadTop == nil) {
-            self.constraintPullToLoadTop = [NSLayoutConstraint constraintWithItem:_pullToLoadView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
-        }
-        if(_constraintPullToLoadLeft == nil) {
-            self.constraintPullToLoadLeft = [NSLayoutConstraint constraintWithItem:_pullToLoadView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
-        }
-        if(_constraintPullToLoadRight == nil) {
-            self.constraintPullToLoadRight = [NSLayoutConstraint constraintWithItem:_pullToLoadView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
-        }
-        if(_pullToLoadHeight >= 0.0f) {
-            if(_constraintPullToLoadHeight == nil) {
-                self.constraintPullToLoadHeight = [NSLayoutConstraint constraintWithItem:_pullToLoadView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:_pullToLoadHeight];
-            }
-        } else {
-            self.constraintPullToLoadHeight = nil;
-        }
-    } else {
-        self.constraintPullToLoadTop = nil;
-        self.constraintPullToLoadLeft = nil;
-        self.constraintPullToLoadRight = nil;
-        self.constraintPullToLoadHeight = nil;
-    }
 }
 
 - (void)showPullToRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
@@ -1110,18 +977,210 @@
     }
 }
 
-#pragma mark NSNotificationCenter
+#pragma mark Private
 
-- (void)notificationReceiveMemoryWarning:(NSNotification*)notification {
+- (void)_receiveMemoryWarning {
     for(MobilyDataCell* cell in _queueCells) {
         [cell removeFromSuperview];
     }
     [_queueCells removeAllObjects];
 }
 
-#pragma mark UIScrollViewDelegate
+- (void)_appearItem:(MobilyDataItem*)item {
+    [_visibleItems addObject:item];
+    [self dequeueCellWithItem:item];
+}
 
-- (void)willBeginDragging {
+- (void)_disappearItem:(MobilyDataItem*)item {
+    [_visibleItems removeObject:item];
+    [self enqueueCellWithItem:item];
+}
+
+- (void)_didInsertItems:(NSArray*)items {
+    if(_updating == YES) {
+        [_insertedItems addObjectsFromArray:items];
+    }
+    [self setNeedValidateLayout];
+}
+
+- (void)_didDeleteItems:(NSArray*)items {
+    [_visibleItems removeObjectsInArray:items];
+    [_selectedItems removeObjectsInArray:items];
+    [_highlightedItems removeObjectsInArray:items];
+    [_editingItems removeObjectsInArray:items];
+    if(_updating == YES) {
+        [_deletedItems addObjectsFromArray:items];
+    } else {
+        for(MobilyDataItem* item in items) {
+            MobilyDataCell* cell = item.cell;
+            if(cell != nil) {
+                [cell animateAction:MobilyDataCellActionRestore];
+            }
+            [self _disappearItem:item];
+        }
+    }
+    [self setNeedValidateLayout];
+}
+
+- (void)_didReplaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items {
+    [_visibleItems removeObjectsInArray:originItems];
+    [_selectedItems removeObjectsInArray:originItems];
+    [_highlightedItems removeObjectsInArray:originItems];
+    [_editingItems removeObjectsInArray:originItems];
+    if(_updating == YES) {
+        [_reloadedBeforeItems addObjectsFromArray:originItems];
+        [_reloadedAfterItems addObjectsFromArray:items];
+    } else {
+        for(MobilyDataItem* item in originItems) {
+            MobilyDataCell* cell = item.cell;
+            if(cell != nil) {
+                [cell animateAction:MobilyDataCellActionRestore];
+            }
+            [self _disappearItem:item];
+        }
+    }
+    [self setNeedValidateLayout];
+}
+
+- (void)_validateLayout {
+    CGRect layoutRect = CGRectZero;
+    if(_container != nil) {
+        layoutRect = [_container _validateLayoutForAvailableFrame:CGRectMakeOriginAndSize(CGPointZero, self.boundsSize)];
+    }
+    self.contentSize = layoutRect.size;
+}
+
+- (void)_layoutForVisible {
+    CGRect bounds = self.bounds;
+    [_container _willLayoutForBounds:UIEdgeInsetsInsetRect(bounds, self.contentInset)];
+    if(_updating == NO) {
+        [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex, BOOL* itemStop) {
+            [item invalidateLayoutForBounds:bounds];
+        }];
+    }
+    [_container _didLayoutForBounds:bounds];
+}
+
+- (void)_updateSuperviewConstraints {
+    if(_pullToRefreshView != nil) {
+        if(_constraintPullToRefreshBottom == nil) {
+            self.constraintPullToRefreshBottom = [NSLayoutConstraint constraintWithItem:_pullToRefreshView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+        }
+        if(_constraintPullToRefreshLeft == nil) {
+            self.constraintPullToRefreshLeft = [NSLayoutConstraint constraintWithItem:_pullToRefreshView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
+        }
+        if(_constraintPullToRefreshRight == nil) {
+            self.constraintPullToRefreshRight = [NSLayoutConstraint constraintWithItem:_pullToRefreshView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
+        }
+        if(_pullToRefreshHeight >= 0.0f) {
+            if(_constraintPullToRefreshHeight == nil) {
+                self.constraintPullToRefreshHeight = [NSLayoutConstraint constraintWithItem:_pullToRefreshView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:_pullToRefreshHeight];
+            }
+        } else {
+            self.constraintPullToRefreshHeight = nil;
+        }
+    } else {
+        self.constraintPullToRefreshBottom = nil;
+        self.constraintPullToRefreshLeft = nil;
+        self.constraintPullToRefreshRight = nil;
+        self.constraintPullToRefreshHeight = nil;
+    }
+    if(_pullToLoadView != nil) {
+        if(_constraintPullToLoadTop == nil) {
+            self.constraintPullToLoadTop = [NSLayoutConstraint constraintWithItem:_pullToLoadView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+        }
+        if(_constraintPullToLoadLeft == nil) {
+            self.constraintPullToLoadLeft = [NSLayoutConstraint constraintWithItem:_pullToLoadView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
+        }
+        if(_constraintPullToLoadRight == nil) {
+            self.constraintPullToLoadRight = [NSLayoutConstraint constraintWithItem:_pullToLoadView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
+        }
+        if(_pullToLoadHeight >= 0.0f) {
+            if(_constraintPullToLoadHeight == nil) {
+                self.constraintPullToLoadHeight = [NSLayoutConstraint constraintWithItem:_pullToLoadView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:_pullToLoadHeight];
+            }
+        } else {
+            self.constraintPullToLoadHeight = nil;
+        }
+    } else {
+        self.constraintPullToLoadTop = nil;
+        self.constraintPullToLoadLeft = nil;
+        self.constraintPullToLoadRight = nil;
+        self.constraintPullToLoadHeight = nil;
+    }
+}
+
+- (void)_batchUpdate:(MobilyDataViewUpdateBlock)update {
+    self.updating = YES;
+    [_container _didBeginUpdate];
+    if(update != nil) {
+        update();
+    }
+    [self validateLayoutIfNeed];
+    [self _layoutForVisible];
+    for(MobilyDataItem* item in _reloadedBeforeItems) {
+        MobilyDataCell* cell = item.cell;
+        if(cell != nil) {
+            [cell animateAction:MobilyDataCellActionReplaceOut];
+        }
+    }
+    for(MobilyDataItem* item in _reloadedAfterItems) {
+        MobilyDataCell* cell = item.cell;
+        if(cell != nil) {
+            [cell animateAction:MobilyDataCellActionReplaceIn];
+        }
+    }
+    for(MobilyDataItem* item in _insertedItems) {
+        MobilyDataCell* cell = item.cell;
+        if(cell != nil) {
+            [cell animateAction:MobilyDataCellActionInsert];
+        }
+    }
+    for(MobilyDataItem* item in _deletedItems) {
+        MobilyDataCell* cell = item.cell;
+        if(cell != nil) {
+            [cell animateAction:MobilyDataCellActionDelete];
+        }
+    }
+}
+
+- (void)_batchComplete:(MobilyDataViewUpdateBlock)complete {
+    if(_reloadedBeforeItems.count > 0) {
+        for(MobilyDataItem* item in _reloadedBeforeItems) {
+            MobilyDataCell* cell = item.cell;
+            if(cell != nil) {
+                [cell animateAction:MobilyDataCellActionRestore];
+            }
+            [self _disappearItem:item];
+        }
+        [_reloadedBeforeItems removeAllObjects];
+    }
+    if(_reloadedAfterItems.count > 0) {
+        [_reloadedAfterItems removeAllObjects];
+    }
+    if(_insertedItems.count > 0) {
+        [_insertedItems removeAllObjects];
+    }
+    if(_deletedItems.count > 0) {
+        for(MobilyDataItem* item in _deletedItems) {
+            MobilyDataCell* cell = item.cell;
+            if(cell != nil) {
+                [cell animateAction:MobilyDataCellActionRestore];
+            }
+            [self _disappearItem:item];
+        }
+        [_deletedItems removeAllObjects];
+    }
+    [_container _didEndUpdate];
+    self.updating = NO;
+    [self _layoutForVisible];
+    
+    if(complete != nil) {
+        complete();
+    }
+}
+
+- (void)_willBeginDragging {
     if(self.pagingEnabled == NO) {
         if(_pullToRefreshView != nil) {
             self.canPullToRefresh = ([_pullToRefreshView state] != MobilyDataRefreshViewStateLoading);
@@ -1142,7 +1201,7 @@
     [self fireEventForKey:MobilyDataViewWillBeginDragging byObject:nil];
 }
 
-- (void)didScroll {
+- (void)_didScroll {
     if(self.pagingEnabled == NO) {
         
         CGRect bounds = self.bounds;
@@ -1271,11 +1330,11 @@
     [self fireEventForKey:MobilyDataViewDidScroll byObject:nil];
 }
 
-- (void)willEndDraggingWithVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset {
+- (void)_willEndDraggingWithVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset {
     NSValue* newTargetContentOffset = [self fireEventForKey:MobilyDataViewWillEndDragging byObject:@{
-        @"velocity" : [NSValue valueWithCGPoint:velocity],
-        @"targetContentOffset" : [NSValue valueWithCGPoint:*targetContentOffset]
-    }];
+                                                                                                     @"velocity" : [NSValue valueWithCGPoint:velocity],
+                                                                                                     @"targetContentOffset" : [NSValue valueWithCGPoint:*targetContentOffset]
+                                                                                                     }];
     if(newTargetContentOffset != nil) {
         if(strcmp(newTargetContentOffset.objCType, @encode(CGPoint)) == 0) {
             [newTargetContentOffset getValue:targetContentOffset];
@@ -1283,7 +1342,7 @@
     }
 }
 
-- (void)didEndDraggingWillDecelerate:(BOOL)decelerate {
+- (void)_didEndDraggingWillDecelerate:(BOOL)decelerate {
     if(self.pagingEnabled == NO) {
         if(_pullDragging == YES) {
             if(_canPullToRefresh == YES) {
@@ -1328,80 +1387,16 @@
     [self fireEventForKey:MobilyDataViewDidEndDragging byObject:@(decelerate)];
 }
 
-- (void)willBeginDecelerating {
+- (void)_willBeginDecelerating {
     [self fireEventForKey:MobilyDataViewWillBeginDecelerating byObject:nil];
 }
 
-- (void)didEndDecelerating {
+- (void)_didEndDecelerating {
     [self fireEventForKey:MobilyDataViewDidEndDecelerating byObject:nil];
 }
 
-- (void)didEndScrollingAnimation {
+- (void)_didEndScrollingAnimation {
     [self fireEventForKey:MobilyDataViewDidEndScrollingAnimation byObject:nil];
-}
-
-#pragma mark Private
-
-- (void)internalBatchUpdate:(MobilyDataViewUpdateBlock)update {
-    self.updating = YES;
-    [_container _didBeginUpdate];
-    if(update != nil) {
-        update();
-    }
-    [self validateLayoutIfNeed];
-    [self layoutForVisible];
-    for(MobilyDataItem* item in _reloadedBeforeItems) {
-        MobilyDataCell* cell = item.cell;
-        if(cell != nil) {
-            [cell animateAction:MobilyDataCellActionReplaceOut];
-        }
-    }
-    for(MobilyDataItem* item in _reloadedAfterItems) {
-        MobilyDataCell* cell = item.cell;
-        if(cell != nil) {
-            [cell animateAction:MobilyDataCellActionReplaceIn];
-        }
-    }
-    for(MobilyDataItem* item in _insertedItems) {
-        MobilyDataCell* cell = item.cell;
-        if(cell != nil) {
-            [cell animateAction:MobilyDataCellActionInsert];
-        }
-    }
-    for(MobilyDataItem* item in _deletedItems) {
-        MobilyDataCell* cell = item.cell;
-        if(cell != nil) {
-            [cell animateAction:MobilyDataCellActionDelete];
-        }
-    }
-}
-
-- (void)internalBatchComplete:(MobilyDataViewUpdateBlock)complete {
-    if(_reloadedBeforeItems.count > 0) {
-        for(MobilyDataItem* item in _reloadedBeforeItems) {
-            [item disappear];
-        }
-        [_reloadedBeforeItems removeAllObjects];
-    }
-    if(_reloadedAfterItems.count > 0) {
-        [_reloadedAfterItems removeAllObjects];
-    }
-    if(_insertedItems.count > 0) {
-        [_insertedItems removeAllObjects];
-    }
-    if(_deletedItems.count > 0) {
-        for(MobilyDataItem* item in _deletedItems) {
-            [item disappear];
-        }
-        [_deletedItems removeAllObjects];
-    }
-    [_container _didEndUpdate];
-    self.updating = NO;
-    [self layoutForVisible];
-    
-    if(complete != nil) {
-        complete();
-    }
 }
 
 @end
@@ -1440,49 +1435,49 @@
 #pragma mark UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView*)scrollView {
-    [_view willBeginDragging];
+    [_view _willBeginDragging];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewDidEndDecelerating:scrollView];
     }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView {
-    [_view didScroll];
+    [_view _didScroll];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewDidScroll:scrollView];
     }
 }
 
 - (void)scrollViewWillEndDragging:(UIScrollView*)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset {
-    [_view willEndDraggingWithVelocity:velocity targetContentOffset:targetContentOffset];
+    [_view _willEndDraggingWithVelocity:velocity targetContentOffset:targetContentOffset];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView*)scrollView willDecelerate:(BOOL)decelerate {
-    [_view didEndDraggingWillDecelerate:decelerate];
+    [_view _didEndDraggingWillDecelerate:decelerate];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
     }
 }
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView*)scrollView {
-    [_view willBeginDecelerating];
+    [_view _willBeginDecelerating];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewDidScroll:scrollView];
     }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView*)scrollView {
-    [_view didEndDecelerating];
+    [_view _didEndDecelerating];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewDidEndDecelerating:scrollView];
     }
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView*)scrollView {
-    [_view didEndScrollingAnimation];
+    [_view _didEndScrollingAnimation];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewDidEndScrollingAnimation:scrollView];
     }

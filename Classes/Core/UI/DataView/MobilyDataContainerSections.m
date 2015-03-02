@@ -137,7 +137,7 @@
     section.parent = self;
     [_sections insertObject:section atIndex:0];
     if(_view != nil) {
-        [_view didInsertItems:section.allItems];
+        [_view _didInsertItems:section.allItems];
     }
 }
 
@@ -145,7 +145,7 @@
     section.parent = self;
     [_sections addObject:section];
     if(_view != nil) {
-        [_view didInsertItems:section.allItems];
+        [_view _didInsertItems:section.allItems];
     }
 }
 
@@ -153,7 +153,7 @@
     section.parent = self;
     [_sections insertObject:section atIndex:index];
     if(_view != nil) {
-        [_view didInsertItems:section.allItems];
+        [_view _didInsertItems:section.allItems];
     }
 }
 
@@ -163,7 +163,7 @@
         section.parent = self;
         _sections[index] = section;
         if(_view != nil) {
-            [_view didReplaceOriginItems:originSection.allItems withItems:section.allItems];
+            [_view _didReplaceOriginItems:originSection.allItems withItems:section.allItems];
         }
     }
 }
@@ -171,7 +171,7 @@
 - (void)deleteSection:(MobilyDataContainer*)section {
     [_sections removeObject:section];
     if(_view != nil) {
-        [_view didDeleteItems:section.allItems];
+        [_view _didDeleteItems:section.allItems];
     }
 }
 

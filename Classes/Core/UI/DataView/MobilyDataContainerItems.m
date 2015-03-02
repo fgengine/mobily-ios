@@ -124,7 +124,7 @@
     [_entries insertObject:entry atIndex:0];
     entry.parent = self;
     if(_view != nil) {
-        [_view didInsertItems:@[ entry ]];
+        [_view _didInsertItems:@[ entry ]];
     }
 }
 
@@ -134,7 +134,7 @@
         entry.parent = self;
     }
     if(_view != nil) {
-        [_view didInsertItems:entries];
+        [_view _didInsertItems:entries];
     }
 }
 
@@ -142,7 +142,7 @@
     [_entries addObject:entry];
     entry.parent = self;
     if(_view != nil) {
-        [_view didInsertItems:@[ entry ]];
+        [_view _didInsertItems:@[ entry ]];
     }
 }
 
@@ -152,7 +152,7 @@
         entry.parent = self;
     }
     if(_view != nil) {
-        [_view didInsertItems:entries];
+        [_view _didInsertItems:entries];
     }
 }
 
@@ -160,7 +160,7 @@
     [_entries insertObject:entry atIndex:index];
     entry.parent = self;
     if(_view != nil) {
-        [_view didInsertItems:@[ entry ]];
+        [_view _didInsertItems:@[ entry ]];
     }
 }
 
@@ -170,7 +170,7 @@
         entry.parent = self;
     }
     if(_view != nil) {
-        [_view didInsertItems:entries];
+        [_view _didInsertItems:entries];
     }
 }
 
@@ -179,7 +179,7 @@
     entry.parent = self;
     _entries[index] = entry;
     if(_view != nil) {
-        [_view didReplaceOriginItems:@[ originEntry ] withItems:@[ entry ]];
+        [_view _didReplaceOriginItems:@[ originEntry ] withItems:@[ entry ]];
     }
 }
 
@@ -192,21 +192,21 @@
     }
     [_entries replaceObjectsAtIndexes:indexSet withObjects:entries];
     if(_view != nil) {
-        [_view didReplaceOriginItems:originEntries withItems:entries];
+        [_view _didReplaceOriginItems:originEntries withItems:entries];
     }
 }
 
 - (void)_deleteEntry:(MobilyDataItem*)entry {
     [_entries removeObject:entry];
     if(_view != nil) {
-        [_view didDeleteItems:@[ entry ]];
+        [_view _didDeleteItems:@[ entry ]];
     }
 }
 
 - (void)_deleteEntries:(NSArray*)entries {
     [_entries removeObjectsInArray:entries];
     if(_view != nil) {
-        [_view didDeleteItems:entries];
+        [_view _didDeleteItems:entries];
     }
 }
 
