@@ -51,6 +51,7 @@
 
 - (void)didBeginEditing;
 - (void)didEndEditing;
+- (void)didValueChanged;
 
 @end
 
