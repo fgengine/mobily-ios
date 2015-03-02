@@ -49,99 +49,6 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilyModelJsonArray ()
-
-@property(nonatomic, readwrite, strong) MobilyModelJson* jsonConverter;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@interface MobilyModelJsonDictionary ()
-
-@property(nonatomic, readwrite, strong) MobilyModelJson* keyJsonConverter;
-@property(nonatomic, readwrite, strong) MobilyModelJson* valueJsonConverter;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@interface MobilyModelJsonBool ()
-
-@property(nonatomic, readwrite, assign) BOOL defaultValue;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@interface MobilyModelJsonString ()
-
-@property(nonatomic, readwrite, strong) NSString* defaultValue;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@interface MobilyModelJsonUrl ()
-
-@property(nonatomic, readwrite, strong) NSURL* defaultValue;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@interface MobilyModelJsonNumber ()
-
-@property(nonatomic, readwrite, strong) NSNumber* defaultValue;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@interface MobilyModelJsonDate ()
-
-@property(nonatomic, readwrite, strong) NSDate* defaultValue;
-@property(nonatomic, readwrite, strong) NSArray* formats;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@interface MobilyModelJsonEnum ()
-
-@property(nonatomic, readwrite, strong) NSNumber* defaultValue;
-@property(nonatomic, readwrite, strong) NSDictionary* enums;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-@interface MobilyModelJsonCustomClass ()
-
-@property(nonatomic, readwrite, assign) Class customClass;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
 @implementation MobilyModelJson
 
 #pragma mark Init / Free
@@ -213,6 +120,16 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
+@interface MobilyModelJsonArray ()
+
+@property(nonatomic, readwrite, strong) MobilyModelJson* jsonConverter;
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
 @implementation MobilyModelJsonArray
 
 #pragma mark Init / Free
@@ -249,6 +166,8 @@
     return self;
 }
 
+#pragma mark MobilyModelJson
+
 - (id)convertValue:(id)value {
     if([value isKindOfClass:NSArray.class] == YES) {
         NSMutableArray* result = NSMutableArray.array;
@@ -265,7 +184,16 @@
     return nil;
 }
 
-#pragma mark MobilyModelJson
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@interface MobilyModelJsonDictionary ()
+
+@property(nonatomic, readwrite, strong) MobilyModelJson* keyJsonConverter;
+@property(nonatomic, readwrite, strong) MobilyModelJson* valueJsonConverter;
 
 @end
 
@@ -372,6 +300,16 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
+@interface MobilyModelJsonBool ()
+
+@property(nonatomic, readwrite, assign) BOOL defaultValue;
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
 @implementation MobilyModelJsonBool
 
 #pragma mark Init / Free
@@ -398,6 +336,16 @@
     }
     return @(_defaultValue);
 }
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@interface MobilyModelJsonString ()
+
+@property(nonatomic, readwrite, strong) NSString* defaultValue;
 
 @end
 
@@ -445,6 +393,16 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
+@interface MobilyModelJsonUrl ()
+
+@property(nonatomic, readwrite, strong) NSURL* defaultValue;
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
 @implementation MobilyModelJsonUrl
 
 #pragma mark Init / Free
@@ -469,6 +427,16 @@
     }
     return _defaultValue;
 }
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@interface MobilyModelJsonNumber ()
+
+@property(nonatomic, readwrite, strong) NSNumber* defaultValue;
 
 @end
 
@@ -519,6 +487,17 @@
     }
     return _defaultValue;
 }
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@interface MobilyModelJsonDate ()
+
+@property(nonatomic, readwrite, strong) NSDate* defaultValue;
+@property(nonatomic, readwrite, strong) NSArray* formats;
 
 @end
 
@@ -643,6 +622,17 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
+@interface MobilyModelJsonEnum ()
+
+@property(nonatomic, readwrite, strong) NSNumber* defaultValue;
+@property(nonatomic, readwrite, strong) NSDictionary* enums;
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
 @implementation MobilyModelJsonEnum
 
 #pragma mark Init / Free
@@ -707,6 +697,16 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
+@interface MobilyModelJsonCustomClass ()
+
+@property(nonatomic, readwrite, assign) Class customClass;
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
 @implementation MobilyModelJsonCustomClass
 
 #pragma mark Init / Free
@@ -736,6 +736,51 @@
 - (id)convertValue:(id)value {
     if([value isKindOfClass:NSDictionary.class] == YES) {
         return [[_customClass alloc] initWithJson:value];
+    }
+    return nil;
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@interface MobilyModelJsonBlock ()
+
+@property(nonatomic, readwrite, copy) MobilyModelJsonConvertBlock block;
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation MobilyModelJsonBlock
+
+#pragma mark Init / Free
+
+- (instancetype)initWithBlock:(MobilyModelJsonConvertBlock)block {
+    self = [super init];
+    if(self != nil) {
+        self.block = block;
+    }
+    return self;
+}
+
+- (instancetype)initWithPath:(NSString*)path block:(MobilyModelJsonConvertBlock)block {
+    self = [super initWithPath:path];
+    if(self != nil) {
+        self.block = block;
+    }
+    return self;
+}
+
+#pragma mark MobilyModelJson
+
+- (id)convertValue:(id)value {
+    if(_block != nil) {
+        return _block(value);
     }
     return nil;
 }

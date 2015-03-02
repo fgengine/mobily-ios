@@ -165,3 +165,18 @@
 @end
 
 /*--------------------------------------------------*/
+
+typedef id (^MobilyModelJsonConvertBlock)(id value);
+
+/*--------------------------------------------------*/
+
+@interface MobilyModelJsonBlock : MobilyModelJson
+
+@property(nonatomic, readonly, copy) MobilyModelJsonConvertBlock block;
+
+- (instancetype)initWithBlock:(MobilyModelJsonConvertBlock)block;
+- (instancetype)initWithPath:(NSString*)path block:(MobilyModelJsonConvertBlock)block;
+
+@end
+
+/*--------------------------------------------------*/
