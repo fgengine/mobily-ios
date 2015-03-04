@@ -147,6 +147,15 @@
 
 #pragma mark Public
 
+- (BOOL)containsObject:(id)object {
+    for(NSMutableArray* columnObjects in _objects) {
+        if([columnObjects containsObject:object] == YES) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
 - (BOOL)containsColumn:(NSUInteger)column row:(NSUInteger)row {
     return ([_objects[column][row] isKindOfClass:NSNull.class] == NO);
 }
@@ -266,20 +275,18 @@
 
 - (void)setObjects:(NSArray*)objects {
     [_objects removeAllObjects];
-    if(objects.count > 0) {
-        NSUInteger index = 0;
-        for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
-            NSMutableArray* columnObjects = [NSMutableArray arrayWithCapacity:_numberOfRows];
-            for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
-                if(index < objects.count) {
-                    [columnObjects addObject:objects[index]];
-                } else {
-                    [columnObjects addObject:[NSNull null]];
-                }
-                index++;
+    NSUInteger index = 0;
+    for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
+        NSMutableArray* columnObjects = [NSMutableArray arrayWithCapacity:_numberOfRows];
+        for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
+            if(index < objects.count) {
+                [columnObjects addObject:objects[index]];
+            } else {
+                [columnObjects addObject:[NSNull null]];
             }
-            [_objects addObject:columnObjects];
+            index++;
         }
+        [_objects addObject:columnObjects];
     }
 }
 

@@ -43,7 +43,7 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataItem : NSObject< MobilyObject >
+@interface MobilyDataItem : NSObject< MobilyObject, NSCopying >
 
 @property(nonatomic, readonly, weak) MobilyDataView* view;
 @property(nonatomic, readonly, weak) MobilyDataContainer* parent;
@@ -62,9 +62,11 @@
 @property(nonatomic, readwrite, assign, getter=isHighlighted) BOOL highlighted;
 @property(nonatomic, readwrite, assign, getter=isEditing) BOOL editing;
 
++ (instancetype)dataItemWithDataItem:(MobilyDataItem*)dataItem;
 + (instancetype)dataItemWithIdentifier:(NSString*)identifier data:(id)data;
 + (NSArray*)dataItemsWithIdentifier:(NSString*)identifier dataArray:(NSArray*)dataArray;
 
+- (instancetype)initWithDataItem:(MobilyDataItem*)dataItem;
 - (instancetype)initWithIdentifier:(NSString*)identifier data:(id)data;
 
 - (BOOL)containsEventForKey:(id)key;

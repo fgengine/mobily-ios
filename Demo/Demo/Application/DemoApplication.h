@@ -40,10 +40,10 @@
 @interface DemoApplication : MobilyApplication
 
 @property(nonatomic, readwrite, weak) MobilyWindow* window;;
-@property(nonatomic, readwrite, weak) MobilySlideController* slideController;
-@property(nonatomic, readwrite, weak) DemoCategoriesController* slideLeftController;
-@property(nonatomic, readwrite, weak) MobilyNavigationController* slideCenterController;
-@property(nonatomic, readwrite, weak) DemoCategoriesController* slideRightController;
+@property(nonatomic, readwrite, weak) MobilySlideController* mainSlideController;
+@property(nonatomic, readwrite, weak) DemoCategoriesController* mainSlideLeftController;
+@property(nonatomic, readwrite, weak) MobilyNavigationController* mainSlideCenterController;
+@property(nonatomic, readwrite, weak) DemoCategoriesController* mainSlideRightController;
 
 @end
 

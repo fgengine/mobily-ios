@@ -50,9 +50,9 @@
 @implementation DemoApplication
 
 - (BOOL)launchingWithOptions:(NSDictionary *)options {
-    _slideController.leftController = _slideLeftController;
-    _slideController.centerController = _slideCenterController;
-    _slideController.rightController = _slideRightController;
+    _mainSlideController.leftController = _mainSlideLeftController;
+    _mainSlideController.centerController = _mainSlideCenterController;
+    _mainSlideController.rightController = _mainSlideRightController;
     
     return [super launchingWithOptions:options];
 }

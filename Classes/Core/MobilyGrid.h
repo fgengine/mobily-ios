@@ -52,6 +52,7 @@
 - (instancetype)initWithColumns:(NSUInteger)columns rows:(NSUInteger)rows objects:(NSArray*)objects;
 - (instancetype)initWithGrid:(MobilyGrid*)grid;
 
+- (BOOL)containsObject:(id)object;
 - (BOOL)containsColumn:(NSUInteger)column row:(NSUInteger)row;
 - (BOOL)isEmptyColumn:(NSInteger)column;
 - (BOOL)isEmptyRow:(NSInteger)row;

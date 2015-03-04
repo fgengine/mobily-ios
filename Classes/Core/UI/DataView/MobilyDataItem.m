@@ -59,6 +59,10 @@
 
 #pragma mark Init / Free
 
++ (instancetype)dataItemWithDataItem:(MobilyDataItem*)dataItem {
+    return [[self alloc] initWithDataItem:dataItem];
+}
+
 + (instancetype)dataItemWithIdentifier:(NSString*)identifier data:(id)data {
     return [[self alloc] initWithIdentifier:identifier data:data];
 }
@@ -69,6 +73,23 @@
         [items addObject:[self dataItemWithIdentifier:identifier data:data]];
     }
     return items;
+}
+
+- (instancetype)initWithDataItem:(MobilyDataItem*)dataItem {
+    self = [super init];
+    if(self != nil) {
+        _identifier = dataItem.identifier;
+        _data = dataItem.data;
+        _originFrame = dataItem.originFrame;
+        _updateFrame = dataItem.updateFrame;
+        _displayFrame = dataItem.displayFrame;
+        _allowsSelection = dataItem.allowsSelection;
+        _allowsHighlighting = dataItem.allowsHighlighting;
+        _allowsEditing = dataItem.allowsEditing;
+        
+        [self setup];
+    }
+    return self;
 }
 
 - (instancetype)initWithIdentifier:(NSString*)identifier data:(id)data {
@@ -92,6 +113,16 @@
 }
 
 - (void)dealloc {
+}
+
+#pragma mark NSCopying
+
+- (id)copy {
+    return [self copyWithZone:NSDefaultMallocZone()];
+}
+
+- (id)copyWithZone:(NSZone*)zone {
+    return [[self.class alloc] initWithDataItem:self];
 }
 
 #pragma mark Property

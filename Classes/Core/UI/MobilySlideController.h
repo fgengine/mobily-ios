@@ -43,6 +43,7 @@ typedef void(^MobilySlideControllerBlock)();
 
 @interface MobilySlideController : MobilyController
 
+@property(nonatomic, readwrite, assign) IBInspectable UIEdgeInsets swipeInsets;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeThreshold;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeVelocity;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeSpeed;
@@ -75,18 +76,25 @@ typedef void(^MobilySlideControllerBlock)();
 @protocol MobilySlideControllerDelegate < NSObject >
 
 @optional
-- (BOOL)canShowLeftControllerInSlideNavigation:(MobilySlideController*)slideNavigation;
-- (void)willShowLeftControllerInSlideNavigation:(MobilySlideController*)slideNavigation duration:(CGFloat)duration;
-- (void)didShowLeftControllerInSlideNavigation:(MobilySlideController*)slideNavigation;
-- (void)willHideLeftControllerInSlideNavigation:(MobilySlideController*)slideNavigation duration:(CGFloat)duration;
-- (void)didHideLeftControllerInSlideNavigation:(MobilySlideController*)slideNavigation;
+- (BOOL)canShowLeftControllerInSlideController:(MobilySlideController*)slideController;
+- (void)willShowLeftControllerInSlideController:(MobilySlideController*)slideController duration:(CGFloat)duration;
+- (void)didShowLeftControllerInSlideController:(MobilySlideController*)slideController;
+- (void)willHideLeftControllerInSlideController:(MobilySlideController*)slideController duration:(CGFloat)duration;
+- (void)didHideLeftControllerInSlideController:(MobilySlideController*)slideController;
 
 @optional
-- (BOOL)canShowRightControllerInSlideNavigation:(MobilySlideController*)slideNavigation;
-- (void)willShowRightControllerInSlideNavigation:(MobilySlideController*)slideNavigation duration:(CGFloat)duration;
-- (void)didShowRightControllerInSlideNavigation:(MobilySlideController*)slideNavigation;
-- (void)willHideRightControllerInSlideNavigation:(MobilySlideController*)slideNavigation duration:(CGFloat)duration;
-- (void)didHideRightControllerInSlideNavigation:(MobilySlideController*)slideNavigation;
+- (BOOL)canShowRightControllerInSlideController:(MobilySlideController*)slideController;
+- (void)willShowRightControllerInSlideController:(MobilySlideController*)slideController duration:(CGFloat)duration;
+- (void)didShowRightControllerInSlideController:(MobilySlideController*)slideController;
+- (void)willHideRightControllerInSlideController:(MobilySlideController*)slideController duration:(CGFloat)duration;
+- (void)didHideRightControllerInSlideController:(MobilySlideController*)slideController;
+
+@optional
+- (BOOL)canShowControllerInSlideController:(MobilySlideController*)slideController;
+- (void)willShowControllerInSlideController:(MobilySlideController*)slideController duration:(CGFloat)duration;
+- (void)didShowControllerInSlideController:(MobilySlideController*)slideController;
+- (void)willHideControllerInSlideController:(MobilySlideController*)slideController duration:(CGFloat)duration;
+- (void)didHideControllerInSlideController:(MobilySlideController*)slideController;
 
 @end
 
@@ -94,7 +102,7 @@ typedef void(^MobilySlideControllerBlock)();
 
 @interface UIViewController (MobilySlideController)
 
-@property(nonatomic, readwrite, strong) MobilySlideController* slideNavigation;
+@property(nonatomic, readwrite, strong) MobilySlideController* slideController;
 
 @end
 

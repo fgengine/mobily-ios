@@ -137,6 +137,23 @@
 
 /*--------------------------------------------------*/
 
+@interface MobilyDataContainerItemsGrid () {
+    MobilyDataContainerOrientation _orientation;
+    UIEdgeInsets _margin;
+    UIOffset _spacing;
+    NSUInteger _numberOfColumns;
+    NSUInteger _numberOfRows;
+    NSMutableArray* _headerColumns;
+    NSMutableArray* _footerColumns;
+    NSMutableArray* _headerRows;
+    NSMutableArray* _footerRows;
+    MobilyMutableGrid* _cells;
+}
+
+@end
+
+/*--------------------------------------------------*/
+
 @interface MobilyDataContainerCalendar () {
 @protected
     NSCalendar* _calendar;

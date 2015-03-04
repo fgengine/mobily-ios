@@ -37,6 +37,10 @@
 #import "MobilyCG.h"
 
 /*--------------------------------------------------*/
+
+#import "MobilySlideController.h"
+
+/*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
@@ -1865,6 +1869,14 @@ MOBILY_DEFINE_VALIDATE_STRING(Title)
     } else if([rootViewController isKindOfClass:UITabBarController.class] == YES) {
         UITabBarController* tabBarController = (UITabBarController*)rootViewController;
         return [self currentViewController:tabBarController.selectedViewController];
+    } else if([rootViewController isKindOfClass:MobilySlideController.class] == YES) {
+        MobilySlideController* slideController = (MobilySlideController*)rootViewController;
+        if(slideController.isShowedLeftController == YES) {
+            return [self currentViewController:slideController.leftController];
+        } else if(slideController.isShowedRightController == YES) {
+            return [self currentViewController:slideController.rightController];
+        }
+        return [self currentViewController:slideController.centerController];
     }
     return rootViewController;
 }

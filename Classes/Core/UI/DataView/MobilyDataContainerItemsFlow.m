@@ -199,7 +199,7 @@
     NSUInteger index = [_items indexOfObject:originItem];
     if(index != NSNotFound) {
         item.zOrder = -0.2f;
-        _entries[index] = item;
+        _items[index] = item;
         [self _replaceOriginEntry:originItem withEntry:item];
     }
 }
@@ -232,8 +232,11 @@
 }
 
 - (void)deleteAllItems {
-    [_items removeAllObjects];
-    [self _deleteAllEntries];
+    if(_items.count > 0) {
+        NSArray* items = [NSArray arrayWithArray:_items];
+        [self _deleteEntries:items];
+        [_items removeAllObjects];
+    }
 }
 
 #pragma mark Private override

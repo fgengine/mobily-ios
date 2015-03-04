@@ -122,12 +122,12 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
 - (IBAction)pressedDataCell:(MobilyDataCell*)dataCell dataItem:(MobilyDataItem*)dataItem {
     DemoCategoriesModel* model = dataItem.data;
     switch(model.type) {
-        case DemoCategoriesTypeButtons: [self.app.slideCenterController pushViewController:DemoButtonsController.new animated:YES]; break;
-        case DemoCategoriesTypeFields: [self.app.slideCenterController pushViewController:DemoFieldsController.new animated:YES]; break;
-        case DemoCategoriesTypeTables: [self.app.slideCenterController pushViewController:DemoTablesController.new animated:YES]; break;
-        case DemoCategoriesTypeCalendar: [self.app.slideCenterController pushViewController:DemoCalendarController.new animated:YES]; break;
-        case DemoCategoriesTypeAudioRecorder: [self.app.slideCenterController pushViewController:DemoAudioRecorderController.new animated:YES]; break;
-        case DemoCategoriesTypeAudioPlayer: [self.app.slideCenterController pushViewController:DemoAudioPlayerController.new animated:YES]; break;
+        case DemoCategoriesTypeButtons: [self.app.mainSlideCenterController pushViewController:DemoButtonsController.new animated:YES]; break;
+        case DemoCategoriesTypeFields: [self.app.mainSlideCenterController pushViewController:DemoFieldsController.new animated:YES]; break;
+        case DemoCategoriesTypeTables: [self.app.mainSlideCenterController pushViewController:DemoTablesController.new animated:YES]; break;
+        case DemoCategoriesTypeCalendar: [self.app.mainSlideCenterController pushViewController:DemoCalendarController.new animated:YES]; break;
+        case DemoCategoriesTypeAudioRecorder: [self.app.mainSlideCenterController pushViewController:DemoAudioRecorderController.new animated:YES]; break;
+        case DemoCategoriesTypeAudioPlayer: [self.app.mainSlideCenterController pushViewController:DemoAudioPlayerController.new animated:YES]; break;
     }
 }
 

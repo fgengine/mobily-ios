@@ -52,6 +52,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 @property(nonatomic, readwrite, getter=isSwipeDragging) BOOL swipeDragging;
 @property(nonatomic, readwrite, getter=isSwipeDecelerating) BOOL swipeDecelerating;
 
+@property(nonatomic, readwrite, strong) UIView* backgroundView;
 @property(nonatomic, readwrite, strong) UIView* leftView;
 @property(nonatomic, readwrite, strong) UIView* centerView;
 @property(nonatomic, readwrite, strong) UIView* rightView;
@@ -81,9 +82,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 - (void)appearRightController;
 - (void)disappearRightController;
 
-- (void)tapGestureHandle:(UITapGestureRecognizer*)tapGesture;
-- (void)panGestureHandle:(UIPanGestureRecognizer*)panGesture;
-
 - (void)setSwipeProgress:(CGFloat)swipeProgress speed:(CGFloat)speed endedSwipe:(BOOL)endedSwipe;
 
 - (void)willBeganSwipe;
@@ -91,6 +89,9 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 - (void)movingSwipe:(CGFloat)progress;
 - (void)willEndedSwipe;
 - (void)didEndedSwipe;
+
+- (void)tapGestureHandle:(UITapGestureRecognizer*)tapGesture;
+- (void)panGestureHandle:(UIPanGestureRecognizer*)panGesture;
 
 @end
 
@@ -105,6 +106,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 - (void)setup {
     [super setup];
     
+    self.swipeInsets = UIEdgeInsetsMake(85.0f, 21.0f, 0.0f, 0.0f);
     self.swipeThreshold = 2.0f;
     self.swipeSpeed = 1050.0f;
     self.swipeVelocity = 570.0f;
@@ -118,6 +120,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
     self.leftController = nil;
     self.centerController = nil;
     self.rightController = nil;
+    self.backgroundView = nil;
     self.leftView = nil;
     self.centerView = nil;
     self.rightView = nil;
@@ -158,6 +161,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
     
     self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureHandle:)];
     self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureHandle:)];
+    self.backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
     self.leftView = [[UIView alloc] initWithFrame:[self leftViewFrameByPercent:0.0f]];
     self.centerView = [[UIView alloc] initWithFrame:[self centerViewFrameByPercent:0.0f]];
     self.rightView = [[UIView alloc] initWithFrame:[self rightViewFrameByPercent:0.0f]];
@@ -184,9 +188,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
     [super viewDidLayoutSubviews];
     
     CGRect bounds = self.view.bounds;
-    if(_backgroundController != nil) {
-        _backgroundController.view.frame = self.view.bounds;
-    }
+    _backgroundView.frame = bounds;
     _leftView.frame = [self leftViewFrameFromBounds:bounds byPercent:_swipeProgress];
     _centerView.frame = [self centerViewFrameFromBounds:bounds byPercent:_swipeProgress];
     _rightView.frame = [self rightViewFrameFromBounds:bounds byPercent:_swipeProgress];
@@ -216,6 +218,20 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         if(_panGesture != nil) {
             _panGesture.delegate = self;
             [self.view addGestureRecognizer:_panGesture];
+        }
+    }
+}
+
+- (void)setBackgroundView:(UIView*)backgroundView {
+    if(_backgroundView != backgroundView) {
+        if(_backgroundView != nil) {
+            [_backgroundView removeFromSuperview];
+        }
+        _backgroundView = backgroundView;
+        if(_backgroundView != nil) {
+            _backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+            _backgroundView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+            [self.view addSubview:_backgroundView];
         }
     }
 }
@@ -528,32 +544,24 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (void)appearBackgroundController {
-    _backgroundController.slideNavigation = self;
+    _backgroundController.slideController = self;
     
-    [_backgroundController willMoveToParentViewController:self];
     [self addChildViewController:_backgroundController];
+    _backgroundController.view.frame = _backgroundView.bounds;
+    [_backgroundView addSubview:_backgroundController.view];
     [_backgroundController didMoveToParentViewController:self];
-    
-    [_backgroundController viewWillAppear:NO];
-    _backgroundController.view.frame = self.view.bounds;
-    [self.view addSubview:_backgroundController.view];
-    [_backgroundController viewDidAppear:NO];
 }
 
 - (void)disappearBackgroundController {
-    _backgroundController.slideNavigation = nil;
+    _backgroundController.slideController = nil;
     
     [_backgroundController viewWillDisappear:NO];
     [_backgroundController.view removeFromSuperview];
     [_backgroundController viewDidDisappear:NO];
-    
-    [_backgroundController willMoveToParentViewController:nil];
-    [_backgroundController removeFromParentViewController];
-    [_backgroundController didMoveToParentViewController:nil];
 }
 
 - (void)appearLeftController {
-    _leftController.slideNavigation = self;
+    _leftController.slideController = self;
     
     [self addChildViewController:_leftController];
     _leftController.view.frame = _leftView.bounds;
@@ -562,7 +570,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (void)disappearLeftController {
-    _leftController.slideNavigation = nil;
+    _leftController.slideController = nil;
     
     [_leftController willMoveToParentViewController:nil];
     [_leftController.view removeFromSuperview];
@@ -570,7 +578,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (void)appearCenterController {
-    _centerController.slideNavigation = self;
+    _centerController.slideController = self;
     
     [self addChildViewController:_centerController];
     _centerController.view.frame = _centerView.bounds;
@@ -579,7 +587,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (void)disappearCenterController {
-    _centerController.slideNavigation = nil;
+    _centerController.slideController = nil;
     
     [_centerController willMoveToParentViewController:nil];
     [_centerController.view removeFromSuperview];
@@ -587,7 +595,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (void)appearRightController {
-    _rightController.slideNavigation = self;
+    _rightController.slideController = self;
     
     [self addChildViewController:_rightController];
     _rightController.view.frame = _rightView.bounds;
@@ -596,20 +604,64 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (void)disappearRightController {
-    _rightController.slideNavigation = nil;
+    _rightController.slideController = nil;
     
     [_rightController willMoveToParentViewController:nil];
     [_rightController.view removeFromSuperview];
     [_rightController removeFromParentViewController];
 }
 
-- (void)tapGestureHandle:(UITapGestureRecognizer*)tapGesture {
-    if(_swipeDecelerating == NO) {
-        if(_showedLeftController == YES) {
-            [self hideLeftControllerAnimated:YES completed:nil];
-        } else if(_showedRightController) {
-            [self hideRightControllerAnimated:YES completed:nil];
+- (void)setSwipeProgress:(CGFloat)swipeProgress speed:(CGFloat)speed endedSwipe:(BOOL)endedSwipe {
+    CGFloat minSwipeProgress = (_swipeDirection == MobilySlideControllerSwipeCellDirectionLeft) ? -1.0f : 0.0f;
+    CGFloat maxSwipeProgress = (_swipeDirection == MobilySlideControllerSwipeCellDirectionRight) ? 1.0f :0.0f;
+    CGFloat normalizedSwipeProgress = MIN(MAX(minSwipeProgress, swipeProgress), maxSwipeProgress);
+    if(_swipeProgress != normalizedSwipeProgress) {
+        _swipeProgress = normalizedSwipeProgress;
+        
+        CGRect bounds = self.view.bounds;
+        [UIView animateWithDuration:ABS(speed) / _swipeSpeed
+                         animations:^{
+                             _leftView.frame = [self leftViewFrameFromBounds:bounds byPercent:_swipeProgress];
+                             _centerView.frame = [self centerViewFrameFromBounds:bounds byPercent:_swipeProgress];
+                             _rightView.frame = [self rightViewFrameFromBounds:bounds byPercent:_swipeProgress];
+                         } completion:^(BOOL finished) {
+                             if(endedSwipe == YES) {
+                                 [self didEndedSwipe];
+                             }
+                         }];
+    } else {
+        if(endedSwipe == YES) {
+            [self didEndedSwipe];
         }
+    }
+}
+
+- (void)willBeganSwipe {
+}
+
+- (void)didBeganSwipe {
+    self.swipeDragging = YES;
+}
+
+- (void)movingSwipe:(CGFloat)progress {
+}
+
+- (void)willEndedSwipe {
+    self.swipeDragging = NO;
+    self.swipeDecelerating = YES;
+}
+
+- (void)didEndedSwipe {
+    _showedLeftController = (_swipeProgress < 0.0f) ? YES : NO;
+    _showedRightController = (_swipeProgress > 0.0f) ? YES : NO;
+    self.swipeDecelerating = NO;
+}
+
+- (void)tapGestureHandle:(UITapGestureRecognizer*)tapGesture {
+    if(_showedLeftController == YES) {
+        [self hideLeftControllerAnimated:YES completed:nil];
+    } else if(_showedRightController) {
+        [self hideRightControllerAnimated:YES completed:nil];
     }
 }
 
@@ -697,70 +749,66 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
     }
 }
 
-- (void)setSwipeProgress:(CGFloat)swipeProgress speed:(CGFloat)speed endedSwipe:(BOOL)endedSwipe {
-    CGFloat minSwipeProgress = (_swipeDirection == MobilySlideControllerSwipeCellDirectionLeft) ? -1.0f : 0.0f;
-    CGFloat maxSwipeProgress = (_swipeDirection == MobilySlideControllerSwipeCellDirectionRight) ? 1.0f :0.0f;
-    CGFloat normalizedSwipeProgress = MIN(MAX(minSwipeProgress, swipeProgress), maxSwipeProgress);
-    if(_swipeProgress != normalizedSwipeProgress) {
-        _swipeProgress = normalizedSwipeProgress;
-        
-        CGRect bounds = self.view.bounds;
-        [UIView animateWithDuration:ABS(speed) / _swipeSpeed
-                         animations:^{
-                             _leftView.frame = [self leftViewFrameFromBounds:bounds byPercent:_swipeProgress];
-                             _centerView.frame = [self centerViewFrameFromBounds:bounds byPercent:_swipeProgress];
-                             _rightView.frame = [self rightViewFrameFromBounds:bounds byPercent:_swipeProgress];
-                         } completion:^(BOOL finished) {
-                             if(endedSwipe == YES) {
-                                 [self didEndedSwipe];
-                             }
-                         }];
-    } else {
-        if(endedSwipe == YES) {
-            [self didEndedSwipe];
-        }
-    }
-}
-
-- (void)willBeganSwipe {
-}
-
-- (void)didBeganSwipe {
-    self.swipeDragging = YES;
-}
-
-- (void)movingSwipe:(CGFloat)progress {
-}
-
-- (void)willEndedSwipe {
-    self.swipeDragging = NO;
-    self.swipeDecelerating = YES;
-}
-
-- (void)didEndedSwipe {
-    _showedLeftController = (_swipeProgress < 0.0f) ? YES : NO;
-    _showedRightController = (_swipeProgress > 0.0f) ? YES : NO;
-    self.swipeDecelerating = NO;
-}
-
 #pragma mark UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer {
     if(gestureRecognizer == _tapGesture) {
+        if((_showedLeftController == YES) || (_showedRightController == YES)) {
+            CGPoint location = [_tapGesture locationInView:self.view];
+            if(CGRectContainsPoint(_centerView.frame, location) == YES) {
+                return YES;
+            }
+        }
     } else if(gestureRecognizer == _panGesture) {
         if((_swipeDragging == NO) && (_swipeDecelerating == NO)) {
+            CGPoint location = [_panGesture locationInView:self.view];
             CGPoint translation = [_panGesture translationInView:self.view];
             if(fabs(translation.x) >= fabs(translation.y)) {
+                BOOL allowPan = NO;
                 if((_showedLeftController == YES) && (_leftController != nil) && (translation.x < 0.0f)) {
-                    return YES;
+                    if(CGRectContainsPoint(_centerView.frame, location) == YES) {
+                        allowPan = YES;
+                    }
                 } else if((_showedRightController == YES) && (_rightController != nil) && (translation.x > 0.0f)) {
-                    return YES;
+                    if(CGRectContainsPoint(_centerView.frame, location) == YES) {
+                        allowPan = YES;
+                    }
                 } else if((_showedLeftController == NO) && (_leftController != nil) && (translation.x > 0.0f)) {
-                    return YES;
+                    if(CGRectContainsPoint(UIEdgeInsetsInsetRect(_centerView.frame, _swipeInsets), location) == NO) {
+                        allowPan = YES;
+                    }
+                    if(allowPan == YES) {
+                        id< MobilySlideControllerDelegate > centerController = ([_centerController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_centerController : nil;
+                        if([centerController respondsToSelector:@selector(canShowLeftControllerInSlideController:)] == YES) {
+                            if([centerController canShowLeftControllerInSlideController:self] == YES) {
+                                id< MobilySlideControllerDelegate > leftController = ([_leftController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_leftController : nil;
+                                if([leftController respondsToSelector:@selector(canShowControllerInSlideController:)] == YES) {
+                                    allowPan = [leftController canShowControllerInSlideController:self];
+                                }
+                            } else {
+                                allowPan = NO;
+                            }
+                        }
+                    }
                 } else if((_showedRightController == NO) && (_rightController != nil) && (translation.x < 0.0f)) {
-                    return YES;
+                    if(CGRectContainsPoint(UIEdgeInsetsInsetRect(_centerView.frame, _swipeInsets), location) == NO) {
+                        allowPan = YES;
+                    }
+                    if(allowPan == YES) {
+                        id< MobilySlideControllerDelegate > centerController = ([_centerController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_centerController : nil;
+                        if([centerController respondsToSelector:@selector(canShowRightControllerInSlideController:)] == YES) {
+                            if([centerController canShowRightControllerInSlideController:self] == YES) {
+                                id< MobilySlideControllerDelegate > rightController = ([_rightController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_rightController : nil;
+                                if([rightController respondsToSelector:@selector(canShowControllerInSlideController:)] == YES) {
+                                    allowPan = [rightController canShowControllerInSlideController:self];
+                                }
+                            } else {
+                                allowPan = NO;
+                            }
+                        }
+                    }
                 }
-                return NO;
+                return allowPan;
             }
         }
     }
@@ -777,7 +825,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 
 /*--------------------------------------------------*/
 
-static char const* const slideNavigationKey = "slideNavigationKey";
+static char const* const slideControllerKey = "slideControllerKey";
 
 /*--------------------------------------------------*/
 #pragma mark -
@@ -785,16 +833,16 @@ static char const* const slideNavigationKey = "slideNavigationKey";
 
 @implementation UIViewController (MobilySlideController)
 
-- (void)setSlideNavigation:(MobilySlideController*)slideNavigation {
-    objc_setAssociatedObject(self, slideNavigationKey, slideNavigation, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setSlideController:(MobilySlideController*)slideController {
+    objc_setAssociatedObject(self, slideControllerKey, slideController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (MobilySlideController*)slideNavigation {
-    MobilySlideController* slideNavigation = objc_getAssociatedObject(self, slideNavigationKey);
-    if(slideNavigation == nil) {
-        slideNavigation = self.parentViewController.slideNavigation;
+- (MobilySlideController*)slideController {
+    MobilySlideController* slideController = objc_getAssociatedObject(self, slideControllerKey);
+    if(slideController == nil) {
+        slideController = self.parentViewController.slideController;
     }
-    return slideNavigation;
+    return slideController;
 }
 
 @end

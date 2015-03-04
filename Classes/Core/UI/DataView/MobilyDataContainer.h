@@ -44,6 +44,11 @@
 
 /*--------------------------------------------------*/
 
+@class MobilyMap;
+@class MobilyGrid;
+
+/*--------------------------------------------------*/
+
 typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
     MobilyDataContainerOrientationVertical,
     MobilyDataContainerOrientationHorizontal,
@@ -151,6 +156,45 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 - (void)deleteItem:(MobilyDataItem*)item;
 - (void)deleteItems:(NSArray*)items;
 - (void)deleteAllItems;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyDataContainerItemsGrid : MobilyDataContainerItems
+
+@property(nonatomic, readwrite, assign) MobilyDataContainerOrientation orientation;
+@property(nonatomic, readwrite, assign) UIEdgeInsets margin;
+@property(nonatomic, readwrite, assign) UIOffset spacing;
+@property(nonatomic, readonly, assign) NSUInteger numberOfColumns;
+@property(nonatomic, readonly, assign) NSUInteger numberOfRows;
+@property(nonatomic, readonly, strong) NSArray* headerColumns;
+@property(nonatomic, readonly, strong) NSArray* footerColumns;
+@property(nonatomic, readonly, strong) NSArray* headerRows;
+@property(nonatomic, readonly, strong) NSArray* footerRows;
+@property(nonatomic, readonly, strong) MobilyGrid* cells;
+
+- (void)prependColumn:(MobilyDataItem*)column;
+- (void)prependHeaderColumn:(MobilyDataItem*)headerColumn footerColumn:(MobilyDataItem*)footerColumn;
+- (void)appendColumn:(MobilyDataItem*)column;
+- (void)appendHeaderColumn:(MobilyDataItem*)headerColumn footerColumn:(MobilyDataItem*)footerColumn;
+- (void)insertColumn:(MobilyDataItem*)column atIndex:(NSUInteger)index;
+- (void)insertHeaderColumn:(MobilyDataItem*)headerColumn footerColumn:(MobilyDataItem*)footerColumn atIndex:(NSUInteger)index;
+- (void)deleteColumn:(MobilyDataItem*)column;
+- (void)deleteAllColumns;
+
+- (void)prependRow:(MobilyDataItem*)row;
+- (void)prependHeaderRow:(MobilyDataItem*)headerRow footerRow:(MobilyDataItem*)footerRow;
+- (void)appendRow:(MobilyDataItem*)row;
+- (void)appendHeaderRow:(MobilyDataItem*)headerRow footerRow:(MobilyDataItem*)footerRow;
+- (void)insertRow:(MobilyDataItem*)row atIndex:(NSUInteger)index;
+- (void)insertHeaderRow:(MobilyDataItem*)headerRow footerRow:(MobilyDataItem*)footerRow atIndex:(NSUInteger)index;
+- (void)deleteRow:(MobilyDataItem*)row;
+- (void)deleteAllRows;
+
+- (void)insertCell:(MobilyDataItem*)cell atColumn:(NSUInteger)column atRow:(NSUInteger)row;
+- (void)deleteAtColumn:(NSUInteger)column atRow:(NSUInteger)row;
+- (void)deleteAllCells;
 
 @end
 

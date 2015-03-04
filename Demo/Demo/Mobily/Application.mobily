@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <DemoApplication>
     <Window name="window">
-        <SlideController name="slideController">
-            <DemoCategoriesController name="slideLeftController" preset="controller"/>
-            <NavigationController name="slideCenterController" preset="navigation-controller">
+        <SlideController name="mainSlideController">
+            <DemoCategoriesController name="mainSlideLeftController" preset="controller"/>
+            <NavigationController name="mainSlideCenterController" preset="navigation-controller">
                 <DemoCategoriesController preset="controller"/>
             </NavigationController>
-            <DemoCategoriesController name="slideRightController" preset="controller"/>
+            <DemoCategoriesController name="mainSlideRightController" preset="controller"/>
         </SlideController>
     </Window>
 </DemoApplication>
