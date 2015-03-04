@@ -107,6 +107,10 @@
     [self prependHeaderColumn:column footerColumn:nil];
 }
 
+- (void)prependColumns:(NSArray*)columns {
+    [self prependHeaderColumns:columns footerColumns:nil];
+}
+
 - (void)prependHeaderColumn:(MobilyDataItem*)headerColumn footerColumn:(MobilyDataItem*)footerColumn {
     if(headerColumn != nil) {
         headerColumn.zOrder = -0.1f;
@@ -123,6 +127,30 @@
     } else if(footerColumn != nil) {
         [_cells insertColumn:[_footerColumns indexOfObject:footerColumn] objects:nil];
     }
+}
+
+- (void)prependHeaderColumns:(NSArray*)headerColumns footerColumns:(NSArray*)footerColumns {
+    if(headerColumns.count > 0) {
+        for(MobilyDataItem* headerColumn in headerColumns) {
+            headerColumn.zOrder = -0.1f;
+        }
+        [_headerColumns insertObjects:headerColumns atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, headerColumns.count)]];
+        [self _prependEntries:headerColumns];
+    }
+    if(footerColumns.count > 0) {
+        for(MobilyDataItem* footerColumn in footerColumns) {
+            footerColumn.zOrder = -0.1f;
+        }
+        [_footerColumns insertObjects:footerColumns atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, footerColumns.count)]];
+        [self _prependEntries:footerColumns];
+    }
+    /*
+    if(headerColumns.count > 0) {
+        [_cells insertColumn:[_headerColumns indexOfObject:headerColumn] objects:nil];
+    } else if(footerColumns.count > 0) {
+        [_cells insertColumn:[_footerColumns indexOfObject:footerColumn] objects:nil];
+    }
+    */
 }
 
 - (void)appendColumn:(MobilyDataItem*)column {
