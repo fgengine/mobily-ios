@@ -81,29 +81,29 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
     self.sections = MobilyDataContainerSectionsList.new;
     
     self.commonItems = MobilyDataContainerItemsList.new;
-    self.commonItems.header = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier data:@"COMMON"];
-    [self.commonItems appendItems:[MobilyDataItem dataItemsWithIdentifier:DemoCategoriesIdentifier dataArray:@[
+    self.commonItems.header = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"COMMON"];
+    [self.commonItems appendItems:[MobilyDataItem dataItemsWithIdentifier:DemoCategoriesIdentifier order:1 dataArray:@[
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeButtons title:@"Buttons"],
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeFields title:@"Fields"],
     ]]];
-    self.commonItems.footer = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier data:@"common"];
+    self.commonItems.footer = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"common"];
     [self.sections appendSection:self.commonItems];
     
     self.collectionItems = MobilyDataContainerItemsList.new;
-    self.collectionItems.header = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier data:@"COLLECTION"];
-    [self.collectionItems appendItems:[MobilyDataItem dataItemsWithIdentifier:DemoCategoriesIdentifier dataArray:@[
+    self.collectionItems.header = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"COLLECTION"];
+    [self.collectionItems appendItems:[MobilyDataItem dataItemsWithIdentifier:DemoCategoriesIdentifier order:1 dataArray:@[
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeCalendar title:@"Calendar"],
         ]]];
-    self.collectionItems.footer = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier data:@"collection"];
+    self.collectionItems.footer = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"collection"];
     [self.sections appendSection:self.collectionItems];
     
     self.audioVideoItems = MobilyDataContainerItemsList.new;
-    self.audioVideoItems.header = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier data:@"AUDIO / VIDEO"];
-    [self.audioVideoItems appendItems:[MobilyDataItem dataItemsWithIdentifier:DemoCategoriesIdentifier dataArray:@[
+    self.audioVideoItems.header = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"AUDIO / VIDEO"];
+    [self.audioVideoItems appendItems:[MobilyDataItem dataItemsWithIdentifier:DemoCategoriesIdentifier order:1 dataArray:@[
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioRecorder title:@"AudioRecorder"],
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioPlayer title:@"AudioPlayer"],
         ]]];
-    self.audioVideoItems.footer = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier data:@"audio / video"];
+    self.audioVideoItems.footer = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"audio / video"];
     [self.sections appendSection:self.audioVideoItems];
 }
 

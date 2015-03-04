@@ -48,26 +48,26 @@
 @property(nonatomic, readonly, weak) MobilyDataView* view;
 @property(nonatomic, readonly, weak) MobilyDataContainer* parent;
 @property(nonatomic, readonly, strong) NSString* identifier;
+@property(nonatomic, readonly, assign) NSUInteger order;
 @property(nonatomic, readonly, strong) id data;
-@property(nonatomic, readonly, strong) MobilyDataCell* cell;
 @property(nonatomic, readwrite, assign) CGRect originFrame;
 @property(nonatomic, readwrite, assign) CGRect updateFrame;
 @property(nonatomic, readwrite, assign) CGRect displayFrame;
 @property(nonatomic, readonly, assign) CGRect frame;
-@property(nonatomic, readwrite, assign) CGFloat zOrder;
 @property(nonatomic, readwrite, assign) BOOL allowsSelection;
 @property(nonatomic, readwrite, assign) BOOL allowsHighlighting;
 @property(nonatomic, readwrite, assign) BOOL allowsEditing;
 @property(nonatomic, readwrite, assign, getter=isSelected) BOOL selected;
 @property(nonatomic, readwrite, assign, getter=isHighlighted) BOOL highlighted;
 @property(nonatomic, readwrite, assign, getter=isEditing) BOOL editing;
+@property(nonatomic, readonly, strong) MobilyDataCell* cell;
 
 + (instancetype)dataItemWithDataItem:(MobilyDataItem*)dataItem;
-+ (instancetype)dataItemWithIdentifier:(NSString*)identifier data:(id)data;
-+ (NSArray*)dataItemsWithIdentifier:(NSString*)identifier dataArray:(NSArray*)dataArray;
++ (instancetype)dataItemWithIdentifier:(NSString*)identifier order:(NSUInteger)order data:(id)data ;
++ (NSArray*)dataItemsWithIdentifier:(NSString*)identifier order:(NSUInteger)order dataArray:(NSArray*)dataArray;
 
 - (instancetype)initWithDataItem:(MobilyDataItem*)dataItem;
-- (instancetype)initWithIdentifier:(NSString*)identifier data:(id)data;
+- (instancetype)initWithIdentifier:(NSString*)identifier order:(NSUInteger)order data:(id)data;
 
 - (BOOL)containsEventForKey:(id)key;
 

@@ -98,7 +98,6 @@
         }
         _header = header;
         if(_header != nil) {
-            _header.zOrder = -0.1f;
             [self _appendEntry:_header];
         }
         if(_view != nil) {
@@ -114,7 +113,6 @@
         }
         _footer = footer;
         if(_footer != nil) {
-            _footer.zOrder = -0.1f;
             [self _appendEntry:_footer];
         }
         if(_view != nil) {
@@ -126,7 +124,6 @@
 #pragma mark Public
 
 - (void)prependItem:(MobilyDataItem*)item {
-    item.zOrder = -0.2f;
     [_items insertObject:item atIndex:0];
     if(_header != nil) {
         [self _insertEntry:item atIndex:[_entries indexOfObject:_header] + 1];
@@ -136,9 +133,6 @@
 }
 
 - (void)prependItems:(NSArray*)items {
-    for(MobilyDataItem* item in items) {
-        item.zOrder = -0.2f;
-    }
     [_items insertObjects:items atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, items.count)]];
     if(_header != nil) {
         [self _insertEntries:items atIndex:[_entries indexOfObject:_header] + 1];
@@ -148,7 +142,6 @@
 }
 
 - (void)appendItem:(MobilyDataItem*)item {
-    item.zOrder = -0.2f;
     [_items addObject:item];
     if(_footer != nil) {
         [self _insertEntry:item atIndex:[_entries indexOfObject:_footer] - 1];
@@ -158,9 +151,6 @@
 }
 
 - (void)appendItems:(NSArray*)items {
-    for(MobilyDataItem* item in items) {
-        item.zOrder = -0.2f;
-    }
     [_items addObjectsFromArray:items];
     if(_footer != nil) {
         [self _insertEntries:items atIndex:[_entries indexOfObject:_footer] - 1];
@@ -170,7 +160,6 @@
 }
 
 - (void)insertItem:(MobilyDataItem*)item atIndex:(NSUInteger)index {
-    item.zOrder = -0.2f;
     [_items insertObject:item atIndex:index];
     if(_header != nil) {
         index = MAX(index, [_entries indexOfObject:_header] + 1);
@@ -182,9 +171,6 @@
 }
 
 - (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index {
-    for(MobilyDataItem* item in items) {
-        item.zOrder = -0.2f;
-    }
     [_items insertObjects:items atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, items.count)]];
     if(_header != nil) {
         index = MAX(index, [_entries indexOfObject:_header] + 1);
@@ -198,7 +184,6 @@
 - (void)replaceOriginItem:(MobilyDataItem*)originItem withItem:(MobilyDataItem*)item {
     NSUInteger index = [_items indexOfObject:originItem];
     if(index != NSNotFound) {
-        item.zOrder = -0.2f;
         _items[index] = item;
         [self _replaceOriginEntry:originItem withEntry:item];
     }
@@ -209,9 +194,6 @@
         return [originItems containsObject:originItem];
     }];
     if(indexSet.count == items.count) {
-        for(MobilyDataItem* item in items) {
-            item.zOrder = -0.2f;
-        }
         [_items replaceObjectsAtIndexes:indexSet withObjects:items];
         [self _replaceOriginEntries:originItems withEntries:items];
     }

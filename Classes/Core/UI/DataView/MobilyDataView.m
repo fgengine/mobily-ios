@@ -484,28 +484,13 @@
 #pragma mark Public
 
 - (void)registerIdentifier:(NSString*)identifier withViewClass:(Class)viewClass {
-    [self registerIdentifier:identifier withViewClass:viewClass preload:0];
-}
-
-- (void)registerIdentifier:(NSString*)identifier withViewClass:(Class)viewClass preload:(NSUInteger)preload {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_registersViews[identifier] != nil) {
-        NSLog(@"ERROR: [%@:%@] %@ - %@ - %d", self.class, NSStringFromSelector(_cmd), identifier, viewClass, (int)preload);
+        NSLog(@"ERROR: [%@:%@] %@ - %@", self.class, NSStringFromSelector(_cmd), identifier, viewClass);
         return;
     }
 #endif
     _registersViews[identifier] = viewClass;
-    if(preload > 0) {
-        NSMutableArray* queue = [NSMutableArray array];
-        for(NSUInteger i = 0; i < preload; i++) {
-            MobilyDataCell* cell = [[_registersViews[identifier] alloc] initWithIdentifier:identifier];
-            if(cell != nil) {
-                [self insertSubview:cell atIndex:0];
-                [queue addObject:cell];
-            }
-        }
-        _queueCells[identifier] = queue;
-    }
 }
 
 - (void)unregisterIdentifier:(NSString*)identifier {
@@ -574,7 +559,14 @@
         if(cell == nil) {
             cell = [[_registersViews[identifier] alloc] initWithIdentifier:identifier];
             if(cell != nil) {
-                [self insertSubview:cell atIndex:0];
+                NSUInteger index = [_visibleItems indexOfObjectPassingTest:^BOOL(MobilyDataItem* visibleItem, NSUInteger index, BOOL* stop) {
+                    return (visibleItem.order > item.order);
+                }];
+                if(index != NSNotFound) {
+                    [self insertSubview:cell atIndex:index];
+                } else {
+                    [self addSubview:cell];
+                }
             }
         } else {
             [queue removeLastObject];

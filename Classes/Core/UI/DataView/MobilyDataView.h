@@ -94,7 +94,6 @@ typedef NS_OPTIONS(NSUInteger, MobilyDataViewPosition) {
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat pullToLoadHeight;
 
 - (void)registerIdentifier:(NSString*)identifier withViewClass:(Class)viewClass;
-- (void)registerIdentifier:(NSString*)identifier withViewClass:(Class)viewClass preload:(NSUInteger)preload;
 - (void)unregisterIdentifier:(NSString*)identifier;
 - (void)unregisterAllIdentifiers;
 

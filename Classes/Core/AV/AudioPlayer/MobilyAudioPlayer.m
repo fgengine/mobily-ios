@@ -159,6 +159,36 @@
     return _player.numberOfLoops;
 }
 
+- (void)setMeteringEnabled:(BOOL)meteringEnabled {
+    _player.meteringEnabled = meteringEnabled;
+}
+
+- (BOOL)isMeteringEnabled {
+    return _player.isMeteringEnabled;
+}
+
+- (CGFloat)peakPower {
+    CGFloat result = 0.0f;
+    if(_prepared == YES) {
+        for(NSUInteger channel = 0; channel < _player.numberOfLoops; channel++) {
+            result += [_player peakPowerForChannel:channel];
+        }
+        result /= _player.numberOfLoops;
+    }
+    return result;
+}
+
+- (CGFloat)averagePower {
+    CGFloat result = 0.0f;
+    if(_prepared == YES) {
+        for(NSUInteger channel = 0; channel < _player.numberOfLoops; channel++) {
+            result += [_player averagePowerForChannel:channel];
+        }
+        result /= _player.numberOfLoops;
+    }
+    return result;
+}
+
 #pragma mark Public
 
 - (BOOL)prepareWithName:(NSString*)name {
@@ -269,6 +299,19 @@
     }
 }
 
+- (void)resume {
+    if((_prepared == YES) && (_playing == YES) && (_paused == YES)) {
+        if([_player play] == YES) {
+            self.paused = NO;
+            if([_delegate respondsToSelector:@selector(audioPlayerDidResumed:)] == YES) {
+                [_delegate audioPlayerDidResumed:self];
+            } else if(_resumedBlock != nil) {
+                _resumedBlock();
+            }
+        }
+    }
+}
+
 - (void)pause {
     if((_prepared == YES) && (_playing == YES) && (_paused == NO)) {
         self.paused = YES;
@@ -281,17 +324,26 @@
     }
 }
 
-- (void)resume {
-    if((_prepared == YES) && (_playing == YES) && (_paused == YES)) {
-        if([_player play] == YES) {
-            self.paused = NO;
-            if([_delegate respondsToSelector:@selector(audioPlayerDidResumed:)] == YES) {
-                [_delegate audioPlayerDidResumed:self];
-            } else if(_resumedBlock != nil) {
-                _resumedBlock();
-            }
-        }
+- (void)updateMeters {
+    if(_prepared == YES) {
+        [_player updateMeters];
     }
+}
+
+- (CGFloat)peakPowerForChannel:(NSUInteger)channelNumber {
+    CGFloat result = 0.0f;
+    if(_prepared == YES) {
+        result = [_player peakPowerForChannel:channelNumber];
+    }
+    return result;
+}
+
+- (CGFloat)averagePowerForChannel:(NSUInteger)channelNumber {
+    CGFloat result = 0.0f;
+    if(_prepared == YES) {
+        result = [_player averagePowerForChannel:channelNumber];
+    }
+    return result;
 }
 
 #pragma mark AVAudioPlayerDelegate

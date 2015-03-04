@@ -107,18 +107,12 @@
     [self prependHeaderColumn:column footerColumn:nil];
 }
 
-- (void)prependColumns:(NSArray*)columns {
-    [self prependHeaderColumns:columns footerColumns:nil];
-}
-
 - (void)prependHeaderColumn:(MobilyDataItem*)headerColumn footerColumn:(MobilyDataItem*)footerColumn {
     if(headerColumn != nil) {
-        headerColumn.zOrder = -0.1f;
         [_headerColumns insertObject:headerColumn atIndex:0];
         [self _prependEntry:headerColumn];
     }
     if(footerColumn != nil) {
-        footerColumn.zOrder = -0.1f;
         [_footerColumns insertObject:footerColumn atIndex:0];
         [self _prependEntry:footerColumn];
     }
@@ -129,42 +123,16 @@
     }
 }
 
-- (void)prependHeaderColumns:(NSArray*)headerColumns footerColumns:(NSArray*)footerColumns {
-    if(headerColumns.count > 0) {
-        for(MobilyDataItem* headerColumn in headerColumns) {
-            headerColumn.zOrder = -0.1f;
-        }
-        [_headerColumns insertObjects:headerColumns atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, headerColumns.count)]];
-        [self _prependEntries:headerColumns];
-    }
-    if(footerColumns.count > 0) {
-        for(MobilyDataItem* footerColumn in footerColumns) {
-            footerColumn.zOrder = -0.1f;
-        }
-        [_footerColumns insertObjects:footerColumns atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, footerColumns.count)]];
-        [self _prependEntries:footerColumns];
-    }
-    /*
-    if(headerColumns.count > 0) {
-        [_cells insertColumn:[_headerColumns indexOfObject:headerColumn] objects:nil];
-    } else if(footerColumns.count > 0) {
-        [_cells insertColumn:[_footerColumns indexOfObject:footerColumn] objects:nil];
-    }
-    */
-}
-
 - (void)appendColumn:(MobilyDataItem*)column {
     [self appendHeaderColumn:column footerColumn:nil];
 }
 
 - (void)appendHeaderColumn:(MobilyDataItem*)headerColumn footerColumn:(MobilyDataItem*)footerColumn {
     if(headerColumn != nil) {
-        headerColumn.zOrder = -0.1f;
         [_headerColumns addObject:headerColumn];
         [self _appendEntry:headerColumn];
     }
     if(footerColumn != nil) {
-        footerColumn.zOrder = -0.1f;
         [_footerColumns addObject:footerColumn];
         [self _appendEntry:footerColumn];
     }
@@ -181,12 +149,10 @@
 
 - (void)insertHeaderColumn:(MobilyDataItem*)headerColumn footerColumn:(MobilyDataItem*)footerColumn atIndex:(NSUInteger)index {
     if(headerColumn != nil) {
-        headerColumn.zOrder = -0.1f;
         [_headerColumns insertObject:headerColumn atIndex:index];
         [self _insertEntry:headerColumn atIndex:index];
     }
     if(footerColumn != nil) {
-        footerColumn.zOrder = -0.1f;
         [_footerColumns insertObject:footerColumn atIndex:index];
         [self _insertEntry:footerColumn atIndex:index];
     }
@@ -235,12 +201,10 @@
 
 - (void)prependHeaderRow:(MobilyDataItem*)headerRow footerRow:(MobilyDataItem*)footerRow {
     if(headerRow != nil) {
-        headerRow.zOrder = -0.1f;
         [_headerRows insertObject:headerRow atIndex:0];
         [self _prependEntry:headerRow];
     }
     if(footerRow != nil) {
-        footerRow.zOrder = -0.1f;
         [_footerRows insertObject:footerRow atIndex:0];
         [self _prependEntry:footerRow];
     }
@@ -257,12 +221,10 @@
 
 - (void)appendHeaderRow:(MobilyDataItem*)headerRow footerRow:(MobilyDataItem*)footerRow {
     if(headerRow != nil) {
-        headerRow.zOrder = -0.1f;
         [_headerRows addObject:headerRow];
         [self _appendEntry:headerRow];
     }
     if(footerRow != nil) {
-        footerRow.zOrder = -0.1f;
         [_footerRows addObject:footerRow];
         [self _appendEntry:footerRow];
     }
@@ -279,12 +241,10 @@
 
 - (void)insertHeaderRow:(MobilyDataItem*)headerRow footerRow:(MobilyDataItem*)footerRow atIndex:(NSUInteger)index {
     if(headerRow != nil) {
-        headerRow.zOrder = -0.1f;
         [_headerRows insertObject:headerRow atIndex:index];
         [self _insertEntry:headerRow atIndex:index];
     }
     if(footerRow != nil) {
-        footerRow.zOrder = -0.1f;
         [_footerRows insertObject:footerRow atIndex:index];
         [self _insertEntry:footerRow atIndex:index];
     }

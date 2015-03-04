@@ -45,17 +45,17 @@
 @synthesize parent = _parent;
 @synthesize identifier = _identifier;
 @synthesize data = _data;
-@synthesize cell = _cell;
 @synthesize originFrame = _originFrame;
 @synthesize updateFrame = _updateFrame;
 @synthesize displayFrame = _displayFrame;
-@synthesize zOrder = _zOrder;
+@synthesize order = _order;
 @synthesize allowsSelection = _allowsSelection;
 @synthesize allowsHighlighting = _allowsHighlighting;
 @synthesize allowsEditing = _allowsEditing;
 @synthesize selected = _selected;
 @synthesize highlighted = _highlighted;
 @synthesize editing = _editing;
+@synthesize cell = _cell;
 
 #pragma mark Init / Free
 
@@ -63,14 +63,14 @@
     return [[self alloc] initWithDataItem:dataItem];
 }
 
-+ (instancetype)dataItemWithIdentifier:(NSString*)identifier data:(id)data {
-    return [[self alloc] initWithIdentifier:identifier data:data];
++ (instancetype)dataItemWithIdentifier:(NSString*)identifier order:(NSUInteger)order data:(id)data {
+    return [[self alloc] initWithIdentifier:identifier order:order data:data];
 }
 
-+ (NSArray*)dataItemsWithIdentifier:(NSString*)identifier dataArray:(NSArray*)dataArray {
++ (NSArray*)dataItemsWithIdentifier:(NSString*)identifier order:(NSUInteger)order dataArray:(NSArray*)dataArray {
     NSMutableArray* items = [NSMutableArray arrayWithCapacity:dataArray.count];
     for(id data in dataArray) {
-        [items addObject:[self dataItemWithIdentifier:identifier data:data]];
+        [items addObject:[self dataItemWithIdentifier:identifier order:order data:data]];
     }
     return items;
 }
@@ -79,6 +79,7 @@
     self = [super init];
     if(self != nil) {
         _identifier = dataItem.identifier;
+        _order = dataItem.order;
         _data = dataItem.data;
         _originFrame = dataItem.originFrame;
         _updateFrame = dataItem.updateFrame;
@@ -92,10 +93,11 @@
     return self;
 }
 
-- (instancetype)initWithIdentifier:(NSString*)identifier data:(id)data {
+- (instancetype)initWithIdentifier:(NSString*)identifier order:(NSUInteger)order data:(id)data {
     self = [super init];
     if(self != nil) {
         _identifier = identifier;
+        _order = order;
         _data = data;
         _originFrame = CGRectNull;
         _updateFrame = CGRectNull;
@@ -152,7 +154,6 @@
                 if(CGRectIsNull(_originFrame) == NO) {
                     _cell.frame = _originFrame;
                 }
-                _cell.zPosition = _zOrder;
                 _cell.selected = _selected;
                 _cell.highlighted = _highlighted;
             }];
@@ -196,15 +197,6 @@
         return _updateFrame;
     }
     return _originFrame;
-}
-
-- (void)setZOrder:(CGFloat)zOrder {
-    if(_zOrder != zOrder) {
-        _zOrder = zOrder;
-        if(_cell != nil) {
-            _cell.zPosition = zOrder;
-        }
-    }
 }
 
 - (void)setSelected:(BOOL)selected {
@@ -366,7 +358,7 @@
 }
 
 - (instancetype)initWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate data:(id)data {
-    self = [super initWithIdentifier:MobilyDataCalendarMonthIdentifier data:data];
+    self = [super initWithIdentifier:MobilyDataCalendarMonthIdentifier order:3 data:data];
     if(self != nil) {
         _calendar = calendar;
         _beginDate = beginDate;
@@ -393,7 +385,7 @@
 }
 
 - (instancetype)initWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data {
-    self = [super initWithIdentifier:MobilyDataCalendarWeekdayIdentifier data:data];
+    self = [super initWithIdentifier:MobilyDataCalendarWeekdayIdentifier order:2 data:data];
     if(self != nil) {
         _calendar = calendar;
         _date = date;
@@ -419,7 +411,7 @@
 }
 
 - (instancetype)initWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data {
-    self = [super initWithIdentifier:MobilyDataCalendarDayIdentifier data:data];
+    self = [super initWithIdentifier:MobilyDataCalendarDayIdentifier order:1 data:data];
     if(self != nil) {
         _calendar = calendar;
         _date = date;

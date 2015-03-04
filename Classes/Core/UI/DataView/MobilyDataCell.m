@@ -306,7 +306,7 @@
 - (void)animateAction:(MobilyDataCellAction)action {
     switch(action) {
         case MobilyDataCellActionRestore: {
-            self.zPosition = _item.zOrder;
+            self.zPosition = 0.0f;
             self.alpha = 1.0f;
             break;
         }
@@ -314,7 +314,7 @@
             [UIView performWithoutAnimation:^{
                 self.alpha = 0.0f;
             }];
-            self.zPosition = _item.zOrder;
+            self.zPosition = 0.0f;
             self.alpha = 1.0f;
             break;
         }
@@ -332,7 +332,7 @@
             [UIView performWithoutAnimation:^{
                 self.alpha = 0.0f;
             }];
-            self.zPosition = _item.zOrder;
+            self.zPosition = 0.0f;
             self.alpha = 1.0f;
             break;
         }

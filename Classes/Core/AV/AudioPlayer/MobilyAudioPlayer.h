@@ -57,6 +57,9 @@ typedef void(^MobilyAudioPlayerErrorBlock)(NSError* error);
 @property(nonatomic, readwrite, assign) BOOL enableRate;
 @property(nonatomic, readwrite, assign) CGFloat rate;
 @property(nonatomic, readwrite, assign) NSInteger numberOfLoops;
+@property(nonatomic, readwrite, assign, getter=isMeteringEnabled) BOOL meteringEnabled;
+@property(nonatomic, readonly, assign) CGFloat peakPower;
+@property(nonatomic, readonly, assign) CGFloat averagePower;
 
 @property(nonatomic, readonly, assign, getter=isPrepared) BOOL prepared;
 @property(nonatomic, readonly, assign, getter=isPlaying) BOOL playing;
@@ -83,6 +86,11 @@ typedef void(^MobilyAudioPlayerErrorBlock)(NSError* error);
 
 - (void)resume;
 - (void)pause;
+
+- (void)updateMeters;
+
+- (CGFloat)peakPowerForChannel:(NSUInteger)channelNumber;
+- (CGFloat)averagePowerForChannel:(NSUInteger)channelNumber;
 
 @end
 

@@ -175,35 +175,21 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 @property(nonatomic, readonly, strong) MobilyGrid* cells;
 
 - (void)prependColumn:(MobilyDataItem*)column;
-- (void)prependColumns:(NSArray*)columns;
 - (void)prependHeaderColumn:(MobilyDataItem*)headerColumn footerColumn:(MobilyDataItem*)footerColumn;
-- (void)prependHeaderColumns:(NSArray*)headerColumns footerColumns:(NSArray*)footerColumns;
 - (void)appendColumn:(MobilyDataItem*)column;
-- (void)appendColumns:(NSArray*)columns;
 - (void)appendHeaderColumn:(MobilyDataItem*)headerColumn footerColumn:(MobilyDataItem*)footerColumn;
-- (void)appendHeaderColumns:(NSArray*)headerColumns footerColumns:(NSArray*)footerColumns;
 - (void)insertColumn:(MobilyDataItem*)column atIndex:(NSUInteger)index;
-- (void)insertColumns:(NSArray*)columns atIndex:(NSUInteger)index;
 - (void)insertHeaderColumn:(MobilyDataItem*)headerColumn footerColumn:(MobilyDataItem*)footerColumn atIndex:(NSUInteger)index;
-- (void)insertHeaderColumns:(NSArray*)headerColumns footerColumns:(NSArray*)footerColumnsNSArray atIndex:(NSUInteger)index;
 - (void)deleteColumn:(MobilyDataItem*)column;
-- (void)deleteColumns:(NSArray*)columns;
 - (void)deleteAllColumns;
 
 - (void)prependRow:(MobilyDataItem*)row;
-- (void)prependRows:(NSArray*)rows;
 - (void)prependHeaderRow:(MobilyDataItem*)headerRow footerRow:(MobilyDataItem*)footerRow;
-- (void)prependHeaderRows:(NSArray*)headerRows footerRows:(NSArray*)footerRows;
 - (void)appendRow:(MobilyDataItem*)row;
-- (void)appendRows:(NSArray*)rows;
 - (void)appendHeaderRow:(MobilyDataItem*)headerRow footerRow:(MobilyDataItem*)footerRow;
-- (void)appendHeaderRows:(NSArray*)headerRows footerRows:(NSArray*)footerRows;
 - (void)insertRow:(MobilyDataItem*)row atIndex:(NSUInteger)index;
-- (void)insertRows:(NSArray*)rows atIndex:(NSUInteger)index;
 - (void)insertHeaderRow:(MobilyDataItem*)headerRow footerRow:(MobilyDataItem*)footerRow atIndex:(NSUInteger)index;
-- (void)insertHeaderRows:(NSArray*)headerRows footerRows:(NSArray*)footerRows atIndex:(NSUInteger)index;
 - (void)deleteRow:(MobilyDataItem*)row;
-- (void)deleteRows:(NSArray*)rows;
 - (void)deleteAllRows;
 
 - (void)insertCell:(MobilyDataItem*)cell atColumn:(NSUInteger)column atRow:(NSUInteger)row;

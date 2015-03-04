@@ -45,19 +45,19 @@
     __weak MobilyDataView* _view;
     __weak MobilyDataContainer* _parent;
     NSString* _identifier;
+    NSUInteger _order;
     id _data;
-    MobilyDataCell* _cell;
     CGRect _originFrame;
     CGRect _updateFrame;
     CGRect _displayFrame;
     CGRect _frame;
-    CGFloat _zOrder;
     BOOL _allowsSelection;
     BOOL _allowsHighlighting;
     BOOL _allowsEditing;
     BOOL _selected;
     BOOL _highlighted;
     BOOL _editing;
+    MobilyDataCell* _cell;
 }
 
 @property(nonatomic, readwrite, weak) MobilyDataView* view;
