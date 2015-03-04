@@ -559,13 +559,17 @@
         if(cell == nil) {
             cell = [[_registersViews[identifier] alloc] initWithIdentifier:identifier];
             if(cell != nil) {
-                NSUInteger index = [_visibleItems indexOfObjectPassingTest:^BOOL(MobilyDataItem* visibleItem, NSUInteger index, BOOL* stop) {
-                    return (visibleItem.order > item.order);
+                NSUInteger index = [self.subviews indexOfObjectPassingTest:^BOOL(UIView* view, NSUInteger index, BOOL* stop) {
+                    if([view isKindOfClass:MobilyDataCell.class] == YES) {
+                        MobilyDataCell* visibleCell = (MobilyDataCell*)view;
+                        return (item.order < visibleCell.item.order);
+                    }
+                    return NO;
                 }];
                 if(index != NSNotFound) {
                     [self insertSubview:cell atIndex:index];
                 } else {
-                    [self addSubview:cell];
+                    [self insertSubview:cell atIndex:0];
                 }
             }
         } else {
@@ -980,6 +984,14 @@
 
 - (void)_appearItem:(MobilyDataItem*)item {
     [_visibleItems addObject:item];
+    [_visibleItems sortUsingComparator:^NSComparisonResult(MobilyDataItem* item1, MobilyDataItem* item2) {
+        if(item1.order < item2.order) {
+            return NSOrderedAscending;
+        } else if(item1.order > item2.order) {
+            return NSOrderedDescending;
+        }
+        return NSOrderedSame;
+    }];
     [self dequeueCellWithItem:item];
 }
 
