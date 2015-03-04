@@ -104,7 +104,7 @@
 }
 
 - (NSUInteger)numberOfChannels {
-    return [_player numberOfChannels];
+    return _player.numberOfChannels;
 }
 
 - (void)setCurrentTime:(NSTimeInterval)currentTime {
@@ -170,10 +170,10 @@
 - (CGFloat)peakPower {
     CGFloat result = 0.0f;
     if(_prepared == YES) {
-        for(NSUInteger channel = 0; channel < _player.numberOfLoops; channel++) {
+        for(NSUInteger channel = 0; channel < _player.numberOfChannels; channel++) {
             result += [_player peakPowerForChannel:channel];
         }
-        result /= _player.numberOfLoops;
+        result /= _player.numberOfChannels;
     }
     return result;
 }
@@ -181,10 +181,10 @@
 - (CGFloat)averagePower {
     CGFloat result = 0.0f;
     if(_prepared == YES) {
-        for(NSUInteger channel = 0; channel < _player.numberOfLoops; channel++) {
+        for(NSUInteger channel = 0; channel < _player.numberOfChannels; channel++) {
             result += [_player averagePowerForChannel:channel];
         }
-        result /= _player.numberOfLoops;
+        result /= _player.numberOfChannels;
     }
     return result;
 }

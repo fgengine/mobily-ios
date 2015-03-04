@@ -55,6 +55,9 @@ typedef void(^MobilyAudioRecorderErrorBlock)(NSError* error);
 @property(nonatomic, readwrite, assign) CGFloat sampleRate;
 @property(nonatomic, readonly, strong) NSURL* url;
 @property(nonatomic, readonly, assign) NSTimeInterval duration;
+@property(nonatomic, readwrite, assign, getter=isMeteringEnabled) BOOL meteringEnabled;
+@property(nonatomic, readonly, assign) CGFloat peakPower;
+@property(nonatomic, readonly, assign) CGFloat averagePower;
 
 @property(nonatomic, readonly, assign, getter=isPrepared) BOOL prepared;
 @property(nonatomic, readonly, assign, getter=isStarted) BOOL started;
@@ -81,6 +84,11 @@ typedef void(^MobilyAudioRecorderErrorBlock)(NSError* error);
 
 - (void)resume;
 - (void)pause;
+
+- (void)updateMeters;
+
+- (CGFloat)peakPowerForChannel:(NSUInteger)channelNumber;
+- (CGFloat)averagePowerForChannel:(NSUInteger)channelNumber;
 
 @end
 

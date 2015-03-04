@@ -123,6 +123,32 @@
     return _duration;
 }
 
+- (BOOL)isMeteringEnabled {
+    return _recorder.isMeteringEnabled;
+}
+
+- (CGFloat)peakPower {
+    CGFloat result = 0.0f;
+    if(_prepared == YES) {
+        for(NSUInteger channel = 0; channel < _numberOfChannels; channel++) {
+            result += [_recorder peakPowerForChannel:channel];
+        }
+        result /= _numberOfChannels;
+    }
+    return result;
+}
+
+- (CGFloat)averagePower {
+    CGFloat result = 0.0f;
+    if(_prepared == YES) {
+        for(NSUInteger channel = 0; channel < _numberOfChannels; channel++) {
+            result += [_recorder averagePowerForChannel:channel];
+        }
+        result /= _numberOfChannels;
+    }
+    return result;
+}
+
 #pragma mark Public
 
 - (BOOL)prepareWithName:(NSString*)name {
@@ -216,6 +242,28 @@
             _resumedBlock();
         }
     }
+}
+
+- (void)updateMeters {
+    if(_prepared == YES) {
+        [_recorder updateMeters];
+    }
+}
+
+- (CGFloat)peakPowerForChannel:(NSUInteger)channelNumber {
+    CGFloat result = 0.0f;
+    if(_prepared == YES) {
+        result = [_recorder peakPowerForChannel:channelNumber];
+    }
+    return result;
+}
+
+- (CGFloat)averagePowerForChannel:(NSUInteger)channelNumber {
+    CGFloat result = 0.0f;
+    if(_prepared == YES) {
+        result = [_recorder averagePowerForChannel:channelNumber];
+    }
+    return result;
 }
 
 #pragma mark Private
