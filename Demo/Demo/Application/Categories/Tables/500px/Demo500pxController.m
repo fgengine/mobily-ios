@@ -2,7 +2,7 @@
 /*                                                  */
 /* The MIT License (MIT)                            */
 /*                                                  */
-/* Copyright (c) 2014 fgengine(Alexander Trifonov)  */
+/* Copyright (c) 2014 Mobily TEAM                   */
 /*                                                  */
 /* Permission is hereby granted, free of charge,    */
 /* to any person obtaining a copy of this software  */
@@ -75,7 +75,7 @@ static NSString* PXConsumerSecret = @"wMDdVbq28mvbkb0GxbLxBW9UdO8v4NZkMIVFqZWl";
 - (void)update {
     [super update];
     
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    [self.activity show];
     [PXRequest requestForSearchTerm:@"Comics"
                                page:1
                      resultsPerPage:500
@@ -86,7 +86,7 @@ static NSString* PXConsumerSecret = @"wMDdVbq28mvbkb0GxbLxBW9UdO8v4NZkMIVFqZWl";
                                  self.dataSource = [results valueForKey:@"photos"];
                                  [_tableView reloadData];
                              }
-                             UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
+                             [self.activity hide];
                          }];
 }
 

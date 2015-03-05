@@ -2,7 +2,7 @@
 /*                                                  */
 /* The MIT License (MIT)                            */
 /*                                                  */
-/* Copyright (c) 2014 fgengine(Alexander Trifonov)  */
+/* Copyright (c) 2014 Mobily TEAM                   */
 /*                                                  */
 /* Permission is hereby granted, free of charge,    */
 /* to any person obtaining a copy of this software  */
@@ -34,6 +34,7 @@
 /*--------------------------------------------------*/
 
 #import "MobilyController.h"
+#import "MobilyActivityView.h"
 
 /*--------------------------------------------------*/
 
@@ -42,6 +43,8 @@
 @property(nonatomic, readwrite, assign, getter=isAutomaticallyHideKeyboard) BOOL automaticallyHideKeyboard;
 @property(nonatomic, readwrite, assign) UIInterfaceOrientationMask orientation;
 @property(nonatomic, readonly, strong) NSString* mobilyName;
+
+@property(nonatomic, readonly, strong) MobilyActivityView* activity;
 
 @end
 

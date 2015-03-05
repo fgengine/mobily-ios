@@ -2,7 +2,7 @@
 /*                                                  */
 /* The MIT License (MIT)                            */
 /*                                                  */
-/* Copyright (c) 2014 fgengine(Alexander Trifonov)  */
+/* Copyright (c) 2014 Mobily TEAM                   */
 /*                                                  */
 /* Permission is hereby granted, free of charge,    */
 /* to any person obtaining a copy of this software  */
@@ -43,11 +43,13 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyWindow ()
-
-@property(nonatomic, readwrite, strong) UIView* emptyView;
-@property(nonatomic, readwrite, strong) UITapGestureRecognizer* emptyTabGesture;
-@property(nonatomic, readwrite, strong) UIPanGestureRecognizer* emptyPanGesture;
+@interface MobilyWindow () {
+@protected
+    UIView* _emptyView;
+    UITapGestureRecognizer* _emptyTabGesture;
+    UIPanGestureRecognizer* _emptyPanGesture;
+    MobilyActivityView* _activity;
+}
 
 - (void)willShowKeyboard:(NSNotification*)notification;
 - (void)didHideKeyboard:(NSNotification*)notification;
@@ -97,14 +99,6 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 
 - (void)dealloc {
     [_eventDidUnload fireSender:self object:nil];
-    
-    self.objectName = nil;
-    self.objectParent = nil;
-    self.objectChilds = nil;
-    
-    self.emptyView = nil;
-    self.emptyTabGesture = nil;
-    self.emptyPanGesture = nil;
 }
 
 #pragma mark MobilyBuilderObject
@@ -145,22 +139,18 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
     [super becomeKeyWindow];
     
     if(_emptyView == nil) {
-        self.emptyView = [[UIView alloc] initWithFrame:self.bounds];
+        _emptyView = [[UIView alloc] initWithFrame:self.bounds];
         if(_emptyView != nil) {
             _emptyView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
             _emptyView.backgroundColor = [UIColor clearColor];
             _emptyView.hidden = YES;
             [self addSubview:_emptyView];
             
-            self.emptyTabGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(resignCurrentFirstResponder)];
-            if(_emptyTabGesture != nil) {
-                [_emptyView addGestureRecognizer:_emptyTabGesture];
-            }
+            _emptyTabGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(resignCurrentFirstResponder)];
+            [_emptyView addGestureRecognizer:_emptyTabGesture];
             
-            self.emptyPanGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(resignCurrentFirstResponder)];
-            if(_emptyPanGesture != nil) {
-                [_emptyView addGestureRecognizer:_emptyPanGesture];
-            }
+            _emptyPanGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(resignCurrentFirstResponder)];
+            [_emptyView addGestureRecognizer:_emptyPanGesture];
         }
     }
     
@@ -226,6 +216,15 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
         }
     }
     return [super hitTest:point withEvent:event];
+}
+
+#pragma mark Property
+
+- (MobilyActivityView*)activity {
+    if(_activity == nil) {
+        _activity = [MobilyActivityView activityViewInView:self style:MobilyActivityViewStyleCircle];
+    }
+    return _activity;
 }
 
 #pragma mark Public

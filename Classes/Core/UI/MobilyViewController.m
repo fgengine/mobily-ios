@@ -2,7 +2,7 @@
 /*                                                  */
 /* The MIT License (MIT)                            */
 /*                                                  */
-/* Copyright (c) 2014 fgengine(Alexander Trifonov)  */
+/* Copyright (c) 2014 Mobily TEAM                   */
 /*                                                  */
 /* Permission is hereby granted, free of charge,    */
 /* to any person obtaining a copy of this software  */
@@ -38,9 +38,11 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyViewController ()
-
-@property(nonatomic, readwrite, strong) NSString* mobilyName;
+@interface MobilyViewController () {
+@protected
+    NSString* _mobilyName;
+    MobilyActivityView* _activity;
+}
 
 @end
 
@@ -69,7 +71,6 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
 }
 
 - (void)dealloc {
-    self.mobilyName = nil;
 }
 
 #pragma mark MobilyLoaderObject
@@ -123,6 +124,15 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
             [super loadView];
         }
     }
+}
+
+#pragma mark Property
+
+- (MobilyActivityView*)activity {
+    if(_activity == nil) {
+        _activity = [MobilyActivityView activityViewInView:self.view style:MobilyActivityViewStyleCircle];
+    }
+    return _activity;
 }
 
 @end

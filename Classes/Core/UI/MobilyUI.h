@@ -2,7 +2,7 @@
 /*                                                  */
 /* The MIT License (MIT)                            */
 /*                                                  */
-/* Copyright (c) 2014 fgengine(Alexander Trifonov)  */
+/* Copyright (c) 2014 Mobily TEAM                   */
 /*                                                  */
 /* Permission is hereby granted, free of charge,    */
 /* to any person obtaining a copy of this software  */
@@ -35,6 +35,7 @@
 
 #import "MobilyObject.h"
 #import "MobilyCG.h"
+#import "MobilyCA.h"
 
 /*--------------------------------------------------*/
 

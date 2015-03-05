@@ -2,7 +2,7 @@
 /*                                                  */
 /* The MIT License (MIT)                            */
 /*                                                  */
-/* Copyright (c) 2014 fgengine(Alexander Trifonov)  */
+/* Copyright (c) 2014 Mobily TEAM                   */
 /*                                                  */
 /* Permission is hereby granted, free of charge,    */
 /* to any person obtaining a copy of this software  */
@@ -34,7 +34,7 @@
 /*--------------------------------------------------*/
 
 #import "MobilyBuilder.h"
-#import "MobilyUI.h"
+#import "MobilyActivityView.h"
 
 /*--------------------------------------------------*/
 
@@ -43,6 +43,8 @@
 @property(nonatomic, readwrite, assign, getter=isAutomaticallyHideKeyboard) BOOL automaticallyHideKeyboard;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidLoad;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidUnload;
+
+@property(nonatomic, readonly, strong) MobilyActivityView* activity;
 
 @end
 
