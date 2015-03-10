@@ -50,12 +50,25 @@
 
 #pragma mark Init / Free
 
++ (instancetype)containerWithOrientation:(MobilyDataContainerOrientation)orientation {
+    return [[self alloc] initWithOrientation:orientation];
+}
+
+- (instancetype)initWithOrientation:(MobilyDataContainerOrientation)orientation {
+    self = [super init];
+    if(self != nil) {
+        _orientation = orientation;
+    }
+    return self;
+}
+
 - (void)setup {
     [super setup];
     
     _orientation = MobilyDataContainerOrientationVertical;
     _margin = UIEdgeInsetsZero;
     _spacing = UIOffsetZero;
+    _defaultSize = CGSizeMake(44.0f, 44.0f);
     _items = NSMutableArray.array;
 }
 
@@ -216,8 +229,8 @@
 - (void)deleteAllItems {
     if(_items.count > 0) {
         NSArray* items = [NSArray arrayWithArray:_items];
-        [self _deleteEntries:items];
         [_items removeAllObjects];
+        [self _deleteEntries:items];
     }
 }
 
@@ -231,7 +244,7 @@
         case MobilyDataContainerOrientationVertical: {
             cumulative.width = restriction.width;
             for(MobilyDataItem* entry in _entries) {
-                CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake(restriction.width, FLT_MAX)];
+                CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake(restriction.width, (_defaultSize.height > 0) ? _defaultSize.height : FLT_MAX)];
                 if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f)) {
                     entry.updateFrame = CGRectMake(offset.x, offset.y + cumulative.height, restriction.width, entrySize.height);
                     cumulative.height += entrySize.height + _spacing.vertical;
@@ -243,7 +256,7 @@
         case MobilyDataContainerOrientationHorizontal: {
             cumulative.height = restriction.height;
             for(MobilyDataItem* entry in _entries) {
-                CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake(FLT_MAX, restriction.height)];
+                CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake((_defaultSize.width > 0) ? _defaultSize.width : FLT_MAX, restriction.height)];
                 if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f)) {
                     entry.updateFrame = CGRectMake(offset.x + cumulative.width, offset.y, entrySize.width, restriction.height);
                     cumulative.width += entrySize.width + _spacing.horizontal;

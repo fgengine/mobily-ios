@@ -50,9 +50,21 @@
 @synthesize footerColumns = _footerColumns;
 @synthesize headerRows = _headerRows;
 @synthesize footerRows = _footerRows;
-@synthesize cells = _cells;
+@synthesize content = _content;
 
 #pragma mark Init / Free
+
++ (instancetype)containerWithOrientation:(MobilyDataContainerOrientation)orientation {
+    return [[self alloc] initWithOrientation:orientation];
+}
+
+- (instancetype)initWithOrientation:(MobilyDataContainerOrientation)orientation {
+    self = [super init];
+    if(self != nil) {
+        _orientation = orientation;
+    }
+    return self;
+}
 
 - (void)setup {
     [super setup];
@@ -66,7 +78,7 @@
     _footerColumns = NSMutableArray.array;
     _headerRows = NSMutableArray.array;
     _footerRows = NSMutableArray.array;
-    _cells = MobilyMutableGrid.grid;
+    _content = MobilyMutableGrid.grid;
 }
 
 - (void)dealloc {
@@ -117,9 +129,9 @@
         [self _prependEntry:footerColumn];
     }
     if(headerColumn != nil) {
-        [_cells insertColumn:[_headerColumns indexOfObject:headerColumn] objects:nil];
+        [_content insertColumn:[_headerColumns indexOfObject:headerColumn] objects:nil];
     } else if(footerColumn != nil) {
-        [_cells insertColumn:[_footerColumns indexOfObject:footerColumn] objects:nil];
+        [_content insertColumn:[_footerColumns indexOfObject:footerColumn] objects:nil];
     }
 }
 
@@ -137,9 +149,9 @@
         [self _appendEntry:footerColumn];
     }
     if(headerColumn != nil) {
-        [_cells insertColumn:[_headerColumns indexOfObject:headerColumn] objects:nil];
+        [_content insertColumn:[_headerColumns indexOfObject:headerColumn] objects:nil];
     } else if(footerColumn != nil) {
-        [_cells insertColumn:[_footerColumns indexOfObject:footerColumn] objects:nil];
+        [_content insertColumn:[_footerColumns indexOfObject:footerColumn] objects:nil];
     }
 }
 
@@ -157,9 +169,9 @@
         [self _insertEntry:footerColumn atIndex:index];
     }
     if(headerColumn != nil) {
-        [_cells insertColumn:index objects:nil];
+        [_content insertColumn:index objects:nil];
     } else if(footerColumn != nil) {
-        [_cells insertColumn:index objects:nil];
+        [_content insertColumn:index objects:nil];
     }
 }
 
@@ -188,10 +200,10 @@
         [self _deleteEntries:footerColumns];
         [_footerColumns removeAllObjects];
     }
-    if(_cells.numberOfColumns > 0) {
-        NSArray* cells = [NSArray arrayWithArray:_cells.objects];
+    if(_content.numberOfColumns > 0) {
+        NSArray* cells = [NSArray arrayWithArray:_content.objects];
         [self _deleteEntries:cells];
-        [_cells removeAllObjects];
+        [_content removeAllObjects];
     }
 }
 
@@ -209,9 +221,9 @@
         [self _prependEntry:footerRow];
     }
     if(headerRow != nil) {
-        [_cells insertRow:[_headerRows indexOfObject:headerRow] objects:nil];
+        [_content insertRow:[_headerRows indexOfObject:headerRow] objects:nil];
     } else if(footerRow != nil) {
-        [_cells insertRow:[_footerRows indexOfObject:footerRow] objects:nil];
+        [_content insertRow:[_footerRows indexOfObject:footerRow] objects:nil];
     }
 }
 
@@ -229,9 +241,9 @@
         [self _appendEntry:footerRow];
     }
     if(headerRow != nil) {
-        [_cells insertRow:[_headerRows indexOfObject:headerRow] objects:nil];
+        [_content insertRow:[_headerRows indexOfObject:headerRow] objects:nil];
     } else if(footerRow != nil) {
-        [_cells insertRow:[_footerRows indexOfObject:footerRow] objects:nil];
+        [_content insertRow:[_footerRows indexOfObject:footerRow] objects:nil];
     }
 }
 
@@ -249,9 +261,9 @@
         [self _insertEntry:footerRow atIndex:index];
     }
     if(headerRow != nil) {
-        [_cells insertRow:index objects:nil];
+        [_content insertRow:index objects:nil];
     } else if(footerRow != nil) {
-        [_cells insertRow:index objects:nil];
+        [_content insertRow:index objects:nil];
     }
 }
 
@@ -280,27 +292,27 @@
         [self _deleteEntries:footerRows];
         [_footerRows removeAllObjects];
     }
-    if(_cells.numberOfRows > 0) {
-        NSArray* cells = [NSArray arrayWithArray:_cells.objects];
+    if(_content.numberOfRows > 0) {
+        NSArray* cells = [NSArray arrayWithArray:_content.objects];
         [self _deleteEntries:cells];
-        [_cells removeAllObjects];
+        [_content removeAllObjects];
     }
 }
 
-- (void)insertCell:(MobilyDataItem*)cell atColumn:(NSUInteger)column atRow:(NSUInteger)row {
-    [_cells setObject:cell atColumn:column atRow:row];
-    [self _appendEntry:cell];
+- (void)insertContent:(MobilyDataItem*)content atColumn:(NSUInteger)column atRow:(NSUInteger)row {
+    [_content setObject:content atColumn:column atRow:row];
+    [self _appendEntry:content];
 }
 
-- (void)deleteAtColumn:(NSUInteger)column atRow:(NSUInteger)row {
-    MobilyDataItem* cell = [_cells objectAtColumn:column atRow:row];
+- (void)deleteContentAtColumn:(NSUInteger)column atRow:(NSUInteger)row {
+    MobilyDataItem* cell = [_content objectAtColumn:column atRow:row];
     if(cell != nil) {
-        [_cells setObject:nil atColumn:column atRow:row];
+        [_content setObject:nil atColumn:column atRow:row];
         [self _deleteEntry:cell];
     }
 }
 
-- (void)deleteAllCells {
+- (void)deleteAllContent {
     if(_headerRows.count > 0) {
         NSArray* headerRows = [NSArray arrayWithArray:_headerRows];
         [self _deleteEntries:headerRows];
@@ -311,10 +323,10 @@
         [self _deleteEntries:footerRows];
         [_footerRows removeAllObjects];
     }
-    if(_cells.numberOfRows > 0) {
-        NSArray* cells = [NSArray arrayWithArray:_cells.objects];
+    if(_content.numberOfRows > 0) {
+        NSArray* cells = [NSArray arrayWithArray:_content.objects];
         [self _deleteEntries:cells];
-        [_cells setObjects:nil];
+        [_content setObjects:nil];
     }
 }
 

@@ -94,9 +94,16 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataItemCalendarMonth : MobilyDataItem
+@interface MobilyDataItemCalendar : MobilyDataItem
 
 @property(nonatomic, readonly, weak) NSCalendar* calendar;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyDataItemCalendarMonth : MobilyDataItemCalendar
+
 @property(nonatomic, readonly, strong) NSDate* beginDate;
 @property(nonatomic, readonly, strong) NSDate* endDate;
 
@@ -104,18 +111,16 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataItemCalendarWeekday : MobilyDataItem
+@interface MobilyDataItemCalendarWeekday : MobilyDataItemCalendar
 
-@property(nonatomic, readonly, weak) NSCalendar* calendar;
 @property(nonatomic, readonly, strong) NSDate* date;
 
 @end
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataItemCalendarDay : MobilyDataItem
+@interface MobilyDataItemCalendarDay : MobilyDataItemCalendar
 
-@property(nonatomic, readonly, weak) NSCalendar* calendar;
 @property(nonatomic, readonly, strong) NSDate* date;
 
 @end

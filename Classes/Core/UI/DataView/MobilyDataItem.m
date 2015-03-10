@@ -343,11 +343,30 @@
 
 /*--------------------------------------------------*/
 
-@implementation MobilyDataItemCalendarMonth
+@implementation MobilyDataItemCalendar
 
 #pragma mark Synthesize
 
 @synthesize calendar = _calendar;
+
+#pragma mark Init / Free
+
+- (instancetype)initWithIdentifier:(NSString*)identifier order:(NSUInteger)order calendar:(NSCalendar*)calendar data:(id)data {
+    self = [super initWithIdentifier:identifier order:order data:data];
+    if(self != nil) {
+        _calendar = calendar;
+    }
+    return self;
+}
+
+@end
+
+/*--------------------------------------------------*/
+
+@implementation MobilyDataItemCalendarMonth
+
+#pragma mark Synthesize
+
 @synthesize beginDate = _beginDate;
 @synthesize endDate = _endDate;
 
@@ -358,9 +377,8 @@
 }
 
 - (instancetype)initWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate data:(id)data {
-    self = [super initWithIdentifier:MobilyDataCalendarMonthIdentifier order:3 data:data];
+    self = [super initWithIdentifier:MobilyDataContainerCalendarMonthIdentifier order:3 calendar:calendar data:data];
     if(self != nil) {
-        _calendar = calendar;
         _beginDate = beginDate;
         _endDate = endDate;
     }
@@ -375,7 +393,6 @@
 
 #pragma mark Synthesize
 
-@synthesize calendar = _calendar;
 @synthesize date = _date;
 
 #pragma mark Init / Free
@@ -385,9 +402,8 @@
 }
 
 - (instancetype)initWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data {
-    self = [super initWithIdentifier:MobilyDataCalendarWeekdayIdentifier order:2 data:data];
+    self = [super initWithIdentifier:MobilyDataContainerCalendarWeekdayIdentifier order:2 calendar:calendar data:data];
     if(self != nil) {
-        _calendar = calendar;
         _date = date;
     }
     return self;
@@ -401,7 +417,6 @@
 
 #pragma mark Synthesize
 
-@synthesize calendar = _calendar;
 @synthesize date = _date;
 
 #pragma mark Init / Free
@@ -411,9 +426,8 @@
 }
 
 - (instancetype)initWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data {
-    self = [super initWithIdentifier:MobilyDataCalendarDayIdentifier order:1 data:data];
+    self = [super initWithIdentifier:MobilyDataContainerCalendarDayIdentifier order:1 calendar:calendar data:data];
     if(self != nil) {
-        _calendar = calendar;
         _date = date;
     }
     return self;

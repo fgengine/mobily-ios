@@ -70,9 +70,19 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataItemCalendarMonth  () {
+@interface MobilyDataItemCalendar  () {
 @protected
     __weak NSCalendar* _calendar;
+}
+
+- (instancetype)initWithIdentifier:(NSString*)identifier order:(NSUInteger)order calendar:(NSCalendar*)calendar data:(id)data;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyDataItemCalendarMonth  () {
+@protected
     NSDate* _beginDate;
     NSDate* _endDate;
 }
@@ -87,7 +97,6 @@
 
 @interface MobilyDataItemCalendarWeekday () {
 @protected
-    __weak NSCalendar* _calendar;
     NSDate* _date;
 }
 
@@ -101,7 +110,6 @@
 
 @interface MobilyDataItemCalendarDay () {
 @protected
-    __weak NSCalendar* _calendar;
     NSDate* _date;
 }
 

@@ -87,6 +87,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 - (void)insertSection:(MobilyDataContainer*)section atIndex:(NSUInteger)index;
 - (void)replaceOriginSection:(MobilyDataContainer*)originSection withSection:(MobilyDataContainer*)section;
 - (void)deleteSection:(MobilyDataContainer*)section;
+- (void)deleteAllSections;
 
 @end
 
@@ -116,9 +117,14 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 @property(nonatomic, readwrite, assign) MobilyDataContainerOrientation orientation;
 @property(nonatomic, readwrite, assign) UIEdgeInsets margin;
 @property(nonatomic, readwrite, assign) UIOffset spacing;
+@property(nonatomic, readwrite, assign) CGSize defaultSize;
 @property(nonatomic, readwrite, assign) MobilyDataItem* header;
 @property(nonatomic, readwrite, assign) MobilyDataItem* footer;
 @property(nonatomic, readonly, strong) NSArray* items;
+
++ (instancetype)containerWithOrientation:(MobilyDataContainerOrientation)orientation;
+
+- (instancetype)initWithOrientation:(MobilyDataContainerOrientation)orientation;
 
 - (void)prependItem:(MobilyDataItem*)item;
 - (void)prependItems:(NSArray*)items;
@@ -141,9 +147,14 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 @property(nonatomic, readwrite, assign) MobilyDataContainerOrientation orientation;
 @property(nonatomic, readwrite, assign) UIEdgeInsets margin;
 @property(nonatomic, readwrite, assign) UIOffset spacing;
+@property(nonatomic, readwrite, assign) CGSize defaultSize;
 @property(nonatomic, readwrite, assign) MobilyDataItem* header;
 @property(nonatomic, readwrite, assign) MobilyDataItem* footer;
 @property(nonatomic, readonly, strong) NSArray* items;
+
++ (instancetype)containerWithOrientation:(MobilyDataContainerOrientation)orientation;
+
+- (instancetype)initWithOrientation:(MobilyDataContainerOrientation)orientation;
 
 - (void)prependItem:(MobilyDataItem*)item;
 - (void)prependItems:(NSArray*)items;
@@ -172,7 +183,11 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 @property(nonatomic, readonly, strong) NSArray* footerColumns;
 @property(nonatomic, readonly, strong) NSArray* headerRows;
 @property(nonatomic, readonly, strong) NSArray* footerRows;
-@property(nonatomic, readonly, strong) MobilyGrid* cells;
+@property(nonatomic, readonly, strong) MobilyGrid* content;
+
++ (instancetype)containerWithOrientation:(MobilyDataContainerOrientation)orientation;
+
+- (instancetype)initWithOrientation:(MobilyDataContainerOrientation)orientation;
 
 - (void)prependColumn:(MobilyDataItem*)column;
 - (void)prependHeaderColumn:(MobilyDataItem*)headerColumn footerColumn:(MobilyDataItem*)footerColumn;
@@ -192,9 +207,9 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 - (void)deleteRow:(MobilyDataItem*)row;
 - (void)deleteAllRows;
 
-- (void)insertCell:(MobilyDataItem*)cell atColumn:(NSUInteger)column atRow:(NSUInteger)row;
-- (void)deleteAtColumn:(NSUInteger)column atRow:(NSUInteger)row;
-- (void)deleteAllCells;
+- (void)insertContent:(MobilyDataItem*)content atColumn:(NSUInteger)column atRow:(NSUInteger)row;
+- (void)deleteContentAtColumn:(NSUInteger)column atRow:(NSUInteger)row;
+- (void)deleteAllContent;
 
 @end
 
@@ -228,14 +243,40 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 - (instancetype)initWithCalendar:(NSCalendar*)calendar;
 
 - (void)prepareBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate;
+- (void)replaceDate:(NSDate*)date data:(id)data;
 - (void)cleanup;
 
 @end
 
 /*--------------------------------------------------*/
 
-extern NSString* MobilyDataCalendarMonthIdentifier;
-extern NSString* MobilyDataCalendarWeekdayIdentifier;
-extern NSString* MobilyDataCalendarDayIdentifier;
+@interface MobilyDataContainerCalendarDays : MobilyDataContainerItems
+
+@property(nonatomic, readonly, strong) NSCalendar* calendar;
+
+@property(nonatomic, readwrite, assign) MobilyDataContainerOrientation orientation;
+@property(nonatomic, readwrite, assign) UIEdgeInsets margin;
+@property(nonatomic, readwrite, assign) UIOffset spacing;
+@property(nonatomic, readwrite, assign) CGSize defaultSize;
+@property(nonatomic, readonly, strong) NSArray* days;
+
++ (instancetype)containerWithCalendar:(NSCalendar*)calendar orientation:(MobilyDataContainerOrientation)orientation;
+
+- (instancetype)initWithCalendar:(NSCalendar*)calendar orientation:(MobilyDataContainerOrientation)orientation;
+
+- (void)prependDate:(NSDate*)date data:(id)data;
+- (void)appendDate:(NSDate*)date data:(id)data;
+- (void)insertDate:(NSDate*)date data:(id)data atIndex:(NSUInteger)index;
+- (void)replaceDate:(NSDate*)date data:(id)data;
+- (void)deleteDate:(NSDate*)date;
+- (void)deleteAllDates;
+
+@end
+
+/*--------------------------------------------------*/
+
+extern NSString* MobilyDataContainerCalendarMonthIdentifier;
+extern NSString* MobilyDataContainerCalendarWeekdayIdentifier;
+extern NSString* MobilyDataContainerCalendarDayIdentifier;
 
 /*--------------------------------------------------*/

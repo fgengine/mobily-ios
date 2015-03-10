@@ -57,9 +57,9 @@
     [self.navigationItem addLeftBarFixedSpace:-16.0f animated:NO];
     [self.navigationItem addLeftBarButtonNormalImage:[UIImage imageNamed:@"menu-back.png"] target:self action:@selector(pressedBack) animated:NO];
     
-    [_dataView registerIdentifier:MobilyDataCalendarMonthIdentifier withViewClass:DemoCalendarMonthCell.class];
-    [_dataView registerIdentifier:MobilyDataCalendarWeekdayIdentifier withViewClass:DemoCalendarWeekdayCell.class];
-    [_dataView registerIdentifier:MobilyDataCalendarDayIdentifier withViewClass:DemoCalendarDayCell.class];
+    [_dataView registerIdentifier:MobilyDataContainerCalendarMonthIdentifier withViewClass:DemoCalendarMonthCell.class];
+    [_dataView registerIdentifier:MobilyDataContainerCalendarWeekdayIdentifier withViewClass:DemoCalendarWeekdayCell.class];
+    [_dataView registerIdentifier:MobilyDataContainerCalendarDayIdentifier withViewClass:DemoCalendarDayCell.class];
 
     [_dataCalendar prepareBeginDate:NSDate.date.previousWeek endDate:NSDate.date.nextWeek];
     

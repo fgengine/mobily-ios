@@ -50,12 +50,25 @@
 
 #pragma mark Init / Free
 
++ (instancetype)containerWithOrientation:(MobilyDataContainerOrientation)orientation {
+    return [[self alloc] initWithOrientation:orientation];
+}
+
+- (instancetype)initWithOrientation:(MobilyDataContainerOrientation)orientation {
+    self = [super init];
+    if(self != nil) {
+        _orientation = orientation;
+    }
+    return self;
+}
+
 - (void)setup {
     [super setup];
     
     _orientation = MobilyDataContainerOrientationVertical;
     _margin = UIEdgeInsetsZero;
     _spacing = UIOffsetZero;
+    _defaultSize = CGSizeMake(44.0f, 44.0f);
     _items = NSMutableArray.array;
 }
 
@@ -231,7 +244,7 @@
     switch(_orientation) {
         case MobilyDataContainerOrientationVertical: {
             for(MobilyDataItem* entry in _entries) {
-                CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake(restriction.width, FLT_MAX)];
+                CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake(restriction.width, (_defaultSize.height > 0) ? _defaultSize.height : FLT_MAX)];
                 if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f)) {
                     if((countOfRow > 0) && (cumulativeRow.width + entrySize.width > restriction.width)) {
                         offset.x = 0.0f;
@@ -254,7 +267,7 @@
         }
         case MobilyDataContainerOrientationHorizontal: {
             for(MobilyDataItem* entry in _entries) {
-                CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake(FLT_MAX, restriction.height)];
+                CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake((_defaultSize.width > 0) ? _defaultSize.width : FLT_MAX, restriction.height)];
                 if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f)) {
                     if((countOfRow > 0) && (cumulativeRow.height + entrySize.height > restriction.height)) {
                         offset.x += cumulativeRow.width + _spacing.horizontal;

@@ -241,6 +241,22 @@
     }
 }
 
+- (void)replaceDate:(NSDate*)date data:(id)data {
+    __block NSUInteger foundColumn = NSNotFound, foundRow = NSNotFound;
+    [_dayItems eachColumnsRows:^(MobilyDataItemCalendarDay* day, NSUInteger column, NSUInteger row) {
+        if([day.date isEqualToDate:date] == YES) {
+            foundColumn = column;
+            foundRow = row;
+        }
+    }];
+    if((foundColumn != NSNotFound) && (foundRow != NSNotFound)) {
+        MobilyDataItemCalendarDay* oldDayItem = [_dayItems objectAtColumn:foundColumn atRow:foundRow];
+        MobilyDataItemCalendarDay* newDayItem = [MobilyDataItemCalendarDay dataItemWithCalendar:_calendar date:date data:data];
+        [_dayItems setObject:newDayItem atColumn:foundColumn atRow:foundRow];
+        [self _replaceOriginEntry:oldDayItem withEntry:newDayItem];
+    }
+}
+
 - (void)cleanup {
     if(_monthItem != nil) {
         [self _deleteEntry:_monthItem];
@@ -335,8 +351,8 @@
 
 /*--------------------------------------------------*/
 
-NSString* MobilyDataCalendarMonthIdentifier = @"MobilyDataCalendarMonthIdentifier";
-NSString* MobilyDataCalendarWeekdayIdentifier = @"MobilyDataCalendarWeekdayIdentifier";
-NSString* MobilyDataCalendarDayIdentifier = @"MobilyDataCalendarDayIdentifier";
+NSString* MobilyDataContainerCalendarMonthIdentifier = @"MobilyDataContainerCalendarMonthIdentifier";
+NSString* MobilyDataContainerCalendarWeekdayIdentifier = @"MobilyDataContainerCalendarWeekdayIdentifier";
+NSString* MobilyDataContainerCalendarDayIdentifier = @"MobilyDataContainerCalendarDayIdentifier";
 
 /*--------------------------------------------------*/

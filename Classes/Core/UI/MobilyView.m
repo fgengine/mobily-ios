@@ -33,62 +33,87 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_CORE
-#   import "MobilyCore.h"
-#   import "MobilyNS.h"
-#   import "MobilyCG.h"
-#   import "MobilyMap.h"
-#   import "MobilyGrid.h"
-#   import "MobilyEvent.h"
-#   import "MobilyTimer.h"
-#   import "MobilyModel.h"
-#   import "MobilyModelJson.h"
-#   import "MobilyCache.h"
-#   import "MobilyTaskManager.h"
-#   import "MobilyHttpQuery.h"
-#   import "MobilyDownloader.h"
-#   import "MobilyRegExpParser.h"
-#   import "MobilyKVO.h"
-#   import "MobilyApiManager.h"
-#   import "MobilyApiProvider.h"
-#   import "MobilyApiRequest.h"
-#   import "MobilyApiResponse.h"
-#   import "MobilyUI.h"
-#   import "MobilyContext.h"
-#   import "MobilyApplication.h"
-#   import "MobilyWindow.h"
-#   import "MobilyController.h"
-#   import "MobilyNavigationController.h"
-#   import "MobilyTabBarController.h"
-#   import "MobilySlideController.h"
-#   import "MobilyViewController.h"
-#   import "MobilyView.h"
-#   import "MobilyButton.h"
-#   import "MobilyTextField.h"
-#   import "MobilyDateField.h"
-#   import "MobilyListField.h"
-#   import "MobilyImageView.h"
-#   import "MobilyScrollView.h"
-#   import "MobilyTableView.h"
-#   import "MobilyFieldValidation.h"
-#   import "MobilyDataView.h"
-#   import "MobilyDataRefreshView.h"
-#   import "MobilyDataContainer.h"
-#   import "MobilyDataItem.h"
-#   import "MobilyDataCell.h"
-#   import "MobilyAV.h"
-#   import "MobilyAudioRecorder.h"
-#   import "MobilyAudioPlayer.h"
-#endif
+#import "MobilyView.h"
+#import "MobilyCG.h"
 
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_SOCIAL
-#   import "MobilySocialManager.h"
-#   import "MobilySocialProvider.h"
-#   import "MobilySocialFacebookProvider.h"
-#   import "MobilySocialVKontakteProvider.h"
-#   import "MobilySocialTwitterProvider.h"
-#endif
+@interface MobilyView ()
+
+
+ 
+@end
+
+/*--------------------------------------------------*/
+
+@implementation MobilyView
+
+#pragma mark Synthesize
+
+@synthesize objectName = _objectName;
+@synthesize objectParent = _objectParent;
+@synthesize objectChilds = _objectChilds;
+
+#pragma mark NSKeyValueCoding
+
+#pragma mark Init / Free
+
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    self = [super initWithCoder:coder];
+    if(self != nil) {
+        [self setup];
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if(self != nil) {
+        [self setup];
+    }
+    return self;
+}
+
+- (void)setup {
+}
+
+- (void)dealloc {
+}
+
+#pragma mark MobilyBuilderObject
+
+- (NSArray*)relatedObjects {
+    return [_objectChilds unionWithArray:self.subviews];
+}
+
+- (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
+    if([objectChild isKindOfClass:UIView.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
+        [self addSubview:(UIView*)objectChild];
+    }
+}
+
+- (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
+    if([objectChild isKindOfClass:UIView.class] == YES) {
+        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
+        [self removeSubview:(UIView*)objectChild];
+    }
+}
+
+- (void)willLoadObjectChilds {
+}
+
+- (void)didLoadObjectChilds {
+}
+
+- (id< MobilyBuilderObject >)objectForName:(NSString*)name {
+    return [MobilyBuilderForm object:self forName:name];
+}
+
+- (id< MobilyBuilderObject >)objectForSelector:(SEL)selector {
+    return [MobilyBuilderForm object:self forSelector:selector];
+}
+
+@end
 
 /*--------------------------------------------------*/

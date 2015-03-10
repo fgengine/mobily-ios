@@ -147,7 +147,7 @@
     NSMutableArray* _footerColumns;
     NSMutableArray* _headerRows;
     NSMutableArray* _footerRows;
-    MobilyMutableGrid* _cells;
+    MobilyMutableGrid* _content;
 }
 
 @end
@@ -182,6 +182,20 @@
 @property(nonatomic, readwrite, strong) MobilyDataItemCalendarMonth* monthItem;
 @property(nonatomic, readwrite, strong) NSMutableArray* weekdayItems;
 @property(nonatomic, readwrite, strong) MobilyMutableGrid* dayItems;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyDataContainerCalendarDays () {
+@protected
+    NSCalendar* _calendar;
+    MobilyDataContainerOrientation _orientation;
+    UIEdgeInsets _margin;
+    UIOffset _spacing;
+}
+
+@property(nonatomic, readwrite, strong) NSCalendar* calendar;
 
 @end
 

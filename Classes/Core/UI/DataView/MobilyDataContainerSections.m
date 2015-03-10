@@ -175,6 +175,16 @@
     }
 }
 
+- (void)deleteAllSections {
+    if(_view != nil) {
+        NSArray* allItems = self.allItems;
+        [_sections removeAllObjects];
+        [_view _didDeleteItems:allItems];
+    } else {
+        [_sections removeAllObjects];
+    }
+}
+
 #pragma mark Private
 
 - (CGRect)_validateSectionsForAvailableFrame:(CGRect)frame {
