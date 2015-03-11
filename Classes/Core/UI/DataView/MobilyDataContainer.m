@@ -95,6 +95,27 @@
     }
 }
 
+- (void)_willBeginDragging {
+}
+
+- (void)_didScroll {
+}
+
+- (void)_willEndDraggingWithVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset {
+}
+
+- (void)_didEndDraggingWillDecelerate:(BOOL)decelerate {
+}
+
+- (void)_willBeginDecelerating {
+}
+
+- (void)_didEndDecelerating {
+}
+
+- (void)_didEndScrollingAnimation {
+}
+
 - (void)_didBeginUpdate {
 }
 
@@ -122,6 +143,10 @@
 }
 
 - (MobilyDataCell*)cellForData:(id)data {
+    MobilyDataItem* item = [self itemForData:data];
+    if(item != nil) {
+        return item.cell;
+    }
     return nil;
 }
 

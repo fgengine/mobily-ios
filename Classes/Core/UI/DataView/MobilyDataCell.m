@@ -60,7 +60,7 @@
 #pragma mark Calculating size
 
 + (CGSize)sizeForItem:(MobilyDataItem*)item availableSize:(CGSize)size {
-    return CGSizeZero;
+    return size;
 }
 
 #pragma mark Init / Free

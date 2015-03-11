@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DemoCategoriesHeaderCell">
@@ -17,7 +17,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CQR-jM-dxK">
-                    <rect key="frame" x="8" y="8" width="295" height="64"/>
+                    <rect key="frame" x="1" y="1" width="309" height="78"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
@@ -35,10 +35,10 @@
                 <constraint firstAttribute="trailing" secondItem="gXG-YQ-Cwm" secondAttribute="trailing" id="7cZ-Mn-F6f"/>
                 <constraint firstItem="gXG-YQ-Cwm" firstAttribute="leading" secondItem="lUL-MD-0aZ" secondAttribute="leading" id="Bbj-yR-pqJ"/>
                 <constraint firstAttribute="bottom" secondItem="gXG-YQ-Cwm" secondAttribute="bottom" id="PP1-ks-ZWB"/>
-                <constraint firstAttribute="bottom" secondItem="CQR-jM-dxK" secondAttribute="bottom" constant="8" id="SAX-DT-yJV"/>
-                <constraint firstAttribute="trailing" secondItem="CQR-jM-dxK" secondAttribute="trailing" constant="8" id="UPu-d4-dPs"/>
-                <constraint firstItem="CQR-jM-dxK" firstAttribute="leading" secondItem="lUL-MD-0aZ" secondAttribute="leading" constant="8" id="oXA-0s-CXw"/>
-                <constraint firstItem="CQR-jM-dxK" firstAttribute="top" secondItem="lUL-MD-0aZ" secondAttribute="top" constant="8" id="ruv-vu-F4N"/>
+                <constraint firstAttribute="bottom" secondItem="CQR-jM-dxK" secondAttribute="bottom" constant="1" id="SAX-DT-yJV"/>
+                <constraint firstAttribute="trailing" secondItem="CQR-jM-dxK" secondAttribute="trailing" constant="1" id="UPu-d4-dPs"/>
+                <constraint firstItem="CQR-jM-dxK" firstAttribute="leading" secondItem="lUL-MD-0aZ" secondAttribute="leading" constant="1" id="oXA-0s-CXw"/>
+                <constraint firstItem="CQR-jM-dxK" firstAttribute="top" secondItem="lUL-MD-0aZ" secondAttribute="top" constant="1" id="ruv-vu-F4N"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="31.5" y="204"/>

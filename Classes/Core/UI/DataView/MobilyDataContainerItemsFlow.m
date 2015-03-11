@@ -44,6 +44,7 @@
 @synthesize orientation = _orientation;
 @synthesize margin = _margin;
 @synthesize spacing = _spacing;
+@synthesize defaultSize = _defaultSize;
 @synthesize header = _header;
 @synthesize footer = _footer;
 @synthesize items = _items;
@@ -104,6 +105,15 @@
     }
 }
 
+- (void)setDefaultSize:(CGSize)defaultSize {
+    if(CGSizeEqualToSize(_defaultSize, defaultSize) == NO) {
+        _defaultSize = defaultSize;
+        if(_view != nil) {
+            [_view setNeedValidateLayout];
+        }
+    }
+}
+
 - (void)setHeader:(MobilyDataItem*)header {
     if(_header != header) {
         if(_header != nil) {
@@ -136,6 +146,10 @@
 
 #pragma mark Public
 
+- (void)prependIdentifier:(NSString*)identifier byData:(id)data {
+    [self prependItem:[MobilyDataItem itemWithIdentifier:identifier order:0 data:data]];
+}
+
 - (void)prependItem:(MobilyDataItem*)item {
     [_items insertObject:item atIndex:0];
     if(_header != nil) {
@@ -154,6 +168,10 @@
     }
 }
 
+- (void)appendIdentifier:(NSString*)identifier byData:(id)data {
+    [self appendItem:[MobilyDataItem itemWithIdentifier:identifier order:0 data:data]];
+}
+
 - (void)appendItem:(MobilyDataItem*)item {
     [_items addObject:item];
     if(_footer != nil) {
@@ -170,6 +188,10 @@
     } else {
         [self _appendEntries:items];
     }
+}
+
+- (void)insertIdentifier:(NSString*)identifier byData:(id)data atIndex:(NSUInteger)index {
+    [self insertItem:[MobilyDataItem itemWithIdentifier:identifier order:0 data:data] atIndex:index];
 }
 
 - (void)insertItem:(MobilyDataItem*)item atIndex:(NSUInteger)index {

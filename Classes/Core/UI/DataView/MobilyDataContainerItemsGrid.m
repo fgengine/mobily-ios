@@ -44,6 +44,8 @@
 @synthesize orientation = _orientation;
 @synthesize margin = _margin;
 @synthesize spacing = _spacing;
+@synthesize defaultColumnSize = _defaultColumnSize;
+@synthesize defaultRowSize = _defaultRowSize;
 @synthesize numberOfColumns = _numberOfColumns;
 @synthesize numberOfRows = _numberOfRows;
 @synthesize headerColumns = _headerColumns;
@@ -113,64 +115,134 @@
     }
 }
 
-#pragma mark Public
-
-- (void)prependColumn:(MobilyDataItem*)column {
-    [self prependHeaderColumn:column footerColumn:nil];
+- (void)setDefaultColumnSize:(CGSize)defaultColumnSize {
+    if(CGSizeEqualToSize(_defaultColumnSize, defaultColumnSize) == NO) {
+        _defaultColumnSize = defaultColumnSize;
+        if(_view != nil) {
+            [_view setNeedValidateLayout];
+        }
+    }
 }
 
-- (void)prependHeaderColumn:(MobilyDataItem*)headerColumn footerColumn:(MobilyDataItem*)footerColumn {
-    if(headerColumn != nil) {
-        [_headerColumns insertObject:headerColumn atIndex:0];
-        [self _prependEntry:headerColumn];
+- (void)setDefaultRowSize:(CGSize)defaultRowSize {
+    if(CGSizeEqualToSize(_defaultRowSize, defaultRowSize) == NO) {
+        _defaultRowSize = defaultRowSize;
+        if(_view != nil) {
+            [_view setNeedValidateLayout];
+        }
     }
-    if(footerColumn != nil) {
-        [_footerColumns insertObject:footerColumn atIndex:0];
-        [self _prependEntry:footerColumn];
+}
+
+#pragma mark Public
+
+- (void)prependColumnIdentifier:(NSString*)identifier byData:(id)data {
+    [self prependColumnHeader:[MobilyDataItem itemWithIdentifier:identifier order:1 data:data]
+              andColumnFooter:nil];
+}
+
+- (void)prependColumn:(MobilyDataItem*)column {
+    [self prependColumnHeader:column
+              andColumnFooter:nil];
+}
+
+- (void)prependColumnIdentifier:(NSString*)identifier byHeaderData:(id)headerData byFooterData:(id)footerData {
+    [self prependColumnHeader:[MobilyDataItem itemWithIdentifier:identifier order:1 data:headerData]
+              andColumnFooter:[MobilyDataItem itemWithIdentifier:identifier order:1 data:footerData]];
+}
+
+- (void)prependColumnHeaderIdentifier:(NSString*)columnIdentifier byHeaderData:(id)headerData andFooterIdentifier:(NSString*)footerIdentifier byFooterData:(id)footerData {
+    [self prependColumnHeader:[MobilyDataItem itemWithIdentifier:columnIdentifier order:1 data:headerData]
+              andColumnFooter:[MobilyDataItem itemWithIdentifier:footerIdentifier order:1 data:footerData]];
+}
+
+- (void)prependColumnHeader:(MobilyDataItem*)header andColumnFooter:(MobilyDataItem*)footer {
+    if(header != nil) {
+        [_headerColumns insertObject:header atIndex:0];
+        [self _prependEntry:header];
     }
-    if(headerColumn != nil) {
-        [_content insertColumn:[_headerColumns indexOfObject:headerColumn] objects:nil];
-    } else if(footerColumn != nil) {
-        [_content insertColumn:[_footerColumns indexOfObject:footerColumn] objects:nil];
+    if(footer != nil) {
+        [_footerColumns insertObject:footer atIndex:0];
+        [self _prependEntry:footer];
     }
+    if(header != nil) {
+        [_content insertColumn:[_headerColumns indexOfObject:header] objects:nil];
+    } else if(footer != nil) {
+        [_content insertColumn:[_footerColumns indexOfObject:footer] objects:nil];
+    }
+}
+
+- (void)appendColumnIdentifier:(NSString*)identifier byData:(id)data {
+    [self appendColumnHeader:[MobilyDataItem itemWithIdentifier:identifier order:1 data:data]
+             andColumnFooter:nil];
 }
 
 - (void)appendColumn:(MobilyDataItem*)column {
-    [self appendHeaderColumn:column footerColumn:nil];
+    [self appendColumnHeader:column
+             andColumnFooter:nil];
 }
 
-- (void)appendHeaderColumn:(MobilyDataItem*)headerColumn footerColumn:(MobilyDataItem*)footerColumn {
-    if(headerColumn != nil) {
-        [_headerColumns addObject:headerColumn];
-        [self _appendEntry:headerColumn];
+- (void)appendColumnIdentifier:(NSString*)identifier byHeaderData:(id)headerData byFooterData:(id)footerData {
+    [self appendColumnHeader:[MobilyDataItem itemWithIdentifier:identifier order:1 data:headerData]
+             andColumnFooter:[MobilyDataItem itemWithIdentifier:identifier order:1 data:footerData]];
+}
+
+- (void)appendColumnHeaderIdentifier:(NSString*)columnIdentifier byHeaderData:(id)headerData andFooterIdentifier:(NSString*)footerIdentifier byFooterData:(id)footerData {
+    [self appendColumnHeader:[MobilyDataItem itemWithIdentifier:columnIdentifier order:1 data:headerData]
+             andColumnFooter:[MobilyDataItem itemWithIdentifier:footerIdentifier order:1 data:footerData]];
+}
+
+- (void)appendColumnHeader:(MobilyDataItem*)header andColumnFooter:(MobilyDataItem*)footer {
+    if(header != nil) {
+        [_headerColumns addObject:header];
+        [self _appendEntry:header];
     }
-    if(footerColumn != nil) {
-        [_footerColumns addObject:footerColumn];
-        [self _appendEntry:footerColumn];
+    if(footer != nil) {
+        [_footerColumns addObject:footer];
+        [self _appendEntry:footer];
     }
-    if(headerColumn != nil) {
-        [_content insertColumn:[_headerColumns indexOfObject:headerColumn] objects:nil];
-    } else if(footerColumn != nil) {
-        [_content insertColumn:[_footerColumns indexOfObject:footerColumn] objects:nil];
+    if(header != nil) {
+        [_content insertColumn:[_headerColumns indexOfObject:header] objects:nil];
+    } else if(footer != nil) {
+        [_content insertColumn:[_footerColumns indexOfObject:footer] objects:nil];
     }
+}
+
+- (void)insertColumnIdentifier:(NSString*)identifier byData:(id)data atIndex:(NSUInteger)index {
+    [self insertColumnHeader:[MobilyDataItem itemWithIdentifier:identifier order:1 data:data]
+             andColumnFooter:nil
+                     atIndex:index];
 }
 
 - (void)insertColumn:(MobilyDataItem*)column atIndex:(NSUInteger)index {
-    [self insertHeaderColumn:column footerColumn:nil atIndex:index];
+    [self insertColumnHeader:column
+             andColumnFooter:nil
+                     atIndex:index];
 }
 
-- (void)insertHeaderColumn:(MobilyDataItem*)headerColumn footerColumn:(MobilyDataItem*)footerColumn atIndex:(NSUInteger)index {
-    if(headerColumn != nil) {
-        [_headerColumns insertObject:headerColumn atIndex:index];
-        [self _insertEntry:headerColumn atIndex:index];
+- (void)insertColumnIdentifier:(NSString*)identifier byHeaderData:(id)headerData byFooterData:(id)footerData atIndex:(NSUInteger)index {
+    [self insertColumnHeader:[MobilyDataItem itemWithIdentifier:identifier order:1 data:headerData]
+             andColumnFooter:[MobilyDataItem itemWithIdentifier:identifier order:1 data:footerData]
+                     atIndex:index];
+}
+
+- (void)insertColumnHeaderIdentifier:(NSString*)columnIdentifier byHeaderData:(id)headerData andFooterIdentifier:(NSString*)footerIdentifier byFooterData:(id)footerData atIndex:(NSUInteger)index {
+    [self insertColumnHeader:[MobilyDataItem itemWithIdentifier:columnIdentifier order:1 data:headerData]
+             andColumnFooter:[MobilyDataItem itemWithIdentifier:footerIdentifier order:1 data:footerData]
+                     atIndex:index];
+}
+
+- (void)insertColumnHeader:(MobilyDataItem*)header andColumnFooter:(MobilyDataItem*)footer atIndex:(NSUInteger)index {
+    if(header != nil) {
+        [_headerColumns insertObject:header atIndex:index];
+        [self _insertEntry:header atIndex:index];
     }
-    if(footerColumn != nil) {
-        [_footerColumns insertObject:footerColumn atIndex:index];
-        [self _insertEntry:footerColumn atIndex:index];
+    if(footer != nil) {
+        [_footerColumns insertObject:footer atIndex:index];
+        [self _insertEntry:footer atIndex:index];
     }
-    if(headerColumn != nil) {
+    if(header != nil) {
         [_content insertColumn:index objects:nil];
-    } else if(footerColumn != nil) {
+    } else if(footer != nil) {
         [_content insertColumn:index objects:nil];
     }
 }
@@ -207,62 +279,114 @@
     }
 }
 
-- (void)prependRow:(MobilyDataItem*)row {
-    [self prependHeaderRow:row footerRow:nil];
+- (void)prependRowIdentifier:(NSString*)identifier byData:(id)data {
+    [self prependRowHeader:[MobilyDataItem itemWithIdentifier:identifier order:1 data:data]
+           andRowFooter:nil];
 }
 
-- (void)prependHeaderRow:(MobilyDataItem*)headerRow footerRow:(MobilyDataItem*)footerRow {
-    if(headerRow != nil) {
-        [_headerRows insertObject:headerRow atIndex:0];
-        [self _prependEntry:headerRow];
+- (void)prependRow:(MobilyDataItem*)column {
+    [self prependRowHeader:column
+           andRowFooter:nil];
+}
+
+- (void)prependRowIdentifier:(NSString*)identifier byHeaderData:(id)headerData byFooterData:(id)footerData {
+    [self prependRowHeader:[MobilyDataItem itemWithIdentifier:identifier order:1 data:headerData]
+              andRowFooter:[MobilyDataItem itemWithIdentifier:identifier order:1 data:footerData]];
+}
+
+- (void)prependRowHeaderIdentifier:(NSString*)columnIdentifier byHeaderData:(id)headerData andFooterIdentifier:(NSString*)footerIdentifier byFooterData:(id)footerData {
+    [self prependRowHeader:[MobilyDataItem itemWithIdentifier:columnIdentifier order:1 data:headerData]
+              andRowFooter:[MobilyDataItem itemWithIdentifier:footerIdentifier order:1 data:footerData]];
+}
+
+- (void)prependRowHeader:(MobilyDataItem*)header andRowFooter:(MobilyDataItem*)footer {
+    if(header != nil) {
+        [_headerRows insertObject:header atIndex:0];
+        [self _prependEntry:header];
     }
-    if(footerRow != nil) {
-        [_footerRows insertObject:footerRow atIndex:0];
-        [self _prependEntry:footerRow];
+    if(footer != nil) {
+        [_footerRows insertObject:footer atIndex:0];
+        [self _prependEntry:footer];
     }
-    if(headerRow != nil) {
-        [_content insertRow:[_headerRows indexOfObject:headerRow] objects:nil];
-    } else if(footerRow != nil) {
-        [_content insertRow:[_footerRows indexOfObject:footerRow] objects:nil];
+    if(header != nil) {
+        [_content insertRow:[_headerRows indexOfObject:header] objects:nil];
+    } else if(footer != nil) {
+        [_content insertRow:[_footerRows indexOfObject:footer] objects:nil];
     }
+}
+
+- (void)appendRowIdentifier:(NSString*)identifier byData:(id)data {
+    [self appendRowHeader:[MobilyDataItem itemWithIdentifier:identifier order:1 data:data]
+              andRowFooter:nil];
 }
 
 - (void)appendRow:(MobilyDataItem*)row {
-    [self appendHeaderRow:row footerRow:nil];
+    [self appendRowHeader:row
+             andRowFooter:nil];
 }
 
-- (void)appendHeaderRow:(MobilyDataItem*)headerRow footerRow:(MobilyDataItem*)footerRow {
-    if(headerRow != nil) {
-        [_headerRows addObject:headerRow];
-        [self _appendEntry:headerRow];
+- (void)appendRowIdentifier:(NSString*)identifier byHeaderData:(id)headerData byFooterData:(id)footerData {
+    [self appendRowHeader:[MobilyDataItem itemWithIdentifier:identifier order:1 data:headerData]
+             andRowFooter:[MobilyDataItem itemWithIdentifier:identifier order:1 data:footerData]];
+}
+
+- (void)appendRowHeaderIdentifier:(NSString*)columnIdentifier byHeaderData:(id)headerData andFooterIdentifier:(NSString*)footerIdentifier byFooterData:(id)footerData {
+    [self appendRowHeader:[MobilyDataItem itemWithIdentifier:columnIdentifier order:1 data:headerData]
+             andRowFooter:[MobilyDataItem itemWithIdentifier:footerIdentifier order:1 data:footerData]];
+}
+
+- (void)appendRowHeader:(MobilyDataItem*)header andRowFooter:(MobilyDataItem*)footer {
+    if(header != nil) {
+        [_headerRows addObject:header];
+        [self _appendEntry:header];
     }
-    if(footerRow != nil) {
-        [_footerRows addObject:footerRow];
-        [self _appendEntry:footerRow];
+    if(footer != nil) {
+        [_footerRows addObject:footer];
+        [self _appendEntry:footer];
     }
-    if(headerRow != nil) {
-        [_content insertRow:[_headerRows indexOfObject:headerRow] objects:nil];
-    } else if(footerRow != nil) {
-        [_content insertRow:[_footerRows indexOfObject:footerRow] objects:nil];
+    if(header != nil) {
+        [_content insertRow:[_headerRows indexOfObject:header] objects:nil];
+    } else if(footer != nil) {
+        [_content insertRow:[_footerRows indexOfObject:footer] objects:nil];
     }
+}
+
+- (void)insertRowIdentifier:(NSString*)identifier byData:(id)data atIndex:(NSUInteger)index {
+    [self insertRowHeader:[MobilyDataItem itemWithIdentifier:identifier order:1 data:data]
+             andRowFooter:nil
+                  atIndex:index];
 }
 
 - (void)insertRow:(MobilyDataItem*)row atIndex:(NSUInteger)index {
-    [self insertHeaderRow:row footerRow:nil atIndex:index];
+    [self insertRowHeader:row
+             andRowFooter:nil
+                  atIndex:index];
 }
 
-- (void)insertHeaderRow:(MobilyDataItem*)headerRow footerRow:(MobilyDataItem*)footerRow atIndex:(NSUInteger)index {
-    if(headerRow != nil) {
-        [_headerRows insertObject:headerRow atIndex:index];
-        [self _insertEntry:headerRow atIndex:index];
+- (void)insertRowIdentifier:(NSString*)identifier byHeaderData:(id)headerData byFooterData:(id)footerData atIndex:(NSUInteger)index {
+    [self insertRowHeader:[MobilyDataItem itemWithIdentifier:identifier order:1 data:headerData]
+             andRowFooter:[MobilyDataItem itemWithIdentifier:identifier order:1 data:footerData]
+                  atIndex:index];
+}
+
+- (void)insertRowHeaderIdentifier:(NSString*)columnIdentifier byHeaderData:(id)headerData andFooterIdentifier:(NSString*)footerIdentifier byFooterData:(id)footerData atIndex:(NSUInteger)index {
+    [self insertRowHeader:[MobilyDataItem itemWithIdentifier:columnIdentifier order:1 data:headerData]
+             andRowFooter:[MobilyDataItem itemWithIdentifier:footerIdentifier order:1 data:footerData]
+                  atIndex:index];
+}
+
+- (void)insertRowHeader:(MobilyDataItem*)header andRowFooter:(MobilyDataItem*)footer atIndex:(NSUInteger)index {
+    if(header != nil) {
+        [_headerRows insertObject:header atIndex:index];
+        [self _insertEntry:header atIndex:index];
     }
-    if(footerRow != nil) {
-        [_footerRows insertObject:footerRow atIndex:index];
-        [self _insertEntry:footerRow atIndex:index];
+    if(footer != nil) {
+        [_footerRows insertObject:footer atIndex:index];
+        [self _insertEntry:footer atIndex:index];
     }
-    if(headerRow != nil) {
+    if(header != nil) {
         [_content insertRow:index objects:nil];
-    } else if(footerRow != nil) {
+    } else if(footer != nil) {
         [_content insertRow:index objects:nil];
     }
 }
@@ -299,6 +423,12 @@
     }
 }
 
+- (void)insertContentIdentifier:(NSString*)identifier byData:(id)data atColumn:(NSUInteger)column atRow:(NSUInteger)row {
+    [self insertContent:[MobilyDataItem itemWithIdentifier:identifier order:0 data:data]
+               atColumn:column
+                  atRow:row];
+}
+
 - (void)insertContent:(MobilyDataItem*)content atColumn:(NSUInteger)column atRow:(NSUInteger)row {
     [_content setObject:content atColumn:column atRow:row];
     [self _appendEntry:content];
@@ -333,7 +463,56 @@
 #pragma mark Private override
 
 - (CGRect)_validateEntriesForAvailableFrame:(CGRect)frame {
-    return CGRectMake(frame.origin.x, frame.origin.y, _margin.left + _margin.right, _margin.top + _margin.bottom);
+    CGSize headerColumnSize = CGSizeZero, footerColumnSize = CGSizeZero;
+    CGSize headerRowSize = CGSizeZero, footerRowSize = CGSizeZero;
+    CGSize contentSize = CGSizeZero;
+    for(MobilyDataItem* headerColumn in _headerColumns) {
+        CGSize itemSize = [headerColumn sizeForAvailableSize:_defaultColumnSize];
+        if((itemSize.width > 0.0f) && (itemSize.height > 0.0f)) {
+            headerColumnSize.width = MAX(headerColumnSize.width, itemSize.width);
+            headerColumnSize.height = MAX(headerColumnSize.height, itemSize.height);
+        }
+    }
+    for(MobilyDataItem* footerColumn in _footerColumns) {
+        CGSize itemSize = [footerColumn sizeForAvailableSize:_defaultColumnSize];
+        if((itemSize.width > 0.0f) && (itemSize.height > 0.0f)) {
+            footerColumnSize.width = MAX(footerColumnSize.width, itemSize.width);
+            footerColumnSize.height = MAX(footerColumnSize.height, itemSize.height);
+        }
+    }
+    for(MobilyDataItem* headerRow in _headerRows) {
+        CGSize itemSize = [headerRow sizeForAvailableSize:_defaultRowSize];
+        if((itemSize.width > 0.0f) && (itemSize.height > 0.0f)) {
+            headerRowSize.width = MAX(headerRowSize.width, itemSize.width);
+            headerRowSize.height = MAX(headerRowSize.height, itemSize.height);
+        }
+    }
+    for(MobilyDataItem* footerRow in _footerRows) {
+        CGSize itemSize = [footerRow sizeForAvailableSize:_defaultRowSize];
+        if((itemSize.width > 0.0f) && (itemSize.height > 0.0f)) {
+            footerRowSize.width = MAX(footerRowSize.width, itemSize.width);
+            footerRowSize.height = MAX(footerRowSize.height, itemSize.height);
+        }
+    }
+    CGPoint offset = CGPointMake(frame.origin.x + _margin.left, frame.origin.y + _margin.top);
+    CGPoint headerOffset = CGPointMake(offset.x + headerRowSize.width, offset.y + headerColumnSize.height);
+    CGPoint footerOffset = CGPointMake(headerOffset.x + contentSize.width, headerOffset.y + contentSize.height);
+    [_headerColumns eachWithIndex:^(MobilyDataItem* headerColumn, NSUInteger index) {
+        headerColumn.updateFrame = CGRectMake(headerOffset.y + (headerColumnSize.height * index), offset.x, headerColumnSize.width, headerColumnSize.height);
+    }];
+    [_footerColumns eachWithIndex:^(MobilyDataItem* footerColumn, NSUInteger index) {
+        footerColumn.updateFrame = CGRectMake(footerOffset.y + (footerColumnSize.height * index), offset.x, footerColumnSize.width, footerColumnSize.height);
+    }];
+    [_headerRows eachWithIndex:^(MobilyDataItem* headerRow, NSUInteger index) {
+        headerRow.updateFrame = CGRectMake(offset.x, headerOffset.y + (headerRowSize.height * index), headerRowSize.width, headerRowSize.height);
+    }];
+    [_footerRows eachWithIndex:^(MobilyDataItem* footerRow, NSUInteger index) {
+        footerRow.updateFrame = CGRectMake(offset.x, footerOffset.y + (footerRowSize.height * index), footerRowSize.width, footerRowSize.height);
+    }];
+    return CGRectMake(frame.origin.x,
+                      frame.origin.y,
+                      _margin.left + headerRowSize.width + contentSize.width + footerRowSize.width + _margin.right,
+                      _margin.top + headerColumnSize.height + contentSize.height + footerRowSize.height + _margin.bottom);
 }
 
 - (void)_willEntriesLayoutForBounds:(CGRect)bounds {

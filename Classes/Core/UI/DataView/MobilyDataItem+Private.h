@@ -87,7 +87,7 @@
     NSDate* _endDate;
 }
 
-+ (instancetype)dataItemWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate data:(id)data;
++ (instancetype)itemWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate data:(id)data;
 
 - (instancetype)initWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate data:(id)data;
 
@@ -100,7 +100,7 @@
     NSDate* _date;
 }
 
-+ (instancetype)dataItemWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data;
++ (instancetype)itemWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data;
 
 - (instancetype)initWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data;
 
@@ -113,7 +113,7 @@
     NSDate* _date;
 }
 
-+ (instancetype)dataItemWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data;
++ (instancetype)itemWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data;
 
 - (instancetype)initWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data;
 

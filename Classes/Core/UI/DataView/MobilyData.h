@@ -38,3 +38,16 @@
 #import "MobilyBuilder.h"
 
 /*--------------------------------------------------*/
+
+typedef NS_OPTIONS(NSUInteger, MobilyDataViewPosition) {
+    MobilyDataViewPositionNone = 0,
+    MobilyDataViewPositionTop = 1 << 0,
+    MobilyDataViewPositionCenteredVertically = 1 << 1,
+    MobilyDataViewPositionBottom = 1 << 2,
+    MobilyDataViewPositionLeft = 1 << 3,
+    MobilyDataViewPositionCenteredHorizontally = 1 << 4,
+    MobilyDataViewPositionRight = 1 << 5,
+    MobilyDataViewPositionCentered = MobilyDataViewPositionCenteredVertically | MobilyDataViewPositionCenteredHorizontally,
+};
+
+/*--------------------------------------------------*/

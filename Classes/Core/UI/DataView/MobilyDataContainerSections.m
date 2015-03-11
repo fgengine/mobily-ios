@@ -125,14 +125,6 @@
     return nil;
 }
 
-- (MobilyDataCell*)cellForData:(id)data {
-    MobilyDataItem* item = [self itemForData:data];
-    if(item != nil) {
-        return item.cell;
-    }
-    return nil;
-}
-
 - (void)prependSection:(MobilyDataContainer*)section {
     section.parent = self;
     [_sections insertObject:section atIndex:0];

@@ -197,6 +197,60 @@
     return result;
 }
 
+- (void)enumerateColumnsRowsUsingBlock:(void(^)(id object, NSUInteger column, NSUInteger row, BOOL* stopColumn, BOOL* stopRow))block {
+    for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
+        BOOL stopColumn = NO;
+        NSMutableArray* columnObjects = _objects[ic];
+        for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
+            BOOL stopRow = NO;
+            block(columnObjects[ir], ic, ir, &stopColumn, &stopRow);
+            if(stopRow == YES) {
+                break;
+            }
+        }
+        if(stopColumn == YES) {
+            break;
+        }
+    }
+}
+
+- (void)enumerateRowsColumnsUsingBlock:(void(^)(id object, NSUInteger column, NSUInteger row, BOOL* stopColumn, BOOL* stopRow))block {
+    for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
+        BOOL stopRow = NO;
+        for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
+            BOOL stopColumn = NO;
+            block(_objects[ic][ir], ic, ir, &stopColumn, &stopRow);
+            if(stopColumn == YES) {
+                break;
+            }
+        }
+        if(stopRow == YES) {
+            break;
+        }
+    }
+}
+
+- (void)enumerateByColumn:(NSInteger)column usingBlock:(void(^)(id object, NSUInteger column, NSUInteger row, BOOL* stop))block {
+    NSMutableArray* columnObjects = _objects[column];
+    for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
+        BOOL stop = NO;
+        block(columnObjects[ir], column, ir, &stop);
+        if(stop == YES) {
+            break;
+        }
+    }
+}
+
+- (void)enumerateByRow:(NSInteger)row usingBlock:(void(^)(id object, NSUInteger column, NSUInteger row, BOOL* stop))block {
+    for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
+        BOOL stop = NO;
+        block(_objects[ic][row], ic, row, &stop);
+        if(stop == YES) {
+            break;
+        }
+    }
+}
+
 - (void)eachColumnsRows:(void(^)(id object, NSUInteger column, NSUInteger row))block {
     for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
         NSMutableArray* columnObjects = _objects[ic];
@@ -307,9 +361,9 @@
 - (void)insertRow:(NSUInteger)row objects:(NSArray*)objects {
     for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
         if(ic < objects.count) {
-            [_objects[ic][row] insertObject:objects[ic] atIndex:row];
+            [_objects[ic] insertObject:objects[ic] atIndex:row];
         } else {
-            [_objects[ic][row] insertObject:[NSNull null] atIndex:row];
+            [_objects[ic] insertObject:[NSNull null] atIndex:row];
         }
     }
     _numberOfRows--;

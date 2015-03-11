@@ -63,7 +63,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 
 - (NSArray*)allItems;
 
-- (id)itemForData:(id)data;
+- (MobilyDataItem*)itemForData:(id)data;
 - (MobilyDataCell*)cellForData:(id)data;
 
 - (BOOL)containsEventForKey:(id)key;
@@ -126,10 +126,13 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 
 - (instancetype)initWithOrientation:(MobilyDataContainerOrientation)orientation;
 
+- (void)prependIdentifier:(NSString*)identifier byData:(id)data;
 - (void)prependItem:(MobilyDataItem*)item;
 - (void)prependItems:(NSArray*)items;
+- (void)appendIdentifier:(NSString*)identifier byData:(id)data;
 - (void)appendItem:(MobilyDataItem*)item;
 - (void)appendItems:(NSArray*)items;
+- (void)insertIdentifier:(NSString*)identifier byData:(id)data atIndex:(NSUInteger)index;
 - (void)insertItem:(MobilyDataItem*)item atIndex:(NSUInteger)index;
 - (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index;
 - (void)replaceOriginItem:(MobilyDataItem*)originItem withItem:(MobilyDataItem*)item;
@@ -156,10 +159,13 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 
 - (instancetype)initWithOrientation:(MobilyDataContainerOrientation)orientation;
 
+- (void)prependIdentifier:(NSString*)identifier byData:(id)data;
 - (void)prependItem:(MobilyDataItem*)item;
 - (void)prependItems:(NSArray*)items;
+- (void)appendIdentifier:(NSString*)identifier byData:(id)data;
 - (void)appendItem:(MobilyDataItem*)item;
 - (void)appendItems:(NSArray*)items;
+- (void)insertIdentifier:(NSString*)identifier byData:(id)data atIndex:(NSUInteger)index;
 - (void)insertItem:(MobilyDataItem*)item atIndex:(NSUInteger)index;
 - (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index;
 - (void)replaceOriginItem:(MobilyDataItem*)originItem withItem:(MobilyDataItem*)item;
@@ -177,6 +183,8 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 @property(nonatomic, readwrite, assign) MobilyDataContainerOrientation orientation;
 @property(nonatomic, readwrite, assign) UIEdgeInsets margin;
 @property(nonatomic, readwrite, assign) UIOffset spacing;
+@property(nonatomic, readwrite, assign) CGSize defaultColumnSize;
+@property(nonatomic, readwrite, assign) CGSize defaultRowSize;
 @property(nonatomic, readonly, assign) NSUInteger numberOfColumns;
 @property(nonatomic, readonly, assign) NSUInteger numberOfRows;
 @property(nonatomic, readonly, strong) NSArray* headerColumns;
@@ -189,29 +197,54 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 
 - (instancetype)initWithOrientation:(MobilyDataContainerOrientation)orientation;
 
+- (void)prependColumnIdentifier:(NSString*)identifier byData:(id)data;
 - (void)prependColumn:(MobilyDataItem*)column;
-- (void)prependHeaderColumn:(MobilyDataItem*)headerColumn footerColumn:(MobilyDataItem*)footerColumn;
+- (void)prependColumnIdentifier:(NSString*)identifier byHeaderData:(id)headerData byFooterData:(id)footerData;
+- (void)prependColumnHeaderIdentifier:(NSString*)columnIdentifier byHeaderData:(id)headerData andFooterIdentifier:(NSString*)footerIdentifier byFooterData:(id)footerData;
+- (void)prependColumnHeader:(MobilyDataItem*)header andColumnFooter:(MobilyDataItem*)columnFooter;
+- (void)appendColumnIdentifier:(NSString*)identifier byData:(id)data;
 - (void)appendColumn:(MobilyDataItem*)column;
-- (void)appendHeaderColumn:(MobilyDataItem*)headerColumn footerColumn:(MobilyDataItem*)footerColumn;
+- (void)appendColumnIdentifier:(NSString*)identifier byHeaderData:(id)headerData byFooterData:(id)footerData;
+- (void)appendColumnHeaderIdentifier:(NSString*)columnIdentifier byHeaderData:(id)headerData andFooterIdentifier:(NSString*)footerIdentifier byFooterData:(id)footerData;
+- (void)appendColumnHeader:(MobilyDataItem*)header andColumnFooter:(MobilyDataItem*)columnFooter;
+- (void)insertColumnIdentifier:(NSString*)identifier byData:(id)data atIndex:(NSUInteger)index;
 - (void)insertColumn:(MobilyDataItem*)column atIndex:(NSUInteger)index;
-- (void)insertHeaderColumn:(MobilyDataItem*)headerColumn footerColumn:(MobilyDataItem*)footerColumn atIndex:(NSUInteger)index;
+- (void)insertColumnIdentifier:(NSString*)identifier byHeaderData:(id)headerData byFooterData:(id)footerData atIndex:(NSUInteger)index;
+- (void)insertColumnHeaderIdentifier:(NSString*)columnIdentifier byHeaderData:(id)headerData andFooterIdentifier:(NSString*)footerIdentifier byFooterData:(id)footerData atIndex:(NSUInteger)index;
+- (void)insertColumnHeader:(MobilyDataItem*)header andColumnFooter:(MobilyDataItem*)columnFooter atIndex:(NSUInteger)index;
 - (void)deleteColumn:(MobilyDataItem*)column;
 - (void)deleteAllColumns;
 
+- (void)prependRowIdentifier:(NSString*)identifier byData:(id)data;
 - (void)prependRow:(MobilyDataItem*)row;
-- (void)prependHeaderRow:(MobilyDataItem*)headerRow footerRow:(MobilyDataItem*)footerRow;
+- (void)prependRowIdentifier:(NSString*)identifier byHeaderData:(id)headerData byFooterData:(id)footerData;
+- (void)prependRowHeaderIdentifier:(NSString*)rowIdentifier byHeaderData:(id)headerData andFooterIdentifier:(NSString*)footerIdentifier byFooterData:(id)footerData;
+- (void)prependRowHeader:(MobilyDataItem*)rowHeader andRowFooter:(MobilyDataItem*)rowFooter;
+- (void)appendRowIdentifier:(NSString*)identifier byData:(id)data;
 - (void)appendRow:(MobilyDataItem*)row;
-- (void)appendHeaderRow:(MobilyDataItem*)headerRow footerRow:(MobilyDataItem*)footerRow;
+- (void)appendRowIdentifier:(NSString*)rowIdentifier byHeaderData:(id)headerData byFooterData:(id)footerData;
+- (void)appendRowHeaderIdentifier:(NSString*)rowIdentifier byHeaderData:(id)headerData andFooterIdentifier:(NSString*)footerIdentifier byFooterData:(id)footerData;
+- (void)appendRowHeader:(MobilyDataItem*)rowHeader andRowFooter:(MobilyDataItem*)rowFooter;
+- (void)insertRowIdentifier:(NSString*)identifier byData:(id)data atIndex:(NSUInteger)index;
 - (void)insertRow:(MobilyDataItem*)row atIndex:(NSUInteger)index;
-- (void)insertHeaderRow:(MobilyDataItem*)headerRow footerRow:(MobilyDataItem*)footerRow atIndex:(NSUInteger)index;
+- (void)insertRowIdentifier:(NSString*)rowIdentifier byHeaderData:(id)headerData byFooterData:(id)footerData atIndex:(NSUInteger)index;
+- (void)insertRowHeaderIdentifier:(NSString*)rowIdentifier byHeaderData:(id)headerData andFooterIdentifier:(NSString*)footerIdentifier byFooterData:(id)footerData atIndex:(NSUInteger)index;
+- (void)insertRowHeader:(MobilyDataItem*)rowHeader andRowFooter:(MobilyDataItem*)rowFooter atIndex:(NSUInteger)index;
 - (void)deleteRow:(MobilyDataItem*)row;
 - (void)deleteAllRows;
 
+- (void)insertContentIdentifier:(NSString*)identifier byData:(id)data atColumn:(NSUInteger)column atRow:(NSUInteger)row;
 - (void)insertContent:(MobilyDataItem*)content atColumn:(NSUInteger)column atRow:(NSUInteger)row;
 - (void)deleteContentAtColumn:(NSUInteger)column atRow:(NSUInteger)row;
 - (void)deleteAllContent;
 
 @end
+
+/*--------------------------------------------------*/
+
+@class MobilyDataItemCalendarMonth;
+@class MobilyDataItemCalendarWeekday;
+@class MobilyDataItemCalendarDay;
 
 /*--------------------------------------------------*/
 
@@ -242,6 +275,9 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 
 - (instancetype)initWithCalendar:(NSCalendar*)calendar;
 
+- (MobilyDataItemCalendarWeekday*)weekdayItemForDate:(NSDate*)date;
+- (MobilyDataItemCalendarDay*)dayItemForDate:(NSDate*)date;
+
 - (void)prepareBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate;
 - (void)replaceDate:(NSDate*)date data:(id)data;
 - (void)cleanup;
@@ -263,6 +299,8 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 + (instancetype)containerWithCalendar:(NSCalendar*)calendar orientation:(MobilyDataContainerOrientation)orientation;
 
 - (instancetype)initWithCalendar:(NSCalendar*)calendar orientation:(MobilyDataContainerOrientation)orientation;
+
+- (MobilyDataItemCalendarDay*)dayItemForDate:(NSDate*)date;
 
 - (void)prependDate:(NSDate*)date data:(id)data;
 - (void)appendDate:(NSDate*)date data:(id)data;

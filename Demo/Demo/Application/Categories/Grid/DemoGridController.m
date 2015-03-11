@@ -57,13 +57,34 @@
     [self.navigationItem addLeftBarFixedSpace:-16.0f animated:NO];
     [self.navigationItem addLeftBarButtonNormalImage:[UIImage imageNamed:@"menu-back.png"] target:self action:@selector(pressedBack) animated:NO];
     
-    // [_dataGrid insertCell:[MobilyDataItem dataI] atColumn:<#(NSUInteger)#>];
-    
     [_dataView registerIdentifier:DemoGridColumnIdentifier withViewClass:DemoGridColumnCell.class];
     [_dataView registerIdentifier:DemoGridRowIdentifier withViewClass:DemoGridRowCell.class];
     [_dataView registerIdentifier:DemoGridIdentifier withViewClass:DemoGridCell.class];
+    
+    _dataView.container = _dataGrid;
+}
 
-    [_dataView setContainer:_dataGrid];
+- (void)update {
+    [super update];
+    
+    for(NSUInteger column = 0; column < 20; column++) {
+        [_dataGrid appendColumnIdentifier:DemoGridColumnIdentifier
+                             byHeaderData:[NSString stringWithFormat:@"C%d", (int)column]
+                             byFooterData:[NSString stringWithFormat:@"c%d", (int)column]];
+    }
+    for(NSUInteger row = 0; row < 20; row++) {
+        [_dataGrid appendRowIdentifier:DemoGridRowIdentifier
+                          byHeaderData:[NSString stringWithFormat:@"R%d", (int)row]
+                          byFooterData:[NSString stringWithFormat:@"r%d", (int)row]];
+    }
+    for(NSUInteger column = 0; column < _dataGrid.numberOfColumns; column++) {
+        for(NSUInteger row = 0; row < _dataGrid.numberOfRows; row++) {
+            [_dataGrid insertContentIdentifier:DemoGridIdentifier
+                                        byData:[NSString stringWithFormat:@"%dx%d", (int)column, (int)row]
+                                      atColumn:column
+                                         atRow:row];
+        }
+    }
 }
 
 #pragma mark Action

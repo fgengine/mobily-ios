@@ -54,6 +54,14 @@
 - (void)_willChangeParent;
 - (void)_didChangeParent;
 
+- (void)_willBeginDragging;
+- (void)_didScroll;
+- (void)_willEndDraggingWithVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset;
+- (void)_didEndDraggingWillDecelerate:(BOOL)decelerate;
+- (void)_willBeginDecelerating;
+- (void)_didEndDecelerating;
+- (void)_didEndScrollingAnimation;
+
 - (void)_didBeginUpdate;
 - (void)_didEndUpdate;
 
@@ -119,6 +127,7 @@
     MobilyDataContainerOrientation _orientation;
     UIEdgeInsets _margin;
     UIOffset _spacing;
+    CGSize _defaultSize;
     NSMutableArray* _items;
 }
 
@@ -130,6 +139,7 @@
     MobilyDataContainerOrientation _orientation;
     UIEdgeInsets _margin;
     UIOffset _spacing;
+    CGSize _defaultSize;
     NSMutableArray* _items;
 }
 
@@ -141,6 +151,8 @@
     MobilyDataContainerOrientation _orientation;
     UIEdgeInsets _margin;
     UIOffset _spacing;
+    CGSize _defaultColumnSize;
+    CGSize _defaultRowSize;
     NSUInteger _numberOfColumns;
     NSUInteger _numberOfRows;
     NSMutableArray* _headerColumns;

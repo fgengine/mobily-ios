@@ -62,8 +62,8 @@
 @property(nonatomic, readwrite, assign, getter=isEditing) BOOL editing;
 @property(nonatomic, readonly, strong) MobilyDataCell* cell;
 
-+ (instancetype)dataItemWithDataItem:(MobilyDataItem*)dataItem;
-+ (instancetype)dataItemWithIdentifier:(NSString*)identifier order:(NSUInteger)order data:(id)data ;
++ (instancetype)itemWithDataItem:(MobilyDataItem*)dataItem;
++ (instancetype)itemWithIdentifier:(NSString*)identifier order:(NSUInteger)order data:(id)data ;
 + (NSArray*)dataItemsWithIdentifier:(NSString*)identifier order:(NSUInteger)order dataArray:(NSArray*)dataArray;
 
 - (instancetype)initWithDataItem:(MobilyDataItem*)dataItem;

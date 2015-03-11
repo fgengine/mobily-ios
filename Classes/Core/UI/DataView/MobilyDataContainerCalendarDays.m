@@ -111,16 +111,26 @@
 
 #pragma mark Public
 
+- (MobilyDataItemCalendarDay*)dayItemForDate:(NSDate*)date {
+    NSUInteger index = [_entries indexOfObjectPassingTest:^BOOL(MobilyDataItemCalendarDay* item, NSUInteger index, BOOL* stop) {
+        return [item.date isEqualToDate:date];
+    }];
+    if(index != NSNotFound) {
+        return _entries[index];
+    }
+    return nil;
+}
+
 - (void)prependDate:(NSDate*)date data:(id)data {
-    [self _prependEntry:[MobilyDataItemCalendarDay dataItemWithCalendar:_calendar date:date data:data]];
+    [self _prependEntry:[MobilyDataItemCalendarDay itemWithCalendar:_calendar date:date data:data]];
 }
 
 - (void)appendDate:(NSDate*)date data:(id)data {
-    [self _appendEntry:[MobilyDataItemCalendarDay dataItemWithCalendar:_calendar date:date data:data]];
+    [self _appendEntry:[MobilyDataItemCalendarDay itemWithCalendar:_calendar date:date data:data]];
 }
 
 - (void)insertDate:(NSDate*)date data:(id)data atIndex:(NSUInteger)index {
-    [self _insertEntry:[MobilyDataItemCalendarDay dataItemWithCalendar:_calendar date:date data:data] atIndex:index];
+    [self _insertEntry:[MobilyDataItemCalendarDay itemWithCalendar:_calendar date:date data:data] atIndex:index];
 }
 
 - (void)replaceDate:(NSDate*)date data:(id)data {
@@ -128,7 +138,7 @@
         return [item.date isEqualToDate:date];
     }];
     if(index != NSNotFound) {
-        [self _replaceOriginEntry:_entries[index] withEntry:[MobilyDataItemCalendarDay dataItemWithCalendar:_calendar date:date data:data]];
+        [self _replaceOriginEntry:_entries[index] withEntry:[MobilyDataItemCalendarDay itemWithCalendar:_calendar date:date data:data]];
     }
 }
 

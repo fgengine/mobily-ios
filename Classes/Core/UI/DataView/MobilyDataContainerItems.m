@@ -100,20 +100,12 @@
     return [_entries copy];
 }
 
-- (MobilyDataItem*)entryForData:(id)data {
+- (MobilyDataItem*)itemForData:(id)data {
     for(MobilyDataItem* entry in _entries) {
         id entryData = entry.data;
         if(entryData == data) {
             return entryData;
         }
-    }
-    return nil;
-}
-
-- (MobilyDataCell*)cellForData:(id)data {
-    MobilyDataItem* entry = [self entryForData:data];
-    if(entry != nil) {
-        return entry.cell;
     }
     return nil;
 }

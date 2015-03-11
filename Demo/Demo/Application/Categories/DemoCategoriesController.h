@@ -43,9 +43,6 @@
 
 @property(nonatomic, readwrite, weak) IBOutlet MobilyDataView* dataView;
 @property(nonatomic, readwrite, strong) MobilyDataContainerSectionsList* sections;
-@property(nonatomic, readwrite, strong) MobilyDataContainerItemsList* commonItems;
-@property(nonatomic, readwrite, strong) MobilyDataContainerItemsList* collectionItems;
-@property(nonatomic, readwrite, strong) MobilyDataContainerItemsList* audioVideoItems;
 
 @end
 

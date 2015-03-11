@@ -59,18 +59,18 @@
 
 #pragma mark Init / Free
 
-+ (instancetype)dataItemWithDataItem:(MobilyDataItem*)dataItem {
++ (instancetype)itemWithDataItem:(MobilyDataItem*)dataItem {
     return [[self alloc] initWithDataItem:dataItem];
 }
 
-+ (instancetype)dataItemWithIdentifier:(NSString*)identifier order:(NSUInteger)order data:(id)data {
++ (instancetype)itemWithIdentifier:(NSString*)identifier order:(NSUInteger)order data:(id)data {
     return [[self alloc] initWithIdentifier:identifier order:order data:data];
 }
 
 + (NSArray*)dataItemsWithIdentifier:(NSString*)identifier order:(NSUInteger)order dataArray:(NSArray*)dataArray {
     NSMutableArray* items = [NSMutableArray arrayWithCapacity:dataArray.count];
     for(id data in dataArray) {
-        [items addObject:[self dataItemWithIdentifier:identifier order:order data:data]];
+        [items addObject:[self itemWithIdentifier:identifier order:order data:data]];
     }
     return items;
 }
@@ -372,7 +372,7 @@
 
 #pragma mark Init / Free
 
-+ (instancetype)dataItemWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate data:(id)data {
++ (instancetype)itemWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate data:(id)data {
     return [[self alloc] initWithCalendar:calendar beginDate:beginDate endDate:endDate data:data];
 }
 
@@ -397,7 +397,7 @@
 
 #pragma mark Init / Free
 
-+ (instancetype)dataItemWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data {
++ (instancetype)itemWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data {
     return [[self alloc] initWithCalendar:calendar date:date data:data];
 }
 
@@ -421,7 +421,7 @@
 
 #pragma mark Init / Free
 
-+ (instancetype)dataItemWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data {
++ (instancetype)itemWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data {
     return [[self alloc] initWithCalendar:calendar date:date data:data];
 }
 

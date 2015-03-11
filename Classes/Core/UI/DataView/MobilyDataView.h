@@ -49,19 +49,6 @@ typedef void(^MobilyDataViewCompleteBlock)(BOOL finished);
 
 /*--------------------------------------------------*/
 
-typedef NS_OPTIONS(NSUInteger, MobilyDataViewPosition) {
-    MobilyDataViewPositionNone = 0,
-    MobilyDataViewPositionTop = 1 << 0,
-    MobilyDataViewPositionCenteredVertically = 1 << 1,
-    MobilyDataViewPositionBottom = 1 << 2,
-    MobilyDataViewPositionLeft = 1 << 3,
-    MobilyDataViewPositionCenteredHorizontally = 1 << 4,
-    MobilyDataViewPositionRight = 1 << 5,
-    MobilyDataViewPositionCentered = MobilyDataViewPositionCenteredVertically | MobilyDataViewPositionCenteredHorizontally,
-};
-
-/*--------------------------------------------------*/
-
 @protocol MobilyDataRefreshView;
 
 /*--------------------------------------------------*/
@@ -163,13 +150,6 @@ typedef NS_OPTIONS(NSUInteger, MobilyDataViewPosition) {
 
 /*--------------------------------------------------*/
 
-extern NSString* MobilyDataViewWillBeginDragging;
-extern NSString* MobilyDataViewDidScroll;
-extern NSString* MobilyDataViewWillEndDragging;
-extern NSString* MobilyDataViewDidEndDragging;
-extern NSString* MobilyDataViewWillBeginDecelerating;
-extern NSString* MobilyDataViewDidEndDecelerating;
-extern NSString* MobilyDataViewDidEndScrollingAnimation;
 extern NSString* MobilyDataViewPullToRefreshTriggered;
 extern NSString* MobilyDataViewPullToLoadTriggered;
 

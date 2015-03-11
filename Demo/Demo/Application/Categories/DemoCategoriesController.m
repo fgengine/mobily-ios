@@ -41,6 +41,7 @@
 #import "DemoButtonsController.h"
 #import "DemoFieldsController.h"
 #import "DemoTablesController.h"
+#import "DemoGridController.h"
 #import "DemoCalendarController.h"
 #import "DemoAudioRecorderController.h"
 #import "DemoAudioPlayerController.h"
@@ -51,6 +52,7 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
     DemoCategoriesTypeButtons,
     DemoCategoriesTypeFields,
     DemoCategoriesTypeTables,
+    DemoCategoriesTypeGrid,
     DemoCategoriesTypeCalendar,
     DemoCategoriesTypeAudioRecorder,
     DemoCategoriesTypeAudioPlayer
@@ -80,31 +82,40 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
     
     self.sections = MobilyDataContainerSectionsList.new;
     
-    self.commonItems = MobilyDataContainerItemsList.new;
-    self.commonItems.header = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"COMMON"];
-    [self.commonItems appendItems:[MobilyDataItem dataItemsWithIdentifier:DemoCategoriesIdentifier order:1 dataArray:@[
+    MobilyDataContainerItemsList* commonItems = MobilyDataContainerItemsList.new;
+    commonItems.header = [MobilyDataItem itemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"COMMON"];
+    [commonItems appendItems:[MobilyDataItem dataItemsWithIdentifier:DemoCategoriesIdentifier order:1 dataArray:@[
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeButtons title:@"Buttons"],
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeFields title:@"Fields"],
     ]]];
-    self.commonItems.footer = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"common"];
-    [self.sections appendSection:self.commonItems];
+    commonItems.footer = [MobilyDataItem itemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"common"];
+    [self.sections appendSection:commonItems];
     
-    self.collectionItems = MobilyDataContainerItemsList.new;
-    self.collectionItems.header = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"COLLECTION"];
-    [self.collectionItems appendItems:[MobilyDataItem dataItemsWithIdentifier:DemoCategoriesIdentifier order:1 dataArray:@[
+    MobilyDataContainerItemsList* tableItems = MobilyDataContainerItemsList.new;
+    tableItems.header = [MobilyDataItem itemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"TABLES"];
+    [tableItems appendItems:[MobilyDataItem dataItemsWithIdentifier:DemoCategoriesIdentifier order:1 dataArray:@[
+        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeTables title:@"Tables"],
+    ]]];
+    tableItems.footer = [MobilyDataItem itemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"tables"];
+    [self.sections appendSection:tableItems];
+    
+    MobilyDataContainerItemsList* collectionItems = MobilyDataContainerItemsList.new;
+    collectionItems.header = [MobilyDataItem itemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"COLLECTION"];
+    [collectionItems appendItems:[MobilyDataItem dataItemsWithIdentifier:DemoCategoriesIdentifier order:1 dataArray:@[
+        [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeGrid title:@"Grid"],
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeCalendar title:@"Calendar"],
-        ]]];
-    self.collectionItems.footer = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"collection"];
-    [self.sections appendSection:self.collectionItems];
+    ]]];
+    collectionItems.footer = [MobilyDataItem itemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"collection"];
+    [self.sections appendSection:collectionItems];
     
-    self.audioVideoItems = MobilyDataContainerItemsList.new;
-    self.audioVideoItems.header = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"AUDIO / VIDEO"];
-    [self.audioVideoItems appendItems:[MobilyDataItem dataItemsWithIdentifier:DemoCategoriesIdentifier order:1 dataArray:@[
+    MobilyDataContainerItemsList* audioVideoItems = MobilyDataContainerItemsList.new;
+    audioVideoItems.header = [MobilyDataItem itemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"AUDIO / VIDEO"];
+    [audioVideoItems appendItems:[MobilyDataItem dataItemsWithIdentifier:DemoCategoriesIdentifier order:1 dataArray:@[
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioRecorder title:@"AudioRecorder"],
         [[DemoCategoriesModel alloc] initWithType:DemoCategoriesTypeAudioPlayer title:@"AudioPlayer"],
-        ]]];
-    self.audioVideoItems.footer = [MobilyDataItem dataItemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"audio / video"];
-    [self.sections appendSection:self.audioVideoItems];
+    ]]];
+    audioVideoItems.footer = [MobilyDataItem itemWithIdentifier:DemoCategoriesHeaderIdentifier order:2 data:@"audio / video"];
+    [self.sections appendSection:audioVideoItems];
 }
 
 - (void)dealloc {
@@ -125,6 +136,7 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
         case DemoCategoriesTypeButtons: [self.app.mainSlideCenterController pushViewController:DemoButtonsController.new animated:YES]; break;
         case DemoCategoriesTypeFields: [self.app.mainSlideCenterController pushViewController:DemoFieldsController.new animated:YES]; break;
         case DemoCategoriesTypeTables: [self.app.mainSlideCenterController pushViewController:DemoTablesController.new animated:YES]; break;
+        case DemoCategoriesTypeGrid: [self.app.mainSlideCenterController pushViewController:DemoGridController.new animated:YES]; break;
         case DemoCategoriesTypeCalendar: [self.app.mainSlideCenterController pushViewController:DemoCalendarController.new animated:YES]; break;
         case DemoCategoriesTypeAudioRecorder: [self.app.mainSlideCenterController pushViewController:DemoAudioRecorderController.new animated:YES]; break;
         case DemoCategoriesTypeAudioPlayer: [self.app.mainSlideCenterController pushViewController:DemoAudioPlayerController.new animated:YES]; break;
@@ -140,7 +152,7 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
 @implementation DemoCategoriesHeaderCell
 
 + (CGSize)sizeForItem:(MobilyDataItem*)item availableSize:(CGSize)size {
-    return CGSizeMake(size.width, 44.0f);
+    return CGSizeMake(size.width, 21.0f);
 }
 
 - (void)prepareForUse {
@@ -158,7 +170,7 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
 @implementation DemoCategoriesCell
 
 + (CGSize)sizeForItem:(MobilyDataItem*)item availableSize:(CGSize)size {
-    return CGSizeMake(size.width, 88.0f);
+    return CGSizeMake(size.width, 44.0f);
 }
 
 - (void)prepareForUse {

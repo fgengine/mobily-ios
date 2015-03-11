@@ -201,6 +201,30 @@
 
 #pragma mark Public
 
+- (MobilyDataItemCalendarWeekday*)weekdayItemForDate:(NSDate*)date {
+    NSDateComponents* dateComponents = [_calendar components:NSCalendarUnitWeekday fromDate:date];
+    for(MobilyDataItemCalendarWeekday* weekdayItem in _weekdayItems) {
+        NSDateComponents* weekdayComponents = [_calendar components:NSCalendarUnitWeekday fromDate:weekdayItem.date];
+        if(weekdayComponents.weekday == dateComponents.weekday) {
+            return weekdayItem;
+        }
+    }
+    return nil;
+}
+
+- (MobilyDataItemCalendarDay*)dayItemForDate:(NSDate*)date {
+    NSDate* beginDate = [date beginningOfDayByCalendar:_calendar];
+    __block MobilyDataItemCalendarDay* result = nil;
+    [_dayItems enumerateColumnsRowsUsingBlock:^(MobilyDataItemCalendarDay* dayItem, NSUInteger column, NSUInteger row, BOOL* stopColumn, BOOL* stopRow) {
+        if([dayItem.date isEqualToDate:beginDate] == YES) {
+            result = dayItem;
+            *stopColumn = YES;
+            *stopRow = YES;
+        }
+    }];
+    return result;
+}
+
 - (void)prepareBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate {
     NSDate* normalizedBeginDate = [beginDate beginningOfWeekByCalendar:_calendar];
     NSDate* normalizedEndDate = [endDate endOfWeekByCalendar:_calendar];
@@ -209,13 +233,13 @@
         _endDate = normalizedEndDate;
         
         if(_monthItem == nil) {
-            _monthItem = [MobilyDataItemCalendarMonth dataItemWithCalendar:_calendar beginDate:_beginDate endDate:_endDate data:[NSNull null]];
+            _monthItem = [MobilyDataItemCalendarMonth itemWithCalendar:_calendar beginDate:_beginDate endDate:_endDate data:[NSNull null]];
             [self _appendEntry:_monthItem];
         }
         if(_weekdayItems.count < 7) {
             NSDate* weekdayDate = [_beginDate beginningOfWeekByCalendar:_calendar];
             for(NSUInteger weekdayIndex = 0; weekdayIndex < 7; weekdayIndex++) {
-                MobilyDataItemCalendarWeekday* weekdayItem = [MobilyDataItemCalendarWeekday dataItemWithCalendar:_calendar date:weekdayDate data:[NSNull null]];
+                MobilyDataItemCalendarWeekday* weekdayItem = [MobilyDataItemCalendarWeekday itemWithCalendar:_calendar date:weekdayDate data:[NSNull null]];
                 [_weekdayItems addObject:weekdayItem];
                 [self _appendEntry:weekdayItem];
                 weekdayDate = [weekdayDate nextDayByCalendar:_calendar];
@@ -230,7 +254,7 @@
                 for(NSUInteger weekdayIndex = 0; weekdayIndex < 7; weekdayIndex++) {
                     MobilyDataItemCalendarDay* dayItem = [_dayItems objectAtColumn:weekdayIndex atRow:weekIndex];
                     if(dayItem == nil) {
-                        dayItem = [MobilyDataItemCalendarDay dataItemWithCalendar:_calendar date:beginDayDate data:[NSNull null]];
+                        dayItem = [MobilyDataItemCalendarDay itemWithCalendar:_calendar date:beginDayDate data:[NSNull null]];
                         [_dayItems setObject:dayItem atColumn:weekdayIndex atRow:weekIndex];
                         [self _appendEntry:dayItem];
                     }
@@ -243,15 +267,17 @@
 
 - (void)replaceDate:(NSDate*)date data:(id)data {
     __block NSUInteger foundColumn = NSNotFound, foundRow = NSNotFound;
-    [_dayItems eachColumnsRows:^(MobilyDataItemCalendarDay* day, NSUInteger column, NSUInteger row) {
+    [_dayItems enumerateColumnsRowsUsingBlock:^(MobilyDataItemCalendarDay* day, NSUInteger column, NSUInteger row, BOOL* stopColumn, BOOL* stopRow) {
         if([day.date isEqualToDate:date] == YES) {
             foundColumn = column;
             foundRow = row;
+            *stopColumn = YES;
+            *stopRow = YES;
         }
     }];
     if((foundColumn != NSNotFound) && (foundRow != NSNotFound)) {
         MobilyDataItemCalendarDay* oldDayItem = [_dayItems objectAtColumn:foundColumn atRow:foundRow];
-        MobilyDataItemCalendarDay* newDayItem = [MobilyDataItemCalendarDay dataItemWithCalendar:_calendar date:date data:data];
+        MobilyDataItemCalendarDay* newDayItem = [MobilyDataItemCalendarDay itemWithCalendar:_calendar date:date data:data];
         [_dayItems setObject:newDayItem atColumn:foundColumn atRow:foundRow];
         [self _replaceOriginEntry:oldDayItem withEntry:newDayItem];
     }

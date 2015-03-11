@@ -14,6 +14,7 @@
 		401FEE5318A3F92800B445EB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401FEE5218A3F92800B445EB /* Foundation.framework */; };
 		401FEE5518A3F92800B445EB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401FEE5418A3F92800B445EB /* CoreGraphics.framework */; };
 		401FEE5718A3F92800B445EB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401FEE5618A3F92800B445EB /* UIKit.framework */; };
+		406B45B51AAF68160048268C /* DemoGridController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 406B45B41AAF68160048268C /* DemoGridController.xib */; };
 		407B41BF1A6420ED00A3DFFD /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 407B41BE1A6420ED00A3DFFD /* AVFoundation.framework */; };
 		407B41C61A642F7300A3DFFD /* DemoAudioRecorderController.m in Sources */ = {isa = PBXBuildFile; fileRef = 407B41C41A642F7300A3DFFD /* DemoAudioRecorderController.m */; };
 		407B41C71A642F7300A3DFFD /* DemoAudioRecorderController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 407B41C51A642F7300A3DFFD /* DemoAudioRecorderController.xib */; };
@@ -63,6 +64,7 @@
 		401FEE5218A3F92800B445EB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		401FEE5418A3F92800B445EB /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		401FEE5618A3F92800B445EB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		406B45B41AAF68160048268C /* DemoGridController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DemoGridController.xib; sourceTree = "<group>"; };
 		407B41BE1A6420ED00A3DFFD /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		407B41C31A642F7300A3DFFD /* DemoAudioRecorderController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoAudioRecorderController.h; sourceTree = "<group>"; };
 		407B41C41A642F7300A3DFFD /* DemoAudioRecorderController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoAudioRecorderController.m; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 			children = (
 				4004F42D1AA7026D00EF80FC /* DemoGridController.h */,
 				4004F42E1AA7026D00EF80FC /* DemoGridController.m */,
+				406B45B41AAF68160048268C /* DemoGridController.xib */,
 				4004F42C1AA7026D00EF80FC /* DemoGridColumnCell.xib */,
 				4004F42F1AA7026D00EF80FC /* DemoGridRowCell.xib */,
 				4004F42B1AA7026D00EF80FC /* DemoGridCell.xib */,
@@ -240,8 +243,8 @@
 				408718F41A5D315C00833F0A /* Buttons */,
 				408718FA1A5D491600833F0A /* Fields */,
 				4098290B1A712B0400D83152 /* Tables */,
-				40E915EC1AA0A6C000572C4E /* Calendar */,
 				4004F42A1AA7026D00EF80FC /* Grid */,
+				40E915EC1AA0A6C000572C4E /* Calendar */,
 				407B41C21A642F7300A3DFFD /* AudioRecorder */,
 				407F25B51A65CB4800B0A79C /* AudioPlayer */,
 				408718DC1A5C443900833F0A /* DemoCategoriesController.h */,
@@ -410,6 +413,7 @@
 				40FDAE371A9B290100A17A98 /* menu-back@2x.png in Resources */,
 				408718FF1A5D491600833F0A /* DemoFieldsController.xib in Resources */,
 				407F25B41A65864C00B0A79C /* TestMusic.m4a in Resources */,
+				406B45B51AAF68160048268C /* DemoGridController.xib in Resources */,
 				407F25BA1A65CB4800B0A79C /* DemoAudioPlayerController.xib in Resources */,
 				409829181A712B9200D83152 /* Demo500pxCell.xib in Resources */,
 				40C01D661A893CBC00FD41B2 /* Mobily.podspec in Resources */,

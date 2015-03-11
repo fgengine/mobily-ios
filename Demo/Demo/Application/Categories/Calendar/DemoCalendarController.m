@@ -60,10 +60,14 @@
     [_dataView registerIdentifier:MobilyDataContainerCalendarMonthIdentifier withViewClass:DemoCalendarMonthCell.class];
     [_dataView registerIdentifier:MobilyDataContainerCalendarWeekdayIdentifier withViewClass:DemoCalendarWeekdayCell.class];
     [_dataView registerIdentifier:MobilyDataContainerCalendarDayIdentifier withViewClass:DemoCalendarDayCell.class];
-
-    [_dataCalendar prepareBeginDate:NSDate.date.previousWeek endDate:NSDate.date.nextWeek];
     
-    [_dataView setContainer:_dataCalendar];
+    _dataView.container = _dataCalendar;
+}
+
+- (void)update {
+    [super update];
+    
+    [_dataCalendar prepareBeginDate:NSDate.date.beginningOfMonth endDate:NSDate.date.endOfMonth];
 }
 
 #pragma mark Action

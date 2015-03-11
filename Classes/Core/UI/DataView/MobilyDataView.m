@@ -1202,18 +1202,18 @@
             self.pullDragging = NO;
         }
     }
-    [self fireEventForKey:MobilyDataViewWillBeginDragging byObject:nil];
+    if(_container != nil) {
+        [_container _willBeginDragging];
+    }
 }
 
 - (void)_didScroll {
     if(self.pagingEnabled == NO) {
-        
         CGRect bounds = self.bounds;
         CGSize frameSize = self.frameSize;
         CGSize contentSize = self.contentSize;
         CGPoint contentOffset = self.contentOffset;
         UIEdgeInsets contentInset = self.contentInset;
-        
         if(self.bounces == YES) {
             if(self.alwaysBounceHorizontal == YES) {
                 if(_bouncesLeft == NO) {
@@ -1232,7 +1232,6 @@
                 }
             }
         }
-        
         if((_pullDragging == YES) && (self.isDragging == YES) && (self.isDecelerating == NO)) {
             if(_canPullToRefresh == YES) {
                 CGFloat pullToRefreshSize = (_pullToRefreshHeight < 0.0f) ? _pullToRefreshView.frameHeight : _pullToRefreshHeight;
@@ -1326,23 +1325,18 @@
                 }
             }
         }
-        
         self.scrollIndicatorInsets = contentInset;
         self.contentInset = contentInset;
         self.contentOffset = contentOffset;
     }
-    [self fireEventForKey:MobilyDataViewDidScroll byObject:nil];
+    if(_container != nil) {
+        [_container _didScroll];
+    }
 }
 
 - (void)_willEndDraggingWithVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset {
-    NSValue* newTargetContentOffset = [self fireEventForKey:MobilyDataViewWillEndDragging byObject:@{
-                                                                                                     @"velocity" : [NSValue valueWithCGPoint:velocity],
-                                                                                                     @"targetContentOffset" : [NSValue valueWithCGPoint:*targetContentOffset]
-                                                                                                     }];
-    if(newTargetContentOffset != nil) {
-        if(strcmp(newTargetContentOffset.objCType, @encode(CGPoint)) == 0) {
-            [newTargetContentOffset getValue:targetContentOffset];
-        }
+    if(_container != nil) {
+        [_container _willEndDraggingWithVelocity:velocity targetContentOffset:targetContentOffset];
     }
 }
 
@@ -1388,19 +1382,27 @@
             self.pullDragging = NO;
         }
     }
-    [self fireEventForKey:MobilyDataViewDidEndDragging byObject:@(decelerate)];
+    if(_container != nil) {
+        [_container _didEndDraggingWillDecelerate:decelerate];
+    }
 }
 
 - (void)_willBeginDecelerating {
-    [self fireEventForKey:MobilyDataViewWillBeginDecelerating byObject:nil];
+    if(_container != nil) {
+        [_container _willBeginDecelerating];
+    }
 }
 
 - (void)_didEndDecelerating {
-    [self fireEventForKey:MobilyDataViewDidEndDecelerating byObject:nil];
+    if(_container != nil) {
+        [_container _didEndDecelerating];
+    }
 }
 
 - (void)_didEndScrollingAnimation {
-    [self fireEventForKey:MobilyDataViewDidEndScrollingAnimation byObject:nil];
+    if(_container != nil) {
+        [_container _didEndScrollingAnimation];
+    }
 }
 
 @end
@@ -1493,13 +1495,6 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-NSString* MobilyDataViewWillBeginDragging = @"MobilyDataViewWillBeginDragging";
-NSString* MobilyDataViewDidScroll = @"MobilyDataViewDidScroll";
-NSString* MobilyDataViewWillEndDragging = @"MobilyDataViewWillEndDragging";
-NSString* MobilyDataViewDidEndDragging = @"MobilyDataViewDidEndDragging";
-NSString* MobilyDataViewWillBeginDecelerating = @"MobilyDataViewWillBeginDecelerating";
-NSString* MobilyDataViewDidEndDecelerating = @"MobilyDataViewDidEndDecelerating";
-NSString* MobilyDataViewDidEndScrollingAnimation = @"MobilyDataViewDidEndScrollingAnimation";
 NSString* MobilyDataViewPullToRefreshTriggered = @"MobilyDataViewPullToRefreshTriggered";
 NSString* MobilyDataViewPullToLoadTriggered = @"MobilyDataViewPullToLoadTriggered";
 

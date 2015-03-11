@@ -60,6 +60,11 @@
 - (id)objectAtColumn:(NSUInteger)column atRow:(NSUInteger)row;
 - (NSArray*)objects;
 
+- (void)enumerateColumnsRowsUsingBlock:(void(^)(id object, NSUInteger column, NSUInteger row, BOOL* stopColumn, BOOL* stopRow))block;
+- (void)enumerateRowsColumnsUsingBlock:(void(^)(id object, NSUInteger column, NSUInteger row, BOOL* stopColumn, BOOL* stopRow))block;
+- (void)enumerateByColumn:(NSInteger)column usingBlock:(void(^)(id object, NSUInteger column, NSUInteger row, BOOL* stop))block;
+- (void)enumerateByRow:(NSInteger)row usingBlock:(void(^)(id object, NSUInteger column, NSUInteger row, BOOL* stop))block;
+
 - (void)eachColumnsRows:(void(^)(id object, NSUInteger column, NSUInteger row))block;
 - (void)eachRowsColumns:(void(^)(id object, NSUInteger column, NSUInteger row))block;
 - (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block byColumn:(NSInteger)column;
