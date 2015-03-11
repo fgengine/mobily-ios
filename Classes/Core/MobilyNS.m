@@ -250,7 +250,7 @@
 - (NSDate*)endOfYearByCalendar:(NSCalendar*)calendar {
     NSDateComponents* components = NSDateComponents.new;
     components.year = 1;
-    return [[calendar dateByAddingComponents:components toDate:self.beginningOfYear options:0] dateByAddingTimeInterval:-1];
+    return [[calendar dateByAddingComponents:components toDate:[self beginningOfYearByCalendar:calendar] options:0] dateByAddingTimeInterval:-1];
 }
 
 - (NSDate*)beginningOfMonth {
@@ -270,7 +270,7 @@
 - (NSDate*)endOfMonthByCalendar:(NSCalendar*)calendar {
     NSDateComponents* components = NSDateComponents.new;
     components.month = 1;
-    return [[calendar dateByAddingComponents:components toDate:self.beginningOfMonth options:0] dateByAddingTimeInterval:-1];
+    return [[calendar dateByAddingComponents:components toDate:[self beginningOfMonthByCalendar:calendar] options:0] dateByAddingTimeInterval:-1];
 }
 
 - (NSDate*)beginningOfWeek {
@@ -291,7 +291,7 @@
 - (NSDate*)endOfWeekByCalendar:(NSCalendar*)calendar {
     NSDateComponents* components = NSDateComponents.new;
     components.weekOfMonth = 1;
-    return [[calendar dateByAddingComponents:components toDate:self.beginningOfWeek options:0] dateByAddingTimeInterval:-1];
+    return [[calendar dateByAddingComponents:components toDate:[self beginningOfWeekByCalendar:calendar] options:0] dateByAddingTimeInterval:-1];
 }
 
 - (NSDate*)beginningOfDay {
@@ -309,7 +309,43 @@
 - (NSDate*)endOfDayByCalendar:(NSCalendar*)calendar {
     NSDateComponents* components = NSDateComponents.new;
     components.day = 1;
-    return [[calendar dateByAddingComponents:components toDate:self.beginningOfDay options:0] dateByAddingTimeInterval:-1];
+    return [[calendar dateByAddingComponents:components toDate:[self beginningOfDayByCalendar:calendar] options:0] dateByAddingTimeInterval:-1];
+}
+
+- (NSDate*)beginningOfHour {
+    return [self beginningOfHourByCalendar:NSCalendar.currentCalendar];
+}
+
+- (NSDate*)beginningOfHourByCalendar:(NSCalendar*)calendar {
+    return [calendar dateFromComponents:[calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour) fromDate:self]];
+}
+
+- (NSDate*)endOfHour {
+    return [self endOfHourByCalendar:NSCalendar.currentCalendar];
+}
+
+- (NSDate*)endOfHourByCalendar:(NSCalendar*)calendar {
+    NSDateComponents* components = NSDateComponents.new;
+    components.hour = 1;
+    return [[calendar dateByAddingComponents:components toDate:[self beginningOfHourByCalendar:calendar] options:0] dateByAddingTimeInterval:-1];
+}
+
+- (NSDate*)beginningOfMinute {
+    return [self beginningOfMinuteByCalendar:NSCalendar.currentCalendar];
+}
+
+- (NSDate*)beginningOfMinuteByCalendar:(NSCalendar*)calendar {
+    return [calendar dateFromComponents:[calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:self]];
+}
+
+- (NSDate*)endOfMinute {
+    return [self endOfMinuteByCalendar:NSCalendar.currentCalendar];
+}
+
+- (NSDate*)endOfMinuteByCalendar:(NSCalendar*)calendar {
+    NSDateComponents* components = NSDateComponents.new;
+    components.minute = 1;
+    return [[calendar dateByAddingComponents:components toDate:[self beginningOfMinuteByCalendar:calendar] options:0] dateByAddingTimeInterval:-1];
 }
 
 - (NSDate*)previousYear {

@@ -104,6 +104,14 @@ typedef NS_ENUM(NSUInteger, MobilyDateSeason) {
 - (NSDate*)beginningOfDayByCalendar:(NSCalendar*)calendar;
 - (NSDate*)endOfDay;
 - (NSDate*)endOfDayByCalendar:(NSCalendar*)calendar;
+- (NSDate*)beginningOfHour;
+- (NSDate*)beginningOfHourByCalendar:(NSCalendar*)calendar;
+- (NSDate*)endOfHour;
+- (NSDate*)endOfHourByCalendar:(NSCalendar*)calendar;
+- (NSDate*)beginningOfMinute;
+- (NSDate*)beginningOfMinuteByCalendar:(NSCalendar*)calendar;
+- (NSDate*)endOfMinute;
+- (NSDate*)endOfMinuteByCalendar:(NSCalendar*)calendar;
 
 - (NSDate*)previousYear;
 - (NSDate*)previousYearByCalendar:(NSCalendar*)calendar;
