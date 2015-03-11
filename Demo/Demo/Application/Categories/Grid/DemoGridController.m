@@ -45,7 +45,7 @@
     self.title = @"Grid";
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
-    self.dataGrid = [MobilyDataContainerItemsGrid new];
+    _dataGrid = [MobilyDataContainerItemsGrid new];
 }
 
 - (void)dealloc {
@@ -77,6 +77,7 @@
                           byHeaderData:[NSString stringWithFormat:@"R%d", (int)row]
                           byFooterData:[NSString stringWithFormat:@"r%d", (int)row]];
     }
+    /*
     for(NSUInteger column = 0; column < _dataGrid.numberOfColumns; column++) {
         for(NSUInteger row = 0; row < _dataGrid.numberOfRows; row++) {
             [_dataGrid insertContentIdentifier:DemoGridIdentifier
@@ -85,6 +86,7 @@
                                          atRow:row];
         }
     }
+    */
 }
 
 #pragma mark Action

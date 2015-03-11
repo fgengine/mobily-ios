@@ -47,6 +47,8 @@
     NSString* _identifier;
     NSUInteger _order;
     id _data;
+    CGSize _size;
+    BOOL _needUpdateSize;
     CGRect _originFrame;
     CGRect _updateFrame;
     CGRect _displayFrame;
@@ -64,6 +66,8 @@
 @property(nonatomic, readwrite, weak) MobilyDataContainer* parent;
 @property(nonatomic, readwrite, strong) NSString* identifier;
 @property(nonatomic, readwrite, strong) id data;
+@property(nonatomic, readwrite, assign) CGSize size;
+@property(nonatomic, readwrite, assign) BOOL needUpdateSize;
 @property(nonatomic, readwrite, strong) MobilyDataCell* cell;
 
 @end

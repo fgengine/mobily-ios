@@ -83,6 +83,7 @@
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated;
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated;
 
+- (void)setNeedUpdateSize;
 - (CGSize)sizeForAvailableSize:(CGSize)size;
 
 - (void)appear;

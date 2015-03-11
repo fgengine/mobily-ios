@@ -263,12 +263,20 @@
 }
 
 - (NSArray*)visibleItems {
+    [_visibleItems sortUsingComparator:^NSComparisonResult(MobilyDataItem* item1, MobilyDataItem* item2) {
+        if(item1.order < item2.order) {
+            return NSOrderedAscending;
+        } else if(item1.order > item2.order) {
+            return NSOrderedDescending;
+        }
+        return NSOrderedSame;
+    }];
     return _visibleItems;
 }
 
 - (NSArray*)visibleCells {
     NSMutableArray* result = NSMutableArray.array;
-    for(MobilyDataItem* item in _visibleItems) {
+    for(MobilyDataItem* item in self.visibleItems) {
         [result addObject:item.view];
     }
     return [NSArray arrayWithArray:result];
@@ -986,14 +994,6 @@
 
 - (void)_appearItem:(MobilyDataItem*)item {
     [_visibleItems addObject:item];
-    [_visibleItems sortUsingComparator:^NSComparisonResult(MobilyDataItem* item1, MobilyDataItem* item2) {
-        if(item1.order < item2.order) {
-            return NSOrderedAscending;
-        } else if(item1.order > item2.order) {
-            return NSOrderedDescending;
-        }
-        return NSOrderedSame;
-    }];
     [self dequeueCellWithItem:item];
 }
 

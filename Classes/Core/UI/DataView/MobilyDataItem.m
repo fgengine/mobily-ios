@@ -45,6 +45,8 @@
 @synthesize parent = _parent;
 @synthesize identifier = _identifier;
 @synthesize data = _data;
+@synthesize size = _size;
+@synthesize needUpdateSize = _needUpdateSize;
 @synthesize originFrame = _originFrame;
 @synthesize updateFrame = _updateFrame;
 @synthesize displayFrame = _displayFrame;
@@ -81,12 +83,15 @@
         _identifier = dataItem.identifier;
         _order = dataItem.order;
         _data = dataItem.data;
+        _size = dataItem.size;
+        _needUpdateSize = dataItem.needUpdateSize;
         _originFrame = dataItem.originFrame;
         _updateFrame = dataItem.updateFrame;
         _displayFrame = dataItem.displayFrame;
         _allowsSelection = dataItem.allowsSelection;
         _allowsHighlighting = dataItem.allowsHighlighting;
         _allowsEditing = dataItem.allowsEditing;
+        _needUpdateSize = YES;
         
         [self setup];
     }
@@ -99,6 +104,8 @@
         _identifier = identifier;
         _order = order;
         _data = data;
+        _size = CGSizeZero;
+        _needUpdateSize = YES;
         _originFrame = CGRectNull;
         _updateFrame = CGRectNull;
         _displayFrame = CGRectNull;
@@ -303,12 +310,20 @@
     }
 }
 
+- (void)setNeedUpdateSize {
+    _needUpdateSize = YES;
+}
+
 - (CGSize)sizeForAvailableSize:(CGSize)size {
-    Class cellClass = [_view cellClassWithItem:self];
-    if(cellClass != nil) {
-        return [cellClass sizeForItem:_data availableSize:size];
+    if(_needUpdateSize == YES) {
+        _needUpdateSize = NO;
+        
+        Class cellClass = [_view cellClassWithItem:self];
+        if(cellClass != nil) {
+            _size = [cellClass sizeForItem:_data availableSize:size];
+        }
     }
-    return CGSizeZero;
+    return _size;
 }
 
 - (void)appear {

@@ -74,6 +74,8 @@
     _orientation = MobilyDataContainerOrientationVertical;
     _margin = UIEdgeInsetsZero;
     _spacing = UIOffsetZero;
+    _defaultColumnSize = CGSizeMake(128.0f, 64.0f);
+    _defaultRowSize = CGSizeMake(64.0f, 44.0f);
     _numberOfColumns = 0;
     _numberOfRows = 0;
     _headerColumns = NSMutableArray.array;
@@ -498,10 +500,10 @@
     CGPoint headerOffset = CGPointMake(offset.x + headerRowSize.width, offset.y + headerColumnSize.height);
     CGPoint footerOffset = CGPointMake(headerOffset.x + contentSize.width, headerOffset.y + contentSize.height);
     [_headerColumns eachWithIndex:^(MobilyDataItem* headerColumn, NSUInteger index) {
-        headerColumn.updateFrame = CGRectMake(headerOffset.y + (headerColumnSize.height * index), offset.x, headerColumnSize.width, headerColumnSize.height);
+        headerColumn.updateFrame = CGRectMake(headerOffset.x + (headerColumnSize.width * index), offset.y, headerColumnSize.width, headerColumnSize.height);
     }];
     [_footerColumns eachWithIndex:^(MobilyDataItem* footerColumn, NSUInteger index) {
-        footerColumn.updateFrame = CGRectMake(footerOffset.y + (footerColumnSize.height * index), offset.x, footerColumnSize.width, footerColumnSize.height);
+        footerColumn.updateFrame = CGRectMake(footerOffset.x + (footerColumnSize.width * index), offset.y, footerColumnSize.width, footerColumnSize.height);
     }];
     [_headerRows eachWithIndex:^(MobilyDataItem* headerRow, NSUInteger index) {
         headerRow.updateFrame = CGRectMake(offset.x, headerOffset.y + (headerRowSize.height * index), headerRowSize.width, headerRowSize.height);
