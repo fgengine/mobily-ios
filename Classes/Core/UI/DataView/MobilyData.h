@@ -48,6 +48,9 @@ typedef NS_OPTIONS(NSUInteger, MobilyDataViewPosition) {
     MobilyDataViewPositionCenteredHorizontally = 1 << 4,
     MobilyDataViewPositionRight = 1 << 5,
     MobilyDataViewPositionCentered = MobilyDataViewPositionCenteredVertically | MobilyDataViewPositionCenteredHorizontally,
+    MobilyDataViewPositionInsideVertically = (MobilyDataViewPositionTop | MobilyDataViewPositionCenteredVertically | MobilyDataViewPositionBottom),
+    MobilyDataViewPositionInsideHorizontally = (MobilyDataViewPositionLeft | MobilyDataViewPositionCenteredHorizontally | MobilyDataViewPositionRight),
+    MobilyDataViewPositionInside = MobilyDataViewPositionInsideVertically | MobilyDataViewPositionInsideHorizontally,
 };
 
 /*--------------------------------------------------*/

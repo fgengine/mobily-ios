@@ -103,8 +103,8 @@
 - (MobilyDataItem*)itemForData:(id)data {
     for(MobilyDataItem* entry in _entries) {
         id entryData = entry.data;
-        if(entryData == data) {
-            return entryData;
+        if([entryData isEqual:data] == YES) {
+            return entry;
         }
     }
     return nil;

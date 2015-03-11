@@ -139,6 +139,7 @@ typedef void(^MobilyDataViewCompleteBlock)(BOOL finished);
 - (void)layoutForVisibleIfNeed;
 
 - (void)scrollToItem:(MobilyDataItem*)item scrollPosition:(MobilyDataViewPosition)scrollPosition animated:(BOOL)animated;
+- (void)scrollToRect:(CGRect)rect scrollPosition:(MobilyDataViewPosition)scrollPosition animated:(BOOL)animated;
 
 - (void)showPullToRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
 - (void)hidePullToRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;

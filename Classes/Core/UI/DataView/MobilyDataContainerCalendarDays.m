@@ -112,11 +112,22 @@
 #pragma mark Public
 
 - (MobilyDataItemCalendarDay*)dayItemForDate:(NSDate*)date {
-    NSUInteger index = [_entries indexOfObjectPassingTest:^BOOL(MobilyDataItemCalendarDay* item, NSUInteger index, BOOL* stop) {
-        return [item.date isEqualToDate:date];
-    }];
-    if(index != NSNotFound) {
-        return _entries[index];
+    for(MobilyDataItemCalendarDay* calendarDay in _entries) {
+        if([date isEqualToDate:calendarDay.date] == YES) {
+            return calendarDay;
+        }
+    }
+    return nil;
+}
+
+- (MobilyDataItemCalendarDay*)nearestDayItemForDate:(NSDate*)date {
+    MobilyDataItemCalendarDay* prevCalendarDay = nil;
+    for(MobilyDataItemCalendarDay* calendarDay in _entries) {
+        switch([date compare:calendarDay.date]) {
+            case NSOrderedDescending: prevCalendarDay = calendarDay; break;
+            case NSOrderedSame: return calendarDay;
+            case NSOrderedAscending: if(prevCalendarDay != nil) { return prevCalendarDay; } break;
+        }
     }
     return nil;
 }
@@ -134,8 +145,8 @@
 }
 
 - (void)replaceDate:(NSDate*)date data:(id)data {
-    NSUInteger index = [_entries indexOfObjectPassingTest:^BOOL(MobilyDataItemCalendarDay* item, NSUInteger index, BOOL* stop) {
-        return [item.date isEqualToDate:date];
+    NSUInteger index = [_entries indexOfObjectPassingTest:^BOOL(MobilyDataItemCalendarDay* calendarDay, NSUInteger index, BOOL* stop) {
+        return [calendarDay.date isEqualToDate:date];
     }];
     if(index != NSNotFound) {
         [self _replaceOriginEntry:_entries[index] withEntry:[MobilyDataItemCalendarDay itemWithCalendar:_calendar date:date data:data]];
@@ -143,8 +154,8 @@
 }
 
 - (void)deleteDate:(NSDate*)date {
-    NSUInteger index = [_entries indexOfObjectPassingTest:^BOOL(MobilyDataItemCalendarDay* item, NSUInteger index, BOOL* stop) {
-        return [item.date isEqualToDate:date];
+    NSUInteger index = [_entries indexOfObjectPassingTest:^BOOL(MobilyDataItemCalendarDay* calendarDay, NSUInteger index, BOOL* stop) {
+        return [calendarDay.date isEqualToDate:date];
     }];
     if(index != NSNotFound) {
         [self _deleteEntry:_entries[index]];
@@ -153,6 +164,13 @@
 
 - (void)deleteAllDates {
     [self _deleteAllEntries];
+}
+
+- (void)scrollToDate:(NSDate*)date scrollPosition:(MobilyDataViewPosition)scrollPosition animated:(BOOL)animated {
+    MobilyDataItem* calendarDay = [self nearestDayItemForDate:date];
+    if(calendarDay != nil) {
+        [_view scrollToItem:calendarDay scrollPosition:scrollPosition animated:animated];
+    }
 }
 
 #pragma mark Private override
@@ -164,10 +182,10 @@
     switch(_orientation) {
         case MobilyDataContainerOrientationVertical: {
             cumulative.width = restriction.width;
-            for(MobilyDataItem* entry in _entries) {
-                CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake(restriction.width, (_defaultSize.height > 0) ? _defaultSize.height : FLT_MAX)];
+            for(MobilyDataItemCalendarDay* calendarDay in _entries) {
+                CGSize entrySize = [calendarDay sizeForAvailableSize:CGSizeMake(restriction.width, (_defaultSize.height > 0) ? _defaultSize.height : FLT_MAX)];
                 if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f)) {
-                    entry.updateFrame = CGRectMake(offset.x, offset.y + cumulative.height, restriction.width, entrySize.height);
+                    calendarDay.updateFrame = CGRectMake(offset.x, offset.y + cumulative.height, restriction.width, entrySize.height);
                     cumulative.height += entrySize.height + _spacing.vertical;
                 }
             }
@@ -176,10 +194,10 @@
         }
         case MobilyDataContainerOrientationHorizontal: {
             cumulative.height = restriction.height;
-            for(MobilyDataItem* entry in _entries) {
-                CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake((_defaultSize.width > 0) ? _defaultSize.width : FLT_MAX, restriction.height)];
+            for(MobilyDataItemCalendarDay* calendarDay in _entries) {
+                CGSize entrySize = [calendarDay sizeForAvailableSize:CGSizeMake((_defaultSize.width > 0) ? _defaultSize.width : FLT_MAX, restriction.height)];
                 if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f)) {
-                    entry.updateFrame = CGRectMake(offset.x + cumulative.width, offset.y, entrySize.width, restriction.height);
+                    calendarDay.updateFrame = CGRectMake(offset.x + cumulative.width, offset.y, entrySize.width, restriction.height);
                     cumulative.width += entrySize.width + _spacing.horizontal;
                 }
             }

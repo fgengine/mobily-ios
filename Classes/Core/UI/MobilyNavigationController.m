@@ -176,7 +176,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 - (void)setNeedUpdate {
     if(_updating == NO) {
         self.updating = YES;
-        if((self.isViewLoaded == YES) && (self.isAppeared == YES)) {
+        if(self.isAppeared == YES) {
             [self clear];
             [self update];
         } else {
@@ -244,6 +244,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.view layoutIfNeeded];
     
     [_eventWillAppear fireSender:self object:nil];
     self.appearedCount = _appearedCount + 1;

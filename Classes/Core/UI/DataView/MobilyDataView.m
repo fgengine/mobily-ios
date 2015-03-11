@@ -817,50 +817,52 @@
 }
 
 - (void)scrollToItem:(MobilyDataItem*)item scrollPosition:(MobilyDataViewPosition)scrollPosition animated:(BOOL)animated {
+    [self validateLayoutIfNeed];
+    [self scrollToRect:[item updateFrame] scrollPosition:scrollPosition animated:animated];
+}
+
+- (void)scrollToRect:(CGRect)rect scrollPosition:(MobilyDataViewPosition)scrollPosition animated:(BOOL)animated {
     NSUInteger vPosition = scrollPosition & (MobilyDataViewPositionTop | MobilyDataViewPositionCenteredVertically | MobilyDataViewPositionBottom);
     NSUInteger hPosition = scrollPosition & (MobilyDataViewPositionLeft | MobilyDataViewPositionCenteredHorizontally | MobilyDataViewPositionRight);
-    if((vPosition != MobilyDataViewPositionNone) && (vPosition != MobilyDataViewPositionTop) && (vPosition != MobilyDataViewPositionCenteredVertically) && (vPosition != MobilyDataViewPositionBottom)) {
-        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"MobilyDataViewPosition: attempt to use a scroll position with multiple vertical positioning styles" userInfo:nil];
-    }
-    if((hPosition != MobilyDataViewPositionNone) && (hPosition != MobilyDataViewPositionLeft) && (hPosition != MobilyDataViewPositionCenteredHorizontally) && (hPosition != MobilyDataViewPositionRight)) {
-        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"MobilyDataViewPosition: attempt to use a scroll position with multiple horizontal positioning styles" userInfo:nil];
-    }
-    CGRect visibleRect = self.bounds;
-    UIEdgeInsets contentInset = self.contentInset;
-    CGRect itemFrame = [item updateFrame];
+    CGRect viewport = UIEdgeInsetsInsetRect(self.bounds, self.contentInset);
+    CGPoint offset = rect.origin;
     switch(vPosition) {
         case MobilyDataViewPositionCenteredVertically: {
-            CGFloat offset = fmax(itemFrame.origin.y - ((visibleRect.size.height * 0.5f) - (itemFrame.size.height * 0.5f)), -contentInset.top);
-            itemFrame = CGRectMake(itemFrame.origin.x, offset, itemFrame.size.width, visibleRect.size.height);
-            break;
-        }
-        case MobilyDataViewPositionTop: {
-            itemFrame = CGRectMake(itemFrame.origin.x, itemFrame.origin.y, itemFrame.size.width, visibleRect.size.height);
+            offset.y = rect.origin.y - ((viewport.size.height * 0.5f) - (rect.size.height * 0.5f));
             break;
         }
         case MobilyDataViewPositionBottom: {
-            CGFloat offset = fmax(itemFrame.origin.y - (visibleRect.size.height - itemFrame.size.height), -contentInset.top);
-            itemFrame = CGRectMake(itemFrame.origin.x, offset, itemFrame.size.width, visibleRect.size.height);
+            offset.y = rect.origin.y - (viewport.size.height - rect.size.height);
+            break;
+        }
+        case MobilyDataViewPositionInsideVertically: {
+            if(offset.y + rect.size.height > viewport.origin.y + viewport.size.height) {
+                offset.y = rect.origin.y - (viewport.size.height - rect.size.height);
+            } else if(offset.y > viewport.origin.y) {
+                offset.y = viewport.origin.y;
+            }
             break;
         }
     }
     switch(hPosition) {
-        case MobilyDataViewPositionLeft: {
-            itemFrame = CGRectMake(itemFrame.origin.x, itemFrame.origin.y, visibleRect.size.width, itemFrame.size.height);
-            break;
-        }
         case MobilyDataViewPositionCenteredHorizontally: {
-            CGFloat offset = itemFrame.origin.x - ((visibleRect.size.width * 0.5f) - (itemFrame.size.width * 0.5f));
-            itemFrame = CGRectMake(offset, itemFrame.origin.y, visibleRect.size.width, itemFrame.size.height);
+            offset.x = rect.origin.x - ((viewport.size.width * 0.5f) - (rect.size.width * 0.5f));
             break;
         }
         case MobilyDataViewPositionRight: {
-            CGFloat offset = itemFrame.origin.x - (visibleRect.size.width - itemFrame.size.width);
-            itemFrame = CGRectMake(offset, itemFrame.origin.y, visibleRect.size.width, itemFrame.size.height);
+            offset.x = rect.origin.x - (viewport.size.width - rect.size.width);
+            break;
+        }
+        case MobilyDataViewPositionInsideHorizontally: {
+            if(offset.x + rect.size.width > viewport.origin.x + viewport.size.width) {
+                offset.x = rect.origin.x - (viewport.size.width - rect.size.width);
+            } else if(offset.x > viewport.origin.x) {
+                offset.x = viewport.origin.x;
+            }
             break;
         }
     }
-    [self scrollRectToVisible:itemFrame animated:animated];
+    [self scrollRectToVisible:CGRectMake(offset.x, offset.y, viewport.size.width, viewport.size.height) animated:animated];
 }
 
 - (void)showPullToRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {

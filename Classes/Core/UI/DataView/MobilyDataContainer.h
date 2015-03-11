@@ -301,6 +301,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 - (instancetype)initWithCalendar:(NSCalendar*)calendar orientation:(MobilyDataContainerOrientation)orientation;
 
 - (MobilyDataItemCalendarDay*)dayItemForDate:(NSDate*)date;
+- (MobilyDataItemCalendarDay*)nearestDayItemForDate:(NSDate*)date;
 
 - (void)prependDate:(NSDate*)date data:(id)data;
 - (void)appendDate:(NSDate*)date data:(id)data;
@@ -308,6 +309,8 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 - (void)replaceDate:(NSDate*)date data:(id)data;
 - (void)deleteDate:(NSDate*)date;
 - (void)deleteAllDates;
+
+- (void)scrollToDate:(NSDate*)date scrollPosition:(MobilyDataViewPosition)scrollPosition animated:(BOOL)animated;
 
 @end
 
