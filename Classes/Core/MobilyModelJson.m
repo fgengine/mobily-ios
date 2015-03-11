@@ -42,6 +42,7 @@
 
 @property(nonatomic, readwrite, strong) NSString* path;
 @property(nonatomic, readwrite, strong) NSArray* subPaths;
+@property(nonatomic, readwrite, copy) MobilyModelJsonUndefinedBehaviour undefinedBehaviour;
 
 @end
 
@@ -62,25 +63,32 @@
 }
 
 - (instancetype)initWithPath:(NSString*)path {
-    self = [super init];
+    return [self initWithPath:path
+           undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithUndefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:nil
+           undefinedBehaviour:undefinedBehaviour];
+}
+
+- (instancetype)initWithPath:(NSString*)path undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    self = [self init];
     if(self != nil) {
-        self.path = path;
-        NSMutableArray* subPaths = [NSMutableArray arrayWithArray:[path componentsSeparatedByString:@"|"]];
-        [subPaths enumerateObjectsUsingBlock:^(NSString* subPath, NSUInteger index, BOOL* stop) {
-            subPaths[index] = [subPath componentsSeparatedByString:@"."];
-        }];
-        self.subPaths = subPaths;
-        [self setup];
+        if(path.length > 0) {
+            self.path = path;
+            NSMutableArray* subPaths = [NSMutableArray arrayWithArray:[path componentsSeparatedByString:@"|"]];
+            [subPaths enumerateObjectsUsingBlock:^(NSString* subPath, NSUInteger index, BOOL* stop) {
+                subPaths[index] = [subPath componentsSeparatedByString:@"."];
+            }];
+            self.subPaths = subPaths;
+        }
+        self.undefinedBehaviour = undefinedBehaviour;
     }
     return self;
 }
 
 - (void)setup {
-}
-
-- (void)dealloc {
-    self.subPaths = nil;
-    self.path = nil;
 }
 
 #pragma mark Public
@@ -105,7 +113,13 @@
             }
         }
     }
-    return [self convertValue:value];
+    id result = [self convertValue:value];
+    if(result == nil) {
+        if(_undefinedBehaviour != nil) {
+            result = _undefinedBehaviour(self, value);
+        }
+    }
+    return result;
 }
 
 #pragma mark MobilyModelJson
@@ -134,34 +148,52 @@
 
 #pragma mark Init / Free
 
-- (instancetype)initWithJsonConverter:(MobilyModelJson*)jsonConverter {
-    self = [super init];
-    if(self != nil) {
-        self.jsonConverter = jsonConverter;
-    }
-    return self;
-}
-
 - (instancetype)initWithJsonModelClass:(Class)jsonModelClass {
-    self = [super init];
-    if(self != nil) {
-        self.jsonConverter = [[MobilyModelJsonCustomClass alloc] initWithCustomClass:jsonModelClass];
-    }
-    return self;
+    return [self initWithPath:nil
+                jsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:jsonModelClass]
+           undefinedBehaviour:nil];
 }
 
-- (instancetype)initWithPath:(NSString*)path jsonConverter:(MobilyModelJson*)jsonConverter {
-    self = [super initWithPath:path];
-    if(self != nil) {
-        self.jsonConverter = jsonConverter;
-    }
-    return self;
+- (instancetype)initWithJsonModelClass:(Class)jsonModelClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:nil
+                jsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:jsonModelClass]
+           undefinedBehaviour:undefinedBehaviour];
+}
+
+- (instancetype)initWithJsonConverter:(MobilyModelJson*)jsonConverter {
+    return [self initWithPath:nil
+                jsonConverter:jsonConverter
+           undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithJsonConverter:(MobilyModelJson*)jsonConverter undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:nil
+                jsonConverter:jsonConverter
+           undefinedBehaviour:undefinedBehaviour];
 }
 
 - (instancetype)initWithPath:(NSString*)path jsonModelClass:(Class)jsonModelClass {
-    self = [super initWithPath:path];
+    return [self initWithPath:path
+                jsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:jsonModelClass]
+           undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path jsonModelClass:(Class)jsonModelClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:path
+                jsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:jsonModelClass]
+           undefinedBehaviour:undefinedBehaviour];
+}
+
+- (instancetype)initWithPath:(NSString*)path jsonConverter:(MobilyModelJson*)jsonConverter {
+    return [self initWithPath:path
+                jsonConverter:jsonConverter
+           undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path jsonConverter:(MobilyModelJson*)jsonConverter undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    self = [super initWithPath:path undefinedBehaviour:undefinedBehaviour];
     if(self != nil) {
-        self.jsonConverter = [[MobilyModelJsonCustomClass alloc] initWithCustomClass:jsonModelClass];
+        self.jsonConverter = jsonConverter;
     }
     return self;
 }
@@ -205,70 +237,116 @@
 
 #pragma mark Init / Free
 
-- (instancetype)initWithValueJsonConverter:(MobilyModelJson*)valueJsonConverter {
-    self = [super init];
-    if(self != nil) {
-        self.valueJsonConverter = valueJsonConverter;
-    }
-    return self;
-}
-
 - (instancetype)initWithValueJsonModelClass:(Class)valueJsonModelClass {
-    self = [super init];
-    if(self != nil) {
-        self.valueJsonConverter = [[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass];
-    }
-    return self;
+    return [self initWithPath:nil
+             keyJsonConverter:nil
+           valueJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass]
+           undefinedBehaviour:nil];
 }
 
-- (instancetype)initWithKeyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter {
-    self = [super init];
-    if(self != nil) {
-        self.keyJsonConverter = keyJsonConverter;
-        self.valueJsonConverter = valueJsonConverter;
-    }
-    return self;
+- (instancetype)initWithValueJsonModelClass:(Class)valueJsonModelClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:nil
+             keyJsonConverter:nil
+           valueJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass]
+           undefinedBehaviour:undefinedBehaviour];
+}
+
+- (instancetype)initWithValueJsonConverter:(MobilyModelJson*)valueJsonConverter {
+    return [self initWithPath:nil
+             keyJsonConverter:nil
+           valueJsonConverter:valueJsonConverter
+           undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithValueJsonConverter:(MobilyModelJson*)valueJsonConverter undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:nil
+             keyJsonConverter:nil
+           valueJsonConverter:valueJsonConverter
+           undefinedBehaviour:undefinedBehaviour];
 }
 
 - (instancetype)initWithKeyJsonModelClass:(Class)keyJsonModelClass valueJsonModelClass:(Class)valueJsonModelClass {
-    self = [super init];
-    if(self != nil) {
-        self.keyJsonConverter = [[MobilyModelJsonCustomClass alloc] initWithCustomClass:keyJsonModelClass];
-        self.valueJsonConverter = [[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass];
-    }
-    return self;
+    return [self initWithPath:nil
+             keyJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:keyJsonModelClass]
+           valueJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass]
+           undefinedBehaviour:nil];
 }
 
-- (instancetype)initWithPath:(NSString*)path valueJsonConverter:(MobilyModelJson*)valueJsonConverter {
-    self = [super initWithPath:path];
-    if(self != nil) {
-        self.valueJsonConverter = valueJsonConverter;
-    }
-    return self;
+- (instancetype)initWithKeyJsonModelClass:(Class)keyJsonModelClass valueJsonModelClass:(Class)valueJsonModelClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:nil
+             keyJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:keyJsonModelClass]
+           valueJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass]
+           undefinedBehaviour:undefinedBehaviour];
+}
+
+- (instancetype)initWithKeyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter {
+    return [self initWithPath:nil
+             keyJsonConverter:keyJsonConverter
+           valueJsonConverter:valueJsonConverter
+           undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithKeyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:nil
+             keyJsonConverter:keyJsonConverter
+           valueJsonConverter:valueJsonConverter
+           undefinedBehaviour:undefinedBehaviour];
 }
 
 - (instancetype)initWithPath:(NSString*)path valueJsonModelClass:(Class)valueJsonModelClass {
-    self = [super initWithPath:path];
-    if(self != nil) {
-        self.valueJsonConverter = [[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass];
-    }
-    return self;
+    return [self initWithPath:path
+             keyJsonConverter:nil
+           valueJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass]
+           undefinedBehaviour:nil];
 }
 
-- (instancetype)initWithPath:(NSString*)path keyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter {
-    self = [super initWithPath:path];
-    if(self != nil) {
-        self.keyJsonConverter = keyJsonConverter;
-        self.valueJsonConverter = valueJsonConverter;
-    }
-    return self;
+- (instancetype)initWithPath:(NSString*)path valueJsonModelClass:(Class)valueJsonModelClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:path
+             keyJsonConverter:nil
+           valueJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass]
+           undefinedBehaviour:undefinedBehaviour];
+}
+
+- (instancetype)initWithPath:(NSString*)path valueJsonConverter:(MobilyModelJson*)valueJsonConverter {
+    return [self initWithPath:path
+             keyJsonConverter:nil
+           valueJsonConverter:valueJsonConverter
+           undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path valueJsonConverter:(MobilyModelJson*)valueJsonConverter undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:path
+             keyJsonConverter:nil
+           valueJsonConverter:valueJsonConverter
+           undefinedBehaviour:undefinedBehaviour];
 }
 
 - (instancetype)initWithPath:(NSString*)path keyJsonModelClass:(Class)keyJsonModelClass valueJsonModelClass:(Class)valueJsonModelClass {
-    self = [super initWithPath:path];
+    return [self initWithPath:path
+             keyJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:keyJsonModelClass]
+           valueJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass]
+           undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path keyJsonModelClass:(Class)keyJsonModelClass valueJsonModelClass:(Class)valueJsonModelClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:path
+             keyJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:keyJsonModelClass]
+           valueJsonConverter:[[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass]
+           undefinedBehaviour:undefinedBehaviour];
+}
+
+- (instancetype)initWithPath:(NSString*)path keyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter {
+    return [self initWithPath:path
+             keyJsonConverter:keyJsonConverter
+           valueJsonConverter:valueJsonConverter
+           undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path keyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    self = [super initWithPath:path undefinedBehaviour:undefinedBehaviour];
     if(self != nil) {
-        self.keyJsonConverter = [[MobilyModelJsonCustomClass alloc] initWithCustomClass:keyJsonModelClass];
-        self.valueJsonConverter = [[MobilyModelJsonCustomClass alloc] initWithCustomClass:valueJsonModelClass];
+        self.keyJsonConverter = keyJsonConverter;
+        self.valueJsonConverter = valueJsonConverter;
     }
     return self;
 }
@@ -315,7 +393,11 @@
 #pragma mark Init / Free
 
 - (instancetype)initWithPath:(NSString*)path defaultValue:(BOOL)defaultValue {
-    self = [super initWithPath:path];
+    return [self initWithPath:path defaultValue:defaultValue undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path defaultValue:(BOOL)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    self = [super initWithPath:path undefinedBehaviour:undefinedBehaviour];
     if(self != nil) {
         self.defaultValue = defaultValue;
     }
@@ -358,15 +440,15 @@
 #pragma mark Init / Free
 
 - (instancetype)initWithPath:(NSString*)path defaultValue:(NSString*)defaultValue {
-    self = [super initWithPath:path];
+    return [self initWithPath:path defaultValue:defaultValue undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path defaultValue:(NSString*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    self = [super initWithPath:path undefinedBehaviour:undefinedBehaviour];
     if(self != nil) {
         self.defaultValue = defaultValue;
     }
     return self;
-}
-
-- (void)dealloc {
-    self.defaultValue = nil;
 }
 
 #pragma mark MobilyModelJson
@@ -408,15 +490,15 @@
 #pragma mark Init / Free
 
 - (instancetype)initWithPath:(NSString*)path defaultValue:(NSURL*)defaultValue {
-    self = [super initWithPath:path];
+    return [self initWithPath:path defaultValue:defaultValue undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path defaultValue:(NSURL*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    self = [super initWithPath:path undefinedBehaviour:undefinedBehaviour];
     if(self != nil) {
         self.defaultValue = defaultValue;
     }
     return self;
-}
-
-- (void)dealloc {
-    self.defaultValue = nil;
 }
 
 #pragma mark MobilyModelJson
@@ -449,15 +531,15 @@
 #pragma mark Init / Free
 
 - (instancetype)initWithPath:(NSString*)path defaultValue:(NSNumber*)defaultValue {
-    self = [super initWithPath:path];
+    return [self initWithPath:path defaultValue:defaultValue undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path defaultValue:(NSNumber*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    self = [super initWithPath:path undefinedBehaviour:undefinedBehaviour];
     if(self != nil) {
         self.defaultValue = defaultValue;
     }
     return self;
-}
-
-- (void)dealloc {
-    self.defaultValue = nil;
 }
 
 #pragma mark MobilyModelJson
@@ -509,85 +591,81 @@
 
 #pragma mark Init / Free
 
-- (instancetype)initWithFormat:(NSString*)format {
-    self = [super init];
-    if(self != nil) {
-        self.formats = @[ format ];
-    }
-    return self;
+- (instancetype)initWithPath:(NSString*)path defaultValue:(NSDate*)defaultValue {
+    return [self initWithPath:path formats:nil defaultValue:defaultValue undefinedBehaviour:nil];
 }
 
-- (instancetype)initWithFormats:(NSArray*)formats {
-    self = [super init];
-    if(self != nil) {
-        self.formats = formats;
-    }
-    return self;
+- (instancetype)initWithPath:(NSString*)path defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:path formats:nil defaultValue:defaultValue undefinedBehaviour:undefinedBehaviour];
+}
+
+- (instancetype)initWithFormat:(NSString*)format {
+    return [self initWithPath:nil formats:@[ format ] defaultValue:nil undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithFormat:(NSString*)format undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:nil formats:@[ format ] defaultValue:nil undefinedBehaviour:undefinedBehaviour];
 }
 
 - (instancetype)initWithFormat:(NSString*)format defaultValue:(NSDate*)defaultValue {
-    self = [super init];
-    if(self != nil) {
-        self.formats = @[ format ];
-        self.defaultValue = defaultValue;
-    }
-    return self;
+    return [self initWithPath:nil formats:@[ format ] defaultValue:defaultValue undefinedBehaviour:nil];
 }
 
-- (instancetype)initWithFormats:(NSArray*)formats defaultValue:(NSDate*)defaultValue {
-    self = [super init];
-    if(self != nil) {
-        self.formats = formats;
-        self.defaultValue = defaultValue;
-    }
-    return self;
+- (instancetype)initWithFormat:(NSString*)format defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:nil formats:@[ format ] defaultValue:defaultValue undefinedBehaviour:undefinedBehaviour];
 }
 
 - (instancetype)initWithPath:(NSString*)path format:(NSString*)format {
-    self = [super initWithPath:path];
-    if(self != nil) {
-        self.formats = @[ format ];
-    }
-    return self;
+    return [self initWithPath:path formats:@[ format ] defaultValue:nil undefinedBehaviour:nil];
 }
 
-- (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats {
-    self = [super initWithPath:path];
-    if(self != nil) {
-        self.formats = formats;
-    }
-    return self;
+- (instancetype)initWithPath:(NSString*)path format:(NSString*)format undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:path formats:@[ format ] defaultValue:nil undefinedBehaviour:undefinedBehaviour];
 }
 
 - (instancetype)initWithPath:(NSString*)path format:(NSString*)format defaultValue:(NSDate*)defaultValue {
-    self = [super initWithPath:path];
-    if(self != nil) {
-        self.formats = @[ format ];
-        self.defaultValue = defaultValue;
-    }
-    return self;
+    return [self initWithPath:path formats:@[ format ] defaultValue:defaultValue undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path format:(NSString*)format defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:path formats:@[ format ] defaultValue:defaultValue undefinedBehaviour:undefinedBehaviour];
+}
+
+- (instancetype)initWithFormats:(NSArray*)formats {
+    return [self initWithPath:nil formats:formats defaultValue:nil undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithFormats:(NSArray*)formats undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:nil formats:formats defaultValue:nil undefinedBehaviour:undefinedBehaviour];
+}
+
+- (instancetype)initWithFormats:(NSArray*)formats defaultValue:(NSDate*)defaultValue {
+    return [self initWithPath:nil formats:formats defaultValue:defaultValue undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithFormats:(NSArray*)formats defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:nil formats:formats defaultValue:defaultValue undefinedBehaviour:undefinedBehaviour];
+}
+
+- (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats {
+    return [self initWithPath:path formats:formats defaultValue:nil undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:path formats:formats defaultValue:nil undefinedBehaviour:undefinedBehaviour];
 }
 
 - (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats defaultValue:(NSDate*)defaultValue {
-    self = [super initWithPath:path];
+    return [self initWithPath:path formats:formats defaultValue:defaultValue undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    self = [super initWithPath:path undefinedBehaviour:undefinedBehaviour];
     if(self != nil) {
         self.formats = formats;
         self.defaultValue = defaultValue;
     }
     return self;
-}
-
-- (instancetype)initWithPath:(NSString*)path defaultValue:(NSDate*)defaultValue {
-    self = [super initWithPath:path];
-    if(self != nil) {
-        self.defaultValue = defaultValue;
-    }
-    return self;
-}
-
-- (void)dealloc {
-    self.formats = nil;
-    self.defaultValue = nil;
 }
 
 #pragma mark MobilyModelJson
@@ -638,42 +716,40 @@
 #pragma mark Init / Free
 
 - (instancetype)initWithEnums:(NSDictionary*)enums {
-    self = [super init];
-    if(self != nil) {
-        self.enums = enums;
-    }
-    return self;
+    return [self initWithPath:nil enums:enums defaultValue:nil undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithEnums:(NSDictionary*)enums undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:nil enums:enums defaultValue:nil undefinedBehaviour:undefinedBehaviour];
 }
 
 - (instancetype)initWithEnums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue {
-    self = [super init];
-    if(self != nil) {
-        self.enums = enums;
-        self.defaultValue = defaultValue;
-    }
-    return self;
+    return [self initWithPath:nil enums:enums defaultValue:defaultValue undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithEnums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:nil enums:enums defaultValue:defaultValue undefinedBehaviour:undefinedBehaviour];
 }
 
 - (instancetype)initWithPath:(NSString*)path enums:(NSDictionary*)enums {
-    self = [super initWithPath:path];
-    if(self != nil) {
-        self.enums = enums;
-    }
-    return self;
+    return [self initWithPath:path enums:enums defaultValue:nil undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path enums:(NSDictionary*)enums undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:path enums:enums defaultValue:nil undefinedBehaviour:undefinedBehaviour];
 }
 
 - (instancetype)initWithPath:(NSString*)path enums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue {
-    self = [super initWithPath:path];
+    return [self initWithPath:path enums:enums defaultValue:defaultValue undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path enums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    self = [super initWithPath:path undefinedBehaviour:undefinedBehaviour];
     if(self != nil) {
         self.enums = enums;
         self.defaultValue = defaultValue;
     }
     return self;
-}
-
-- (void)dealloc {
-    self.enums = nil;
-    self.defaultValue = nil;
 }
 
 #pragma mark MobilyModelJson
@@ -712,23 +788,23 @@
 #pragma mark Init / Free
 
 - (instancetype)initWithCustomClass:(Class)customClass {
-    self = [super init];
-    if(self != nil) {
-        self.customClass = customClass;
-    }
-    return self;
+    return [self initWithPath:nil customClass:customClass undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithCustomClass:(Class)customClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:nil customClass:customClass undefinedBehaviour:undefinedBehaviour];
 }
 
 - (instancetype)initWithPath:(NSString*)path customClass:(Class)customClass {
-    self = [super initWithPath:path];
+    return [self initWithPath:path customClass:customClass undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path customClass:(Class)customClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    self = [super initWithPath:path undefinedBehaviour:undefinedBehaviour];
     if(self != nil) {
         self.customClass = customClass;
     }
     return self;
-}
-
-- (void)dealloc {
-    self.customClass = nil;
 }
 
 #pragma mark MobilyModelJson
@@ -761,15 +837,19 @@
 #pragma mark Init / Free
 
 - (instancetype)initWithBlock:(MobilyModelJsonConvertBlock)block {
-    self = [super init];
-    if(self != nil) {
-        self.block = block;
-    }
-    return self;
+    return [self initWithPath:nil block:block undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithBlock:(MobilyModelJsonConvertBlock)block undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:nil block:block undefinedBehaviour:undefinedBehaviour];
 }
 
 - (instancetype)initWithPath:(NSString*)path block:(MobilyModelJsonConvertBlock)block {
-    self = [super initWithPath:path];
+    return [self initWithPath:path block:block undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path block:(MobilyModelJsonConvertBlock)block undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    self = [super initWithPath:path undefinedBehaviour:undefinedBehaviour];
     if(self != nil) {
         self.block = block;
     }

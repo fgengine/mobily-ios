@@ -37,11 +37,17 @@
 
 /*--------------------------------------------------*/
 
+typedef id (^MobilyModelJsonUndefinedBehaviour)(id modelJson, id value);
+
+/*--------------------------------------------------*/
+
 @interface MobilyModelJson : NSObject < MobilyObject >
 
 @property(nonatomic, readonly, strong) NSString* path;
 
 - (instancetype)initWithPath:(NSString*)path;
+- (instancetype)initWithUndefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithPath:(NSString*)path undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 
 - (id)parseJson:(id)json;
 
@@ -55,10 +61,14 @@
 
 @property(nonatomic, readonly, strong) MobilyModelJson* jsonConverter;
 
-- (instancetype)initWithJsonConverter:(MobilyModelJson*)jsonConverter;
 - (instancetype)initWithJsonModelClass:(Class)jsonModelClass;
-- (instancetype)initWithPath:(NSString*)path jsonConverter:(MobilyModelJson*)jsonConverter;
+- (instancetype)initWithJsonModelClass:(Class)jsonModelClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithJsonConverter:(MobilyModelJson*)jsonConverter;
+- (instancetype)initWithJsonConverter:(MobilyModelJson*)jsonConverter undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithPath:(NSString*)path jsonModelClass:(Class)jsonModelClass;
+- (instancetype)initWithPath:(NSString*)path jsonModelClass:(Class)jsonModelClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithPath:(NSString*)path jsonConverter:(MobilyModelJson*)jsonConverter;
+- (instancetype)initWithPath:(NSString*)path jsonConverter:(MobilyModelJson*)jsonConverter undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 
 @end
 
@@ -69,14 +79,22 @@
 @property(nonatomic, readonly, strong) MobilyModelJson* keyJsonConverter;
 @property(nonatomic, readonly, strong) MobilyModelJson* valueJsonConverter;
 
-- (instancetype)initWithValueJsonConverter:(MobilyModelJson*)valueJsonConverter;
 - (instancetype)initWithValueJsonModelClass:(Class)valueJsonModelClass;
-- (instancetype)initWithKeyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter;
+- (instancetype)initWithValueJsonModelClass:(Class)valueJsonModelClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithValueJsonConverter:(MobilyModelJson*)valueJsonConverter;
+- (instancetype)initWithValueJsonConverter:(MobilyModelJson*)valueJsonConverter undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithKeyJsonModelClass:(Class)keyJsonModelClass valueJsonModelClass:(Class)valueJsonModelClass;
-- (instancetype)initWithPath:(NSString*)path valueJsonConverter:(MobilyModelJson*)valueJsonConverter;
+- (instancetype)initWithKeyJsonModelClass:(Class)keyJsonModelClass valueJsonModelClass:(Class)valueJsonModelClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithKeyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter;
+- (instancetype)initWithKeyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithPath:(NSString*)path valueJsonModelClass:(Class)valueJsonModelClass;
-- (instancetype)initWithPath:(NSString*)path keyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter;
+- (instancetype)initWithPath:(NSString*)path valueJsonModelClass:(Class)valueJsonModelClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithPath:(NSString*)path valueJsonConverter:(MobilyModelJson*)valueJsonConverter;
+- (instancetype)initWithPath:(NSString*)path valueJsonConverter:(MobilyModelJson*)valueJsonConverter undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithPath:(NSString*)path keyJsonModelClass:(Class)keyJsonModelClass valueJsonModelClass:(Class)valueJsonModelClass;
+- (instancetype)initWithPath:(NSString*)path keyJsonModelClass:(Class)keyJsonModelClass valueJsonModelClass:(Class)valueJsonModelClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithPath:(NSString*)path keyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter;
+- (instancetype)initWithPath:(NSString*)path keyJsonConverter:(MobilyModelJson*)keyJsonConverter valueJsonConverter:(MobilyModelJson*)valueJsonConverter undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 
 @end
 
@@ -87,6 +105,7 @@
 @property(nonatomic, readonly, assign) BOOL defaultValue;
 
 - (instancetype)initWithPath:(NSString*)path defaultValue:(BOOL)defaultValue;
+- (instancetype)initWithPath:(NSString*)path defaultValue:(BOOL)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 
 @end
 
@@ -97,6 +116,7 @@
 @property(nonatomic, readonly, strong) NSString* defaultValue;
 
 - (instancetype)initWithPath:(NSString*)path defaultValue:(NSString*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path defaultValue:(NSString*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 
 @end
 
@@ -107,6 +127,7 @@
 @property(nonatomic, readonly, strong) NSURL* defaultValue;
 
 - (instancetype)initWithPath:(NSString*)path defaultValue:(NSURL*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path defaultValue:(NSURL*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 
 @end
 
@@ -117,6 +138,7 @@
 @property(nonatomic, readonly, strong) NSNumber* defaultValue;
 
 - (instancetype)initWithPath:(NSString*)path defaultValue:(NSNumber*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path defaultValue:(NSNumber*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 
 @end
 
@@ -127,15 +149,24 @@
 @property(nonatomic, readonly, strong) NSDate* defaultValue;
 @property(nonatomic, readonly, strong) NSArray* formats;
 
-- (instancetype)initWithFormat:(NSString*)format;
-- (instancetype)initWithFormats:(NSArray*)formats;
-- (instancetype)initWithFormat:(NSString*)format defaultValue:(NSDate*)defaultValue;
-- (instancetype)initWithFormats:(NSArray*)formats defaultValue:(NSDate*)defaultValue;
-- (instancetype)initWithPath:(NSString*)path format:(NSString*)format;
-- (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats;
-- (instancetype)initWithPath:(NSString*)path format:(NSString*)format defaultValue:(NSDate*)defaultValue;
-- (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats defaultValue:(NSDate*)defaultValue;
 - (instancetype)initWithPath:(NSString*)path defaultValue:(NSDate*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithFormat:(NSString*)format;
+- (instancetype)initWithFormat:(NSString*)format undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithFormat:(NSString*)format defaultValue:(NSDate*)defaultValue;
+- (instancetype)initWithFormat:(NSString*)format defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithPath:(NSString*)path format:(NSString*)format;
+- (instancetype)initWithPath:(NSString*)path format:(NSString*)format undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithPath:(NSString*)path format:(NSString*)format defaultValue:(NSDate*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path format:(NSString*)format defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithFormats:(NSArray*)formats;
+- (instancetype)initWithFormats:(NSArray*)formats undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithFormats:(NSArray*)formats defaultValue:(NSDate*)defaultValue;
+- (instancetype)initWithFormats:(NSArray*)formats defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats;
+- (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats defaultValue:(NSDate*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 
 @end
 
@@ -147,9 +178,13 @@
 @property(nonatomic, readonly, strong) NSDictionary* enums;
 
 - (instancetype)initWithEnums:(NSDictionary*)enums;
+- (instancetype)initWithEnums:(NSDictionary*)enums undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithEnums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue;
+- (instancetype)initWithEnums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithPath:(NSString*)path enums:(NSDictionary*)enums;
+- (instancetype)initWithPath:(NSString*)path enums:(NSDictionary*)enums undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithPath:(NSString*)path enums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path enums:(NSDictionary*)enums defaultValue:(NSNumber*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 
 @end
 
@@ -160,7 +195,9 @@
 @property(nonatomic, readonly, assign) Class customClass;
 
 - (instancetype)initWithCustomClass:(Class)customClass;
+- (instancetype)initWithCustomClass:(Class)customClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithPath:(NSString*)path customClass:(Class)customClass;
+- (instancetype)initWithPath:(NSString*)path customClass:(Class)customClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 
 @end
 
@@ -175,7 +212,9 @@ typedef id (^MobilyModelJsonConvertBlock)(id value);
 @property(nonatomic, readonly, copy) MobilyModelJsonConvertBlock block;
 
 - (instancetype)initWithBlock:(MobilyModelJsonConvertBlock)block;
+- (instancetype)initWithBlock:(MobilyModelJsonConvertBlock)block undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithPath:(NSString*)path block:(MobilyModelJsonConvertBlock)block;
+- (instancetype)initWithPath:(NSString*)path block:(MobilyModelJsonConvertBlock)block undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 
 @end
 
