@@ -82,85 +82,53 @@ typedef NS_ENUM(NSUInteger, MobilyDateSeason) {
 - (NSUInteger)unixTimestamp;
 
 - (NSDate*)extractCalendarUnit:(NSCalendarUnit)calendarUnit;
-- (NSDate*)extractCalendarUnit:(NSCalendarUnit)calendarUnit byCalendar:(NSCalendar*)calendar;
 - (NSDate*)withoutDate;
-- (NSDate*)withoutDateByCalendar:(NSCalendar*)calendar;
 - (NSDate*)withoutTime;
-- (NSDate*)withoutTimeByCalendar:(NSCalendar*)calendar;
 
 - (NSDate*)beginningOfYear;
-- (NSDate*)beginningOfYearByCalendar:(NSCalendar*)calendar;
 - (NSDate*)endOfYear;
-- (NSDate*)endOfYearByCalendar:(NSCalendar*)calendar;
 - (NSDate*)beginningOfMonth;
-- (NSDate*)beginningOfMonthByCalendar:(NSCalendar*)calendar;
 - (NSDate*)endOfMonth;
-- (NSDate*)endOfMonthByCalendar:(NSCalendar*)calendar;
 - (NSDate*)beginningOfWeek;
-- (NSDate*)beginningOfWeekByCalendar:(NSCalendar*)calendar;
 - (NSDate*)endOfWeek;
-- (NSDate*)endOfWeekByCalendar:(NSCalendar*)calendar;
 - (NSDate*)beginningOfDay;
-- (NSDate*)beginningOfDayByCalendar:(NSCalendar*)calendar;
 - (NSDate*)endOfDay;
-- (NSDate*)endOfDayByCalendar:(NSCalendar*)calendar;
 - (NSDate*)beginningOfHour;
-- (NSDate*)beginningOfHourByCalendar:(NSCalendar*)calendar;
 - (NSDate*)endOfHour;
-- (NSDate*)endOfHourByCalendar:(NSCalendar*)calendar;
 - (NSDate*)beginningOfMinute;
-- (NSDate*)beginningOfMinuteByCalendar:(NSCalendar*)calendar;
 - (NSDate*)endOfMinute;
-- (NSDate*)endOfMinuteByCalendar:(NSCalendar*)calendar;
 
 - (NSDate*)previousYear;
-- (NSDate*)previousYearByCalendar:(NSCalendar*)calendar;
 - (NSDate*)nextYear;
-- (NSDate*)nextYearByCalendar:(NSCalendar*)calendar;
 - (NSDate*)previousMonth;
-- (NSDate*)previousMonthByCalendar:(NSCalendar*)calendar;
 - (NSDate*)nextMonth;
-- (NSDate*)nextMonthByCalendar:(NSCalendar*)calendar;
 - (NSDate*)previousWeek;
-- (NSDate*)previousWeekByCalendar:(NSCalendar*)calendar;
 - (NSDate*)nextWeek;
-- (NSDate*)nextWeekByCalendar:(NSCalendar*)calendar;
 - (NSDate*)previousDay;
-- (NSDate*)previousDayByCalendar:(NSCalendar*)calendar;
 - (NSDate*)nextDay;
-- (NSDate*)nextDayByCalendar:(NSCalendar*)calendar;
 - (NSDate*)previousHour;
-- (NSDate*)previousHourByCalendar:(NSCalendar*)calendar;
 - (NSDate*)nextHour;
-- (NSDate*)nextHourByCalendar:(NSCalendar*)calendar;
 - (NSDate*)previousMinute;
-- (NSDate*)previousMinuteByCalendar:(NSCalendar*)calendar;
 - (NSDate*)nextMinute;
-- (NSDate*)nextMinuteByCalendar:(NSCalendar*)calendar;
 - (NSDate*)previousSecond;
-- (NSDate*)previousSecondByCalendar:(NSCalendar*)calendar;
 - (NSDate*)nextSecond;
-- (NSDate*)nextSecondByCalendar:(NSCalendar*)calendar;
 
 - (NSInteger)yearsToDate:(NSDate*)date;
-- (NSInteger)yearsToDate:(NSDate*)date byCalendar:(NSCalendar*)calendar;
 - (NSInteger)monthsToDate:(NSDate*)date;
-- (NSInteger)monthsToDate:(NSDate*)date byCalendar:(NSCalendar*)calendar;
 - (NSInteger)daysToDate:(NSDate*)date;
-- (NSInteger)daysToDate:(NSDate*)date byCalendar:(NSCalendar*)calendar;
 - (NSInteger)weeksToDate:(NSDate*)date;
-- (NSInteger)weeksToDate:(NSDate*)date byCalendar:(NSCalendar*)calendar;
 - (NSInteger)hoursToDate:(NSDate*)date;
-- (NSInteger)hoursToDate:(NSDate*)date byCalendar:(NSCalendar*)calendar;
 - (NSInteger)minutesToDate:(NSDate*)date;
-- (NSInteger)minutesToDate:(NSDate*)date byCalendar:(NSCalendar*)calendar;
 - (NSInteger)secondsToDate:(NSDate*)date;
-- (NSInteger)secondsToDate:(NSDate*)date byCalendar:(NSCalendar*)calendar;
 
+- (NSDate*)addYears:(NSInteger)years;
+- (NSDate*)addHonths:(NSInteger)months;
+- (NSDate*)addDays:(NSInteger)days;
+- (NSDate*)addHours:(NSInteger)hours;
 - (NSDate*)addMinutes:(NSInteger)minutes;
+- (NSDate*)addSeconds:(NSInteger)seconds;
 
 - (MobilyDateSeason)season;
-- (MobilyDateSeason)seasonByCalendar:(NSCalendar*)calendar;
 
 @end
 
