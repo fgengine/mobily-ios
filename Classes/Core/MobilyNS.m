@@ -544,6 +544,10 @@
     return [[calendar components:NSCalendarUnitSecond fromDate:self toDate:date options:0] second];
 }
 
+- (NSDate*)addMinutes:(NSInteger)minutes {
+    return [self dateByAddingTimeInterval:(minutes*60)];
+}
+
 - (MobilyDateSeason)season {
     return [self seasonByCalendar:NSCalendar.currentCalendar];
 }

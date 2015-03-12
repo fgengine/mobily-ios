@@ -157,6 +157,8 @@ typedef NS_ENUM(NSUInteger, MobilyDateSeason) {
 - (NSInteger)secondsToDate:(NSDate*)date;
 - (NSInteger)secondsToDate:(NSDate*)date byCalendar:(NSCalendar*)calendar;
 
+- (NSDate*)addMinutes:(NSInteger)minutes;
+
 - (MobilyDateSeason)season;
 - (MobilyDateSeason)seasonByCalendar:(NSCalendar*)calendar;
 
