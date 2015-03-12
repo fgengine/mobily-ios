@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name = 'Mobily'
-    s.version = '2.0.69'
+    s.version = '2.0.70'
     s.summary = 'Mobily framework for iOS'
     s.homepage = 'https://github.com/fgengine/mobily-ios/tree/v2'
     s.license = {
@@ -41,7 +41,7 @@ Pod::Spec.new do |s|
     s.subspec 'Social' do |ss|
         ss.public_header_files = 'Classes/Social/**/*.h'
         ss.source_files = 'Classes/Social/**/*.{h,m}'
-        ss.resources = 'Classes/Social/Twitter/Frameworks/TwitterKit.bundle/Resources/TwitterKitResources.bundle'
+        ss.resources = 'Classes/Social/Twitter/Frameworks/TwitterKit.framework/Resources/TwitterKitResources.bundle'
         ss.vendored_frameworks = 'Classes/Social/Facebook/Frameworks/FacebookSDK.framework', 'Classes/Social/Facebook/Frameworks/FBAudienceNetwork.bundle', 'Classes/Social/Twitter/Frameworks/TwitterKit.framework'
         ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_SOCIAL' }
         ss.frameworks = 'CoreData', 'Accounts', 'Social', 'TwitterKit'
