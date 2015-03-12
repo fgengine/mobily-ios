@@ -130,9 +130,15 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
 
 - (MobilyActivityView*)activity {
     if(_activity == nil) {
-        _activity = [MobilyActivityView activityViewInView:self.view style:MobilyActivityViewStyleCircle];
+        _activity = [self makeActivity];
     }
     return _activity;
+}
+
+#pragma mark Public
+
+- (MobilyActivityView*)makeActivity {
+    return [MobilyActivityView activityViewInView:self.view style:MobilyActivityViewStyleCircle];
 }
 
 @end

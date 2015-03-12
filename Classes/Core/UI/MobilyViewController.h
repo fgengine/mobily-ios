@@ -46,6 +46,8 @@
 
 @property(nonatomic, readonly, strong) MobilyActivityView* activity;
 
+- (MobilyActivityView*)makeActivity;
+
 @end
 
 /*--------------------------------------------------*/

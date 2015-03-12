@@ -763,6 +763,21 @@
     }
 }
 
+- (void)batchUpdate:(MobilyDataViewUpdateBlock)update {
+#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
+    if(_updating != NO) {
+        NSLog(@"ERROR: [%@:%@] %@", self.class, NSStringFromSelector(_cmd), update);
+        return;
+    }
+#endif
+    [self _batchUpdate:^{
+        if(update != nil) {
+            update();
+        }
+        [self _batchComplete:nil];
+    }];
+}
+
 - (void)batchUpdate:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     if(_updating != NO) {
@@ -789,19 +804,32 @@
         return;
     }
 #endif
-    [UIView animateWithDuration:duration
-                          delay:0.0f
-                        options:0
-                     animations:^{
-                         [self _batchUpdate:update];
-                     }
-                     completion:^(BOOL finished) {
-                         [self _batchComplete:^() {
-                             if(complete != nil) {
-                                 complete(finished);
-                             }
+    if(duration > FLT_EPSILON) {
+        [UIView animateWithDuration:duration
+                              delay:0.0f
+                            options:0
+                         animations:^{
+                             [self _batchUpdate:update];
+                         }
+                         completion:^(BOOL finished) {
+                             [self _batchComplete:^() {
+                                 if(complete != nil) {
+                                     complete(finished);
+                                 }
+                             }];
                          }];
-                     }];
+    } else {
+        [self _batchUpdate:^{
+            if(update != nil) {
+                update();
+            }
+            [self _batchComplete:^() {
+                if(complete != nil) {
+                    complete(YES);
+                }
+            }];
+        }];
+    }
 }
 
 - (void)setNeedValidateLayout {

@@ -129,6 +129,7 @@ typedef void(^MobilyDataViewCompleteBlock)(BOOL finished);
 - (void)endedEditItem:(MobilyDataItem*)item animated:(BOOL)animated;
 - (void)endedEditAllItemsAnimated:(BOOL)animated;
 
+- (void)batchUpdate:(MobilyDataViewUpdateBlock)update;
 - (void)batchUpdate:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete;
 - (void)batchDuration:(NSTimeInterval)duration update:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete;
 

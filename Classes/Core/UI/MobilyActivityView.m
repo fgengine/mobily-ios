@@ -269,18 +269,21 @@
         _showCount = 1;
         [self layoutIfNeeded];
         self.hidden = NO;
-        [UIView animateWithDuration:MobilyActivityDuration animations:^{
-            if(prepare != nil) {
-                prepare();
-                [self layoutIfNeeded];
-            }
-            _panelView.alpha = 1.0f;
-            self.alpha = 1.0f;
-        } completion:^(BOOL finished) {
-            if(complete != nil) {
-                complete();
-            }
-        }];
+        [UIView animateWithDuration:MobilyActivityDuration
+                              delay:0.0f
+                            options:(UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionBeginFromCurrentState)
+                         animations:^{
+                             if(prepare != nil) {
+                                 prepare();
+                                 [self layoutIfNeeded];
+                             }
+                             _panelView.alpha = 1.0f;
+                             self.alpha = 1.0f;
+                         } completion:^(BOOL finished) {
+                             if(complete != nil) {
+                                 complete();
+                             }
+                         }];
     } else if(_showCount != NSNotFound) {
         _showCount++;
     }
@@ -299,19 +302,22 @@
         _showCount = NSNotFound;
         [self layoutIfNeeded];
         
-        [UIView animateWithDuration:MobilyActivityDuration animations:^{
-            if(prepare != nil) {
-                prepare();
-                [self layoutIfNeeded];
-            }
-            _panelView.alpha = 0.0f;
-            self.alpha = 0.0f;
-        } completion:^(BOOL finished) {
-            self.hidden = YES;
-            if(complete != nil) {
-                complete();
-            }
-        }];
+        [UIView animateWithDuration:MobilyActivityDuration
+                              delay:0.0f
+                            options:(UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionBeginFromCurrentState)
+                         animations:^{
+                             if(prepare != nil) {
+                                 prepare();
+                                 [self layoutIfNeeded];
+                             }
+                             _panelView.alpha = 0.0f;
+                             self.alpha = 0.0f;
+                         } completion:^(BOOL finished) {
+                             self.hidden = YES;
+                             if(complete != nil) {
+                                 complete();
+                             }
+                         }];
     } else if(_showCount != NSNotFound) {
         _showCount--;
     }
