@@ -43,6 +43,7 @@
     UIView* _panelView;
     MobilySpinnerView* _spinnerView;
     UILabel* _textView;
+    NSUInteger _showCount;
 }
 
 @end
@@ -131,6 +132,8 @@
         _textView.numberOfLines = 0;
         [_panelView addSubview:_textView];
         
+        _showCount = NSNotFound;
+        
         [self setup];
     }
     return self;
@@ -146,7 +149,7 @@
     
     CGSize spinnerSize = CGSizeMake(self.spinnerSize, self.spinnerSize);
     CGSize textSize = [_textView implicitSizeForWidth:_textWidth];
-    CGSize panelSize = CGSizeMake(_margin + MAX(spinnerSize.width, textSize.width) + _margin, _margin + spinnerSize.height + _spacing + textSize.height + _margin);
+    CGSize panelSize = CGSizeMake(_margin + MAX(spinnerSize.width, textSize.width) + _margin, _margin + spinnerSize.height + ((_textView.text.length > 0) ? _spacing + textSize.height : 0.0f) + _margin);
     CGFloat spinnerOffset = floorf((panelSize.width - spinnerSize.width) * 0.5f);
     
     _panelView.frame = CGRectMakeCenterPoint(self.frameCenter, panelSize.width, panelSize.height);
@@ -247,6 +250,10 @@
     return _textView.font;
 }
 
+- (BOOL)isShowed {
+    return (_showCount > 0);
+}
+
 #pragma mark Public
 
 - (void)show {
@@ -258,9 +265,8 @@
 }
 
 - (void)showPrepare:(MobilyActivityViewBlock)prepare complete:(MobilyActivityViewBlock)complete {
-    if(_showed == NO) {
-        _showed = YES;
-        
+    if(_showCount == NSNotFound) {
+        _showCount = 1;
         [self layoutIfNeeded];
         self.hidden = NO;
         [UIView animateWithDuration:MobilyActivityDuration animations:^{
@@ -275,6 +281,8 @@
                 complete();
             }
         }];
+    } else if(_showCount != NSNotFound) {
+        _showCount++;
     }
 }
 
@@ -287,8 +295,8 @@
 }
 
 - (void)hidePrepare:(MobilyActivityViewBlock)prepare complete:(MobilyActivityViewBlock)complete {
-    if(_showed == YES) {
-        _showed = NO;
+    if(_showCount == 1) {
+        _showCount = NSNotFound;
         [self layoutIfNeeded];
         
         [UIView animateWithDuration:MobilyActivityDuration animations:^{
@@ -304,6 +312,8 @@
                 complete();
             }
         }];
+    } else if(_showCount != NSNotFound) {
+        _showCount--;
     }
 }
 
