@@ -43,6 +43,7 @@
 
 @synthesize view = _view;
 @synthesize parent = _parent;
+@synthesize allowAutoAlign = _allowAutoAlign;
 
 #pragma mark Init / Free
 
@@ -105,21 +106,30 @@
 }
 
 - (void)_didEndDraggingWillDecelerate:(BOOL)decelerate {
+    if((decelerate == NO) && (_allowAutoAlign == YES)) {
+        [self alignAnimated:YES];
+    }
 }
 
 - (void)_willBeginDecelerating {
 }
 
 - (void)_didEndDecelerating {
+    if(_allowAutoAlign == YES) {
+        [self alignAnimated:YES];
+    }
 }
 
 - (void)_didEndScrollingAnimation {
 }
 
-- (void)_didBeginUpdate {
+- (void)_didBeginUpdateAnimated:(BOOL)animated {
 }
 
-- (void)_didEndUpdate {
+- (void)_didEndUpdateAnimated:(BOOL)animated {
+    if(_allowAutoAlign == YES) {
+        [self alignAnimated:animated];
+    }
 }
 
 - (CGRect)_validateLayoutForAvailableFrame:(CGRect)frame {
@@ -168,6 +178,9 @@
 
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
     return [_view fireEventForKey:key bySender:sender byObject:object orDefault:orDefault];
+}
+
+- (void)alignAnimated:(BOOL)animated {
 }
 
 @end

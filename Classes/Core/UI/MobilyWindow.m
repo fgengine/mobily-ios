@@ -177,11 +177,9 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 
 - (void)didAddSubview:(UIView*)subview {
     [super didAddSubview:subview];
-    [self bringSubviewToFront:_emptyView];
-}
-
-- (void)willRemoveSubview:(UIView*)subview {
-    [super willRemoveSubview:subview];
+    if(_activity != nil) {
+        [self bringSubviewToFront:_activity];
+    }
     [self bringSubviewToFront:_emptyView];
 }
 

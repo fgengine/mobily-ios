@@ -50,7 +50,7 @@
     _entries = NSMutableArray.array;
 }
 
-#pragma mark Property private
+#pragma mark Private property private
 
 - (void)_willChangeView {
 }
@@ -61,20 +61,20 @@
     }
 }
 
-#pragma mark Public override
+#pragma mark Private override
 
-- (void)_didBeginUpdate {
-    [super _didBeginUpdate];
+- (void)_didBeginUpdateAnimated:(BOOL)animated {
+    [super _didBeginUpdateAnimated:animated];
     for(MobilyDataItem* entry in _entries) {
-        [entry didBeginUpdate];
+        [entry didBeginUpdateAnimated:animated];
     }
 }
 
-- (void)_didEndUpdate {
+- (void)_didEndUpdateAnimated:(BOOL)animated {
     for(MobilyDataItem* entry in _entries) {
-        [entry didEndUpdate];
+        [entry didEndUpdateAnimated:animated];
     }
-    [super _didEndUpdate];
+    [super _didEndUpdateAnimated:animated];
 }
 
 - (CGRect)_validateLayoutForAvailableFrame:(CGRect)frame {
@@ -94,7 +94,11 @@
     [self _didEntriesLayoutForBounds:CGRectIntersection(bounds, _entriesFrame)];
 }
 
-#pragma mark Public
+#pragma mark Public override
+
+- (void)alignAnimated:(BOOL)animated {
+    
+}
 
 - (NSArray*)allEntries {
     return [_entries copy];

@@ -76,8 +76,8 @@
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
 
-- (void)didBeginUpdate;
-- (void)didEndUpdate;
+- (void)didBeginUpdateAnimated:(BOOL)animated;
+- (void)didEndUpdateAnimated:(BOOL)animated;
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated;
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated;

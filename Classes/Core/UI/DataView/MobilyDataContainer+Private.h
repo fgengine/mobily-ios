@@ -44,6 +44,7 @@
 @protected
     __weak MobilyDataView* _view;
     __weak MobilyDataContainer* _parent;
+    BOOL _allowAutoAlign;
 }
 
 @property(nonatomic, readwrite, weak) MobilyDataView* view;
@@ -62,8 +63,8 @@
 - (void)_didEndDecelerating;
 - (void)_didEndScrollingAnimation;
 
-- (void)_didBeginUpdate;
-- (void)_didEndUpdate;
+- (void)_didBeginUpdateAnimated:(BOOL)animated;
+- (void)_didEndUpdateAnimated:(BOOL)animated;
 
 - (CGRect)_validateLayoutForAvailableFrame:(CGRect)frame;
 - (void)_willLayoutForBounds:(CGRect)bounds;

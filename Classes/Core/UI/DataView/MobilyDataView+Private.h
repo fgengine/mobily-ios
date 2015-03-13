@@ -135,8 +135,8 @@
 - (void)_didEndDecelerating;
 - (void)_didEndScrollingAnimation;
 
-- (void)_batchUpdate:(MobilyDataViewUpdateBlock)update;
-- (void)_batchComplete:(MobilyDataViewUpdateBlock)complete;
+- (void)_batchUpdate:(MobilyDataViewUpdateBlock)update animated:(BOOL)animated;
+- (void)_batchComplete:(MobilyDataViewUpdateBlock)complete animated:(BOOL)animated;
 
 @end
 

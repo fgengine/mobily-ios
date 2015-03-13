@@ -61,7 +61,7 @@
 - (void)dealloc {
 }
 
-#pragma mark Property private
+#pragma mark Private propert private
 
 - (void)_willChangeView {
 }
@@ -72,20 +72,20 @@
     }
 }
 
-#pragma mark Public override
+#pragma mark Private override
 
-- (void)_didBeginUpdate {
-    [super _didBeginUpdate];
+- (void)_didBeginUpdateAnimated:(BOOL)animated {
+    [super _didBeginUpdateAnimated:animated];
     for(MobilyDataContainer* section in _sections) {
-        [section _didBeginUpdate];
+        [section _didBeginUpdateAnimated:animated];
     }
 }
 
-- (void)_didEndUpdate {
+- (void)_didEndUpdateAnimated:(BOOL)animated {
     for(MobilyDataContainer* section in _sections) {
-        [section _didEndUpdate];
+        [section _didEndUpdateAnimated:animated];
     }
-    [super _didEndUpdate];
+    [super _didEndUpdateAnimated:animated];
 }
 
 - (CGRect)_validateLayoutForAvailableFrame:(CGRect)frame {
@@ -105,7 +105,10 @@
     [self _didSectionsLayoutForBounds:CGRectIntersection(bounds, _sectionsFrame)];
 }
 
-#pragma mark Public
+#pragma mark Public override
+
+- (void)alignAnimated:(BOOL)animated {
+}
 
 - (NSArray*)allItems {
     NSMutableArray* result = NSMutableArray.array;

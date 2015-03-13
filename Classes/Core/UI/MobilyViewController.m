@@ -126,6 +126,14 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
     }
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    if(_activity != nil) {
+        [self.view bringSubviewToFront:_activity];
+    }
+}
+
 #pragma mark Property
 
 - (MobilyActivityView*)activity {

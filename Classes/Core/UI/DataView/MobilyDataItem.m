@@ -240,10 +240,10 @@
     return [_view fireEventForKey:key bySender:sender byObject:object orDefault:orDefault];
 }
 
-- (void)didBeginUpdate {
+- (void)didBeginUpdateAnimated:(BOOL)animated {
 }
 
-- (void)didEndUpdate {
+- (void)didEndUpdateAnimated:(BOOL)animated {
     self.originFrame = _updateFrame;
     if(_cell != nil) {
         _cell.frame = self.frame;

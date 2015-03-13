@@ -282,6 +282,10 @@
     return [NSArray arrayWithArray:result];
 }
 
+- (CGRect)visibleBounds {
+    return UIEdgeInsetsInsetRect(self.bounds, self.contentInset);
+}
+
 - (NSArray*)selectedItems {
     return _selectedItems;
 }
@@ -774,8 +778,8 @@
         if(update != nil) {
             update();
         }
-        [self _batchComplete:nil];
-    }];
+        [self _batchComplete:nil animated:NO];
+    } animated:NO];
 }
 
 - (void)batchUpdate:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete {
@@ -793,8 +797,8 @@
             if(complete != nil) {
                 complete(YES);
             }
-        }];
-    }];
+        } animated:NO];
+    } animated:NO];
 }
 
 - (void)batchDuration:(NSTimeInterval)duration update:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete {
@@ -809,14 +813,14 @@
                               delay:0.0f
                             options:0
                          animations:^{
-                             [self _batchUpdate:update];
+                             [self _batchUpdate:update animated:YES];
                          }
                          completion:^(BOOL finished) {
                              [self _batchComplete:^() {
                                  if(complete != nil) {
                                      complete(finished);
                                  }
-                             }];
+                             } animated:YES];
                          }];
     } else {
         [self _batchUpdate:^{
@@ -827,8 +831,8 @@
                 if(complete != nil) {
                     complete(YES);
                 }
-            }];
-        }];
+            } animated:NO];
+        } animated:NO];
     }
 }
 
@@ -860,7 +864,7 @@
 - (void)scrollToRect:(CGRect)rect scrollPosition:(MobilyDataViewPosition)scrollPosition animated:(BOOL)animated {
     NSUInteger vPosition = scrollPosition & (MobilyDataViewPositionTop | MobilyDataViewPositionCenteredVertically | MobilyDataViewPositionBottom);
     NSUInteger hPosition = scrollPosition & (MobilyDataViewPositionLeft | MobilyDataViewPositionCenteredHorizontally | MobilyDataViewPositionRight);
-    CGRect viewport = UIEdgeInsetsInsetRect(self.bounds, self.contentInset);
+    CGRect viewport = self.visibleBounds;
     CGPoint offset = rect.origin;
     switch(vPosition) {
         case MobilyDataViewPositionCenteredVertically: {
@@ -1086,7 +1090,7 @@
 
 - (void)_layoutForVisible {
     CGRect bounds = self.bounds;
-    [_container _willLayoutForBounds:UIEdgeInsetsInsetRect(bounds, self.contentInset)];
+    [_container _willLayoutForBounds:self.visibleBounds];
     if(_updating == NO) {
         [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex, BOOL* itemStop) {
             [item invalidateLayoutForBounds:bounds];
@@ -1141,76 +1145,6 @@
         self.constraintPullToLoadLeft = nil;
         self.constraintPullToLoadRight = nil;
         self.constraintPullToLoadHeight = nil;
-    }
-}
-
-- (void)_batchUpdate:(MobilyDataViewUpdateBlock)update {
-    self.updating = YES;
-    [_container _didBeginUpdate];
-    if(update != nil) {
-        update();
-    }
-    [self validateLayoutIfNeed];
-    [self _layoutForVisible];
-    for(MobilyDataItem* item in _reloadedBeforeItems) {
-        MobilyDataCell* cell = item.cell;
-        if(cell != nil) {
-            [cell animateAction:MobilyDataCellActionReplaceOut];
-        }
-    }
-    for(MobilyDataItem* item in _reloadedAfterItems) {
-        MobilyDataCell* cell = item.cell;
-        if(cell != nil) {
-            [cell animateAction:MobilyDataCellActionReplaceIn];
-        }
-    }
-    for(MobilyDataItem* item in _insertedItems) {
-        MobilyDataCell* cell = item.cell;
-        if(cell != nil) {
-            [cell animateAction:MobilyDataCellActionInsert];
-        }
-    }
-    for(MobilyDataItem* item in _deletedItems) {
-        MobilyDataCell* cell = item.cell;
-        if(cell != nil) {
-            [cell animateAction:MobilyDataCellActionDelete];
-        }
-    }
-}
-
-- (void)_batchComplete:(MobilyDataViewUpdateBlock)complete {
-    if(_reloadedBeforeItems.count > 0) {
-        for(MobilyDataItem* item in _reloadedBeforeItems) {
-            MobilyDataCell* cell = item.cell;
-            if(cell != nil) {
-                [cell animateAction:MobilyDataCellActionRestore];
-            }
-            [self _disappearItem:item];
-        }
-        [_reloadedBeforeItems removeAllObjects];
-    }
-    if(_reloadedAfterItems.count > 0) {
-        [_reloadedAfterItems removeAllObjects];
-    }
-    if(_insertedItems.count > 0) {
-        [_insertedItems removeAllObjects];
-    }
-    if(_deletedItems.count > 0) {
-        for(MobilyDataItem* item in _deletedItems) {
-            MobilyDataCell* cell = item.cell;
-            if(cell != nil) {
-                [cell animateAction:MobilyDataCellActionRestore];
-            }
-            [self _disappearItem:item];
-        }
-        [_deletedItems removeAllObjects];
-    }
-    [_container _didEndUpdate];
-    self.updating = NO;
-    [self _layoutForVisible];
-    
-    if(complete != nil) {
-        complete();
     }
 }
 
@@ -1432,6 +1366,76 @@
 - (void)_didEndScrollingAnimation {
     if(_container != nil) {
         [_container _didEndScrollingAnimation];
+    }
+}
+
+- (void)_batchUpdate:(MobilyDataViewUpdateBlock)update animated:(BOOL)animated {
+    self.updating = YES;
+    [_container _didBeginUpdateAnimated:animated];
+    if(update != nil) {
+        update();
+    }
+    [self validateLayoutIfNeed];
+    [self _layoutForVisible];
+    for(MobilyDataItem* item in _reloadedBeforeItems) {
+        MobilyDataCell* cell = item.cell;
+        if(cell != nil) {
+            [cell animateAction:MobilyDataCellActionReplaceOut];
+        }
+    }
+    for(MobilyDataItem* item in _reloadedAfterItems) {
+        MobilyDataCell* cell = item.cell;
+        if(cell != nil) {
+            [cell animateAction:MobilyDataCellActionReplaceIn];
+        }
+    }
+    for(MobilyDataItem* item in _insertedItems) {
+        MobilyDataCell* cell = item.cell;
+        if(cell != nil) {
+            [cell animateAction:MobilyDataCellActionInsert];
+        }
+    }
+    for(MobilyDataItem* item in _deletedItems) {
+        MobilyDataCell* cell = item.cell;
+        if(cell != nil) {
+            [cell animateAction:MobilyDataCellActionDelete];
+        }
+    }
+}
+
+- (void)_batchComplete:(MobilyDataViewUpdateBlock)complete animated:(BOOL)animated {
+    if(_reloadedBeforeItems.count > 0) {
+        for(MobilyDataItem* item in _reloadedBeforeItems) {
+            MobilyDataCell* cell = item.cell;
+            if(cell != nil) {
+                [cell animateAction:MobilyDataCellActionRestore];
+            }
+            [self _disappearItem:item];
+        }
+        [_reloadedBeforeItems removeAllObjects];
+    }
+    if(_reloadedAfterItems.count > 0) {
+        [_reloadedAfterItems removeAllObjects];
+    }
+    if(_insertedItems.count > 0) {
+        [_insertedItems removeAllObjects];
+    }
+    if(_deletedItems.count > 0) {
+        for(MobilyDataItem* item in _deletedItems) {
+            MobilyDataCell* cell = item.cell;
+            if(cell != nil) {
+                [cell animateAction:MobilyDataCellActionRestore];
+            }
+            [self _disappearItem:item];
+        }
+        [_deletedItems removeAllObjects];
+    }
+    [_container _didEndUpdateAnimated:animated];
+    self.updating = NO;
+    [self _layoutForVisible];
+    
+    if(complete != nil) {
+        complete();
     }
 }
 

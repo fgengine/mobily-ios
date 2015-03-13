@@ -60,6 +60,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 
 @property(nonatomic, readonly, weak) MobilyDataView* view;
 @property(nonatomic, readonly, weak) MobilyDataContainer* parent;
+@property(nonatomic, readonly, assign) BOOL allowAutoAlign;
 
 - (NSArray*)allItems;
 
@@ -72,6 +73,8 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 - (id)fireEventForKey:(id)key byObject:(id)object orDefault:(id)orDefault;
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
+
+- (void)alignAnimated:(BOOL)animated;
 
 @end
 

@@ -301,7 +301,6 @@
     if(_showCount == 1) {
         _showCount = NSNotFound;
         [self layoutIfNeeded];
-        
         [UIView animateWithDuration:MobilyActivityDuration
                               delay:0.0f
                             options:(UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionBeginFromCurrentState)

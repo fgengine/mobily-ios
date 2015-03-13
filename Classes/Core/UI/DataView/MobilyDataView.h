@@ -67,6 +67,7 @@ typedef void(^MobilyDataViewCompleteBlock)(BOOL finished);
 @property(nonatomic, readwrite, strong) MobilyDataContainer* container;
 @property(nonatomic, readonly, strong) NSArray* visibleItems;
 @property(nonatomic, readonly, strong) NSArray* visibleCells;
+@property(nonatomic, readwrite, assign) CGRect visibleBounds;
 @property(nonatomic, readonly, strong) NSArray* selectedItems;
 @property(nonatomic, readonly, strong) NSArray* selectedCells;
 @property(nonatomic, readonly, strong) NSArray* highlightedItems;
