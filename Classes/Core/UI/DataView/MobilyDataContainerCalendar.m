@@ -296,6 +296,8 @@
         [self _deleteEntries:_dayItems.objects];
         [_dayItems removeAllObjects];
     }
+    _beginDate = nil;
+    _endDate = nil;
 }
 
 #pragma mark Private override

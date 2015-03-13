@@ -132,8 +132,32 @@
     return nil;
 }
 
+- (void)prepareBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate interval:(NSTimeInterval)interval data:(id)data {
+    NSTimeInterval timeInterval = beginDate.timeIntervalSince1970;
+    NSTimeInterval endTimeInterval = endDate.timeIntervalSince1970;
+    while(endTimeInterval - timeInterval >= interval) {
+        NSDate* date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+        MobilyDataItemCalendarDay* calendarDay = [self dayItemForDate:date];
+        if(calendarDay == nil) {
+            [self appendDate:date data:data];
+        }
+        timeInterval += interval;
+    }
+    [_entries sortUsingComparator:^NSComparisonResult(MobilyDataItemCalendarDay* calendarDay1, MobilyDataItemCalendarDay* calendarDay2) {
+        return [calendarDay1.date compare:calendarDay2.date];
+    }];
+}
+
+- (void)prependToDate:(NSDate*)date interval:(NSTimeInterval)interval data:(id)data {
+    [self prepareBeginDate:date endDate:(_entries.count > 0) ? [_entries.firstObject date] : [NSDate date] interval:interval data:data];
+}
+
 - (void)prependDate:(NSDate*)date data:(id)data {
     [self _prependEntry:[MobilyDataItemCalendarDay itemWithCalendar:_calendar date:date data:data]];
+}
+
+- (void)appendToDate:(NSDate*)date interval:(NSTimeInterval)interval data:(id)data {
+    [self prepareBeginDate:(_entries.count > 0) ? [_entries.lastObject date] : [NSDate date] endDate:date interval:interval data:data];
 }
 
 - (void)appendDate:(NSDate*)date data:(id)data {
@@ -150,6 +174,21 @@
     }];
     if(index != NSNotFound) {
         [self _replaceOriginEntry:_entries[index] withEntry:[MobilyDataItemCalendarDay itemWithCalendar:_calendar date:date data:data]];
+    }
+}
+
+- (void)deleteBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate {
+    NSTimeInterval beginTimeInterval = beginDate.timeIntervalSince1970;
+    NSTimeInterval endTimeInterval = endDate.timeIntervalSince1970;
+    NSIndexSet* indexSet = [_entries indexesOfObjectsPassingTest:^BOOL(MobilyDataItemCalendarDay* calendarDay, NSUInteger index, BOOL* stop) {
+        NSComparisonResult timeInterval = calendarDay.date.timeIntervalSince1970;
+        if((timeInterval >= beginTimeInterval) || (timeInterval <= endTimeInterval)) {
+            return YES;
+        }
+        return NO;
+    }];
+    if(indexSet.count > 0) {
+        [self _deleteEntries:[_entries objectsAtIndexes:indexSet]];
     }
 }
 

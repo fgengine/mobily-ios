@@ -303,10 +303,14 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 - (MobilyDataItemCalendarDay*)dayItemForDate:(NSDate*)date;
 - (MobilyDataItemCalendarDay*)nearestDayItemForDate:(NSDate*)date;
 
+- (void)prepareBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate interval:(NSTimeInterval)interval data:(id)data;
+- (void)prependToDate:(NSDate*)date interval:(NSTimeInterval)interval data:(id)data;
 - (void)prependDate:(NSDate*)date data:(id)data;
+- (void)appendToDate:(NSDate*)date interval:(NSTimeInterval)interval data:(id)data;
 - (void)appendDate:(NSDate*)date data:(id)data;
 - (void)insertDate:(NSDate*)date data:(id)data atIndex:(NSUInteger)index;
 - (void)replaceDate:(NSDate*)date data:(id)data;
+- (void)deleteBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate;
 - (void)deleteDate:(NSDate*)date;
 - (void)deleteAllDates;
 
