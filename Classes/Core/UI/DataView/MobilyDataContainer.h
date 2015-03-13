@@ -256,6 +256,8 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 @property(nonatomic, readonly, strong) NSCalendar* calendar;
 @property(nonatomic, readonly, strong) NSDate* beginDate;
 @property(nonatomic, readonly, strong) NSDate* endDate;
+@property(nonatomic, readonly, strong) NSDate* displayBeginDate;
+@property(nonatomic, readonly, strong) NSDate* displayEndDate;
 
 @property(nonatomic, readwrite, assign) BOOL canShowMonth;
 @property(nonatomic, readwrite, assign) UIEdgeInsets monthMargin;

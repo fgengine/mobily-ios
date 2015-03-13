@@ -56,6 +56,8 @@
 @synthesize daysSpacing = _daysSpacing;
 @synthesize beginDate = _beginDate;
 @synthesize endDate = _endDate;
+@synthesize displayBeginDate = _displayBeginDate;
+@synthesize displayEndDate = _displayEndDate;
 @synthesize monthItem = _monthItem;
 @synthesize weekdayItems = _weekdayItems;
 @synthesize dayItems = _dayItems;
@@ -226,14 +228,18 @@
 }
 
 - (void)prepareBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate {
-    NSDate* normalizedBeginDate = [beginDate beginningOfWeek];
-    NSDate* normalizedEndDate = [endDate endOfWeek];
-    if(([_beginDate isEqualToDate:normalizedBeginDate] == NO) || ([_endDate isEqualToDate:normalizedEndDate] == NO)) {
-        _beginDate = normalizedBeginDate;
-        _endDate = normalizedEndDate;
-        
-        if(_monthItem == nil) {
-            _monthItem = [MobilyDataItemCalendarMonth itemWithCalendar:_calendar beginDate:_beginDate endDate:_endDate data:[NSNull null]];
+    if(([_beginDate isEqualToDate:beginDate] == NO) || ([_endDate isEqualToDate:endDate] == NO)) {
+        _beginDate = beginDate;
+        _displayBeginDate = [_beginDate beginningOfWeek];
+        _endDate = endDate;
+        _displayEndDate = [_endDate endOfWeek];
+
+        if(_monthItem != nil) {
+            MobilyDataItemCalendarMonth* monthItem = [MobilyDataItemCalendarMonth itemWithCalendar:_calendar beginDate:_beginDate endDate:_endDate displayBeginDate:_displayBeginDate displayEndDate:_displayEndDate data:[NSNull null]];
+            [self _replaceOriginEntry:_monthItem withEntry:monthItem];
+            _monthItem = monthItem;
+        } else {
+            _monthItem = [MobilyDataItemCalendarMonth itemWithCalendar:_calendar beginDate:_beginDate endDate:_endDate displayBeginDate:_displayBeginDate displayEndDate:_displayEndDate data:[NSNull null]];
             [self _appendEntry:_monthItem];
         }
         if(_weekdayItems.count < 7) {
@@ -245,8 +251,8 @@
                 weekdayDate = [weekdayDate nextDay];
             }
         }
-        NSDate* beginDayDate = [_beginDate beginningOfWeek];
-        NSDate* endDayDate = [_endDate endOfWeek];
+        NSDate* beginDayDate = [_displayBeginDate copy];
+        NSDate* endDayDate = [_displayEndDate copy];
         NSInteger weekOfMonth = [beginDayDate weeksToDate:[endDayDate nextSecond]];
         if(weekOfMonth > 0) {
             [_dayItems setNumberOfColumns:7 numberOfRows:weekOfMonth];

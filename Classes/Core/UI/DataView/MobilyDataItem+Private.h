@@ -89,11 +89,13 @@
 @protected
     NSDate* _beginDate;
     NSDate* _endDate;
+    NSDate* _displayBeginDate;
+    NSDate* _displayEndDate;
 }
 
-+ (instancetype)itemWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate data:(id)data;
++ (instancetype)itemWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate displayBeginDate:(NSDate*)displayBeginDate displayEndDate:(NSDate*)displayEndDate data:(id)data;
 
-- (instancetype)initWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate data:(id)data;
+- (instancetype)initWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate displayBeginDate:(NSDate*)displayBeginDate displayEndDate:(NSDate*)displayEndDate data:(id)data;
 
 @end
 

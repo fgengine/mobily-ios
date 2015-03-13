@@ -107,6 +107,8 @@
 
 @property(nonatomic, readonly, strong) NSDate* beginDate;
 @property(nonatomic, readonly, strong) NSDate* endDate;
+@property(nonatomic, readonly, strong) NSDate* displayBeginDate;
+@property(nonatomic, readonly, strong) NSDate* displayEndDate;
 
 @end
 

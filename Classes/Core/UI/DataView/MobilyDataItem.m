@@ -384,18 +384,22 @@
 
 @synthesize beginDate = _beginDate;
 @synthesize endDate = _endDate;
+@synthesize displayBeginDate = _displayBeginDate;
+@synthesize displayEndDate = _displayEndDate;
 
 #pragma mark Init / Free
 
-+ (instancetype)itemWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate data:(id)data {
-    return [[self alloc] initWithCalendar:calendar beginDate:beginDate endDate:endDate data:data];
++ (instancetype)itemWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate displayBeginDate:(NSDate*)displayBeginDate displayEndDate:(NSDate*)displayEndDate data:(id)data {
+    return [[self alloc] initWithCalendar:calendar beginDate:beginDate endDate:endDate displayBeginDate:displayBeginDate displayEndDate:displayEndDate data:data];
 }
 
-- (instancetype)initWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate data:(id)data {
+- (instancetype)initWithCalendar:(NSCalendar*)calendar beginDate:(NSDate*)beginDate endDate:(NSDate*)endDate displayBeginDate:(NSDate*)displayBeginDate displayEndDate:(NSDate*)displayEndDate data:(id)data {
     self = [super initWithIdentifier:MobilyDataContainerCalendarMonthIdentifier order:3 calendar:calendar data:data];
     if(self != nil) {
         _beginDate = beginDate;
         _endDate = endDate;
+        _displayBeginDate = displayBeginDate;
+        _displayEndDate = displayEndDate;
     }
     return self;
 }

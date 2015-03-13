@@ -184,6 +184,8 @@
     UIOffset _daysSpacing;
     NSDate* _beginDate;
     NSDate* _endDate;
+    NSDate* _displayBeginDate;
+    NSDate* _displayEndDate;
     MobilyDataItemCalendarMonth* _monthItem;
     NSMutableArray* _weekdayItems;
     MobilyMutableGrid* _dayItems;
