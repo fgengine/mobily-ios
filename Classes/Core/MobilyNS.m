@@ -246,6 +246,9 @@
 - (NSDate*)beginningOfWeek {
     NSDateComponents* components = [NSCalendar.currentCalendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay) fromDate:self];
     NSInteger offset = components.weekday - (NSInteger)NSCalendar.currentCalendar.firstWeekday;
+    if(offset < 0) {
+        offset = offset + 7;
+    }
     components.day = components.day - offset;
     return [NSCalendar.currentCalendar dateFromComponents:components];
 }
