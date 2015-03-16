@@ -575,7 +575,7 @@
                 for(UIView* view in self.subviews) {
                     if([view isKindOfClass:MobilyDataCell.class] == YES) {
                         MobilyDataCell* cell = (MobilyDataCell*)view;
-                        if(item.order < cell.item.order) {
+                        if(item.order > cell.item.order) {
                             nearestCell = cell;
                         } else if(item.order == cell.item.order) {
                             nearestCell = cell;

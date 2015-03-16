@@ -229,11 +229,11 @@
 
 - (void)prepareBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate {
     if(([_beginDate isEqualToDate:beginDate] == NO) || ([_endDate isEqualToDate:endDate] == NO)) {
+        [self cleanup];
         _beginDate = beginDate;
         _displayBeginDate = [_beginDate beginningOfWeek];
         _endDate = endDate;
         _displayEndDate = [_endDate endOfWeek];
-        [self cleanup];
         if(_canShowMonth == YES) {
             _monthItem = [MobilyDataItemCalendarMonth itemWithCalendar:_calendar beginDate:_beginDate endDate:_endDate displayBeginDate:_displayBeginDate displayEndDate:_displayEndDate data:[NSNull null]];
             [self _appendEntry:_monthItem];
@@ -288,7 +288,12 @@
     }];
     if((foundColumn != NSNotFound) && (foundRow != NSNotFound)) {
         MobilyDataItemCalendarDay* oldDayItem = [_dayItems objectAtColumn:foundColumn atRow:foundRow];
-        MobilyDataItemCalendarDay* newDayItem = [MobilyDataItemCalendarDay itemWithCalendar:_calendar date:date data:data];
+        MobilyDataItemCalendarDay* newDayItem;
+        if(oldDayItem.weekdayItem != nil) {
+            newDayItem = [MobilyDataItemCalendarDay itemWithWeekdayItem:oldDayItem.weekdayItem date:date data:data];
+        } else {
+            newDayItem = [MobilyDataItemCalendarDay itemWithCalendar:oldDayItem.calendar date:date data:data];
+        }
         [_dayItems setObject:newDayItem atColumn:foundColumn atRow:foundRow];
         [self _replaceOriginEntry:oldDayItem withEntry:newDayItem];
     }
