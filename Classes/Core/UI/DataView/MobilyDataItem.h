@@ -116,6 +116,7 @@
 
 @interface MobilyDataItemCalendarWeekday : MobilyDataItemCalendar
 
+@property(nonatomic, readonly, weak) MobilyDataItemCalendarMonth* monthItem;
 @property(nonatomic, readonly, strong) NSDate* date;
 
 @end
@@ -124,6 +125,8 @@
 
 @interface MobilyDataItemCalendarDay : MobilyDataItemCalendar
 
+@property(nonatomic, readonly, weak) MobilyDataItemCalendarMonth* monthItem;
+@property(nonatomic, readonly, weak) MobilyDataItemCalendarWeekday* weekdayItem;
 @property(nonatomic, readonly, strong) NSDate* date;
 
 @end

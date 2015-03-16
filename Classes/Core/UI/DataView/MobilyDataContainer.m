@@ -43,7 +43,9 @@
 
 @synthesize view = _view;
 @synthesize parent = _parent;
+@synthesize frame = _frame;
 @synthesize allowAutoAlign = _allowAutoAlign;
+@synthesize alignThreshold = _alignThreshold;
 
 #pragma mark Init / Free
 
@@ -56,6 +58,9 @@
 }
 
 - (void)setup {
+    _allowAutoAlign = YES;
+    _alignPosition = MobilyDataContainerAlignTop | MobilyDataContainerAlignCenteredHorizontally;
+    _alignThreshold = 20.0f;
 }
 
 - (void)dealloc {
@@ -102,22 +107,19 @@
 - (void)_didScroll {
 }
 
-- (void)_willEndDraggingWithVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset {
+- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize viewportSize:(CGSize)viewportSize {
+    if(_allowAutoAlign == YES) {
+        *contentOffset = [self _alignWithVelocity:velocity contentOffset:*contentOffset contentSize:contentSize viewportSize:viewportSize];
+    }
 }
 
 - (void)_didEndDraggingWillDecelerate:(BOOL)decelerate {
-    if((decelerate == NO) && (_allowAutoAlign == YES)) {
-        [self alignAnimated:YES];
-    }
 }
 
 - (void)_willBeginDecelerating {
 }
 
 - (void)_didEndDecelerating {
-    if(_allowAutoAlign == YES) {
-        [self alignAnimated:YES];
-    }
 }
 
 - (void)_didEndScrollingAnimation {
@@ -127,9 +129,13 @@
 }
 
 - (void)_didEndUpdateAnimated:(BOOL)animated {
-    if(_allowAutoAlign == YES) {
-        [self alignAnimated:animated];
+    if((_allowAutoAlign == YES) && (_view.isDragging == NO) && (_view.isDecelerating == NO)) {
+        _view.contentOffset = [self _alignWithVelocity:CGPointZero contentOffset:_view.contentOffset contentSize:_view.contentSize viewportSize:_view.boundsSize];
     }
+}
+
+- (CGPoint)_alignWithVelocity:(CGPoint)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize viewportSize:(CGSize)viewportSize {
+    return contentOffset;
 }
 
 - (CGRect)_validateLayoutForAvailableFrame:(CGRect)frame {
@@ -146,6 +152,10 @@
 
 - (NSArray*)allItems {
     return @[];
+}
+
+- (MobilyDataItem*)itemForPoint:(CGPoint)point {
+    return nil;
 }
 
 - (MobilyDataItem*)itemForData:(id)data {
@@ -178,9 +188,6 @@
 
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
     return [_view fireEventForKey:key bySender:sender byObject:object orDefault:orDefault];
-}
-
-- (void)alignAnimated:(BOOL)animated {
 }
 
 @end

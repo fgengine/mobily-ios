@@ -77,9 +77,6 @@
 - (void)setup {
 }
 
-- (void)dealloc {
-}
-
 #pragma mark MobilyBuilderObject
 
 - (NSArray*)relatedObjects {

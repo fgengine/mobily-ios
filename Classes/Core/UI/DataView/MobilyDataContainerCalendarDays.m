@@ -73,9 +73,6 @@
     _defaultSize = CGSizeMake(44.0f, 44.0f);
 }
 
-- (void)dealloc {
-}
-
 #pragma mark Property
 
 - (void)setOrientation:(MobilyDataContainerOrientation)orientation {

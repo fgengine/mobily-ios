@@ -85,9 +85,6 @@
     _content = MobilyMutableGrid.grid;
 }
 
-- (void)dealloc {
-}
-
 #pragma mark Property
 
 - (void)setOrientation:(MobilyDataContainerOrientation)orientation {

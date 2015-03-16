@@ -41,6 +41,10 @@
 #import "MobilySlideController.h"
 
 /*--------------------------------------------------*/
+
+#import <sys/utsname.h>
+
+/*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
@@ -696,6 +700,72 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
         CGColorSpaceRelease(colourSpace);
     }
     return result;
+}
+
+- (UIImage*)blurredImageWithRadius:(CGFloat)radius iterations:(NSUInteger)iterations tintColor:(UIColor*)tintColor {
+    UIImage* image = nil;
+    CGSize size = self.size;
+    CGFloat scale = self.scale;
+    if(floorf(size.width) * floorf(size.height) > FLT_EPSILON) {
+        CGImageRef imageRef = self.CGImage;
+        uint32_t boxSize = (uint32_t)(radius * scale);
+        if(boxSize % 2 == 0) {
+            boxSize++;
+        }
+        vImage_Buffer buffer1;
+        buffer1.width = CGImageGetWidth(imageRef);
+        buffer1.height = CGImageGetHeight(imageRef);
+        buffer1.rowBytes = CGImageGetBytesPerRow(imageRef);
+        size_t bytes = buffer1.rowBytes * buffer1.height;
+        buffer1.data = malloc(bytes);
+        if(buffer1.data != NULL) {
+            vImage_Buffer buffer2;
+            buffer2.width = buffer1.width;
+            buffer2.height = buffer1.height;
+            buffer2.rowBytes = buffer1.rowBytes;
+            buffer2.data = malloc(bytes);
+            if(buffer2.data != nil) {
+                size_t tempBufferSize = (size_t)vImageBoxConvolve_ARGB8888(&buffer1, &buffer2, NULL, 0, 0, boxSize, boxSize, NULL, kvImageEdgeExtend + kvImageGetTempBufferSize);
+                if(tempBufferSize > 0) {
+                    void* tempBuffer = malloc(tempBufferSize);
+                    if(tempBuffer != nil) {
+                        CFDataRef dataSource = CGDataProviderCopyData(CGImageGetDataProvider(imageRef));
+                        if(dataSource != NULL) {
+                            memcpy(buffer1.data, CFDataGetBytePtr(dataSource), bytes);
+                            CFRelease(dataSource);
+                        }
+                        for(NSUInteger i = 0; i < iterations; i++) {
+                            if(vImageBoxConvolve_ARGB8888(&buffer1, &buffer2, tempBuffer, 0, 0, boxSize, boxSize, NULL, kvImageEdgeExtend) == kvImageNoError) {
+                                void* temp = buffer1.data;
+                                buffer1.data = buffer2.data;
+                                buffer2.data = temp;
+                            }
+                        }
+                        free(tempBuffer);
+                        CGContextRef context = CGBitmapContextCreate(buffer1.data, buffer1.width, buffer1.height, 8, buffer1.rowBytes, CGImageGetColorSpace(imageRef), CGImageGetBitmapInfo(imageRef));
+                        if(context != NULL) {
+                            if(tintColor != nil) {
+                                if(CGColorGetAlpha(tintColor.CGColor) > 0.0f) {
+                                    CGContextSetFillColorWithColor(context, [[tintColor colorWithAlphaComponent:0.25] CGColor]);
+                                    CGContextSetBlendMode(context, kCGBlendModePlusLighter);
+                                    CGContextFillRect(context, CGRectMake(0, 0, buffer1.width, buffer1.height));
+                                }
+                            }
+                            imageRef = CGBitmapContextCreateImage(context);
+                            if(imageRef != nil) {
+                                image = [UIImage imageWithCGImage:imageRef scale:scale orientation:self.imageOrientation];
+                                CGImageRelease(imageRef);
+                            }
+                            CGContextRelease(context);
+                        }
+                    }
+                }
+                free(buffer2.data);
+            }
+            free(buffer1.data);
+        }
+    }
+    return image;
 }
 
 @end
@@ -2147,14 +2217,29 @@ MOBILY_DEFINE_VALIDATE_IMAGE(BackIndicatorTransitionMaskImage)
 #pragma mark -
 /*--------------------------------------------------*/
 
+static CGFloat Mobily_SystemVersion = FLT_EPSILON;
+static NSString* Mobily_DeviceTypeString = nil;
+static NSString* Mobily_DeviceVersionString = nil;
+static MobilyDeviceFamily Mobily_DeviceFamily = MobilyDeviceFamilyUnknown;
+static MobilyDeviceModel Mobily_DeviceModel = MobilyDeviceModelUnknown;
+
+/*--------------------------------------------------*/
+
 @implementation UIDevice (MobilyUI)
 
 + (CGFloat)systemVersion {
-    static CGFloat version = 0.0f;
-    if(version == 0.0f) {
-        version = [[[self currentDevice] systemVersion] floatValue];
+    if(Mobily_SystemVersion <= FLT_EPSILON) {
+        Mobily_SystemVersion = [self.currentDevice.systemVersion floatValue];
     }
-    return version;
+    return Mobily_SystemVersion;
+}
+
++ (BOOL)isSimulator {
+#ifdef MOBILY_SIMULATOR
+    return YES;
+#else
+    return NO;
+#endif
 }
 
 + (BOOL)isIPhone {
@@ -2163,6 +2248,143 @@ MOBILY_DEFINE_VALIDATE_IMAGE(BackIndicatorTransitionMaskImage)
 
 + (BOOL)isIPad {
     return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+}
+
++ (NSString*)deviceTypeString {
+    if(Mobily_DeviceTypeString == nil) {
+        struct utsname systemInfo;
+        uname(&systemInfo);
+        Mobily_DeviceTypeString = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+    }
+    return Mobily_DeviceTypeString;
+}
+
++ (NSString*)deviceVersionString {
+    if(Mobily_DeviceVersionString == nil) {
+        NSString* deviceType = self.deviceTypeString;
+        NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"[0-9]{1,},[0-9]{1,}" options:0 error:nil];
+        NSRange rangeOfVersion = [regex rangeOfFirstMatchInString:deviceType options:0 range:NSMakeRange(0, deviceType.length)];
+        if((rangeOfVersion.location != NSNotFound) && (rangeOfVersion.length > 0)) {
+            Mobily_DeviceVersionString = [deviceType substringWithRange:rangeOfVersion];
+        }
+    }
+    return Mobily_DeviceVersionString;
+}
+
++ (MobilyDeviceFamily)family {
+    if(Mobily_DeviceFamily == MobilyDeviceFamilyUnknown) {
+#ifdef MOBILY_SIMULATOR
+        Mobily_DeviceFamily = MobilyDeviceFamilySimulator;
+#else
+        NSDictionary* modelManifest = @{
+            @"iPhone": @(MobilyDeviceFamilyPhone),
+            @"iPad": @(MobilyDeviceFamilyPad),
+            @"iPod": @(MobilyDeviceFamilyPod),
+        };
+        NSString* deviceType = self.deviceTypeString;
+        [modelManifest enumerateKeysAndObjectsUsingBlock:^(NSString* string, NSNumber* number, BOOL* stop) {
+            if([deviceType hasPrefix:string] == YES) {
+                Mobily_DeviceFamily = number.unsignedIntegerValue;
+                *stop = YES;
+            }
+        }];
+#endif
+    }
+    return Mobily_DeviceFamily;
+}
+
++ (MobilyDeviceModel)model {
+    if(Mobily_DeviceModel == MobilyDeviceModelUnknown) {
+#ifdef MOBILY_SIMULATOR
+        switch(UI_USER_INTERFACE_IDIOM()) {
+            case UIUserInterfaceIdiomPhone: Mobily_DeviceModel = MobilyDeviceModelSimulatorPhone; break;
+            case UIUserInterfaceIdiomPad: Mobily_DeviceModel = MobilyDeviceModelSimulatorPad; break;
+        }
+#else
+        NSDictionary* familyModelManifest = @{
+            @(MobilyDeviceFamilyPhone): @{
+                @"1,1": @(MobilyDeviceModelPhone1),
+                @"1,2": @(MobilyDeviceModelPhone3G),
+                @"2,1": @(MobilyDeviceModelPhone3GS),
+                @"3,1": @(MobilyDeviceModelPhone4),
+                @"3,2": @(MobilyDeviceModelPhone4),
+                @"3,3": @(MobilyDeviceModelPhone4),
+                @"4,1": @(MobilyDeviceModelPhone4S),
+                @"5,1": @(MobilyDeviceModelPhone5),
+                @"5,2": @(MobilyDeviceModelPhone5),
+                @"5,3": @(MobilyDeviceModelPhone5C),
+                @"5,4": @(MobilyDeviceModelPhone5C),
+                @"6,1": @(MobilyDeviceModelPhone5S),
+                @"6,2": @(MobilyDeviceModelPhone5S),
+                @"7,1": @(MobilyDeviceModelPhone6Plus),
+                @"7,2": @(MobilyDeviceModelPhone6),
+            },
+            @(MobilyDeviceFamilyPad): @{
+                @"1,1": @(MobilyDeviceModelPad1),
+                @"2,1": @(MobilyDeviceModelPad2),
+                @"2,2": @(MobilyDeviceModelPad2),
+                @"2,3": @(MobilyDeviceModelPad2),
+                @"2,4": @(MobilyDeviceModelPad2),
+                @"2,5": @(MobilyDeviceModelPadMini1),
+                @"2,6": @(MobilyDeviceModelPadMini1),
+                @"2,7": @(MobilyDeviceModelPadMini1),
+                @"3,1": @(MobilyDeviceModelPad3),
+                @"3,2": @(MobilyDeviceModelPad3),
+                @"3,3": @(MobilyDeviceModelPad3),
+                @"3,4": @(MobilyDeviceModelPad4),
+                @"3,5": @(MobilyDeviceModelPad4),
+                @"3,6": @(MobilyDeviceModelPad4),
+                @"4,1": @(MobilyDeviceModelPadAir1),
+                @"4,2": @(MobilyDeviceModelPadAir1),
+                @"4,3": @(MobilyDeviceModelPadAir1),
+                @"4,4": @(MobilyDeviceModelPadMini2),
+                @"4,5": @(MobilyDeviceModelPadMini2),
+                @"4,6": @(MobilyDeviceModelPadMini2),
+                @"4,7": @(MobilyDeviceModelPadMini3),
+                @"4,8": @(MobilyDeviceModelPadMini3),
+                @"4,9": @(MobilyDeviceModelPadMini3),
+                @"5,3": @(MobilyDeviceModelPadAir2),
+                @"5,4": @(MobilyDeviceModelPadAir2),
+            },
+            @(MobilyDeviceFamilyPod): @{
+                @"1,1": @(MobilyDeviceModelPod1),
+                @"2,1": @(MobilyDeviceModelPod2),
+                @"3,1": @(MobilyDeviceModelPod3),
+                @"4,1": @(MobilyDeviceModelPod4),
+                @"5,1": @(MobilyDeviceModelPod5),
+            },
+        };
+        NSDictionary* modelManifest = familyModelManifest[@(self.family)];
+        if(modelManifest != nil) {
+            NSNumber* modelType = modelManifest[self.deviceVersionString];
+            if(modelType != nil) {
+                Mobily_DeviceModel = modelType.unsignedIntegerValue;
+            }
+        }
+#endif
+    }
+    return Mobily_DeviceModel;
+}
+
++ (MobilyDeviceDisplay)display {
+    static MobilyDeviceDisplay displayType = MobilyDeviceDisplayUnknown;
+    if(displayType == MobilyDeviceDisplayUnknown) {
+        CGRect screenRect = UIScreen.mainScreen.bounds;
+        CGFloat screenWidth = screenRect.size.width;
+        CGFloat screenHeight = screenRect.size.height;
+        if(((screenWidth == 768) && (screenHeight == 1024)) || ((screenWidth == 1024) && (screenHeight == 768))) {
+            displayType = MobilyDeviceDisplayPad;
+        } else if(((screenWidth == 320) && (screenHeight == 480)) || ((screenWidth == 480) && (screenHeight == 320))) {
+            displayType = MobilyDeviceDisplayPhone35Inch;
+        } else if(((screenWidth == 320) && (screenHeight == 568)) || ((screenWidth == 568) && (screenHeight == 320))) {
+            displayType = MobilyDeviceDisplayPhone4Inch;
+        } else if(((screenWidth == 375) && (screenHeight == 667)) || ((screenWidth == 667) && (screenHeight == 375))) {
+            displayType = MobilyDeviceDisplayPhone47Inch;
+        } else if(((screenWidth == 414) && (screenHeight == 736)) || ((screenWidth == 736) && (screenHeight == 414))) {
+            displayType = MobilyDeviceDisplayPhone55Inch;
+        }
+    }
+    return displayType;
 }
 
 @end

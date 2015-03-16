@@ -63,6 +63,16 @@ typedef NS_ENUM(NSUInteger, MobilyDateSeason) {
     MobilyDateSeasonAutumn
 };
 
+typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
+    MobilyDateWeekdayMonday = 2,
+    MobilyDateWeekdayTuesday = 3,
+    MobilyDateWeekdayWednesday = 4,
+    MobilyDateWeekdayThursday = 5,
+    MobilyDateWeekdayFriday = 6,
+    MobilyDateWeekdaySaturday = 7,
+    MobilyDateWeekdaySunday = 1,
+};
+
 /*--------------------------------------------------*/
 
 @interface NSDate (MobilyNS)
@@ -129,6 +139,7 @@ typedef NS_ENUM(NSUInteger, MobilyDateSeason) {
 - (NSDate*)addSeconds:(NSInteger)seconds;
 
 - (MobilyDateSeason)season;
+- (MobilyDateWeekday)weekday;
 
 @end
 

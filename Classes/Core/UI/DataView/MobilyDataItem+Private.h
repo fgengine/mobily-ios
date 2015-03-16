@@ -103,12 +103,15 @@
 
 @interface MobilyDataItemCalendarWeekday () {
 @protected
+    __weak MobilyDataItemCalendarMonth* _monthItem;
     NSDate* _date;
 }
 
 + (instancetype)itemWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data;
++ (instancetype)itemWithMonthItem:(MobilyDataItemCalendarMonth*)monthItem date:(NSDate*)date data:(id)data;
 
 - (instancetype)initWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data;
+- (instancetype)initWithMonthItem:(MobilyDataItemCalendarMonth*)monthItem date:(NSDate*)date data:(id)data;
 
 @end
 
@@ -116,12 +119,16 @@
 
 @interface MobilyDataItemCalendarDay () {
 @protected
+    __weak MobilyDataItemCalendarMonth* _monthItem;
+    __weak MobilyDataItemCalendarWeekday* _weekdayItem;
     NSDate* _date;
 }
 
 + (instancetype)itemWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data;
++ (instancetype)itemWithWeekdayItem:(MobilyDataItemCalendarWeekday*)weekdayItem date:(NSDate*)date data:(id)data;
 
 - (instancetype)initWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data;
+- (instancetype)initWithWeekdayItem:(MobilyDataItemCalendarWeekday*)weekdayItem date:(NSDate*)date data:(id)data;
 
 @end
 

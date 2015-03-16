@@ -103,6 +103,7 @@ typedef void(^MobilyDataViewCompleteBlock)(BOOL finished);
 - (void)dequeueCellWithItem:(MobilyDataItem*)item;
 - (void)enqueueCellWithItem:(MobilyDataItem*)item;
 
+- (MobilyDataItem*)itemForPoint:(CGPoint)point;
 - (MobilyDataItem*)itemForData:(id)data;
 - (MobilyDataCell*)cellForData:(id)data;
 

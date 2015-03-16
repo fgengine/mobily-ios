@@ -45,6 +45,8 @@
     __weak MobilyDataView* _view;
     __weak MobilyDataContainer* _parent;
     BOOL _allowAutoAlign;
+    CGFloat _alignThreshold;
+    CGRect _frame;
 }
 
 @property(nonatomic, readwrite, weak) MobilyDataView* view;
@@ -57,7 +59,7 @@
 
 - (void)_willBeginDragging;
 - (void)_didScroll;
-- (void)_willEndDraggingWithVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset;
+- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize viewportSize:(CGSize)viewportSize;
 - (void)_didEndDraggingWillDecelerate:(BOOL)decelerate;
 - (void)_willBeginDecelerating;
 - (void)_didEndDecelerating;
@@ -65,6 +67,8 @@
 
 - (void)_didBeginUpdateAnimated:(BOOL)animated;
 - (void)_didEndUpdateAnimated:(BOOL)animated;
+
+- (CGPoint)_alignWithVelocity:(CGPoint)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize viewportSize:(CGSize)viewportSize;
 
 - (CGRect)_validateLayoutForAvailableFrame:(CGRect)frame;
 - (void)_willLayoutForBounds:(CGRect)bounds;
@@ -77,7 +81,6 @@
 @interface MobilyDataContainerSections () {
 @protected
     NSMutableArray* _sections;
-    CGRect _sectionsFrame;
 }
 
 - (CGRect)_validateSectionsForAvailableFrame:(CGRect)frame;
@@ -101,7 +104,6 @@
 @interface MobilyDataContainerItems () {
 @protected
     NSMutableArray* _entries;
-    CGRect _entriesFrame;
 }
 
 - (void)_prependEntry:(MobilyDataItem*)entry;

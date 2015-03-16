@@ -42,11 +42,12 @@
 #pragma mark Synthesize
 
 @synthesize entries = _entries;
-@synthesize entriesFrame = _entriesFrame;
 
 #pragma mark Init / Free
 
 - (void)setup {
+    [super setup];
+    
     _entries = NSMutableArray.array;
 }
 
@@ -79,29 +80,34 @@
 
 - (CGRect)_validateLayoutForAvailableFrame:(CGRect)frame {
     if(_entries.count > 0) {
-        _entriesFrame = [self _validateEntriesForAvailableFrame:frame];
+        _frame = [self _validateEntriesForAvailableFrame:frame];
     } else {
-        _entriesFrame = CGRectNull;
+        _frame = CGRectNull;
     }
-    return _entriesFrame;
+    return _frame;
 }
 
 - (void)_willLayoutForBounds:(CGRect)bounds {
-    [self _willEntriesLayoutForBounds:CGRectIntersection(bounds, _entriesFrame)];
+    [self _willEntriesLayoutForBounds:CGRectIntersection(bounds, _frame)];
 }
 
 - (void)_didLayoutForBounds:(CGRect)bounds {
-    [self _didEntriesLayoutForBounds:CGRectIntersection(bounds, _entriesFrame)];
+    [self _didEntriesLayoutForBounds:CGRectIntersection(bounds, _frame)];
 }
 
 #pragma mark Public override
 
-- (void)alignAnimated:(BOOL)animated {
-    
-}
-
 - (NSArray*)allEntries {
     return [_entries copy];
+}
+
+- (MobilyDataItem*)itemForPoint:(CGPoint)point {
+    for(MobilyDataItem* entry in _entries) {
+        if(CGRectContainsPoint(entry.frame, point) == YES) {
+            return entry;
+        }
+    }
+    return nil;
 }
 
 - (MobilyDataItem*)itemForData:(id)data {
@@ -208,6 +214,55 @@
 
 - (void)_deleteAllEntries {
     [self _deleteEntries:[_entries copy]];
+}
+
+- (CGPoint)_alignWithVelocity:(CGPoint)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize viewportSize:(CGSize)viewportSize {
+    if(CGRectContainsPoint(_frame, contentOffset) == YES) {
+        MobilyDataItem* alingItem = nil;
+        for(MobilyDataItem* item in _entries) {
+            if(CGRectContainsPoint(item.originFrame, contentOffset) == YES) {
+                alingItem = item;
+                break;
+            }
+        }
+        if(alingItem != nil) {
+            CGRect alingItemFrame = alingItem.originFrame;
+            CGFloat vex = ABS((contentOffset.x + viewportSize.width) - contentSize.width);
+            CGFloat vey = ABS((contentOffset.y + viewportSize.height) - contentSize.height);
+            if(_alignThreshold > FLT_EPSILON) {
+                CGFloat dsx = ABS(contentOffset.x - alingItemFrame.origin.x);
+                CGFloat dsy = ABS(contentOffset.y - alingItemFrame.origin.y);
+                CGFloat dex = ABS(contentOffset.x - (alingItemFrame.origin.x + alingItemFrame.size.width));
+                CGFloat dey = ABS(contentOffset.y - (alingItemFrame.origin.y + alingItemFrame.size.height));
+                if(vex <= _alignThreshold) {
+                    contentOffset.x = contentSize.width - viewportSize.width;
+                } else if(dex <= _alignThreshold) {
+                    contentOffset.x = alingItemFrame.origin.x + alingItemFrame.size.width;
+                } else if(dsx <= _alignThreshold) {
+                    contentOffset.x = alingItemFrame.origin.x;
+                }
+                if(vey <= _alignThreshold) {
+                    contentOffset.y = contentSize.height - viewportSize.height;
+                } else if(dey <= _alignThreshold) {
+                    contentOffset.y = alingItemFrame.origin.y + alingItemFrame.size.height;
+                } else if(dsy <= _alignThreshold) {
+                    contentOffset.y = alingItemFrame.origin.y;
+                }
+            } else {
+                if(vex > FLT_EPSILON) {
+                    contentOffset.x = alingItemFrame.origin.x;
+                } else {
+                    contentOffset.x = contentSize.width - viewportSize.width;
+                }
+                if(vey > FLT_EPSILON) {
+                    contentOffset.y = alingItemFrame.origin.y;
+                } else {
+                    contentOffset.y = contentSize.height - viewportSize.height;
+                }
+            }
+        }
+    }
+    return contentOffset;
 }
 
 - (CGRect)_validateEntriesForAvailableFrame:(CGRect)frame {

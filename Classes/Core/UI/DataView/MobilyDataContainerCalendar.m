@@ -233,38 +233,46 @@
         _displayBeginDate = [_beginDate beginningOfWeek];
         _endDate = endDate;
         _displayEndDate = [_endDate endOfWeek];
-
-        if(_monthItem != nil) {
+        [self cleanup];
+        if(_canShowMonth == YES) {
             MobilyDataItemCalendarMonth* monthItem = [MobilyDataItemCalendarMonth itemWithCalendar:_calendar beginDate:_beginDate endDate:_endDate displayBeginDate:_displayBeginDate displayEndDate:_displayEndDate data:[NSNull null]];
             [self _replaceOriginEntry:_monthItem withEntry:monthItem];
             _monthItem = monthItem;
-        } else {
-            _monthItem = [MobilyDataItemCalendarMonth itemWithCalendar:_calendar beginDate:_beginDate endDate:_endDate displayBeginDate:_displayBeginDate displayEndDate:_displayEndDate data:[NSNull null]];
-            [self _appendEntry:_monthItem];
         }
-        if(_weekdayItems.count < 7) {
+        if(_canShowWeekdays == YES) {
             NSDate* weekdayDate = [_beginDate beginningOfWeek];
             for(NSUInteger weekdayIndex = 0; weekdayIndex < 7; weekdayIndex++) {
-                MobilyDataItemCalendarWeekday* weekdayItem = [MobilyDataItemCalendarWeekday itemWithCalendar:_calendar date:weekdayDate data:[NSNull null]];
+                MobilyDataItemCalendarWeekday* weekdayItem;
+                if(_canShowMonth == YES) {
+                    weekdayItem = [MobilyDataItemCalendarWeekday itemWithMonthItem:_monthItem date:weekdayDate data:[NSNull null]];
+                } else {
+                    weekdayItem = [MobilyDataItemCalendarWeekday itemWithCalendar:_calendar date:weekdayDate data:[NSNull null]];
+                }
                 [_weekdayItems addObject:weekdayItem];
                 [self _appendEntry:weekdayItem];
                 weekdayDate = [weekdayDate nextDay];
             }
         }
-        NSDate* beginDayDate = [_displayBeginDate copy];
-        NSDate* endDayDate = [_displayEndDate copy];
-        NSInteger weekOfMonth = [beginDayDate weeksToDate:[endDayDate nextSecond]];
-        if(weekOfMonth > 0) {
-            [_dayItems setNumberOfColumns:7 numberOfRows:weekOfMonth];
-            for(NSUInteger weekIndex = 0; weekIndex < weekOfMonth; weekIndex++) {
-                for(NSUInteger weekdayIndex = 0; weekdayIndex < 7; weekdayIndex++) {
-                    MobilyDataItemCalendarDay* dayItem = [_dayItems objectAtColumn:weekdayIndex atRow:weekIndex];
-                    if(dayItem == nil) {
-                        dayItem = [MobilyDataItemCalendarDay itemWithCalendar:_calendar date:beginDayDate data:[NSNull null]];
-                        [_dayItems setObject:dayItem atColumn:weekdayIndex atRow:weekIndex];
-                        [self _appendEntry:dayItem];
+        if(_canShowDays == YES) {
+            NSDate* beginDayDate = [_displayBeginDate copy];
+            NSDate* endDayDate = [_displayEndDate copy];
+            NSInteger weekOfMonth = [beginDayDate weeksToDate:[endDayDate nextSecond]];
+            if(weekOfMonth > 0) {
+                [_dayItems setNumberOfColumns:7 numberOfRows:weekOfMonth];
+                for(NSUInteger weekIndex = 0; weekIndex < weekOfMonth; weekIndex++) {
+                    for(NSUInteger weekdayIndex = 0; weekdayIndex < 7; weekdayIndex++) {
+                        MobilyDataItemCalendarDay* dayItem = [_dayItems objectAtColumn:weekdayIndex atRow:weekIndex];
+                        if(dayItem == nil) {
+                            if(_canShowWeekdays == YES) {
+                                dayItem = [MobilyDataItemCalendarDay itemWithWeekdayItem:_weekdayItems[weekdayIndex] date:beginDayDate data:[NSNull null]];
+                            } else {
+                                dayItem = [MobilyDataItemCalendarDay itemWithCalendar:_calendar date:beginDayDate data:[NSNull null]];
+                            }
+                            [_dayItems setObject:dayItem atColumn:weekdayIndex atRow:weekIndex];
+                            [self _appendEntry:dayItem];
+                        }
+                        beginDayDate = [beginDayDate nextDay];
                     }
-                    beginDayDate = [beginDayDate nextDay];
                 }
             }
         }

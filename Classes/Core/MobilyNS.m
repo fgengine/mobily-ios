@@ -59,30 +59,30 @@
 @implementation NSDate (MobilyNS)
 
 + (NSDate*)dateByYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day {
-    NSDateComponents* component = [NSDateComponents new];
-    component.year = year;
-    component.month = month;
-    component.day = day;
-    return [NSCalendar.currentCalendar dateFromComponents:component];
+    NSDateComponents* components = [NSDateComponents new];
+    components.year = year;
+    components.month = month;
+    components.day = day;
+    return [NSCalendar.currentCalendar dateFromComponents:components];
 }
 
 + (NSDate*)dateByHour:(NSInteger)hour minute:(NSInteger)minute second:(NSInteger)seccond {
-    NSDateComponents* component = [NSDateComponents new];
-    component.hour = hour;
-    component.minute = minute;
-    component.second = seccond;
-    return [NSCalendar.currentCalendar dateFromComponents:component];
+    NSDateComponents* components = [NSDateComponents new];
+    components.hour = hour;
+    components.minute = minute;
+    components.second = seccond;
+    return [NSCalendar.currentCalendar dateFromComponents:components];
 }
 
 + (NSDate*)dateByYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day hour:(NSInteger)hour minute:(NSInteger)minute second:(NSInteger)seccond {
-    NSDateComponents* component = [NSDateComponents new];
-    component.year = year;
-    component.month = month;
-    component.day = day;
-    component.hour = hour;
-    component.minute = minute;
-    component.second = seccond;
-    return [NSCalendar.currentCalendar dateFromComponents:component];
+    NSDateComponents* components = [NSDateComponents new];
+    components.year = year;
+    components.month = month;
+    components.day = day;
+    components.hour = hour;
+    components.minute = minute;
+    components.second = seccond;
+    return [NSCalendar.currentCalendar dateFromComponents:components];
 }
 
 - (NSString*)formatTime {
@@ -226,8 +226,11 @@
 }
 
 - (NSDate*)endOfYear {
-    NSDateComponents* components = NSDateComponents.new;
-    components.year = 1;
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = NSDateComponents.new;
+        components.year = 1;
+    }
     return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:[self beginningOfYear] options:0] dateByAddingTimeInterval:-1];
 }
 
@@ -238,8 +241,11 @@
 }
 
 - (NSDate*)endOfMonth {
-    NSDateComponents* components = NSDateComponents.new;
-    components.month = 1;
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = NSDateComponents.new;
+        components.month = 1;
+    }
     return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:[self beginningOfMonth] options:0] dateByAddingTimeInterval:-1];
 }
 
@@ -254,8 +260,11 @@
 }
 
 - (NSDate*)endOfWeek {
-    NSDateComponents* components = NSDateComponents.new;
-    components.weekOfMonth = 1;
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = NSDateComponents.new;
+        components.weekOfMonth = 1;
+    }
     return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:[self beginningOfWeek] options:0] dateByAddingTimeInterval:-1];
 }
 
@@ -264,8 +273,11 @@
 }
 
 - (NSDate*)endOfDay {
-    NSDateComponents* components = NSDateComponents.new;
-    components.day = 1;
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = NSDateComponents.new;
+        components.day = 1;
+    }
     return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:[self beginningOfDay] options:0] dateByAddingTimeInterval:-1];
 }
 
@@ -274,8 +286,11 @@
 }
 
 - (NSDate*)endOfHour {
-    NSDateComponents* components = NSDateComponents.new;
-    components.hour = 1;
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = NSDateComponents.new;
+        components.hour = 1;
+    }
     return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:[self beginningOfHour] options:0] dateByAddingTimeInterval:-1];
 }
 
@@ -284,93 +299,138 @@
 }
 
 - (NSDate*)endOfMinute {
-    NSDateComponents* components = NSDateComponents.new;
-    components.minute = 1;
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = NSDateComponents.new;
+        components.minute = 1;
+    }
     return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:[self beginningOfMinute] options:0] dateByAddingTimeInterval:-1];
 }
 
 - (NSDate*)previousYear {
-    NSDateComponents* component = [NSDateComponents new];
-    component.year = -1;
-    return [NSCalendar.currentCalendar dateByAddingComponents:component toDate:self options:0];
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = [NSDateComponents new];
+        components.year = -1;
+    }
+    return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSDate*)nextYear {
-    NSDateComponents* component = [NSDateComponents new];
-    component.year = 1;
-    return [NSCalendar.currentCalendar dateByAddingComponents:component toDate:self options:0];
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = [NSDateComponents new];
+        components.year = 1;
+    }
+    return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSDate*)previousMonth {
-    NSDateComponents* component = [NSDateComponents new];
-    component.month = -1;
-    return [NSCalendar.currentCalendar dateByAddingComponents:component toDate:self options:0];
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = [NSDateComponents new];
+        components.month = -1;
+    }
+    return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSDate*)nextMonth {
-    NSDateComponents* component = [NSDateComponents new];
-    component.month = 1;
-    return [NSCalendar.currentCalendar dateByAddingComponents:component toDate:self options:0];
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = [NSDateComponents new];
+        components.month = 1;
+    }
+    return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSDate*)previousWeek {
-    NSDateComponents* component = [NSDateComponents new];
-    component.day = -7;
-    return [NSCalendar.currentCalendar dateByAddingComponents:component toDate:self options:0];
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = [NSDateComponents new];
+        components.day = -7;
+    }
+    return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSDate*)nextWeek {
-    NSDateComponents* component = [NSDateComponents new];
-    component.day = 7;
-    return [NSCalendar.currentCalendar dateByAddingComponents:component toDate:self options:0];
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = [NSDateComponents new];
+        components.day = 7;
+    }
+    return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSDate*)previousDay {
-    NSDateComponents* component = [NSDateComponents new];
-    component.day = -1;
-    return [NSCalendar.currentCalendar dateByAddingComponents:component toDate:self options:0];
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = [NSDateComponents new];
+        components.day = -1;
+    }
+    return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSDate*)nextDay {
-    NSDateComponents* component = [NSDateComponents new];
-    component.day = 1;
-    return [NSCalendar.currentCalendar dateByAddingComponents:component toDate:self options:0];
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = [NSDateComponents new];
+        components.day = 1;
+    }
+    return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSDate*)previousHour {
-    NSDateComponents* component = [NSDateComponents new];
-    component.hour = -1;
-    return [NSCalendar.currentCalendar dateByAddingComponents:component toDate:self options:0];
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = [NSDateComponents new];
+        components.hour = -1;
+    }
+    return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSDate*)nextHour {
-    NSDateComponents* component = [NSDateComponents new];
-    component.hour = 1;
-    return [NSCalendar.currentCalendar dateByAddingComponents:component toDate:self options:0];
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = [NSDateComponents new];
+        components.hour = 1;
+    }
+    return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSDate*)previousMinute {
-    NSDateComponents* component = [NSDateComponents new];
-    component.minute = -1;
-    return [NSCalendar.currentCalendar dateByAddingComponents:component toDate:self options:0];
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = [NSDateComponents new];
+        components.minute = -1;
+    }
+    return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSDate*)nextMinute {
-    NSDateComponents* component = [NSDateComponents new];
-    component.minute = 1;
-    return [NSCalendar.currentCalendar dateByAddingComponents:component toDate:self options:0];
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = [NSDateComponents new];
+        components.minute = 1;
+    }
+    return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSDate*)previousSecond {
-    NSDateComponents* component = [NSDateComponents new];
-    component.second = -1;
-    return [NSCalendar.currentCalendar dateByAddingComponents:component toDate:self options:0];
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = [NSDateComponents new];
+        components.second = -1;
+    }
+    return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSDate*)nextSecond {
-    NSDateComponents* component = [NSDateComponents new];
-    component.second = 1;
-    return [NSCalendar.currentCalendar dateByAddingComponents:component toDate:self options:0];
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = [NSDateComponents new];
+        components.second = 1;
+    }
+    return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSInteger)yearsToDate:(NSDate*)date {
@@ -402,15 +462,21 @@
 }
 
 - (NSDate*)addYears:(NSInteger)years {
-    NSDateComponents* component = [NSDateComponents new];
-    component.year = years;
-    return [NSCalendar.currentCalendar dateByAddingComponents:component toDate:self options:0];
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = [NSDateComponents new];
+        components.year = years;
+    }
+    return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSDate*)addHonths:(NSInteger)months {
-    NSDateComponents* component = [NSDateComponents new];
-    component.month = months;
-    return [NSCalendar.currentCalendar dateByAddingComponents:component toDate:self options:0];
+    static NSDateComponents* components = nil;
+    if(components != nil) {
+        components = [NSDateComponents new];
+        components.month = months;
+    }
+    return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSDate*)addDays:(NSInteger)days {
@@ -440,6 +506,11 @@
         return MobilyDateSeasonAutumn;
     }
     return MobilyDateSeasonWinter;
+}
+
+- (MobilyDateWeekday)weekday {
+    NSDateComponents* components = [NSCalendar.currentCalendar components:NSCalendarUnitWeekday fromDate:self];
+    return [components weekday];
 }
 
 @end
@@ -478,7 +549,7 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
 /*--------------------------------------------------*/
 
@@ -509,10 +580,10 @@ static char NSDataBase64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
             }
         }
         NSInteger index = (i / 3) * 4;
-        output[index + 0] = NSDataBase64Table[(value >> 18) & 0x3F];
-        output[index + 1] = NSDataBase64Table[(value >> 12) & 0x3F];
-        output[index + 2] = (i + 1) < length ? NSDataBase64Table[(value >> 6) & 0x3F] : '=';
-        output[index + 3] = (i + 2) < length ? NSDataBase64Table[(value >> 0) & 0x3F] : '=';
+        output[index + 0] = Mobily_Base64Table[(value >> 18) & 0x3F];
+        output[index + 1] = Mobily_Base64Table[(value >> 12) & 0x3F];
+        output[index + 2] = (i + 1) < length ? Mobily_Base64Table[(value >> 6) & 0x3F] : '=';
+        output[index + 3] = (i + 2) < length ? Mobily_Base64Table[(value >> 0) & 0x3F] : '=';
     }
     return [NSString stringWithData:result encoding:NSASCIIStringEncoding];
 }

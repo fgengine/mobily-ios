@@ -73,9 +73,6 @@
     _items = NSMutableArray.array;
 }
 
-- (void)dealloc {
-}
-
 #pragma mark Property
 
 - (void)setOrientation:(MobilyDataContainerOrientation)orientation {
@@ -319,8 +316,8 @@
         case MobilyDataContainerOrientationVertical: {
             CGFloat boundsBefore = bounds.origin.y;
             CGFloat boundsAfter = bounds.origin.y + bounds.size.height;
-            CGFloat entriesBefore = _entriesFrame.origin.y;
-            CGFloat entriesAfter = _entriesFrame.origin.y + _entriesFrame.size.height;
+            CGFloat entriesBefore = _frame.origin.y;
+            CGFloat entriesAfter = _frame.origin.y + _frame.size.height;
             if(_header != nil) {
                 CGRect headerFrame = _header.updateFrame;
                 headerFrame.origin.y = boundsBefore;
@@ -350,8 +347,8 @@
         case MobilyDataContainerOrientationHorizontal: {
             CGFloat boundsBefore = bounds.origin.x;
             CGFloat boundsAfter = bounds.origin.x + bounds.size.width;
-            CGFloat entriesBefore = _entriesFrame.origin.x;
-            CGFloat entriesAfter = _entriesFrame.origin.x + _entriesFrame.size.width;
+            CGFloat entriesBefore = _frame.origin.x;
+            CGFloat entriesAfter = _frame.origin.x + _frame.size.width;
             if(_header != nil) {
                 CGRect headerFrame = _header.updateFrame;
                 headerFrame.origin.x = boundsBefore;

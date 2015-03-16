@@ -130,6 +130,8 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 - (UIImage*)scaleToSize:(CGSize)size;
 
+- (UIImage*)blurredImageWithRadius:(CGFloat)radius iterations:(NSUInteger)iterations tintColor:(UIColor*)tintColor;
+
 @end
 
 /*--------------------------------------------------*/
@@ -382,12 +384,69 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 /* OTHER                                            */
 /*--------------------------------------------------*/
 
+typedef NS_ENUM(NSInteger, MobilyDeviceFamily) {
+    MobilyDeviceFamilyUnknown = 0,
+    MobilyDeviceFamilyPhone,
+    MobilyDeviceFamilyPad,
+    MobilyDeviceFamilyPod,
+    MobilyDeviceFamilySimulator,
+};
+
+typedef NS_ENUM(NSInteger, MobilyDeviceModel) {
+    MobilyDeviceModelUnknown = 0,
+    MobilyDeviceModelSimulatorPhone,
+    MobilyDeviceModelSimulatorPad,
+    MobilyDeviceModelPhone1,
+    MobilyDeviceModelPhone3G,
+    MobilyDeviceModelPhone3GS,
+    MobilyDeviceModelPhone4,
+    MobilyDeviceModelPhone4S,
+    MobilyDeviceModelPhone5,
+    MobilyDeviceModelPhone5C,
+    MobilyDeviceModelPhone5S,
+    MobilyDeviceModelPhone6,
+    MobilyDeviceModelPhone6Plus,
+    MobilyDeviceModelPad1,
+    MobilyDeviceModelPad2,
+    MobilyDeviceModelPad3,
+    MobilyDeviceModelPad4,
+    MobilyDeviceModelPadMini1,
+    MobilyDeviceModelPadMini2,
+    MobilyDeviceModelPadMini3,
+    MobilyDeviceModelPadAir1,
+    MobilyDeviceModelPadAir2,
+    MobilyDeviceModelPod1,
+    MobilyDeviceModelPod2,
+    MobilyDeviceModelPod3,
+    MobilyDeviceModelPod4,
+    MobilyDeviceModelPod5,
+};
+
+typedef NS_ENUM(NSInteger, MobilyDeviceDisplay) {
+    MobilyDeviceDisplayUnknown = 0,
+    MobilyDeviceDisplayPad,
+    MobilyDeviceDisplayPhone35Inch,
+    MobilyDeviceDisplayPhone4Inch,
+    MobilyDeviceDisplayPhone47Inch,
+    MobilyDeviceDisplayPhone55Inch,
+};
+
+/*--------------------------------------------------*/
+
 @interface UIDevice (MobilyUI)
 
 + (CGFloat)systemVersion;
 
++ (BOOL)isSimulator;
 + (BOOL)isIPhone;
 + (BOOL)isIPad;
+
++ (NSString*)deviceTypeString;
++ (NSString*)deviceVersionString;
+
++ (MobilyDeviceFamily)family;
++ (MobilyDeviceModel)model;
++ (MobilyDeviceDisplay)display;
 
 @end
 

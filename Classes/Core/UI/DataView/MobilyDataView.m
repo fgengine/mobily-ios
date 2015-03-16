@@ -571,15 +571,20 @@
         if(cell == nil) {
             cell = [[_registersViews[identifier] alloc] initWithIdentifier:identifier];
             if(cell != nil) {
-                NSUInteger index = [self.subviews indexOfObjectPassingTest:^BOOL(UIView* view, NSUInteger index, BOOL* stop) {
+                MobilyDataCell* nearestCell = nil;
+                for(UIView* view in self.subviews) {
                     if([view isKindOfClass:MobilyDataCell.class] == YES) {
-                        MobilyDataCell* visibleCell = (MobilyDataCell*)view;
-                        return (item.order < visibleCell.item.order);
+                        MobilyDataCell* cell = (MobilyDataCell*)view;
+                        if(item.order < cell.item.order) {
+                            nearestCell = cell;
+                        } else if(item.order == cell.item.order) {
+                            nearestCell = cell;
+                            break;
+                        }
                     }
-                    return NO;
-                }];
-                if(index != NSNotFound) {
-                    [self insertSubview:cell atIndex:index];
+                }
+                if(nearestCell != nil) {
+                    [self insertSubview:cell belowSubview:nearestCell];
                 } else {
                     [self insertSubview:cell atIndex:0];
                 }
@@ -603,6 +608,10 @@
         }
         item.cell = nil;
     }
+}
+
+- (MobilyDataItem*)itemForPoint:(CGPoint)point {
+    return [_container itemForPoint:point];
 }
 
 - (MobilyDataItem*)itemForData:(id)data {
@@ -633,16 +642,16 @@
         if([self shouldSelectItem:item] == YES) {
             if(_allowsMultipleSelection == YES) {
                 [_selectedItems addObject:item];
-                [item setSelected:YES animated:NO];
+                [item setSelected:YES animated:animated];
             } else {
                 if(_selectedItems.count > 0) {
                     for(MobilyDataItem* item in _selectedItems) {
-                        [item setSelected:NO animated:NO];
+                        [item setSelected:NO animated:animated];
                     }
                     [_selectedItems removeAllObjects];
                 }
                 [_selectedItems addObject:item];
-                [item setSelected:YES animated:NO];
+                [item setSelected:YES animated:animated];
             }
         }
     }
@@ -652,20 +661,19 @@
     if([_selectedItems containsObject:item] == YES) {
         if([self shouldDeselectItem:item] == YES) {
             [_selectedItems removeObject:item];
-            [item setSelected:NO animated:NO];
+            [item setSelected:NO animated:animated];
         }
     }
 }
 
 - (void)deselectAllItemsAnimated:(BOOL)animated {
     if(_selectedItems.count > 0) {
-        for(MobilyDataItem* item in _selectedItems) {
+        [_selectedItems each:^(MobilyDataItem* item) {
             if([self shouldDeselectItem:item] == YES) {
                 [_selectedItems removeObject:item];
-                [item setSelected:NO animated:NO];
+                [item setSelected:NO animated:animated];
             }
-        }
-        [_selectedItems removeAllObjects];
+        }];
     }
 }
 
@@ -685,7 +693,7 @@
     if([_highlightedItems containsObject:item] == NO) {
         if([self shouldHighlightItem:item] == YES) {
             [_highlightedItems addObject:item];
-            [item setHighlighted:YES animated:NO];
+            [item setHighlighted:YES animated:animated];
         }
     }
 }
@@ -694,20 +702,19 @@
     if([_highlightedItems containsObject:item] == YES) {
         if([self shouldUnhighlightItem:item] == YES) {
             [_highlightedItems removeObject:item];
-            [item setHighlighted:NO animated:NO];
+            [item setHighlighted:NO animated:animated];
         }
     }
 }
 
 - (void)unhighlightAllItemsAnimated:(BOOL)animated {
     if(_highlightedItems.count > 0) {
-        for(MobilyDataItem* item in _highlightedItems) {
+        [_highlightedItems each:^(MobilyDataItem* item) {
             if([self shouldUnhighlightItem:item] == YES) {
                 [_highlightedItems removeObject:item];
-                [item setHighlighted:NO animated:NO];
+                [item setHighlighted:NO animated:animated];
             }
-        }
-        [_highlightedItems removeAllObjects];
+        }];
     }
 }
 
@@ -731,16 +738,16 @@
         if([self shouldBeganEditItem:item] == YES) {
             if(_allowsMultipleEditing == YES) {
                 [_editingItems addObject:item];
-                [item setEditing:YES animated:NO];
+                [item setEditing:YES animated:animated];
             } else {
                 if(_editingItems.count > 0) {
                     for(MobilyDataItem* item in _editingItems) {
-                        [item setEditing:NO animated:NO];
+                        [item setEditing:NO animated:animated];
                     }
                     [_editingItems removeAllObjects];
                 }
                 [_editingItems addObject:item];
-                [item setEditing:YES animated:NO];
+                [item setEditing:YES animated:animated];
             }
         }
     }
@@ -750,20 +757,19 @@
     if([_editingItems containsObject:item] == YES) {
         if([self shouldEndedEditItem:item] == YES) {
             [_editingItems removeObject:item];
-            [item setEditing:NO animated:NO];
+            [item setEditing:NO animated:animated];
         }
     }
 }
 
 - (void)endedEditAllItemsAnimated:(BOOL)animated {
     if(_editingItems.count > 0) {
-        for(MobilyDataItem* item in _editingItems) {
+        [_editingItems each:^(MobilyDataItem* item) {
             if([self shouldEndedEditItem:item] == YES) {
                 [_editingItems removeObject:item];
-                [item setEditing:NO animated:NO];
+                [item setEditing:NO animated:animated];
             }
-        }
-        [_editingItems removeAllObjects];
+        }];
     }
 }
 
@@ -1298,9 +1304,11 @@
     }
 }
 
-- (void)_willEndDraggingWithVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset {
+- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize viewportSize:(CGSize)viewportSize {
     if(_container != nil) {
-        [_container _willEndDraggingWithVelocity:velocity targetContentOffset:targetContentOffset];
+        [_container _willEndDraggingWithVelocity:velocity contentOffset:contentOffset contentSize:contentSize viewportSize:viewportSize];
+        contentOffset->x = MAX(0.0f, MIN(contentOffset->x, contentSize.width - viewportSize.width));
+        contentOffset->y = MAX(0.0f, MIN(contentOffset->y, contentSize.height - viewportSize.height));
     }
 }
 
@@ -1489,7 +1497,7 @@
 }
 
 - (void)scrollViewWillEndDragging:(UIScrollView*)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset {
-    [_view _willEndDraggingWithVelocity:velocity targetContentOffset:targetContentOffset];
+    [_view _willEndDraggingWithVelocity:velocity contentOffset:targetContentOffset contentSize:scrollView.contentSize viewportSize:scrollView.boundsSize];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     }

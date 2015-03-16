@@ -37,6 +37,10 @@
 
 /*--------------------------------------------------*/
 
+typedef void(^MobilySimpleBlock)();
+
+/*--------------------------------------------------*/
+
 @protocol MobilyObject < NSObject >
 
 - (void)setup;

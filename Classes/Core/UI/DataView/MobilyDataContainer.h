@@ -54,16 +54,31 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
     MobilyDataContainerOrientationHorizontal,
 };
 
+typedef NS_OPTIONS(NSUInteger, MobilyDataContainerAlign) {
+    MobilyDataContainerAlignNone = 0,
+    MobilyDataContainerAlignTop = 1 << 0,
+    MobilyDataContainerAlignCenteredVertically = 1 << 1,
+    MobilyDataContainerAlignBottom = 1 << 2,
+    MobilyDataContainerAlignLeft = 1 << 3,
+    MobilyDataContainerAlignCenteredHorizontally = 1 << 4,
+    MobilyDataContainerAlignRight = 1 << 5,
+    MobilyDataContainerAlignCentered = MobilyDataContainerAlignCenteredVertically | MobilyDataContainerAlignCenteredHorizontally,
+};
+
 /*--------------------------------------------------*/
 
 @interface MobilyDataContainer : NSObject< MobilyObject >
 
 @property(nonatomic, readonly, weak) MobilyDataView* view;
 @property(nonatomic, readonly, weak) MobilyDataContainer* parent;
+@property(nonatomic, readonly, assign) CGRect frame;
 @property(nonatomic, readonly, assign) BOOL allowAutoAlign;
+@property(nonatomic, readwrite, assign) MobilyDataContainerAlign alignPosition;
+@property(nonatomic, readwrite, assign) CGFloat alignThreshold;
 
 - (NSArray*)allItems;
 
+- (MobilyDataItem*)itemForPoint:(CGPoint)point;
 - (MobilyDataItem*)itemForData:(id)data;
 - (MobilyDataCell*)cellForData:(id)data;
 
@@ -74,8 +89,6 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
 
-- (void)alignAnimated:(BOOL)animated;
-
 @end
 
 /*--------------------------------------------------*/
@@ -83,7 +96,6 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 @interface MobilyDataContainerSections : MobilyDataContainer
 
 @property(nonatomic, readonly, strong) NSArray* sections;
-@property(nonatomic, readonly, assign) CGRect sectionsFrame;
 
 - (void)prependSection:(MobilyDataContainer*)section;
 - (void)appendSection:(MobilyDataContainer*)section;
@@ -109,7 +121,6 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 @interface MobilyDataContainerItems : MobilyDataContainer
 
 @property(nonatomic, readonly, strong) NSArray* entries;
-@property(nonatomic, readonly, assign) CGRect entriesFrame;
 
 @end
 

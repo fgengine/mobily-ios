@@ -157,12 +157,12 @@
         _cell = cell;
         if(_cell != nil) {
             [UIView performWithoutAnimation:^{
-                _cell.item = self;
                 if(CGRectIsNull(_originFrame) == NO) {
                     _cell.frame = _originFrame;
                 }
                 _cell.selected = _selected;
                 _cell.highlighted = _highlighted;
+                _cell.item = self;
             }];
             _cell.frame = self.frame;
         }
@@ -412,6 +412,7 @@
 
 #pragma mark Synthesize
 
+@synthesize monthItem = _monthItem;
 @synthesize date = _date;
 
 #pragma mark Init / Free
@@ -420,9 +421,22 @@
     return [[self alloc] initWithCalendar:calendar date:date data:data];
 }
 
++ (instancetype)itemWithMonthItem:(MobilyDataItemCalendarMonth*)monthItem date:(NSDate*)date data:(id)data {
+    return [[self alloc] initWithMonthItem:monthItem date:date data:data];
+}
+
 - (instancetype)initWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data {
     self = [super initWithIdentifier:MobilyDataContainerCalendarWeekdayIdentifier order:2 calendar:calendar data:data];
     if(self != nil) {
+        _date = date;
+    }
+    return self;
+}
+
+- (instancetype)initWithMonthItem:(MobilyDataItemCalendarMonth*)monthItem date:(NSDate*)date data:(id)data {
+    self = [super initWithIdentifier:MobilyDataContainerCalendarWeekdayIdentifier order:2 calendar:monthItem.calendar data:data];
+    if(self != nil) {
+        _monthItem = monthItem;
         _date = date;
     }
     return self;
@@ -436,6 +450,8 @@
 
 #pragma mark Synthesize
 
+@synthesize monthItem = _monthItem;
+@synthesize weekdayItem = _weekdayItem;
 @synthesize date = _date;
 
 #pragma mark Init / Free
@@ -444,9 +460,23 @@
     return [[self alloc] initWithCalendar:calendar date:date data:data];
 }
 
++ (instancetype)itemWithWeekdayItem:(MobilyDataItemCalendarWeekday*)weekdayItem date:(NSDate*)date data:(id)data {
+    return [[self alloc] initWithWeekdayItem:weekdayItem date:date data:data];
+}
+
 - (instancetype)initWithCalendar:(NSCalendar*)calendar date:(NSDate*)date data:(id)data {
     self = [super initWithIdentifier:MobilyDataContainerCalendarDayIdentifier order:1 calendar:calendar data:data];
     if(self != nil) {
+        _date = date;
+    }
+    return self;
+}
+
+- (instancetype)initWithWeekdayItem:(MobilyDataItemCalendarWeekday*)weekdayItem date:(NSDate*)date data:(id)data {
+    self = [super initWithIdentifier:MobilyDataContainerCalendarDayIdentifier order:1 calendar:weekdayItem.calendar data:data];
+    if(self != nil) {
+        _monthItem = weekdayItem.monthItem;
+        _weekdayItem = weekdayItem;
         _date = date;
     }
     return self;

@@ -170,7 +170,7 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
 @implementation DemoCategoriesCell
 
 + (CGSize)sizeForItem:(MobilyDataItem*)item availableSize:(CGSize)size {
-    return CGSizeMake(size.width, 44.0f);
+    return CGSizeMake(size.width, 88.0f);
 }
 
 - (void)prepareForUse {

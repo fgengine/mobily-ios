@@ -129,7 +129,7 @@
 
 - (void)_willBeginDragging;
 - (void)_didScroll;
-- (void)_willEndDraggingWithVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset;
+- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize viewportSize:(CGSize)viewportSize;
 - (void)_didEndDraggingWillDecelerate:(BOOL)decelerate;
 - (void)_willBeginDecelerating;
 - (void)_didEndDecelerating;

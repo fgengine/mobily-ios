@@ -42,23 +42,13 @@
 #pragma mark Synthesize
 
 @synthesize sections = _sections;
-@synthesize sectionsFrame = _sectionsFrame;
 
 #pragma mark Init / Free
 
-- (instancetype)init {
-    self = [super init];
-    if(self != nil) {
-        [self setup];
-    }
-    return self;
-}
-
 - (void)setup {
+    [super setup];
+    
     _sections = NSMutableArray.array;
-}
-
-- (void)dealloc {
 }
 
 #pragma mark Private propert private
@@ -90,25 +80,22 @@
 
 - (CGRect)_validateLayoutForAvailableFrame:(CGRect)frame {
     if(_sections.count > 0) {
-        _sectionsFrame = [self _validateSectionsForAvailableFrame:frame];
+        _frame = [self _validateSectionsForAvailableFrame:frame];
     } else {
-        _sectionsFrame = CGRectNull;
+        _frame = CGRectNull;
     }
-    return _sectionsFrame;
+    return _frame;
 }
 
 - (void)_willLayoutForBounds:(CGRect)bounds {
-    [self _willSectionsLayoutForBounds:CGRectIntersection(bounds, _sectionsFrame)];
+    [self _willSectionsLayoutForBounds:CGRectIntersection(bounds, _frame)];
 }
 
 - (void)_didLayoutForBounds:(CGRect)bounds {
-    [self _didSectionsLayoutForBounds:CGRectIntersection(bounds, _sectionsFrame)];
+    [self _didSectionsLayoutForBounds:CGRectIntersection(bounds, _frame)];
 }
 
 #pragma mark Public override
-
-- (void)alignAnimated:(BOOL)animated {
-}
 
 - (NSArray*)allItems {
     NSMutableArray* result = NSMutableArray.array;
@@ -116,6 +103,16 @@
         [result addObjectsFromArray:section.allItems];
     }
     return result;
+}
+
+- (MobilyDataItem*)itemForPoint:(CGPoint)point {
+    for(MobilyDataContainer* section in _sections) {
+        MobilyDataItem* item = [section itemForPoint:point];
+        if(item != nil) {
+            return item;
+        }
+    }
+    return nil;
 }
 
 - (MobilyDataItem*)itemForData:(id)data {
@@ -127,6 +124,8 @@
     }
     return nil;
 }
+
+#pragma mark Public
 
 - (void)prependSection:(MobilyDataContainer*)section {
     section.parent = self;
@@ -180,7 +179,16 @@
     }
 }
 
-#pragma mark Private
+#pragma mark Private override
+
+- (CGPoint)_alignWithVelocity:(CGPoint)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize viewportSize:(CGSize)viewportSize {
+    if(CGRectContainsPoint(_frame, contentOffset) == YES) {
+        for(MobilyDataContainer* section in _sections) {
+            contentOffset = [section _alignWithVelocity:velocity contentOffset:contentOffset contentSize:contentSize viewportSize:viewportSize];
+        }
+    }
+    return contentOffset;
+}
 
 - (CGRect)_validateSectionsForAvailableFrame:(CGRect)frame {
     return CGRectNull;
