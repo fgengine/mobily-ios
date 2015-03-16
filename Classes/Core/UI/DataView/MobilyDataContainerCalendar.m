@@ -235,9 +235,8 @@
         _displayEndDate = [_endDate endOfWeek];
         [self cleanup];
         if(_canShowMonth == YES) {
-            MobilyDataItemCalendarMonth* monthItem = [MobilyDataItemCalendarMonth itemWithCalendar:_calendar beginDate:_beginDate endDate:_endDate displayBeginDate:_displayBeginDate displayEndDate:_displayEndDate data:[NSNull null]];
-            [self _replaceOriginEntry:_monthItem withEntry:monthItem];
-            _monthItem = monthItem;
+            _monthItem = [MobilyDataItemCalendarMonth itemWithCalendar:_calendar beginDate:_beginDate endDate:_endDate displayBeginDate:_displayBeginDate displayEndDate:_displayEndDate data:[NSNull null]];
+            [self _appendEntry:_monthItem];
         }
         if(_canShowWeekdays == YES) {
             NSDate* weekdayDate = [_beginDate beginningOfWeek];
@@ -261,16 +260,14 @@
                 [_dayItems setNumberOfColumns:7 numberOfRows:weekOfMonth];
                 for(NSUInteger weekIndex = 0; weekIndex < weekOfMonth; weekIndex++) {
                     for(NSUInteger weekdayIndex = 0; weekdayIndex < 7; weekdayIndex++) {
-                        MobilyDataItemCalendarDay* dayItem = [_dayItems objectAtColumn:weekdayIndex atRow:weekIndex];
-                        if(dayItem == nil) {
-                            if(_canShowWeekdays == YES) {
-                                dayItem = [MobilyDataItemCalendarDay itemWithWeekdayItem:_weekdayItems[weekdayIndex] date:beginDayDate data:[NSNull null]];
-                            } else {
-                                dayItem = [MobilyDataItemCalendarDay itemWithCalendar:_calendar date:beginDayDate data:[NSNull null]];
-                            }
-                            [_dayItems setObject:dayItem atColumn:weekdayIndex atRow:weekIndex];
-                            [self _appendEntry:dayItem];
+                        MobilyDataItemCalendarDay* dayItem;
+                        if(_canShowWeekdays == YES) {
+                            dayItem = [MobilyDataItemCalendarDay itemWithWeekdayItem:_weekdayItems[weekdayIndex] date:beginDayDate data:[NSNull null]];
+                        } else {
+                            dayItem = [MobilyDataItemCalendarDay itemWithCalendar:_calendar date:beginDayDate data:[NSNull null]];
                         }
+                        [_dayItems setObject:dayItem atColumn:weekdayIndex atRow:weekIndex];
+                        [self _appendEntry:dayItem];
                         beginDayDate = [beginDayDate nextDay];
                     }
                 }

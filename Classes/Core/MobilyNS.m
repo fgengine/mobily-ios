@@ -227,7 +227,7 @@
 
 - (NSDate*)endOfYear {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = NSDateComponents.new;
         components.year = 1;
     }
@@ -242,7 +242,7 @@
 
 - (NSDate*)endOfMonth {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = NSDateComponents.new;
         components.month = 1;
     }
@@ -261,7 +261,7 @@
 
 - (NSDate*)endOfWeek {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = NSDateComponents.new;
         components.weekOfMonth = 1;
     }
@@ -274,7 +274,7 @@
 
 - (NSDate*)endOfDay {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = NSDateComponents.new;
         components.day = 1;
     }
@@ -287,7 +287,7 @@
 
 - (NSDate*)endOfHour {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = NSDateComponents.new;
         components.hour = 1;
     }
@@ -300,7 +300,7 @@
 
 - (NSDate*)endOfMinute {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = NSDateComponents.new;
         components.minute = 1;
     }
@@ -309,7 +309,7 @@
 
 - (NSDate*)previousYear {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = [NSDateComponents new];
         components.year = -1;
     }
@@ -318,7 +318,7 @@
 
 - (NSDate*)nextYear {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = [NSDateComponents new];
         components.year = 1;
     }
@@ -327,7 +327,7 @@
 
 - (NSDate*)previousMonth {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = [NSDateComponents new];
         components.month = -1;
     }
@@ -336,7 +336,7 @@
 
 - (NSDate*)nextMonth {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = [NSDateComponents new];
         components.month = 1;
     }
@@ -345,7 +345,7 @@
 
 - (NSDate*)previousWeek {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = [NSDateComponents new];
         components.day = -7;
     }
@@ -354,7 +354,7 @@
 
 - (NSDate*)nextWeek {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = [NSDateComponents new];
         components.day = 7;
     }
@@ -363,7 +363,7 @@
 
 - (NSDate*)previousDay {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = [NSDateComponents new];
         components.day = -1;
     }
@@ -372,7 +372,7 @@
 
 - (NSDate*)nextDay {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = [NSDateComponents new];
         components.day = 1;
     }
@@ -381,7 +381,7 @@
 
 - (NSDate*)previousHour {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = [NSDateComponents new];
         components.hour = -1;
     }
@@ -390,7 +390,7 @@
 
 - (NSDate*)nextHour {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = [NSDateComponents new];
         components.hour = 1;
     }
@@ -399,7 +399,7 @@
 
 - (NSDate*)previousMinute {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = [NSDateComponents new];
         components.minute = -1;
     }
@@ -408,7 +408,7 @@
 
 - (NSDate*)nextMinute {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = [NSDateComponents new];
         components.minute = 1;
     }
@@ -417,7 +417,7 @@
 
 - (NSDate*)previousSecond {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = [NSDateComponents new];
         components.second = -1;
     }
@@ -426,7 +426,7 @@
 
 - (NSDate*)nextSecond {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = [NSDateComponents new];
         components.second = 1;
     }
@@ -463,7 +463,7 @@
 
 - (NSDate*)addYears:(NSInteger)years {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = [NSDateComponents new];
         components.year = years;
     }
@@ -472,7 +472,7 @@
 
 - (NSDate*)addHonths:(NSInteger)months {
     static NSDateComponents* components = nil;
-    if(components != nil) {
+    if(components == nil) {
         components = [NSDateComponents new];
         components.month = months;
     }
