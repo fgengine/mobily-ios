@@ -615,23 +615,23 @@
         if(cell == nil) {
             cell = [[_registersViews[identifier] alloc] initWithIdentifier:identifier];
             if(cell != nil) {
-                MobilyDataCell* nearestCell = nil;
-                for(UIView* view in self.subviews) {
+                __block NSUInteger viewIndex = NSNotFound;
+                [self.subviews enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
                     if([view isKindOfClass:MobilyDataCell.class] == YES) {
-                        MobilyDataCell* cell = (MobilyDataCell*)view;
-                        if(item.order > cell.item.order) {
-                            nearestCell = cell;
-                        } else if(item.order == cell.item.order) {
-                            nearestCell = cell;
-                            break;
+                        MobilyDataCell* existCell = (MobilyDataCell*)view;
+                        if(item.order > existCell.item.order) {
+                            viewIndex = index;
+                        } else if(item.order <= existCell.item.order) {
+                            *stop = YES;
                         }
                     }
-                }
-                if(nearestCell != nil) {
-                    [self insertSubview:cell belowSubview:nearestCell];
+                }];
+                if(viewIndex != NSNotFound) {
+                    [self insertSubview:cell atIndex:viewIndex + 1];
                 } else {
                     [self insertSubview:cell atIndex:0];
                 }
+                // NSLog(@"%@", self.subviews);
             }
         } else {
             [queue removeLastObject];

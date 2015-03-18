@@ -58,8 +58,7 @@
 }
 
 - (void)setup {
-    _allowAutoAlign = YES;
-    _alignPosition = MobilyDataContainerAlignTop | MobilyDataContainerAlignCenteredHorizontally;
+    _alignPosition = MobilyDataContainerAlignLeft | MobilyDataContainerAlignTop;
     _alignThreshold = 20.0f;
 }
 

@@ -90,6 +90,7 @@
         _spacing = MobilyActivityViewSpacing;
         _textWidth = textWidth;
         
+        self.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
         self.backgroundColor = MobilyActivityViewBackgroundColor;
         self.alpha = 0.0f;
         self.hidden = YES;
@@ -268,6 +269,7 @@
 - (void)showPrepare:(MobilyActivityViewBlock)prepare complete:(MobilyActivityViewBlock)complete {
     if(_showCount == NSNotFound) {
         _showCount = 1;
+        // self.frame = self.superview.frame;
         [self layoutIfNeeded];
         self.hidden = NO;
         [UIView animateWithDuration:MobilyActivityDuration
@@ -281,6 +283,8 @@
                              _panelView.alpha = 1.0f;
                              self.alpha = 1.0f;
                          } completion:^(BOOL finished __unused) {
+                             _panelView.alpha = 1.0f;
+                             self.alpha = 1.0f;
                              if(complete != nil) {
                                  complete();
                              }
@@ -313,6 +317,8 @@
                              _panelView.alpha = 0.0f;
                              self.alpha = 0.0f;
                          } completion:^(BOOL finished __unused) {
+                             _panelView.alpha = 0.0f;
+                             self.alpha = 0.0f;
                              self.hidden = YES;
                              if(complete != nil) {
                                  complete();
