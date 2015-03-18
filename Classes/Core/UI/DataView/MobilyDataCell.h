@@ -77,8 +77,17 @@ typedef NS_ENUM(NSUInteger, MobilyDataCellAction) {
 - (void)prepareForUse;
 - (void)prepareForUnuse;
 
-- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
+- (BOOL)containsEventForKey:(id)key;
+- (BOOL)containsEventForIdentifier:(NSString*)identifier forKey:(id)key;
+
+- (void)fireEventForKey:(id)key byObject:(id)object;
+- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object;
+- (id)fireEventForKey:(id)key byObject:(id)object orDefault:(id)orDefault;
+- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object orDefault:(id)orDefault;
+- (void)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
+- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object;
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
+- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated;
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated;

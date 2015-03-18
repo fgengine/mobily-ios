@@ -363,7 +363,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 - (void)didLoadFromNib {
 }
 
-+ (CGFloat)heightForModel:(id)model tableView:(UITableView*)tableView {
++ (CGFloat)heightForModel:(id __unused)model tableView:(UITableView* __unused)tableView {
     return 240.0f;
 }
 
@@ -663,8 +663,8 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 }
 
 - (void)setHiddenAnySwipeViewAnimated:(BOOL)animated {
-    [self setShowedLeftSwipeView:NO animated:NO];
-    [self setShowedRightSwipeView:NO animated:NO];
+    [self setShowedLeftSwipeView:NO animated:animated];
+    [self setShowedRightSwipeView:NO animated:animated];
 }
 
 - (void)willBeganSwipe {
@@ -674,7 +674,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
     self.swipeDragging = YES;
 }
 
-- (void)movingSwipe:(CGFloat)progress {
+- (void)movingSwipe:(CGFloat __unused)progress {
 }
 
 - (void)willEndedSwipe {
@@ -862,7 +862,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
                          animations:^{
                              [self updateConstraintsIfNeeded];
                              [self layoutIfNeeded];
-                         } completion:^(BOOL finished) {
+                         } completion:^(BOOL finished __unused) {
                              if(endedSwipe == YES) {
                                  [self didEndedSwipe];
                              }
@@ -961,19 +961,21 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 #pragma mark UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer {
-    if((_swipeDragging == NO) && (_swipeDecelerating == NO)) {
-        CGPoint translation = [_panGesture translationInView:self];
-        if(fabs(translation.x) >= fabs(translation.y)) {
-            if((_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (translation.x < 0.0f)) {
-                return YES;
-            } else if((_showedRightSwipeView == YES) && (_rightSwipeView != nil) && (translation.x > 0.0f)) {
-                return YES;
-            } else if((_showedLeftSwipeView == NO) && (_leftSwipeView != nil) && (translation.x > 0.0f)) {
-                return YES;
-            } else if((_showedRightSwipeView == NO) && (_rightSwipeView != nil) && (translation.x < 0.0f)) {
-                return YES;
+    if(gestureRecognizer == _panGesture) {
+        if((_swipeDragging == NO) && (_swipeDecelerating == NO)) {
+            CGPoint translation = [_panGesture translationInView:self];
+            if(fabs(translation.x) >= fabs(translation.y)) {
+                if((_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (translation.x < 0.0f)) {
+                    return YES;
+                } else if((_showedRightSwipeView == YES) && (_rightSwipeView != nil) && (translation.x > 0.0f)) {
+                    return YES;
+                } else if((_showedLeftSwipeView == NO) && (_leftSwipeView != nil) && (translation.x > 0.0f)) {
+                    return YES;
+                } else if((_showedRightSwipeView == NO) && (_rightSwipeView != nil) && (translation.x < 0.0f)) {
+                    return YES;
+                }
+                return NO;
             }
-            return NO;
         }
     }
     return NO;

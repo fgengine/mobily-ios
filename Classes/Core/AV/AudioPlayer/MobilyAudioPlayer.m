@@ -65,7 +65,7 @@
     return self;
 }
 
-- (instancetype)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder* __unused)coder {
     self = [super init];
     if(self != nil) {
         [self setup];
@@ -251,7 +251,7 @@
             if((_prepared == NO) && (failure != nil)) {
                 failure();
             }
-        } failureBlock:^(NSURL *url) {
+        } failureBlock:^(NSURL* url __unused) {
             if(failure != nil) {
                 failure();
             }
@@ -348,7 +348,7 @@
 
 #pragma mark AVAudioPlayerDelegate
 
-- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer*)player successfully:(BOOL)successfully {
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer* __unused)player successfully:(BOOL __unused)successfully {
     self.playing = NO;
     if([_delegate respondsToSelector:@selector(audioPlayerDidFinished:)] == YES) {
         [_delegate audioPlayerDidFinished:self];
@@ -357,7 +357,7 @@
     }
 }
 
-- (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer*)player error:(NSError*)error {
+- (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer* __unused)player error:(NSError*)error {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     NSLog(@"MobilyAudioPlayer::EncodeErrorDidOccur:%@", error);
 #endif

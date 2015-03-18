@@ -239,7 +239,7 @@ typedef void (^MobilyDownloaderBlock)();
 }
 
 - (void)cancelByUrl:(NSURL*)url {
-    [_taskManager enumirateTasksUsingBlock:^(MobilyDownloaderTask* task, BOOL* stop) {
+    [_taskManager enumirateTasksUsingBlock:^(MobilyDownloaderTask* task, BOOL* stop __unused) {
         if([[task url] isEqual:url] == YES) {
             [task cancel];
         }
@@ -247,7 +247,7 @@ typedef void (^MobilyDownloaderBlock)();
 }
 
 - (void)cancelByTarget:(id)target {
-    [_taskManager enumirateTasksUsingBlock:^(MobilyDownloaderTask* task, BOOL* stop) {
+    [_taskManager enumirateTasksUsingBlock:^(MobilyDownloaderTask* task, BOOL* stop __unused) {
         if([task target] == target) {
             [task cancel];
         }
@@ -293,15 +293,15 @@ typedef void (^MobilyDownloaderBlock)();
 - (instancetype)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target completeBlock:(MobilyDownloaderCompleteBlock)completeBlock failureBlock:(MobilyDownloaderFailureBlock)failureBlock {
     self = [self initWithDownloader:downloader url:url target:target];
     if(self != nil) {
-        self.completeEvent = [MobilyEventBlock eventWithBlock:^id(id sender, id object) {
+        self.completeEvent = [MobilyEventBlock eventWithBlock:^id(id entry, NSURL* url) {
             if(completeBlock != nil) {
-                completeBlock(_entry, _url);
+                completeBlock(entry, url);
             }
             return nil;
         } inMainQueue:YES];
-        self.failureEvent = [MobilyEventBlock eventWithBlock:^id(id sender, id object) {
+        self.failureEvent = [MobilyEventBlock eventWithBlock:^id(id sender __unused, NSURL* url) {
             if(failureBlock != nil) {
-                failureBlock(_url);
+                failureBlock(url);
             }
             return nil;
         } inMainQueue:YES];
@@ -375,7 +375,7 @@ typedef void (^MobilyDownloaderBlock)();
     if(_entry != nil) {
         [_completeEvent fireSender:_entry object:_url];
     } else {
-        [_failureEvent fireSender:_url object:nil];
+        [_failureEvent fireSender:self object:_url];
     }
 }
 

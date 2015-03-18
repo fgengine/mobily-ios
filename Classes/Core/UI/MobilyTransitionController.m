@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyTransitionController.h"
+#import "MobilyTransitionController+Private.h"
 
 /*--------------------------------------------------*/
 
@@ -82,25 +82,15 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilyTransitionController ()
-
-@property(nonatomic, readwrite, weak) UIViewController* fromViewController;
-@property(nonatomic, readwrite, assign) CGRect initialFrameFromViewController;
-@property(nonatomic, readwrite, assign) CGRect finalFrameFromViewController;
-@property(nonatomic, readwrite, weak) UIViewController* toViewController;
-@property(nonatomic, readwrite, assign) CGRect initialFrameToViewController;
-@property(nonatomic, readwrite, assign) CGRect finalFrameToViewController;
-@property(nonatomic, readwrite, weak) UIView* containerView;
-@property(nonatomic, readwrite, weak) UIView* fromView;
-@property(nonatomic, readwrite, weak) UIView* toView;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
 @implementation MobilyTransitionController
+
+@synthesize transitionContext = _transitionContext;
+@synthesize operation = _operation;
+@synthesize duration = _duration;
+@synthesize percentComplete = _percentComplete;
+@synthesize completionSpeed = _completionSpeed;
+@synthesize completionCurve = _completionCurve;
+@synthesize interactive = _interactive;
 
 #pragma mark Init / Free
 
@@ -113,9 +103,14 @@
 }
 
 - (void)setup {
-    self.duration = 1.0f;
-    self.interactiveCompletionSpeed = 720.0f;
-    self.interactiveCompletionSpeed = UIViewAnimationCurveEaseOut;
+    _operation = MobilyTransitionOperationPresent;
+    _duration = 0.3f;
+    _completionSpeed = 720.0f;
+    _completionSpeed = UIViewAnimationCurveEaseOut;
+    _initialFrameFromViewController = CGRectNull;
+    _finalFrameFromViewController = CGRectNull;
+    _initialFrameToViewController = CGRectNull;
+    _finalFrameToViewController = CGRectNull;
 }
 
 - (void)dealloc {
@@ -126,30 +121,7 @@
 - (void)setTransitionContext:(id< UIViewControllerContextTransitioning >)transitionContext {
     if(_transitionContext != transitionContext) {
         _transitionContext = transitionContext;
-        
-        self.fromViewController = [_transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-        self.toViewController = [_transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
-        self.containerView = _transitionContext.containerView;
-        self.fromView = (UIDevice.systemVersion >= 8.0f) ? [_transitionContext viewForKey:UITransitionContextFromViewKey] : _fromViewController.view;
-        self.toView = (UIDevice.systemVersion >= 8.0f) ? [_transitionContext viewForKey:UITransitionContextToViewKey] : _toViewController.view;
-    }
-}
-
-- (void)setFromViewController:(UIViewController*)fromViewController {
-    if(_fromViewController != fromViewController) {
-        _fromViewController = fromViewController;
-        
-        self.initialFrameFromViewController = [_transitionContext initialFrameForViewController:_fromViewController];
-        self.finalFrameFromViewController = [_transitionContext finalFrameForViewController:_fromViewController];
-    }
-}
-
-- (void)setToViewController:(UIViewController*)toViewController {
-    if(_toViewController != toViewController) {
-        _toViewController = toViewController;
-        
-        self.initialFrameToViewController = [_transitionContext initialFrameForViewController:_toViewController];
-        self.finalFrameToViewController = [_transitionContext finalFrameForViewController:_toViewController];
+        [self _prepareTransitionContext];
     }
 }
 
@@ -159,60 +131,108 @@
     return [_transitionContext isAnimated];
 }
 
-- (BOOL)isInteractive {
-    return [_transitionContext isInteractive];
-}
-
-- (BOOL)transitionWasCancelled {
+- (BOOL)isCancelled {
     return [_transitionContext transitionWasCancelled];
 }
 
-- (void)startTransition {
-}
-
-- (void)completeTransition {
-    [_transitionContext completeTransition:(_transitionContext.transitionWasCancelled == NO)];
-}
-
-- (void)startInteractive {
-    [self startInteractive];
+- (void)beginInteractive {
+    _interactive = YES;
 }
 
 - (void)updateInteractive:(CGFloat)percentComplete {
-    [_transitionContext updateInteractiveTransition:percentComplete];
+    if((_interactive == YES) && (_percentComplete != percentComplete)) {
+        _percentComplete = percentComplete;
+        [self _updateInteractive:percentComplete];
+    }
 }
 
 - (void)finishInteractive {
-    [_transitionContext finishInteractiveTransition];
+    if(_interactive == YES) {
+        [self _finishInteractive];
+    }
 }
 
 - (void)cancelInteractive {
+    if(_interactive == YES) {
+        [self _cancelInteractive];
+    }
+}
+
+- (void)endInteractive {
+    _interactive = NO;
+}
+
+#pragma mark Private
+
+- (void)_prepareTransitionContext {
+    _fromViewController = [_transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    _initialFrameFromViewController = [_transitionContext initialFrameForViewController:_fromViewController];
+    _finalFrameFromViewController = [_transitionContext finalFrameForViewController:_fromViewController];
+    _toViewController = [_transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+    _initialFrameToViewController = [_transitionContext initialFrameForViewController:_toViewController];
+    _finalFrameToViewController = [_transitionContext finalFrameForViewController:_toViewController];
+    _containerView = _transitionContext.containerView;
+    _fromView = (UIDevice.systemVersion >= 8.0f) ? [_transitionContext viewForKey:UITransitionContextFromViewKey] : _fromViewController.view;
+    _toView = (UIDevice.systemVersion >= 8.0f) ? [_transitionContext viewForKey:UITransitionContextToViewKey] : _toViewController.view;
+}
+
+- (void)_startTransition {
+}
+
+- (void)_completeTransition {
+    [_transitionContext completeTransition:([_transitionContext transitionWasCancelled] == NO)];
+}
+
+- (void)_startInteractive {
+}
+
+- (void)_updateInteractive:(CGFloat __unused)percentComplete {
+    [_transitionContext updateInteractiveTransition:percentComplete];
+}
+
+- (void)_finishInteractive {
+    [_transitionContext finishInteractiveTransition];
+}
+
+- (void)_cancelInteractive {
     [_transitionContext cancelInteractiveTransition];
+}
+
+- (void)_completeInteractive {
+    [_transitionContext completeTransition:([_transitionContext transitionWasCancelled] == NO)];
 }
 
 #pragma mark UIViewControllerAnimatedTransitioning
 
-- (NSTimeInterval)transitionDuration:(id< UIViewControllerContextTransitioning >)transitionContext {
+- (NSTimeInterval)transitionDuration:(id< UIViewControllerContextTransitioning > __unused)transitionContext {
     return _duration;
 }
 
 - (void)animateTransition:(id< UIViewControllerContextTransitioning >)transitionContext {
     self.transitionContext = transitionContext;
-    [self startTransition];
+    [self _startTransition];
+}
+
+- (void)animationEnded:(BOOL __unused)transitionCompleted {
 }
 
 #pragma mark UIViewControllerInteractiveTransitioning
 
 - (void)startInteractiveTransition:(id< UIViewControllerContextTransitioning >)transitionContext {
-    self.transitionContext = transitionContext;
+    if((_interactive == YES) && ([transitionContext isInteractive] == YES)) {
+        self.transitionContext = transitionContext;
+        [self _startInteractive];
+    } else {
+        [self animateTransition:transitionContext];
+    }
 }
 
 - (CGFloat)completionSpeed {
-    return _interactiveCompletionSpeed;
+    return _completionSpeed;
 }
 
 - (UIViewAnimationCurve)completionCurve {
-    return _interactiveCompletionSpeed;
+    return _completionSpeed;
 }
 
 @end

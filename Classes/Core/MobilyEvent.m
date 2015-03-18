@@ -179,7 +179,7 @@
     return [[self alloc] initWithBlock:block queue:(inCurrentQueue == YES) ? dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) : nil];
 }
 
-- (instancetype)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder* __unused)coder {
     self = [super init];
     if(self != nil) {
         [self setup];
@@ -206,7 +206,7 @@
 
 #pragma mark NSCoding
 
-- (void)encodeWithCoder:(NSCoder*)coder {
+- (void)encodeWithCoder:(NSCoder* __unused)coder {
 }
 
 #pragma mark Public
@@ -233,7 +233,7 @@
 
 @interface MobilyEvents ()
 
-@property(nonatomic, readwrite, strong) NSMutableDictionary* events;
+@property(nonatomic, readwrite, strong) NSMutableDictionary* groupsEvents;
 
 @end
 
@@ -254,45 +254,94 @@
 }
 
 - (void)setup {
-    self.events = NSMutableDictionary.dictionary;
+    self.groupsEvents = NSMutableDictionary.dictionary;
 }
 
 - (void)dealloc {
-    self.events = nil;
+    self.groupsEvents = nil;
 }
 
 #pragma mark Public
 
 - (void)addEventWithTarget:(id)target action:(SEL)action forKey:(id)key {
-    [self addEvent:[MobilyEventSelector eventWithTarget:target action:action] forKey:key];
+    [self addEventWithTarget:target action:action forGroup:[NSNull null] forKey:key];
+}
+
+- (void)addEventWithTarget:(id)target action:(SEL)action forGroup:(id)group forKey:(id)key {
+    [self addEvent:[MobilyEventSelector eventWithTarget:target action:action] forGroup:group forKey:key];
 }
 
 - (void)addEventWithBlock:(MobilyEventBlockType)block forKey:(id)key {
-    [self addEvent:[MobilyEventBlock eventWithBlock:block] forKey:key];
+    [self addEventWithBlock:block forGroup:[NSNull null] forKey:key];
+}
+
+- (void)addEventWithBlock:(MobilyEventBlockType)block forGroup:(id)group forKey:(id)key {
+    [self addEvent:[MobilyEventBlock eventWithBlock:block] forGroup:group forKey:key];
 }
 
 - (void)addEvent:(id< MobilyEvent >)event forKey:(id)key {
-    _events[key] = event;
+    [self addEvent:event forGroup:[NSNull null] forKey:key];
+}
+
+- (void)addEvent:(id< MobilyEvent >)event forGroup:(id)group forKey:(id)key {
+    NSMutableDictionary* events = _groupsEvents[group];
+    if(events == nil) {
+        events = [NSMutableDictionary dictionaryWithObject:event forKey:key];
+        _groupsEvents[group] = events;
+    } else {
+        events[key] = event;
+    }
 }
 
 - (void)removeEventForKey:(id)key {
-    [_events removeObjectForKey:key];
+    [self removeEventInGroup:[NSNull null] forKey:key];
+}
+
+- (void)removeEventInGroup:(id)group forKey:(id)key {
+    NSMutableDictionary* events = _groupsEvents[group];
+    if(events != nil) {
+        [events removeObjectForKey:key];
+    }
+}
+
+- (void)removeEventsForGroup:(id)group {
+    [_groupsEvents removeObjectForKey:group];
 }
 
 - (void)removeAllEvents {
-    [_events removeAllObjects];
+    [_groupsEvents removeAllObjects];
 }
 
 - (BOOL)containsEventForKey:(id)key {
-    return (_events[key] != nil);
+    return [self containsEventInGroup:[NSNull null] forKey:key];
 }
 
-- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
-    return [self fireEventForKey:key bySender:sender byObject:object orDefault:nil];
+- (BOOL)containsEventInGroup:(id)group forKey:(id)key {
+    NSMutableDictionary* events = _groupsEvents[group];
+    if(events != nil) {
+        return (events[key] != nil);
+    }
+    return NO;
+}
+
+- (void)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
+    [self fireEventInGroup:[NSNull null] forKey:key bySender:sender byObject:object orDefault:nil];
+}
+
+- (void)fireEventInGroup:(id)group forKey:(id)key bySender:(id)sender byObject:(id)object {
+    [self fireEventInGroup:group forKey:key bySender:sender byObject:object orDefault:nil];
 }
 
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
-    id< MobilyEvent > event = _events[key];
+    return [self fireEventInGroup:[NSNull null] forKey:key bySender:sender byObject:object orDefault:orDefault];
+}
+
+- (id)fireEventInGroup:(id)group forKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
+    id< MobilyEvent > event = nil;
+    NSMutableDictionary* events = _groupsEvents[group];
+    if(events != nil) {
+        event = events[key];
+    }
     if(event != nil) {
         return [event fireSender:sender object:object];
     }

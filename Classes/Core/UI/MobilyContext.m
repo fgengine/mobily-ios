@@ -200,51 +200,51 @@ static NSString* MOBILY_ACCESS_KEY = nil;
     return UIApplication.sharedApplication.keyWindow;
 }
 
-- (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)options {
+- (BOOL)application:(UIApplication* __unused)application didFinishLaunchingWithOptions:(NSDictionary*)options {
     return [self loadWithOptions:options];
 }
 
-- (void)applicationWillTerminate:(UIApplication*)application {
+- (void)applicationWillTerminate:(UIApplication* __unused)application {
     [self unload];
 }
 
-- (void)applicationDidReceiveMemoryWarning:(UIApplication*)application {
+- (void)applicationDidReceiveMemoryWarning:(UIApplication* __unused)application {
     [_application receiveMemoryWarning];
 }
 
-- (void)applicationDidBecomeActive:(UIApplication*)application {
+- (void)applicationDidBecomeActive:(UIApplication* __unused)application {
     [_application becomeActive];
 }
 
-- (void)applicationWillResignActive:(UIApplication*)application {
+- (void)applicationWillResignActive:(UIApplication* __unused)application {
     [_application resignActive];
 }
 
-- (void)applicationWillEnterForeground:(UIApplication*)application {
+- (void)applicationWillEnterForeground:(UIApplication* __unused)application {
     [_application enterForeground];
 }
 
-- (void)applicationDidEnterBackground:(UIApplication*)application {
+- (void)applicationDidEnterBackground:(UIApplication* __unused)application {
     [_application enterBackground];
 }
 
-- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken {
+- (void)application:(UIApplication* __unused)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken {
     [_application registerForRemoteNotificationsWithDeviceToken:deviceToken];
 }
 
-- (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error {
+- (void)application:(UIApplication* __unused)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error {
     [_application failToRegisterForRemoteNotificationsWithError:error];
 }
 
-- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)notification {
+- (void)application:(UIApplication* __unused)application didReceiveRemoteNotification:(NSDictionary*)notification {
     [_application receiveRemoteNotification:notification];
 }
 
-- (void)application:(UIApplication*)application didReceiveLocalNotification:(UILocalNotification*)notification {
+- (void)application:(UIApplication* __unused)application didReceiveLocalNotification:(UILocalNotification*)notification {
     [_application receiveLocalNotification:notification];
 }
 
-- (BOOL)application:(UIApplication*)application openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation {
+- (BOOL)application:(UIApplication* __unused)application openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation {
     return [_application openURL:url sourceApplication:sourceApplication annotation:annotation];
 }
 

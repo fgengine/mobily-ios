@@ -43,6 +43,7 @@
 @property(nonatomic, readonly, assign, getter=isAppeared) BOOL appeared;
 @property(nonatomic, readwrite, strong) MobilyTransitionController* transitionModal;
 @property(nonatomic, readwrite, strong) MobilyTransitionController* transitionNavigation;
+@property(nonatomic, readwrite, strong) MobilyTransitionController* transitionInteractive;
 
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidLoad;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidUnload;

@@ -97,7 +97,7 @@
     }
     [queryParams addEntriesFromDictionary:[self formDataFromDictionary:params]];
     NSMutableString* queryString = NSMutableString.string;
-    [queryParams enumerateKeysAndObjectsUsingBlock:^(NSString* key, id< NSObject > value, BOOL* stop) {
+    [queryParams enumerateKeysAndObjectsUsingBlock:^(NSString* key, id< NSObject > value, BOOL* stop __unused) {
         if(queryString.length > 0) {
             [queryString appendString:@"&"];
         }
@@ -114,7 +114,7 @@
 - (void)setRequestBodyParams:(NSDictionary*)params {
     NSMutableData* body = NSMutableData.data;
     NSDictionary* formData = [self formDataFromDictionary:params];
-    [formData enumerateKeysAndObjectsUsingBlock:^(NSString* key, id< NSObject > value, BOOL* stop) {
+    [formData enumerateKeysAndObjectsUsingBlock:^(NSString* key, id< NSObject > value, BOOL* stop __unused) {
         if(body.length > 0) {
             [body appendData:[@"&" dataUsingEncoding:NSUTF8StringEncoding]];
         }
@@ -128,7 +128,7 @@
 - (void)setRequestBodyParams:(NSDictionary*)params boundary:(NSString*)boundary attachments:(NSArray*)attachments {
     NSMutableData* body = NSMutableData.data;
     NSDictionary* formData = [self formDataFromDictionary:params];
-    [formData enumerateKeysAndObjectsUsingBlock:^(NSString* key, id< NSObject > value, BOOL* stop) {
+    [formData enumerateKeysAndObjectsUsingBlock:^(NSString* key, id< NSObject > value, BOOL* stop __unused) {
         [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[[NSString stringWithFormat:@"%@\r\n", value.description] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -314,7 +314,7 @@
 
 - (NSDictionary*)formDataFromDictionary:(NSDictionary*)dictionary {
     NSMutableDictionary* result = NSMutableDictionary.dictionary;
-    [dictionary enumerateKeysAndObjectsUsingBlock:^(id keyPath, id value, BOOL* stop) {
+    [dictionary enumerateKeysAndObjectsUsingBlock:^(id keyPath, id value, BOOL* stop __unused) {
         [self formDataFromDictionary:result value:value keyPath:keyPath];
     }];
     return result;
@@ -322,11 +322,11 @@
 
 - (void)formDataFromDictionary:(NSMutableDictionary*)dictionary value:(id)value keyPath:(NSString*)keyPath {
     if([value isKindOfClass:NSDictionary.class] == YES) {
-        [value enumerateKeysAndObjectsUsingBlock:^(id dictKey, id dictValue, BOOL* stop) {
+        [value enumerateKeysAndObjectsUsingBlock:^(id dictKey, id dictValue, BOOL* stop __unused) {
             [self formDataFromDictionary:dictionary value:dictValue keyPath:[NSString stringWithFormat:@"%@[%@]", keyPath, dictKey]];
         }];
     } else if([value isKindOfClass:NSArray.class] == YES) {
-        [value enumerateObjectsUsingBlock:^(id arrayValue, NSUInteger arrayIndex, BOOL* stop) {
+        [value enumerateObjectsUsingBlock:^(id arrayValue, NSUInteger arrayIndex, BOOL* stop __unused) {
             [self formDataFromDictionary:dictionary value:arrayValue keyPath:[NSString stringWithFormat:@"%@[%lu]", keyPath, (unsigned long)arrayIndex]];
         }];
     } else {
@@ -336,7 +336,7 @@
 
 #pragma mark NSURLConnectionDelegate
 
-- (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error {
+- (void)connection:(NSURLConnection* __unused)connection didFailWithError:(NSError*)error {
     self.connection = nil;
     self.response = nil;
     self.mutableResponseData = nil;
@@ -351,7 +351,7 @@
     UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
 }
 
-- (void)connection:(NSURLConnection*)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge {
+- (void)connection:(NSURLConnection* __unused)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge {
     id< NSURLAuthenticationChallengeSender > sender = challenge.sender;
     SecTrustRef serverTrust = challenge.protectionSpace.serverTrust;
     
@@ -420,24 +420,24 @@
 
 #pragma mark NSURLConnectionDataDelegate
 
-- (NSCachedURLResponse*)connection:(NSURLConnection*)connection willCacheResponse:(NSCachedURLResponse*)cachedResponse {
+- (NSCachedURLResponse*)connection:(NSURLConnection* __unused)connection willCacheResponse:(NSCachedURLResponse* __unused)cachedResponse {
     return nil;
 }
 
-- (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response {
+- (void)connection:(NSURLConnection* __unused)connection didReceiveResponse:(NSURLResponse*)response {
     if([response isKindOfClass:NSHTTPURLResponse.class] == YES) {
         self.response = (NSHTTPURLResponse*)response;
     }
 }
 
-- (void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data {
+- (void)connection:(NSURLConnection* __unused)connection didReceiveData:(NSData*)data {
     if(_mutableResponseData == nil) {
         self.mutableResponseData = NSMutableData.data;
     }
     [_mutableResponseData appendData:data];
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection*)connection {
+- (void)connectionDidFinishLoading:(NSURLConnection* __unused)connection {
     self.connection = nil;
     if([_delegate respondsToSelector:@selector(didFinishHttpQuery:)] == YES) {
         [_delegate didFinishHttpQuery:self];

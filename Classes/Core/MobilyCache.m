@@ -139,7 +139,7 @@
 }
 
 - (instancetype)initWithName:(NSString*)name memoryCapacity:(NSUInteger)memoryCapacity discCapacity:(NSUInteger)discCapacity {
-    return [self initWithName:MOBILY_CACHE_NAME memoryCapacity:memoryCapacity memoryStorageInterval:MOBILY_CACHE_MEMORY_STORAGE_INTERVAL discCapacity:discCapacity discStorageInterval:MOBILY_CACHE_DISC_STORAGE_INTERVAL];
+    return [self initWithName:name memoryCapacity:memoryCapacity memoryStorageInterval:MOBILY_CACHE_MEMORY_STORAGE_INTERVAL discCapacity:discCapacity discStorageInterval:MOBILY_CACHE_DISC_STORAGE_INTERVAL];
 }
 
 - (instancetype)initWithName:(NSString*)name memoryCapacity:(NSUInteger)memoryCapacity memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discCapacity:(NSUInteger)discCapacity discStorageInterval:(NSTimeInterval)discStorageInterval {
@@ -412,7 +412,7 @@
 
 #pragma mark NSNotificationCenter
 
-- (void)notificationReceiveMemoryWarning:(NSNotification*)notification {
+- (void)notificationReceiveMemoryWarning:(NSNotification* __unused)notification {
     for(MobilyCacheItem* item in _items) {
         [item clearFromMemoryCache];
     }
@@ -421,7 +421,7 @@
 
 #pragma mark MobilyTimerDelegate
 
--(void)timerDidRepeat:(MobilyTimer*)timer {
+-(void)timerDidRepeat:(MobilyTimer* __unused)timer {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self removeObsoleteItems];
     });

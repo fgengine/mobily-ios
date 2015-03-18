@@ -424,7 +424,7 @@
     }
 }
 
-- (void)hideAnySwipeViewAnimated:(BOOL)animated {
+- (void)hideAnySwipeViewAnimated:(BOOL __unused)animated {
     [self setShowedLeftSwipeView:NO animated:NO];
     [self setShowedRightSwipeView:NO animated:NO];
 }
@@ -436,7 +436,7 @@
     self.swipeDragging = YES;
 }
 
-- (void)movingSwipe:(CGFloat)progress {
+- (void)movingSwipe:(CGFloat __unused)progress {
 }
 
 - (void)willEndedSwipe {
@@ -515,7 +515,7 @@
         [UIView animateWithDuration:ABS(speed) / _swipeSpeed
                          animations:^{
                              [self layoutIfNeeded];
-                         } completion:^(BOOL finished) {
+                         } completion:^(BOOL finished __unused) {
                              if(endedSwipe == YES) {
                                  [self didEndedSwipe];
                              }

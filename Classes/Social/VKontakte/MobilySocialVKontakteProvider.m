@@ -142,7 +142,7 @@
     }
 }
 
-- (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation {
+- (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id __unused)annotation {
     return [VKSdk processOpenURL:url fromApplication:sourceApplication];
 }
 
@@ -152,7 +152,7 @@
     [self vkSdkShouldPresentViewController:[VKCaptchaViewController captchaControllerWithError:captchaError]];
 }
 
-- (void)vkSdkTokenHasExpired:(VKAccessToken*)expiredToken {
+- (void)vkSdkTokenHasExpired:(VKAccessToken* __unused)expiredToken {
     if(_failureBlock != nil) {
         _failureBlock(nil);
     }

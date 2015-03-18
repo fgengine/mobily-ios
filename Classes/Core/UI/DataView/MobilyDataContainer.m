@@ -113,7 +113,7 @@
     }
 }
 
-- (void)_didEndDraggingWillDecelerate:(BOOL)decelerate {
+- (void)_didEndDraggingWillDecelerate:(BOOL __unused)decelerate {
 }
 
 - (void)_willBeginDecelerating {
@@ -125,27 +125,27 @@
 - (void)_didEndScrollingAnimation {
 }
 
-- (void)_didBeginUpdateAnimated:(BOOL)animated {
+- (void)_didBeginUpdateAnimated:(BOOL __unused)animated {
 }
 
-- (void)_didEndUpdateAnimated:(BOOL)animated {
+- (void)_didEndUpdateAnimated:(BOOL __unused)animated {
     if((_allowAutoAlign == YES) && (_view.isDragging == NO) && (_view.isDecelerating == NO)) {
         _view.contentOffset = [self _alignWithVelocity:CGPointZero contentOffset:_view.contentOffset contentSize:_view.contentSize viewportSize:_view.boundsSize];
     }
 }
 
-- (CGPoint)_alignWithVelocity:(CGPoint)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize viewportSize:(CGSize)viewportSize {
+- (CGPoint)_alignWithVelocity:(CGPoint __unused)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize __unused)contentSize viewportSize:(CGSize __unused)viewportSize {
     return contentOffset;
 }
 
-- (CGRect)_validateLayoutForAvailableFrame:(CGRect)frame {
+- (CGRect)_validateLayoutForAvailableFrame:(CGRect __unused)frame {
     return CGRectNull;
 }
 
-- (void)_willLayoutForBounds:(CGRect)bounds {
+- (void)_willLayoutForBounds:(CGRect __unused)bounds {
 }
 
-- (void)_didLayoutForBounds:(CGRect)bounds {
+- (void)_didLayoutForBounds:(CGRect __unused)bounds {
 }
 
 #pragma mark Public
@@ -154,11 +154,11 @@
     return @[];
 }
 
-- (MobilyDataItem*)itemForPoint:(CGPoint)point {
+- (MobilyDataItem*)itemForPoint:(CGPoint __unused)point {
     return nil;
 }
 
-- (MobilyDataItem*)itemForData:(id)data {
+- (MobilyDataItem*)itemForData:(id __unused)data {
     return nil;
 }
 
@@ -174,20 +174,40 @@
     return [_view containsEventForKey:key];
 }
 
-- (id)fireEventForKey:(id)key byObject:(id)object {
-    return [_view fireEventForKey:key bySender:self byObject:object];
+- (BOOL)containsEventForIdentifier:(NSString*)identifier forKey:(id)key {
+    return [_view containsEventForIdentifier:identifier forKey:key];
+}
+
+- (void)fireEventForKey:(id)key byObject:(id)object {
+    [_view fireEventForKey:key bySender:self byObject:object];
+}
+
+- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object {
+    [_view fireEventForIdentifier:identifier forKey:key bySender:self byObject:object];
 }
 
 - (id)fireEventForKey:(id)key byObject:(id)object orDefault:(id)orDefault {
     return [_view fireEventForKey:key bySender:self byObject:object orDefault:orDefault];
 }
 
-- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
-    return [_view fireEventForKey:key bySender:sender byObject:object];
+- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object orDefault:(id)orDefault {
+    return [_view fireEventForIdentifier:identifier forKey:key bySender:self byObject:object orDefault:orDefault];
+}
+
+- (void)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
+    [_view fireEventForKey:key bySender:sender byObject:object];
+}
+
+- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object {
+    [_view fireEventForIdentifier:identifier forKey:key bySender:sender byObject:object];
 }
 
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
     return [_view fireEventForKey:key bySender:sender byObject:object orDefault:orDefault];
+}
+
+- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
+    return [_view fireEventForIdentifier:identifier forKey:key bySender:sender byObject:object orDefault:orDefault];
 }
 
 @end

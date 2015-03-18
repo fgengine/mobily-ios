@@ -131,7 +131,7 @@
 }
 
 - (id)copyWithZone:(NSZone*)zone {
-    return [[self.class alloc] initWithDataItem:self];
+    return [[self.class allocWithZone:zone] initWithDataItem:self];
 }
 
 #pragma mark Property
@@ -224,26 +224,46 @@
     return [_view containsEventForKey:key];
 }
 
-- (id)fireEventForKey:(id)key byObject:(id)object {
-    return [_view fireEventForKey:key bySender:self byObject:object];
+- (BOOL)containsEventForIdentifier:(NSString*)identifier forKey:(id)key {
+    return [_view containsEventForIdentifier:identifier forKey:key];
+}
+
+- (void)fireEventForKey:(id)key byObject:(id)object {
+    [_view fireEventForKey:key bySender:self byObject:object];
+}
+
+- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object {
+    [_view fireEventForIdentifier:identifier forKey:key bySender:self byObject:object];
 }
 
 - (id)fireEventForKey:(id)key byObject:(id)object orDefault:(id)orDefault {
     return [_view fireEventForKey:key bySender:self byObject:object orDefault:orDefault];
 }
 
-- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
-    return [_view fireEventForKey:key bySender:sender byObject:object];
+- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object orDefault:(id)orDefault {
+    return [_view fireEventForIdentifier:identifier forKey:key bySender:self byObject:object orDefault:orDefault];
+}
+
+- (void)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
+    [_view fireEventForKey:key bySender:sender byObject:object];
+}
+
+- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object {
+    [_view fireEventForIdentifier:identifier forKey:key bySender:sender byObject:object];
 }
 
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
     return [_view fireEventForKey:key bySender:sender byObject:object orDefault:orDefault];
 }
 
-- (void)didBeginUpdateAnimated:(BOOL)animated {
+- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
+    return [_view fireEventForIdentifier:identifier forKey:key bySender:sender byObject:object orDefault:orDefault];
 }
 
-- (void)didEndUpdateAnimated:(BOOL)animated {
+- (void)didBeginUpdateAnimated:(BOOL __unused)animated {
+}
+
+- (void)didEndUpdateAnimated:(BOOL __unused)animated {
     self.originFrame = _updateFrame;
     if(_cell != nil) {
         _cell.frame = self.frame;

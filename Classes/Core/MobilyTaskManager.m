@@ -126,7 +126,7 @@
 
 - (void)cancelTask:(MobilyTask*)task {
     [self updating];
-    [[_queueManager operations] enumerateObjectsUsingBlock:^(MobilyTaskOperation* operation, NSUInteger idx, BOOL* stop) {
+    [[_queueManager operations] enumerateObjectsUsingBlock:^(MobilyTaskOperation* operation, NSUInteger index __unused, BOOL* stop) {
         if([task isEqual:operation.task] == YES) {
             [operation cancel];
             *stop = YES;
@@ -137,7 +137,7 @@
 
 - (void)cancelAllTasks {
     [self updating];
-    [[_queueManager operations] enumerateObjectsUsingBlock:^(MobilyTaskOperation* operation, NSUInteger idx, BOOL* stop) {
+    [[_queueManager operations] enumerateObjectsUsingBlock:^(MobilyTaskOperation* operation, NSUInteger index __unused, BOOL* stop __unused) {
         [operation cancel];
     }];
     [self updated];
@@ -145,7 +145,7 @@
 
 - (void)enumirateTasksUsingBlock:(MobilyTaskManagerEnumBlock)block {
     [self updating];
-    [[_queueManager operations] enumerateObjectsUsingBlock:^(MobilyTaskOperation* operation, NSUInteger idx, BOOL* stop) {
+    [[_queueManager operations] enumerateObjectsUsingBlock:^(MobilyTaskOperation* operation, NSUInteger index __unused, BOOL* stop) {
         block(operation.task, stop);
     }];
     [self updated];
@@ -155,7 +155,7 @@
     NSMutableArray* result = NSMutableArray.array;
     if(result != nil) {
         [self updating];
-        [[_queueManager operations] enumerateObjectsUsingBlock:^(MobilyTaskOperation* operation, NSUInteger idx, BOOL* stop) {
+        [[_queueManager operations] enumerateObjectsUsingBlock:^(MobilyTaskOperation* operation, NSUInteger index __unused, BOOL* stop __unused) {
             [result addObject:operation.task];
         }];
         [self updated];

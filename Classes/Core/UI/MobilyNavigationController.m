@@ -40,11 +40,19 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyNavigationController () < UIViewControllerTransitioningDelegate, UINavigationControllerDelegate >
+#import "MobilyTransitionController.h"
+
+/*--------------------------------------------------*/
+
+@interface MobilyNavigationController () < UIViewControllerTransitioningDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate >
 
 @property(nonatomic, readwrite, assign) NSUInteger appearedCount;
 @property(nonatomic, readwrite, assign, getter=isNeedUpdate) BOOL needUpdate;
 @property(nonatomic, readwrite, assign) BOOL updating;
+
+@property(nonatomic, readwrite, strong) UIScreenEdgePanGestureRecognizer* interactiveGesture;
+
+- (void)interactiveGestureHandle:(UIPanGestureRecognizer* __unused)interactiveGesture;
 
 @end
 
@@ -59,11 +67,13 @@
 @synthesize objectName = _objectName;
 @synthesize objectParent = _objectParent;
 @synthesize objectChilds = _objectChilds;
+@synthesize interactiveGesture = _interactiveGesture;
 
 #pragma mark NSKeyValueCoding
 
 MOBILY_DEFINE_VALIDATE_TRANSITION_CONTROLLER(TransitionModal);
 MOBILY_DEFINE_VALIDATE_TRANSITION_CONTROLLER(TransitionNavigation);
+MOBILY_DEFINE_VALIDATE_TRANSITION_CONTROLLER(TransitionInteractive);
 MOBILY_DEFINE_VALIDATE_EVENT(EventDidLoad)
 MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 MOBILY_DEFINE_VALIDATE_EVENT(EventWillAppear)
@@ -107,6 +117,10 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (void)setup {
     self.delegate = self;
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
+    
+    self.interactiveGesture = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(interactiveGestureHandle:)];
+    self.transitionInteractive = [MobilyTransitionControllerSlide new];
     self.needUpdate = YES;
 }
 
@@ -165,6 +179,21 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
         [self viewDidUnload];
     }
 #pragma clang diagnostic pop
+}
+
+- (void)setInteractiveGesture:(UIScreenEdgePanGestureRecognizer*)interactiveGesture {
+    if(_interactiveGesture != interactiveGesture) {
+        if(_interactiveGesture != nil) {
+            [self.view removeGestureRecognizer:_interactiveGesture];
+        }
+        _interactiveGesture = interactiveGesture;
+        if(_interactiveGesture != nil) {
+            _interactiveGesture.delegate = self;
+            _interactiveGesture.edges = UIRectEdgeLeft;
+            [self.view addGestureRecognizer:_interactiveGesture];
+
+        }
+    }
 }
 
 - (BOOL)isAppeared {
@@ -276,30 +305,30 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 #pragma mark UIViewControllerTransitioningDelegate
 
-- (id< UIViewControllerAnimatedTransitioning >)animationControllerForPresentedController:(UIViewController*)presented presentingController:(UIViewController*)presenting sourceController:(UIViewController*)source {
+- (id< UIViewControllerAnimatedTransitioning >)animationControllerForPresentedController:(UIViewController* __unused)presented presentingController:(UIViewController* __unused)presenting sourceController:(UIViewController* __unused)source {
     if(_transitionModal != nil) {
-        _transitionModal.reverse = NO;
+        _transitionModal.operation = MobilyTransitionOperationPresent;
     }
     return _transitionModal;
 }
 
-- (id< UIViewControllerAnimatedTransitioning >)animationControllerForDismissedController:(UIViewController*)dismissed {
+- (id< UIViewControllerAnimatedTransitioning >)animationControllerForDismissedController:(UIViewController* __unused)dismissed {
     if(_transitionModal != nil) {
-        _transitionModal.reverse = YES;
+        _transitionModal.operation = MobilyTransitionOperationDismiss;
     }
     return _transitionModal;
 }
 
-- (id< UIViewControllerInteractiveTransitioning >)interactionControllerForPresentation:(id< UIViewControllerAnimatedTransitioning >)animator {
+- (id< UIViewControllerInteractiveTransitioning >)interactionControllerForPresentation:(id< UIViewControllerAnimatedTransitioning > __unused)animator {
     if(_transitionModal != nil) {
-        _transitionModal.reverse = NO;
+        _transitionModal.operation = MobilyTransitionOperationPresent;
     }
     return _transitionModal;
 }
 
-- (id< UIViewControllerInteractiveTransitioning >)interactionControllerForDismissal:(id< UIViewControllerAnimatedTransitioning >)animator {
+- (id< UIViewControllerInteractiveTransitioning >)interactionControllerForDismissal:(id< UIViewControllerAnimatedTransitioning > __unused)animator {
     if(_transitionModal != nil) {
-        _transitionModal.reverse = YES;
+        _transitionModal.operation = MobilyTransitionOperationDismiss;
     }
     return _transitionModal;
 }
@@ -313,28 +342,86 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     }
 }
 
-- (NSUInteger)navigationControllerSupportedInterfaceOrientations:(UINavigationController*)navigationController {
+- (NSUInteger)navigationControllerSupportedInterfaceOrientations:(UINavigationController* __unused)navigationController {
     return self.topViewController.supportedInterfaceOrientations;
 }
 
-- (UIInterfaceOrientation)navigationControllerPreferredInterfaceOrientationForPresentation:(UINavigationController*)navigationController {
+- (UIInterfaceOrientation)navigationControllerPreferredInterfaceOrientationForPresentation:(UINavigationController* __unused)navigationController {
     return [self.topViewController preferredInterfaceOrientationForPresentation];
 }
 
-- (id< UIViewControllerInteractiveTransitioning >)navigationController:(UINavigationController*)navigationController interactionControllerForAnimationController:(id< UIViewControllerAnimatedTransitioning >)animationController {
-    return _transitionNavigation;
+- (id< UIViewControllerInteractiveTransitioning >)navigationController:(UINavigationController* __unused)navigationController interactionControllerForAnimationController:(id< UIViewControllerAnimatedTransitioning > __unused)animationController {
+    if(animationController == _transitionInteractive) {
+        return _transitionInteractive;
+    }
+    return nil;
 }
 
-- (id< UIViewControllerAnimatedTransitioning >)navigationController:(UINavigationController*)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController*)fromViewController toViewController:(UIViewController*)toViewController {
-    if(_transitionNavigation != nil) {
+- (id< UIViewControllerAnimatedTransitioning >)navigationController:(UINavigationController* __unused)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController* __unused)fromViewController toViewController:(UIViewController* __unused)toViewController {
+    if((_transitionInteractive != nil) && (_transitionInteractive.isInteractive == YES)) {
         switch(operation) {
-            case UINavigationControllerOperationPush: _transitionNavigation.reverse = NO; break;
-            case UINavigationControllerOperationPop: _transitionNavigation.reverse = YES; break;
+            case UINavigationControllerOperationPush: _transitionInteractive.operation = MobilyTransitionOperationPush; break;
+            case UINavigationControllerOperationPop: _transitionInteractive.operation = MobilyTransitionOperationPop; break;
+            default: break;
+        }
+        return _transitionInteractive;
+    } else if(_transitionNavigation != nil) {
+        switch(operation) {
+            case UINavigationControllerOperationPush: _transitionNavigation.operation = MobilyTransitionOperationPush; break;
+            case UINavigationControllerOperationPop: _transitionNavigation.operation = MobilyTransitionOperationPop; break;
             default: break;
         }
         return _transitionNavigation;
     }
     return nil;
+}
+
+#pragma mark Private
+
+- (void)interactiveGestureHandle:(UIPanGestureRecognizer* __unused)interactiveGesture {
+    CGPoint translation = [_interactiveGesture translationInView:self.view];
+    CGFloat progress = translation.x / self.view.frame.size.width;
+    switch(_interactiveGesture.state) {
+        case UIGestureRecognizerStateBegan: {
+            [_transitionInteractive beginInteractive];
+            [self popViewControllerAnimated:YES];
+            break;
+        }
+        case UIGestureRecognizerStateChanged: {
+            [_transitionInteractive updateInteractive:progress];
+            break;
+        }
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateCancelled: {
+            if((_transitionInteractive.isCancelled == NO) && (progress >= 0.3f)) {
+                [_transitionInteractive finishInteractive];
+            } else {
+                [_transitionInteractive cancelInteractive];
+            }
+            [_transitionInteractive endInteractive];
+            break;
+        }
+        default: {
+            break;
+        }
+    }
+}
+
+#pragma mark UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer {
+    if(_transitionInteractive != nil) {
+        if(_transitionInteractive.isAnimated == NO) {
+            if(self.viewControllers.count > 1) {
+                if(gestureRecognizer == _interactiveGesture) {
+                    return YES;
+                } else if(gestureRecognizer == self.interactivePopGestureRecognizer) {
+                    return YES;
+                }
+            }
+        }
+    }
+    return NO;
 }
 
 @end

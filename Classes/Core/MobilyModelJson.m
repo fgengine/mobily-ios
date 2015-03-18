@@ -78,7 +78,7 @@
         if(path.length > 0) {
             self.path = path;
             NSMutableArray* subPaths = [NSMutableArray arrayWithArray:[path componentsSeparatedByString:@"|"]];
-            [subPaths enumerateObjectsUsingBlock:^(NSString* subPath, NSUInteger index, BOOL* stop) {
+            [subPaths enumerateObjectsUsingBlock:^(NSString* subPath, NSUInteger index, BOOL* stop __unused) {
                 subPaths[index] = [subPath componentsSeparatedByString:@"."];
             }];
             self.subPaths = subPaths;
@@ -357,7 +357,7 @@
     if([value isKindOfClass:NSDictionary.class] == YES) {
         NSMutableDictionary* result = NSMutableDictionary.dictionary;
         if(result != nil) {
-            [value enumerateKeysAndObjectsUsingBlock:^(id jsonKey, id jsonObject, BOOL* stop) {
+            [value enumerateKeysAndObjectsUsingBlock:^(id jsonKey, id jsonObject, BOOL* stop __unused) {
                 id key = (_keyJsonConverter != nil) ? [_keyJsonConverter convertValue:jsonKey] : jsonKey;
                 if(key != nil) {
                     id value = [_valueJsonConverter convertValue:jsonObject];
@@ -462,7 +462,7 @@
             numberFormat = [NSNumberFormatter new];
             numberFormat.locale = NSLocale.currentLocale;
             numberFormat.formatterBehavior = NSNumberFormatterBehavior10_4;
-            numberFormat.numberStyle = NSNumberFormatterDecimalStyle;
+            numberFormat.numberStyle = NSNumberFormatterNoStyle;
         }
         return [numberFormat stringFromNumber:value];
     }
@@ -554,7 +554,7 @@
         }
         numberFormat.locale = NSLocale.currentLocale;
         numberFormat.formatterBehavior = NSNumberFormatterBehavior10_4;
-        numberFormat.numberStyle = NSNumberFormatterDecimalStyle;
+        numberFormat.numberStyle = NSNumberFormatterNoStyle;
         
         NSNumber* number = [numberFormat numberFromString:value];
         if(number == nil) {

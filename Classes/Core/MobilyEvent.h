@@ -79,22 +79,30 @@ typedef id (^MobilyEventBlockType)(id sender, id object);
 @interface MobilyEvents: NSObject< MobilyObject >
 
 - (void)addEventWithTarget:(id)target action:(SEL)action forKey:(id)key;
+- (void)addEventWithTarget:(id)target action:(SEL)action forGroup:(id)group forKey:(id)key;
 - (void)addEventWithBlock:(MobilyEventBlockType)block forKey:(id)key;
+- (void)addEventWithBlock:(MobilyEventBlockType)block forGroup:(id)group forKey:(id)key;
 - (void)addEvent:(id< MobilyEvent >)event forKey:(id)key;
+- (void)addEvent:(id< MobilyEvent >)event forGroup:(id)group forKey:(id)key;
 - (void)removeEventForKey:(id)key;
+- (void)removeEventInGroup:(id)group forKey:(id)key;
+- (void)removeEventsForGroup:(id)group;
 - (void)removeAllEvents;
 
 - (BOOL)containsEventForKey:(id)key;
+- (BOOL)containsEventInGroup:(id)group forKey:(id)key;
 
-- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
+- (void)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
+- (void)fireEventInGroup:(id)group forKey:(id)key bySender:(id)sender byObject:(id)object;
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
+- (id)fireEventInGroup:(id)group forKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
 
 @end
 
 /*--------------------------------------------------*/
 
 #define MOBILY_DEFINE_VALIDATE_EVENT(name) \
-- (BOOL)validate##name:(inout id*)value error:(out NSError**)error { \
+- (BOOL)validate##name:(inout id*)value error:(out NSError** __unused)error { \
     if([*value isKindOfClass:NSString.class] == YES) { \
         SEL action = NSSelectorFromString(*value); \
         if(action != nil) { \

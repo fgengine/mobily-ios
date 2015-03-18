@@ -453,14 +453,14 @@ typedef NS_ENUM(NSInteger, MobilyDeviceDisplay) {
 /*--------------------------------------------------*/
 
 #define MOBILY_DEFINE_VALIDATE_STRING(name) \
-- (BOOL)validate##name:(inout id*)value error:(out NSError**)error { \
+- (BOOL)validate##name:(inout id*)value error:(out NSError** __unused)error { \
     return [*value isKindOfClass:NSString.class]; \
 }
 
 /*--------------------------------------------------*/
 
 #define MOBILY_DEFINE_VALIDATE_STRING_BASED(name, resultClass, convertValue) \
-- (BOOL)validate##name:(inout id*)value error:(out NSError**)error { \
+- (BOOL)validate##name:(inout id*)value error:(out NSError** __unused)error { \
     if([*value isKindOfClass:NSString.class] == YES) { \
         *value = convertValue; \
     } \

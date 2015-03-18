@@ -523,16 +523,36 @@
     [_registersEvents addEventWithTarget:target action:action forKey:key];
 }
 
+- (void)registerEventWithTarget:(id)target action:(SEL)action forIdentifier:(NSString*)identifier forKey:(id)key {
+    [_registersEvents addEventWithTarget:target action:action forGroup:identifier forKey:key];
+}
+
 - (void)registerEventWithBlock:(MobilyEventBlockType)block forKey:(id)key {
     [_registersEvents addEventWithBlock:block forKey:key];
+}
+
+- (void)registerEventWithBlock:(MobilyEventBlockType)block forIdentifier:(NSString*)identifier forKey:(id)key {
+    [_registersEvents addEventWithBlock:block forGroup:identifier forKey:key];
 }
 
 - (void)registerEvent:(id< MobilyEvent >)event forKey:(id)key {
     [_registersEvents addEvent:event forKey:key];
 }
 
+- (void)registerEvent:(id< MobilyEvent >)event forIdentifier:(NSString*)identifier forKey:(id)key {
+    [_registersEvents addEvent:event forGroup:identifier forKey:key];
+}
+
 - (void)unregisterEventForKey:(id)key {
     [_registersEvents removeEventForKey:key];
+}
+
+- (void)unregisterEventForIdentifier:(NSString*)identifier forKey:(id)key {
+    [_registersEvents removeEventInGroup:identifier forKey:key];
+}
+
+- (void)unregisterEventsForIdentifier:(NSString*)identifier {
+    [_registersEvents removeEventsForGroup:identifier];
 }
 
 - (void)unregisterAllEvents {
@@ -543,20 +563,44 @@
     return [_registersEvents containsEventForKey:key];
 }
 
-- (id)fireEventForKey:(id)key byObject:(id)object {
-    return [_registersEvents fireEventForKey:key bySender:self byObject:object];
+- (BOOL)containsEventForIdentifier:(NSString*)identifier forKey:(id)key {
+    return [_registersEvents containsEventInGroup:identifier forKey:key];
+}
+
+- (BOOL)containsEventForKey:(id)key forIdentifier:(NSString*)identifier {
+    return [_registersEvents containsEventInGroup:identifier forKey:key];
+}
+
+- (void)fireEventForKey:(id)key byObject:(id)object {
+    [_registersEvents fireEventForKey:key bySender:self byObject:object];
+}
+
+- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object {
+    [_registersEvents fireEventInGroup:identifier forKey:key bySender:self byObject:object];
 }
 
 - (id)fireEventForKey:(id)key byObject:(id)object orDefault:(id)orDefault {
     return [_registersEvents fireEventForKey:key bySender:self byObject:object orDefault:orDefault];
 }
 
-- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
-    return [_registersEvents fireEventForKey:key bySender:sender byObject:object];
+- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object orDefault:(id)orDefault {
+    return [_registersEvents fireEventInGroup:identifier forKey:key bySender:self byObject:object orDefault:orDefault];
+}
+
+- (void)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
+    [_registersEvents fireEventForKey:key bySender:sender byObject:object];
+}
+
+- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object {
+    [_registersEvents fireEventInGroup:identifier forKey:key bySender:sender byObject:object];
 }
 
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
     return [_registersEvents fireEventForKey:key bySender:sender byObject:object orDefault:orDefault];
+}
+
+- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
+    return [_registersEvents fireEventInGroup:identifier forKey:key bySender:sender byObject:object orDefault:orDefault];
 }
 
 - (Class)cellClassWithItem:(MobilyDataItem*)item {
@@ -633,7 +677,7 @@
     return _allowsSelection;
 }
 
-- (BOOL)shouldDeselectItem:(MobilyDataItem*)item {
+- (BOOL)shouldDeselectItem:(MobilyDataItem* __unused)item {
     return YES;
 }
 
@@ -685,7 +729,7 @@
     return item.allowsHighlighting;
 }
 
-- (BOOL)shouldUnhighlightItem:(MobilyDataItem*)item {
+- (BOOL)shouldUnhighlightItem:(MobilyDataItem* __unused)item {
     return YES;
 }
 
@@ -729,7 +773,7 @@
     return NO;
 }
 
-- (BOOL)shouldEndedEditItem:(MobilyDataItem*)item {
+- (BOOL)shouldEndedEditItem:(MobilyDataItem* __unused)item {
     return _allowsEditing;
 }
 
@@ -1098,7 +1142,7 @@
     CGRect bounds = self.bounds;
     [_container _willLayoutForBounds:self.visibleBounds];
     if(_updating == NO) {
-        [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex, BOOL* itemStop) {
+        [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex __unused, BOOL* itemStop __unused) {
             [item invalidateLayoutForBounds:bounds];
         }];
     }
@@ -1319,7 +1363,7 @@
                 switch(_pullToRefreshView.state) {
                     case MobilyDataRefreshViewStateRelease: {
                         if([self containsEventForKey:MobilyDataViewPullToRefreshTriggered] == YES) {
-                            [self showPullToRefreshAnimated:YES complete:^(BOOL finished) {
+                            [self showPullToRefreshAnimated:YES complete:^(BOOL finished __unused) {
                                 [self fireEventForKey:MobilyDataViewPullToRefreshTriggered byObject:_pullToRefreshView];
                             }];
                         } else {
@@ -1337,7 +1381,7 @@
                 switch(_pullToLoadView.state) {
                     case MobilyDataRefreshViewStateRelease: {
                         if([self containsEventForKey:MobilyDataViewPullToLoadTriggered] == YES) {
-                            [self showPullToLoadAnimated:YES complete:^(BOOL finished) {
+                            [self showPullToLoadAnimated:YES complete:^(BOOL finished __unused) {
                                 [self fireEventForKey:MobilyDataViewPullToLoadTriggered byObject:_pullToLoadView];
                             }];
                         } else {

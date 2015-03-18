@@ -229,11 +229,11 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 
 #pragma mark Private
 
-- (void)willShowKeyboard:(NSNotification*)notification {
+- (void)willShowKeyboard:(NSNotification* __unused)notification {
     _emptyView.hidden = NO;
 }
 
-- (void)didHideKeyboard:(NSNotification*)notification {
+- (void)didHideKeyboard:(NSNotification* __unused)notification {
     _emptyView.hidden = YES;
 }
 

@@ -110,7 +110,7 @@
 
 #pragma mark Public
 
-- (BOOL)launchingWithOptions:(NSDictionary*)options {
+- (BOOL)launchingWithOptions:(NSDictionary* __unused)options {
     MobilyWindow* window = nil;
     if(_remoteNotificationType != UIRemoteNotificationTypeNone) {
         [UIApplication.sharedApplication registerForRemoteNotificationTypes:_remoteNotificationType];
@@ -151,16 +151,16 @@
     self.deviceToken = deviceToken;
 }
 
-- (void)failToRegisterForRemoteNotificationsWithError:(NSError*)error {
+- (void)failToRegisterForRemoteNotificationsWithError:(NSError* __unused)error {
 }
 
-- (void)receiveRemoteNotification:(NSDictionary*)notification {
+- (void)receiveRemoteNotification:(NSDictionary* __unused)notification {
 }
 
-- (void)receiveLocalNotification:(UILocalNotification*)notification {
+- (void)receiveLocalNotification:(UILocalNotification* __unused)notification {
 }
 
-- (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation {
+- (BOOL)openURL:(NSURL* __unused)url sourceApplication:(NSString* __unused)sourceApplication annotation:(id __unused)annotation {
     return NO;
 }
 

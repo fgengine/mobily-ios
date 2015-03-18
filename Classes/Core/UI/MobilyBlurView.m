@@ -392,7 +392,7 @@
 
 #pragma mark CALayerDelegate
 
-- (void)displayLayer:(CALayer*)layer {
+- (void)displayLayer:(CALayer* __unused)layer {
     [self updateAsynchronously:NO completion:NULL];
 }
 

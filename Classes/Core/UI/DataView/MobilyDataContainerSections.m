@@ -190,7 +190,7 @@
     return contentOffset;
 }
 
-- (CGRect)_validateSectionsForAvailableFrame:(CGRect)frame {
+- (CGRect)_validateSectionsForAvailableFrame:(CGRect __unused)frame {
     return CGRectNull;
 }
 

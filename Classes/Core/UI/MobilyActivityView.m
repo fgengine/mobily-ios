@@ -130,6 +130,7 @@
         _textView.font = MobilyActivityViewTextFont;
         _textView.textAlignment = NSTextAlignmentCenter;
         _textView.numberOfLines = 0;
+        _textView.text = text;
         [_panelView addSubview:_textView];
         
         _showCount = NSNotFound;
@@ -279,7 +280,7 @@
                              }
                              _panelView.alpha = 1.0f;
                              self.alpha = 1.0f;
-                         } completion:^(BOOL finished) {
+                         } completion:^(BOOL finished __unused) {
                              if(complete != nil) {
                                  complete();
                              }
@@ -311,7 +312,7 @@
                              }
                              _panelView.alpha = 0.0f;
                              self.alpha = 0.0f;
-                         } completion:^(BOOL finished) {
+                         } completion:^(BOOL finished __unused) {
                              self.hidden = YES;
                              if(complete != nil) {
                                  complete();

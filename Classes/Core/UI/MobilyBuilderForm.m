@@ -184,7 +184,7 @@
 
 #pragma mark NSXMLParserDelegate
 
-- (void)parser:(NSXMLParser*)parser didStartElement:(NSString*)elementName namespaceURI:(NSString*)namespaceURI qualifiedName:(NSString*)qualifiedName attributes:(NSDictionary*)attributes {
+- (void)parser:(NSXMLParser*)parser didStartElement:(NSString*)elementName namespaceURI:(NSString* __unused)namespaceURI qualifiedName:(NSString* __unused)qualifiedName attributes:(NSDictionary*)attributes {
     Class targetClass = nil;
     Class customClass = NSClassFromString(elementName);
     if(customClass != nil) {
@@ -228,7 +228,7 @@
     }
 }
 
-- (void)parser:(NSXMLParser*)parser didEndElement:(NSString*)elementName namespaceURI:(NSString*)namespaceURI qualifiedName:(NSString*)qualifiedName {
+- (void)parser:(NSXMLParser* __unused)parser didEndElement:(NSString* __unused)elementName namespaceURI:(NSString* __unused)namespaceURI qualifiedName:(NSString* __unused)qualifiedName {
     [_lastFormObject didLoadObjectChilds];
     [_stackFormObjects removeObject:_lastFormObject];
     _lastFormObject = [_stackFormObjects lastObject];

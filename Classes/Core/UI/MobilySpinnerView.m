@@ -110,7 +110,7 @@
 
 #pragma mark Public override
 
-- (CGSize)sizeThatFits:(CGSize)size {
+- (CGSize)sizeThatFits:(CGSize __unused)size {
     return CGSizeMake(_size, _size);
 }
 

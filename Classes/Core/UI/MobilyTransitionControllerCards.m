@@ -33,86 +33,103 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyTransitionController.h"
+#import "MobilyTransitionController+Private.h"
+
+/*--------------------------------------------------*/
+
+@interface MobilyTransitionControllerCards ()
+
+- (void)_startTransitionForward;
+- (void)_startTransitionReverse;
+- (CATransform3D)_firstTransform;
+- (CATransform3D)_secondTransformWithView:(UIView*)view;
+
+@end
 
 /*--------------------------------------------------*/
 
 @implementation MobilyTransitionControllerCards
 
-#pragma mark MobilyTransitionController
+#pragma mark Transition
 
-- (void)startTransition {
-    if([self isReverse] == NO){
-        [self startForwardTransition];
-    } else {
-        [self startReverseTransition];
+- (void)_startTransition {
+    switch(_operation) {
+        case MobilyTransitionOperationPresent:
+        case MobilyTransitionOperationPush:
+            [self _startTransitionForward];
+            break;
+        case MobilyTransitionOperationDismiss:
+        case MobilyTransitionOperationPop:
+            [self _startTransitionReverse];
+            break;
     }
-    
 }
 
-- (void)startForwardTransition {
-    CGRect frame = self.initialFrameFromViewController;
+#pragma mark Private
+
+- (void)_startTransitionForward {
+    CGRect frame = _initialFrameFromViewController;
     CGRect offScreenFrame = frame;
     offScreenFrame.origin.y = offScreenFrame.size.height;
-    self.toView.frame = offScreenFrame;
-    [self.containerView insertSubview:self.toView aboveSubview:self.fromView];
-    CATransform3D t1 = self.firstTransform;
-    CATransform3D t2 = [self secondTransformWithView:self.fromView];
-    [UIView animateKeyframesWithDuration:self.duration
+    _toView.frame = offScreenFrame;
+    [_containerView insertSubview:_toView aboveSubview:_fromView];
+    CATransform3D t1 = [self _firstTransform];
+    CATransform3D t2 = [self _secondTransformWithView:_fromView];
+    [UIView animateKeyframesWithDuration:_duration
                                    delay:0.0f
                                  options:UIViewKeyframeAnimationOptionCalculationModeCubic
                               animations:^{
                                   [UIView addKeyframeWithRelativeStartTime:0.0f relativeDuration:0.4f animations:^{
-                                      self.fromView.layer.transform = t1;
-                                      self.fromView.alpha = 0.6f;
+                                      _fromView.layer.transform = t1;
+                                      _fromView.alpha = 0.6f;
                                   }];
                                   [UIView addKeyframeWithRelativeStartTime:0.2f relativeDuration:0.4f animations:^{
-                                      self.fromView.layer.transform = t2;
+                                      _fromView.layer.transform = t2;
                                   }];
                                   [UIView addKeyframeWithRelativeStartTime:0.6f relativeDuration:0.2f animations:^{
-                                      self.toView.frame = CGRectOffset(self.toView.frame, 0.0f, -30.0f);
+                                      _toView.frame = CGRectOffset(_toView.frame, 0.0f, -30.0f);
                                   }];
                                   [UIView addKeyframeWithRelativeStartTime:0.8f relativeDuration:0.2f animations:^{
-                                      self.toView.frame = frame;
+                                      _toView.frame = frame;
                                   }];
-                              } completion:^(BOOL finished) {
-                                  [self completeTransition];
+                              } completion:^(BOOL finished __unused) {
+                                  [self _completeTransition];
                               }];
 }
 
-- (void)startReverseTransition {
-    CGRect frame = self.initialFrameFromViewController;
-    self.toView.frame = frame;
-    [self.toView.layer setTransform:CATransform3DScale(CATransform3DIdentity, 0.6f, 0.6f, 1.0f)];
-    [self.toView setAlpha:0.6f];
-    [self.containerView insertSubview:self.toView belowSubview:self.fromView];
+- (void)_startTransitionReverse {
+    CGRect frame = _initialFrameFromViewController;
+    _toView.frame = frame;
+    _toView.layer.transform = CATransform3DScale(CATransform3DIdentity, 0.6f, 0.6f, 1.0f);
+    _toView.alpha = 0.6f;
+    [_containerView insertSubview:_toView belowSubview:_fromView];
     CGRect frameOffScreen = frame;
     frameOffScreen.origin.y = frame.size.height;
-    CATransform3D t1 = self.firstTransform;
-    [UIView animateKeyframesWithDuration:self.duration
+    CATransform3D t1 = [self _firstTransform];
+    [UIView animateKeyframesWithDuration:_duration
                                    delay:0.0f
                                  options:UIViewKeyframeAnimationOptionCalculationModeCubic
                               animations:^{
                                   [UIView addKeyframeWithRelativeStartTime:0.0f relativeDuration:0.5f animations:^{
-                                      self.fromView.frame = frameOffScreen;
+                                      _fromView.frame = frameOffScreen;
                                   }];
                                   [UIView addKeyframeWithRelativeStartTime:0.35f relativeDuration:0.35f animations:^{
-                                      self.toView.layer.transform = t1;
-                                      self.toView.alpha = 1.0f;
+                                      _toView.layer.transform = t1;
+                                      _toView.alpha = 1.0f;
                                   }];
                                   [UIView addKeyframeWithRelativeStartTime:0.75f relativeDuration:0.25f animations:^{
-                                      self.toView.layer.transform = CATransform3DIdentity;
+                                      _toView.layer.transform = CATransform3DIdentity;
                                   }];
-                              } completion:^(BOOL finished) {
-                                  if(self.transitionWasCancelled == YES) {
-                                      self.toView.layer.transform = CATransform3DIdentity;
-                                      self.toView.alpha = 1.0f;
+                              } completion:^(BOOL finished __unused) {
+                                  if([self isCancelled] == YES) {
+                                      _toView.layer.transform = CATransform3DIdentity;
+                                      _toView.alpha = 1.0f;
                                   }
-                                  [self completeTransition];
+                                  [self _completeTransition];
                               }];
 }
 
-- (CATransform3D)firstTransform {
+- (CATransform3D)_firstTransform {
     CATransform3D t1 = CATransform3DIdentity;
     t1.m34 = 1.0f / -900.0f;
     t1 = CATransform3DScale(t1, 0.95f, 0.95f, 1.0f);
@@ -120,8 +137,8 @@
     return t1;
 }
 
-- (CATransform3D)secondTransformWithView:(UIView*)view {
-    CATransform3D t1 = self.firstTransform;
+- (CATransform3D)_secondTransformWithView:(UIView*)view {
+    CATransform3D t1 = [self _firstTransform];
     CATransform3D t2 = CATransform3DIdentity;
     t2.m34 = t1.m34;
     t2 = CATransform3DTranslate(t2, 0.0f, view.frame.size.height * -0.08f, 0.0f);

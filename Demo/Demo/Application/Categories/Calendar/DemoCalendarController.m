@@ -45,7 +45,10 @@
     self.title = @"Calendar";
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
-    self.dataCalendar = [MobilyDataContainerCalendar containerWithCalendar:NSCalendar.currentCalendar];
+    _dataSections = [MobilyDataContainerSectionsList new];
+    _dataSections.orientation = MobilyDataContainerOrientationHorizontal;
+    
+    _dataCalendar = [MobilyDataContainerCalendar containerWithCalendar:NSCalendar.currentCalendar];
 }
 
 - (void)dealloc {
@@ -57,11 +60,13 @@
     [self.navigationItem addLeftBarFixedSpace:-16.0f animated:NO];
     [self.navigationItem addLeftBarButtonNormalImage:[UIImage imageNamed:@"menu-back.png"] target:self action:@selector(pressedBack) animated:NO];
     
+    [_dataSections appendSection:_dataCalendar];
+    
     [_dataView registerIdentifier:MobilyDataContainerCalendarMonthIdentifier withViewClass:DemoCalendarMonthCell.class];
     [_dataView registerIdentifier:MobilyDataContainerCalendarWeekdayIdentifier withViewClass:DemoCalendarWeekdayCell.class];
     [_dataView registerIdentifier:MobilyDataContainerCalendarDayIdentifier withViewClass:DemoCalendarDayCell.class];
     
-    _dataView.container = _dataCalendar;
+    _dataView.container = _dataSections;
 }
 
 - (void)update {

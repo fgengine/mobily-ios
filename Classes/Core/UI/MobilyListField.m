@@ -135,21 +135,21 @@
 
 #pragma mark UIPickerViewDataSource
 
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView*)pickerView {
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView* __unused)pickerView {
     return 1;
 }
 
-- (NSInteger)pickerView:(UIPickerView*)pickerView numberOfRowsInComponent:(NSInteger)component {
+- (NSInteger)pickerView:(UIPickerView* __unused)pickerView numberOfRowsInComponent:(NSInteger __unused)component {
     return _items.count;
 }
 
 #pragma mark UIPickerViewDelegate
 
-- (NSString*)pickerView:(UIPickerView*)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+- (NSString*)pickerView:(UIPickerView* __unused)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger __unused)component {
     return [_items[row] title];
 }
 
-- (NSAttributedString*)pickerView:(UIPickerView*)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component {
+- (NSAttributedString*)pickerView:(UIPickerView* __unused)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger __unused)component {
     MobilyListFieldItem* listItem = _items[row];
     return [[NSAttributedString alloc] initWithString:[listItem title] attributes:@{
         NSFontAttributeName : [listItem font],
@@ -157,7 +157,7 @@
     }];
 }
 
-- (void)pickerView:(UIPickerView*)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+- (void)pickerView:(UIPickerView* __unused)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger __unused)component {
     [self setSelectedItem:_items[row] animated:YES emitted:YES];
 }
 

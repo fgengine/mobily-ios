@@ -116,7 +116,7 @@
     return MobilySocialSession.class;
 }
 
-- (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
+- (void)signoutSuccess:(MobilySocialProviderSuccessBlock __unused)success failure:(MobilySocialProviderFailureBlock __unused)failure {
 }
 
 - (void)didBecomeActive {
@@ -125,7 +125,7 @@
 - (void)willResignActive {
 }
 
-- (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation {
+- (BOOL)openURL:(NSURL* __unused)url sourceApplication:(NSString* __unused)sourceApplication annotation:(id __unused)annotation {
     return NO;
 }
 

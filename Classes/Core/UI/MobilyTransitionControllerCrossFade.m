@@ -33,29 +33,82 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyTransitionController.h"
+#import "MobilyTransitionController+Private.h"
 
 /*--------------------------------------------------*/
 
 @implementation MobilyTransitionControllerCrossFade
 
-#pragma mark MobilyTransitionController
+#pragma mark Transition
 
-- (void)startTransition {
-    [self.containerView addSubview:self.toView];
-    [self.containerView sendSubviewToBack:self.toView];
+- (void)_startTransition {
+    [_containerView addSubview:_toView];
+    [_containerView sendSubviewToBack:_toView];
     
-    [UIView animateWithDuration:self.duration animations:^{
-        self.fromView.alpha = 0.0f;
-    } completion:^(BOOL finished) {
-        if(self.transitionWasCancelled == YES) {
-            self.fromView.alpha = 1.0;
-        } else {
-            [self.fromView removeFromSuperview];
-            self.fromView.alpha = 1.0f;
-        }
-        [self completeTransition];
-    }];
+    [UIView animateWithDuration:_duration
+                          delay:0.0f
+                        options:UIViewAnimationOptionBeginFromCurrentState
+                     animations:^{
+                         _fromView.alpha = 0.0f;
+                     } completion:^(BOOL finished __unused) {
+                         if([self isCancelled] == YES) {
+                             _fromView.alpha = 1.0;
+                         } else {
+                             [_fromView removeFromSuperview];
+                             _fromView.alpha = 1.0f;
+                         }
+                         [self _completeTransition];
+                     }];
+}
+
+#pragma mark Interactive
+
+- (void)_startInteractive {
+    [super _startInteractive];
+    
+    [_containerView addSubview:_toView];
+    [_containerView sendSubviewToBack:_toView];
+}
+
+- (void)_updateInteractive:(CGFloat)complete {
+    [super _updateInteractive:complete];
+    
+    _fromView.alpha = 1.0f - complete;
+    _toView.alpha = complete;
+}
+
+- (void)_finishInteractive {
+    [super _finishInteractive];
+    
+    [UIView animateWithDuration:_duration * _percentComplete
+                          delay:0.0f
+                        options:UIViewAnimationOptionBeginFromCurrentState
+                     animations:^{
+                         _fromView.alpha = 0.0f;
+                         _toView.alpha = 1.0f;
+                     } completion:^(BOOL finished __unused) {
+                         _fromView.alpha = 1.0f;
+                         _toView.alpha = 1.0f;
+                         [_fromView removeFromSuperview];
+                         [self _completeInteractive];
+                     }];
+}
+
+- (void)_cancelInteractive {
+    [super _cancelInteractive];
+    
+    [UIView animateWithDuration:_duration * (1.0f - _percentComplete)
+                          delay:0.0f
+                        options:UIViewAnimationOptionBeginFromCurrentState
+                     animations:^{
+                         _fromView.alpha = 1.0f;
+                         _toView.alpha = 0.0f;
+                     } completion:^(BOOL finished __unused) {
+                         _fromView.alpha = 1.0f;
+                         _toView.alpha = 1.0f;
+                         [_toView removeFromSuperview];
+                         [self _completeInteractive];
+                     }];
 }
 
 @end

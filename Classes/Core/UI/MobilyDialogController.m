@@ -110,14 +110,14 @@
     return result;
 }
 
-- (void)showDialogController:(UIViewController*)viewController animated:(BOOL)animated {
+- (void)showDialogController:(UIViewController* __unused)viewController animated:(BOOL __unused)animated {
 }
 
-- (UIViewController*)dismissDialogControllerAnimated:(BOOL)animated {
+- (UIViewController*)dismissDialogControllerAnimated:(BOOL __unused)animated {
     return nil;
 }
 
-- (NSArray*)dismissAllDialogControllerAnimated:(BOOL)animated {
+- (NSArray*)dismissAllDialogControllerAnimated:(BOOL __unused)animated {
     return nil;
 }
 

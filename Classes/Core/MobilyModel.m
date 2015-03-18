@@ -242,7 +242,7 @@
 }
 
 - (void)fromJson:(id)json {
-    [self.jsonMap enumerateKeysAndObjectsUsingBlock:^(NSString* field, MobilyModelJson* converter, BOOL* stop) {
+    [self.jsonMap enumerateKeysAndObjectsUsingBlock:^(NSString* field, MobilyModelJson* converter, BOOL* stop __unused) {
         id value = [converter parseJson:json];
         if(value != nil) {
             [self setValue:value forKey:field];
@@ -668,7 +668,7 @@
 
 - (void)enumirateModelsUsingBlock:(MobilyModelCollectionEnumBlock)block {
     [self loadIsNeed];
-    [_unsafeModels enumerateObjectsUsingBlock:^(id item, NSUInteger index, BOOL* stop) {
+    [_unsafeModels enumerateObjectsUsingBlock:^(id item, NSUInteger index __unused, BOOL* stop) {
         block(item, stop);
     }];
 }

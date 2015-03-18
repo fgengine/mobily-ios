@@ -49,35 +49,33 @@
 
 /*--------------------------------------------------*/
 
+typedef NS_ENUM(NSUInteger, MobilyTransitionOperation) {
+    MobilyTransitionOperationPresent,
+    MobilyTransitionOperationDismiss,
+    MobilyTransitionOperationPush,
+    MobilyTransitionOperationPop
+};
+
+/*--------------------------------------------------*/
+
 @interface MobilyTransitionController : NSObject < UIViewControllerAnimatedTransitioning, UIViewControllerInteractiveTransitioning >
 
 @property(nonatomic, readwrite, weak) id< UIViewControllerContextTransitioning > transitionContext;
+@property(nonatomic, readwrite, assign) MobilyTransitionOperation operation;
 @property(nonatomic, readwrite, assign) NSTimeInterval duration;
-@property(nonatomic, readwrite, assign) CGFloat interactiveCompletionSpeed;
-@property(nonatomic, readwrite, assign) UIViewAnimationCurve interactiveCompletionCurve;
-@property(nonatomic, readwrite, assign, getter=isReverse) BOOL reverse;
-
-@property(nonatomic, readonly, weak) UIViewController* fromViewController;
-@property(nonatomic, readonly, assign) CGRect initialFrameFromViewController;
-@property(nonatomic, readonly, assign) CGRect finalFrameFromViewController;
-@property(nonatomic, readonly, weak) UIViewController* toViewController;
-@property(nonatomic, readonly, assign) CGRect initialFrameToViewController;
-@property(nonatomic, readonly, assign) CGRect finalFrameToViewController;
-@property(nonatomic, readonly, weak) UIView* containerView;
-@property(nonatomic, readonly, weak) UIView* fromView;
-@property(nonatomic, readonly, weak) UIView* toView;
+@property(nonatomic, readonly, assign) CGFloat percentComplete;
+@property(nonatomic, readwrite, assign) CGFloat completionSpeed;
+@property(nonatomic, readwrite, assign) UIViewAnimationCurve completionCurve;
+@property(nonatomic, readonly, assign, getter=isInteractive) BOOL interactive;
 
 - (BOOL)isAnimated;
-- (BOOL)isInteractive;
-- (BOOL)transitionWasCancelled;
+- (BOOL)isCancelled;
 
-- (void)startTransition;
-- (void)completeTransition;
-
-- (void)startInteractive;
+- (void)beginInteractive;
 - (void)updateInteractive:(CGFloat)percentComplete;
 - (void)finishInteractive;
 - (void)cancelInteractive;
+- (void)endInteractive;
 
 @end
 
@@ -95,8 +93,14 @@
 
 /*--------------------------------------------------*/
 
+@interface MobilyTransitionControllerSlide : MobilyTransitionController
+
+@end
+
+/*--------------------------------------------------*/
+
 #define MOBILY_DEFINE_VALIDATE_TRANSITION_CONTROLLER(name) \
-- (BOOL)validate##name:(inout id*)value error:(out NSError**)error { \
+- (BOOL)validate##name:(inout id*)value error:(out NSError** __unused)error { \
     if([*value isKindOfClass:NSString.class] == YES) { \
         *value = [*value convertToTransitionController]; \
     } \

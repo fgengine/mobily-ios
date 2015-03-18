@@ -33,35 +33,41 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-@interface DemoCalendarController : MobilyViewController
-
-@property(nonatomic, readwrite, weak) IBOutlet MobilyDataView* dataView;
-@property(nonatomic, readwrite, strong) MobilyDataContainerSectionsList* dataSections;
-@property(nonatomic, readwrite, strong) MobilyDataContainerCalendar* dataCalendar;
-
-@end
+#import "MobilyTransitionController.h"
 
 /*--------------------------------------------------*/
 
-@interface DemoCalendarMonthCell : MobilyDataCell
+@interface MobilyTransitionController () {
+@protected
+    __weak id< UIViewControllerContextTransitioning > _transitionContext;
+    MobilyTransitionOperation _operation;
+    NSTimeInterval _duration;
+    CGFloat _percentComplete;
+    CGFloat _completionSpeed;
+    UIViewAnimationCurve _completionCurve;
+    BOOL _interactive;
+    
+    __weak UIViewController* _fromViewController;
+    CGRect _initialFrameFromViewController;
+    CGRect _finalFrameFromViewController;
+    __weak UIViewController* _toViewController;
+    CGRect _initialFrameToViewController;
+    CGRect _finalFrameToViewController;
+    UIView* _containerView;
+    UIView* _fromView;
+    UIView* _toView;
+}
 
-@property(nonatomic, readwrite, weak) IBOutlet UILabel* textView;
+- (void)_prepareTransitionContext;
 
-@end
+- (void)_startTransition;
+- (void)_completeTransition;
 
-/*--------------------------------------------------*/
-
-@interface DemoCalendarWeekdayCell : MobilyDataCell
-
-@property(nonatomic, readwrite, weak) IBOutlet UILabel* textView;
-
-@end
-
-/*--------------------------------------------------*/
-
-@interface DemoCalendarDayCell : MobilyDataCell
-
-@property(nonatomic, readwrite, weak) IBOutlet UILabel* textView;
+- (void)_startInteractive;
+- (void)_updateInteractive:(CGFloat)percentComplete;
+- (void)_finishInteractive;
+- (void)_cancelInteractive;
+- (void)_completeInteractive;
 
 @end
 

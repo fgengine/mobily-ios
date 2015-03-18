@@ -118,11 +118,11 @@
     return output;
 }
 
-- (void)validatedSuccess:(id<MobilyValidatedObject>)control andValue:(NSString*)value {
+- (void)validatedSuccess:(id<MobilyValidatedObject>)control andValue:(NSString* __unused)value {
     [_validatedControls addObject:control];
 }
 
-- (void)validatedFail:(id<MobilyValidatedObject>)control andValue:(NSString*)value {
+- (void)validatedFail:(id<MobilyValidatedObject>)control andValue:(NSString* __unused)value {
     [_validatedControls removeObject:control];
 }
 
@@ -222,7 +222,7 @@
     return NO;
 }
 
-- (NSArray*)messages:(NSString*)value {
+- (NSArray*)messages:(NSString* __unused)value {
     return @[];
 }
 
@@ -241,7 +241,7 @@
     return NO;
 }
 
-- (NSArray*)messages:(NSString*)value {
+- (NSArray*)messages:(NSString* __unused)value {
     return @[];
 }
 
@@ -263,7 +263,7 @@
     return NO;
 }
 
-- (NSArray*)messages:(NSString*)value {
+- (NSArray*)messages:(NSString* __unused)value {
     return @[];
 }
 
@@ -325,7 +325,7 @@
     return result;
 }
 
-- (NSArray*)messages:(NSString*)value {
+- (NSArray*)messages:(NSString* __unused)value {
     return @[];
 }
 

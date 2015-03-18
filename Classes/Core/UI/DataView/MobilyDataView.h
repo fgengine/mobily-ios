@@ -86,17 +86,27 @@ typedef void(^MobilyDataViewCompleteBlock)(BOOL finished);
 - (void)unregisterAllIdentifiers;
 
 - (void)registerEventWithTarget:(id)target action:(SEL)action forKey:(id)key;
+- (void)registerEventWithTarget:(id)target action:(SEL)action forIdentifier:(NSString*)identifier forKey:(id)key;
 - (void)registerEventWithBlock:(MobilyEventBlockType)block forKey:(id)key;
+- (void)registerEventWithBlock:(MobilyEventBlockType)block forIdentifier:(NSString*)identifier forKey:(id)key;
 - (void)registerEvent:(id< MobilyEvent >)event forKey:(id)key;
+- (void)registerEvent:(id< MobilyEvent >)event forIdentifier:(NSString*)identifier forKey:(id)key;
 - (void)unregisterEventForKey:(id)key;
+- (void)unregisterEventForIdentifier:(NSString*)identifier forKey:(id)key;
+- (void)unregisterEventsForIdentifier:(NSString*)identifier;
 - (void)unregisterAllEvents;
 
 - (BOOL)containsEventForKey:(id)key;
+- (BOOL)containsEventForIdentifier:(NSString*)identifier forKey:(id)key;
 
-- (id)fireEventForKey:(id)key byObject:(id)object;
+- (void)fireEventForKey:(id)key byObject:(id)object;
+- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object;
 - (id)fireEventForKey:(id)key byObject:(id)object orDefault:(id)orDefault;
-- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
+- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object orDefault:(id)orDefault;
+- (void)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
+- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object;
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
+- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
 
 - (Class)cellClassWithItem:(MobilyDataItem*)item;
 

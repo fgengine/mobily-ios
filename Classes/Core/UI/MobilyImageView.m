@@ -143,12 +143,12 @@
         }
         _imageUrl = imageUrl;
         super.image = _defaultImage;
-        [[MobilyImageDownloader shared] downloadWithUrl:_imageUrl byTarget:self completeBlock:^(UIImage* image, NSURL* url) {
+        [[MobilyImageDownloader shared] downloadWithUrl:_imageUrl byTarget:self completeBlock:^(UIImage* image, NSURL* url __unused) {
             super.image = image;
             if(complete != nil) {
                 complete();
             }
-        } failureBlock:^(NSURL* url) {
+        } failureBlock:^(NSURL* url __unused) {
             if(failure != nil) {
                 failure();
             }
@@ -234,11 +234,11 @@
 
 #pragma mark MobilyDownloaderDelegate
 
-- (id)downloader:(MobilyDownloader*)mobilyDownloader entryFromData:(NSData*)data {
+- (id)downloader:(MobilyDownloader* __unused)mobilyDownloader entryFromData:(NSData*)data {
     return [UIImage imageWithData:data];
 }
 
-- (NSData*)downloader:(MobilyDownloader*)mobilyDownloader entryToData:(id)entry {
+- (NSData*)downloader:(MobilyDownloader* __unused)mobilyDownloader entryToData:(id)entry {
     return UIImagePNGRepresentation(entry);
 }
 

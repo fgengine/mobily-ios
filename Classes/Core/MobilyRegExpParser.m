@@ -162,7 +162,7 @@
         NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:_expression options:0 error:nil];
         if(regex != nil) {
             __block NSInteger offset = 0;
-            [regex enumerateMatchesInString:_string options:0 range:NSMakeRange(0, _string.length) usingBlock:^(NSTextCheckingResult* checkingResult, NSMatchingFlags flags, BOOL* stop) {
+            [regex enumerateMatchesInString:_string options:0 range:NSMakeRange(0, _string.length) usingBlock:^(NSTextCheckingResult* checkingResult, NSMatchingFlags flags __unused, BOOL* stop __unused) {
                 NSUInteger numberOfRanges = checkingResult.numberOfRanges;
                 
                 NSString* matchOriginalString = [_string substringWithRange:checkingResult.range];

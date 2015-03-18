@@ -186,7 +186,7 @@
 }
 
 - (void)_replaceOriginEntries:(NSArray*)originEntries withEntries:(NSArray*)entries {
-    NSIndexSet* indexSet = [_entries indexesOfObjectsPassingTest:^BOOL(MobilyDataItem* originEntry, NSUInteger index, BOOL* stop) {
+    NSIndexSet* indexSet = [_entries indexesOfObjectsPassingTest:^BOOL(MobilyDataItem* originEntry, NSUInteger index __unused, BOOL* stop __unused) {
         return [originEntries containsObject:originEntry];
     }];
     for(MobilyDataItem* entry in entries) {
@@ -216,7 +216,7 @@
     [self _deleteEntries:[_entries copy]];
 }
 
-- (CGPoint)_alignWithVelocity:(CGPoint)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize viewportSize:(CGSize)viewportSize {
+- (CGPoint)_alignWithVelocity:(CGPoint __unused)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize viewportSize:(CGSize)viewportSize {
     if(CGRectContainsPoint(_frame, contentOffset) == YES) {
         MobilyDataItem* alingItem = nil;
         for(MobilyDataItem* item in _entries) {
@@ -265,11 +265,11 @@
     return contentOffset;
 }
 
-- (CGRect)_validateEntriesForAvailableFrame:(CGRect)frame {
+- (CGRect)_validateEntriesForAvailableFrame:(CGRect __unused)frame {
     return CGRectNull;
 }
 
-- (void)_willEntriesLayoutForBounds:(CGRect)bounds {
+- (void)_willEntriesLayoutForBounds:(CGRect __unused)bounds {
 }
 
 - (void)_didEntriesLayoutForBounds:(CGRect)bounds {

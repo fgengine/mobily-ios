@@ -38,10 +38,11 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyButton ()
+@interface MobilyButton () {
+    __weak UILabel* _titleLabel;
+    __weak UIImageView* _imageView;
+}
 
-
- 
 @end
 
 /*--------------------------------------------------*/
@@ -75,6 +76,8 @@
 }
 
 - (void)setup {
+    _titleLabel = self.titleLabel;
+    _imageView = self.imageView;
 }
 
 - (void)dealloc {
@@ -134,11 +137,15 @@
     CGSize imageSize = CGSizeZero;
     NSString* title = self.currentTitle;
     if(title != nil) {
-        titleSize = self.titleLabel.implicitSize;
+        titleSize = _titleLabel.implicitSize;
+        titleSize.width += self.titleEdgeInsets.left + self.titleEdgeInsets.right;
+        titleSize.height += self.titleEdgeInsets.top + self.titleEdgeInsets.bottom;
     }
     UIImage* image = self.currentImage;
     if(image != nil) {
         imageSize = image.size;
+        imageSize.width += self.imageEdgeInsets.left + self.imageEdgeInsets.right;
+        imageSize.height += self.imageEdgeInsets.top + self.imageEdgeInsets.bottom;
     }
     switch(_imageAlignment) {
         case MobilyButtonImageAlignmentLeft:
@@ -152,6 +159,8 @@
             result.height += imageSize.height + titleSize.height;
             break;
     }
+    result.width += self.contentEdgeInsets.left + self.contentEdgeInsets.right;
+    result.height += self.contentEdgeInsets.top + self.contentEdgeInsets.bottom;
     return result;
 }
 
@@ -160,6 +169,8 @@
     UIImage* image = self.currentImage;
     if(image != nil) {
         CGSize imageSize = image.size;
+        imageSize.width += self.imageEdgeInsets.left + self.imageEdgeInsets.right;
+        imageSize.height += self.imageEdgeInsets.top + self.imageEdgeInsets.bottom;
         CGRect imageRect = CGRectZero;
         CGRect titleRect = CGRectZero;
         switch(_imageAlignment) {
@@ -179,6 +190,8 @@
     UIImage* image = self.currentImage;
     if(image != nil) {
         CGSize imageSize = image.size;
+        imageSize.width += self.imageEdgeInsets.left + self.imageEdgeInsets.right;
+        imageSize.height += self.imageEdgeInsets.top + self.imageEdgeInsets.bottom;
         CGRect imageRect = CGRectZero;
         CGRect titleRect = CGRectZero;
         switch(_imageAlignment) {

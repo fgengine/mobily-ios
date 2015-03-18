@@ -821,7 +821,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 }
 
 - (id)instantiateWithClass:(Class)class owner:(id)owner options:(NSDictionary*)options {
-    NSArray* content = [self instantiateWithOwner:owner options:nil];
+    NSArray* content = [self instantiateWithOwner:owner options:options];
     for(id item in content) {
         if([item isKindOfClass:class] == YES) {
             return item;
@@ -854,11 +854,11 @@ static UIResponder* MOBILY_CURRENT_FIRST_RESPONDER = nil;
 
 + (id)currentFirstResponder {
     MOBILY_CURRENT_FIRST_RESPONDER = nil;
-    [UIApplication.sharedApplication sendAction:@selector(findFirstResponder:) to:nil from:nil forEvent:nil];
+    [UIApplication.sharedApplication sendAction:@selector(findFirstResponder) to:nil from:nil forEvent:nil];
     return MOBILY_CURRENT_FIRST_RESPONDER;
 }
 
-- (void)findFirstResponder:(id)sender {
+- (void)findFirstResponder {
     MOBILY_CURRENT_FIRST_RESPONDER = self;
 }
 
@@ -1305,7 +1305,7 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
     [UIView animateWithDuration:duration
                      animations:^{
                          self.backgroundColor = color;
-                     } completion:^(BOOL finished) {
+                     } completion:^(BOOL finished __unused) {
                          [UIView animateWithDuration:duration
                                                delay:timeout
                                              options:0
@@ -1591,7 +1591,7 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
     }
 }
 
-- (void)adjustmentNotificationKeyboardHide:(NSNotification*)notification {
+- (void)adjustmentNotificationKeyboardHide:(NSNotification* __unused)notification {
     if(self.keyboardResponder != nil) {
         self.contentInset = self.keyboardContentInset;
         self.scrollIndicatorInsets = self.keyboardIndicatorInset;

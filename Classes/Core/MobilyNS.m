@@ -835,7 +835,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 
 - (id)lastObjectIsClass:(Class)objectClass {
     __block id result = nil;
-    [self enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id object, NSUInteger index, BOOL *stop) {
+    [self enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id object, NSUInteger index __unused, BOOL *stop __unused) {
         if([object isKindOfClass:objectClass] == YES) {
             result = object;
             *stop = YES;
@@ -857,7 +857,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 
 - (id)lastObjectIsProtocol:(Protocol*)objectProtocol {
     __block id result = nil;
-    [self enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id object, NSUInteger index, BOOL *stop) {
+    [self enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id object, NSUInteger index __unused, BOOL *stop __unused) {
         if([object conformsToProtocol:objectProtocol] == YES) {
             result = object;
             *stop = YES;
@@ -867,7 +867,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 }
 
 - (BOOL)containsObjectsInArray:(NSArray*)objectsArray {
-    for(id object in self) {
+    for(id object in objectsArray) {
         if([self containsObject:object] == NO) {
             return NO;
         }
@@ -924,25 +924,25 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 }
 
 - (void)each:(void(^)(id object))block {
-    [self enumerateObjectsUsingBlock:^(id object, NSUInteger idx, BOOL *stop) {
+    [self enumerateObjectsUsingBlock:^(id object, NSUInteger index __unused, BOOL* stop __unused) {
         block(object);
     }];
 }
 
 - (void)eachWithIndex:(void(^)(id object, NSUInteger index))block {
-    [self enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
+    [self enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL* stop __unused) {
         block(object, index);
     }];
 }
 
 - (void)each:(void(^)(id object))block options:(NSEnumerationOptions)options {
-    [self enumerateObjectsWithOptions:options usingBlock:^(id object, NSUInteger index, BOOL *stop) {
+    [self enumerateObjectsWithOptions:options usingBlock:^(id object, NSUInteger index __unused, BOOL* stop __unused) {
         block(object);
     }];
 }
 
 - (void)eachWithIndex:(void(^)(id object, NSUInteger index))block options:(NSEnumerationOptions)options {
-    [self enumerateObjectsWithOptions:options usingBlock:^(id object, NSUInteger index, BOOL *stop) {
+    [self enumerateObjectsWithOptions:options usingBlock:^(id object, NSUInteger index, BOOL* stop __unused) {
         block(object, index);
     }];
 }
@@ -959,13 +959,13 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 }
 
 - (NSArray*)select:(BOOL(^)(id object))block {
-    return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings) {
+    return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings __unused) {
         return (block(evaluatedObject) == YES);
     }]];
 }
 
 - (NSArray*)reject:(BOOL(^)(id object))block {
-    return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings) {
+    return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings __unused) {
         return (block(evaluatedObject) == NO);
     }]];
 }
@@ -1175,42 +1175,42 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 }
 
 - (void)each:(void(^)(id key, id value))block {
-    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL* stop __unused) {
         block(key, obj);
     }];
 }
 
 - (void)eachWithIndex:(void(^)(id key, id value, NSUInteger index))block {
     __block NSInteger index = 0;
-    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL* stop __unused) {
         block(key, obj, index);
         index++;
     }];
 }
 
 - (void)eachKey:(void(^)(id key))block {
-    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj __unused, BOOL* stop __unused) {
         block(key);
     }];
 }
 
 - (void)eachKeyWithIndex:(void(^)(id key, NSUInteger index))block {
     __block NSInteger index = 0;
-    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj __unused, BOOL* stop __unused) {
         block(key, index);
         index++;
     }];
 }
 
 - (void)eachValue:(void(^)(id value))block {
-    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+    [self enumerateKeysAndObjectsUsingBlock:^(id key __unused, id obj, BOOL* stop __unused) {
         block(obj);
     }];
 }
 
 - (void)eachValueWithIndex:(void(^)(id value, NSUInteger index))block {
     __block NSInteger index = 0;
-    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+    [self enumerateKeysAndObjectsUsingBlock:^(id key __unused, id obj, BOOL* stop __unused) {
         block(obj, index);
         index++;
     }];
@@ -1218,7 +1218,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 
 - (NSArray*)map:(id(^)(id key, id value))block {
     NSMutableArray* array = [NSMutableArray array];
-    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL* stop __unused) {
         id object = block(key, obj);
         if(object != nil) {
             [array addObject:object];

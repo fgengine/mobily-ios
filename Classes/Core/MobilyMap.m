@@ -291,10 +291,10 @@
 }
 
 - (NSUInteger)indexOfEntryWithObject:(id)object pairedWithKey:(id< NSCopying >)key {
-    NSIndexSet* idx1 = [_objects indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL* stop) {
+    NSIndexSet* idx1 = [_objects indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger index __unused, BOOL* stop __unused) {
         return [obj isEqual:object];
     }];
-    NSIndexSet* idx2 = [_keys indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL* stop) {
+    NSIndexSet* idx2 = [_keys indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger index __unused, BOOL* stop __unused) {
         return [obj isEqual:key];
     }];
     NSUInteger index = NSNotFound;
@@ -321,10 +321,10 @@
 }
 
 - (NSUInteger)indexOfEntryWithObject:(id)object pairedWithKey:(id< NSCopying >)key inRange:(NSRange)range {
-    NSIndexSet* idx1 = [[_objects objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range]]indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL* stop) {
+    NSIndexSet* idx1 = [[_objects objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range]] indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger index __unused, BOOL* stop __unused) {
         return [obj isEqual:object];
     }];
-    NSIndexSet* idx2 = [[_keys objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range]] indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL* stop) {
+    NSIndexSet* idx2 = [[_keys objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range]] indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger index __unused, BOOL* stop __unused) {
         return [obj isEqual:key];
     }];
     NSUInteger index = NSNotFound;
@@ -437,37 +437,37 @@
 }
 
 - (void)each:(void(^)(id key, id object))block {
-    [_objects enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL* stop) {
+    [_objects enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL* stop __unused) {
         block(_keys[index], object);
     }];
 }
 
 - (void)eachWithIndex:(void(^)(id key, id object, NSUInteger index))block {
-    [_objects enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL* stop) {
+    [_objects enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL* stop __unused) {
         block(_keys[index], object, index);
     }];
 }
 
 - (void)eachKey:(void(^)(id key))block {
-    [_objects enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL* stop) {
+    [_objects enumerateObjectsUsingBlock:^(id object __unused, NSUInteger index, BOOL* stop __unused) {
         block(_keys[index]);
     }];
 }
 
 - (void)eachKeyWithIndex:(void(^)(id key, NSUInteger index))block {
-    [_objects enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL* stop) {
+    [_objects enumerateObjectsUsingBlock:^(id object __unused, NSUInteger index, BOOL* stop __unused) {
         block(_keys[index], index);
     }];
 }
 
 - (void)eachValue:(void(^)(id object))block {
-    [_objects enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL* stop) {
+    [_objects enumerateObjectsUsingBlock:^(id object, NSUInteger index __unused, BOOL* stop __unused) {
         block(object);
     }];
 }
 
 - (void)eachValueWithIndex:(void(^)(id object, NSUInteger index))block {
-    [_objects enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL* stop) {
+    [_objects enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL* stop __unused) {
         block(object, index);
     }];
 }
@@ -806,7 +806,7 @@
 }
 
 - (id)mutableCopyWithZone:(NSZone*)zone {
-    return [[MobilyMutableMap alloc] initWithMap:self];
+    return [[MobilyMutableMap allocWithZone:zone] initWithMap:self];
 }
 
 #pragma mark NSFastEnumeration

@@ -135,7 +135,7 @@
 }
 
 - (void)cancelByRequest:(MobilyApiRequest*)request {
-    [self.taskManager enumirateTasksUsingBlock:^(MobilyApiProviderTask* task, BOOL* stop) {
+    [self.taskManager enumirateTasksUsingBlock:^(MobilyApiProviderTask* task, BOOL* stop __unused) {
         if([task.request isEqual:request] == YES) {
             [task cancel];
         }
@@ -143,7 +143,7 @@
 }
 
 - (void)cancelByTarget:(id)target {
-    [self.taskManager enumirateTasksUsingBlock:^(MobilyApiProviderTask* task, BOOL* stop) {
+    [self.taskManager enumirateTasksUsingBlock:^(MobilyApiProviderTask* task, BOOL* stop __unused) {
         if(task.target == target) {
             [task cancel];
         }
@@ -183,7 +183,7 @@
     if(self != nil) {
         self.completeEvent = [MobilyEventBlock eventWithBlock:^id(id sender, id object) {
             if(completeBlock != nil) {
-                completeBlock(_request, _response);
+                completeBlock(sender, object);
             }
             return nil;
         } inMainQueue:YES];

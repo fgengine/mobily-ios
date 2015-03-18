@@ -77,7 +77,7 @@
         self.pickerView = [UIDatePicker new];
         if(_pickerView != nil) {
             _pickerView.datePickerMode = _datePickerMode;
-            [_pickerView addTarget:self action:@selector(changedDate:) forControlEvents:UIControlEventValueChanged];
+            [_pickerView addTarget:self action:@selector(changedDate) forControlEvents:UIControlEventValueChanged];
         }
         self.inputView = _pickerView;
     }
@@ -192,7 +192,7 @@
 }
 
 - (void)setDate:(NSDate*)date animated:(BOOL)animated {
-    [self setDate:date animated:YES emitted:NO];
+    [self setDate:date animated:animated emitted:NO];
 }
 
 #pragma mark Private
@@ -212,7 +212,7 @@
         }
         if([self isEditing] == YES) {
             if(_date != nil) {
-                [_pickerView setDate:_date animated:NO];
+                [_pickerView setDate:_date animated:animated];
             }
         }
         if(emitted == YES) {
@@ -221,7 +221,7 @@
     }
 }
 
-- (void)changedDate:(id)sender {
+- (void)changedDate {
     [self setDate:_pickerView.date animated:YES emitted:YES];
 }
 

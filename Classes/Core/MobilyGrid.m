@@ -288,7 +288,7 @@
 }
 
 - (id)copyWithZone:(NSZone*)zone {
-    return [[MobilyGrid alloc] initWithGrid:self];
+    return [[MobilyGrid allocWithZone:zone] initWithGrid:self];
 }
 
 - (id)mutableCopy {
@@ -296,7 +296,7 @@
 }
 
 - (id)mutableCopyWithZone:(NSZone*)zone {
-    return [[MobilyMutableGrid alloc] initWithGrid:self];
+    return [[MobilyMutableGrid allocWithZone:zone] initWithGrid:self];
 }
 
 @end

@@ -262,30 +262,30 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 #pragma mark UIViewControllerTransitioningDelegate
 
-- (id< UIViewControllerAnimatedTransitioning >)animationControllerForPresentedController:(UIViewController*)presented presentingController:(UIViewController*)presenting sourceController:(UIViewController*)source {
+- (id< UIViewControllerAnimatedTransitioning >)animationControllerForPresentedController:(UIViewController* __unused)presented presentingController:(UIViewController* __unused)presenting sourceController:(UIViewController* __unused)source {
     if(_transitionModal != nil) {
-        _transitionModal.reverse = NO;
+        _transitionModal.operation = MobilyTransitionOperationPresent;
     }
     return _transitionModal;
 }
 
-- (id< UIViewControllerAnimatedTransitioning >)animationControllerForDismissedController:(UIViewController*)dismissed {
+- (id< UIViewControllerAnimatedTransitioning >)animationControllerForDismissedController:(UIViewController* __unused)dismissed {
     if(_transitionModal != nil) {
-        _transitionModal.reverse = YES;
+        _transitionModal.operation = MobilyTransitionOperationDismiss;
     }
     return _transitionModal;
 }
 
-- (id< UIViewControllerInteractiveTransitioning >)interactionControllerForPresentation:(id< UIViewControllerAnimatedTransitioning >)animator {
+- (id< UIViewControllerInteractiveTransitioning >)interactionControllerForPresentation:(id< UIViewControllerAnimatedTransitioning > __unused)animator {
     if(_transitionModal != nil) {
-        _transitionModal.reverse = NO;
+        _transitionModal.operation = MobilyTransitionOperationDismiss;
     }
     return _transitionModal;
 }
 
-- (id< UIViewControllerInteractiveTransitioning >)interactionControllerForDismissal:(id< UIViewControllerAnimatedTransitioning >)animator {
+- (id< UIViewControllerInteractiveTransitioning >)interactionControllerForDismissal:(id< UIViewControllerAnimatedTransitioning > __unused)animator {
     if(_transitionModal != nil) {
-        _transitionModal.reverse = YES;
+        _transitionModal.operation = MobilyTransitionOperationDismiss;
     }
     return _transitionModal;
 }

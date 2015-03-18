@@ -217,7 +217,7 @@
 - (MobilyDataItemCalendarDay*)dayItemForDate:(NSDate*)date {
     NSDate* beginDate = [date beginningOfDay];
     __block MobilyDataItemCalendarDay* result = nil;
-    [_dayItems enumerateColumnsRowsUsingBlock:^(MobilyDataItemCalendarDay* dayItem, NSUInteger column, NSUInteger row, BOOL* stopColumn, BOOL* stopRow) {
+    [_dayItems enumerateColumnsRowsUsingBlock:^(MobilyDataItemCalendarDay* dayItem, NSUInteger column __unused, NSUInteger row __unused, BOOL* stopColumn, BOOL* stopRow) {
         if([dayItem.date isEqualToDate:beginDate] == YES) {
             result = dayItem;
             *stopColumn = YES;
@@ -368,7 +368,7 @@
         __block CGFloat dayOffset = offset.x + daysMargin.left;
         cumulative.height += daysMargin.top;
         offset.y += daysMargin.top;
-        [_dayItems eachRowsColumns:^(MobilyDataItemCalendarDay* dayItem, NSUInteger column, NSUInteger row) {
+        [_dayItems eachRowsColumns:^(MobilyDataItemCalendarDay* dayItem, NSUInteger column, NSUInteger row __unused) {
             if(column != lastColumn) {
                 dayItem.updateFrame = CGRectMake(dayOffset, offset.y, defaultDaysWidth, daysHeight);
                 dayOffset += defaultDaysWidth + daysSpacing.horizontal;
@@ -388,7 +388,7 @@
     return CGRectMake(frame.origin.x, frame.origin.y, monthMargin.left + cumulative.width + monthMargin.right, monthMargin.top + cumulative.height + monthMargin.bottom);
 }
 
-- (void)_willEntriesLayoutForBounds:(CGRect)bounds {
+- (void)_willEntriesLayoutForBounds:(CGRect __unused)bounds {
 }
 
 @end

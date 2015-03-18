@@ -514,7 +514,7 @@
                       _margin.top + headerColumnSize.height + contentSize.height + footerRowSize.height + _margin.bottom);
 }
 
-- (void)_willEntriesLayoutForBounds:(CGRect)bounds {
+- (void)_willEntriesLayoutForBounds:(CGRect __unused)bounds {
 }
 
 @end

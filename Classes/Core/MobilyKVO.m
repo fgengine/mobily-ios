@@ -87,7 +87,7 @@ static void* MobilyKVOContext = &MobilyKVOContext;
 
 #pragma mark Private
 
-- (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
+- (void)observeValueForKeyPath:(NSString* __unused)keyPath ofObject:(id __unused)object change:(NSDictionary*)change context:(void*)context {
 	if(context == MobilyKVOContext) {
 		if(_block != nil) {
 			id oldValue = change[NSKeyValueChangeOldKey];

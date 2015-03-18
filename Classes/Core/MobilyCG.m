@@ -246,6 +246,15 @@ CGRect CGRectDiv(CGRect rect, CGFloat value) {
     return CGRectMake(rect.origin.x / value, rect.origin.y / value, rect.size.width / value, rect.size.height / value);
 }
 
+CGRect CGRectLerp(CGRect rect1, CGRect rect2, CGFloat t) {
+    return CGRectMake(
+        ((1.0f - t) * rect1.origin.x) + (t * rect2.origin.x),
+        ((1.0f - t) * rect1.origin.y) + (t * rect2.origin.y),
+        ((1.0f - t) * rect1.size.width) + (t * rect2.size.width),
+        ((1.0f - t) * rect1.size.height) + (t * rect2.size.height)
+    );
+}
+
 CGRect CGRectIntersectionExt(CGRect r1, CGRect r2, CGRect* smallRemainder, CGRect* largeRemainder) {
     CGRect intersection = CGRectIntersection(r1, r2);
     if(CGRectIsNull(intersection) == NO) {

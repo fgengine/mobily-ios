@@ -132,7 +132,7 @@
     [FBSession.activeSession handleDidBecomeActive];
 }
 
-- (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation {
+- (BOOL)openURL:(NSURL*)url sourceApplication:(NSString* __unused)sourceApplication annotation:(id __unused)annotation {
     [FBSession.activeSession setStateChangeHandler:^(FBSession *session, FBSessionState state, NSError *error) {
          [self sessionStateChanged:session state:state error:error];
      }];

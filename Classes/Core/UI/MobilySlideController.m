@@ -157,6 +157,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 - (void)loadView {
     [super loadView];
     
+    self.view.translatesAutoresizingMaskIntoConstraints = NO;
     self.view.clipsToBounds = YES;
     
     self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureHandle:)];
@@ -229,8 +230,8 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         }
         _backgroundView = backgroundView;
         if(_backgroundView != nil) {
-            _backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
-            _backgroundView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+            // _backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+            // _backgroundView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
             [self.view addSubview:_backgroundView];
         }
     }
@@ -243,8 +244,8 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         }
         _leftView = leftView;
         if(_leftView != nil) {
-            _leftView.translatesAutoresizingMaskIntoConstraints = NO;
-            _leftView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+            // _leftView.translatesAutoresizingMaskIntoConstraints = NO;
+            // _leftView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
             [self.view addSubview:_leftView];
         }
     }
@@ -257,8 +258,8 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         }
         _centerView = centerView;
         if(_centerView != nil) {
-            _centerView.translatesAutoresizingMaskIntoConstraints = NO;
-            _centerView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+            // _centerView.translatesAutoresizingMaskIntoConstraints = NO;
+            // _centerView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
             [self.view addSubview:_centerView];
         }
     }
@@ -271,8 +272,8 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         }
         _rightView = rightView;
         if(_rightView != nil) {
-            _rightView.translatesAutoresizingMaskIntoConstraints = NO;
-            _rightView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+            // _rightView.translatesAutoresizingMaskIntoConstraints = NO;
+            // _rightView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
             [self.view addSubview:_rightView];
         }
     }
@@ -396,16 +397,22 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             [UIView animateWithDuration:speed / _swipeSpeed animations:^{
                 _leftView.frame = leftFrame;
                 _centerView.frame = centerFrame;
-            } completion:^(BOOL finished) {
+            } completion:^(BOOL finished __unused) {
+                _leftView.userInteractionEnabled = YES;
+                _centerView.userInteractionEnabled = NO;
                 _showedLeftController = YES;
+                _swipeProgress = -1.0f;
                 if(completed != nil) {
                     completed();
                 }
             }];
         } else {
+            _leftView.userInteractionEnabled = YES;
             _leftView.frame = leftFrame;
+            _centerView.userInteractionEnabled = NO;
             _centerView.frame = centerFrame;
             _showedLeftController = YES;
+            _swipeProgress = -1.0f;
             if(completed != nil) {
                 completed();
             }
@@ -429,16 +436,22 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             [UIView animateWithDuration:speed / _swipeSpeed animations:^{
                 _leftView.frame = leftFrame;
                 _centerView.frame = centerFrame;
-            } completion:^(BOOL finished) {
+            } completion:^(BOOL finished __unused) {
+                _leftView.userInteractionEnabled = NO;
+                _centerView.userInteractionEnabled = YES;
                 _showedLeftController = NO;
+                _swipeProgress = 0.0f;
                 if(completed != nil) {
                     completed();
                 }
             }];
         } else {
+            _leftView.userInteractionEnabled = NO;
             _leftView.frame = leftFrame;
+            _centerView.userInteractionEnabled = YES;
             _centerView.frame = centerFrame;
             _showedLeftController = NO;
+            _swipeProgress = 0.0f;
             if(completed != nil) {
                 completed();
             }
@@ -462,16 +475,22 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             [UIView animateWithDuration:speed / _swipeSpeed animations:^{
                 _centerView.frame = centerFrame;
                 _rightView.frame = rightFrame;
-            } completion:^(BOOL finished) {
+            } completion:^(BOOL finished __unused) {
+                _centerView.userInteractionEnabled = NO;
+                _rightView.userInteractionEnabled = YES;
                 _showedRightController = YES;
+                _swipeProgress = 1.0f;
                 if(completed != nil) {
                     completed();
                 }
             }];
         } else {
+            _centerView.userInteractionEnabled = NO;
             _centerView.frame = centerFrame;
+            _rightView.userInteractionEnabled = YES;
             _rightView.frame = rightFrame;
             _showedRightController = YES;
+            _swipeProgress = 1.0f;
             if(completed != nil) {
                 completed();
             }
@@ -495,16 +514,22 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             [UIView animateWithDuration:speed / _swipeSpeed animations:^{
                 _centerView.frame = centerFrame;
                 _rightView.frame = rightFrame;
-            } completion:^(BOOL finished) {
+            } completion:^(BOOL finished __unused) {
+                _centerView.userInteractionEnabled = YES;
+                _rightView.userInteractionEnabled = NO;
                 _showedRightController = NO;
+                _swipeProgress = 0.0f;
                 if(completed != nil) {
                     completed();
                 }
             }];
         } else {
+            _centerView.userInteractionEnabled = YES;
             _centerView.frame = centerFrame;
+            _rightView.userInteractionEnabled = NO;
             _rightView.frame = rightFrame;
             _showedRightController = NO;
+            _swipeProgress = 0.0f;
             if(completed != nil) {
                 completed();
             }
@@ -624,7 +649,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
                              _leftView.frame = [self leftViewFrameFromBounds:bounds byPercent:_swipeProgress];
                              _centerView.frame = [self centerViewFrameFromBounds:bounds byPercent:_swipeProgress];
                              _rightView.frame = [self rightViewFrameFromBounds:bounds byPercent:_swipeProgress];
-                         } completion:^(BOOL finished) {
+                         } completion:^(BOOL finished __unused) {
                              if(endedSwipe == YES) {
                                  [self didEndedSwipe];
                              }
@@ -643,7 +668,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
     self.swipeDragging = YES;
 }
 
-- (void)movingSwipe:(CGFloat)progress {
+- (void)movingSwipe:(CGFloat __unused)progress {
 }
 
 - (void)willEndedSwipe {
@@ -654,18 +679,21 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 - (void)didEndedSwipe {
     _showedLeftController = (_swipeProgress < 0.0f) ? YES : NO;
     _showedRightController = (_swipeProgress > 0.0f) ? YES : NO;
+    _leftView.userInteractionEnabled = (_showedLeftController == YES) ? YES : NO;
+    _centerView.userInteractionEnabled = ((_showedLeftController == YES) || (_showedRightController == YES)) ? NO : YES;
+    _rightView.userInteractionEnabled = (_showedRightController == YES) ? YES : NO;
     self.swipeDecelerating = NO;
 }
 
-- (void)tapGestureHandle:(UITapGestureRecognizer*)tapGesture {
+- (void)tapGestureHandle:(UITapGestureRecognizer* __unused)tapGesture {
     if(_showedLeftController == YES) {
         [self hideLeftControllerAnimated:YES completed:nil];
-    } else if(_showedRightController) {
+    } else if(_showedRightController == YES) {
         [self hideRightControllerAnimated:YES completed:nil];
     }
 }
 
-- (void)panGestureHandle:(UIPanGestureRecognizer*)panGesture {
+- (void)panGestureHandle:(UIPanGestureRecognizer* __unused)panGesture {
     if(_swipeDecelerating == NO) {
         CGPoint translation = [_panGesture translationInView:self.view];
         CGPoint velocity = [_panGesture velocityInView:self.view];
@@ -761,22 +789,20 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         }
     } else if(gestureRecognizer == _panGesture) {
         if((_swipeDragging == NO) && (_swipeDecelerating == NO)) {
+            BOOL allowPan = NO;
             CGPoint location = [_panGesture locationInView:self.view];
             CGPoint translation = [_panGesture translationInView:self.view];
-            if(fabs(translation.x) >= fabs(translation.y)) {
-                BOOL allowPan = NO;
-                if((_showedLeftController == YES) && (_leftController != nil) && (translation.x < 0.0f)) {
-                    if(CGRectContainsPoint(_centerView.frame, location) == YES) {
-                        allowPan = YES;
-                    }
-                } else if((_showedRightController == YES) && (_rightController != nil) && (translation.x > 0.0f)) {
-                    if(CGRectContainsPoint(_centerView.frame, location) == YES) {
-                        allowPan = YES;
-                    }
-                } else if((_showedLeftController == NO) && (_leftController != nil) && (translation.x > 0.0f)) {
-                    if(CGRectContainsPoint(UIEdgeInsetsInsetRect(_centerView.frame, _swipeInsets), location) == NO) {
-                        allowPan = YES;
-                    }
+            if((_showedLeftController == YES) && (_leftController != nil)) {
+                if(CGRectContainsPoint(_centerView.frame, location) == YES) {
+                    allowPan = YES;
+                }
+            } else if((_showedRightController == YES) && (_rightController != nil)) {
+                if(CGRectContainsPoint(_centerView.frame, location) == YES) {
+                    allowPan = YES;
+                }
+            } else if((_showedLeftController == NO) && (_leftController != nil) && (translation.x > 0.0f)) {
+                if(fabs(translation.x) >= fabs(translation.y)) {
+                    allowPan = CGRectContainsPoint(UIEdgeInsetsInsetRect(_centerView.frame, _swipeInsets), location);
                     if(allowPan == YES) {
                         id< MobilySlideControllerDelegate > centerController = ([_centerController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_centerController : nil;
                         if([centerController respondsToSelector:@selector(canShowLeftControllerInSlideController:)] == YES) {
@@ -790,10 +816,10 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
                             }
                         }
                     }
-                } else if((_showedRightController == NO) && (_rightController != nil) && (translation.x < 0.0f)) {
-                    if(CGRectContainsPoint(UIEdgeInsetsInsetRect(_centerView.frame, _swipeInsets), location) == NO) {
-                        allowPan = YES;
-                    }
+                }
+            } else if((_showedRightController == NO) && (_rightController != nil) && (translation.x < 0.0f)) {
+                if(fabs(translation.x) >= fabs(translation.y)) {
+                    allowPan = CGRectContainsPoint(UIEdgeInsetsInsetRect(_centerView.frame, _swipeInsets), location);
                     if(allowPan == YES) {
                         id< MobilySlideControllerDelegate > centerController = ([_centerController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_centerController : nil;
                         if([centerController respondsToSelector:@selector(canShowRightControllerInSlideController:)] == YES) {
@@ -808,8 +834,8 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
                         }
                     }
                 }
-                return allowPan;
             }
+            return allowPan;
         }
     }
     return NO;

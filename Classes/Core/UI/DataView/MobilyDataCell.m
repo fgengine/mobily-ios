@@ -59,7 +59,7 @@
 
 #pragma mark Calculating size
 
-+ (CGSize)sizeForItem:(MobilyDataItem*)item availableSize:(CGSize)size {
++ (CGSize)sizeForItem:(MobilyDataItem* __unused)item availableSize:(CGSize)size {
     return size;
 }
 
@@ -283,23 +283,55 @@
 - (void)prepareForUnuse {
 }
 
-- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
-    return [_item fireEventForKey:key bySender:sender byObject:object];
+- (BOOL)containsEventForKey:(id)key {
+    return [_item containsEventForKey:key];
+}
+
+- (BOOL)containsEventForIdentifier:(NSString*)identifier forKey:(id)key {
+    return [_item containsEventForIdentifier:identifier forKey:key];
+}
+
+- (void)fireEventForKey:(id)key byObject:(id)object {
+    [_item fireEventForKey:key bySender:self byObject:object];
+}
+
+- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object {
+    [_item fireEventForIdentifier:identifier forKey:key bySender:self byObject:object];
+}
+
+- (id)fireEventForKey:(id)key byObject:(id)object orDefault:(id)orDefault {
+    return [_item fireEventForKey:key bySender:self byObject:object orDefault:orDefault];
+}
+
+- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object orDefault:(id)orDefault {
+    return [_item fireEventForIdentifier:identifier forKey:key bySender:self byObject:object orDefault:orDefault];
+}
+
+- (void)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
+    [_item fireEventForKey:key bySender:sender byObject:object];
+}
+
+- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object {
+    [_item fireEventForIdentifier:identifier forKey:key bySender:sender byObject:object];
 }
 
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
     return [_item fireEventForKey:key bySender:sender byObject:object orDefault:orDefault];
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
+    return [_item fireEventForIdentifier:identifier forKey:key bySender:sender byObject:object orDefault:orDefault];
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL __unused)animated {
     _selected = selected;
 }
 
-- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL __unused)animated {
     _highlighted = highlighted;
 }
 
-- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+- (void)setEditing:(BOOL)editing animated:(BOOL __unused)animated {
     _editing = editing;
 }
 
@@ -339,10 +371,10 @@
     }
 }
 
-- (void)validateLayoutForBounds:(CGRect)bounds {
+- (void)validateLayoutForBounds:(CGRect __unused)bounds {
 }
 
-- (void)invalidateLayoutForBounds:(CGRect)bounds {
+- (void)invalidateLayoutForBounds:(CGRect __unused)bounds {
 }
 
 #pragma mark Private

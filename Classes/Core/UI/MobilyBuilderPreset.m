@@ -100,7 +100,7 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
 
 + (void)registerByName:(NSString*)name attributes:(NSDictionary*)attributes {
     NSMutableDictionary* finalAttributes = NSMutableDictionary.dictionary;
-    [attributes enumerateKeysAndObjectsUsingBlock:^(NSString* key, NSString* value, BOOL* stop) {
+    [attributes enumerateKeysAndObjectsUsingBlock:^(NSString* key, NSString* value, BOOL* stop __unused) {
         if(([value hasPrefix:@"${"] == YES) && ([value hasSuffix:@"}"] == YES)) {
             NSString* path = [value substringWithRange:NSMakeRange(2, value.length - 3)];
             NSArray* partPath = [path componentsSeparatedByString:@"."];
@@ -193,7 +193,7 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
     if(characterSet == nil) {
         characterSet = [NSCharacterSet characterSetWithCharactersInString:@":-"];
     }
-    [presetAttributes enumerateKeysAndObjectsUsingBlock:^(NSString* key, id value, BOOL* stop) {
+    [presetAttributes enumerateKeysAndObjectsUsingBlock:^(NSString* key, id value, BOOL* stop __unused) {
         NSString* validKey = NSString.string;
         NSArray* components = [key componentsSeparatedByCharactersInSet:characterSet];
         if(components.count > 1) {
@@ -267,7 +267,7 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
 
 #pragma mark NSXMLParserDelegate
 
-- (void)parser:(NSXMLParser*)parser didStartElement:(NSString*)elementName namespaceURI:(NSString*)namespaceURI qualifiedName:(NSString*)qualifiedName attributes:(NSDictionary*)attributes {
+- (void)parser:(NSXMLParser*)parser didStartElement:(NSString*)elementName namespaceURI:(NSString* __unused)namespaceURI qualifiedName:(NSString* __unused)qualifiedName attributes:(NSDictionary*)attributes {
     if(_isFoundedRoot == NO) {
         if([elementName isEqualToString:MOBILY_BUILDER_PRESET_ROOT_NAME] == YES) {
             _isFoundedRoot = YES;
@@ -289,7 +289,7 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
     }
 }
 
-- (void)parser:(NSXMLParser*)parser didEndElement:(NSString*)elementName namespaceURI:(NSString*)namespaceURI qualifiedName:(NSString*)qualifiedName {
+- (void)parser:(NSXMLParser* __unused)parser didEndElement:(NSString*)elementName namespaceURI:(NSString* __unused)namespaceURI qualifiedName:(NSString* __unused)qualifiedName {
     if(_isFoundedRoot == YES) {
         if([elementName isEqualToString:MOBILY_BUILDER_PRESET_ROOT_NAME] == YES) {
             _isFoundedRoot = NO;

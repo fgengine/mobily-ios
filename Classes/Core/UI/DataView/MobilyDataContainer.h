@@ -83,11 +83,16 @@ typedef NS_OPTIONS(NSUInteger, MobilyDataContainerAlign) {
 - (MobilyDataCell*)cellForData:(id)data;
 
 - (BOOL)containsEventForKey:(id)key;
+- (BOOL)containsEventForIdentifier:(NSString*)identifier forKey:(id)key;
 
-- (id)fireEventForKey:(id)key byObject:(id)object;
+- (void)fireEventForKey:(id)key byObject:(id)object;
+- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object;
 - (id)fireEventForKey:(id)key byObject:(id)object orDefault:(id)orDefault;
-- (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
+- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object orDefault:(id)orDefault;
+- (void)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
+- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object;
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
+- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
 
 @end
 

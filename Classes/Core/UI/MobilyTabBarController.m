@@ -266,30 +266,30 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 #pragma mark UIViewControllerTransitioningDelegate
 
-- (id< UIViewControllerAnimatedTransitioning >)animationControllerForPresentedController:(UIViewController*)presented presentingController:(UIViewController*)presenting sourceController:(UIViewController*)source {
+- (id< UIViewControllerAnimatedTransitioning >)animationControllerForPresentedController:(UIViewController* __unused)presented presentingController:(UIViewController* __unused)presenting sourceController:(UIViewController* __unused)source {
     if(_transitionModal != nil) {
-        _transitionModal.reverse = NO;
+        _transitionModal.operation = MobilyTransitionOperationPresent;
     }
     return _transitionModal;
 }
 
-- (id< UIViewControllerAnimatedTransitioning >)animationControllerForDismissedController:(UIViewController*)dismissed {
+- (id< UIViewControllerAnimatedTransitioning >)animationControllerForDismissedController:(UIViewController* __unused)dismissed {
     if(_transitionModal != nil) {
-        _transitionModal.reverse = YES;
+        _transitionModal.operation = MobilyTransitionOperationDismiss;
     }
     return _transitionModal;
 }
 
-- (id< UIViewControllerInteractiveTransitioning >)interactionControllerForPresentation:(id< UIViewControllerAnimatedTransitioning >)animator {
+- (id< UIViewControllerInteractiveTransitioning >)interactionControllerForPresentation:(id< UIViewControllerAnimatedTransitioning > __unused)animator {
     if(_transitionModal != nil) {
-        _transitionModal.reverse = NO;
+        _transitionModal.operation = MobilyTransitionOperationPresent;
     }
     return _transitionModal;
 }
 
-- (id< UIViewControllerInteractiveTransitioning >)interactionControllerForDismissal:(id< UIViewControllerAnimatedTransitioning >)animator {
+- (id< UIViewControllerInteractiveTransitioning >)interactionControllerForDismissal:(id< UIViewControllerAnimatedTransitioning > __unused)animator {
     if(_transitionModal != nil) {
-        _transitionModal.reverse = YES;
+        _transitionModal.operation = MobilyTransitionOperationDismiss;
     }
     return _transitionModal;
 }
@@ -312,22 +312,26 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 - (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray*)viewControllers changed:(BOOL)changed {
 }
 */
-- (NSUInteger)tabBarControllerSupportedInterfaceOrientations:(UITabBarController*)tabBarController {
+- (NSUInteger)tabBarControllerSupportedInterfaceOrientations:(UITabBarController* __unused)tabBarController {
     return self.selectedViewController.supportedInterfaceOrientations;
 }
 
-- (UIInterfaceOrientation)tabBarControllerPreferredInterfaceOrientationForPresentation:(UITabBarController*)tabBarController {
+- (UIInterfaceOrientation)tabBarControllerPreferredInterfaceOrientationForPresentation:(UITabBarController* __unused)tabBarController {
     return [self.selectedViewController preferredInterfaceOrientationForPresentation];
 }
 
-- (id< UIViewControllerInteractiveTransitioning >)tabBarController:(UITabBarController*)tabBarController interactionControllerForAnimationController:(id< UIViewControllerAnimatedTransitioning >)animationController {
+- (id< UIViewControllerInteractiveTransitioning >)tabBarController:(UITabBarController* __unused)tabBarController interactionControllerForAnimationController:(id< UIViewControllerAnimatedTransitioning > __unused)animationController {
     return _transitionNavigation;
 }
 
-- (id< UIViewControllerAnimatedTransitioning >)tabBarController:(UITabBarController*)tabBarController animationControllerForTransitionFromViewController:(UIViewController*)fromViewController toViewController:(UIViewController*)toViewController {
+- (id< UIViewControllerAnimatedTransitioning >)tabBarController:(UITabBarController* __unused)tabBarController animationControllerForTransitionFromViewController:(UIViewController*)fromViewController toViewController:(UIViewController*)toViewController {
     if(_transitionNavigation != nil) {
         NSArray* viewControllers = tabBarController.viewControllers;
-        _transitionNavigation.reverse = [viewControllers indexOfObject:fromViewController] < [viewControllers indexOfObject:toViewController];
+        if([viewControllers indexOfObject:fromViewController] > [viewControllers indexOfObject:toViewController]) {
+            _transitionModal.operation = MobilyTransitionOperationPush;
+        } else {
+            _transitionModal.operation = MobilyTransitionOperationPop;
+        }
         return _transitionNavigation;
     }
     return nil;

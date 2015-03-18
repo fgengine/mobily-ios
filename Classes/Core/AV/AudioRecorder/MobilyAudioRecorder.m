@@ -66,7 +66,7 @@
     return self;
 }
 
-- (instancetype)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder* __unused)coder {
     self = [super init];
     if(self != nil) {
         [self setup];
@@ -280,7 +280,7 @@
 
 #pragma mark AVAudioRecorderDelegate
 
-- (void)audioRecorderDidFinishRecording:(AVAudioRecorder*)recorder successfully:(BOOL)successfully {
+- (void)audioRecorderDidFinishRecording:(AVAudioRecorder* __unused)recorder successfully:(BOOL __unused)successfully {
     self.waitFinished = NO;
     self.started = NO;
     if([_delegate respondsToSelector:@selector(audioRecorderDidFinished:)] == YES) {
@@ -290,7 +290,7 @@
     }
 }
 
-- (void)audioRecorderEncodeErrorDidOccur:(AVAudioRecorder*)recorder error:(NSError*)error {
+- (void)audioRecorderEncodeErrorDidOccur:(AVAudioRecorder* __unused)recorder error:(NSError* __unused)error {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
     NSLog(@"MobilyAudioRecorder::EncodeErrorDidOccur:%@", error);
 #endif

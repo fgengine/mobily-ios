@@ -222,7 +222,7 @@
 }
 
 - (void)replaceOriginItems:(NSArray*)originItems withItems:(NSArray*)items {
-    NSIndexSet* indexSet = [_items indexesOfObjectsPassingTest:^BOOL(MobilyDataItem* originItem, NSUInteger index, BOOL* stop) {
+    NSIndexSet* indexSet = [_items indexesOfObjectsPassingTest:^BOOL(MobilyDataItem* originItem, NSUInteger index __unused, BOOL* stop __unused) {
         return [originItems containsObject:originItem];
     }];
     if(indexSet.count == items.count) {
