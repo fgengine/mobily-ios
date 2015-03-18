@@ -157,7 +157,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 - (void)loadView {
     [super loadView];
     
-    self.view.translatesAutoresizingMaskIntoConstraints = NO;
     self.view.clipsToBounds = YES;
     
     self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureHandle:)];
@@ -230,8 +229,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         }
         _backgroundView = backgroundView;
         if(_backgroundView != nil) {
-            // _backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
-            // _backgroundView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
             [self.view addSubview:_backgroundView];
         }
     }
@@ -244,8 +241,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         }
         _leftView = leftView;
         if(_leftView != nil) {
-            // _leftView.translatesAutoresizingMaskIntoConstraints = NO;
-            // _leftView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
             [self.view addSubview:_leftView];
         }
     }
@@ -258,8 +253,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         }
         _centerView = centerView;
         if(_centerView != nil) {
-            // _centerView.translatesAutoresizingMaskIntoConstraints = NO;
-            // _centerView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
             [self.view addSubview:_centerView];
         }
     }
@@ -272,8 +265,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         }
         _rightView = rightView;
         if(_rightView != nil) {
-            // _rightView.translatesAutoresizingMaskIntoConstraints = NO;
-            // _rightView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
             [self.view addSubview:_rightView];
         }
     }
