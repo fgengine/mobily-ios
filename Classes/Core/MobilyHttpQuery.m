@@ -104,7 +104,7 @@
         [queryString appendFormat:@"%@=%@", key, value.description];
     }];
     urlComponents.query = queryString;
-    self.requestUrl = [NSURL URLWithString:urlComponents.string];
+    self.requestUrl = urlComponents.URL;
 }
 
 - (void)setRequestUrlParams:(NSDictionary*)params {

@@ -94,7 +94,6 @@ CGRect CGRectSub(CGRect rect, CGFloat value);
 CGRect CGRectMul(CGRect rect, CGFloat value);
 CGRect CGRectDiv(CGRect rect, CGFloat value);
 CGRect CGRectLerp(CGRect rect1, CGRect rect2, CGFloat t);
-CGRect CGRectIntersectionExt(CGRect r1, CGRect r2, CGRect* smallRemainder, CGRect* largeRemainder);
 CGRect CGRectAspectFillFromBoundsAndSize(CGRect bounds, CGSize size);
 CGRect CGRectAspectFitFromBoundsAndSize(CGRect bounds, CGSize size);
 

@@ -246,6 +246,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 @property(nonatomic, readwrite, assign) CGFloat scrollIndicatorInsetRight;
 @property(nonatomic, readwrite, assign) CGFloat scrollIndicatorInsetBottom;
 @property(nonatomic, readwrite, assign) CGFloat scrollIndicatorInsetLeft;
+@property(nonatomic, readonly, assign) CGRect visibleBounds;
 
 - (void)setContentOffsetX:(CGFloat)contentOffsetX animated:(BOOL)animated;
 - (void)setContentOffsetY:(CGFloat)contentOffsetY animated:(BOOL)animated;

@@ -282,10 +282,6 @@
     return [NSArray arrayWithArray:result];
 }
 
-- (CGRect)visibleBounds {
-    return UIEdgeInsetsInsetRect(self.bounds, self.contentInset);
-}
-
 - (NSArray*)selectedItems {
     return _selectedItems;
 }

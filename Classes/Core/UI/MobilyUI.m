@@ -1407,7 +1407,7 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
     if(value != nil) {
         return value.UIEdgeInsetsValue;
     }
-    return UIEdgeInsetsMake(8.0f, 8.0f, 8.0f, 8.0f);
+    return UIEdgeInsetsMake(2.0f, 0.0f, 2.0f, 0.0f);
 }
 
 - (void)setContentOffsetX:(CGFloat)contentOffsetX {
@@ -1506,6 +1506,10 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
     return self.scrollIndicatorInsets.left;
 }
 
+- (CGRect)visibleBounds {
+    return UIEdgeInsetsInsetRect(self.bounds, self.contentInset);
+}
+
 #pragma mark Public
 
 - (void)setContentOffsetX:(CGFloat)contentOffsetX animated:(BOOL)animated {
@@ -1531,63 +1535,47 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 - (void)adjustmentNotificationKeyboardShow:(NSNotification*)notification {
     self.keyboardResponder = [UIResponder currentFirstResponderInView:self];
     if([[self keyboardResponder] isKindOfClass:UIView.class] == YES) {
-        CGPoint contentOffset = self.contentOffset;
-        UIEdgeInsets contentInsets = self.contentInset;
-        UIEdgeInsets indicatorInsets = self.scrollIndicatorInsets;
         CGRect scrollRect = [self convertRect:self.bounds toView:nil];
         CGRect keyboardRect = [[notification userInfo][UIKeyboardFrameEndUserInfoKey] CGRectValue];
-        CGRect responderRect = [(UIView*)self.keyboardResponder convertRect:((UIView*)self.keyboardResponder).bounds toView:nil];
-        CGRect smallRemainderRect = CGRectZero, largeRemainderRect = CGRectZero;
-        CGRect intersectionRect = CGRectIntersectionExt(scrollRect, keyboardRect, &smallRemainderRect, &largeRemainderRect);
+        CGRect intersectionRect = CGRectIntersection(scrollRect, keyboardRect);
         if(CGRectIsNull(intersectionRect) == NO) {
-            CGPoint smallRemainderCenter = CGRectGetCenterPoint(smallRemainderRect);
-            CGPoint largeRemainderCenter = CGRectGetCenterPoint(largeRemainderRect);
-            if(ABS(smallRemainderCenter.x - largeRemainderCenter.x) > FLT_EPSILON) {
-                if(smallRemainderCenter.x >= largeRemainderCenter.x) {
-                    contentInsets.right = intersectionRect.size.width + smallRemainderRect.size.width;
-                    indicatorInsets.right = intersectionRect.size.width + smallRemainderRect.size.width;
-                } else {
-                    contentInsets.left = intersectionRect.size.width + smallRemainderRect.size.width;
-                    indicatorInsets.left = intersectionRect.size.width + smallRemainderRect.size.width;
-                }
+            if(intersectionRect.size.height > FLT_EPSILON) {
+                UIEdgeInsets contentInsets = self.contentInset;
+                UIEdgeInsets indicatorInsets = self.scrollIndicatorInsets;
+                self.keyboardContentInset = self.contentInset;
+                self.keyboardIndicatorInset = self.scrollIndicatorInsets;
+                contentInsets.bottom = indicatorInsets.bottom = intersectionRect.size.height;
+                self.contentInset = contentInsets;
+                self.scrollIndicatorInsets = indicatorInsets;
             }
-            if(ABS(smallRemainderCenter.y - largeRemainderCenter.y) > FLT_EPSILON) {
-                if(smallRemainderCenter.y >= largeRemainderCenter.y) {
-                    contentInsets.bottom = intersectionRect.size.height + smallRemainderRect.size.height;
-                    indicatorInsets.bottom = intersectionRect.size.height + smallRemainderRect.size.height;
-                } else {
-                    contentInsets.top = intersectionRect.size.height + smallRemainderRect.size.height;
-                    indicatorInsets.top = intersectionRect.size.height + smallRemainderRect.size.height;
-                }
-            }
-            if(CGRectContainsRect(largeRemainderRect, responderRect) == NO) {
-                CGRect visibleRect = UIEdgeInsetsInsetRect(largeRemainderRect, [self keyboardInset]);
-                CGRect correctRect = CGRectOffset(responderRect, contentOffset.x, contentOffset.y);
+            CGRect visibleRect = UIEdgeInsetsInsetRect(self.visibleBounds, self.keyboardInset);
+            CGRect responderRect = [(UIView*)self.keyboardResponder convertRect:((UIView*)self.keyboardResponder).bounds toView:self];
+            if(CGRectContainsRect(visibleRect, responderRect) == NO) {
+                CGPoint contentOffset = self.contentOffset;
+                self.keyboardContentOffset = contentOffset;
                 CGFloat vrsx = CGRectGetMinX(visibleRect), vrsy = CGRectGetMinY(visibleRect);
                 CGFloat vrex = CGRectGetMaxX(visibleRect), vrey = CGRectGetMaxY(visibleRect);
                 CGFloat vrcx = CGRectGetMidX(visibleRect), vrcy = CGRectGetMidY(visibleRect);
-                CGFloat crsx = CGRectGetMinX(correctRect), crsy = CGRectGetMinY(correctRect);
-                CGFloat crex = CGRectGetMaxX(correctRect), crey = CGRectGetMaxY(correctRect);
-                CGFloat crcx = CGRectGetMidX(correctRect), crcy = CGRectGetMidY(correctRect);
-                if((vrex - vrsx) < (crex - crsx)) {
-                    contentOffset.x += vrcx - crcx;
-                } else if(vrsx > crsx) {
-                    contentOffset.x -= vrsx - crsx;
-                } else if(vrex < crex) {
-                    contentOffset.x -= vrex - crex;
+                CGFloat rrsx = CGRectGetMinX(responderRect), rrsy = CGRectGetMinY(responderRect);
+                CGFloat rrex = CGRectGetMaxX(responderRect), rrey = CGRectGetMaxY(responderRect);
+                CGFloat rrcx = CGRectGetMidX(responderRect), rrcy = CGRectGetMidY(responderRect);
+                if((vrex - vrsx) < (rrex - rrsx)) {
+                    contentOffset.x += vrcx - rrcx;
+                } else if(vrsx > rrsx) {
+                    contentOffset.x -= vrsx - rrsx;
+                } else if(vrex < rrex) {
+                    contentOffset.x -= vrex - rrex;
                 }
-                if((vrey - vrsy) < (crey - crsy)) {
-                    contentOffset.y += vrcy - crcy;
-                } else if(vrsy > crsy) {
-                    contentOffset.y -= vrsy - crsy;
-                } else if(vrey < crey) {
-                    contentOffset.y -= vrey - crey;
+                if((vrey - vrsy) < (rrey - rrsy)) {
+                    contentOffset.y += vrcy - rrcy;
+                } else if(vrsy > rrsy) {
+                    contentOffset.y -= vrsy - rrsy;
+                } else if(vrey < rrey) {
+                    contentOffset.y -= vrey - rrey;
                 }
+                [self setContentOffset:contentOffset animated:YES];
             }
         }
-        self.contentInset = contentInsets;
-        self.scrollIndicatorInsets = indicatorInsets;
-        [self setContentOffset:contentOffset animated:NO];
     }
 }
 
