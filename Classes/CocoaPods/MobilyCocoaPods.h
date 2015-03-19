@@ -80,6 +80,7 @@
 #   import "MobilyAV.h"
 #   import "MobilyAudioRecorder.h"
 #   import "MobilyAudioPlayer.h"
+#   import "MobilyGeoLocationManager.h"
 #endif
 
 /*--------------------------------------------------*/

@@ -131,7 +131,7 @@
 
 #pragma mark UIButton
 
-- (CGSize)sizeThatFits:(CGSize)size {
+- (CGSize)sizeThatFits:(CGSize __unused)size {
     return [self intrinsicContentSize];
 }
 

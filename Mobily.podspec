@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name = 'Mobily'
-    s.version = '2.0.87'
+    s.version = '2.0.88'
     s.summary = 'Mobily framework for iOS'
     s.homepage = 'https://github.com/fgengine/mobily-ios/tree/v2'
     s.license = {
@@ -34,7 +34,7 @@ Pod::Spec.new do |s|
         ss.public_header_files = 'Classes/Core/**/*.h'
         ss.source_files = 'Classes/Core/**/*.{h,m}'
         ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_CORE' }
-        ss.frameworks = 'Foundation', 'CoreGraphics', 'UIKit', 'AVFoundation'
+        ss.frameworks = 'Foundation', 'CoreGraphics', 'UIKit', 'AVFoundation', 'CoreLocation'
         ss.dependency 'Mobily/CocoaPods'
     end
 
