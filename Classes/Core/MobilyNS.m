@@ -495,6 +495,26 @@
     return [self dateByAddingTimeInterval:seconds];
 }
 
+- (BOOL)isEarlier:(NSDate*)anotherDate {
+    return ([self compare:anotherDate] == NSOrderedAscending);
+}
+
+- (BOOL)isEarlierOrSame:(NSDate*)anotherDate {
+    return ([self isEarlier:anotherDate] || [self isSame:anotherDate]);
+}
+
+- (BOOL)isSame:(NSDate*)anotherDate {
+    return ([self compare:anotherDate] == NSOrderedSame);
+}
+
+- (BOOL)isAfter:(NSDate*)anotherDate {
+    return ([self compare:anotherDate] == NSOrderedDescending);
+}
+
+- (BOOL)isAfterOrSame:(NSDate*)anotherDate {
+    return ([self isAfter:anotherDate] || [self isSame:anotherDate]);
+}
+
 - (MobilyDateSeason)season {
     NSDateComponents* components = [NSCalendar.currentCalendar components:NSCalendarUnitMonth fromDate:self];
     NSInteger month = [components month];
