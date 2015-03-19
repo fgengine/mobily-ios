@@ -53,6 +53,7 @@
     CGRect _updateFrame;
     CGRect _displayFrame;
     CGRect _frame;
+    BOOL _allowsAlign;
     BOOL _allowsSelection;
     BOOL _allowsHighlighting;
     BOOL _allowsEditing;

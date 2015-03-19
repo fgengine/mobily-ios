@@ -42,6 +42,10 @@
 
 /*--------------------------------------------------*/
 
+@class MobilyGeoLocationRequest;
+
+/*--------------------------------------------------*/
+
 typedef NS_ENUM(NSInteger, MobilyGeoLocationServicesState) {
     MobilyGeoLocationServicesStateAvailable,
     MobilyGeoLocationServicesStateNotDetermined,
@@ -51,14 +55,6 @@ typedef NS_ENUM(NSInteger, MobilyGeoLocationServicesState) {
 };
 
 typedef CGFloat MobilyGeoLocationAccuracy;
-
-extern const MobilyGeoLocationAccuracy MobilyGeoLocationAccuracyCity;
-extern const MobilyGeoLocationAccuracy MobilyGeoLocationAccuracyNeighborhood;
-extern const MobilyGeoLocationAccuracy MobilyGeoLocationAccuracyBlock;
-extern const MobilyGeoLocationAccuracy MobilyGeoLocationAccuracyHouse;
-extern const MobilyGeoLocationAccuracy MobilyGeoLocationAccuracyRoom;
-
-@class MobilyGeoLocationRequest;
 
 typedef NS_ENUM(NSInteger, MobilyGeoLocationStatus) {
     MobilyGeoLocationStatusSuccess = 0,

@@ -51,6 +51,7 @@
 @synthesize updateFrame = _updateFrame;
 @synthesize displayFrame = _displayFrame;
 @synthesize order = _order;
+@synthesize allowsAlign = _allowsAlign;
 @synthesize allowsSelection = _allowsSelection;
 @synthesize allowsHighlighting = _allowsHighlighting;
 @synthesize allowsEditing = _allowsEditing;

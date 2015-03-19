@@ -54,6 +54,7 @@
 @property(nonatomic, readwrite, assign) CGRect updateFrame;
 @property(nonatomic, readwrite, assign) CGRect displayFrame;
 @property(nonatomic, readonly, assign) CGRect frame;
+@property(nonatomic, readwrite, assign) BOOL allowsAlign;
 @property(nonatomic, readwrite, assign) BOOL allowsSelection;
 @property(nonatomic, readwrite, assign) BOOL allowsHighlighting;
 @property(nonatomic, readwrite, assign) BOOL allowsEditing;

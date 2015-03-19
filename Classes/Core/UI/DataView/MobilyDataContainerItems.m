@@ -240,37 +240,39 @@
     alingCorner.y = MAX(visibleInsets.top, MIN(alingCorner.y, contentSize.height - (visibleSize.height - (visibleInsets.top + visibleInsets.bottom))));
     if(CGRectContainsPoint(_frame, alingCorner) == YES) {
         for(MobilyDataItem* item in _entries) {
-            CGPoint alingItemCorner = CGPointZero;
-            if((_alignPosition & MobilyDataContainerAlignLeft) != 0) {
-                alingItemCorner.x = CGRectGetMinX(item.updateFrame);
-            } else if((_alignPosition & MobilyDataContainerAlignCenteredHorizontally) != 0) {
-                alingItemCorner.x = CGRectGetMidX(item.updateFrame);
-            } else if((_alignPosition & MobilyDataContainerAlignRight) != 0) {
-                alingItemCorner.x = CGRectGetMaxX(item.updateFrame);
-            } else {
-                alingItemCorner.x = contentOffset.x;
-            }
-            if((_alignPosition & MobilyDataContainerAlignTop) != 0) {
-                alingItemCorner.y = CGRectGetMinY(item.updateFrame);
-            } else if((_alignPosition & MobilyDataContainerAlignCenteredVertically) != 0) {
-                alingItemCorner.y = CGRectGetMidY(item.updateFrame);
-            } else if((_alignPosition & MobilyDataContainerAlignBottom) != 0) {
-                alingItemCorner.y = CGRectGetMaxY(item.updateFrame);
-            } else {
-                alingItemCorner.y = contentOffset.y;
-            }
-            CGFloat dx = alingCorner.x - alingItemCorner.x;
-            CGFloat dy = alingCorner.y - alingItemCorner.y;
-            BOOL adx = (ABS(alingItemCorner.x - contentOffset.x) > FLT_EPSILON) && (ABS(dx) <= _alignThreshold.horizontal);
-            BOOL ady = (ABS(alingItemCorner.y - contentOffset.y) > FLT_EPSILON) && (ABS(dy) <= _alignThreshold.vertical);
-            if((adx == YES) || (ady == YES)) {
-                if(adx == YES) {
-                    contentOffset.x -= dx;
-                    alingCorner.x -= dx;
+            if(item.allowsAlign == YES) {
+                CGPoint alingItemCorner = CGPointZero;
+                if((_alignPosition & MobilyDataContainerAlignLeft) != 0) {
+                    alingItemCorner.x = CGRectGetMinX(item.updateFrame);
+                } else if((_alignPosition & MobilyDataContainerAlignCenteredHorizontally) != 0) {
+                    alingItemCorner.x = CGRectGetMidX(item.updateFrame);
+                } else if((_alignPosition & MobilyDataContainerAlignRight) != 0) {
+                    alingItemCorner.x = CGRectGetMaxX(item.updateFrame);
+                } else {
+                    alingItemCorner.x = contentOffset.x;
                 }
-                if(ady == YES) {
-                    contentOffset.y -= dy;
-                    alingCorner.y -= dy;
+                if((_alignPosition & MobilyDataContainerAlignTop) != 0) {
+                    alingItemCorner.y = CGRectGetMinY(item.updateFrame);
+                } else if((_alignPosition & MobilyDataContainerAlignCenteredVertically) != 0) {
+                    alingItemCorner.y = CGRectGetMidY(item.updateFrame);
+                } else if((_alignPosition & MobilyDataContainerAlignBottom) != 0) {
+                    alingItemCorner.y = CGRectGetMaxY(item.updateFrame);
+                } else {
+                    alingItemCorner.y = contentOffset.y;
+                }
+                CGFloat dx = alingCorner.x - alingItemCorner.x;
+                CGFloat dy = alingCorner.y - alingItemCorner.y;
+                BOOL adx = (ABS(alingItemCorner.x - contentOffset.x) > FLT_EPSILON) && (ABS(dx) <= _alignThreshold.horizontal);
+                BOOL ady = (ABS(alingItemCorner.y - contentOffset.y) > FLT_EPSILON) && (ABS(dy) <= _alignThreshold.vertical);
+                if((adx == YES) || (ady == YES)) {
+                    if(adx == YES) {
+                        contentOffset.x -= dx;
+                        alingCorner.x -= dx;
+                    }
+                    if(ady == YES) {
+                        contentOffset.y -= dy;
+                        alingCorner.y -= dy;
+                    }
                 }
             }
         }

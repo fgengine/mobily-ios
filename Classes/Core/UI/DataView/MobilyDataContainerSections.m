@@ -182,9 +182,70 @@
 #pragma mark Private override
 
 - (CGPoint)_alignWithVelocity:(CGPoint)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize visibleInsets:(UIEdgeInsets)visibleInsets {
-    if(CGRectContainsPoint(_frame, contentOffset) == YES) {
-        for(MobilyDataContainer* section in _sections) {
-            if(section.allowAutoAlign == YES) {
+    if(_allowAutoAlign == YES) {
+        CGPoint alingCorner = CGPointZero;
+        if((_alignPosition & MobilyDataContainerAlignLeft) != 0) {
+            alingCorner.x = contentOffset.x + visibleInsets.left;
+        } else if((_alignPosition & MobilyDataContainerAlignCenteredHorizontally) != 0) {
+            alingCorner.x = contentOffset.x + (visibleInsets.left + (visibleSize.width * 0.5f));
+        } else if((_alignPosition & MobilyDataContainerAlignRight) != 0) {
+            alingCorner.x = contentOffset.x + (visibleSize.width - visibleInsets.right);
+        } else {
+            alingCorner.x = contentOffset.x;
+        }
+        if((_alignPosition & MobilyDataContainerAlignTop) != 0) {
+            alingCorner.y = contentOffset.y + visibleInsets.top;
+        } else if((_alignPosition & MobilyDataContainerAlignCenteredVertically) != 0) {
+            alingCorner.y = contentOffset.y + (visibleInsets.top + (visibleSize.height * 0.5f));
+        } else if((_alignPosition & MobilyDataContainerAlignBottom) != 0) {
+            alingCorner.y = contentOffset.y + (visibleSize.height - visibleInsets.bottom);
+        } else {
+            alingCorner.y = contentOffset.y;
+        }
+        alingCorner.x = MAX(visibleInsets.left, MIN(alingCorner.x, contentSize.width - (visibleSize.width - (visibleInsets.left + visibleInsets.right))));
+        alingCorner.y = MAX(visibleInsets.top, MIN(alingCorner.y, contentSize.height - (visibleSize.height - (visibleInsets.top + visibleInsets.bottom))));
+        if(CGRectContainsPoint(_frame, alingCorner) == YES) {
+            for(MobilyDataContainer* section in _sections) {
+                if(section.allowAutoAlign == YES) {
+                    CGPoint alingSectionCorner = CGPointZero;
+                    if((_alignPosition & MobilyDataContainerAlignLeft) != 0) {
+                        alingSectionCorner.x = CGRectGetMinX(section.frame);
+                    } else if((_alignPosition & MobilyDataContainerAlignCenteredHorizontally) != 0) {
+                        alingSectionCorner.x = CGRectGetMidX(section.frame);
+                    } else if((_alignPosition & MobilyDataContainerAlignRight) != 0) {
+                        alingSectionCorner.x = CGRectGetMaxX(section.frame);
+                    } else {
+                        alingSectionCorner.x = contentOffset.x;
+                    }
+                    if((_alignPosition & MobilyDataContainerAlignTop) != 0) {
+                        alingSectionCorner.y = CGRectGetMinY(section.frame);
+                    } else if((_alignPosition & MobilyDataContainerAlignCenteredVertically) != 0) {
+                        alingSectionCorner.y = CGRectGetMidY(section.frame);
+                    } else if((_alignPosition & MobilyDataContainerAlignBottom) != 0) {
+                        alingSectionCorner.y = CGRectGetMaxY(section.frame);
+                    } else {
+                        alingSectionCorner.y = contentOffset.y;
+                    }
+                    CGFloat dx = alingCorner.x - alingSectionCorner.x;
+                    CGFloat dy = alingCorner.y - alingSectionCorner.y;
+                    BOOL adx = (ABS(alingSectionCorner.x - contentOffset.x) > FLT_EPSILON) && (ABS(dx) <= _alignThreshold.horizontal);
+                    BOOL ady = (ABS(alingSectionCorner.y - contentOffset.y) > FLT_EPSILON) && (ABS(dy) <= _alignThreshold.vertical);
+                    if((adx == YES) || (ady == YES)) {
+                        if(adx == YES) {
+                            contentOffset.x -= dx;
+                            alingCorner.x -= dx;
+                        }
+                        if(ady == YES) {
+                            contentOffset.y -= dy;
+                            alingCorner.y -= dy;
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        if(CGRectContainsPoint(_frame, contentOffset) == YES) {
+            for(MobilyDataContainer* section in _sections) {
                 contentOffset = [section _alignWithVelocity:velocity contentOffset:contentOffset contentSize:contentSize visibleSize:visibleSize visibleInsets:visibleInsets];
             }
         }

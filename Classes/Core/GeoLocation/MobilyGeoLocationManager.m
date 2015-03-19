@@ -472,15 +472,5 @@
 }
 
 @end
-    
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
-const MobilyGeoLocationAccuracy MobilyGeoLocationAccuracyCity = 5000.0; // in meters
-const MobilyGeoLocationAccuracy MobilyGeoLocationAccuracyNeighborhood = 1000.0; // in meters
-const MobilyGeoLocationAccuracy MobilyGeoLocationAccuracyBlock = 100.0; // in meters
-const MobilyGeoLocationAccuracy MobilyGeoLocationAccuracyHouse = 15.0; // in meters
-const MobilyGeoLocationAccuracy MobilyGeoLocationAccuracyRoom = 5.0; // in meters
 
 /*--------------------------------------------------*/
