@@ -45,6 +45,7 @@
 @synthesize parent = _parent;
 @synthesize frame = _frame;
 @synthesize allowAutoAlign = _allowAutoAlign;
+@synthesize alignPosition = _alignPosition;
 @synthesize alignThreshold = _alignThreshold;
 
 #pragma mark Init / Free
@@ -59,7 +60,7 @@
 
 - (void)setup {
     _alignPosition = MobilyDataContainerAlignLeft | MobilyDataContainerAlignTop;
-    _alignThreshold = 20.0f;
+    _alignThreshold = UIOffsetMake(20.0f, 20.0f);
 }
 
 - (void)dealloc {
@@ -106,9 +107,9 @@
 - (void)_didScroll {
 }
 
-- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize viewportSize:(CGSize)viewportSize {
+- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize visibleInsets:(UIEdgeInsets)visibleInsets {
     if(_allowAutoAlign == YES) {
-        *contentOffset = [self _alignWithVelocity:velocity contentOffset:*contentOffset contentSize:contentSize viewportSize:viewportSize];
+        *contentOffset = [self _alignWithVelocity:velocity contentOffset:*contentOffset contentSize:contentSize visibleSize:visibleSize visibleInsets:visibleInsets];
     }
 }
 
@@ -129,11 +130,18 @@
 
 - (void)_didEndUpdateAnimated:(BOOL __unused)animated {
     if((_allowAutoAlign == YES) && (_view.isDragging == NO) && (_view.isDecelerating == NO)) {
-        _view.contentOffset = [self _alignWithVelocity:CGPointZero contentOffset:_view.contentOffset contentSize:_view.contentSize viewportSize:_view.boundsSize];
+        CGPoint contentOffset = _view.contentOffset;
+        CGSize contentSize = _view.contentSize;
+        CGSize visibleSize = _view.boundsSize;
+        UIEdgeInsets visibleInsets = UIEdgeInsetsZero;
+        CGPoint alingOffset = [self _alignWithVelocity:CGPointZero contentOffset:contentOffset contentSize:contentSize visibleSize:visibleSize visibleInsets:visibleInsets];
+        alingOffset.x = MAX(visibleInsets.left, MIN(alingOffset.x, contentSize.width - (visibleSize.width - (visibleInsets.left + visibleInsets.right))));
+        alingOffset.y = MAX(visibleInsets.top, MIN(alingOffset.y, contentSize.height - (visibleSize.height - (visibleInsets.top + visibleInsets.bottom))));
+        [_view setContentOffset:alingOffset animated:YES];
     }
 }
 
-- (CGPoint)_alignWithVelocity:(CGPoint __unused)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize __unused)contentSize viewportSize:(CGSize __unused)viewportSize {
+- (CGPoint)_alignWithVelocity:(CGPoint __unused)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize __unused)contentSize visibleSize:(CGSize __unused)visibleSize visibleInsets:(UIEdgeInsets __unused)visibleInsets {
     return contentOffset;
 }
 

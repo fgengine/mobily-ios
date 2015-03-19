@@ -45,7 +45,8 @@
     __weak MobilyDataView* _view;
     __weak MobilyDataContainer* _parent;
     BOOL _allowAutoAlign;
-    CGFloat _alignThreshold;
+    MobilyDataContainerAlign _alignPosition;
+    UIOffset _alignThreshold;
     CGRect _frame;
 }
 
@@ -59,7 +60,7 @@
 
 - (void)_willBeginDragging;
 - (void)_didScroll;
-- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize viewportSize:(CGSize)viewportSize;
+- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize visibleInsets:(UIEdgeInsets)visibleInsets;
 - (void)_didEndDraggingWillDecelerate:(BOOL)decelerate;
 - (void)_willBeginDecelerating;
 - (void)_didEndDecelerating;
@@ -68,7 +69,7 @@
 - (void)_didBeginUpdateAnimated:(BOOL)animated;
 - (void)_didEndUpdateAnimated:(BOOL)animated;
 
-- (CGPoint)_alignWithVelocity:(CGPoint)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize viewportSize:(CGSize)viewportSize;
+- (CGPoint)_alignWithVelocity:(CGPoint)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize visibleInsets:(UIEdgeInsets)visibleInsets;
 
 - (CGRect)_validateLayoutForAvailableFrame:(CGRect)frame;
 - (void)_willLayoutForBounds:(CGRect)bounds;

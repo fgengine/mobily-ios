@@ -181,10 +181,12 @@
 
 #pragma mark Private override
 
-- (CGPoint)_alignWithVelocity:(CGPoint)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize viewportSize:(CGSize)viewportSize {
+- (CGPoint)_alignWithVelocity:(CGPoint)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize visibleInsets:(UIEdgeInsets)visibleInsets {
     if(CGRectContainsPoint(_frame, contentOffset) == YES) {
         for(MobilyDataContainer* section in _sections) {
-            contentOffset = [section _alignWithVelocity:velocity contentOffset:contentOffset contentSize:contentSize viewportSize:viewportSize];
+            if(section.allowAutoAlign == YES) {
+                contentOffset = [section _alignWithVelocity:velocity contentOffset:contentOffset contentSize:contentSize visibleSize:visibleSize visibleInsets:visibleInsets];
+            }
         }
     }
     return contentOffset;

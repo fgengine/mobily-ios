@@ -1344,11 +1344,11 @@
     }
 }
 
-- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize viewportSize:(CGSize)viewportSize {
+- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize visibleInsets:(UIEdgeInsets)visibleInsets {
     if(_container != nil) {
-        [_container _willEndDraggingWithVelocity:velocity contentOffset:contentOffset contentSize:contentSize viewportSize:viewportSize];
-        contentOffset->x = MAX(0.0f, MIN(contentOffset->x, contentSize.width - viewportSize.width));
-        contentOffset->y = MAX(0.0f, MIN(contentOffset->y, contentSize.height - viewportSize.height));
+        [_container _willEndDraggingWithVelocity:velocity contentOffset:contentOffset contentSize:contentSize visibleSize:visibleSize visibleInsets:visibleInsets];
+        contentOffset->x = MAX(visibleInsets.left, MIN(contentOffset->x, contentSize.width - (visibleSize.width - (visibleInsets.left + visibleInsets.right))));
+        contentOffset->y = MAX(visibleInsets.top, MIN(contentOffset->y, contentSize.height - (visibleSize.height - (visibleInsets.top + visibleInsets.bottom))));
     }
 }
 
@@ -1537,7 +1537,7 @@
 }
 
 - (void)scrollViewWillEndDragging:(UIScrollView*)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset {
-    [_view _willEndDraggingWithVelocity:velocity contentOffset:targetContentOffset contentSize:scrollView.contentSize viewportSize:scrollView.boundsSize];
+    [_view _willEndDraggingWithVelocity:velocity contentOffset:targetContentOffset contentSize:scrollView.contentSize visibleSize:_view.boundsSize visibleInsets:UIEdgeInsetsZero];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     }

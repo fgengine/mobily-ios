@@ -72,9 +72,9 @@ typedef NS_OPTIONS(NSUInteger, MobilyDataContainerAlign) {
 @property(nonatomic, readonly, weak) MobilyDataView* view;
 @property(nonatomic, readonly, weak) MobilyDataContainer* parent;
 @property(nonatomic, readonly, assign) CGRect frame;
-@property(nonatomic, readonly, assign) BOOL allowAutoAlign;
+@property(nonatomic, readwrite, assign) BOOL allowAutoAlign;
 @property(nonatomic, readwrite, assign) MobilyDataContainerAlign alignPosition;
-@property(nonatomic, readwrite, assign) CGFloat alignThreshold;
+@property(nonatomic, readwrite, assign) UIOffset alignThreshold;
 
 - (NSArray*)allItems;
 
