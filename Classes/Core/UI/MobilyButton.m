@@ -131,13 +131,17 @@
 
 #pragma mark UIButton
 
+- (CGSize)sizeThatFits:(CGSize)size {
+    return [self intrinsicContentSize];
+}
+
 - (CGSize)intrinsicContentSize {
     CGSize result = CGSizeZero;
     CGSize titleSize = CGSizeZero;
     CGSize imageSize = CGSizeZero;
     NSString* title = self.currentTitle;
     if(title != nil) {
-        titleSize = _titleLabel.implicitSize;
+        titleSize = [title implicitSizeWithFont:_titleLabel.font lineBreakMode:_titleLabel.lineBreakMode];
         titleSize.width += self.titleEdgeInsets.left + self.titleEdgeInsets.right;
         titleSize.height += self.titleEdgeInsets.top + self.titleEdgeInsets.bottom;
     }
