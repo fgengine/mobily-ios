@@ -197,26 +197,29 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
             parentViewController = currentViewController;
         }
         if(_automaticallyHideKeyboard == YES) {
+            UIView* view = nil;
             if([currentViewController isKindOfClass:[MobilyControllerView class]] == YES) {
                 MobilyControllerView* mobilyViewController = (MobilyControllerView*)currentViewController;
                 if([mobilyViewController isAutomaticallyHideKeyboard] == NO) {
-                    return [[[self rootViewController] view] hitTest:point withEvent:event];
+                    [_emptyView setHidden:YES];
+                    view = [super hitTest:point withEvent:event];
+                    [_emptyView setHidden:NO];
                 }
             }
-            UIView* view = [[parentViewController view] hitTest:point withEvent:event];
-            if([view canBecomeFirstResponder] == NO) {
-                if([view isKindOfClass:[UIControl class]] == YES) {
-                    UIControl* control = (UIControl*)view;
-                    if([control isEnabled] == NO) {
+            if(view == nil) {
+                view = [[parentViewController view] hitTest:point withEvent:event];
+                if([view canBecomeFirstResponder] == NO) {
+                    if([view isKindOfClass:[UIControl class]] == YES) {
+                        UIControl* control = (UIControl*)view;
+                        if([control isEnabled] == NO) {
+                            view = _emptyView;
+                        }
+                    } else {
                         view = _emptyView;
                     }
-                } else {
-                    view = _emptyView;
                 }
             }
             return view;
-        } else {
-            return [[[self rootViewController] view] hitTest:point withEvent:event];
         }
     }
     return [super hitTest:point withEvent:event];
