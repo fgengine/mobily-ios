@@ -138,6 +138,10 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 - (NSDate*)addMinutes:(NSInteger)minutes;
 - (NSDate*)addSeconds:(NSInteger)seconds;
 
+- (BOOL)isYesterday;
+- (BOOL)isToday;
+- (BOOL)isTomorrow;
+- (BOOL)insideFrom:(NSDate*)from to:(NSDate*)to;
 - (BOOL)isEarlier:(NSDate*)anotherDate;
 - (BOOL)isEarlierOrSame:(NSDate*)anotherDate;
 - (BOOL)isSame:(NSDate*)anotherDate;

@@ -495,6 +495,25 @@
     return [self dateByAddingTimeInterval:seconds];
 }
 
+- (BOOL)isYesterday {
+    NSDate* date = NSDate.date.previousDay;
+    return [self insideFrom:date.beginningOfDay to:date.endOfDay];
+}
+
+- (BOOL)isToday {
+    NSDate* date = NSDate.date;
+    return [self insideFrom:date.beginningOfDay to:date.endOfDay];
+}
+
+- (BOOL)isTomorrow {
+    NSDate* date = NSDate.date.nextDay;
+    return [self insideFrom:date.beginningOfDay to:date.endOfDay];
+}
+
+- (BOOL)insideFrom:(NSDate*)from to:(NSDate*)to {
+    return ([self isAfterOrSame:from] == YES) && ([self isEarlierOrSame:to]);
+}
+
 - (BOOL)isEarlier:(NSDate*)anotherDate {
     return ([self compare:anotherDate] == NSOrderedAscending);
 }
