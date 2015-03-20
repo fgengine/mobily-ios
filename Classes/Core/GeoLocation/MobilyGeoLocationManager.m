@@ -456,7 +456,7 @@
         _timer = nil;
     }
     _requestStartTime = nil;
-    _canceled = nil;
+    _canceled = YES;
 }
 
 - (void)_startTimerIfNeeded {
