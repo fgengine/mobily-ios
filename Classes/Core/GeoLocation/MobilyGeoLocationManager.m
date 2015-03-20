@@ -202,16 +202,25 @@
 - (void)_startUpdatingIfNeeded {
 #if (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_8_0)
     if([UIDevice systemVersion] >= 8.0f) {
-        if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
-            BOOL hasAlwaysKey = ([NSBundle.mainBundle objectForInfoDictionaryKey:@"NSLocationAlwaysUsageDescription"] != nil);
-            BOOL hasWhenInUseKey = ([NSBundle.mainBundle objectForInfoDictionaryKey:@"NSLocationWhenInUseUsageDescription"] != nil);
-            if(hasAlwaysKey == YES) {
-                [_locationManager requestAlwaysAuthorization];
-            } else if(hasWhenInUseKey == YES) {
-                [_locationManager requestWhenInUseAuthorization];
-            } else {
-                NSAssert((hasAlwaysKey == YES) || (hasWhenInUseKey == YES), @"To use location services in iOS 8+, your Info.plist must provide a value for either NSLocationWhenInUseUsageDescription or NSLocationAlwaysUsageDescription.");
+        CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
+        switch(authorizationStatus) {
+            case kCLAuthorizationStatusNotDetermined: {
+                BOOL hasAlwaysKey = ([NSBundle.mainBundle objectForInfoDictionaryKey:@"NSLocationAlwaysUsageDescription"] != nil);
+                BOOL hasWhenInUseKey = ([NSBundle.mainBundle objectForInfoDictionaryKey:@"NSLocationWhenInUseUsageDescription"] != nil);
+                if(hasAlwaysKey == YES) {
+                    [_locationManager requestAlwaysAuthorization];
+                } else if(hasWhenInUseKey == YES) {
+                    [_locationManager requestWhenInUseAuthorization];
+                } else {
+                    NSAssert((hasAlwaysKey == YES) || (hasWhenInUseKey == YES), @"To use location services in iOS 8+, your Info.plist must provide a value for either NSLocationWhenInUseUsageDescription or NSLocationAlwaysUsageDescription.");
+                }
+                break;
             }
+            case kCLAuthorizationStatusDenied: {
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                break;
+            }
+            default: break;
         }
     }
 #endif
@@ -330,18 +339,18 @@
 
 #pragma mark CLLocationManagerDelegate
 
-- (void)locationManager:(CLLocationManager*)manager didUpdateLocations:(NSArray*)locations {
+- (void)locationManager:(CLLocationManager* __unused)manager didUpdateLocations:(NSArray*)locations {
     _updateFailed = NO;
     _currentLocation = [locations lastObject];
     [self _processRequests];
 }
 
-- (void)locationManager:(CLLocationManager*)manager didFailWithError:(NSError*)error {
+- (void)locationManager:(CLLocationManager* __unused)manager didFailWithError:(NSError* __unused)error {
     _updateFailed = YES;
     [self _completeAllRequests];
 }
 
-- (void)locationManager:(CLLocationManager*)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+- (void)locationManager:(CLLocationManager* __unused)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
     switch(status) {
         case kCLAuthorizationStatusDenied:
         case kCLAuthorizationStatusRestricted:
