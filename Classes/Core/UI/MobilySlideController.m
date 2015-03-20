@@ -377,8 +377,9 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         if(self.isViewLoaded == NO) {
             animated = NO;
         }
-        CGRect leftFrame = [self leftViewFrameByPercent:-1.0f];
-        CGRect centerFrame = [self centerViewFrameByPercent:-1.0f];
+        _swipeProgress = -1.0f;
+        CGRect leftFrame = [self leftViewFrameByPercent:_swipeProgress];
+        CGRect centerFrame = [self centerViewFrameByPercent:_swipeProgress];
         CGFloat diffX = ABS(leftFrame.origin.x - centerFrame.origin.x);
         CGFloat diffY = ABS(leftFrame.origin.y - centerFrame.origin.y);
         CGFloat diffW = ABS(leftFrame.size.width - centerFrame.size.width);
@@ -392,7 +393,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
                 _leftView.userInteractionEnabled = YES;
                 _centerView.userInteractionEnabled = NO;
                 _showedLeftController = YES;
-                _swipeProgress = -1.0f;
                 if(completed != nil) {
                     completed();
                 }
@@ -403,7 +403,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             _centerView.userInteractionEnabled = NO;
             _centerView.frame = centerFrame;
             _showedLeftController = YES;
-            _swipeProgress = -1.0f;
             if(completed != nil) {
                 completed();
             }
@@ -416,8 +415,9 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         if(self.isViewLoaded == NO) {
             animated = NO;
         }
-        CGRect leftFrame = [self leftViewFrameByPercent:0.0f];
-        CGRect centerFrame = [self centerViewFrameByPercent:0.0f];
+        _swipeProgress = 0.0f;
+        CGRect leftFrame = [self leftViewFrameByPercent:_swipeProgress];
+        CGRect centerFrame = [self centerViewFrameByPercent:_swipeProgress];
         CGFloat diffX = ABS(leftFrame.origin.x - centerFrame.origin.x);
         CGFloat diffY = ABS(leftFrame.origin.y - centerFrame.origin.y);
         CGFloat diffW = ABS(leftFrame.size.width - centerFrame.size.width);
@@ -431,7 +431,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
                 _leftView.userInteractionEnabled = NO;
                 _centerView.userInteractionEnabled = YES;
                 _showedLeftController = NO;
-                _swipeProgress = 0.0f;
                 if(completed != nil) {
                     completed();
                 }
@@ -442,7 +441,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             _centerView.userInteractionEnabled = YES;
             _centerView.frame = centerFrame;
             _showedLeftController = NO;
-            _swipeProgress = 0.0f;
             if(completed != nil) {
                 completed();
             }
@@ -455,8 +453,9 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         if(self.isViewLoaded == NO) {
             animated = NO;
         }
-        CGRect centerFrame = [self centerViewFrameByPercent:1.0f];
-        CGRect rightFrame = [self rightViewFrameByPercent:1.0f];
+        _swipeProgress = 1.0f;
+        CGRect centerFrame = [self centerViewFrameByPercent:_swipeProgress];
+        CGRect rightFrame = [self rightViewFrameByPercent:_swipeProgress];
         CGFloat diffX = ABS(centerFrame.origin.x - rightFrame.origin.x);
         CGFloat diffY = ABS(centerFrame.origin.y - rightFrame.origin.y);
         CGFloat diffW = ABS(centerFrame.size.width - rightFrame.size.width);
@@ -470,7 +469,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
                 _centerView.userInteractionEnabled = NO;
                 _rightView.userInteractionEnabled = YES;
                 _showedRightController = YES;
-                _swipeProgress = 1.0f;
                 if(completed != nil) {
                     completed();
                 }
@@ -481,7 +479,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             _rightView.userInteractionEnabled = YES;
             _rightView.frame = rightFrame;
             _showedRightController = YES;
-            _swipeProgress = 1.0f;
             if(completed != nil) {
                 completed();
             }
@@ -494,8 +491,9 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         if(self.isViewLoaded == NO) {
             animated = NO;
         }
-        CGRect centerFrame = [self centerViewFrameByPercent:0.0f];
-        CGRect rightFrame = [self rightViewFrameByPercent:0.0f];
+        _swipeProgress = 0.0f;
+        CGRect centerFrame = [self centerViewFrameByPercent:_swipeProgress];
+        CGRect rightFrame = [self rightViewFrameByPercent:_swipeProgress];
         CGFloat diffX = ABS(centerFrame.origin.x - rightFrame.origin.x);
         CGFloat diffY = ABS(centerFrame.origin.y - rightFrame.origin.y);
         CGFloat diffW = ABS(centerFrame.size.width - rightFrame.size.width);
@@ -509,7 +507,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
                 _centerView.userInteractionEnabled = YES;
                 _rightView.userInteractionEnabled = NO;
                 _showedRightController = NO;
-                _swipeProgress = 0.0f;
                 if(completed != nil) {
                     completed();
                 }
@@ -520,7 +517,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             _rightView.userInteractionEnabled = NO;
             _rightView.frame = rightFrame;
             _showedRightController = NO;
-            _swipeProgress = 0.0f;
             if(completed != nil) {
                 completed();
             }

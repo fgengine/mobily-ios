@@ -93,7 +93,6 @@
         self.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
         self.backgroundColor = MobilyActivityViewBackgroundColor;
         self.alpha = 0.0f;
-        self.hidden = YES;
         [view addSubview:self];
         
         _panelView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -269,11 +268,9 @@
 - (void)showPrepare:(MobilyActivityViewBlock)prepare complete:(MobilyActivityViewBlock)complete {
     if(_showCount == NSNotFound) {
         _showCount = 1;
-        // self.frame = self.superview.frame;
         [self layoutIfNeeded];
-        self.hidden = NO;
         [UIView animateWithDuration:MobilyActivityDuration
-                              delay:0.0f
+                              delay:0.1f
                             options:(UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionBeginFromCurrentState)
                          animations:^{
                              if(prepare != nil) {
@@ -282,9 +279,7 @@
                              }
                              _panelView.alpha = 1.0f;
                              self.alpha = 1.0f;
-                         } completion:^(BOOL finished __unused) {
-                             _panelView.alpha = 1.0f;
-                             self.alpha = 1.0f;
+                         } completion:^(BOOL finished) {
                              if(complete != nil) {
                                  complete();
                              }
@@ -307,7 +302,7 @@
         _showCount = NSNotFound;
         [self layoutIfNeeded];
         [UIView animateWithDuration:MobilyActivityDuration
-                              delay:0.0f
+                              delay:0.1f
                             options:(UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionBeginFromCurrentState)
                          animations:^{
                              if(prepare != nil) {
@@ -317,9 +312,6 @@
                              _panelView.alpha = 0.0f;
                              self.alpha = 0.0f;
                          } completion:^(BOOL finished __unused) {
-                             _panelView.alpha = 0.0f;
-                             self.alpha = 0.0f;
-                             self.hidden = YES;
                              if(complete != nil) {
                                  complete();
                              }
