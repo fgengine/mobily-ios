@@ -217,59 +217,95 @@
 }
 
 - (CGPoint)_alignWithVelocity:(CGPoint __unused)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize visibleInsets:(UIEdgeInsets)visibleInsets {
-    CGPoint alingCorner = CGPointZero;
-    if((_alignPosition & MobilyDataContainerAlignLeft) != 0) {
-        alingCorner.x = contentOffset.x + visibleInsets.left;
-    } else if((_alignPosition & MobilyDataContainerAlignCenteredHorizontally) != 0) {
-        alingCorner.x = contentOffset.x + (visibleInsets.left + (visibleSize.width * 0.5f));
-    } else if((_alignPosition & MobilyDataContainerAlignRight) != 0) {
-        alingCorner.x = contentOffset.x + (visibleSize.width - visibleInsets.right);
-    } else {
-        alingCorner.x = contentOffset.x;
+    MobilyDataContainerAlign hAlignPosition = _alignPosition & (MobilyDataContainerAlignLeft | MobilyDataContainerAlignCenteredHorizontally | MobilyDataContainerAlignRight);
+    MobilyDataContainerAlign vAlignPosition = _alignPosition & (MobilyDataContainerAlignTop | MobilyDataContainerAlignCenteredVertically | MobilyDataContainerAlignBottom);
+    if(hAlignPosition != 0) {
+        CGFloat sdx = contentOffset.x;
+        CGFloat edx = contentSize.width - (contentOffset.x + visibleSize.width);
+        if(ABS(sdx) <= (_alignThreshold.vertical * 0.5f)) {
+            contentOffset.x = 0.0f;
+        } else if(ABS(edx) <= (_alignThreshold.horizontal * 0.5f)) {
+            contentOffset.x = contentSize.width - visibleSize.width;
+            hAlignPosition = 0;
+        }
     }
-    if((_alignPosition & MobilyDataContainerAlignTop) != 0) {
-        alingCorner.y = contentOffset.y + visibleInsets.top;
-    } else if((_alignPosition & MobilyDataContainerAlignCenteredVertically) != 0) {
-        alingCorner.y = contentOffset.y + (visibleInsets.top + (visibleSize.height * 0.5f));
-    } else if((_alignPosition & MobilyDataContainerAlignBottom) != 0) {
-        alingCorner.y = contentOffset.y + (visibleSize.height - visibleInsets.bottom);
-    } else {
-        alingCorner.y = contentOffset.y;
+    if(vAlignPosition != 0) {
+        CGFloat sdy = contentOffset.y;
+        CGFloat edy = contentSize.height - (contentOffset.y + visibleSize.height);
+        if(ABS(sdy) <= (_alignThreshold.vertical * 0.5f)) {
+            contentOffset.y = 0.0f;
+        } else if(ABS(edy) <= (_alignThreshold.vertical * 0.5f)) {
+            contentOffset.y = contentSize.height - visibleSize.height;
+            vAlignPosition = 0;
+        }
     }
-    alingCorner.x = MAX(visibleInsets.left, MIN(alingCorner.x, contentSize.width - (visibleSize.width - (visibleInsets.left + visibleInsets.right))));
-    alingCorner.y = MAX(visibleInsets.top, MIN(alingCorner.y, contentSize.height - (visibleSize.height - (visibleInsets.top + visibleInsets.bottom))));
-    if(CGRectContainsPoint(_frame, alingCorner) == YES) {
-        for(MobilyDataItem* item in _entries) {
-            if(item.allowsAlign == YES) {
-                CGPoint alingItemCorner = CGPointZero;
-                if((_alignPosition & MobilyDataContainerAlignLeft) != 0) {
-                    alingItemCorner.x = CGRectGetMinX(item.updateFrame);
-                } else if((_alignPosition & MobilyDataContainerAlignCenteredHorizontally) != 0) {
-                    alingItemCorner.x = CGRectGetMidX(item.updateFrame);
-                } else if((_alignPosition & MobilyDataContainerAlignRight) != 0) {
-                    alingItemCorner.x = CGRectGetMaxX(item.updateFrame);
-                } else {
-                    alingItemCorner.x = contentOffset.x;
-                }
-                if((_alignPosition & MobilyDataContainerAlignTop) != 0) {
-                    alingItemCorner.y = CGRectGetMinY(item.updateFrame);
-                } else if((_alignPosition & MobilyDataContainerAlignCenteredVertically) != 0) {
-                    alingItemCorner.y = CGRectGetMidY(item.updateFrame);
-                } else if((_alignPosition & MobilyDataContainerAlignBottom) != 0) {
-                    alingItemCorner.y = CGRectGetMaxY(item.updateFrame);
-                } else {
-                    alingItemCorner.y = contentOffset.y;
-                }
-                CGFloat dx = alingCorner.x - alingItemCorner.x;
-                CGFloat dy = alingCorner.y - alingItemCorner.y;
-                BOOL adx = (ABS(alingItemCorner.x - contentOffset.x) > FLT_EPSILON) && (ABS(dx) <= _alignThreshold.horizontal);
-                BOOL ady = (ABS(alingItemCorner.y - contentOffset.y) > FLT_EPSILON) && (ABS(dy) <= _alignThreshold.vertical);
-                if((adx == YES) || (ady == YES)) {
-                    if(adx == YES) {
+    if((hAlignPosition != 0) || (vAlignPosition != 0)) {
+        CGPoint alingCorner = CGPointZero;
+        if(hAlignPosition != 0) {
+            if((_alignPosition & MobilyDataContainerAlignLeft) != 0) {
+                alingCorner.x = contentOffset.x + visibleInsets.left;
+            } else if((_alignPosition & MobilyDataContainerAlignCenteredHorizontally) != 0) {
+                alingCorner.x = contentOffset.x + (visibleInsets.left + ((visibleSize.width - (visibleInsets.left + visibleInsets.right)) * 0.5f));
+            } else if((_alignPosition & MobilyDataContainerAlignRight) != 0) {
+                alingCorner.x = contentOffset.x + (visibleInsets.left + (visibleSize.width - (visibleInsets.left + visibleInsets.right)));
+            } else {
+                alingCorner.x = contentOffset.x;
+            }
+        } else {
+            alingCorner.x = contentOffset.x;
+        }
+        if(vAlignPosition != 0) {
+            if((_alignPosition & MobilyDataContainerAlignTop) != 0) {
+                alingCorner.y = contentOffset.y + visibleInsets.top;
+            } else if((_alignPosition & MobilyDataContainerAlignCenteredVertically) != 0) {
+                alingCorner.y = contentOffset.y + (visibleInsets.top + ((visibleSize.height - (visibleInsets.top + visibleInsets.bottom)) * 0.5f));
+            } else if((_alignPosition & MobilyDataContainerAlignBottom) != 0) {
+                alingCorner.y = contentOffset.y + (visibleInsets.top + (visibleSize.height - (visibleInsets.top + visibleInsets.bottom)));
+            } else {
+                alingCorner.y = contentOffset.y;
+            }
+        } else {
+            alingCorner.y = contentOffset.y;
+        }
+        alingCorner.x = MAX(visibleInsets.left, MIN(alingCorner.x, contentSize.width - (visibleSize.width - (visibleInsets.left + visibleInsets.right))));
+        alingCorner.y = MAX(visibleInsets.top, MIN(alingCorner.y, contentSize.height - (visibleSize.height - (visibleInsets.top + visibleInsets.bottom))));
+        if(CGRectContainsPoint(_frame, alingCorner) == YES) {
+            for(MobilyDataItem* item in _entries) {
+                if(item.allowsAlign == YES) {
+                    CGPoint alingItemCorner = CGPointZero;
+                    if(hAlignPosition != 0) {
+                        if((_alignPosition & MobilyDataContainerAlignLeft) != 0) {
+                            alingItemCorner.x = CGRectGetMinX(item.updateFrame);
+                        } else if((_alignPosition & MobilyDataContainerAlignCenteredHorizontally) != 0) {
+                            alingItemCorner.x = CGRectGetMidX(item.updateFrame);
+                        } else if((_alignPosition & MobilyDataContainerAlignRight) != 0) {
+                            alingItemCorner.x = CGRectGetMaxX(item.updateFrame);
+                        } else {
+                            alingItemCorner.x = contentOffset.x;
+                        }
+                    } else {
+                        alingItemCorner.x = contentOffset.x;
+                    }
+                    if(vAlignPosition != 0) {
+                        if((_alignPosition & MobilyDataContainerAlignTop) != 0) {
+                            alingItemCorner.y = CGRectGetMinY(item.updateFrame);
+                        } else if((_alignPosition & MobilyDataContainerAlignCenteredVertically) != 0) {
+                            alingItemCorner.y = CGRectGetMidY(item.updateFrame);
+                        } else if((_alignPosition & MobilyDataContainerAlignBottom) != 0) {
+                            alingItemCorner.y = CGRectGetMaxY(item.updateFrame);
+                        } else {
+                            alingItemCorner.y = contentOffset.y;
+                        }
+                    } else {
+                        alingItemCorner.y = contentOffset.y;
+                    }
+                    CGFloat dx = alingCorner.x - alingItemCorner.x;
+                    CGFloat dy = alingCorner.y - alingItemCorner.y;
+                    if((ABS(alingItemCorner.x - contentOffset.x) > FLT_EPSILON) && (ABS(dx) <= _alignThreshold.horizontal)) {
                         contentOffset.x -= dx;
                         alingCorner.x -= dx;
                     }
-                    if(ady == YES) {
+                    if((ABS(alingItemCorner.y - contentOffset.y) > FLT_EPSILON) && (ABS(dy) <= _alignThreshold.vertical)) {
                         contentOffset.y -= dy;
                         alingCorner.y -= dy;
                     }
