@@ -45,6 +45,7 @@
 @synthesize parent = _parent;
 @synthesize frame = _frame;
 @synthesize allowAutoAlign = _allowAutoAlign;
+@synthesize alignInsets = _alignInsets;
 @synthesize alignPosition = _alignPosition;
 @synthesize alignThreshold = _alignThreshold;
 
@@ -59,7 +60,7 @@
 }
 
 - (void)setup {
-    _alignPosition = MobilyDataContainerAlignLeft | MobilyDataContainerAlignTop;
+    _alignPosition = MobilyDataContainerAlignNone;
     _alignThreshold = UIOffsetMake(20.0f, 20.0f);
 }
 
@@ -84,6 +85,11 @@
     }
 }
 
+- (CGRect)frame {
+    [_view validateLayoutIfNeed];
+    return _frame;
+}
+
 #pragma mark Property private
 
 - (void)_willChangeView {
@@ -104,12 +110,12 @@
 - (void)_willBeginDragging {
 }
 
-- (void)_didScroll {
+- (void)_didScrollDragging:(BOOL)dragging decelerating:(BOOL)decelerating {
 }
 
-- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize visibleInsets:(UIEdgeInsets)visibleInsets {
+- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize {
     if(_allowAutoAlign == YES) {
-        *contentOffset = [self _alignWithVelocity:velocity contentOffset:*contentOffset contentSize:contentSize visibleSize:visibleSize visibleInsets:visibleInsets];
+        *contentOffset = [self _alignWithVelocity:velocity contentOffset:*contentOffset contentSize:contentSize visibleSize:visibleSize];
     }
 }
 
@@ -129,19 +135,60 @@
 }
 
 - (void)_didEndUpdateAnimated:(BOOL __unused)animated {
-    if((_allowAutoAlign == YES) && (_view.isDragging == NO) && (_view.isDecelerating == NO)) {
-        CGPoint contentOffset = _view.contentOffset;
-        CGSize contentSize = _view.contentSize;
-        CGSize visibleSize = _view.boundsSize;
-        UIEdgeInsets visibleInsets = UIEdgeInsetsZero;
-        CGPoint alingOffset = [self _alignWithVelocity:CGPointZero contentOffset:contentOffset contentSize:contentSize visibleSize:visibleSize visibleInsets:visibleInsets];
-        alingOffset.x = MAX(visibleInsets.left, MIN(alingOffset.x, contentSize.width - (visibleSize.width - (visibleInsets.left + visibleInsets.right))));
-        alingOffset.y = MAX(visibleInsets.top, MIN(alingOffset.y, contentSize.height - (visibleSize.height - (visibleInsets.top + visibleInsets.bottom))));
-        [_view setContentOffset:alingOffset animated:YES];
+    if(_allowAutoAlign == YES) {
+        [self align];
     }
 }
 
-- (CGPoint)_alignWithVelocity:(CGPoint __unused)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize __unused)contentSize visibleSize:(CGSize __unused)visibleSize visibleInsets:(UIEdgeInsets __unused)visibleInsets {
+- (CGPoint)_alignPointWithContentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize {
+    CGPoint alignPoint = CGPointZero;
+    MobilyDataContainerAlign hAlignPosition = _alignPosition & (MobilyDataContainerAlignLeft | MobilyDataContainerAlignCenteredHorizontally | MobilyDataContainerAlignRight);
+    MobilyDataContainerAlign vAlignPosition = _alignPosition & (MobilyDataContainerAlignTop | MobilyDataContainerAlignCenteredVertically | MobilyDataContainerAlignBottom);
+    if(hAlignPosition != 0) {
+        CGFloat sdx = contentOffset.x;
+        CGFloat edx = contentSize.width - (contentOffset.x + visibleSize.width);
+        if(ABS(sdx) <= (_alignThreshold.vertical * 0.5f)) {
+            contentOffset.x = 0.0f;
+        } else if(ABS(edx) <= (_alignThreshold.horizontal * 0.5f)) {
+            contentOffset.x = contentSize.width - visibleSize.width;
+            hAlignPosition = 0;
+        }
+    }
+    if(vAlignPosition != 0) {
+        CGFloat sdy = contentOffset.y;
+        CGFloat edy = contentSize.height - (contentOffset.y + visibleSize.height);
+        if(ABS(sdy) <= (_alignThreshold.vertical * 0.5f)) {
+            contentOffset.y = 0.0f;
+        } else if(ABS(edy) <= (_alignThreshold.vertical * 0.5f)) {
+            contentOffset.y = contentSize.height - visibleSize.height;
+            vAlignPosition = 0;
+        }
+    }
+    if((hAlignPosition != 0) || (vAlignPosition != 0)) {
+        CGRect visibleRect = CGRectMake(_alignInsets.left, _alignInsets.top, visibleSize.width - (_alignInsets.left + _alignInsets.right), visibleSize.height - (_alignInsets.top + _alignInsets.bottom));
+        if((_alignPosition & MobilyDataContainerAlignLeft) != 0) {
+            alignPoint.x = contentOffset.x + visibleRect.origin.x;
+        } else if((_alignPosition & MobilyDataContainerAlignCenteredHorizontally) != 0) {
+            alignPoint.x = contentOffset.x + (visibleRect.origin.x + (visibleRect.size.width * 0.5f));
+        } else if((_alignPosition & MobilyDataContainerAlignRight) != 0) {
+            alignPoint.x = contentOffset.x + (visibleRect.origin.x + visibleRect.size.width);
+        } else {
+            alignPoint.x = contentOffset.x;
+        }
+        if((_alignPosition & MobilyDataContainerAlignTop) != 0) {
+            alignPoint.y = contentOffset.y + visibleRect.origin.y;
+        } else if((_alignPosition & MobilyDataContainerAlignCenteredVertically) != 0) {
+            alignPoint.y = contentOffset.y + (visibleRect.origin.y + (visibleRect.size.height * 0.5f));
+        } else if((_alignPosition & MobilyDataContainerAlignBottom) != 0) {
+            alignPoint.y = contentOffset.y + (visibleRect.origin.y + visibleRect.size.height);
+        } else {
+            alignPoint.y = contentOffset.y;
+        }
+    }
+    return alignPoint;
+}
+
+- (CGPoint)_alignWithVelocity:(CGPoint __unused)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize __unused)contentSize visibleSize:(CGSize __unused)visibleSize {
     return contentOffset;
 }
 
@@ -215,6 +262,22 @@
 
 - (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
     return [_view fireEventForIdentifier:identifier forKey:key bySender:sender byObject:object orDefault:orDefault];
+}
+
+- (CGPoint)alignPoint {
+    return [self _alignPointWithContentOffset:_view.contentOffset contentSize:_view.contentSize visibleSize:_view.boundsSize];
+}
+
+- (void)align {
+    if((_view.dragging == NO) && (_view.decelerating == NO)) {
+        CGPoint contentOffset = _view.contentOffset;
+        CGSize contentSize = _view.contentSize;
+        CGSize visibleSize = _view.boundsSize;
+        CGPoint alingOffset = [self _alignWithVelocity:CGPointZero contentOffset:contentOffset contentSize:contentSize visibleSize:visibleSize];
+        alingOffset.x = MAX(0.0f, MIN(alingOffset.x, contentSize.width));
+        alingOffset.y = MAX(0.0f, MIN(alingOffset.y, contentSize.height));
+        [_view setContentOffset:alingOffset animated:YES];
+    }
 }
 
 @end

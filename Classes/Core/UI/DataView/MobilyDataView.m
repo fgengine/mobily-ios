@@ -67,21 +67,35 @@
 @synthesize insertedItems = _insertedItems;
 @synthesize updating = _updating;
 @synthesize invalidLayout = _invalidLayout;
-@synthesize pullToRefreshView = _pullToRefreshView;
-@synthesize pullToRefreshHeight = _pullToRefreshHeight;
-@synthesize constraintPullToRefreshBottom = _constraintPullToRefreshBottom;
-@synthesize constraintPullToRefreshLeft = _constraintPullToRefreshLeft;
-@synthesize constraintPullToRefreshRight = _constraintPullToRefreshRight;
-@synthesize constraintPullToRefreshHeight = _constraintPullToRefreshHeight;
-@synthesize pullToLoadView = _pullToLoadView;
-@synthesize pullToLoadHeight = _pullToLoadHeight;
-@synthesize constraintPullToLoadTop = _constraintPullToLoadTop;
-@synthesize constraintPullToLoadLeft = _constraintPullToLoadLeft;
-@synthesize constraintPullToLoadRight = _constraintPullToLoadRight;
-@synthesize constraintPullToLoadHeight = _constraintPullToLoadHeight;
-@synthesize pullDragging = _pullDragging;
-@synthesize canPullToRefresh = _canPullToRefresh;
-@synthesize canPullToLoad = _canPullToLoad;
+@synthesize topRefreshView = _topRefreshView;
+@synthesize topRefreshThreshold = _topRefreshThreshold;
+@synthesize constraintTopRefreshBottom = _constraintTopRefreshBottom;
+@synthesize constraintTopRefreshLeft = _constraintTopRefreshLeft;
+@synthesize constraintTopRefreshRight = _constraintTopRefreshRight;
+@synthesize constraintTopRefreshSize = _constraintTopRefreshSize;
+@synthesize bottomRefreshView = _bottomRefreshView;
+@synthesize bottomRefreshThreshold = _bottomRefreshThreshold;
+@synthesize constraintBottomRefreshTop = _constraintBottomRefreshTop;
+@synthesize constraintBottomRefreshLeft = _constraintBottomRefreshLeft;
+@synthesize constraintBottomRefreshRight = _constraintBottomRefreshRight;
+@synthesize constraintBottomRefreshSize = _constraintBottomRefreshSize;
+@synthesize leftRefreshView = _leftRefreshView;
+@synthesize leftRefreshThreshold = _leftRefreshThreshold;
+@synthesize constraintLeftRefreshTop = _constraintLeftRefreshTop;
+@synthesize constraintLeftRefreshBottom = _constraintLeftRefreshBottom;
+@synthesize constraintLeftRefreshLeft = _constraintLeftRefreshLeft;
+@synthesize constraintLeftRefreshSize = _constraintLeftRefreshSize;
+@synthesize rightRefreshView = _rightRefreshView;
+@synthesize rightRefreshThreshold = _rightRefreshThreshold;
+@synthesize constraintRightRefreshTop = _constraintRightRefreshTop;
+@synthesize constraintRightRefreshBottom = _constraintRightRefreshBottom;
+@synthesize constraintRightRefreshRight = _constraintRightRefreshRight;
+@synthesize constraintRightRefreshSize = _constraintRightRefreshSize;
+@synthesize refreshDragging = _refreshDragging;
+@synthesize canTopRefresh = _canTopRefresh;
+@synthesize canBottomRefresh = _canBottomRefresh;
+@synthesize canLeftRefresh = _canLeftRefresh;
+@synthesize canRightRefresh = _canRightRefresh;
 
 #pragma mark NSKeyValueCoding
 
@@ -128,8 +142,10 @@
     _deletedItems = NSMutableArray.array;
     _insertedItems = NSMutableArray.array;
     
-    _pullToRefreshHeight = -1.0f;
-    _pullToLoadHeight = -1.0f;
+    _topRefreshThreshold = 64.0f;
+    _bottomRefreshThreshold = 64.0f;
+    _leftRefreshThreshold = 64.0f;
+    _rightRefreshThreshold = 64.0f;
     
     [self registerAdjustmentResponder];
     
@@ -327,162 +343,316 @@
     return result;
 }
 
-- (void)setPullToRefreshView:(MobilyDataRefreshView*)pullToRefreshView {
-    if(_pullToRefreshView != pullToRefreshView) {
-        if(_pullToRefreshView != nil) {
-            self.constraintPullToRefreshBottom = nil;
-            self.constraintPullToRefreshLeft = nil;
-            self.constraintPullToRefreshRight = nil;
-            self.constraintPullToRefreshHeight = nil;
-            [_pullToRefreshView removeFromSuperview];
+- (void)setTopRefreshView:(MobilyDataRefreshView*)topRefreshView {
+    if(_topRefreshView != topRefreshView) {
+        if(_topRefreshView != nil) {
+            self.constraintTopRefreshBottom = nil;
+            self.constraintTopRefreshLeft = nil;
+            self.constraintTopRefreshRight = nil;
+            self.constraintTopRefreshSize = nil;
+            [_topRefreshView removeFromSuperview];
         }
-        _pullToRefreshView = pullToRefreshView;
-        if(_pullToRefreshView != nil) {
-            _pullToRefreshView.translatesAutoresizingMaskIntoConstraints = NO;
+        _topRefreshView = topRefreshView;
+        if(_topRefreshView != nil) {
+            _topRefreshView.translatesAutoresizingMaskIntoConstraints = NO;
             if(self.superview != nil) {
-                [self.superview insertSubview:_pullToRefreshView aboveSubview:self];
+                [self.superview insertSubview:_topRefreshView aboveSubview:self];
                 [self _updateSuperviewConstraints];
             }
         }
     }
 }
 
-- (void)setConstraintPullToRefreshBottom:(NSLayoutConstraint*)constraintPullToRefreshBottom {
-    if(_constraintPullToRefreshBottom != constraintPullToRefreshBottom) {
-        if(_constraintPullToRefreshBottom != nil) {
-            [self.superview removeConstraint:_constraintPullToRefreshBottom];
+- (void)setConstraintTopRefreshBottom:(NSLayoutConstraint*)constraintTopRefreshBottom {
+    if(_constraintTopRefreshBottom != constraintTopRefreshBottom) {
+        if(_constraintTopRefreshBottom != nil) {
+            [self.superview removeConstraint:_constraintTopRefreshBottom];
         }
-        _constraintPullToRefreshBottom = constraintPullToRefreshBottom;
-        if(_constraintPullToRefreshBottom != nil) {
-            [self.superview addConstraint:_constraintPullToRefreshBottom];
-        }
-    }
-}
-
-- (void)setConstraintPullToRefreshLeft:(NSLayoutConstraint*)constraintPullToRefreshLeft {
-    if(_constraintPullToRefreshLeft != constraintPullToRefreshLeft) {
-        if(_constraintPullToRefreshLeft != nil) {
-            [self.superview removeConstraint:_constraintPullToRefreshLeft];
-        }
-        _constraintPullToRefreshLeft = constraintPullToRefreshLeft;
-        if(_constraintPullToRefreshLeft != nil) {
-            [self.superview addConstraint:_constraintPullToRefreshLeft];
+        _constraintTopRefreshBottom = constraintTopRefreshBottom;
+        if(_constraintTopRefreshBottom != nil) {
+            [self.superview addConstraint:_constraintTopRefreshBottom];
         }
     }
 }
 
-- (void)setConstraintPullToRefreshRight:(NSLayoutConstraint*)constraintPullToRefreshRight {
-    if(_constraintPullToRefreshRight != constraintPullToRefreshRight) {
-        if(_constraintPullToRefreshRight != nil) {
-            [self.superview removeConstraint:_constraintPullToRefreshRight];
+- (void)setConstraintTopRefreshLeft:(NSLayoutConstraint*)constraintTopRefreshLeft {
+    if(_constraintTopRefreshLeft != constraintTopRefreshLeft) {
+        if(_constraintTopRefreshLeft != nil) {
+            [self.superview removeConstraint:_constraintTopRefreshLeft];
         }
-        _constraintPullToRefreshRight = constraintPullToRefreshRight;
-        if(_constraintPullToRefreshRight != nil) {
-            [self.superview addConstraint:_constraintPullToRefreshRight];
-        }
-    }
-}
-
-- (void)setConstraintPullToRefreshHeight:(NSLayoutConstraint*)constraintPullToRefreshHeight {
-    if(_constraintPullToRefreshHeight != constraintPullToRefreshHeight) {
-        if(_constraintPullToRefreshHeight != nil) {
-            [self.superview removeConstraint:_constraintPullToRefreshHeight];
-        }
-        _constraintPullToRefreshHeight = constraintPullToRefreshHeight;
-        if(_constraintPullToRefreshHeight != nil) {
-            [self.superview addConstraint:_constraintPullToRefreshHeight];
+        _constraintTopRefreshLeft = constraintTopRefreshLeft;
+        if(_constraintTopRefreshLeft != nil) {
+            [self.superview addConstraint:_constraintTopRefreshLeft];
         }
     }
 }
 
-- (void)setPullToRefreshHeight:(CGFloat)pullToRefreshHeight {
-    if(_pullToRefreshHeight != pullToRefreshHeight) {
-        _pullToRefreshHeight = pullToRefreshHeight;
-        if(_pullToRefreshHeight < 0.0f) {
-            self.constraintPullToRefreshHeight = nil;
-        } else if(_constraintPullToRefreshHeight != nil) {
-            _constraintPullToRefreshHeight.constant = _pullToRefreshHeight;
+- (void)setConstraintTopRefreshRight:(NSLayoutConstraint*)constraintTopRefreshRight {
+    if(_constraintTopRefreshRight != constraintTopRefreshRight) {
+        if(_constraintTopRefreshRight != nil) {
+            [self.superview removeConstraint:_constraintTopRefreshRight];
+        }
+        _constraintTopRefreshRight = constraintTopRefreshRight;
+        if(_constraintTopRefreshRight != nil) {
+            [self.superview addConstraint:_constraintTopRefreshRight];
+        }
+    }
+}
+
+- (void)setConstraintTopRefreshSize:(NSLayoutConstraint*)constraintTopRefreshSize {
+    if(_constraintTopRefreshSize != constraintTopRefreshSize) {
+        if(_constraintTopRefreshSize != nil) {
+            [self.superview removeConstraint:_constraintTopRefreshSize];
+        }
+        _constraintTopRefreshSize = constraintTopRefreshSize;
+        if(_constraintTopRefreshSize != nil) {
+            [self.superview addConstraint:_constraintTopRefreshSize];
+        }
+    }
+}
+
+- (void)setTopRefreshThreshold:(CGFloat)topRefreshThreshold {
+    if(_topRefreshThreshold != topRefreshThreshold) {
+        _topRefreshThreshold = topRefreshThreshold;
+        if(_constraintTopRefreshSize != nil) {
+            _constraintTopRefreshSize.constant = _topRefreshThreshold;
         } else if(self.superview != nil) {
             [self _updateSuperviewConstraints];
         }
     }
 }
 
-- (void)setPullToLoadView:(MobilyDataRefreshView*)pullToLoadView {
-    if(_pullToLoadView != pullToLoadView) {
-        if(_pullToLoadView != nil) {
-            self.constraintPullToLoadTop = nil;
-            self.constraintPullToLoadLeft = nil;
-            self.constraintPullToLoadRight = nil;
-            self.constraintPullToLoadHeight = nil;
-            [_pullToLoadView removeFromSuperview];
+- (void)setBottomRefreshView:(MobilyDataRefreshView*)bottomRefreshView {
+    if(_bottomRefreshView != bottomRefreshView) {
+        if(_bottomRefreshView != nil) {
+            self.constraintBottomRefreshTop = nil;
+            self.constraintBottomRefreshLeft = nil;
+            self.constraintBottomRefreshRight = nil;
+            self.constraintBottomRefreshSize = nil;
+            [_bottomRefreshView removeFromSuperview];
         }
-        _pullToLoadView = pullToLoadView;
-        if(_pullToLoadView != nil) {
-            _pullToLoadView.translatesAutoresizingMaskIntoConstraints = NO;
+        _bottomRefreshView = bottomRefreshView;
+        if(_bottomRefreshView != nil) {
+            _bottomRefreshView.translatesAutoresizingMaskIntoConstraints = NO;
             if(self.superview != nil) {
-                [self.superview insertSubview:_pullToLoadView aboveSubview:self];
+                [self.superview insertSubview:_bottomRefreshView aboveSubview:self];
                 [self _updateSuperviewConstraints];
             }
         }
     }
 }
 
-- (void)setConstraintPullToLoadTop:(NSLayoutConstraint*)constraintPullToLoadTop {
-    if(_constraintPullToLoadTop != constraintPullToLoadTop) {
-        if(_constraintPullToLoadTop != nil) {
-            [self.superview removeConstraint:_constraintPullToLoadTop];
+- (void)setConstraintBottomRefreshTop:(NSLayoutConstraint*)constraintBottomRefreshTop {
+    if(_constraintBottomRefreshTop != constraintBottomRefreshTop) {
+        if(_constraintBottomRefreshTop != nil) {
+            [self.superview removeConstraint:_constraintBottomRefreshTop];
         }
-        _constraintPullToLoadTop = constraintPullToLoadTop;
-        if(_constraintPullToLoadTop != nil) {
-            [self.superview addConstraint:_constraintPullToLoadTop];
-        }
-    }
-}
-
-- (void)setConstraintPullToLoadLeft:(NSLayoutConstraint*)constraintPullToLoadLeft {
-    if(_constraintPullToLoadLeft != constraintPullToLoadLeft) {
-        if(_constraintPullToLoadLeft != nil) {
-            [self.superview removeConstraint:_constraintPullToLoadLeft];
-        }
-        _constraintPullToLoadLeft = constraintPullToLoadLeft;
-        if(_constraintPullToLoadLeft != nil) {
-            [self.superview addConstraint:_constraintPullToLoadLeft];
+        _constraintBottomRefreshTop = constraintBottomRefreshTop;
+        if(_constraintBottomRefreshTop != nil) {
+            [self.superview addConstraint:_constraintBottomRefreshTop];
         }
     }
 }
 
-- (void)setConstraintPullToLoadRight:(NSLayoutConstraint*)constraintPullToLoadRight {
-    if(_constraintPullToLoadRight != constraintPullToLoadRight) {
-        if(_constraintPullToLoadRight != nil) {
-            [self.superview removeConstraint:_constraintPullToLoadRight];
+- (void)setConstraintBottomRefreshLeft:(NSLayoutConstraint*)constraintBottomRefreshLeft {
+    if(_constraintBottomRefreshLeft != constraintBottomRefreshLeft) {
+        if(_constraintBottomRefreshLeft != nil) {
+            [self.superview removeConstraint:_constraintBottomRefreshLeft];
         }
-        _constraintPullToLoadRight = constraintPullToLoadRight;
-        if(_constraintPullToLoadRight != nil) {
-            [self.superview addConstraint:_constraintPullToLoadRight];
-        }
-    }
-}
-
-- (void)setConstraintPullToLoadHeight:(NSLayoutConstraint*)constraintPullToLoadHeight {
-    if(_constraintPullToLoadHeight != constraintPullToLoadHeight) {
-        if(_constraintPullToLoadHeight != nil) {
-            [self.superview removeConstraint:_constraintPullToLoadHeight];
-        }
-        _constraintPullToLoadHeight = constraintPullToLoadHeight;
-        if(_constraintPullToLoadHeight != nil) {
-            [self.superview addConstraint:_constraintPullToLoadHeight];
+        _constraintBottomRefreshLeft = constraintBottomRefreshLeft;
+        if(_constraintBottomRefreshLeft != nil) {
+            [self.superview addConstraint:_constraintBottomRefreshLeft];
         }
     }
 }
 
-- (void)setPullToLoadHeight:(CGFloat)pullToLoadHeight {
-    if(_pullToLoadHeight != pullToLoadHeight) {
-        _pullToLoadHeight = pullToLoadHeight;
-        if(_pullToLoadHeight < 0.0f) {
-            self.constraintPullToLoadHeight = nil;
-        } else if(_constraintPullToLoadHeight != nil) {
-            _constraintPullToLoadHeight.constant = _pullToLoadHeight;
+- (void)setConstraintBottomRefreshRight:(NSLayoutConstraint*)constraintBottomRefreshRight {
+    if(_constraintBottomRefreshRight != constraintBottomRefreshRight) {
+        if(_constraintBottomRefreshRight != nil) {
+            [self.superview removeConstraint:_constraintBottomRefreshRight];
+        }
+        _constraintBottomRefreshRight = constraintBottomRefreshRight;
+        if(_constraintBottomRefreshRight != nil) {
+            [self.superview addConstraint:_constraintBottomRefreshRight];
+        }
+    }
+}
+
+- (void)setConstraintBottomRefreshSize:(NSLayoutConstraint*)constraintBottomRefreshSize {
+    if(_constraintBottomRefreshSize != constraintBottomRefreshSize) {
+        if(_constraintBottomRefreshSize != nil) {
+            [self.superview removeConstraint:_constraintBottomRefreshSize];
+        }
+        _constraintBottomRefreshSize = constraintBottomRefreshSize;
+        if(_constraintBottomRefreshSize != nil) {
+            [self.superview addConstraint:_constraintBottomRefreshSize];
+        }
+    }
+}
+
+- (void)setBottomRefreshThreshold:(CGFloat)bottomRefreshThreshold {
+    if(_bottomRefreshThreshold != bottomRefreshThreshold) {
+        _bottomRefreshThreshold = bottomRefreshThreshold;
+        if(_constraintBottomRefreshSize != nil) {
+            _constraintBottomRefreshSize.constant = _bottomRefreshThreshold;
+        } else if(self.superview != nil) {
+            [self _updateSuperviewConstraints];
+        }
+    }
+}
+
+- (void)setLeftRefreshView:(MobilyDataRefreshView*)leftRefreshView {
+    if(_leftRefreshView != leftRefreshView) {
+        if(_leftRefreshView != nil) {
+            self.constraintLeftRefreshBottom = nil;
+            self.constraintLeftRefreshLeft = nil;
+            self.constraintLeftRefreshTop = nil;
+            self.constraintLeftRefreshSize = nil;
+            [_leftRefreshView removeFromSuperview];
+        }
+        _leftRefreshView = leftRefreshView;
+        if(_leftRefreshView != nil) {
+            _leftRefreshView.translatesAutoresizingMaskIntoConstraints = NO;
+            if(self.superview != nil) {
+                [self.superview insertSubview:_leftRefreshView aboveSubview:self];
+                [self _updateSuperviewConstraints];
+            }
+        }
+    }
+}
+
+- (void)setConstraintLeftRefreshTop:(NSLayoutConstraint*)constraintLeftRefreshTop {
+    if(_constraintLeftRefreshTop != constraintLeftRefreshTop) {
+        if(_constraintLeftRefreshTop != nil) {
+            [self.superview removeConstraint:_constraintLeftRefreshTop];
+        }
+        _constraintLeftRefreshTop = constraintLeftRefreshTop;
+        if(_constraintLeftRefreshTop != nil) {
+            [self.superview addConstraint:_constraintLeftRefreshTop];
+        }
+    }
+}
+
+- (void)setConstraintLeftRefreshBottom:(NSLayoutConstraint*)constraintLeftRefreshBottom {
+    if(_constraintLeftRefreshBottom != constraintLeftRefreshBottom) {
+        if(_constraintLeftRefreshBottom != nil) {
+            [self.superview removeConstraint:_constraintLeftRefreshBottom];
+        }
+        _constraintLeftRefreshBottom = constraintLeftRefreshBottom;
+        if(_constraintLeftRefreshBottom != nil) {
+            [self.superview addConstraint:_constraintLeftRefreshBottom];
+        }
+    }
+}
+
+- (void)setConstraintLeftRefreshLeft:(NSLayoutConstraint*)constraintLeftRefreshLeft {
+    if(_constraintLeftRefreshLeft != constraintLeftRefreshLeft) {
+        if(_constraintLeftRefreshLeft != nil) {
+            [self.superview removeConstraint:_constraintLeftRefreshLeft];
+        }
+        _constraintLeftRefreshLeft = constraintLeftRefreshLeft;
+        if(_constraintLeftRefreshLeft != nil) {
+            [self.superview addConstraint:_constraintLeftRefreshLeft];
+        }
+    }
+}
+
+- (void)setConstraintLeftRefreshSize:(NSLayoutConstraint*)constraintLeftRefreshSize {
+    if(_constraintLeftRefreshSize != constraintLeftRefreshSize) {
+        if(_constraintLeftRefreshSize != nil) {
+            [self.superview removeConstraint:_constraintLeftRefreshSize];
+        }
+        _constraintLeftRefreshSize = constraintLeftRefreshSize;
+        if(_constraintLeftRefreshSize != nil) {
+            [self.superview addConstraint:_constraintLeftRefreshSize];
+        }
+    }
+}
+
+- (void)setLeftRefreshThreshold:(CGFloat)leftRefreshThreshold {
+    if(_leftRefreshThreshold != leftRefreshThreshold) {
+        _leftRefreshThreshold = leftRefreshThreshold;
+        if(_constraintLeftRefreshSize != nil) {
+            _constraintLeftRefreshSize.constant = _leftRefreshThreshold;
+        } else if(self.superview != nil) {
+            [self _updateSuperviewConstraints];
+        }
+    }
+}
+
+- (void)setRightRefreshView:(MobilyDataRefreshView*)rightRefreshView {
+    if(_rightRefreshView != rightRefreshView) {
+        if(_rightRefreshView != nil) {
+            self.constraintRightRefreshTop = nil;
+            self.constraintRightRefreshBottom = nil;
+            self.constraintRightRefreshRight = nil;
+            self.constraintRightRefreshSize = nil;
+            [_rightRefreshView removeFromSuperview];
+        }
+        _rightRefreshView = rightRefreshView;
+        if(_rightRefreshView != nil) {
+            _rightRefreshView.translatesAutoresizingMaskIntoConstraints = NO;
+            if(self.superview != nil) {
+                [self.superview insertSubview:_rightRefreshView aboveSubview:self];
+                [self _updateSuperviewConstraints];
+            }
+        }
+    }
+}
+
+- (void)setConstraintRightRefreshTop:(NSLayoutConstraint*)constraintRightRefreshTop {
+    if(_constraintRightRefreshTop != constraintRightRefreshTop) {
+        if(_constraintRightRefreshTop != nil) {
+            [self.superview removeConstraint:_constraintRightRefreshTop];
+        }
+        _constraintRightRefreshTop = constraintRightRefreshTop;
+        if(_constraintRightRefreshTop != nil) {
+            [self.superview addConstraint:_constraintRightRefreshTop];
+        }
+    }
+}
+
+- (void)setConstraintRightRefreshBottom:(NSLayoutConstraint*)constraintRightRefreshBottom {
+    if(_constraintRightRefreshBottom != constraintRightRefreshBottom) {
+        if(_constraintRightRefreshBottom != nil) {
+            [self.superview removeConstraint:_constraintRightRefreshBottom];
+        }
+        _constraintRightRefreshBottom = constraintRightRefreshBottom;
+        if(_constraintRightRefreshBottom != nil) {
+            [self.superview addConstraint:_constraintRightRefreshBottom];
+        }
+    }
+}
+
+- (void)setConstraintRightRefreshRight:(NSLayoutConstraint*)constraintRightRefreshRight {
+    if(_constraintRightRefreshRight != constraintRightRefreshRight) {
+        if(_constraintRightRefreshRight != nil) {
+            [self.superview removeConstraint:_constraintRightRefreshRight];
+        }
+        _constraintRightRefreshRight = constraintRightRefreshRight;
+        if(_constraintRightRefreshRight != nil) {
+            [self.superview addConstraint:_constraintRightRefreshRight];
+        }
+    }
+}
+
+- (void)setConstraintRightRefreshSize:(NSLayoutConstraint*)constraintRightRefreshSize {
+    if(_constraintRightRefreshSize != constraintRightRefreshSize) {
+        if(_constraintRightRefreshSize != nil) {
+            [self.superview removeConstraint:_constraintRightRefreshSize];
+        }
+        _constraintRightRefreshSize = constraintRightRefreshSize;
+        if(_constraintRightRefreshSize != nil) {
+            [self.superview addConstraint:_constraintRightRefreshSize];
+        }
+    }
+}
+
+- (void)setRightRefreshThreshold:(CGFloat)rightRefreshThreshold {
+    if(_rightRefreshThreshold != rightRefreshThreshold) {
+        _rightRefreshThreshold = rightRefreshThreshold;
+        if(_constraintRightRefreshSize != nil) {
+            _constraintRightRefreshSize.constant = _rightRefreshThreshold;
         } else if(self.superview != nil) {
             [self _updateSuperviewConstraints];
         }
@@ -627,7 +797,6 @@
                 } else {
                     [self insertSubview:cell atIndex:0];
                 }
-                // NSLog(@"%@", self.subviews);
             }
         } else {
             [queue removeLastObject];
@@ -951,26 +1120,27 @@
     [self scrollRectToVisible:CGRectMake(offset.x, offset.y, viewport.size.width, viewport.size.height) animated:animated];
 }
 
-- (void)showPullToRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
-    if(_pullToRefreshView.state == MobilyDataRefreshViewStateRelease) {
-        UIEdgeInsets contentInset = self.contentInset;
-        contentInset.top = (_pullToRefreshHeight < 0.0f) ? _pullToRefreshView.frameHeight : _pullToRefreshHeight;
-        _constraintPullToRefreshBottom.constant = contentInset.top;
-        _pullToRefreshView.state = MobilyDataRefreshViewStateLoading;
+- (void)showTopRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
+    if(_topRefreshView.state == MobilyDataRefreshViewStateRelease) {
+        _topRefreshView.state = MobilyDataRefreshViewStateLoading;
+        _constraintTopRefreshSize.constant = _topRefreshThreshold;
         if(animated == YES) {
             [UIView animateWithDuration:0.3f
+                                  delay:0.05f
+                                options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
-                                 self.scrollIndicatorInsets = self.contentInset = contentInset;
+                                 self.contentInset = UIEdgeInsetsMake(_topRefreshThreshold, self.contentInset.left, self.contentInset.bottom, self.contentInset.right);
+                                 self.scrollIndicatorInsets = self.contentInset;
                                  [self.superview layoutIfNeeded];
                              }
                              completion:^(BOOL finished) {
-                                 self.contentInset = self.scrollIndicatorInsets = contentInset;
                                  if(complete != nil) {
                                      complete(finished);
                                  }
                              }];
         } else {
-            self.scrollIndicatorInsets = self.contentInset = contentInset;
+            self.contentInset = UIEdgeInsetsMake(_topRefreshThreshold, self.contentInset.left, self.contentInset.bottom, self.contentInset.right);
+            self.scrollIndicatorInsets = self.contentInset;
             if(complete != nil) {
                 complete(YES);
             }
@@ -978,27 +1148,28 @@
     }
 }
 
-- (void)hidePullToRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
-    if(_pullToRefreshView.state != MobilyDataRefreshViewStateIdle) {
-        UIEdgeInsets contentInset = self.contentInset;
-        contentInset.top = 0.0f;
-        _constraintPullToRefreshBottom.constant = contentInset.top;
+- (void)hideTopRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
+    if(_topRefreshView.state != MobilyDataRefreshViewStateIdle) {
+        _constraintTopRefreshBottom.constant = 0.0f;
         if(animated == YES) {
             [UIView animateWithDuration:0.3f
+                                  delay:0.05f
+                                options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
-                                 self.contentInset = self.scrollIndicatorInsets = contentInset;
+                                 self.contentInset = UIEdgeInsetsMake(0.0f, self.contentInset.left, self.contentInset.bottom, self.contentInset.right);
+                                 self.scrollIndicatorInsets = self.contentInset;
                                  [self.superview layoutIfNeeded];
                              }
                              completion:^(BOOL finished) {
-                                 self.contentInset = self.scrollIndicatorInsets = contentInset;
-                                 _pullToRefreshView.state = MobilyDataRefreshViewStateIdle;
+                                 _topRefreshView.state = MobilyDataRefreshViewStateIdle;
                                  if(complete != nil) {
                                      complete(finished);
                                  }
                              }];
         } else {
-            self.scrollIndicatorInsets = self.contentInset = contentInset;
-            _pullToRefreshView.state = MobilyDataRefreshViewStateIdle;
+            self.contentInset = UIEdgeInsetsMake(0.0f, self.contentInset.left, self.contentInset.bottom, self.contentInset.right);
+            self.scrollIndicatorInsets = self.contentInset;
+            _topRefreshView.state = MobilyDataRefreshViewStateIdle;
             if(complete != nil) {
                 complete(YES);
             }
@@ -1006,26 +1177,27 @@
     }
 }
 
-- (void)showPullToLoadAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
-    if(_pullToLoadView.state == MobilyDataRefreshViewStateRelease) {
-        UIEdgeInsets contentInset = self.contentInset;
-        contentInset.bottom = (_pullToLoadHeight < 0.0f) ? _pullToLoadView.frameHeight : _pullToLoadHeight;
-        _constraintPullToLoadTop.constant = -contentInset.bottom;
-        _pullToLoadView.state = MobilyDataRefreshViewStateLoading;
+- (void)showBottomRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
+    if(_bottomRefreshView.state == MobilyDataRefreshViewStateRelease) {
+        _constraintBottomRefreshSize.constant = _bottomRefreshThreshold;
+        _bottomRefreshView.state = MobilyDataRefreshViewStateLoading;
         if(animated == YES) {
             [UIView animateWithDuration:0.3f
+                                  delay:0.05f
+                                options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
-                                 self.scrollIndicatorInsets = self.contentInset = contentInset;
+                                 self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, _bottomRefreshThreshold, self.contentInset.right);
+                                 self.scrollIndicatorInsets = self.contentInset;
                                  [self.superview layoutIfNeeded];
                              }
                              completion:^(BOOL finished) {
-                                 self.contentInset = self.scrollIndicatorInsets = contentInset;
                                  if(complete != nil) {
                                      complete(finished);
                                  }
                              }];
         } else {
-            self.scrollIndicatorInsets = self.contentInset = contentInset;
+            self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, _bottomRefreshThreshold, self.contentInset.right);
+            self.scrollIndicatorInsets = self.contentInset;
             if(complete != nil) {
                 complete(YES);
             }
@@ -1033,27 +1205,142 @@
     }
 }
 
-- (void)hidePullToLoadAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
-    if(_pullToLoadView.state != MobilyDataRefreshViewStateIdle) {
-        UIEdgeInsets contentInset = self.contentInset;
-        contentInset.bottom = 0.0f;
-        _constraintPullToLoadTop.constant = contentInset.bottom;
+- (void)hideBottomRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
+    if(_bottomRefreshView.state != MobilyDataRefreshViewStateIdle) {
+        _constraintBottomRefreshSize.constant = 0.0f;
         if(animated == YES) {
             [UIView animateWithDuration:0.3f
+                                  delay:0.05f
+                                options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
-                                 self.scrollIndicatorInsets = self.contentInset = contentInset;
+                                 self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, 0.0f, self.contentInset.right);
+                                 self.scrollIndicatorInsets = self.contentInset;
                                  [self.superview layoutIfNeeded];
                              }
                              completion:^(BOOL finished) {
-                                 self.contentInset = self.scrollIndicatorInsets = contentInset;
-                                 _pullToLoadView.state = MobilyDataRefreshViewStateIdle;
+                                 _bottomRefreshView.state = MobilyDataRefreshViewStateIdle;
                                  if(complete != nil) {
                                      complete(finished);
                                  }
                              }];
         } else {
-            self.scrollIndicatorInsets = self.contentInset = contentInset;
-            _pullToLoadView.state = MobilyDataRefreshViewStateIdle;
+            self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, 0.0f, self.contentInset.right);
+            self.scrollIndicatorInsets = self.contentInset;
+            _bottomRefreshView.state = MobilyDataRefreshViewStateIdle;
+            if(complete != nil) {
+                complete(YES);
+            }
+        }
+    }
+}
+
+- (void)showLeftRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
+    if(_leftRefreshView.state == MobilyDataRefreshViewStateRelease) {
+        _constraintLeftRefreshSize.constant = _leftRefreshThreshold;
+        _leftRefreshView.state = MobilyDataRefreshViewStateLoading;
+        if(animated == YES) {
+            [UIView animateWithDuration:0.3f
+                                  delay:0.05f
+                                options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
+                             animations:^{
+                                 self.contentInset = UIEdgeInsetsMake(self.contentInset.top, _leftRefreshThreshold, self.contentInset.bottom, self.contentInset.right);
+                                 self.scrollIndicatorInsets = self.contentInset;
+                                 [self.superview layoutIfNeeded];
+                             }
+                             completion:^(BOOL finished) {
+                                 if(complete != nil) {
+                                     complete(finished);
+                                 }
+                             }];
+        } else {
+            self.contentInset = UIEdgeInsetsMake(self.contentInset.top, _leftRefreshThreshold, self.contentInset.bottom, self.contentInset.right);
+            self.scrollIndicatorInsets = self.contentInset;
+            if(complete != nil) {
+                complete(YES);
+            }
+        }
+    }
+}
+
+- (void)hideLeftRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
+    if(_leftRefreshView.state != MobilyDataRefreshViewStateIdle) {
+        _constraintLeftRefreshSize.constant = 0.0f;
+        if(animated == YES) {
+            [UIView animateWithDuration:0.3f
+                                  delay:0.05f
+                                options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
+                             animations:^{
+                                 self.contentInset = UIEdgeInsetsMake(self.contentInset.top, 0.0f, self.contentInset.bottom, self.contentInset.right);
+                                 self.scrollIndicatorInsets = self.contentInset;
+                                 [self.superview layoutIfNeeded];
+                             }
+                             completion:^(BOOL finished) {
+                                 _leftRefreshView.state = MobilyDataRefreshViewStateIdle;
+                                 if(complete != nil) {
+                                     complete(finished);
+                                 }
+                             }];
+        } else {
+            self.contentInset = UIEdgeInsetsMake(self.contentInset.top, 0.0f, self.contentInset.bottom, self.contentInset.right);
+            self.scrollIndicatorInsets = self.contentInset;
+            _leftRefreshView.state = MobilyDataRefreshViewStateIdle;
+            if(complete != nil) {
+                complete(YES);
+            }
+        }
+    }
+}
+
+- (void)showRightRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
+    if(_rightRefreshView.state == MobilyDataRefreshViewStateRelease) {
+        _constraintRightRefreshSize.constant = _rightRefreshThreshold;
+        _rightRefreshView.state = MobilyDataRefreshViewStateLoading;
+        if(animated == YES) {
+            [UIView animateWithDuration:0.3f
+                                  delay:0.05f
+                                options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
+                             animations:^{
+                                 self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, self.contentInset.bottom, _rightRefreshThreshold);
+                                 self.scrollIndicatorInsets = self.contentInset;
+                                 [self.superview layoutIfNeeded];
+                             }
+                             completion:^(BOOL finished) {
+                                 if(complete != nil) {
+                                     complete(finished);
+                                 }
+                             }];
+        } else {
+            self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, self.contentInset.bottom, _rightRefreshThreshold);
+            self.scrollIndicatorInsets = self.contentInset;
+            if(complete != nil) {
+                complete(YES);
+            }
+        }
+    }
+}
+
+- (void)hideRightRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
+    if(_rightRefreshView.state != MobilyDataRefreshViewStateIdle) {
+        _constraintRightRefreshSize.constant = 0.0f;
+        if(animated == YES) {
+            [UIView animateWithDuration:0.3f
+                                  delay:0.05f
+                                options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
+                             animations:^{
+                                 self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, self.contentInset.bottom, 0.0f);
+                                 self.scrollIndicatorInsets = self.contentInset;
+                                 [self.superview layoutIfNeeded];
+                             }
+                             completion:^(BOOL finished) {
+                                 _rightRefreshView.state = MobilyDataRefreshViewStateIdle;
+                                 if(complete != nil) {
+                                     complete(finished);
+                                 }
+                             }];
+        } else {
+            self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, self.contentInset.bottom, 0.0f);
+            self.scrollIndicatorInsets = self.contentInset;
+            _rightRefreshView.state = MobilyDataRefreshViewStateIdle;
             if(complete != nil) {
                 complete(YES);
             }
@@ -1135,81 +1422,134 @@
 }
 
 - (void)_layoutForVisible {
-    CGRect bounds = self.bounds;
     [_container _willLayoutForBounds:self.visibleBounds];
-    if(_updating == NO) {
-        [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex __unused, BOOL* itemStop __unused) {
-            [item invalidateLayoutForBounds:bounds];
-        }];
+    if((self.dragging == YES) || (self.decelerating == YES)) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if(_updating == NO) {
+                [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex __unused, BOOL* itemStop __unused) {
+                    [item invalidateLayoutForBounds:self.bounds];
+                }];
+            }
+            [_container _didLayoutForBounds:self.bounds];
+        });
+    } else {
+        CGRect bounds = self.bounds;
+        if(_updating == NO) {
+            [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex __unused, BOOL* itemStop __unused) {
+                [item invalidateLayoutForBounds:bounds];
+            }];
+        }
+        [_container _didLayoutForBounds:bounds];
     }
-    [_container _didLayoutForBounds:bounds];
 }
 
 - (void)_updateSuperviewConstraints {
-    if(_pullToRefreshView != nil) {
-        if(_constraintPullToRefreshBottom == nil) {
-            self.constraintPullToRefreshBottom = [NSLayoutConstraint constraintWithItem:_pullToRefreshView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+    if(_topRefreshView != nil) {
+        if(_constraintTopRefreshBottom == nil) {
+            self.constraintTopRefreshBottom = [NSLayoutConstraint constraintWithItem:_topRefreshView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
         }
-        if(_constraintPullToRefreshLeft == nil) {
-            self.constraintPullToRefreshLeft = [NSLayoutConstraint constraintWithItem:_pullToRefreshView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
+        if(_constraintTopRefreshLeft == nil) {
+            self.constraintTopRefreshLeft = [NSLayoutConstraint constraintWithItem:_topRefreshView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
         }
-        if(_constraintPullToRefreshRight == nil) {
-            self.constraintPullToRefreshRight = [NSLayoutConstraint constraintWithItem:_pullToRefreshView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
+        if(_constraintTopRefreshRight == nil) {
+            self.constraintTopRefreshRight = [NSLayoutConstraint constraintWithItem:_topRefreshView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
         }
-        if(_pullToRefreshHeight >= 0.0f) {
-            if(_constraintPullToRefreshHeight == nil) {
-                self.constraintPullToRefreshHeight = [NSLayoutConstraint constraintWithItem:_pullToRefreshView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:_pullToRefreshHeight];
-            }
-        } else {
-            self.constraintPullToRefreshHeight = nil;
+        if(_constraintTopRefreshSize == nil) {
+            self.constraintTopRefreshSize = [NSLayoutConstraint constraintWithItem:_topRefreshView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
         }
     } else {
-        self.constraintPullToRefreshBottom = nil;
-        self.constraintPullToRefreshLeft = nil;
-        self.constraintPullToRefreshRight = nil;
-        self.constraintPullToRefreshHeight = nil;
+        self.constraintTopRefreshBottom = nil;
+        self.constraintTopRefreshLeft = nil;
+        self.constraintTopRefreshRight = nil;
+        self.constraintTopRefreshSize = nil;
     }
-    if(_pullToLoadView != nil) {
-        if(_constraintPullToLoadTop == nil) {
-            self.constraintPullToLoadTop = [NSLayoutConstraint constraintWithItem:_pullToLoadView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+    if(_bottomRefreshView != nil) {
+        if(_constraintBottomRefreshTop == nil) {
+            self.constraintBottomRefreshTop = [NSLayoutConstraint constraintWithItem:_bottomRefreshView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
         }
-        if(_constraintPullToLoadLeft == nil) {
-            self.constraintPullToLoadLeft = [NSLayoutConstraint constraintWithItem:_pullToLoadView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
+        if(_constraintBottomRefreshLeft == nil) {
+            self.constraintBottomRefreshLeft = [NSLayoutConstraint constraintWithItem:_bottomRefreshView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
         }
-        if(_constraintPullToLoadRight == nil) {
-            self.constraintPullToLoadRight = [NSLayoutConstraint constraintWithItem:_pullToLoadView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
+        if(_constraintBottomRefreshRight == nil) {
+            self.constraintBottomRefreshRight = [NSLayoutConstraint constraintWithItem:_bottomRefreshView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
         }
-        if(_pullToLoadHeight >= 0.0f) {
-            if(_constraintPullToLoadHeight == nil) {
-                self.constraintPullToLoadHeight = [NSLayoutConstraint constraintWithItem:_pullToLoadView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:_pullToLoadHeight];
-            }
-        } else {
-            self.constraintPullToLoadHeight = nil;
+        if(_constraintBottomRefreshSize == nil) {
+            self.constraintBottomRefreshSize = [NSLayoutConstraint constraintWithItem:_bottomRefreshView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
         }
     } else {
-        self.constraintPullToLoadTop = nil;
-        self.constraintPullToLoadLeft = nil;
-        self.constraintPullToLoadRight = nil;
-        self.constraintPullToLoadHeight = nil;
+        self.constraintBottomRefreshTop = nil;
+        self.constraintBottomRefreshLeft = nil;
+        self.constraintBottomRefreshRight = nil;
+        self.constraintBottomRefreshSize = nil;
+    }
+    if(_leftRefreshView != nil) {
+        if(_constraintLeftRefreshTop == nil) {
+            self.constraintLeftRefreshTop = [NSLayoutConstraint constraintWithItem:_leftRefreshView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+        }
+        if(_constraintLeftRefreshBottom == nil) {
+            self.constraintLeftRefreshBottom = [NSLayoutConstraint constraintWithItem:_leftRefreshView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+        }
+        if(_constraintLeftRefreshLeft == nil) {
+            self.constraintLeftRefreshLeft = [NSLayoutConstraint constraintWithItem:_leftRefreshView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
+        }
+        if(_constraintLeftRefreshSize == nil) {
+            self.constraintLeftRefreshSize = [NSLayoutConstraint constraintWithItem:_leftRefreshView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
+        }
+    } else {
+        self.constraintLeftRefreshTop = nil;
+        self.constraintLeftRefreshBottom = nil;
+        self.constraintLeftRefreshLeft = nil;
+        self.constraintLeftRefreshSize = nil;
+    }
+    if(_rightRefreshView != nil) {
+        if(_constraintRightRefreshTop == nil) {
+            self.constraintRightRefreshTop = [NSLayoutConstraint constraintWithItem:_rightRefreshView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+        }
+        if(_constraintRightRefreshBottom == nil) {
+            self.constraintRightRefreshBottom = [NSLayoutConstraint constraintWithItem:_rightRefreshView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+        }
+        if(_constraintRightRefreshRight == nil) {
+            self.constraintRightRefreshRight = [NSLayoutConstraint constraintWithItem:_rightRefreshView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
+        }
+        if(_constraintRightRefreshSize == nil) {
+            self.constraintRightRefreshSize = [NSLayoutConstraint constraintWithItem:_rightRefreshView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
+        }
+    } else {
+        self.constraintRightRefreshTop = nil;
+        self.constraintRightRefreshBottom = nil;
+        self.constraintRightRefreshRight = nil;
+        self.constraintRightRefreshSize = nil;
     }
 }
 
 - (void)_willBeginDragging {
     if(self.pagingEnabled == NO) {
-        if(_pullToRefreshView != nil) {
-            self.canPullToRefresh = ([_pullToRefreshView state] != MobilyDataRefreshViewStateLoading);
-        } else {
-            self.canPullToRefresh = NO;
-        }
-        if(_pullToLoadView != nil) {
-            self.canPullToLoad = ([_pullToLoadView state] != MobilyDataRefreshViewStateLoading);
-        } else {
-            self.canPullToLoad = NO;
-        }
-        if((_canPullToRefresh == YES) || (_canPullToLoad == YES)) {
-            self.pullDragging = YES;
-        } else {
-            self.pullDragging = NO;
+        if(_refreshDragging == NO) {
+            if(_topRefreshView != nil) {
+                self.canTopRefresh = ([_topRefreshView state] != MobilyDataRefreshViewStateLoading);
+            } else {
+                self.canTopRefresh = NO;
+            }
+            if(_bottomRefreshView != nil) {
+                self.canBottomRefresh = ([_bottomRefreshView state] != MobilyDataRefreshViewStateLoading);
+            } else {
+                self.canBottomRefresh = NO;
+            }
+            if(_leftRefreshView != nil) {
+                self.canLeftRefresh = ([_leftRefreshView state] != MobilyDataRefreshViewStateLoading);
+            } else {
+                self.canLeftRefresh = NO;
+            }
+            if(_rightRefreshView != nil) {
+                self.canRightRefresh = ([_rightRefreshView state] != MobilyDataRefreshViewStateLoading);
+            } else {
+                self.canRightRefresh = NO;
+            }
+            if((_canTopRefresh == YES) || (_canBottomRefresh == YES) || (_canLeftRefresh == YES) || (_canRightRefresh == YES)) {
+                self.refreshDragging = YES;
+            } else {
+                self.refreshDragging = NO;
+            }
         }
     }
     if(_container != nil) {
@@ -1217,7 +1557,7 @@
     }
 }
 
-- (void)_didScroll {
+- (void)_didScrollDragging:(BOOL)dragging decelerating:(BOOL)decelerating {
     if(self.pagingEnabled == NO) {
         CGRect bounds = self.bounds;
         CGSize frameSize = self.frameSize;
@@ -1242,96 +1582,143 @@
                 }
             }
         }
-        if((_pullDragging == YES) && (self.isDragging == YES) && (self.isDecelerating == NO)) {
-            if(_canPullToRefresh == YES) {
-                CGFloat pullToRefreshSize = (_pullToRefreshHeight < 0.0f) ? _pullToRefreshView.frameHeight : _pullToRefreshHeight;
-                CGFloat offset = MIN(pullToRefreshSize, -contentOffset.y);
-                switch(_pullToRefreshView.state) {
+        if((_refreshDragging == YES) && (dragging == YES) && (decelerating == NO)) {
+            if((_canTopRefresh == YES) && (contentOffset.y < 0.0f)) {
+                CGFloat offset = -contentOffset.y;
+                switch(_topRefreshView.state) {
                     case MobilyDataRefreshViewStateIdle:
                         if(offset > 0.0f) {
-                            if(_constraintPullToRefreshBottom != nil) {
-                                _constraintPullToRefreshBottom.constant = 0.0f;
-                            }
-                            _pullToRefreshView.state = MobilyDataRefreshViewStatePull;
+                            _topRefreshView.state = MobilyDataRefreshViewStatePull;
                             contentInset.top = 0.0f;
                         }
                         break;
                     case MobilyDataRefreshViewStatePull:
                     case MobilyDataRefreshViewStateRelease:
                         if(offset < 0.0f) {
-                            if(_constraintPullToRefreshBottom != nil) {
-                                _constraintPullToRefreshBottom.constant = 0.0f;
-                            }
-                            _pullToRefreshView.state = MobilyDataRefreshViewStateIdle;
+                            _topRefreshView.state = MobilyDataRefreshViewStateIdle;
                             contentInset.top = 0.0f;
-                        } else if(offset >= pullToRefreshSize) {
-                            if(_constraintPullToRefreshBottom != nil) {
-                                _constraintPullToRefreshBottom.constant = pullToRefreshSize;
-                            }
-                            if(_pullToRefreshView.state != MobilyDataRefreshViewStateRelease) {
-                                _pullToRefreshView.state = MobilyDataRefreshViewStateRelease;
+                        } else if(offset >= _topRefreshThreshold) {
+                            if(_topRefreshView.state != MobilyDataRefreshViewStateRelease) {
+                                _topRefreshView.state = MobilyDataRefreshViewStateRelease;
                                 contentInset.top = offset;
                             }
                         } else {
-                            if(_constraintPullToRefreshBottom != nil) {
-                                _constraintPullToRefreshBottom.constant = offset;
-                            }
-                            _pullToRefreshView.state = MobilyDataRefreshViewStatePull;
+                            _topRefreshView.state = MobilyDataRefreshViewStatePull;
                             contentInset.top = offset;
                         }
                         break;
                     default:
                         break;
                 }
+                _constraintTopRefreshSize.constant = offset;
+            } else {
+                _topRefreshView.state = MobilyDataRefreshViewStateIdle;
+                _constraintTopRefreshSize.constant = 0.0f;
+                contentInset.top = 0.0f;
             }
-            if((_canPullToLoad == YES) && (contentSize.height > frameSize.height)) {
+            if((_canBottomRefresh == YES) && (contentSize.height >= frameSize.height)) {
                 CGFloat contentBottom = contentSize.height - bounds.size.height;
-                CGFloat pullToLoadSize = (_pullToLoadHeight < 0.0f) ? _pullToLoadView.frameHeight : _pullToLoadHeight;
                 if(contentOffset.y >= contentBottom) {
-                    CGFloat offset = MIN(pullToLoadSize, contentOffset.y - contentBottom);
-                    switch(_pullToLoadView.state) {
+                    CGFloat offset = contentOffset.y - contentBottom;
+                    switch(_bottomRefreshView.state) {
                         case MobilyDataRefreshViewStateIdle:
                             if(offset > 0.0f) {
-                                if(_constraintPullToLoadTop != nil) {
-                                    _constraintPullToLoadTop.constant = -offset;
-                                }
-                                _pullToLoadView.state = MobilyDataRefreshViewStatePull;
+                                _bottomRefreshView.state = MobilyDataRefreshViewStatePull;
                                 contentInset.bottom = offset;
                             }
                             break;
                         case MobilyDataRefreshViewStatePull:
                         case MobilyDataRefreshViewStateRelease:
                             if(offset < 0.0f) {
-                                if(_constraintPullToLoadTop != nil) {
-                                    _constraintPullToLoadTop.constant = 0.0f;
-                                }
-                                _pullToLoadView.state = MobilyDataRefreshViewStateIdle;
+                                _bottomRefreshView.state = MobilyDataRefreshViewStateIdle;
                                 contentInset.bottom = 0.0f;
-                            } else if(offset >= pullToLoadSize) {
-                                if(_constraintPullToLoadTop != nil) {
-                                    _constraintPullToLoadTop.constant = -pullToLoadSize;
-                                }
-                                if(_pullToLoadView.state != MobilyDataRefreshViewStateRelease) {
-                                    _pullToLoadView.state = MobilyDataRefreshViewStateRelease;
+                            } else if(offset >= _bottomRefreshThreshold) {
+                                if(_bottomRefreshView.state != MobilyDataRefreshViewStateRelease) {
+                                    _bottomRefreshView.state = MobilyDataRefreshViewStateRelease;
                                     contentInset.bottom = offset;
                                 }
                             } else {
-                                if(_constraintPullToLoadTop != nil) {
-                                    _constraintPullToLoadTop.constant = -offset;
-                                }
-                                _pullToLoadView.state = MobilyDataRefreshViewStatePull;
+                                _bottomRefreshView.state = MobilyDataRefreshViewStatePull;
                                 contentInset.bottom = offset;
                             }
                             break;
                         default:
                             break;
                     }
+                    _constraintBottomRefreshSize.constant = offset;
                 } else {
-                    if(_constraintPullToLoadTop != nil) {
-                        _constraintPullToLoadTop.constant = 0.0f;
-                    }
-                    _pullToLoadView.state = MobilyDataRefreshViewStateIdle;
+                    _bottomRefreshView.state = MobilyDataRefreshViewStateIdle;
+                    _constraintBottomRefreshSize.constant = 0.0f;
                     contentInset.bottom = 0.0f;
+                }
+            }
+            if((_canLeftRefresh == YES) && (contentOffset.x < 0.0f)) {
+                CGFloat offset = -contentOffset.x;
+                switch(_leftRefreshView.state) {
+                    case MobilyDataRefreshViewStateIdle:
+                        if(offset > 0.0f) {
+                            _leftRefreshView.state = MobilyDataRefreshViewStatePull;
+                            contentInset.left = 0.0f;
+                        }
+                        break;
+                    case MobilyDataRefreshViewStatePull:
+                    case MobilyDataRefreshViewStateRelease:
+                        if(offset < 0.0f) {
+                            _leftRefreshView.state = MobilyDataRefreshViewStateIdle;
+                            contentInset.left = 0.0f;
+                        } else if(offset >= _leftRefreshThreshold) {
+                            if(_leftRefreshView.state != MobilyDataRefreshViewStateRelease) {
+                                _leftRefreshView.state = MobilyDataRefreshViewStateRelease;
+                                contentInset.left = offset;
+                            }
+                        } else {
+                            _leftRefreshView.state = MobilyDataRefreshViewStatePull;
+                            contentInset.left = offset;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                _constraintLeftRefreshSize.constant = offset;
+            } else {
+                _leftRefreshView.state = MobilyDataRefreshViewStateIdle;
+                _constraintLeftRefreshSize.constant = 0.0f;
+                contentInset.left = 0.0f;
+            }
+            if((_canRightRefresh == YES) && (contentSize.width >= frameSize.width)) {
+                CGFloat contentRight = contentSize.width - bounds.size.width;
+                if(contentOffset.x >= contentRight) {
+                    CGFloat offset = contentOffset.x - contentRight;
+                    switch(_rightRefreshView.state) {
+                        case MobilyDataRefreshViewStateIdle:
+                            if(offset > 0.0f) {
+                                _rightRefreshView.state = MobilyDataRefreshViewStatePull;
+                                contentInset.right = offset;
+                            }
+                            break;
+                        case MobilyDataRefreshViewStatePull:
+                        case MobilyDataRefreshViewStateRelease:
+                            if(offset < 0.0f) {
+                                _rightRefreshView.state = MobilyDataRefreshViewStateIdle;
+                                contentInset.right = 0.0f;
+                            } else if(offset >= _rightRefreshThreshold) {
+                                if(_rightRefreshView.state != MobilyDataRefreshViewStateRelease) {
+                                    _rightRefreshView.state = MobilyDataRefreshViewStateRelease;
+                                    contentInset.right = offset;
+                                }
+                            } else {
+                                _rightRefreshView.state = MobilyDataRefreshViewStatePull;
+                                contentInset.right = offset;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    _constraintRightRefreshSize.constant = offset;
+                } else {
+                    _rightRefreshView.state = MobilyDataRefreshViewStateIdle;
+                    _constraintRightRefreshSize.constant = 0.0f;
+                    contentInset.right = 0.0f;
                 }
             }
         }
@@ -1340,58 +1727,113 @@
         self.contentOffset = contentOffset;
     }
     if(_container != nil) {
-        [_container _didScroll];
+        [_container _didScrollDragging:dragging decelerating:decelerating];
     }
 }
 
-- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize visibleInsets:(UIEdgeInsets)visibleInsets {
+- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize {
     if(_container != nil) {
-        [_container _willEndDraggingWithVelocity:velocity contentOffset:contentOffset contentSize:contentSize visibleSize:visibleSize visibleInsets:visibleInsets];
-        contentOffset->x = MAX(visibleInsets.left, MIN(contentOffset->x, contentSize.width - (visibleSize.width - (visibleInsets.left + visibleInsets.right))));
-        contentOffset->y = MAX(visibleInsets.top, MIN(contentOffset->y, contentSize.height - (visibleSize.height - (visibleInsets.top + visibleInsets.bottom))));
+        [_container _willEndDraggingWithVelocity:velocity contentOffset:contentOffset contentSize:contentSize visibleSize:visibleSize];
+        contentOffset->x = MAX(0.0f, MIN(contentOffset->x, contentSize.width - visibleSize.width));
+        contentOffset->y = MAX(0.0f, MIN(contentOffset->y, contentSize.height - visibleSize.height));
     }
 }
 
 - (void)_didEndDraggingWillDecelerate:(BOOL)decelerate {
     if(self.pagingEnabled == NO) {
-        if(_pullDragging == YES) {
-            if(_canPullToRefresh == YES) {
-                switch(_pullToRefreshView.state) {
+        if(_refreshDragging == YES) {
+            if(_canTopRefresh == YES) {
+                switch(_topRefreshView.state) {
                     case MobilyDataRefreshViewStateRelease: {
-                        if([self containsEventForKey:MobilyDataViewPullToRefreshTriggered] == YES) {
-                            [self showPullToRefreshAnimated:YES complete:^(BOOL finished __unused) {
-                                [self fireEventForKey:MobilyDataViewPullToRefreshTriggered byObject:_pullToRefreshView];
+                        if([self containsEventForKey:MobilyDataViewTopRefreshTriggered] == YES) {
+                            [self showTopRefreshAnimated:YES complete:^(BOOL finished __unused) {
+                                [self fireEventForKey:MobilyDataViewTopRefreshTriggered byObject:_topRefreshView];
+                                self.refreshDragging = NO;
                             }];
                         } else {
-                            [self hidePullToRefreshAnimated:YES complete:nil];
+                            [self hideTopRefreshAnimated:YES complete:^(BOOL finished) {
+                                self.refreshDragging = NO;
+                            }];
                         }
                         break;
                     }
                     default: {
-                        [self hidePullToRefreshAnimated:YES complete:nil];
+                        [self hideTopRefreshAnimated:YES complete:^(BOOL finished) {
+                            self.refreshDragging = NO;
+                        }];
                         break;
                     }
                 }
             }
-            if(_canPullToLoad == YES) {
-                switch(_pullToLoadView.state) {
+            if(_canBottomRefresh == YES) {
+                switch(_bottomRefreshView.state) {
                     case MobilyDataRefreshViewStateRelease: {
-                        if([self containsEventForKey:MobilyDataViewPullToLoadTriggered] == YES) {
-                            [self showPullToLoadAnimated:YES complete:^(BOOL finished __unused) {
-                                [self fireEventForKey:MobilyDataViewPullToLoadTriggered byObject:_pullToLoadView];
+                        if([self containsEventForKey:MobilyDataViewBottomRefreshTriggered] == YES) {
+                            [self showBottomRefreshAnimated:YES complete:^(BOOL finished __unused) {
+                                [self fireEventForKey:MobilyDataViewBottomRefreshTriggered byObject:_bottomRefreshView];
+                                self.refreshDragging = NO;
                             }];
                         } else {
-                            [self hidePullToLoadAnimated:YES complete:nil];
+                            [self hideBottomRefreshAnimated:YES complete:^(BOOL finished) {
+                                self.refreshDragging = NO;
+                            }];
                         }
                         break;
                     }
                     default: {
-                        [self hidePullToLoadAnimated:YES complete:nil];
+                        [self hideBottomRefreshAnimated:YES complete:^(BOOL finished) {
+                            self.refreshDragging = NO;
+                        }];
                         break;
                     }
                 }
             }
-            self.pullDragging = NO;
+            if(_canLeftRefresh == YES) {
+                switch(_leftRefreshView.state) {
+                    case MobilyDataRefreshViewStateRelease: {
+                        if([self containsEventForKey:MobilyDataViewLeftRefreshTriggered] == YES) {
+                            [self showLeftRefreshAnimated:YES complete:^(BOOL finished __unused) {
+                                [self fireEventForKey:MobilyDataViewLeftRefreshTriggered byObject:_leftRefreshView];
+                                self.refreshDragging = NO;
+                            }];
+                        } else {
+                            [self hideLeftRefreshAnimated:YES complete:^(BOOL finished) {
+                                self.refreshDragging = NO;
+                            }];
+                        }
+                        break;
+                    }
+                    default: {
+                        [self hideLeftRefreshAnimated:YES complete:^(BOOL finished) {
+                            self.refreshDragging = NO;
+                        }];
+                        break;
+                    }
+                }
+            }
+            if(_canRightRefresh == YES) {
+                switch(_rightRefreshView.state) {
+                    case MobilyDataRefreshViewStateRelease: {
+                        if([self containsEventForKey:MobilyDataViewRightRefreshTriggered] == YES) {
+                            [self showRightRefreshAnimated:YES complete:^(BOOL finished __unused) {
+                                [self fireEventForKey:MobilyDataViewRightRefreshTriggered byObject:_rightRefreshView];
+                                self.refreshDragging = NO;
+                            }];
+                        } else {
+                            [self hideRightRefreshAnimated:YES complete:^(BOOL finished) {
+                                self.refreshDragging = NO;
+                            }];
+                        }
+                        break;
+                    }
+                    default: {
+                        [self hideRightRefreshAnimated:YES complete:^(BOOL finished) {
+                            self.refreshDragging = NO;
+                        }];
+                        break;
+                    }
+                }
+            }
         }
     }
     if(_container != nil) {
@@ -1530,14 +1972,14 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView {
-    [_view _didScroll];
+    [_view _didScrollDragging:_view.dragging decelerating:_view.decelerating];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewDidScroll:scrollView];
     }
 }
 
 - (void)scrollViewWillEndDragging:(UIScrollView*)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset {
-    [_view _willEndDraggingWithVelocity:velocity contentOffset:targetContentOffset contentSize:scrollView.contentSize visibleSize:_view.boundsSize visibleInsets:UIEdgeInsetsZero];
+    [_view _willEndDraggingWithVelocity:velocity contentOffset:targetContentOffset contentSize:scrollView.contentSize visibleSize:_view.boundsSize];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     }
@@ -1577,7 +2019,9 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-NSString* MobilyDataViewPullToRefreshTriggered = @"MobilyDataViewPullToRefreshTriggered";
-NSString* MobilyDataViewPullToLoadTriggered = @"MobilyDataViewPullToLoadTriggered";
+NSString* MobilyDataViewTopRefreshTriggered = @"MobilyDataViewTopRefreshTriggered";
+NSString* MobilyDataViewBottomRefreshTriggered = @"MobilyDataViewBottomRefreshTriggered";
+NSString* MobilyDataViewLeftRefreshTriggered = @"MobilyDataViewLeftRefreshTriggered";
+NSString* MobilyDataViewRightRefreshTriggered = @"MobilyDataViewRightRefreshTriggered";
 
 /*--------------------------------------------------*/

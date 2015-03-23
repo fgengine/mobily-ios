@@ -55,13 +55,13 @@ typedef NS_ENUM(NSUInteger, MobilyDataContainerOrientation) {
 };
 
 typedef NS_OPTIONS(NSUInteger, MobilyDataContainerAlign) {
-    MobilyDataContainerAlignNone = 0,
-    MobilyDataContainerAlignTop = 1 << 0,
-    MobilyDataContainerAlignCenteredVertically = 1 << 1,
-    MobilyDataContainerAlignBottom = 1 << 2,
-    MobilyDataContainerAlignLeft = 1 << 3,
-    MobilyDataContainerAlignCenteredHorizontally = 1 << 4,
-    MobilyDataContainerAlignRight = 1 << 5,
+    MobilyDataContainerAlignNone = MobilyDataViewPositionNone,
+    MobilyDataContainerAlignTop = MobilyDataViewPositionTop,
+    MobilyDataContainerAlignCenteredVertically = MobilyDataViewPositionCenteredVertically,
+    MobilyDataContainerAlignBottom = MobilyDataViewPositionBottom,
+    MobilyDataContainerAlignLeft = MobilyDataViewPositionLeft,
+    MobilyDataContainerAlignCenteredHorizontally = MobilyDataViewPositionCenteredHorizontally,
+    MobilyDataContainerAlignRight = MobilyDataViewPositionRight,
     MobilyDataContainerAlignCentered = MobilyDataContainerAlignCenteredVertically | MobilyDataContainerAlignCenteredHorizontally,
 };
 
@@ -73,6 +73,7 @@ typedef NS_OPTIONS(NSUInteger, MobilyDataContainerAlign) {
 @property(nonatomic, readonly, weak) MobilyDataContainer* parent;
 @property(nonatomic, readonly, assign) CGRect frame;
 @property(nonatomic, readwrite, assign) BOOL allowAutoAlign;
+@property(nonatomic, readwrite, assign) UIEdgeInsets alignInsets;
 @property(nonatomic, readwrite, assign) MobilyDataContainerAlign alignPosition;
 @property(nonatomic, readwrite, assign) UIOffset alignThreshold;
 
@@ -94,6 +95,9 @@ typedef NS_OPTIONS(NSUInteger, MobilyDataContainerAlign) {
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
 - (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
 
+- (CGPoint)alignPoint;
+- (void)align;
+
 @end
 
 /*--------------------------------------------------*/
@@ -109,6 +113,8 @@ typedef NS_OPTIONS(NSUInteger, MobilyDataContainerAlign) {
 - (void)deleteSection:(MobilyDataContainer*)section;
 - (void)deleteAllSections;
 
+- (void)scrollToSection:(MobilyDataContainer*)section scrollPosition:(MobilyDataViewPosition)scrollPosition animated:(BOOL)animated;
+
 @end
 
 /*--------------------------------------------------*/
@@ -118,8 +124,22 @@ typedef NS_OPTIONS(NSUInteger, MobilyDataContainerAlign) {
 @property(nonatomic, readwrite, assign) MobilyDataContainerOrientation orientation;
 @property(nonatomic, readwrite, assign) UIEdgeInsets margin;
 @property(nonatomic, readwrite, assign) UIOffset spacing;
+@property(nonatomic, readwrite, assign) BOOL pagingEnabled;
+@property(nonatomic, readwrite, assign) NSUInteger currentSectionIndex;
+@property(nonatomic, readwrite, strong) MobilyDataContainer* currentSection;
+
++ (instancetype)containerWithOrientation:(MobilyDataContainerOrientation)orientation;
+
+- (instancetype)initWithOrientation:(MobilyDataContainerOrientation)orientation;
+
+- (void)setCurrentSectionIndex:(NSUInteger)currentSectionIndex animated:(BOOL)animated;
+- (void)setCurrentSection:(MobilyDataContainer*)currentSection animated:(BOOL)animated;
 
 @end
+
+/*--------------------------------------------------*/
+
+extern NSString* MobilyDataContainerCurrentSectionChanged;
 
 /*--------------------------------------------------*/
 

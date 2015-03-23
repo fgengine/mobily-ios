@@ -75,10 +75,14 @@ typedef void(^MobilyDataViewCompleteBlock)(BOOL finished);
 @property(nonatomic, readonly, strong) NSArray* editingCells;
 @property(nonatomic, readonly, assign, getter=isUpdating) BOOL updating;
 
-@property(nonatomic, readwrite, strong) IBOutlet MobilyDataRefreshView* pullToRefreshView;
-@property(nonatomic, readwrite, assign) IBInspectable CGFloat pullToRefreshHeight;
-@property(nonatomic, readwrite, strong) IBOutlet MobilyDataRefreshView* pullToLoadView;
-@property(nonatomic, readwrite, assign) IBInspectable CGFloat pullToLoadHeight;
+@property(nonatomic, readwrite, strong) IBOutlet MobilyDataRefreshView* topRefreshView;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat topRefreshThreshold;
+@property(nonatomic, readwrite, strong) IBOutlet MobilyDataRefreshView* bottomRefreshView;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat bottomRefreshThreshold;
+@property(nonatomic, readwrite, strong) IBOutlet MobilyDataRefreshView* leftRefreshView;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat leftRefreshThreshold;
+@property(nonatomic, readwrite, strong) IBOutlet MobilyDataRefreshView* rightRefreshView;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat rightRefreshThreshold;
 
 - (void)registerIdentifier:(NSString*)identifier withViewClass:(Class)viewClass;
 - (void)unregisterIdentifier:(NSString*)identifier;
@@ -153,17 +157,22 @@ typedef void(^MobilyDataViewCompleteBlock)(BOOL finished);
 - (void)scrollToItem:(MobilyDataItem*)item scrollPosition:(MobilyDataViewPosition)scrollPosition animated:(BOOL)animated;
 - (void)scrollToRect:(CGRect)rect scrollPosition:(MobilyDataViewPosition)scrollPosition animated:(BOOL)animated;
 
-- (void)showPullToRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
-- (void)hidePullToRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
-
-- (void)showPullToLoadAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
-- (void)hidePullToLoadAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
+- (void)showTopRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
+- (void)hideTopRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
+- (void)showBottomRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
+- (void)hideBottomRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
+- (void)showLeftRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
+- (void)hideLeftRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
+- (void)showRightRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
+- (void)hideRightRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
 
 @end
 
 /*--------------------------------------------------*/
 
-extern NSString* MobilyDataViewPullToRefreshTriggered;
-extern NSString* MobilyDataViewPullToLoadTriggered;
+extern NSString* MobilyDataViewTopRefreshTriggered;
+extern NSString* MobilyDataViewBottomRefreshTriggered;
+extern NSString* MobilyDataViewLeftRefreshTriggered;
+extern NSString* MobilyDataViewRightRefreshTriggered;
 
 /*--------------------------------------------------*/

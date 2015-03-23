@@ -70,21 +70,35 @@
     NSMutableArray* _insertedItems;
     BOOL _updating;
     BOOL _invalidLayout;
-    MobilyDataRefreshView* _pullToRefreshView;
-    CGFloat _pullToRefreshHeight;
-    NSLayoutConstraint* _constraintPullToRefreshBottom;
-    NSLayoutConstraint* _constraintPullToRefreshLeft;
-    NSLayoutConstraint* _constraintPullToRefreshRight;
-    NSLayoutConstraint* _constraintPullToRefreshHeight;
-    MobilyDataRefreshView* _pullToLoadView;
-    CGFloat _pullToLoadHeight;
-    NSLayoutConstraint* _constraintPullToLoadTop;
-    NSLayoutConstraint* _constraintPullToLoadLeft;
-    NSLayoutConstraint* _constraintPullToLoadRight;
-    NSLayoutConstraint* _constraintPullToLoadHeight;
-    BOOL _pullDragging;
-    BOOL _canPullToRefresh;
-    BOOL _canPullToLoad;
+    MobilyDataRefreshView* _topRefreshView;
+    CGFloat _topRefreshThreshold;
+    NSLayoutConstraint* _constraintTopRefreshBottom;
+    NSLayoutConstraint* _constraintTopRefreshLeft;
+    NSLayoutConstraint* _constraintTopRefreshRight;
+    NSLayoutConstraint* _constraintTopRefreshSize;
+    MobilyDataRefreshView* _bottomRefreshView;
+    CGFloat _bottomRefreshThreshold;
+    NSLayoutConstraint* _constraintBottomRefreshTop;
+    NSLayoutConstraint* _constraintBottomRefreshLeft;
+    NSLayoutConstraint* _constraintBottomRefreshRight;
+    NSLayoutConstraint* _constraintBottomRefreshSize;
+    MobilyDataRefreshView* _leftRefreshView;
+    CGFloat _leftRefreshThreshold;
+    NSLayoutConstraint* _constraintLeftRefreshTop;
+    NSLayoutConstraint* _constraintLeftRefreshBottom;
+    NSLayoutConstraint* _constraintLeftRefreshLeft;
+    NSLayoutConstraint* _constraintLeftRefreshSize;
+    MobilyDataRefreshView* _rightRefreshView;
+    CGFloat _rightRefreshThreshold;
+    NSLayoutConstraint* _constraintRightRefreshTop;
+    NSLayoutConstraint* _constraintRightRefreshBottom;
+    NSLayoutConstraint* _constraintRightRefreshRight;
+    NSLayoutConstraint* _constraintRightRefreshSize;
+    BOOL _refreshDragging;
+    BOOL _canTopRefresh;
+    BOOL _canBottomRefresh;
+    BOOL _canLeftRefresh;
+    BOOL _canRightRefresh;
 }
 
 @property(nonatomic, readwrite, strong) MobilyDataViewDelegateProxy* delegateProxy;
@@ -99,19 +113,31 @@
 @property(nonatomic, readwrite, assign, getter=isUpdating) BOOL updating;
 @property(nonatomic, readwrite, assign) BOOL invalidLayout;
 
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintPullToRefreshBottom;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintPullToRefreshLeft;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintPullToRefreshRight;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintPullToRefreshHeight;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintTopRefreshBottom;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintTopRefreshLeft;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintTopRefreshRight;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintTopRefreshSize;
 
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintPullToLoadTop;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintPullToLoadLeft;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintPullToLoadRight;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintPullToLoadHeight;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintBottomRefreshTop;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintBottomRefreshLeft;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintBottomRefreshRight;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintBottomRefreshSize;
 
-@property(nonatomic, readwrite, assign, getter=isPullDragging) BOOL pullDragging;
-@property(nonatomic, readwrite, assign) BOOL canPullToRefresh;
-@property(nonatomic, readwrite, assign) BOOL canPullToLoad;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintLeftRefreshTop;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintLeftRefreshBottom;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintLeftRefreshLeft;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintLeftRefreshSize;
+
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintRightRefreshTop;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintRightRefreshBottom;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintRightRefreshRight;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintRightRefreshSize;
+
+@property(nonatomic, readwrite, assign, getter=isRefreshDragging) BOOL refreshDragging;
+@property(nonatomic, readwrite, assign) BOOL canTopRefresh;
+@property(nonatomic, readwrite, assign) BOOL canBottomRefresh;
+@property(nonatomic, readwrite, assign) BOOL canLeftRefresh;
+@property(nonatomic, readwrite, assign) BOOL canRightRefresh;
 
 - (void)_receiveMemoryWarning;
 
@@ -128,8 +154,8 @@
 - (void)_updateSuperviewConstraints;
 
 - (void)_willBeginDragging;
-- (void)_didScroll;
-- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize visibleInsets:(UIEdgeInsets)visibleInsets;
+- (void)_didScrollDragging:(BOOL)dragging decelerating:(BOOL)decelerating;
+- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize;
 - (void)_didEndDraggingWillDecelerate:(BOOL)decelerate;
 - (void)_willBeginDecelerating;
 - (void)_didEndDecelerating;

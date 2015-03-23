@@ -45,6 +45,7 @@
     __weak MobilyDataView* _view;
     __weak MobilyDataContainer* _parent;
     BOOL _allowAutoAlign;
+    UIEdgeInsets _alignInsets;
     MobilyDataContainerAlign _alignPosition;
     UIOffset _alignThreshold;
     CGRect _frame;
@@ -59,8 +60,8 @@
 - (void)_didChangeParent;
 
 - (void)_willBeginDragging;
-- (void)_didScroll;
-- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize visibleInsets:(UIEdgeInsets)visibleInsets;
+- (void)_didScrollDragging:(BOOL)dragging decelerating:(BOOL)decelerating;
+- (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize;
 - (void)_didEndDraggingWillDecelerate:(BOOL)decelerate;
 - (void)_willBeginDecelerating;
 - (void)_didEndDecelerating;
@@ -69,7 +70,8 @@
 - (void)_didBeginUpdateAnimated:(BOOL)animated;
 - (void)_didEndUpdateAnimated:(BOOL)animated;
 
-- (CGPoint)_alignWithVelocity:(CGPoint)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize visibleInsets:(UIEdgeInsets)visibleInsets;
+- (CGPoint)_alignPointWithContentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize;
+- (CGPoint)_alignWithVelocity:(CGPoint)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize;
 
 - (CGRect)_validateLayoutForAvailableFrame:(CGRect)frame;
 - (void)_willLayoutForBounds:(CGRect)bounds;
@@ -96,6 +98,8 @@
     MobilyDataContainerOrientation _orientation;
     UIEdgeInsets _margin;
     UIOffset _spacing;
+    BOOL _pagingEnabled;
+    MobilyDataContainer* _currentSection;
 }
 
 @end

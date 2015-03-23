@@ -68,7 +68,6 @@
 }
 
 - (void)setup {
-    self.backgroundColor = [UIColor redColor];
 }
 
 - (void)dealloc {

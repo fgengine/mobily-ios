@@ -39,16 +39,45 @@
 
 @implementation MobilyDataContainerSectionsList
 
+#pragma mark Synthesize
+
+@synthesize orientation = _orientation;
+@synthesize margin = _margin;
+@synthesize spacing = _spacing;
+@synthesize pagingEnabled = _pagingEnabled;
+@synthesize currentSection = _currentSection;
+
 #pragma mark Init / Free
+
++ (instancetype)containerWithOrientation:(MobilyDataContainerOrientation)orientation {
+    return [[self alloc] initWithOrientation:orientation];
+}
+
+- (instancetype)initWithOrientation:(MobilyDataContainerOrientation)orientation {
+    self = [super init];
+    if(self != nil) {
+        _orientation = orientation;
+    }
+    return self;
+}
 
 - (void)setup {
     [super setup];
     
-    self.margin = UIEdgeInsetsZero;
-    self.spacing = UIOffsetZero;
+    _margin = UIEdgeInsetsZero;
+    _spacing = UIOffsetZero;
 }
 
 #pragma mark Property
+
+- (void)setAllowAutoAlign:(BOOL)allowAutoAlign {
+    if(_allowAutoAlign != allowAutoAlign) {
+        [super setAllowAutoAlign:allowAutoAlign];
+        if(_pagingEnabled == YES) {
+            self.pagingEnabled = NO;
+        }
+    }
+}
 
 - (void)setOrientation:(MobilyDataContainerOrientation)orientation {
     if(_orientation != orientation) {
@@ -77,7 +106,106 @@
     }
 }
 
+- (void)setPagingEnabled:(BOOL)pagingEnabled {
+    if(_pagingEnabled != pagingEnabled) {
+        if(_pagingEnabled == YES) {
+            _currentSection = nil;
+        }
+        _pagingEnabled = pagingEnabled;
+        _allowAutoAlign = _pagingEnabled;
+        if(_pagingEnabled == YES) {
+            [self align];
+        }
+    }
+}
+
+- (void)setCurrentSectionIndex:(NSUInteger)currentSectionIndex {
+    [self setCurrentSection:_sections[currentSectionIndex] animated:NO];
+}
+
+- (void)setCurrentSectionIndex:(NSUInteger)currentSectionIndex animated:(BOOL)animated {
+    [self setCurrentSection:_sections[currentSectionIndex] animated:animated];
+}
+
+- (NSUInteger)currentSectionIndex {
+    return [_sections indexOfObjectIdenticalTo:_currentSection];
+}
+
+- (void)setCurrentSection:(MobilyDataContainer*)currentSection {
+    [self setCurrentSection:currentSection animated:NO];
+}
+
+- (void)setCurrentSection:(MobilyDataContainer*)currentSection animated:(BOOL)animated {
+    if(_currentSection != currentSection) {
+        _currentSection = currentSection;
+        if((_pagingEnabled == YES) && (_currentSection != nil)) {
+            [self scrollToSection:_currentSection scrollPosition:(MobilyDataViewPosition)_alignPosition animated:animated];
+        }
+    }
+}
+
+#pragma mark Public override
+
+- (void)replaceOriginSection:(MobilyDataContainer*)originSection withSection:(MobilyDataContainer*)section {
+    if((_pagingEnabled == YES) && (_currentSection == originSection)) {
+        _currentSection = section;
+    }
+    [super replaceOriginSection:originSection withSection:section];
+}
+
+- (void)deleteSection:(MobilyDataContainer*)section {
+    if((_pagingEnabled == YES) && (_currentSection == section)) {
+        _currentSection = [_sections nextObjectOfObject:_currentSection];
+    }
+    [super deleteSection:section];
+}
+
+- (void)deleteAllSections {
+    if(_pagingEnabled == YES) {
+        _currentSection = nil;
+    }
+    [super deleteAllSections];
+}
+
 #pragma mark Private override
+
+- (void)_didEndDraggingWillDecelerate:(BOOL __unused)decelerate {
+    [super _didEndDraggingWillDecelerate:decelerate];
+    
+    if((_pagingEnabled == YES) && (decelerate == NO)) {
+        CGPoint alignPoint = [self alignPoint];
+        for(MobilyDataContainer* section in _sections) {
+            if(CGRectContainsPoint(section.frame, alignPoint) == YES) {
+                _currentSection = section;
+                [self fireEventForKey:MobilyDataContainerCurrentSectionChanged byObject:_currentSection];
+                break;
+            }
+        }
+    }
+}
+
+- (void)_didEndDecelerating {
+    [super _didEndDecelerating];
+    
+    if(_pagingEnabled == YES) {
+        CGPoint alignPoint = [self alignPoint];
+        for(MobilyDataContainer* section in _sections) {
+            if(CGRectContainsPoint(section.frame, alignPoint) == YES) {
+                _currentSection = section;
+                [self fireEventForKey:MobilyDataContainerCurrentSectionChanged byObject:_currentSection];
+                break;
+            }
+        }
+    }
+}
+
+- (void)_didEndUpdateAnimated:(BOOL)animated {
+    [super _didEndUpdateAnimated:animated];
+    
+    if((_pagingEnabled == YES) && (_currentSection != nil)) {
+        [self scrollToSection:_currentSection scrollPosition:(MobilyDataViewPosition)_alignPosition animated:animated];
+    }
+}
 
 - (CGRect)_validateSectionsForAvailableFrame:(CGRect)frame {
     CGPoint offset = CGPointMake(frame.origin.x + _margin.left, frame.origin.y + _margin.top);
@@ -113,5 +241,9 @@
 }
 
 @end
+
+/*--------------------------------------------------*/
+
+NSString* MobilyDataContainerCurrentSectionChanged = @"MobilyDataContainerCurrentSectionChanged";
 
 /*--------------------------------------------------*/
