@@ -276,13 +276,9 @@
         _selected = selected;
         if(_cell != nil) {
             if(_selected == YES) {
-                if([_view isSelectedItem:self] == NO) {
-                    [_view selectItem:self animated:animated];
-                }
+                [_view selectItem:self animated:animated];
             } else {
-                if([_view isSelectedItem:self] == YES) {
-                    [_view deselectItem:self animated:animated];
-                }
+                [_view deselectItem:self animated:animated];
             }
         }
         if(_cell != nil) {
@@ -296,13 +292,9 @@
         _highlighted = highlighted;
         if(_cell != nil) {
             if(_highlighted == YES) {
-                if([_view isHighlightedItem:self] == NO) {
-                    [_view highlightItem:self animated:animated];
-                }
+                [_view highlightItem:self animated:animated];
             } else {
-                if([_view isHighlightedItem:self] == YES) {
-                    [_view unhighlightItem:self animated:animated];
-                }
+                [_view unhighlightItem:self animated:animated];
             }
         }
         if(_cell != nil) {
@@ -316,13 +308,9 @@
         _editing = editing;
         if(_cell != nil) {
             if(_editing == YES) {
-                if([_view isEditingItem:self] == NO) {
-                    [_view beganEditItem:self animated:animated];
-                }
+                [_view beganEditItem:self animated:animated];
             } else {
-                if([_view isEditingItem:self] == YES) {
-                    [_view endedEditItem:self animated:animated];
-                }
+                [_view endedEditItem:self animated:animated];
             }
         }
         if(_cell != nil) {

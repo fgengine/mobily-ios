@@ -56,6 +56,7 @@ typedef void(^MobilyDataViewCompleteBlock)(BOOL finished);
 @interface MobilyDataView : UIScrollView< MobilyBuilderObject >
 
 @property(nonatomic, readwrite, assign) IBInspectable BOOL allowsSelection;
+@property(nonatomic, readwrite, assign) IBInspectable BOOL allowsOnceSelection;
 @property(nonatomic, readwrite, assign) IBInspectable BOOL allowsMultipleSelection;
 @property(nonatomic, readwrite, assign) IBInspectable BOOL allowsEditing;
 @property(nonatomic, readwrite, assign) IBInspectable BOOL allowsMultipleEditing;

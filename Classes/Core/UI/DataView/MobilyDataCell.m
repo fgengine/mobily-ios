@@ -355,7 +355,7 @@
 
 - (void)_handlerTapGestureRecognizer:(UITapGestureRecognizer*)gestureRecognizer {
     if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-        [_item setSelected:(_selected != YES) animated:YES];
+        [_item.view _userSelectItem:_item animated:YES];
     }
     [_item fireEventForKey:MobilyDataCellPressed bySender:self byObject:_item];
 }

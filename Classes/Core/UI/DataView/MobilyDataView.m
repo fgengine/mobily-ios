@@ -47,6 +47,7 @@
 @synthesize delegateProxy = _delegateProxy;
 @synthesize allowsSelection = _allowsSelection;
 @synthesize allowsMultipleSelection = _allowsMultipleSelection;
+@synthesize allowsOnceSelection = _allowsOnceSelection;
 @synthesize allowsEditing = _allowsEditing;
 @synthesize allowsMultipleEditing = _allowsMultipleEditing;
 @synthesize bouncesTop = _bouncesTop;
@@ -126,9 +127,7 @@
     _bouncesBottom = YES;
     
     _allowsSelection = YES;
-    _allowsMultipleSelection = NO;
     _allowsEditing = YES;
-    _allowsMultipleEditing = NO;
     
     _visibleItems = NSMutableArray.array;
     _selectedItems = NSMutableArray.array;
@@ -837,41 +836,46 @@
 
 - (BOOL)shouldSelectItem:(MobilyDataItem*)item {
     if(_allowsSelection == YES) {
-        return item.allowsSelection;
+        if(item.allowsSelection == YES) {
+            if([self isSelectedItem:item] == NO) {
+                return YES;
+            }
+        }
     }
-    return _allowsSelection;
+    return NO;
 }
 
 - (BOOL)shouldDeselectItem:(MobilyDataItem* __unused)item {
-    return YES;
+    if([self isSelectedItem:item] == YES) {
+        return YES;
+    }
+    return NO;
 }
 
 - (void)selectItem:(MobilyDataItem*)item animated:(BOOL)animated {
-    if([_selectedItems containsObject:item] == NO) {
-        if([self shouldSelectItem:item] == YES) {
-            if(_allowsMultipleSelection == YES) {
-                [_selectedItems addObject:item];
-                [item setSelected:YES animated:animated];
-            } else {
-                if(_selectedItems.count > 0) {
-                    for(MobilyDataItem* item in _selectedItems) {
+    if([self shouldSelectItem:item] == YES) {
+        if(_allowsMultipleSelection == YES) {
+            [_selectedItems addObject:item];
+            [item setSelected:YES animated:animated];
+        } else {
+            if(_selectedItems.count > 0) {
+                [_selectedItems each:^(MobilyDataItem* item) {
+                    if([self shouldDeselectItem:item] == YES) {
+                        [_selectedItems removeObject:item];
                         [item setSelected:NO animated:animated];
                     }
-                    [_selectedItems removeAllObjects];
-                }
-                [_selectedItems addObject:item];
-                [item setSelected:YES animated:animated];
+                }];
             }
+            [_selectedItems addObject:item];
+            [item setSelected:YES animated:animated];
         }
     }
 }
 
 - (void)deselectItem:(MobilyDataItem*)item animated:(BOOL)animated {
-    if([_selectedItems containsObject:item] == YES) {
-        if([self shouldDeselectItem:item] == YES) {
-            [_selectedItems removeObject:item];
-            [item setSelected:NO animated:animated];
-        }
+    if([self shouldDeselectItem:item] == YES) {
+        [_selectedItems removeObject:item];
+        [item setSelected:NO animated:animated];
     }
 }
 
@@ -950,10 +954,12 @@
                 [item setEditing:YES animated:animated];
             } else {
                 if(_editingItems.count > 0) {
-                    for(MobilyDataItem* item in _editingItems) {
-                        [item setEditing:NO animated:animated];
-                    }
-                    [_editingItems removeAllObjects];
+                    [_editingItems each:^(MobilyDataItem* item) {
+                        if([self shouldEndedEditItem:item] == YES) {
+                            [_editingItems removeObject:item];
+                            [item setEditing:NO animated:animated];
+                        }
+                    }];
                 }
                 [_editingItems addObject:item];
                 [item setEditing:YES animated:animated];
@@ -1357,6 +1363,18 @@
         }
     }];
     [_queueCells removeAllObjects];
+}
+
+- (void)_userSelectItem:(MobilyDataItem*)item animated:(BOOL)animated {
+    if(_allowsOnceSelection == YES) {
+        [self selectItem:item animated:animated];
+    } else {
+        if([self isSelectedItem:item] == NO) {
+            [self selectItem:item animated:animated];
+        } else {
+            [self deselectItem:item animated:animated];
+        }
+    }
 }
 
 - (void)_appearItem:(MobilyDataItem*)item {

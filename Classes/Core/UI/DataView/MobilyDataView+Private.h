@@ -50,6 +50,7 @@
     MobilyDataViewDelegateProxy* _delegateProxy;
     BOOL _allowsSelection;
     BOOL _allowsMultipleSelection;
+    BOOL _allowsOnceSelection;
     BOOL _allowsEditing;
     BOOL _allowsMultipleEditing;
     BOOL _bouncesTop;
@@ -140,6 +141,8 @@
 @property(nonatomic, readwrite, assign) BOOL canRightRefresh;
 
 - (void)_receiveMemoryWarning;
+
+- (void)_userSelectItem:(MobilyDataItem*)item animated:(BOOL)animated;
 
 - (void)_appearItem:(MobilyDataItem*)item;
 - (void)_disappearItem:(MobilyDataItem*)item;
