@@ -1125,8 +1125,8 @@
         _topRefreshView.state = MobilyDataRefreshViewStateLoading;
         _constraintTopRefreshSize.constant = _topRefreshThreshold;
         if(animated == YES) {
-            [UIView animateWithDuration:0.3f
-                                  delay:0.05f
+            [UIView animateWithDuration:0.1f
+                                  delay:0.01f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
                                  self.contentInset = UIEdgeInsetsMake(_topRefreshThreshold, self.contentInset.left, self.contentInset.bottom, self.contentInset.right);
@@ -1152,8 +1152,8 @@
     if(_topRefreshView.state != MobilyDataRefreshViewStateIdle) {
         _constraintTopRefreshBottom.constant = 0.0f;
         if(animated == YES) {
-            [UIView animateWithDuration:0.3f
-                                  delay:0.05f
+            [UIView animateWithDuration:0.1f
+                                  delay:0.01f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
                                  self.contentInset = UIEdgeInsetsMake(0.0f, self.contentInset.left, self.contentInset.bottom, self.contentInset.right);
@@ -1182,8 +1182,8 @@
         _bottomRefreshView.state = MobilyDataRefreshViewStateLoading;
         _constraintBottomRefreshSize.constant = _bottomRefreshThreshold;
         if(animated == YES) {
-            [UIView animateWithDuration:0.3f
-                                  delay:0.05f
+            [UIView animateWithDuration:0.1f
+                                  delay:0.01f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
                                  self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, _bottomRefreshThreshold, self.contentInset.right);
@@ -1209,8 +1209,8 @@
     if(_bottomRefreshView.state != MobilyDataRefreshViewStateIdle) {
         _constraintBottomRefreshSize.constant = 0.0f;
         if(animated == YES) {
-            [UIView animateWithDuration:0.3f
-                                  delay:0.05f
+            [UIView animateWithDuration:0.1f
+                                  delay:0.01f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
                                  self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, 0.0f, self.contentInset.right);
@@ -1239,8 +1239,8 @@
         _leftRefreshView.state = MobilyDataRefreshViewStateLoading;
         _constraintLeftRefreshSize.constant = _leftRefreshThreshold;
         if(animated == YES) {
-            [UIView animateWithDuration:0.3f
-                                  delay:0.05f
+            [UIView animateWithDuration:0.1f
+                                  delay:0.01f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
                                  self.contentInset = UIEdgeInsetsMake(self.contentInset.top, _leftRefreshThreshold, self.contentInset.bottom, self.contentInset.right);
@@ -1266,8 +1266,8 @@
     if(_leftRefreshView.state != MobilyDataRefreshViewStateIdle) {
         _constraintLeftRefreshSize.constant = 0.0f;
         if(animated == YES) {
-            [UIView animateWithDuration:0.3f
-                                  delay:0.05f
+            [UIView animateWithDuration:0.1f
+                                  delay:0.01f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
                                  self.contentInset = UIEdgeInsetsMake(self.contentInset.top, 0.0f, self.contentInset.bottom, self.contentInset.right);
@@ -1296,8 +1296,8 @@
         _rightRefreshView.state = MobilyDataRefreshViewStateLoading;
         _constraintRightRefreshSize.constant = _rightRefreshThreshold;
         if(animated == YES) {
-            [UIView animateWithDuration:0.3f
-                                  delay:0.05f
+            [UIView animateWithDuration:0.1f
+                                  delay:0.01f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
                                  self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, self.contentInset.bottom, _rightRefreshThreshold);
@@ -1323,8 +1323,8 @@
     if(_rightRefreshView.state != MobilyDataRefreshViewStateIdle) {
         _constraintRightRefreshSize.constant = 0.0f;
         if(animated == YES) {
-            [UIView animateWithDuration:0.3f
-                                  delay:0.05f
+            [UIView animateWithDuration:0.1f
+                                  delay:0.01f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
                                  self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, self.contentInset.bottom, 0.0f);
@@ -1351,9 +1351,11 @@
 #pragma mark Private
 
 - (void)_receiveMemoryWarning {
-    for(MobilyDataCell* cell in _queueCells) {
-        [cell removeFromSuperview];
-    }
+    [_queueCells each:^(NSString* identifier, NSArray* cells) {
+        for(MobilyDataCell* cell in cells) {
+            [cell removeFromSuperview];
+        }
+    }];
     [_queueCells removeAllObjects];
 }
 
