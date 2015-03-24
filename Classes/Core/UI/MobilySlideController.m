@@ -106,7 +106,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 - (void)setup {
     [super setup];
     
-    self.swipeInsets = UIEdgeInsetsMake(85.0f, 21.0f, 0.0f, 0.0f);
     self.swipeThreshold = 2.0f;
     self.swipeSpeed = 1050.0f;
     self.swipeVelocity = 570.0f;
@@ -789,7 +788,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
                 }
             } else if((_showedLeftController == NO) && (_leftController != nil) && (translation.x > 0.0f)) {
                 if(fabs(translation.x) >= fabs(translation.y)) {
-                    allowPan = CGRectContainsPoint(UIEdgeInsetsInsetRect(_centerView.frame, _swipeInsets), location);
+                    allowPan = CGRectContainsPoint(_centerView.frame, location);
                     if(allowPan == YES) {
                         id< MobilySlideControllerDelegate > centerController = ([_centerController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_centerController : nil;
                         if([centerController respondsToSelector:@selector(canShowLeftControllerInSlideController:)] == YES) {
@@ -806,7 +805,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
                 }
             } else if((_showedRightController == NO) && (_rightController != nil) && (translation.x < 0.0f)) {
                 if(fabs(translation.x) >= fabs(translation.y)) {
-                    allowPan = CGRectContainsPoint(UIEdgeInsetsInsetRect(_centerView.frame, _swipeInsets), location);
+                    allowPan = CGRectContainsPoint(_centerView.frame, location);
                     if(allowPan == YES) {
                         id< MobilySlideControllerDelegate > centerController = ([_centerController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_centerController : nil;
                         if([centerController respondsToSelector:@selector(canShowRightControllerInSlideController:)] == YES) {

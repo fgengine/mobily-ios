@@ -41,16 +41,6 @@
 
 /*--------------------------------------------------*/
 
-typedef NS_ENUM(NSUInteger, MobilyDataCellAction) {
-    MobilyDataCellActionRestore,
-    MobilyDataCellActionInsert,
-    MobilyDataCellActionDelete,
-    MobilyDataCellActionReplaceOut,
-    MobilyDataCellActionReplaceIn
-};
-
-/*--------------------------------------------------*/
-
 @interface MobilyDataCell : UIView< MobilyObject, UIGestureRecognizerDelegate >
 
 @property(nonatomic, readonly, strong) NSString* identifier;
@@ -92,8 +82,6 @@ typedef NS_ENUM(NSUInteger, MobilyDataCellAction) {
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated;
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated;
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated;
-
-- (void)animateAction:(MobilyDataCellAction)action;
 
 - (void)validateLayoutForBounds:(CGRect)bounds;
 - (void)invalidateLayoutForBounds:(CGRect)bounds;

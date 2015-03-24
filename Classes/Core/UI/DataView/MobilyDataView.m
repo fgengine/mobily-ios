@@ -1384,12 +1384,20 @@
     if(_updating == YES) {
         [_deletedItems addObjectsFromArray:items];
     } else {
-        for(MobilyDataItem* item in items) {
-            MobilyDataCell* cell = item.cell;
-            if(cell != nil) {
-                [cell animateAction:MobilyDataCellActionRestore];
+        if([self containsEventForKey:MobilyDataViewAnimateRestore] == YES) {
+            [self fireEventForKey:MobilyDataViewAnimateRestore byObject:items];
+            for(MobilyDataItem* item in items) {
+                [self _disappearItem:item];
             }
-            [self _disappearItem:item];
+        } else {
+            for(MobilyDataItem* item in items) {
+                MobilyDataCell* cell = item.cell;
+                if(cell != nil) {
+                    cell.zPosition = 0.0f;
+                    cell.alpha = 1.0f;
+                }
+                [self _disappearItem:item];
+            }
         }
     }
     [self setNeedValidateLayout];
@@ -1404,12 +1412,20 @@
         [_reloadedBeforeItems addObjectsFromArray:originItems];
         [_reloadedAfterItems addObjectsFromArray:items];
     } else {
-        for(MobilyDataItem* item in originItems) {
-            MobilyDataCell* cell = item.cell;
-            if(cell != nil) {
-                [cell animateAction:MobilyDataCellActionRestore];
+        if([self containsEventForKey:MobilyDataViewAnimateRestore] == YES) {
+            [self fireEventForKey:MobilyDataViewAnimateRestore byObject:items];
+            for(MobilyDataItem* item in items) {
+                [self _disappearItem:item];
             }
-            [self _disappearItem:item];
+        } else {
+            for(MobilyDataItem* item in items) {
+                MobilyDataCell* cell = item.cell;
+                if(cell != nil) {
+                    cell.zPosition = 0.0f;
+                    cell.alpha = 1.0f;
+                }
+                [self _disappearItem:item];
+            }
         }
     }
     [self setNeedValidateLayout];
@@ -1845,56 +1861,102 @@
     }
     [self validateLayoutIfNeed];
     [self _layoutForVisible];
-    for(MobilyDataItem* item in _reloadedBeforeItems) {
-        MobilyDataCell* cell = item.cell;
-        if(cell != nil) {
-            [cell animateAction:MobilyDataCellActionReplaceOut];
+    if(_reloadedBeforeItems.count > 0) {
+        if([self containsEventForKey:MobilyDataViewAnimateReplaceOut] == YES) {
+            [self fireEventForKey:MobilyDataViewAnimateReplaceOut byObject:_reloadedBeforeItems];
+        } else {
+            for(MobilyDataItem* item in _reloadedBeforeItems) {
+                MobilyDataCell* cell = item.cell;
+                if(cell != nil) {
+                    cell.zPosition = -1.0f;
+                    cell.alpha = 0.0f;
+                }
+            }
         }
     }
-    for(MobilyDataItem* item in _reloadedAfterItems) {
-        MobilyDataCell* cell = item.cell;
-        if(cell != nil) {
-            [cell animateAction:MobilyDataCellActionReplaceIn];
+    if(_reloadedAfterItems.count > 0) {
+        if([self containsEventForKey:MobilyDataViewAnimateReplaceIn] == YES) {
+            [self fireEventForKey:MobilyDataViewAnimateReplaceIn byObject:_reloadedAfterItems];
+        } else {
+            for(MobilyDataItem* item in _reloadedAfterItems) {
+                MobilyDataCell* cell = item.cell;
+                if(cell != nil) {
+                    [UIView performWithoutAnimation:^{
+                        cell.alpha = 0.0f;
+                    }];
+                    cell.zPosition = 0.0f;
+                    cell.alpha = 1.0f;
+                }
+            }
         }
+        [_reloadedAfterItems removeAllObjects];
     }
-    for(MobilyDataItem* item in _insertedItems) {
-        MobilyDataCell* cell = item.cell;
-        if(cell != nil) {
-            [cell animateAction:MobilyDataCellActionInsert];
+    if(_insertedItems.count > 0) {
+        if([self containsEventForKey:MobilyDataViewAnimateInsert] == YES) {
+            [self fireEventForKey:MobilyDataViewAnimateInsert byObject:_insertedItems];
+        } else {
+            for(MobilyDataItem* item in _insertedItems) {
+                MobilyDataCell* cell = item.cell;
+                if(cell != nil) {
+                    [UIView performWithoutAnimation:^{
+                        cell.alpha = 0.0f;
+                    }];
+                    cell.zPosition = 0.0f;
+                    cell.alpha = 1.0f;
+                }
+            }
         }
+        [_insertedItems removeAllObjects];
     }
-    for(MobilyDataItem* item in _deletedItems) {
-        MobilyDataCell* cell = item.cell;
-        if(cell != nil) {
-            [cell animateAction:MobilyDataCellActionDelete];
+    if(_deletedItems.count > 0) {
+        if([self containsEventForKey:MobilyDataViewAnimateDelete] == YES) {
+            [self fireEventForKey:MobilyDataViewAnimateDelete byObject:_deletedItems];
+        } else {
+            for(MobilyDataItem* item in _deletedItems) {
+                MobilyDataCell* cell = item.cell;
+                if(cell != nil) {
+                    cell.zPosition = -1.0f;
+                    cell.alpha = 0.0f;
+                }
+            }
         }
     }
 }
 
 - (void)_batchComplete:(MobilyDataViewUpdateBlock)complete animated:(BOOL)animated {
     if(_reloadedBeforeItems.count > 0) {
-        for(MobilyDataItem* item in _reloadedBeforeItems) {
-            MobilyDataCell* cell = item.cell;
-            if(cell != nil) {
-                [cell animateAction:MobilyDataCellActionRestore];
+        if([self containsEventForKey:MobilyDataViewAnimateRestore] == YES) {
+            [self fireEventForKey:MobilyDataViewAnimateRestore byObject:_reloadedBeforeItems];
+            for(MobilyDataItem* item in _reloadedBeforeItems) {
+                [self _disappearItem:item];
             }
-            [self _disappearItem:item];
+        } else {
+            for(MobilyDataItem* item in _reloadedBeforeItems) {
+                MobilyDataCell* cell = item.cell;
+                if(cell != nil) {
+                    cell.zPosition = 0.0f;
+                    cell.alpha = 1.0f;
+                }
+                [self _disappearItem:item];
+            }
         }
         [_reloadedBeforeItems removeAllObjects];
     }
-    if(_reloadedAfterItems.count > 0) {
-        [_reloadedAfterItems removeAllObjects];
-    }
-    if(_insertedItems.count > 0) {
-        [_insertedItems removeAllObjects];
-    }
     if(_deletedItems.count > 0) {
-        for(MobilyDataItem* item in _deletedItems) {
-            MobilyDataCell* cell = item.cell;
-            if(cell != nil) {
-                [cell animateAction:MobilyDataCellActionRestore];
+        if([self containsEventForKey:MobilyDataViewAnimateRestore] == YES) {
+            [self fireEventForKey:MobilyDataViewAnimateRestore byObject:_deletedItems];
+            for(MobilyDataItem* item in _deletedItems) {
+                [self _disappearItem:item];
             }
-            [self _disappearItem:item];
+        } else {
+            for(MobilyDataItem* item in _deletedItems) {
+                MobilyDataCell* cell = item.cell;
+                if(cell != nil) {
+                    cell.zPosition = 0.0f;
+                    cell.alpha = 1.0f;
+                }
+                [self _disappearItem:item];
+            }
         }
         [_deletedItems removeAllObjects];
     }
@@ -2001,5 +2063,13 @@ NSString* MobilyDataViewTopRefreshTriggered = @"MobilyDataViewTopRefreshTriggere
 NSString* MobilyDataViewBottomRefreshTriggered = @"MobilyDataViewBottomRefreshTriggered";
 NSString* MobilyDataViewLeftRefreshTriggered = @"MobilyDataViewLeftRefreshTriggered";
 NSString* MobilyDataViewRightRefreshTriggered = @"MobilyDataViewRightRefreshTriggered";
+
+/*--------------------------------------------------*/
+
+NSString* MobilyDataViewAnimateRestore = @"MobilyDataViewAnimateRestore";
+NSString* MobilyDataViewAnimateInsert = @"MobilyDataViewAnimateInsert";
+NSString* MobilyDataViewAnimateDelete = @"MobilyDataViewAnimateDelete";
+NSString* MobilyDataViewAnimateReplaceOut = @"MobilyDataViewAnimateReplaceOut";
+NSString* MobilyDataViewAnimateReplaceIn = @"MobilyDataViewAnimateReplaceIn";
 
 /*--------------------------------------------------*/

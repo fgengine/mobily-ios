@@ -335,42 +335,6 @@
     _editing = editing;
 }
 
-- (void)animateAction:(MobilyDataCellAction)action {
-    switch(action) {
-        case MobilyDataCellActionRestore: {
-            self.zPosition = 0.0f;
-            self.alpha = 1.0f;
-            break;
-        }
-        case MobilyDataCellActionInsert: {
-            [UIView performWithoutAnimation:^{
-                self.alpha = 0.0f;
-            }];
-            self.zPosition = 0.0f;
-            self.alpha = 1.0f;
-            break;
-        }
-        case MobilyDataCellActionDelete: {
-            self.zPosition = -1.0f;
-            self.alpha = 0.0f;
-            break;
-        }
-        case MobilyDataCellActionReplaceOut: {
-            self.zPosition = -1.0f;
-            self.alpha = 0.0f;
-            break;
-        }
-        case MobilyDataCellActionReplaceIn: {
-            [UIView performWithoutAnimation:^{
-                self.alpha = 0.0f;
-            }];
-            self.zPosition = 0.0f;
-            self.alpha = 1.0f;
-            break;
-        }
-    }
-}
-
 - (void)validateLayoutForBounds:(CGRect __unused)bounds {
 }
 

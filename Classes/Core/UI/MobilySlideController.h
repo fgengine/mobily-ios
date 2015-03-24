@@ -43,7 +43,6 @@ typedef void(^MobilySlideControllerBlock)();
 
 @interface MobilySlideController : MobilyController
 
-@property(nonatomic, readwrite, assign) IBInspectable UIEdgeInsets swipeInsets;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeThreshold;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeVelocity;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeSpeed;

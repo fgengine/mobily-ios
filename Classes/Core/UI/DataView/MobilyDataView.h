@@ -176,3 +176,11 @@ extern NSString* MobilyDataViewLeftRefreshTriggered;
 extern NSString* MobilyDataViewRightRefreshTriggered;
 
 /*--------------------------------------------------*/
+
+extern NSString* MobilyDataViewAnimateRestore;
+extern NSString* MobilyDataViewAnimateInsert;
+extern NSString* MobilyDataViewAnimateDelete;
+extern NSString* MobilyDataViewAnimateReplaceOut;
+extern NSString* MobilyDataViewAnimateReplaceIn;
+
+/*--------------------------------------------------*/
