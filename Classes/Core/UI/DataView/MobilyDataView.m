@@ -126,9 +126,9 @@
     _bouncesBottom = YES;
     
     _allowsSelection = YES;
-    _allowsMultipleSelection = YES;
+    _allowsMultipleSelection = NO;
     _allowsEditing = YES;
-    _allowsMultipleEditing = YES;
+    _allowsMultipleEditing = NO;
     
     _visibleItems = NSMutableArray.array;
     _selectedItems = NSMutableArray.array;
@@ -1179,8 +1179,8 @@
 
 - (void)showBottomRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
     if(_bottomRefreshView.state == MobilyDataRefreshViewStateRelease) {
-        _constraintBottomRefreshSize.constant = _bottomRefreshThreshold;
         _bottomRefreshView.state = MobilyDataRefreshViewStateLoading;
+        _constraintBottomRefreshSize.constant = _bottomRefreshThreshold;
         if(animated == YES) {
             [UIView animateWithDuration:0.3f
                                   delay:0.05f
@@ -1236,8 +1236,8 @@
 
 - (void)showLeftRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
     if(_leftRefreshView.state == MobilyDataRefreshViewStateRelease) {
-        _constraintLeftRefreshSize.constant = _leftRefreshThreshold;
         _leftRefreshView.state = MobilyDataRefreshViewStateLoading;
+        _constraintLeftRefreshSize.constant = _leftRefreshThreshold;
         if(animated == YES) {
             [UIView animateWithDuration:0.3f
                                   delay:0.05f
@@ -1293,8 +1293,8 @@
 
 - (void)showRightRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
     if(_rightRefreshView.state == MobilyDataRefreshViewStateRelease) {
-        _constraintRightRefreshSize.constant = _rightRefreshThreshold;
         _rightRefreshView.state = MobilyDataRefreshViewStateLoading;
+        _constraintRightRefreshSize.constant = _rightRefreshThreshold;
         if(animated == YES) {
             [UIView animateWithDuration:0.3f
                                   delay:0.05f
@@ -1422,18 +1422,20 @@
 }
 
 - (void)_layoutForVisible {
-    [_container _willLayoutForBounds:self.visibleBounds];
     if((self.dragging == YES) || (self.decelerating == YES)) {
+        [_container _willLayoutForBounds:self.visibleBounds];
         dispatch_async(dispatch_get_main_queue(), ^{
+            CGRect bounds = self.bounds;
             if(_updating == NO) {
                 [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex __unused, BOOL* itemStop __unused) {
-                    [item invalidateLayoutForBounds:self.bounds];
+                    [item invalidateLayoutForBounds:bounds];
                 }];
             }
-            [_container _didLayoutForBounds:self.bounds];
+            [_container _didLayoutForBounds:bounds];
         });
     } else {
-        CGRect bounds = self.bounds;
+        CGRect bounds = self.visibleBounds;
+        [_container _willLayoutForBounds:bounds];
         if(_updating == NO) {
             [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex __unused, BOOL* itemStop __unused) {
                 [item invalidateLayoutForBounds:bounds];
@@ -1559,11 +1561,9 @@
 
 - (void)_didScrollDragging:(BOOL)dragging decelerating:(BOOL)decelerating {
     if(self.pagingEnabled == NO) {
-        CGRect bounds = self.bounds;
         CGSize frameSize = self.frameSize;
-        CGSize contentSize = self.contentSize;
         CGPoint contentOffset = self.contentOffset;
-        UIEdgeInsets contentInset = self.contentInset;
+        CGSize contentSize = self.contentSize;
         if(self.bounces == YES) {
             if(self.alwaysBounceHorizontal == YES) {
                 if(_bouncesLeft == NO) {
@@ -1581,6 +1581,7 @@
                     contentOffset.y = MIN(contentSize.height - frameSize.height, contentOffset.y);
                 }
             }
+            self.contentOffset = contentOffset;
         }
         if((_refreshDragging == YES) && (dragging == YES) && (decelerating == NO)) {
             if((_canTopRefresh == YES) && (contentOffset.y < 0.0f)) {
@@ -1589,22 +1590,18 @@
                     case MobilyDataRefreshViewStateIdle:
                         if(offset > 0.0f) {
                             _topRefreshView.state = MobilyDataRefreshViewStatePull;
-                            contentInset.top = 0.0f;
                         }
                         break;
                     case MobilyDataRefreshViewStatePull:
                     case MobilyDataRefreshViewStateRelease:
                         if(offset < 0.0f) {
                             _topRefreshView.state = MobilyDataRefreshViewStateIdle;
-                            contentInset.top = 0.0f;
                         } else if(offset >= _topRefreshThreshold) {
                             if(_topRefreshView.state != MobilyDataRefreshViewStateRelease) {
                                 _topRefreshView.state = MobilyDataRefreshViewStateRelease;
-                                contentInset.top = offset;
                             }
                         } else {
                             _topRefreshView.state = MobilyDataRefreshViewStatePull;
-                            contentInset.top = offset;
                         }
                         break;
                     default:
@@ -1614,32 +1611,27 @@
             } else {
                 _topRefreshView.state = MobilyDataRefreshViewStateIdle;
                 _constraintTopRefreshSize.constant = 0.0f;
-                contentInset.top = 0.0f;
             }
             if((_canBottomRefresh == YES) && (contentSize.height >= frameSize.height)) {
-                CGFloat contentBottom = contentSize.height - bounds.size.height;
+                CGFloat contentBottom = contentSize.height - frameSize.height;
                 if(contentOffset.y >= contentBottom) {
                     CGFloat offset = contentOffset.y - contentBottom;
                     switch(_bottomRefreshView.state) {
                         case MobilyDataRefreshViewStateIdle:
                             if(offset > 0.0f) {
                                 _bottomRefreshView.state = MobilyDataRefreshViewStatePull;
-                                contentInset.bottom = offset;
                             }
                             break;
                         case MobilyDataRefreshViewStatePull:
                         case MobilyDataRefreshViewStateRelease:
                             if(offset < 0.0f) {
                                 _bottomRefreshView.state = MobilyDataRefreshViewStateIdle;
-                                contentInset.bottom = 0.0f;
                             } else if(offset >= _bottomRefreshThreshold) {
                                 if(_bottomRefreshView.state != MobilyDataRefreshViewStateRelease) {
                                     _bottomRefreshView.state = MobilyDataRefreshViewStateRelease;
-                                    contentInset.bottom = offset;
                                 }
                             } else {
                                 _bottomRefreshView.state = MobilyDataRefreshViewStatePull;
-                                contentInset.bottom = offset;
                             }
                             break;
                         default:
@@ -1649,7 +1641,6 @@
                 } else {
                     _bottomRefreshView.state = MobilyDataRefreshViewStateIdle;
                     _constraintBottomRefreshSize.constant = 0.0f;
-                    contentInset.bottom = 0.0f;
                 }
             }
             if((_canLeftRefresh == YES) && (contentOffset.x < 0.0f)) {
@@ -1658,22 +1649,18 @@
                     case MobilyDataRefreshViewStateIdle:
                         if(offset > 0.0f) {
                             _leftRefreshView.state = MobilyDataRefreshViewStatePull;
-                            contentInset.left = 0.0f;
                         }
                         break;
                     case MobilyDataRefreshViewStatePull:
                     case MobilyDataRefreshViewStateRelease:
                         if(offset < 0.0f) {
                             _leftRefreshView.state = MobilyDataRefreshViewStateIdle;
-                            contentInset.left = 0.0f;
                         } else if(offset >= _leftRefreshThreshold) {
                             if(_leftRefreshView.state != MobilyDataRefreshViewStateRelease) {
                                 _leftRefreshView.state = MobilyDataRefreshViewStateRelease;
-                                contentInset.left = offset;
                             }
                         } else {
                             _leftRefreshView.state = MobilyDataRefreshViewStatePull;
-                            contentInset.left = offset;
                         }
                         break;
                     default:
@@ -1683,32 +1670,27 @@
             } else {
                 _leftRefreshView.state = MobilyDataRefreshViewStateIdle;
                 _constraintLeftRefreshSize.constant = 0.0f;
-                contentInset.left = 0.0f;
             }
             if((_canRightRefresh == YES) && (contentSize.width >= frameSize.width)) {
-                CGFloat contentRight = contentSize.width - bounds.size.width;
+                CGFloat contentRight = contentSize.width - frameSize.width;
                 if(contentOffset.x >= contentRight) {
                     CGFloat offset = contentOffset.x - contentRight;
                     switch(_rightRefreshView.state) {
                         case MobilyDataRefreshViewStateIdle:
                             if(offset > 0.0f) {
                                 _rightRefreshView.state = MobilyDataRefreshViewStatePull;
-                                contentInset.right = offset;
                             }
                             break;
                         case MobilyDataRefreshViewStatePull:
                         case MobilyDataRefreshViewStateRelease:
                             if(offset < 0.0f) {
                                 _rightRefreshView.state = MobilyDataRefreshViewStateIdle;
-                                contentInset.right = 0.0f;
                             } else if(offset >= _rightRefreshThreshold) {
                                 if(_rightRefreshView.state != MobilyDataRefreshViewStateRelease) {
                                     _rightRefreshView.state = MobilyDataRefreshViewStateRelease;
-                                    contentInset.right = offset;
                                 }
                             } else {
                                 _rightRefreshView.state = MobilyDataRefreshViewStatePull;
-                                contentInset.right = offset;
                             }
                             break;
                         default:
@@ -1718,13 +1700,9 @@
                 } else {
                     _rightRefreshView.state = MobilyDataRefreshViewStateIdle;
                     _constraintRightRefreshSize.constant = 0.0f;
-                    contentInset.right = 0.0f;
                 }
             }
         }
-        self.scrollIndicatorInsets = contentInset;
-        self.contentInset = contentInset;
-        self.contentOffset = contentOffset;
     }
     if(_container != nil) {
         [_container _didScrollDragging:dragging decelerating:decelerating];
@@ -1734,8 +1712,6 @@
 - (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize {
     if(_container != nil) {
         [_container _willEndDraggingWithVelocity:velocity contentOffset:contentOffset contentSize:contentSize visibleSize:visibleSize];
-        contentOffset->x = MAX(0.0f, MIN(contentOffset->x, contentSize.width - visibleSize.width));
-        contentOffset->y = MAX(0.0f, MIN(contentOffset->y, contentSize.height - visibleSize.height));
     }
 }
 

@@ -270,13 +270,7 @@
 
 - (void)align {
     if((_view.dragging == NO) && (_view.decelerating == NO)) {
-        CGPoint contentOffset = _view.contentOffset;
-        CGSize contentSize = _view.contentSize;
-        CGSize visibleSize = _view.boundsSize;
-        CGPoint alingOffset = [self _alignWithVelocity:CGPointZero contentOffset:contentOffset contentSize:contentSize visibleSize:visibleSize];
-        alingOffset.x = MAX(0.0f, MIN(alingOffset.x, contentSize.width));
-        alingOffset.y = MAX(0.0f, MIN(alingOffset.y, contentSize.height));
-        [_view setContentOffset:alingOffset animated:YES];
+        [_view setContentOffset:[self _alignWithVelocity:CGPointZero contentOffset:_view.contentOffset contentSize:_view.contentSize visibleSize:_view.boundsSize] animated:YES];
     }
 }
 
