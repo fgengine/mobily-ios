@@ -66,28 +66,33 @@
 @synthesize reloadedAfterItems = _reloadedAfterItems;
 @synthesize deletedItems = _deletedItems;
 @synthesize insertedItems = _insertedItems;
+@synthesize animating = _animating;
 @synthesize updating = _updating;
 @synthesize invalidLayout = _invalidLayout;
 @synthesize topRefreshView = _topRefreshView;
 @synthesize topRefreshThreshold = _topRefreshThreshold;
+@synthesize topRefreshVelocity = _topRefreshVelocity;
 @synthesize constraintTopRefreshBottom = _constraintTopRefreshBottom;
 @synthesize constraintTopRefreshLeft = _constraintTopRefreshLeft;
 @synthesize constraintTopRefreshRight = _constraintTopRefreshRight;
 @synthesize constraintTopRefreshSize = _constraintTopRefreshSize;
 @synthesize bottomRefreshView = _bottomRefreshView;
 @synthesize bottomRefreshThreshold = _bottomRefreshThreshold;
+@synthesize bottomRefreshVelocity = _bottomRefreshVelocity;
 @synthesize constraintBottomRefreshTop = _constraintBottomRefreshTop;
 @synthesize constraintBottomRefreshLeft = _constraintBottomRefreshLeft;
 @synthesize constraintBottomRefreshRight = _constraintBottomRefreshRight;
 @synthesize constraintBottomRefreshSize = _constraintBottomRefreshSize;
 @synthesize leftRefreshView = _leftRefreshView;
 @synthesize leftRefreshThreshold = _leftRefreshThreshold;
+@synthesize leftRefreshVelocity = _leftRefreshVelocity;
 @synthesize constraintLeftRefreshTop = _constraintLeftRefreshTop;
 @synthesize constraintLeftRefreshBottom = _constraintLeftRefreshBottom;
 @synthesize constraintLeftRefreshLeft = _constraintLeftRefreshLeft;
 @synthesize constraintLeftRefreshSize = _constraintLeftRefreshSize;
 @synthesize rightRefreshView = _rightRefreshView;
 @synthesize rightRefreshThreshold = _rightRefreshThreshold;
+@synthesize rightRefreshVelocity = _rightRefreshVelocity;
 @synthesize constraintRightRefreshTop = _constraintRightRefreshTop;
 @synthesize constraintRightRefreshBottom = _constraintRightRefreshBottom;
 @synthesize constraintRightRefreshRight = _constraintRightRefreshRight;
@@ -142,9 +147,13 @@
     _insertedItems = NSMutableArray.array;
     
     _topRefreshThreshold = 64.0f;
+    _topRefreshVelocity = 240.0f;
     _bottomRefreshThreshold = 64.0f;
+    _bottomRefreshVelocity = 240.0f;
     _leftRefreshThreshold = 64.0f;
+    _leftRefreshVelocity = 240.0f;
     _rightRefreshThreshold = 64.0f;
+    _rightRefreshVelocity = 240.0f;
     
     [self registerAdjustmentResponder];
     
@@ -819,6 +828,7 @@
 }
 
 - (MobilyDataItem*)itemForPoint:(CGPoint)point {
+    [self validateLayoutIfNeed];
     return [_container itemForPoint:point];
 }
 
@@ -1032,7 +1042,7 @@
     if(duration > FLT_EPSILON) {
         [UIView animateWithDuration:duration
                               delay:0.0f
-                            options:0
+                            options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                          animations:^{
                              [self _batchUpdate:update animated:YES];
                          }
@@ -1083,6 +1093,7 @@
 }
 
 - (void)scrollToRect:(CGRect)rect scrollPosition:(MobilyDataViewPosition)scrollPosition animated:(BOOL)animated {
+    [self validateLayoutIfNeed];
     NSUInteger vPosition = scrollPosition & (MobilyDataViewPositionTop | MobilyDataViewPositionCenteredVertically | MobilyDataViewPositionBottom);
     NSUInteger hPosition = scrollPosition & (MobilyDataViewPositionLeft | MobilyDataViewPositionCenteredHorizontally | MobilyDataViewPositionRight);
     CGRect viewport = self.visibleBounds;
@@ -1129,14 +1140,18 @@
 - (void)showTopRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
     if(_topRefreshView.state == MobilyDataRefreshViewStateRelease) {
         _topRefreshView.state = MobilyDataRefreshViewStateLoading;
-        _constraintTopRefreshSize.constant = _topRefreshThreshold;
+        
+        UIEdgeInsets fromInsets = self.contentInset;
+        UIEdgeInsets toInsets = UIEdgeInsetsMake(_topRefreshThreshold, fromInsets.left, fromInsets.bottom, fromInsets.right);
+        CGFloat fromConstraint = fromInsets.top;
+        CGFloat toConstraint = _topRefreshThreshold;
         if(animated == YES) {
-            [UIView animateWithDuration:0.1f
+            [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _topRefreshVelocity
                                   delay:0.01f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
-                                 self.contentInset = UIEdgeInsetsMake(_topRefreshThreshold, self.contentInset.left, self.contentInset.bottom, self.contentInset.right);
-                                 self.scrollIndicatorInsets = self.contentInset;
+                                 self.contentInset = self.scrollIndicatorInsets = toInsets;
+                                 _constraintTopRefreshSize.constant = toConstraint;
                                  [self.superview layoutIfNeeded];
                              }
                              completion:^(BOOL finished) {
@@ -1145,8 +1160,8 @@
                                  }
                              }];
         } else {
-            self.contentInset = UIEdgeInsetsMake(_topRefreshThreshold, self.contentInset.left, self.contentInset.bottom, self.contentInset.right);
-            self.scrollIndicatorInsets = self.contentInset;
+            self.contentInset = self.scrollIndicatorInsets = toInsets;
+            _constraintTopRefreshSize.constant = toConstraint;
             if(complete != nil) {
                 complete(YES);
             }
@@ -1156,14 +1171,17 @@
 
 - (void)hideTopRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
     if(_topRefreshView.state != MobilyDataRefreshViewStateIdle) {
-        _constraintTopRefreshBottom.constant = 0.0f;
+        UIEdgeInsets fromInsets = self.contentInset;
+        UIEdgeInsets toInsets = UIEdgeInsetsMake(0.0f, fromInsets.left, fromInsets.bottom, fromInsets.right);
+        CGFloat fromConstraint = fromInsets.top;
+        CGFloat toConstraint = 0.0f;
         if(animated == YES) {
-            [UIView animateWithDuration:0.1f
+            [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _topRefreshVelocity
                                   delay:0.01f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
-                                 self.contentInset = UIEdgeInsetsMake(0.0f, self.contentInset.left, self.contentInset.bottom, self.contentInset.right);
-                                 self.scrollIndicatorInsets = self.contentInset;
+                                 self.contentInset = self.scrollIndicatorInsets = toInsets;
+                                 _constraintTopRefreshSize.constant = toConstraint;
                                  [self.superview layoutIfNeeded];
                              }
                              completion:^(BOOL finished) {
@@ -1173,8 +1191,8 @@
                                  }
                              }];
         } else {
-            self.contentInset = UIEdgeInsetsMake(0.0f, self.contentInset.left, self.contentInset.bottom, self.contentInset.right);
-            self.scrollIndicatorInsets = self.contentInset;
+            self.contentInset = self.scrollIndicatorInsets = toInsets;
+            _constraintTopRefreshSize.constant = toConstraint;
             _topRefreshView.state = MobilyDataRefreshViewStateIdle;
             if(complete != nil) {
                 complete(YES);
@@ -1186,14 +1204,18 @@
 - (void)showBottomRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
     if(_bottomRefreshView.state == MobilyDataRefreshViewStateRelease) {
         _bottomRefreshView.state = MobilyDataRefreshViewStateLoading;
-        _constraintBottomRefreshSize.constant = _bottomRefreshThreshold;
+        
+        UIEdgeInsets fromInsets = self.contentInset;
+        UIEdgeInsets toInsets = UIEdgeInsetsMake(fromInsets.top, fromInsets.left, _bottomRefreshThreshold, fromInsets.right);
+        CGFloat fromConstraint = fromInsets.bottom;
+        CGFloat toConstraint = _bottomRefreshThreshold;
         if(animated == YES) {
-            [UIView animateWithDuration:0.1f
+            [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _bottomRefreshVelocity
                                   delay:0.01f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
-                                 self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, _bottomRefreshThreshold, self.contentInset.right);
-                                 self.scrollIndicatorInsets = self.contentInset;
+                                 self.contentInset = self.scrollIndicatorInsets = toInsets;
+                                 _constraintBottomRefreshSize.constant = toConstraint;
                                  [self.superview layoutIfNeeded];
                              }
                              completion:^(BOOL finished) {
@@ -1202,8 +1224,8 @@
                                  }
                              }];
         } else {
-            self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, _bottomRefreshThreshold, self.contentInset.right);
-            self.scrollIndicatorInsets = self.contentInset;
+            self.contentInset = self.scrollIndicatorInsets = toInsets;
+            _constraintBottomRefreshSize.constant = toConstraint;
             if(complete != nil) {
                 complete(YES);
             }
@@ -1213,14 +1235,17 @@
 
 - (void)hideBottomRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
     if(_bottomRefreshView.state != MobilyDataRefreshViewStateIdle) {
-        _constraintBottomRefreshSize.constant = 0.0f;
+        UIEdgeInsets fromInsets = self.contentInset;
+        UIEdgeInsets toInsets = UIEdgeInsetsMake(fromInsets.top, fromInsets.left, 0.0f, fromInsets.right);
+        CGFloat fromConstraint = fromInsets.bottom;
+        CGFloat toConstraint = 0.0f;
         if(animated == YES) {
-            [UIView animateWithDuration:0.1f
+            [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _bottomRefreshVelocity
                                   delay:0.01f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
-                                 self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, 0.0f, self.contentInset.right);
-                                 self.scrollIndicatorInsets = self.contentInset;
+                                 self.contentInset = self.scrollIndicatorInsets = toInsets;
+                                 _constraintBottomRefreshSize.constant = toConstraint;
                                  [self.superview layoutIfNeeded];
                              }
                              completion:^(BOOL finished) {
@@ -1230,8 +1255,8 @@
                                  }
                              }];
         } else {
-            self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, 0.0f, self.contentInset.right);
-            self.scrollIndicatorInsets = self.contentInset;
+            self.contentInset = self.scrollIndicatorInsets = toInsets;
+            _constraintBottomRefreshSize.constant = toConstraint;
             _bottomRefreshView.state = MobilyDataRefreshViewStateIdle;
             if(complete != nil) {
                 complete(YES);
@@ -1243,14 +1268,18 @@
 - (void)showLeftRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
     if(_leftRefreshView.state == MobilyDataRefreshViewStateRelease) {
         _leftRefreshView.state = MobilyDataRefreshViewStateLoading;
-        _constraintLeftRefreshSize.constant = _leftRefreshThreshold;
+        
+        UIEdgeInsets fromInsets = self.contentInset;
+        UIEdgeInsets toInsets = UIEdgeInsetsMake(fromInsets.top, _leftRefreshThreshold, fromInsets.bottom, fromInsets.right);
+        CGFloat fromConstraint = fromInsets.left;
+        CGFloat toConstraint = _leftRefreshThreshold;
         if(animated == YES) {
-            [UIView animateWithDuration:0.1f
+            [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _leftRefreshVelocity
                                   delay:0.01f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
-                                 self.contentInset = UIEdgeInsetsMake(self.contentInset.top, _leftRefreshThreshold, self.contentInset.bottom, self.contentInset.right);
-                                 self.scrollIndicatorInsets = self.contentInset;
+                                 self.contentInset = self.scrollIndicatorInsets = toInsets;
+                                 _constraintLeftRefreshSize.constant = toConstraint;
                                  [self.superview layoutIfNeeded];
                              }
                              completion:^(BOOL finished) {
@@ -1259,8 +1288,8 @@
                                  }
                              }];
         } else {
-            self.contentInset = UIEdgeInsetsMake(self.contentInset.top, _leftRefreshThreshold, self.contentInset.bottom, self.contentInset.right);
-            self.scrollIndicatorInsets = self.contentInset;
+            self.contentInset = self.scrollIndicatorInsets = toInsets;
+            _constraintLeftRefreshSize.constant = toConstraint;
             if(complete != nil) {
                 complete(YES);
             }
@@ -1270,14 +1299,17 @@
 
 - (void)hideLeftRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
     if(_leftRefreshView.state != MobilyDataRefreshViewStateIdle) {
-        _constraintLeftRefreshSize.constant = 0.0f;
+        UIEdgeInsets fromInsets = self.contentInset;
+        UIEdgeInsets toInsets = UIEdgeInsetsMake(fromInsets.top, 0.0f, fromInsets.bottom, fromInsets.right);
+        CGFloat fromConstraint = fromInsets.left;
+        CGFloat toConstraint = 0.0f;
         if(animated == YES) {
-            [UIView animateWithDuration:0.1f
+            [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _leftRefreshVelocity
                                   delay:0.01f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
-                                 self.contentInset = UIEdgeInsetsMake(self.contentInset.top, 0.0f, self.contentInset.bottom, self.contentInset.right);
-                                 self.scrollIndicatorInsets = self.contentInset;
+                                 self.contentInset = self.scrollIndicatorInsets = toInsets;
+                                 _constraintLeftRefreshSize.constant = toConstraint;
                                  [self.superview layoutIfNeeded];
                              }
                              completion:^(BOOL finished) {
@@ -1287,8 +1319,8 @@
                                  }
                              }];
         } else {
-            self.contentInset = UIEdgeInsetsMake(self.contentInset.top, 0.0f, self.contentInset.bottom, self.contentInset.right);
-            self.scrollIndicatorInsets = self.contentInset;
+            self.contentInset = self.scrollIndicatorInsets = toInsets;
+            _constraintLeftRefreshSize.constant = toConstraint;
             _leftRefreshView.state = MobilyDataRefreshViewStateIdle;
             if(complete != nil) {
                 complete(YES);
@@ -1300,14 +1332,18 @@
 - (void)showRightRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
     if(_rightRefreshView.state == MobilyDataRefreshViewStateRelease) {
         _rightRefreshView.state = MobilyDataRefreshViewStateLoading;
-        _constraintRightRefreshSize.constant = _rightRefreshThreshold;
+        
+        UIEdgeInsets fromInsets = self.contentInset;
+        UIEdgeInsets toInsets = UIEdgeInsetsMake(fromInsets.top, fromInsets.left, fromInsets.bottom, _rightRefreshThreshold);
+        CGFloat fromConstraint = fromInsets.right;
+        CGFloat toConstraint = _rightRefreshThreshold;
         if(animated == YES) {
-            [UIView animateWithDuration:0.1f
+            [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _rightRefreshVelocity
                                   delay:0.01f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
-                                 self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, self.contentInset.bottom, _rightRefreshThreshold);
-                                 self.scrollIndicatorInsets = self.contentInset;
+                                 self.contentInset = self.scrollIndicatorInsets = toInsets;
+                                 _constraintRightRefreshSize.constant = toConstraint;
                                  [self.superview layoutIfNeeded];
                              }
                              completion:^(BOOL finished) {
@@ -1316,8 +1352,8 @@
                                  }
                              }];
         } else {
-            self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, self.contentInset.bottom, _rightRefreshThreshold);
-            self.scrollIndicatorInsets = self.contentInset;
+            self.contentInset = self.scrollIndicatorInsets = toInsets;
+            _constraintRightRefreshSize.constant = toConstraint;
             if(complete != nil) {
                 complete(YES);
             }
@@ -1327,14 +1363,17 @@
 
 - (void)hideRightRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
     if(_rightRefreshView.state != MobilyDataRefreshViewStateIdle) {
-        _constraintRightRefreshSize.constant = 0.0f;
+        UIEdgeInsets fromInsets = self.contentInset;
+        UIEdgeInsets toInsets = UIEdgeInsetsMake(fromInsets.top, fromInsets.left, fromInsets.bottom, 0.0f);
+        CGFloat fromConstraint = fromInsets.right;
+        CGFloat toConstraint = 0.0f;
         if(animated == YES) {
-            [UIView animateWithDuration:0.1f
+            [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _rightRefreshVelocity
                                   delay:0.01f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
-                                 self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, self.contentInset.bottom, 0.0f);
-                                 self.scrollIndicatorInsets = self.contentInset;
+                                 self.contentInset = self.scrollIndicatorInsets = toInsets;
+                                 _constraintRightRefreshSize.constant = toConstraint;
                                  [self.superview layoutIfNeeded];
                              }
                              completion:^(BOOL finished) {
@@ -1344,8 +1383,8 @@
                                  }
                              }];
         } else {
-            self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, self.contentInset.bottom, 0.0f);
-            self.scrollIndicatorInsets = self.contentInset;
+            self.contentInset = self.scrollIndicatorInsets = toInsets;
+            _constraintRightRefreshSize.constant = toConstraint;
             _rightRefreshView.state = MobilyDataRefreshViewStateIdle;
             if(complete != nil) {
                 complete(YES);
@@ -1873,6 +1912,7 @@
 
 - (void)_batchUpdate:(MobilyDataViewUpdateBlock)update animated:(BOOL)animated {
     self.updating = YES;
+    self.animating = animated;
     [_container _didBeginUpdateAnimated:animated];
     if(update != nil) {
         update();
@@ -1955,7 +1995,6 @@
                     cell.zPosition = 0.0f;
                     cell.alpha = 1.0f;
                 }
-                [self _disappearItem:item];
             }
         }
         [_reloadedBeforeItems removeAllObjects];
@@ -1979,6 +2018,7 @@
         [_deletedItems removeAllObjects];
     }
     [_container _didEndUpdateAnimated:animated];
+    self.animating = NO;
     self.updating = NO;
     [self _layoutForVisible];
     

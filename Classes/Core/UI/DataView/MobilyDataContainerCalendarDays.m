@@ -132,7 +132,7 @@
 - (void)prepareBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate interval:(NSTimeInterval)interval data:(id)data {
     NSTimeInterval timeInterval = beginDate.timeIntervalSince1970;
     NSTimeInterval endTimeInterval = endDate.timeIntervalSince1970;
-    while(endTimeInterval - timeInterval >= 0.0f) {
+    while(endTimeInterval - timeInterval > 0.0f) {
         NSDate* date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
         MobilyDataItemCalendarDay* calendarDay = [self dayItemForDate:date];
         if(calendarDay == nil) {

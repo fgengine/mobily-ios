@@ -74,16 +74,21 @@ typedef void(^MobilyDataViewCompleteBlock)(BOOL finished);
 @property(nonatomic, readonly, strong) NSArray* highlightedCells;
 @property(nonatomic, readonly, strong) NSArray* editingItems;
 @property(nonatomic, readonly, strong) NSArray* editingCells;
+@property(nonatomic, readonly, assign, getter=isAnimating) BOOL animating;
 @property(nonatomic, readonly, assign, getter=isUpdating) BOOL updating;
 
 @property(nonatomic, readwrite, strong) IBOutlet MobilyDataRefreshView* topRefreshView;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat topRefreshThreshold;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat topRefreshVelocity;
 @property(nonatomic, readwrite, strong) IBOutlet MobilyDataRefreshView* bottomRefreshView;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat bottomRefreshThreshold;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat bottomRefreshVelocity;
 @property(nonatomic, readwrite, strong) IBOutlet MobilyDataRefreshView* leftRefreshView;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat leftRefreshThreshold;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat leftRefreshVelocity;
 @property(nonatomic, readwrite, strong) IBOutlet MobilyDataRefreshView* rightRefreshView;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat rightRefreshThreshold;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat rightRefreshVelocity;
 
 - (void)registerIdentifier:(NSString*)identifier withViewClass:(Class)viewClass;
 - (void)unregisterIdentifier:(NSString*)identifier;
