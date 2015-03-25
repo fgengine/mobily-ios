@@ -203,6 +203,8 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 
 + (NSString*)rightWordFormByCount:(NSInteger)count andForms:(NSArray*)forms;
 
+- (NSArray*)charactersArray;
+
 @end
 
 /*--------------------------------------------------*/

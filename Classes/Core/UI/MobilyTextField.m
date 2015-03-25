@@ -43,10 +43,16 @@
 
 /*--------------------------------------------------*/
 
+const NSString* kPhoneEmptySymbol = @"_";
+
+/*--------------------------------------------------*/
+
 @interface MobilyTextField ()
 
 @property(nonatomic, readwrite, weak) UIResponder* prevInputResponder;
 @property(nonatomic, readwrite, weak) UIResponder* nextInputResponder;
+
+@property(nonatomic, readwrite, strong) NSMutableArray* phoneFormatSymbols;
 
 - (void)pressedPrev;
 - (void)pressedNext;
@@ -149,7 +155,42 @@
     [self setHiddenToolbar:hiddenToolbar animated:NO];
 }
 
+- (void)setPhoneFormat:(NSString *)phoneFormat {
+    if([phoneFormat isEqualToString:_phoneFormat] == NO) {
+        _phoneFormat = phoneFormat;
+        
+        self.phoneFormatSymbols = NSMutableArray.array;
+        
+        /*
+        [[_phoneFormat charactersArray] each:^(NSString* ichar) {
+            if([ichar isEqualToString:@"#"]) {
+                [_phoneFormatSymbols addObject:[NSMutableDictionary dictionaryWithDictionary:@{@"digit": @(YES), @"value": kPhoneEmptySymbol}]];
+            } else {
+                [_phoneFormatSymbols addObject:[NSMutableDictionary dictionaryWithDictionary:@{@"digit": @(NO), @"value": ichar}]];
+            }
+        }];
+         */
+    }
+}
+
 #pragma mark Public
+
+- (NSString*)getDigitsOnly {
+    __block NSString* result = @"";
+    if(_phoneFormatSymbols.count > 0) {
+        [_phoneFormatSymbols each:^(NSMutableDictionary* object) {
+            if([object[@"digit"] boolValue] == YES) {
+                if([object[@"value"] isEqualToString:(NSString*)kPhoneEmptySymbol] == NO) {
+                    result = [result stringByAppendingString:object[@"value"]];
+                }
+            }
+        }];
+    }
+    if(result.length == 0) {
+        result = self.text;
+    }
+    return result;
+}
 
 - (void)setHiddenToolbar:(BOOL)hiddenToolbar animated:(BOOL)animated {
     if(_hiddenToolbar != hiddenToolbar) {
@@ -170,6 +211,29 @@
 }
 
 - (void)didBeginEditing {
+    if(_phoneFormat != nil) {
+        if(_phoneFormatSymbols.count == 0) {
+            self.phoneFormatSymbols = NSMutableArray.array;
+            if(self.text.length > 0) {
+                for(int i = 0; i < self.text.length; i ++) {
+                    NSString* phoneFormatChar = [NSString stringWithFormat:@"%c", [_phoneFormat characterAtIndex:i]];
+                    [_phoneFormatSymbols addObject:[NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                                   @"digit": @([phoneFormatChar isEqualToString:@"#"]),
+                                                                                                   @"value": [NSString stringWithFormat:@"%c", [self.text characterAtIndex:i]]
+                                                                                                   }]];
+                }
+            } else {
+                [[_phoneFormat charactersArray] each:^(NSString* ichar) {
+                    if([ichar isEqualToString:@"#"]) {
+                        [_phoneFormatSymbols addObject:[NSMutableDictionary dictionaryWithDictionary:@{@"digit": @(YES), @"value": kPhoneEmptySymbol}]];
+                    } else {
+                        [_phoneFormatSymbols addObject:[NSMutableDictionary dictionaryWithDictionary:@{@"digit": @(NO), @"value": ichar}]];
+                    }
+                }];
+            }
+        }
+        [self updateTextWithPhoneFormat];
+    }
     if(_toolbar == nil) {
         CGRect windowBounds = self.window.bounds;
         self.toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(windowBounds.origin.x, windowBounds.origin.y, windowBounds.size.width, MOBILY_TOOLBAR_HEIGHT)];
@@ -195,11 +259,22 @@
 }
 
 - (void)didEndEditing {
+    if(_phoneFormat != nil) {
+        if([self allDigitsEntered] == NO) {
+            self.text = @"";
+            [_phoneFormatSymbols each:^(NSMutableDictionary* object) {
+                if([object[@"digit"] boolValue] == YES) {
+                    object[@"value"] = kPhoneEmptySymbol;
+                }
+            }];
+        }
+    }
+    
     _prevInputResponder = nil;
     _nextInputResponder = nil;
 }
 
-- (void)didValueChanged {
+- (void)validate {
     if(_validator != nil) {
         if([_validator validate:self.text] == YES) {
             [_form validatedSuccess:self andValue:self.text];
@@ -209,7 +284,76 @@
     }
 }
 
+- (void)didValueChanged {
+    if(_phoneFormat != nil) {
+        if(self.text.length < _phoneFormatSymbols.count) {
+            for(unsigned long i=_phoneFormatSymbols.count-1; i > 0; i--) {
+                if([_phoneFormatSymbols[i][@"digit"] boolValue] == YES) {
+                    if([_phoneFormatSymbols[i][@"value"] isEqualToString:(NSString*)kPhoneEmptySymbol] == NO) {
+                        _phoneFormatSymbols[i][@"value"] = kPhoneEmptySymbol;
+                        break;
+                    }
+                }
+            }
+        } else {
+            for(int i=0; i < self.text.length; i++) {
+                NSString* ichar  = [NSString stringWithFormat:@"%c", [self.text characterAtIndex:i]];
+                if(i < _phoneFormatSymbols.count) {
+                     if([_phoneFormatSymbols[i][@"digit"] boolValue] == YES) {
+                         if([_phoneFormatSymbols[i][@"value"] isEqualToString:ichar] == NO) {
+                                _phoneFormatSymbols[i][@"value"] = ichar;
+                                break;
+                         }
+                     }
+                     
+                }
+            }
+        }
+        [self updateTextWithPhoneFormat];
+    }
+    
+    [self validate];
+}
+
 #pragma mark Private
+
+- (void)updateTextWithPhoneFormat {
+    self.text = [self getPhoneFormattedText];
+    NSInteger index = [_phoneFormatSymbols indexOfObjectPassingTest:^BOOL(NSDictionary* obj, NSUInteger idx, BOOL *stop) {
+        return ([obj[@"value"] isEqualToString:(NSString*)kPhoneEmptySymbol]);
+    }];
+    if(index != NSNotFound) {
+        [self selectTextAtIndex:index];
+    }
+}
+
+- (NSString*)getPhoneFormattedText {
+    __block NSString* result = @"";
+    [_phoneFormatSymbols each:^(NSDictionary* object) {
+        result = [result stringByAppendingString:object[@"value"]];
+    }];
+    return result;
+}
+
+- (void)selectTextAtIndex:(NSInteger)index {
+    NSRange range = NSMakeRange(index, 0);
+    UITextPosition *start = [self positionFromPosition:[self beginningOfDocument] offset:range.location];
+    UITextPosition *end = [self positionFromPosition:start offset:range.length];
+    [self setSelectedTextRange:[self textRangeFromPosition:start toPosition:end]];
+}
+
+- (BOOL)allDigitsEntered {
+    __block BOOL result = YES;
+    [_phoneFormatSymbols each:^(NSDictionary* object) {
+        if([object[@"digit"] boolValue] == YES) {
+            if([object[@"value"] isEqualToString:(NSString*)kPhoneEmptySymbol]) {
+                result = NO;
+            }
+        }
+    }];
+    
+    return result;
+}
 
 - (void)pressedPrev {
     if(_prevInputResponder != nil) {

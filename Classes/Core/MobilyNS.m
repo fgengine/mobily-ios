@@ -791,6 +791,15 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return forms[2];
 }
 
+- (NSArray*)charactersArray {
+    NSMutableArray* chars = NSMutableArray.array;
+    for(int i=0; i < self.length; i++) {
+        [chars addObject:[NSString stringWithFormat:@"%c", [self characterAtIndex:i]]];
+    }
+    return chars;
+}
+
+
 @end
 
 /*--------------------------------------------------*/
