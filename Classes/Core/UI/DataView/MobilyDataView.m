@@ -1143,7 +1143,7 @@
         
         UIEdgeInsets fromInsets = self.contentInset;
         UIEdgeInsets toInsets = UIEdgeInsetsMake(_topRefreshThreshold, fromInsets.left, fromInsets.bottom, fromInsets.right);
-        CGFloat fromConstraint = fromInsets.top;
+        CGFloat fromConstraint = _constraintTopRefreshSize.constant;
         CGFloat toConstraint = _topRefreshThreshold;
         if(animated == YES) {
             [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _topRefreshVelocity
@@ -1173,7 +1173,7 @@
     if(_topRefreshView.state != MobilyDataRefreshViewStateIdle) {
         UIEdgeInsets fromInsets = self.contentInset;
         UIEdgeInsets toInsets = UIEdgeInsetsMake(0.0f, fromInsets.left, fromInsets.bottom, fromInsets.right);
-        CGFloat fromConstraint = fromInsets.top;
+        CGFloat fromConstraint = _constraintTopRefreshSize.constant;
         CGFloat toConstraint = 0.0f;
         if(animated == YES) {
             [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _topRefreshVelocity
@@ -1207,7 +1207,7 @@
         
         UIEdgeInsets fromInsets = self.contentInset;
         UIEdgeInsets toInsets = UIEdgeInsetsMake(fromInsets.top, fromInsets.left, _bottomRefreshThreshold, fromInsets.right);
-        CGFloat fromConstraint = fromInsets.bottom;
+        CGFloat fromConstraint = _constraintBottomRefreshSize.constant;
         CGFloat toConstraint = _bottomRefreshThreshold;
         if(animated == YES) {
             [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _bottomRefreshVelocity
@@ -1237,7 +1237,7 @@
     if(_bottomRefreshView.state != MobilyDataRefreshViewStateIdle) {
         UIEdgeInsets fromInsets = self.contentInset;
         UIEdgeInsets toInsets = UIEdgeInsetsMake(fromInsets.top, fromInsets.left, 0.0f, fromInsets.right);
-        CGFloat fromConstraint = fromInsets.bottom;
+        CGFloat fromConstraint = _constraintBottomRefreshSize.constant;
         CGFloat toConstraint = 0.0f;
         if(animated == YES) {
             [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _bottomRefreshVelocity
@@ -1271,7 +1271,7 @@
         
         UIEdgeInsets fromInsets = self.contentInset;
         UIEdgeInsets toInsets = UIEdgeInsetsMake(fromInsets.top, _leftRefreshThreshold, fromInsets.bottom, fromInsets.right);
-        CGFloat fromConstraint = fromInsets.left;
+        CGFloat fromConstraint = _constraintLeftRefreshSize.constant;
         CGFloat toConstraint = _leftRefreshThreshold;
         if(animated == YES) {
             [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _leftRefreshVelocity
@@ -1301,7 +1301,7 @@
     if(_leftRefreshView.state != MobilyDataRefreshViewStateIdle) {
         UIEdgeInsets fromInsets = self.contentInset;
         UIEdgeInsets toInsets = UIEdgeInsetsMake(fromInsets.top, 0.0f, fromInsets.bottom, fromInsets.right);
-        CGFloat fromConstraint = fromInsets.left;
+        CGFloat fromConstraint = _constraintLeftRefreshSize.constant;
         CGFloat toConstraint = 0.0f;
         if(animated == YES) {
             [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _leftRefreshVelocity
@@ -1335,7 +1335,7 @@
         
         UIEdgeInsets fromInsets = self.contentInset;
         UIEdgeInsets toInsets = UIEdgeInsetsMake(fromInsets.top, fromInsets.left, fromInsets.bottom, _rightRefreshThreshold);
-        CGFloat fromConstraint = fromInsets.right;
+        CGFloat fromConstraint = _constraintRightRefreshSize.constant;
         CGFloat toConstraint = _rightRefreshThreshold;
         if(animated == YES) {
             [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _rightRefreshVelocity
@@ -1365,7 +1365,7 @@
     if(_rightRefreshView.state != MobilyDataRefreshViewStateIdle) {
         UIEdgeInsets fromInsets = self.contentInset;
         UIEdgeInsets toInsets = UIEdgeInsetsMake(fromInsets.top, fromInsets.left, fromInsets.bottom, 0.0f);
-        CGFloat fromConstraint = fromInsets.right;
+        CGFloat fromConstraint = _constraintRightRefreshSize.constant;
         CGFloat toConstraint = 0.0f;
         if(animated == YES) {
             [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _rightRefreshVelocity
