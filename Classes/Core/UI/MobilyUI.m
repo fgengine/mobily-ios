@@ -1325,7 +1325,6 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 @interface UIScrollView (MobilyUI_Keyboard)
 
 @property(nonatomic, readwrite, weak) UIResponder* keyboardResponder;
-@property(nonatomic, readwrite, assign) CGPoint keyboardContentOffset;
 @property(nonatomic, readwrite, assign) UIEdgeInsets keyboardContentInset;
 @property(nonatomic, readwrite, assign) UIEdgeInsets keyboardIndicatorInset;
 
@@ -1363,7 +1362,6 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 
 - (void)setKeyboardResponder:(UIResponder*)keyboardResponder {
     if(self.keyboardResponder == nil) {
-        self.keyboardContentOffset = self.contentOffset;
         self.keyboardContentInset = self.contentInset;
         self.keyboardIndicatorInset = self.scrollIndicatorInsets;
     }
@@ -1372,14 +1370,6 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 
 - (UIResponder*)keyboardResponder {
     return objc_getAssociatedObject(self, @selector(keyboardResponder));
-}
-
-- (void)setKeyboardContentOffset:(CGPoint)keyboardContentOffset {
-    objc_setAssociatedObject(self, @selector(keyboardContentOffset), [NSValue valueWithCGPoint:keyboardContentOffset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (CGPoint)keyboardContentOffset {
-    return [objc_getAssociatedObject(self, @selector(keyboardContentOffset)) CGPointValue];
 }
 
 - (void)setKeyboardContentInset:(UIEdgeInsets)keyboardContentInset {
@@ -1542,8 +1532,6 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
             if(intersectionRect.size.height > FLT_EPSILON) {
                 UIEdgeInsets contentInsets = self.contentInset;
                 UIEdgeInsets indicatorInsets = self.scrollIndicatorInsets;
-                self.keyboardContentInset = self.contentInset;
-                self.keyboardIndicatorInset = self.scrollIndicatorInsets;
                 contentInsets.bottom = indicatorInsets.bottom = intersectionRect.size.height;
                 self.contentInset = contentInsets;
                 self.scrollIndicatorInsets = indicatorInsets;
@@ -1552,7 +1540,6 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
             CGRect responderRect = [(UIView*)self.keyboardResponder convertRect:((UIView*)self.keyboardResponder).bounds toView:self];
             if(CGRectContainsRect(visibleRect, responderRect) == NO) {
                 CGPoint contentOffset = self.contentOffset;
-                self.keyboardContentOffset = contentOffset;
                 CGFloat vrsx = CGRectGetMinX(visibleRect), vrsy = CGRectGetMinY(visibleRect);
                 CGFloat vrex = CGRectGetMaxX(visibleRect), vrey = CGRectGetMaxY(visibleRect);
                 CGFloat vrcx = CGRectGetMidX(visibleRect), vrcy = CGRectGetMidY(visibleRect);
@@ -1583,7 +1570,6 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
     if(self.keyboardResponder != nil) {
         self.contentInset = self.keyboardContentInset;
         self.scrollIndicatorInsets = self.keyboardIndicatorInset;
-        [self setContentOffset:self.keyboardContentOffset animated:YES];
         self.keyboardResponder = nil;
     }
 }
