@@ -377,9 +377,9 @@
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer {
     if(gestureRecognizer == _pressGestureRecognizer) {
-        return [_item.view shouldHighlightItem:_item];
+        return YES;
     } else if(gestureRecognizer == _tapGestureRecognizer) {
-        return [_item.view shouldSelectItem:_item];
+        return YES;
     } else if(gestureRecognizer == _longPressGestureRecognizer) {
         return YES;
     }
