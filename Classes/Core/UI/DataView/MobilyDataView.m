@@ -1995,6 +1995,7 @@
                     cell.zPosition = 0.0f;
                     cell.alpha = 1.0f;
                 }
+                [self _disappearItem:item];
             }
         }
         [_reloadedBeforeItems removeAllObjects];
