@@ -168,6 +168,11 @@ typedef void(^MobilyDataViewCompleteBlock)(BOOL finished);
 
 /*--------------------------------------------------*/
 
+extern NSString* MobilyDataViewSelectItem;
+extern NSString* MobilyDataViewDeselectItem;
+
+/*--------------------------------------------------*/
+
 extern NSString* MobilyDataViewTopRefreshTriggered;
 extern NSString* MobilyDataViewBottomRefreshTriggered;
 extern NSString* MobilyDataViewLeftRefreshTriggered;

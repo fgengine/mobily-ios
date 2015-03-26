@@ -152,7 +152,11 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
 
 - (void)_receiveMemoryWarning;
 
-- (void)_userSelectItem:(MobilyDataItem*)item animated:(BOOL)animated;
+- (void)_pressedItem:(MobilyDataItem*)item animated:(BOOL)animated;
+
+- (void)_selectItem:(MobilyDataItem*)item user:(BOOL)user animated:(BOOL)animated;
+- (void)_deselectItem:(MobilyDataItem*)item user:(BOOL)user animated:(BOOL)animated;
+- (void)_deselectAllItemsUser:(BOOL)user animated:(BOOL)animated;
 
 - (void)_appearItem:(MobilyDataItem*)item;
 - (void)_disappearItem:(MobilyDataItem*)item;

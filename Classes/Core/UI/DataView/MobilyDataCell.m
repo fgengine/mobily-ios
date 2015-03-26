@@ -355,14 +355,14 @@
 
 - (void)_handlerTapGestureRecognizer:(UITapGestureRecognizer*)gestureRecognizer {
     if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-        [_item.view _userSelectItem:_item animated:YES];
+        [_item.view _pressedItem:_item animated:YES];
+        [self fireEventForKey:MobilyDataCellPressed byObject:_item];
     }
-    [_item fireEventForKey:MobilyDataCellPressed bySender:self byObject:_item];
 }
 
 - (void)_handlerLongPressGestureRecognizer:(UILongPressGestureRecognizer*)gestureRecognizer {
     if(gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        [_item fireEventForKey:MobilyDataCellLongPressed bySender:self byObject:_item];
+        [self fireEventForKey:MobilyDataCellLongPressed byObject:_item];
     }
 }
 

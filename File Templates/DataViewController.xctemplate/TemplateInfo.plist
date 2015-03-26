@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>AllowedTypes</key>
+        <array>
+            <string>public.objective-c-source</string>
+        </array>
+        <key>DefaultCompletionName</key>
+        <string>Controller</string>
+        <key>Description</key>
+        <string>A Controller class</string>
+        <key>Kind</key>
+        <string>Xcode.IDEKit.TextSubstitutionFileTemplateKind</string>
+        <key>MainTemplateFile</key>
+        <string>___FILEBASENAME___.m</string>
+        <key>Platforms</key>
+        <array>
+            <string>com.apple.platform.iphoneos</string>
+        </array>
+        <key>Options</key>
+        <array>
+           <dict>
+	            <key>Default</key>
+	            <string>Controller</string>
+               <key>Description</key>
+               <string>The name of the Controller class to create</string>
+               <key>Identifier</key>
+               <string>productName</string>
+               <key>Name</key>
+               <string>Class Name</string>
+               <key>NotPersisted</key>
+               <true/>
+               <key>Required</key>
+               <true/>
+               <key>Type</key>
+               <string>text</string>
+            </dict>
+            <dict>
+                <key>Default</key>
+                <string>BaseController</string>
+                <key>Description</key>
+                <string>Base class</string>
+                <key>Identifier</key>
+                <string>baseClass</string>
+                <key>Name</key>
+                <string>Base class</string>
+                <key>Required</key>
+                <true/>
+                <key>NotPersisted</key>
+                <true/>
+                <key>Type</key>
+                <string>text</string>
+            </dict>
+            <dict>
+                <key>Default</key>
+                <string>___VARIABLE_baseClass:identifier___</string>
+                <key>Identifier</key>
+                <string>baseClassName</string>
+                <key>Type</key>
+                <string>static</string>
+            </dict>
+        </array>
+
+        <key>Summary</key>
+        <string>A Controller class</string>
+    </dict>
+</plist>

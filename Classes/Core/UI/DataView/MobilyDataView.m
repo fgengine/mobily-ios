@@ -824,41 +824,15 @@
 }
 
 - (void)selectItem:(MobilyDataItem*)item animated:(BOOL)animated {
-    if([self shouldSelectItem:item] == YES) {
-        if(_allowsMultipleSelection == YES) {
-            [_selectedItems addObject:item];
-            [item setSelected:YES animated:animated];
-        } else {
-            if(_selectedItems.count > 0) {
-                [_selectedItems each:^(MobilyDataItem* item) {
-                    if([self shouldDeselectItem:item] == YES) {
-                        [_selectedItems removeObject:item];
-                        [item setSelected:NO animated:animated];
-                    }
-                }];
-            }
-            [_selectedItems addObject:item];
-            [item setSelected:YES animated:animated];
-        }
-    }
+    [self _selectItem:item user:NO animated:animated];
 }
 
 - (void)deselectItem:(MobilyDataItem*)item animated:(BOOL)animated {
-    if([self shouldDeselectItem:item] == YES) {
-        [_selectedItems removeObject:item];
-        [item setSelected:NO animated:animated];
-    }
+    [self _deselectItem:item user:NO animated:animated];
 }
 
 - (void)deselectAllItemsAnimated:(BOOL)animated {
-    if(_selectedItems.count > 0) {
-        [_selectedItems each:^(MobilyDataItem* item) {
-            if([self shouldDeselectItem:item] == YES) {
-                [_selectedItems removeObject:item];
-                [item setSelected:NO animated:animated];
-            }
-        }];
-    }
+    [self _deselectAllItemsUser:NO animated:animated];
 }
 
 - (BOOL)isHighlightedItem:(MobilyDataItem*)item {
@@ -1156,15 +1130,64 @@
     [_queueCells removeAllObjects];
 }
 
-- (void)_userSelectItem:(MobilyDataItem*)item animated:(BOOL)animated {
+- (void)_pressedItem:(MobilyDataItem*)item animated:(BOOL)animated {
     if(_allowsOnceSelection == YES) {
-        [self selectItem:item animated:animated];
+        [self _selectItem:item user:YES animated:animated];
     } else {
         if([self isSelectedItem:item] == NO) {
-            [self selectItem:item animated:animated];
+            [self _selectItem:item user:YES animated:animated];
         } else {
-            [self deselectItem:item animated:animated];
+            [self _deselectItem:item user:YES animated:animated];
         }
+    }
+}
+
+- (void)_selectItem:(MobilyDataItem*)item user:(BOOL)user animated:(BOOL)animated {
+    if([self shouldSelectItem:item] == YES) {
+        if(_allowsMultipleSelection == YES) {
+            [_selectedItems addObject:item];
+            [item setSelected:YES animated:animated];
+            if(user == YES) {
+            }
+        } else {
+            if(_selectedItems.count > 0) {
+                [_selectedItems each:^(MobilyDataItem* item) {
+                    if([self shouldDeselectItem:item] == YES) {
+                        [_selectedItems removeObject:item];
+                        [item setSelected:NO animated:animated];
+                    }
+                }];
+            }
+            [_selectedItems addObject:item];
+            [item setSelected:YES animated:animated];
+            if(user == YES) {
+                [self fireEventForKey:MobilyDataViewSelectItem byObject:item];
+            }
+        }
+    }
+}
+
+- (void)_deselectItem:(MobilyDataItem*)item user:(BOOL)user animated:(BOOL)animated {
+    if([self shouldDeselectItem:item] == YES) {
+        [_selectedItems removeObject:item];
+        [item setSelected:NO animated:animated];
+        if(user == YES) {
+            [self fireEventForKey:MobilyDataViewDeselectItem byObject:item];
+        }
+    }
+}
+
+- (void)_deselectAllItemsUser:(BOOL)user animated:(BOOL)animated {
+    if(_selectedItems.count > 0) {
+        [_selectedItems each:^(MobilyDataItem* item) {
+            if([self shouldDeselectItem:item] == YES) {
+                [_selectedItems removeObject:item];
+                [item setSelected:NO animated:animated];
+                if(user == YES) {
+                    [self fireEventForKey:MobilyDataViewDeselectItem byObject:item];
+                }
+            }
+        }];
     }
 }
 
@@ -1891,6 +1914,11 @@
 
 /*--------------------------------------------------*/
 #pragma mark -
+/*--------------------------------------------------*/
+
+NSString* MobilyDataViewSelectItem = @"MobilyDataViewSelectItem";
+NSString* MobilyDataViewDeselectItem = @"MobilyDataViewDeselectItem";
+
 /*--------------------------------------------------*/
 
 NSString* MobilyDataViewTopRefreshTriggered = @"MobilyDataViewTopRefreshTriggered";
