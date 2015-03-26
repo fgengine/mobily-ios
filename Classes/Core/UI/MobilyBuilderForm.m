@@ -120,10 +120,10 @@
         isLinked = YES;
     }
     @catch(NSException* exception) {
-        id objectParent = [object objectParent];
-        if(objectParent != nil) {
-            isLinked = [self object:objectParent outletName:outletName outletObject:outletObject];
-        }
+    }
+    id objectParent = [object objectParent];
+    if(objectParent != nil) {
+        isLinked = [self object:objectParent outletName:outletName outletObject:outletObject];
     }
     return isLinked;
 }
@@ -207,7 +207,7 @@
         NSString* targetName = attributes[@"name"];
         if(targetName.length > 0) {
             target.objectName = targetName;
-            [MobilyBuilderForm object:target outletName:targetName outletObject:target];
+            [MobilyBuilderForm object:_lastFormObject outletName:targetName outletObject:target];
         }
         if(attributes.count > 0) {
             NSDictionary* mixinAttirutes = [MobilyBuilderPreset mixinAttributes:attributes];

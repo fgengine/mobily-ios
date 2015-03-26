@@ -34,6 +34,7 @@
 /*--------------------------------------------------*/
 
 #import "MobilyActivityView.h"
+#import "MobilyBlurView.h"
 #import "MobilySpinnerView.h"
 
 /*--------------------------------------------------*/
@@ -91,12 +92,13 @@
         _textWidth = textWidth;
         
         self.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-        self.tintColor = MobilyActivityViewBackgroundColor;
+        self.backgroundColor = MobilyActivityViewBackgroundColor;
         self.alpha = 0.0f;
         [view addSubview:self];
         
-        _panelView = [[UIView alloc] initWithFrame:CGRectZero];
-        _panelView.backgroundColor = MobilyActivityViewPanelColor;
+        _panelView = [[MobilyBlurView alloc] initWithFrame:CGRectZero];
+        // _panelView.backgroundColor = MobilyActivityViewPanelColor;
+        _panelView.tintColor = MobilyActivityViewPanelColor;
         _panelView.cornerRadius = MobilyActivityViewPanelCornerRadius;
         _panelView.clipsToBounds = YES;
         [self addSubview:_panelView];
@@ -141,7 +143,6 @@
 }
 
 - (void)setup {
-    [super setup];
 }
 
 #pragma mark Public override

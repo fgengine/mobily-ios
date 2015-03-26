@@ -41,6 +41,14 @@
 
 /*--------------------------------------------------*/
 
+typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
+    MobilyDataViewDirectionUnknown,
+    MobilyDataViewDirectionHorizontal,
+    MobilyDataViewDirectionVertical
+};
+
+/*--------------------------------------------------*/
+
 @class MobilyDataViewDelegateProxy;
 
 /*--------------------------------------------------*/
@@ -57,6 +65,8 @@
     BOOL _bouncesLeft;
     BOOL _bouncesRight;
     BOOL _bouncesBottom;
+    CGPoint _scrollBeginPosition;
+    MobilyDataViewDirection _scrollDirection;
     MobilyDataContainer* _container;
     NSMutableArray* _visibleItems;
     NSMutableArray* _selectedItems;
@@ -73,29 +83,21 @@
     BOOL _updating;
     BOOL _invalidLayout;
     MobilyDataRefreshView* _topRefreshView;
-    CGFloat _topRefreshThreshold;
-    CGFloat _topRefreshVelocity;
-    NSLayoutConstraint* _constraintTopRefreshBottom;
+    NSLayoutConstraint* _constraintTopRefreshTop;
     NSLayoutConstraint* _constraintTopRefreshLeft;
     NSLayoutConstraint* _constraintTopRefreshRight;
     NSLayoutConstraint* _constraintTopRefreshSize;
     MobilyDataRefreshView* _bottomRefreshView;
-    CGFloat _bottomRefreshThreshold;
-    CGFloat _bottomRefreshVelocity;
-    NSLayoutConstraint* _constraintBottomRefreshTop;
+    NSLayoutConstraint* _constraintBottomRefreshBottom;
     NSLayoutConstraint* _constraintBottomRefreshLeft;
     NSLayoutConstraint* _constraintBottomRefreshRight;
     NSLayoutConstraint* _constraintBottomRefreshSize;
     MobilyDataRefreshView* _leftRefreshView;
-    CGFloat _leftRefreshThreshold;
-    CGFloat _leftRefreshVelocity;
     NSLayoutConstraint* _constraintLeftRefreshTop;
     NSLayoutConstraint* _constraintLeftRefreshBottom;
     NSLayoutConstraint* _constraintLeftRefreshLeft;
     NSLayoutConstraint* _constraintLeftRefreshSize;
     MobilyDataRefreshView* _rightRefreshView;
-    CGFloat _rightRefreshThreshold;
-    CGFloat _rightRefreshVelocity;
     NSLayoutConstraint* _constraintRightRefreshTop;
     NSLayoutConstraint* _constraintRightRefreshBottom;
     NSLayoutConstraint* _constraintRightRefreshRight;
@@ -108,6 +110,8 @@
 }
 
 @property(nonatomic, readwrite, strong) MobilyDataViewDelegateProxy* delegateProxy;
+@property(nonatomic, readwrite, assign) CGPoint scrollBeginPosition;
+@property(nonatomic, readwrite, assign) MobilyDataViewDirection scrollDirection;
 
 @property(nonatomic, readwrite, strong) NSMutableDictionary* registersViews;
 @property(nonatomic, readwrite, strong) MobilyEvents* registersEvents;
@@ -120,12 +124,12 @@
 @property(nonatomic, readwrite, assign, getter=isUpdating) BOOL updating;
 @property(nonatomic, readwrite, assign) BOOL invalidLayout;
 
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintTopRefreshBottom;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintTopRefreshTop;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintTopRefreshLeft;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintTopRefreshRight;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintTopRefreshSize;
 
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintBottomRefreshTop;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintBottomRefreshBottom;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintBottomRefreshLeft;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintBottomRefreshRight;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintBottomRefreshSize;

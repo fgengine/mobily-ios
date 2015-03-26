@@ -41,8 +41,17 @@
 
 /*--------------------------------------------------*/
 
+typedef NS_ENUM(NSUInteger, MobilyDataRefreshViewType) {
+    MobilyDataRefreshViewTypeTop,
+    MobilyDataRefreshViewTypeBottom,
+    MobilyDataRefreshViewTypeLeft,
+    MobilyDataRefreshViewTypeRight
+};
+
+/*--------------------------------------------------*/
+
 typedef NS_ENUM(NSUInteger, MobilyDataRefreshViewState) {
-    MobilyDataRefreshViewStateIdle = 0,
+    MobilyDataRefreshViewStateIdle,
     MobilyDataRefreshViewStatePull,
     MobilyDataRefreshViewStateRelease,
     MobilyDataRefreshViewStateLoading
@@ -52,8 +61,14 @@ typedef NS_ENUM(NSUInteger, MobilyDataRefreshViewState) {
 
 @interface MobilyDataRefreshView : UIView< MobilyBuilderObject >
 
+@property(nonatomic, readwrite, assign) MobilyDataRefreshViewType type;
 @property(nonatomic, readonly, weak) MobilyDataView* view;
+@property(nonatomic, readonly, weak) NSLayoutConstraint* constraintOffset;
+@property(nonatomic, readonly, weak) NSLayoutConstraint* constraintSize;
 @property(nonatomic, readonly, assign) MobilyDataRefreshViewState state;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat size;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat threshold;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat velocity;
 
 - (void)didIdle;
 - (void)didPull;

@@ -45,7 +45,12 @@
 @synthesize objectParent = _objectParent;
 @synthesize objectChilds = _objectChilds;
 @synthesize view = _view;
+@synthesize constraintOffset = _constraintOffset;
+@synthesize constraintSize = _constraintSize;
 @synthesize state = _state;
+@synthesize size = _size;
+@synthesize threshold = _threshold;
+@synthesize velocity = _velocity;
 
 #pragma mark NSKeyValueCoding
 
@@ -68,6 +73,9 @@
 }
 
 - (void)setup {
+    _threshold = 64.0f;
+    _size = 128.0f;
+    _velocity = 720.0f;
 }
 
 - (void)dealloc {
@@ -127,6 +135,15 @@
     }
 }
 
+- (void)setSize:(CGFloat)size {
+    if(_size != size) {
+        _size = size;
+        if(_state == MobilyDataRefreshViewStateLoading) {
+            _constraintSize.constant = _size;
+        }
+    }
+}
+
 #pragma mark Public
 
 - (void)didIdle {
@@ -139,6 +156,79 @@
 }
 
 - (void)didLoading {
+}
+
+#pragma mark Private
+
+- (void)_showAnimated:(BOOL)animated complete:(MobilyDataRefreshViewCompleteBlock)complete {
+    self.state = MobilyDataRefreshViewStateLoading;
+    
+    UIEdgeInsets contentInset = _view.contentInset;
+    switch (_type) {
+        case MobilyDataRefreshViewTypeTop: contentInset.top = _size; break;
+        case MobilyDataRefreshViewTypeBottom: contentInset.bottom = _size; break;
+        case MobilyDataRefreshViewTypeLeft: contentInset.left = _size; break;
+        case MobilyDataRefreshViewTypeRight: contentInset.right = _size; break;
+    }
+    CGFloat fromConstraint = _constraintSize.constant;
+    CGFloat toConstraint = _size;
+    if(animated == YES) {
+        [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _velocity
+                              delay:0.01f
+                            options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
+                         animations:^{
+                             _view.contentInset = _view.scrollIndicatorInsets = contentInset;
+                             _constraintSize.constant = toConstraint;
+                             [self.superview layoutIfNeeded];
+                         }
+                         completion:^(BOOL finished) {
+                             if(complete != nil) {
+                                 complete(finished);
+                             }
+                         }];
+    } else {
+        _view.contentInset = _view.scrollIndicatorInsets = contentInset;
+        _view.contentOffset = CGPointMake(-contentInset.top, -contentInset.left);
+        _constraintSize.constant = toConstraint;
+        if(complete != nil) {
+            complete(YES);
+        }
+    }
+}
+
+- (void)_hideAnimated:(BOOL)animated complete:(MobilyDataRefreshViewCompleteBlock)complete {
+    UIEdgeInsets contentInset = _view.contentInset;
+    switch (_type) {
+        case MobilyDataRefreshViewTypeTop: contentInset.top = 0.0f; break;
+        case MobilyDataRefreshViewTypeBottom: contentInset.bottom = 0.0f; break;
+        case MobilyDataRefreshViewTypeLeft: contentInset.left = 0.0f; break;
+        case MobilyDataRefreshViewTypeRight: contentInset.right = 0.0f; break;
+    }
+    CGFloat fromConstraint = _constraintSize.constant;
+    CGFloat toConstraint = 0.0f;
+    if(animated == YES) {
+        [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / _velocity
+                              delay:0.01f
+                            options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
+                         animations:^{
+                             _view.contentInset = _view.scrollIndicatorInsets = contentInset;
+                             _constraintSize.constant = toConstraint;
+                             [self.superview layoutIfNeeded];
+                         }
+                         completion:^(BOOL finished) {
+                             self.state = MobilyDataRefreshViewStateIdle;
+                             if(complete != nil) {
+                                 complete(finished);
+                             }
+                         }];
+    } else {
+        _view.contentInset = _view.scrollIndicatorInsets = contentInset;
+        _constraintSize.constant = toConstraint;
+        self.state = MobilyDataRefreshViewStateIdle;
+        if(complete != nil) {
+            complete(YES);
+        }
+    }
 }
 
 @end

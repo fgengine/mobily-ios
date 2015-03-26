@@ -75,10 +75,10 @@
 
 /*--------------------------------------------------*/
 
-typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
-    MobilyTableSwipeCellDirectionUnknown,
-    MobilyTableSwipeCellDirectionLeft,
-    MobilyTableSwipeCellDirectionRight
+typedef NS_ENUM(NSUInteger, MobilyDataCellSwipeDirection) {
+    MobilyDataCellSwipeDirectionUnknown,
+    MobilyDataCellSwipeDirectionLeft,
+    MobilyDataCellSwipeDirectionRight
 };
 
 /*--------------------------------------------------*/
@@ -113,7 +113,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
     CGFloat _panSwipeProgress;
     CGFloat _panSwipeLeftWidth;
     CGFloat _panSwipeRightWidth;
-    MobilyTableSwipeCellDirection _panSwipeDirection;
+    MobilyDataCellSwipeDirection _panSwipeDirection;
 }
 
 @property(nonatomic, readwrite, strong) UIPanGestureRecognizer* panGestureRecognizer;
@@ -135,7 +135,7 @@ typedef NS_ENUM(NSUInteger, MobilyTableSwipeCellDirection) {
 @property(nonatomic, readwrite, assign) CGFloat panSwipeProgress;
 @property(nonatomic, readwrite, assign) CGFloat panSwipeLeftWidth;
 @property(nonatomic, readwrite, assign) CGFloat panSwipeRightWidth;
-@property(nonatomic, readwrite, assign) MobilyTableSwipeCellDirection panSwipeDirection;
+@property(nonatomic, readwrite, assign) MobilyDataCellSwipeDirection panSwipeDirection;
 
 - (UIOffset)_rootViewOffsetOfCenterBySwipeProgress:(CGFloat)swipeProgress;
 - (CGFloat)_leftViewOffsetBySwipeProgress:(CGFloat)swipeProgress;

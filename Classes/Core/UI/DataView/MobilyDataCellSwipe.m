@@ -502,8 +502,8 @@
 }
 
 - (void)_updateSwipeProgress:(CGFloat)swipeProgress speed:(CGFloat)speed endedSwipe:(BOOL)endedSwipe {
-    CGFloat minSwipeProgress = (_panSwipeDirection == MobilyTableSwipeCellDirectionLeft) ? -1.0f : 0.0f;
-    CGFloat maxSwipeProgress = (_panSwipeDirection == MobilyTableSwipeCellDirectionRight) ? 1.0f :0.0f;
+    CGFloat minSwipeProgress = (_panSwipeDirection == MobilyDataCellSwipeDirectionLeft) ? -1.0f : 0.0f;
+    CGFloat maxSwipeProgress = (_panSwipeDirection == MobilyDataCellSwipeDirectionRight) ? 1.0f :0.0f;
     CGFloat normalizedSwipeProgress = MIN(MAX(minSwipeProgress, swipeProgress), maxSwipeProgress);
     if(_panSwipeProgress != normalizedSwipeProgress) {
         _panSwipeProgress = normalizedSwipeProgress;
@@ -538,38 +538,38 @@
                 self.panSwipeLastVelocity = velocity.x;
                 self.panSwipeLeftWidth = -_leftSwipeView.frameWidth;
                 self.panSwipeRightWidth = _rightSwipeView.frameWidth;
-                self.panSwipeDirection = MobilyTableSwipeCellDirectionUnknown;
+                self.panSwipeDirection = MobilyDataCellSwipeDirectionUnknown;
                 break;
             }
             case UIGestureRecognizerStateChanged: {
                 CGFloat delta = _panSwipeLastOffset - translation.x;
-                if(_panSwipeDirection == MobilyTableSwipeCellDirectionUnknown) {
+                if(_panSwipeDirection == MobilyDataCellSwipeDirectionUnknown) {
                     if((_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (delta > _swipeThreshold)) {
-                        self.panSwipeDirection = MobilyTableSwipeCellDirectionLeft;
+                        self.panSwipeDirection = MobilyDataCellSwipeDirectionLeft;
                         [self didBeganSwipe];
                     } else if((_showedRightSwipeView == YES) && (_rightSwipeView != nil) && (delta < -_swipeThreshold)) {
-                        self.panSwipeDirection = MobilyTableSwipeCellDirectionRight;
+                        self.panSwipeDirection = MobilyDataCellSwipeDirectionRight;
                         [self didBeganSwipe];
                     } else if((_showedLeftSwipeView == NO) && (_leftSwipeView != nil) && (delta < -_swipeThreshold)) {
-                        self.panSwipeDirection = MobilyTableSwipeCellDirectionLeft;
+                        self.panSwipeDirection = MobilyDataCellSwipeDirectionLeft;
                         [self didBeganSwipe];
                     } else if((_showedRightSwipeView == NO) && (_rightSwipeView != nil) && (delta > _swipeThreshold)) {
-                        self.panSwipeDirection = MobilyTableSwipeCellDirectionRight;
+                        self.panSwipeDirection = MobilyDataCellSwipeDirectionRight;
                         [self didBeganSwipe];
                     }
                 }
-                if(_panSwipeDirection != MobilyTableSwipeCellDirectionUnknown) {
+                if(_panSwipeDirection != MobilyDataCellSwipeDirectionUnknown) {
                     switch(_panSwipeDirection) {
-                        case MobilyTableSwipeCellDirectionUnknown: {
+                        case MobilyDataCellSwipeDirectionUnknown: {
                             break;
                         }
-                        case MobilyTableSwipeCellDirectionLeft: {
+                        case MobilyDataCellSwipeDirectionLeft: {
                             CGFloat localDelta = MIN(MAX(_panSwipeLeftWidth, delta), -_panSwipeLeftWidth);
                             [self _updateSwipeProgress:_panSwipeProgress - (localDelta / _panSwipeLeftWidth) speed:localDelta endedSwipe:NO];
                             [self movingSwipe:_panSwipeProgress];
                             break;
                         }
-                        case MobilyTableSwipeCellDirectionRight: {
+                        case MobilyDataCellSwipeDirectionRight: {
                             CGFloat localDelta = MIN(MAX(-_panSwipeRightWidth, delta), _panSwipeRightWidth);
                             [self _updateSwipeProgress:_panSwipeProgress + (localDelta / _panSwipeRightWidth) speed:localDelta endedSwipe:NO];
                             [self movingSwipe:_panSwipeProgress];
@@ -585,15 +585,15 @@
             case UIGestureRecognizerStateCancelled: {
                 [self willEndedSwipe];
                 CGFloat swipeProgress = roundf(_panSwipeProgress - (_panSwipeLastVelocity / _swipeVelocity));
-                CGFloat minSwipeProgress = (_panSwipeDirection == MobilyTableSwipeCellDirectionLeft) ? -1.0f : 0.0f;
-                CGFloat maxSwipeProgress = (_panSwipeDirection == MobilyTableSwipeCellDirectionRight) ? 1.0f : 0.0f;
+                CGFloat minSwipeProgress = (_panSwipeDirection == MobilyDataCellSwipeDirectionLeft) ? -1.0f : 0.0f;
+                CGFloat maxSwipeProgress = (_panSwipeDirection == MobilyDataCellSwipeDirectionRight) ? 1.0f : 0.0f;
                 CGFloat needSwipeProgress = MIN(MAX(minSwipeProgress, swipeProgress), maxSwipeProgress);
                 switch(_panSwipeDirection) {
-                    case MobilyTableSwipeCellDirectionLeft: {
+                    case MobilyDataCellSwipeDirectionLeft: {
                         [self _updateSwipeProgress:needSwipeProgress speed:_panSwipeLeftWidth * ABS(needSwipeProgress - _panSwipeProgress) endedSwipe:YES];
                         break;
                     }
-                    case MobilyTableSwipeCellDirectionRight: {
+                    case MobilyDataCellSwipeDirectionRight: {
                         [self _updateSwipeProgress:needSwipeProgress speed:_panSwipeRightWidth * ABS(needSwipeProgress - _panSwipeProgress) endedSwipe:YES];
                         break;
                     }

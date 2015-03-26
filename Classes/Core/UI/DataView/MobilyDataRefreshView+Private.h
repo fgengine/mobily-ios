@@ -38,14 +38,29 @@
 
 /*--------------------------------------------------*/
 
+typedef void(^MobilyDataRefreshViewCompleteBlock)(BOOL finished);
+
+/*--------------------------------------------------*/
+
 @interface MobilyDataRefreshView () {
 @protected
+    MobilyDataRefreshViewType _type;
     __weak MobilyDataView* _view;
+    __weak NSLayoutConstraint* _constraintOffset;
+    __weak NSLayoutConstraint* _constraintSize;
     MobilyDataRefreshViewState _state;
+    CGFloat _size;
+    CGFloat _threshold;
+    CGFloat _velocity;
 }
 
 @property(nonatomic, readwrite, weak) MobilyDataView* view;
+@property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintOffset;
+@property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintSize;
 @property(nonatomic, readwrite, assign) MobilyDataRefreshViewState state;
+
+- (void)_showAnimated:(BOOL)animated complete:(MobilyDataRefreshViewCompleteBlock)complete;
+- (void)_hideAnimated:(BOOL)animated complete:(MobilyDataRefreshViewCompleteBlock)complete;
 
 @end
 
