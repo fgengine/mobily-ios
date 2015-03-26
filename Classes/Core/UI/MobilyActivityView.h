@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyUI.h"
+#import "MobilyBlurView.h"
 
 /*--------------------------------------------------*/
 
@@ -62,7 +62,7 @@ typedef void (^MobilyActivityViewBlock)();
 
 /*--------------------------------------------------*/
 
-@interface MobilyActivityView : UIView < MobilyObject >
+@interface MobilyActivityView : MobilyBlurView
 
 @property(nonatomic, readonly, assign) MobilyActivityViewStyle style;
 @property(nonatomic, readwrite, assign) CGFloat margin;

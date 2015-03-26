@@ -119,8 +119,8 @@
 
 - (void)setup {
     _blurEnabled = YES;
-    self.blurLayer.blurRadius = 60.0f;
-    _blurIterations = 2;
+    self.blurLayer.blurRadius = 20.0f;
+    _blurIterations = 4;
     _dynamic = YES;
     _updateInterval = 0.1f;
     self.layer.magnificationFilter = @"linear";

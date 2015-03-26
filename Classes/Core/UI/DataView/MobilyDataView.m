@@ -1088,7 +1088,6 @@
 }
 
 - (void)scrollToItem:(MobilyDataItem*)item scrollPosition:(MobilyDataViewPosition)scrollPosition animated:(BOOL)animated {
-    [self validateLayoutIfNeed];
     [self scrollToRect:[item updateFrame] scrollPosition:scrollPosition animated:animated];
 }
 

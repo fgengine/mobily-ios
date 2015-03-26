@@ -170,6 +170,11 @@
     }
 }
 
+- (CGRect)originFrame {
+    [_view validateLayoutIfNeed];
+    return _originFrame;
+}
+
 - (void)setUpdateFrame:(CGRect)updateFrame {
     if(CGRectEqualToRect(_updateFrame, updateFrame) == NO) {
         _updateFrame = updateFrame;
@@ -182,6 +187,11 @@
     }
 }
 
+- (CGRect)updateFrame {
+    [_view validateLayoutIfNeed];
+    return _updateFrame;
+}
+
 - (void)setDisplayFrame:(CGRect)displayFrame {
     if(CGRectEqualToRect(_displayFrame, displayFrame) == NO) {
         _displayFrame = displayFrame;
@@ -192,6 +202,7 @@
 }
 
 - (CGRect)displayFrame {
+    [_view validateLayoutIfNeed];
     if(CGRectIsNull(_displayFrame) == YES) {
         return _updateFrame;
     }
@@ -199,6 +210,7 @@
 }
 
 - (CGRect)frame {
+    [_view validateLayoutIfNeed];
     if(CGRectIsNull(_displayFrame) == NO) {
         return _displayFrame;
     } else if(CGRectIsNull(_updateFrame) == NO) {

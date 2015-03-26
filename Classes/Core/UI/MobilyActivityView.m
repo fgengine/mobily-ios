@@ -91,7 +91,7 @@
         _textWidth = textWidth;
         
         self.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-        self.backgroundColor = MobilyActivityViewBackgroundColor;
+        self.tintColor = MobilyActivityViewBackgroundColor;
         self.alpha = 0.0f;
         [view addSubview:self];
         
@@ -141,6 +141,7 @@
 }
 
 - (void)setup {
+    [super setup];
 }
 
 #pragma mark Public override
