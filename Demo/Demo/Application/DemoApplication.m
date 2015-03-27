@@ -54,6 +54,8 @@
     _mainSlideController.centerController = _mainSlideCenterController;
     _mainSlideController.rightController = _mainSlideRightController;
     
+    _window.rootViewController = _mainSlideController;
+    
     return [super launchingWithOptions:options];
 }
 

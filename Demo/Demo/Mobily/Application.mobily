@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
-<DemoApplication>
+<DemoApplication notificationType="alert|sound">
+    <ApplicationNotificationCategory identifier="DEFAULT">
+        <ApplicationNotificationAction identifier="TEST" title="Test"/>
+    </ApplicationNotificationCategory>
     <Window name="window">
         <SlideController name="mainSlideController">
             <DemoCategoriesController name="mainSlideLeftController" preset="controller"/>

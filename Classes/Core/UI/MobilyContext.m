@@ -228,6 +228,10 @@ static NSString* MOBILY_ACCESS_KEY = nil;
     [_application enterBackground];
 }
 
+- (void)application:(UIApplication* __unused)application didRegisterUserNotificationSettings:(UIUserNotificationSettings*)notificationSettings {
+    [_application registerUserNotificationSettings:notificationSettings];
+}
+
 - (void)application:(UIApplication* __unused)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken {
     [_application registerForRemoteNotificationsWithDeviceToken:deviceToken];
 }
@@ -242,6 +246,14 @@ static NSString* MOBILY_ACCESS_KEY = nil;
 
 - (void)application:(UIApplication* __unused)application didReceiveLocalNotification:(UILocalNotification*)notification {
     [_application receiveLocalNotification:notification];
+}
+
+- (void)application:(UIApplication* __unused)application handleActionWithIdentifier:(NSString*)identifier forLocalNotification:(UILocalNotification*)notification completionHandler:(void(^)())completionHandler {
+    [_application handleActionWithIdentifier:identifier forLocalNotification:notification completionHandler:completionHandler];
+}
+
+- (void)application:(UIApplication* __unused)application handleActionWithIdentifier:(NSString*)identifier forRemoteNotification:(NSDictionary*)userInfo completionHandler:(void(^)())completionHandler {
+    [_application handleActionWithIdentifier:identifier forRemoteNotification:userInfo completionHandler:completionHandler];
 }
 
 - (BOOL)application:(UIApplication* __unused)application openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation {

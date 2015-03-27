@@ -37,10 +37,20 @@
 
 /*--------------------------------------------------*/
 
+typedef NS_OPTIONS(NSUInteger, MobilyApplicationNotificationType) {
+    MobilyApplicationNotificationTypeNone = 0,
+    MobilyApplicationNotificationTypeBadge = 1 << 0,
+    MobilyApplicationNotificationTypeSound = 1 << 1,
+    MobilyApplicationNotificationTypeAlert = 1 << 2,
+};
+
+/*--------------------------------------------------*/
+
 @interface MobilyApplication : NSObject < MobilyBuilderObject >
 
-@property(nonatomic, readwrite, assign) UIRemoteNotificationType remoteNotificationType;
-@property(nonatomic, readonly, assign) UIApplicationState applicationState;
+@property(nonatomic, readonly, assign) MobilyApplicationNotificationType notificationType;
+@property(nonatomic, readonly, strong) NSArray* notificationCategories;
+@property(nonatomic, readonly, assign) UIApplicationState state;
 @property(nonatomic, readonly, strong) NSData* deviceToken;
 
 - (BOOL)launchingWithOptions:(NSDictionary*)options;
@@ -50,12 +60,47 @@
 - (void)resignActive;
 - (void)enterForeground;
 - (void)enterBackground;
+- (void)registerUserNotificationSettings:(UIUserNotificationSettings*)notificationSettings;
 - (void)registerForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken;
 - (void)failToRegisterForRemoteNotificationsWithError:(NSError*)error;
 - (void)receiveRemoteNotification:(NSDictionary*)notification;
 - (void)receiveLocalNotification:(UILocalNotification*)notification;
+- (void)handleActionWithIdentifier:(NSString*)identifier forLocalNotification:(UILocalNotification*)notification completionHandler:(void(^)())completionHandler;
+- (void)handleActionWithIdentifier:(NSString*)identifier forRemoteNotification:(NSDictionary*)notification completionHandler:(void(^)())completionHandler;
 
 - (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyApplicationNotificationCategory : NSObject < MobilyBuilderObject >
+
+@property(nonatomic, readonly, strong) NSString* identifier;
+@property(nonatomic, readonly, strong) NSArray* actions;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyApplicationNotificationAction : NSObject < MobilyBuilderObject >
+
+@property(nonatomic, readonly, strong) NSString* identifier;
+@property(nonatomic, readonly, strong) NSString* title;
+@property(nonatomic, readonly, assign) UIUserNotificationActivationMode activationMode;
+@property(nonatomic, readonly, assign, getter=isAuthenticationRequired) BOOL authenticationRequired;
+@property(nonatomic, readonly, assign, getter=isDestructive) BOOL destructive;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface NSString (MobilyApplication)
+
+- (MobilyApplicationNotificationType)convertToApplicationNotificationType;
+- (MobilyApplicationNotificationType)convertToApplicationNotificationTypeSeparated:(NSString*)separated;
+
+- (UIUserNotificationActivationMode)convertToUserNotificationActivationMode;
 
 @end
 
