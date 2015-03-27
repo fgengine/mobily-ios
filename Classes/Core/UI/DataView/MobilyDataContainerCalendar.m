@@ -43,14 +43,19 @@
 
 @synthesize calendar = _calendar;
 @synthesize canShowMonth = _canShowMonth;
+@synthesize canSelectMonth = _canSelectMonth;
 @synthesize monthMargin = _monthMargin;
 @synthesize monthHeight = _monthHeight;
 @synthesize monthSpacing = _monthSpacing;
 @synthesize canShowWeekdays = _canShowWeekdays;
+@synthesize canSelectWeekdays = _canSelectWeekdays;
 @synthesize weekdaysMargin = _weekdaysMargin;
 @synthesize weekdaysHeight = _weekdaysHeight;
 @synthesize weekdaysSpacing = _weekdaysSpacing;
 @synthesize canShowDays = _canShowDays;
+@synthesize canSelectDays = _canSelectDays;
+@synthesize canSelectPreviousDays = _canSelectPreviousDays;
+@synthesize canSelectNextDays = _canSelectNextDays;
 @synthesize daysMargin = _daysMargin;
 @synthesize daysHeight = _daysHeight;
 @synthesize daysSpacing = _daysSpacing;
@@ -74,14 +79,19 @@
     if(self != nil) {
         _calendar = calendar;
         _canShowMonth = YES;
+        _canSelectMonth = NO;
         _monthMargin = UIEdgeInsetsZero;
         _monthHeight = 64.0f;
         _monthSpacing = 0.0f;
         _canShowWeekdays = YES;
+        _canSelectWeekdays = NO;
         _weekdaysMargin = UIEdgeInsetsZero;
         _weekdaysHeight = 21.0f;
         _weekdaysSpacing = UIOffsetZero;
         _canShowDays = YES;
+        _canSelectDays = YES;
+        _canSelectPreviousDays = NO;
+        _canSelectNextDays = NO;
         _daysMargin = UIEdgeInsetsZero;
         _daysHeight = 44.0f;
         _daysSpacing = UIOffsetZero;
@@ -98,6 +108,15 @@
         _canShowMonth = canShowMonth;
         if(_view != nil) {
             [_view setNeedValidateLayout];
+        }
+    }
+}
+
+- (void)setCanSelectMonth:(BOOL)canSelectMonth {
+    if(_canSelectMonth != canSelectMonth) {
+        _canSelectMonth = canSelectMonth;
+        if(_monthItem != nil) {
+            _monthItem.allowsSelection = _canSelectMonth;
         }
     }
 }
@@ -138,6 +157,15 @@
     }
 }
 
+- (void)setCanSelectWeekdays:(BOOL)canSelectWeekdays {
+    if(_canSelectWeekdays != canSelectWeekdays) {
+        _canSelectWeekdays = canSelectWeekdays;
+        [_weekdayItems each:^(MobilyDataItemCalendarWeekday* weekdayItem) {
+            weekdayItem.allowsSelection = _canSelectWeekdays;
+        }];
+    }
+}
+
 - (void)setWeekdaysMargin:(UIEdgeInsets)weekdaysMargin {
     if(UIEdgeInsetsEqualToEdgeInsets(_weekdaysMargin, weekdaysMargin) == NO) {
         _weekdaysMargin = weekdaysMargin;
@@ -171,6 +199,39 @@
         if(_view != nil) {
             [_view setNeedValidateLayout];
         }
+    }
+}
+
+- (void)setCanSelectDays:(BOOL)canSelectDays {
+    if(_canSelectDays != canSelectDays) {
+        _canSelectDays = canSelectDays;
+        [_weekdayItems each:^(MobilyDataItemCalendarDay* dayItem) {
+            if(([dayItem.date isAfterOrSame:_beginDate] == YES) && ([dayItem.date isEarlierOrSame:_endDate] == YES)) {
+                dayItem.allowsSelection = _canSelectDays;
+            }
+        }];
+    }
+}
+
+- (void)setCanSelectPreviousDays:(BOOL)canSelectPreviousDays {
+    if(_canSelectPreviousDays != canSelectPreviousDays) {
+        _canSelectPreviousDays = canSelectPreviousDays;
+        [_weekdayItems each:^(MobilyDataItemCalendarDay* dayItem) {
+            if([dayItem.date isAfter:_endDate] == YES) {
+                dayItem.allowsSelection = _canSelectNextDays;
+            }
+        }];
+    }
+}
+
+- (void)setCanSelectNextDays:(BOOL)canSelectNextDays {
+    if(_canSelectNextDays != canSelectNextDays) {
+        _canSelectNextDays = canSelectNextDays;
+        [_weekdayItems each:^(MobilyDataItemCalendarDay* dayItem) {
+            if([dayItem.date isEarlier:_beginDate] == YES) {
+                dayItem.allowsSelection = _canSelectPreviousDays;
+            }
+        }];
     }
 }
 
@@ -236,6 +297,7 @@
         _displayEndDate = [_endDate endOfWeek];
         if(_canShowMonth == YES) {
             _monthItem = [MobilyDataItemCalendarMonth itemWithCalendar:_calendar beginDate:_beginDate endDate:_endDate displayBeginDate:_displayBeginDate displayEndDate:_displayEndDate data:[NSNull null]];
+            _monthItem.allowsSelection = _canSelectMonth;
             [self _appendEntry:_monthItem];
         }
         if(_canShowWeekdays == YES) {
@@ -247,6 +309,7 @@
                 } else {
                     weekdayItem = [MobilyDataItemCalendarWeekday itemWithCalendar:_calendar date:weekdayDate data:[NSNull null]];
                 }
+                weekdayItem.allowsSelection = _canSelectWeekdays;
                 [_weekdayItems addObject:weekdayItem];
                 [self _appendEntry:weekdayItem];
                 weekdayDate = [weekdayDate nextDay];
@@ -265,6 +328,13 @@
                             dayItem = [MobilyDataItemCalendarDay itemWithWeekdayItem:_weekdayItems[weekdayIndex] date:beginDayDate data:[NSNull null]];
                         } else {
                             dayItem = [MobilyDataItemCalendarDay itemWithCalendar:_calendar date:beginDayDate data:[NSNull null]];
+                        }
+                        if([dayItem.date isEarlier:_beginDate] == YES) {
+                            dayItem.allowsSelection = _canSelectPreviousDays;
+                        } else if([dayItem.date isAfter:_endDate] == YES) {
+                            dayItem.allowsSelection = _canSelectNextDays;
+                        } else {
+                            dayItem.allowsSelection = _canSelectDays;
                         }
                         [_dayItems setObject:dayItem atColumn:weekdayIndex atRow:weekIndex];
                         [self _appendEntry:dayItem];

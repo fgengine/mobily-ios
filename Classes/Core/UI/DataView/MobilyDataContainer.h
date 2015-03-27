@@ -296,18 +296,23 @@ extern NSString* MobilyDataContainerCurrentSectionChanged;
 @property(nonatomic, readonly, strong) NSDate* displayEndDate;
 
 @property(nonatomic, readwrite, assign) BOOL canShowMonth;
+@property(nonatomic, readwrite, assign) BOOL canSelectMonth;
 @property(nonatomic, readwrite, assign) UIEdgeInsets monthMargin;
 @property(nonatomic, readwrite, assign) CGFloat monthHeight;
 @property(nonatomic, readwrite, assign) CGFloat monthSpacing;
 @property(nonatomic, readwrite, assign) BOOL canSnapToEdgeMonth;
 
 @property(nonatomic, readwrite, assign) BOOL canShowWeekdays;
+@property(nonatomic, readwrite, assign) BOOL canSelectWeekdays;
 @property(nonatomic, readwrite, assign) UIEdgeInsets weekdaysMargin;
 @property(nonatomic, readwrite, assign) CGFloat weekdaysHeight;
 @property(nonatomic, readwrite, assign) UIOffset weekdaysSpacing;
 @property(nonatomic, readwrite, assign) BOOL canSnapToEdgeWeekdays;
 
 @property(nonatomic, readwrite, assign) BOOL canShowDays;
+@property(nonatomic, readwrite, assign) BOOL canSelectDays;
+@property(nonatomic, readwrite, assign) BOOL canSelectPreviousDays;
+@property(nonatomic, readwrite, assign) BOOL canSelectNextDays;
 @property(nonatomic, readwrite, assign) UIEdgeInsets daysMargin;
 @property(nonatomic, readwrite, assign) CGFloat daysHeight;
 @property(nonatomic, readwrite, assign) UIOffset daysSpacing;

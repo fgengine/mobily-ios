@@ -178,14 +178,19 @@
 @protected
     NSCalendar* _calendar;
     BOOL _canShowMonth;
+    BOOL _canSelectMonth;
     UIEdgeInsets _monthMargin;
     CGFloat _monthHeight;
     CGFloat _monthSpacing;
     BOOL _canShowWeekdays;
+    BOOL _canSelectWeekdays;
     UIEdgeInsets _weekdaysMargin;
     CGFloat _weekdaysHeight;
     UIOffset _weekdaysSpacing;
     BOOL _canShowDays;
+    BOOL _canSelectDays;
+    BOOL _canSelectPreviousDays;
+    BOOL _canSelectNextDays;
     UIEdgeInsets _daysMargin;
     CGFloat _daysHeight;
     UIOffset _daysSpacing;
