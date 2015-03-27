@@ -86,6 +86,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataCellSwipeDirection) {
 @interface MobilyDataCellSwipe () {
 @protected
     UIPanGestureRecognizer* _panGestureRecognizer;
+    BOOL _swipeEnabled;
     MobilyDataSwipeCellStyle _swipeStyle;
     CGFloat _swipeThreshold;
     CGFloat _swipeVelocity;

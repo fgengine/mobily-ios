@@ -1298,7 +1298,7 @@
 - (void)_updateSuperviewConstraints {
     if(_topRefreshView != nil) {
         if(_constraintTopRefreshTop == nil) {
-            self.constraintTopRefreshTop = [NSLayoutConstraint constraintWithItem:_topRefreshView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+            self.constraintTopRefreshTop = [NSLayoutConstraint constraintWithItem:_topRefreshView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
         }
         if(_constraintTopRefreshLeft == nil) {
             self.constraintTopRefreshLeft = [NSLayoutConstraint constraintWithItem:_topRefreshView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
@@ -1317,7 +1317,7 @@
     }
     if(_bottomRefreshView != nil) {
         if(_constraintBottomRefreshBottom == nil) {
-            self.constraintBottomRefreshBottom = [NSLayoutConstraint constraintWithItem:_bottomRefreshView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+            self.constraintBottomRefreshBottom = [NSLayoutConstraint constraintWithItem:_bottomRefreshView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
         }
         if(_constraintBottomRefreshLeft == nil) {
             self.constraintBottomRefreshLeft = [NSLayoutConstraint constraintWithItem:_bottomRefreshView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];

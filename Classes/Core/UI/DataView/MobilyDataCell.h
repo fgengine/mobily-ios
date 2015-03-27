@@ -102,6 +102,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataSwipeCellStyle) {
 
 @property(nonatomic, readonly, strong) UIPanGestureRecognizer* panGestureRecognizer;
 
+@property(nonatomic, readonly, getter=isSwipeEnabled) BOOL swipeEnabled;
 @property(nonatomic, readwrite, assign) IBInspectable MobilyDataSwipeCellStyle swipeStyle;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeThreshold;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeVelocity;

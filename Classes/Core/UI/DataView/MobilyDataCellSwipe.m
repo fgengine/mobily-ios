@@ -42,6 +42,7 @@
 #pragma mark Synthesize
 
 @synthesize panGestureRecognizer = _panGestureRecognizer;
+@synthesize swipeEnabled = _swipeEnabled;
 @synthesize swipeStyle = _swipeStyle;
 @synthesize swipeThreshold = _swipeThreshold;
 @synthesize swipeVelocity = _swipeVelocity;
@@ -78,6 +79,7 @@
     
     self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_handlerPanGestureRecognizer:)];
     
+    _swipeEnabled = YES;
     _swipeStyle = MobilyDataSwipeCellStyleLeaves;
     _swipeThreshold = 2.0f;
     _swipeSpeed = 1050.0f;
@@ -615,7 +617,7 @@
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer {
     if(gestureRecognizer == _panGestureRecognizer) {
-        if((_swipeDragging == NO) && (_swipeDecelerating == NO)) {
+        if((_swipeEnabled == YES) && (_swipeDragging == NO) && (_swipeDecelerating == NO)) {
             if([self.item.view shouldBeganEditItem:self.item] == YES) {
                 CGPoint translation = [_panGestureRecognizer translationInView:self];
                 if(fabs(translation.x) >= fabs(translation.y)) {

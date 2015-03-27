@@ -73,8 +73,8 @@
 }
 
 - (void)setup {
-    _threshold = 64.0f;
-    _size = 128.0f;
+    _threshold = 40.0f;
+    _size = 52.0f;
     _velocity = 720.0f;
 }
 
