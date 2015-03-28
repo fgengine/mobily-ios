@@ -24,6 +24,20 @@
     [super setup];
 }
 
+#pragma mark Public
+
+- (void)didIdle {
+}
+
+- (void)didPull {
+}
+
+- (void)didRelease {
+}
+
+- (void)didLoading {
+}
+
 #pragma mark Private override
 
 - (void)_showAnimated:(BOOL)animated complete:(MobilyDataRefreshViewCompleteBlock)complete {
