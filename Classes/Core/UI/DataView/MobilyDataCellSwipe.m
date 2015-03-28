@@ -50,10 +50,12 @@
 @synthesize swipeDragging = _swipeDragging;
 @synthesize swipeDecelerating = _swipeDecelerating;
 @synthesize showedLeftSwipeView = _showedLeftSwipeView;
+@synthesize leftSwipeEnabled = _leftSwipeEnabled;
 @synthesize leftSwipeView = _leftSwipeView;
 @synthesize leftSwipeOffset = _leftSwipeOffset;
 @synthesize leftSwipeSize = _leftSwipeSize;
 @synthesize showedRightSwipeView = _showedRightSwipeView;
+@synthesize rightSwipeEnabled = _rightSwipeEnabled;
 @synthesize rightSwipeView = _rightSwipeView;
 @synthesize rightSwipeOffset = _rightSwipeOffset;
 @synthesize rightSwipeSize = _rightSwipeSize;
@@ -84,7 +86,9 @@
     _swipeThreshold = 2.0f;
     _swipeSpeed = 1050.0f;
     _swipeVelocity = 570.0f;
+    _leftSwipeEnabled = YES;
     _leftSwipeSize = -1.0f;
+    _rightSwipeEnabled = YES;
     _rightSwipeSize = -1.0f;
     _rootOffsetOfCenter = [self _rootViewOffsetOfCenterBySwipeProgress:0.0f];
     _leftSwipeOffset = [self _leftViewOffsetBySwipeProgress:0.0f];
@@ -622,13 +626,13 @@
                 CGPoint translation = [_panGestureRecognizer translationInView:self];
                 if(fabs(translation.x) >= fabs(translation.y)) {
                     if((_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (translation.x < 0.0f)) {
-                        return YES;
+                        return _leftSwipeEnabled;
                     } else if((_showedRightSwipeView == YES) && (_rightSwipeView != nil) && (translation.x > 0.0f)) {
-                        return YES;
+                        return _rightSwipeEnabled;
                     } else if((_showedLeftSwipeView == NO) && (_leftSwipeView != nil) && (translation.x > 0.0f)) {
-                        return YES;
+                        return _leftSwipeEnabled;
                     } else if((_showedRightSwipeView == NO) && (_rightSwipeView != nil) && (translation.x < 0.0f)) {
-                        return YES;
+                        return _rightSwipeEnabled;
                     }
                     return NO;
                 }

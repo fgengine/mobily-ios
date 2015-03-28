@@ -102,7 +102,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataSwipeCellStyle) {
 
 @property(nonatomic, readonly, strong) UIPanGestureRecognizer* panGestureRecognizer;
 
-@property(nonatomic, readonly, getter=isSwipeEnabled) BOOL swipeEnabled;
+@property(nonatomic, readwrite, getter=isSwipeEnabled) BOOL swipeEnabled;
 @property(nonatomic, readwrite, assign) IBInspectable MobilyDataSwipeCellStyle swipeStyle;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeThreshold;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeVelocity;
@@ -111,11 +111,13 @@ typedef NS_ENUM(NSUInteger, MobilyDataSwipeCellStyle) {
 @property(nonatomic, readonly, getter=isSwipeDecelerating) BOOL swipeDecelerating;
 
 @property(nonatomic, readwrite, assign, getter=isShowedLeftSwipeView) IBInspectable BOOL showedLeftSwipeView;
+@property(nonatomic, readwrite, assign, getter=isLeftSwipeEnabled) IBInspectable BOOL leftSwipeEnabled;
 @property(nonatomic, readwrite, strong) IBOutlet UIView* leftSwipeView;
 @property(nonatomic, readwrite, assign) CGFloat leftSwipeOffset;
 @property(nonatomic, readwrite, assign) CGFloat leftSwipeSize;
 
 @property(nonatomic, readwrite, assign, getter=isShowedRightSwipeView) IBInspectable BOOL showedRightSwipeView;
+@property(nonatomic, readwrite, assign, getter=isRightSwipeEnabled) IBInspectable BOOL rightSwipeEnabled;
 @property(nonatomic, readwrite, strong) IBOutlet UIView* rightSwipeView;
 @property(nonatomic, readwrite, assign) CGFloat rightSwipeOffset;
 @property(nonatomic, readwrite, assign) CGFloat rightSwipeSize;

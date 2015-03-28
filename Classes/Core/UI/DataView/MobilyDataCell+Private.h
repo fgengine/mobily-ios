@@ -94,10 +94,12 @@ typedef NS_ENUM(NSUInteger, MobilyDataCellSwipeDirection) {
     BOOL _swipeDragging;
     BOOL _swipeDecelerating;
     BOOL _showedLeftSwipeView;
+    BOOL _leftSwipeEnabled;
     UIView* _leftSwipeView;
     CGFloat _leftSwipeOffset;
     CGFloat _leftSwipeSize;
     BOOL _showedRightSwipeView;
+    BOOL _rightSwipeEnabled;
     UIView* _rightSwipeView;
     CGFloat _rightSwipeOffset;
     CGFloat _rightSwipeSize;
