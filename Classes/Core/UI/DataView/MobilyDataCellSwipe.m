@@ -201,12 +201,12 @@
 - (void)setPanGestureRecognizer:(UIPanGestureRecognizer*)panGestureRecognizer {
     if(_panGestureRecognizer != panGestureRecognizer) {
         if(_panGestureRecognizer != nil) {
-            [self removeGestureRecognizer:_panGestureRecognizer];
+            [_rootView removeGestureRecognizer:_panGestureRecognizer];
         }
         _panGestureRecognizer = panGestureRecognizer;
         if(_panGestureRecognizer != nil) {
             _panGestureRecognizer.delegate = self;
-            [self addGestureRecognizer:_panGestureRecognizer];
+            [_rootView addGestureRecognizer:_panGestureRecognizer];
         }
     }
 }
@@ -626,13 +626,13 @@
                 CGPoint translation = [_panGestureRecognizer translationInView:self];
                 if(fabs(translation.x) >= fabs(translation.y)) {
                     if((_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (translation.x < 0.0f)) {
-                        return _leftSwipeEnabled;
+                        return YES;
                     } else if((_showedRightSwipeView == YES) && (_rightSwipeView != nil) && (translation.x > 0.0f)) {
-                        return _rightSwipeEnabled;
+                        return YES;
                     } else if((_showedLeftSwipeView == NO) && (_leftSwipeView != nil) && (translation.x > 0.0f)) {
-                        return _leftSwipeEnabled;
+                        return YES;
                     } else if((_showedRightSwipeView == NO) && (_rightSwipeView != nil) && (translation.x < 0.0f)) {
-                        return _rightSwipeEnabled;
+                        return YES;
                     }
                     return NO;
                 }

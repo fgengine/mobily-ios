@@ -145,13 +145,13 @@
 - (void)setPressGestureRecognizer:(UILongPressGestureRecognizer*)pressGestureRecognizer {
     if(_pressGestureRecognizer != pressGestureRecognizer) {
         if(_pressGestureRecognizer != nil) {
-            [self removeGestureRecognizer:_pressGestureRecognizer];
+            [_rootView removeGestureRecognizer:_pressGestureRecognizer];
         }
         _pressGestureRecognizer = pressGestureRecognizer;
         if(_pressGestureRecognizer != nil) {
             _pressGestureRecognizer.minimumPressDuration = 0.01f;
             _pressGestureRecognizer.delegate = self;
-            [self addGestureRecognizer:_pressGestureRecognizer];
+            [_rootView addGestureRecognizer:_pressGestureRecognizer];
         }
     }
 }
@@ -159,12 +159,12 @@
 - (void)setTapGestureRecognizer:(UITapGestureRecognizer*)tapGestureRecognizer {
     if(_tapGestureRecognizer != tapGestureRecognizer) {
         if(_tapGestureRecognizer != nil) {
-            [self removeGestureRecognizer:_tapGestureRecognizer];
+            [_rootView removeGestureRecognizer:_tapGestureRecognizer];
         }
         _tapGestureRecognizer = tapGestureRecognizer;
         if(_tapGestureRecognizer != nil) {
             _tapGestureRecognizer.delegate = self;
-            [self addGestureRecognizer:_tapGestureRecognizer];
+            [_rootView addGestureRecognizer:_tapGestureRecognizer];
         }
     }
 }
@@ -172,12 +172,12 @@
 - (void)setLongPressGestureRecognizer:(UILongPressGestureRecognizer*)longPressGestureRecognizer {
     if(_longPressGestureRecognizer != longPressGestureRecognizer) {
         if(_longPressGestureRecognizer != nil) {
-            [self removeGestureRecognizer:_longPressGestureRecognizer];
+            [_rootView removeGestureRecognizer:_longPressGestureRecognizer];
         }
         _longPressGestureRecognizer = longPressGestureRecognizer;
         if(_longPressGestureRecognizer != nil) {
             _longPressGestureRecognizer.delegate = self;
-            [self addGestureRecognizer:_longPressGestureRecognizer];
+            [_rootView addGestureRecognizer:_longPressGestureRecognizer];
         }
     }
 }
