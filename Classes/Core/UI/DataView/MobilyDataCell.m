@@ -369,9 +369,6 @@
 #pragma mark UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
-    if((otherGestureRecognizer == _item.view.panGestureRecognizer) || (otherGestureRecognizer == _item.view.pinchGestureRecognizer)) {
-        return NO;
-    }
     return YES;
 }
 
