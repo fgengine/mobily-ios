@@ -228,12 +228,16 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 
 - (MobilyActivityView*)activity {
     if(_activity == nil) {
-        _activity = [MobilyActivityView activityViewInView:self style:MobilyActivityViewStyleCircle];
+        _activity = [self makeActivity];
     }
     return _activity;
 }
 
 #pragma mark Public
+
+- (MobilyActivityView*)makeActivity {
+    return [MobilyActivityView activityViewInView:self style:MobilyActivityViewStyleCircle];
+}
 
 #pragma mark Private
 
