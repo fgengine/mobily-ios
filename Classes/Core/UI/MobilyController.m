@@ -174,8 +174,8 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 - (void)setNeedUpdate {
     if(_updating == NO) {
         self.updating = YES;
+        [self clear];
         if(self.isAppeared == YES) {
-            [self clear];
             [self update];
         } else {
             self.needUpdate = YES;
@@ -187,6 +187,9 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
         }];
         self.updating = NO;
     }
+}
+
+- (void)setNeedClear {
 }
 
 - (void)update {
