@@ -338,10 +338,8 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (void)navigationController:(UINavigationController*)navigationController willShowViewController:(UIViewController*)viewController animated:(BOOL)animated {
     if([viewController isKindOfClass:MobilyController.class] == YES) {
-        if(self.navigationBarHidden == NO) {
-            MobilyController* mobilyController = (MobilyController*)viewController;
-            [navigationController setNavigationBarHidden:mobilyController.isNavigationBarHidden animated:animated];
-        }
+        MobilyController* mobilyController = (MobilyController*)viewController;
+        [navigationController setNavigationBarHidden:mobilyController.isNavigationBarHidden animated:animated];
     }
 }
 
