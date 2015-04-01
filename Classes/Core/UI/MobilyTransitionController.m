@@ -213,7 +213,7 @@
     [self _startTransition];
 }
 
-- (void)animationEnded:(BOOL __unused)transitionCompleted {
+- (void)animationEnded:(BOOL __unused)transitionComplete {
 }
 
 #pragma mark UIViewControllerInteractiveTransitioning

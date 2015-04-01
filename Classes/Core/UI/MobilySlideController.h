@@ -57,16 +57,16 @@ typedef void(^MobilySlideControllerBlock)();
 @property(nonatomic, readonly, getter=isSwipeDragging) BOOL swipeDragging;
 @property(nonatomic, readonly, getter=isSwipeDecelerating) BOOL swipeDecelerating;
 
-- (void)setBackgroundController:(UIViewController*)backgroundController animated:(BOOL)animated completed:(MobilySlideControllerBlock)completed;
-- (void)setLeftController:(UIViewController*)leftController animated:(BOOL)animated completed:(MobilySlideControllerBlock)completed;
-- (void)setCenterController:(UIViewController*)centerController animated:(BOOL)animated completed:(MobilySlideControllerBlock)completed;
-- (void)setRightController:(UIViewController*)rightController animated:(BOOL)animated completed:(MobilySlideControllerBlock)completed;
+- (void)setBackgroundController:(UIViewController*)backgroundController animated:(BOOL)animated complete:(MobilySlideControllerBlock)complete;
+- (void)setLeftController:(UIViewController*)leftController animated:(BOOL)animated complete:(MobilySlideControllerBlock)complete;
+- (void)setCenterController:(UIViewController*)centerController animated:(BOOL)animated complete:(MobilySlideControllerBlock)complete;
+- (void)setRightController:(UIViewController*)rightController animated:(BOOL)animated complete:(MobilySlideControllerBlock)complete;
 
-- (void)showLeftControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed;
-- (void)hideLeftControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed;
+- (void)showLeftControllerAnimated:(BOOL)animated complete:(MobilySlideControllerBlock)complete;
+- (void)hideLeftControllerAnimated:(BOOL)animated complete:(MobilySlideControllerBlock)complete;
 
-- (void)showRightControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed;
-- (void)hideRightControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed;
+- (void)showRightControllerAnimated:(BOOL)animated complete:(MobilySlideControllerBlock)complete;
+- (void)hideRightControllerAnimated:(BOOL)animated complete:(MobilySlideControllerBlock)complete;
 
 @end
 

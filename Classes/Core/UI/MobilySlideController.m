@@ -270,24 +270,24 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (void)setBackgroundController:(UIViewController*)backgroundController {
-    [self setBackgroundController:backgroundController animated:NO completed:nil];
+    [self setBackgroundController:backgroundController animated:NO complete:nil];
 }
 
 - (void)setLeftController:(UIViewController*)leftController {
-    [self setLeftController:leftController animated:NO completed:nil];
+    [self setLeftController:leftController animated:NO complete:nil];
 }
 
 - (void)setCenterController:(UIViewController*)centerController {
-    [self setCenterController:centerController animated:NO completed:nil];
+    [self setCenterController:centerController animated:NO complete:nil];
 }
 
 - (void)setRightController:(UIViewController*)rightController {
-    [self setRightController:rightController animated:NO completed:nil];
+    [self setRightController:rightController animated:NO complete:nil];
 }
 
 #pragma mark Public
 
-- (void)setBackgroundController:(UIViewController*)backgroundController animated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
+- (void)setBackgroundController:(UIViewController*)backgroundController animated:(BOOL)animated complete:(MobilySlideControllerBlock)complete {
     if(_backgroundController != backgroundController) {
         if(self.isViewLoaded == NO) {
             animated = NO;
@@ -301,14 +301,14 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             if((_backgroundController != nil) && (self.isViewLoaded == YES)) {
                 [self appearBackgroundController];
             }
-            if(completed != nil) {
-                completed();
+            if(complete != nil) {
+                complete();
             }
         }
     }
 }
 
-- (void)setLeftController:(UIViewController*)leftController animated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
+- (void)setLeftController:(UIViewController*)leftController animated:(BOOL)animated complete:(MobilySlideControllerBlock)complete {
     if(_leftController != leftController) {
         if(self.isViewLoaded == NO) {
             animated = NO;
@@ -322,14 +322,14 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             if((_leftController != nil) && (self.isViewLoaded == YES)) {
                 [self appearLeftController];
             }
-            if(completed != nil) {
-                completed();
+            if(complete != nil) {
+                complete();
             }
         }
     }
 }
 
-- (void)setCenterController:(UIViewController*)centerController animated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
+- (void)setCenterController:(UIViewController*)centerController animated:(BOOL)animated complete:(MobilySlideControllerBlock)complete {
     if(_centerController != centerController) {
         if(self.isViewLoaded == NO) {
             animated = NO;
@@ -343,14 +343,14 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             if((_centerController != nil) && (self.isViewLoaded == YES)) {
                 [self appearCenterController];
             }
-            if(completed != nil) {
-                completed();
+            if(complete != nil) {
+                complete();
             }
         }
     }
 }
 
-- (void)setRightController:(UIViewController*)rightController animated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
+- (void)setRightController:(UIViewController*)rightController animated:(BOOL)animated complete:(MobilySlideControllerBlock)complete {
     if(_rightController != rightController) {
         if(self.isViewLoaded == NO) {
             animated = NO;
@@ -364,14 +364,14 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             if((_rightController != nil) && (self.isViewLoaded == YES)) {
                 [self appearRightController];
             }
-            if(completed != nil) {
-                completed();
+            if(complete != nil) {
+                complete();
             }
         }
     }
 }
 
-- (void)showLeftControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
+- (void)showLeftControllerAnimated:(BOOL)animated complete:(MobilySlideControllerBlock)complete {
     if(_showedLeftController == NO) {
         if(self.isViewLoaded == NO) {
             animated = NO;
@@ -392,8 +392,8 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
                 _leftView.userInteractionEnabled = YES;
                 _centerView.userInteractionEnabled = NO;
                 _showedLeftController = YES;
-                if(completed != nil) {
-                    completed();
+                if(complete != nil) {
+                    complete();
                 }
             }];
         } else {
@@ -402,14 +402,14 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             _centerView.userInteractionEnabled = NO;
             _centerView.frame = centerFrame;
             _showedLeftController = YES;
-            if(completed != nil) {
-                completed();
+            if(complete != nil) {
+                complete();
             }
         }
     }
 }
 
-- (void)hideLeftControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
+- (void)hideLeftControllerAnimated:(BOOL)animated complete:(MobilySlideControllerBlock)complete {
     if(_showedLeftController == YES) {
         if(self.isViewLoaded == NO) {
             animated = NO;
@@ -430,8 +430,8 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
                 _leftView.userInteractionEnabled = NO;
                 _centerView.userInteractionEnabled = YES;
                 _showedLeftController = NO;
-                if(completed != nil) {
-                    completed();
+                if(complete != nil) {
+                    complete();
                 }
             }];
         } else {
@@ -440,14 +440,14 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             _centerView.userInteractionEnabled = YES;
             _centerView.frame = centerFrame;
             _showedLeftController = NO;
-            if(completed != nil) {
-                completed();
+            if(complete != nil) {
+                complete();
             }
         }
     }
 }
 
-- (void)showRightControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
+- (void)showRightControllerAnimated:(BOOL)animated complete:(MobilySlideControllerBlock)complete {
     if(_showedRightController == NO) {
         if(self.isViewLoaded == NO) {
             animated = NO;
@@ -468,8 +468,8 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
                 _centerView.userInteractionEnabled = NO;
                 _rightView.userInteractionEnabled = YES;
                 _showedRightController = YES;
-                if(completed != nil) {
-                    completed();
+                if(complete != nil) {
+                    complete();
                 }
             }];
         } else {
@@ -478,14 +478,14 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             _rightView.userInteractionEnabled = YES;
             _rightView.frame = rightFrame;
             _showedRightController = YES;
-            if(completed != nil) {
-                completed();
+            if(complete != nil) {
+                complete();
             }
         }
     }
 }
 
-- (void)hideRightControllerAnimated:(BOOL)animated completed:(MobilySlideControllerBlock)completed {
+- (void)hideRightControllerAnimated:(BOOL)animated complete:(MobilySlideControllerBlock)complete {
     if(_showedRightController == YES) {
         if(self.isViewLoaded == NO) {
             animated = NO;
@@ -506,8 +506,8 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
                 _centerView.userInteractionEnabled = YES;
                 _rightView.userInteractionEnabled = NO;
                 _showedRightController = NO;
-                if(completed != nil) {
-                    completed();
+                if(complete != nil) {
+                    complete();
                 }
             }];
         } else {
@@ -516,8 +516,8 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             _rightView.userInteractionEnabled = NO;
             _rightView.frame = rightFrame;
             _showedRightController = NO;
-            if(completed != nil) {
-                completed();
+            if(complete != nil) {
+                complete();
             }
         }
     }
@@ -673,9 +673,9 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 
 - (void)tapGestureHandle:(UITapGestureRecognizer* __unused)tapGesture {
     if(_showedLeftController == YES) {
-        [self hideLeftControllerAnimated:YES completed:nil];
+        [self hideLeftControllerAnimated:YES complete:nil];
     } else if(_showedRightController == YES) {
-        [self hideRightControllerAnimated:YES completed:nil];
+        [self hideRightControllerAnimated:YES complete:nil];
     }
 }
 

@@ -224,24 +224,24 @@
     [self setCacheData:data forKey:key memoryStorageInterval:_memoryStorageInterval discStorageInterval:_discStorageInterval];
 }
 
-- (void)setCacheData:(NSData*)data forKey:(NSString*)key completed:(MobilyCacheCompleted)completed {
-    [self setCacheData:data forKey:key memoryStorageInterval:_memoryStorageInterval discStorageInterval:_discStorageInterval completed:completed];
+- (void)setCacheData:(NSData*)data forKey:(NSString*)key complete:(MobilyCacheComplete)complete {
+    [self setCacheData:data forKey:key memoryStorageInterval:_memoryStorageInterval discStorageInterval:_discStorageInterval complete:complete];
 }
 
 - (void)setCacheData:(NSData*)data forKey:(NSString*)key memoryStorageInterval:(NSTimeInterval)memoryStorageInterval {
     [self setCacheData:data forKey:key memoryStorageInterval:memoryStorageInterval discStorageInterval:_discStorageInterval];
 }
 
-- (void)setCacheData:(NSData*)data forKey:(NSString*)key memoryStorageInterval:(NSTimeInterval)memoryStorageInterval completed:(MobilyCacheCompleted)completed {
-    [self setCacheData:data forKey:key memoryStorageInterval:memoryStorageInterval discStorageInterval:_discStorageInterval completed:completed];
+- (void)setCacheData:(NSData*)data forKey:(NSString*)key memoryStorageInterval:(NSTimeInterval)memoryStorageInterval complete:(MobilyCacheComplete)complete {
+    [self setCacheData:data forKey:key memoryStorageInterval:memoryStorageInterval discStorageInterval:_discStorageInterval complete:complete];
 }
 
 - (void)setCacheData:(NSData*)data forKey:(NSString*)key discStorageInterval:(NSTimeInterval)discStorageInterval {
     [self setCacheData:data forKey:key memoryStorageInterval:_memoryStorageInterval discStorageInterval:discStorageInterval];
 }
 
-- (void)setCacheData:(NSData*)data forKey:(NSString*)key discStorageInterval:(NSTimeInterval)discStorageInterval completed:(MobilyCacheCompleted)completed {
-    [self setCacheData:data forKey:key memoryStorageInterval:_memoryStorageInterval discStorageInterval:discStorageInterval completed:completed];
+- (void)setCacheData:(NSData*)data forKey:(NSString*)key discStorageInterval:(NSTimeInterval)discStorageInterval complete:(MobilyCacheComplete)complete {
+    [self setCacheData:data forKey:key memoryStorageInterval:_memoryStorageInterval discStorageInterval:discStorageInterval complete:complete];
 }
 
 - (void)setCacheData:(NSData*)data forKey:(NSString*)key memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discStorageInterval:(NSTimeInterval)discStorageInterval {
@@ -265,11 +265,11 @@
     }
 }
 
-- (void)setCacheData:(NSData*)data forKey:(NSString*)key memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discStorageInterval:(NSTimeInterval)discStorageInterval completed:(MobilyCacheCompleted)completed {
+- (void)setCacheData:(NSData*)data forKey:(NSString*)key memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discStorageInterval:(NSTimeInterval)discStorageInterval complete:(MobilyCacheComplete)complete {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self setCacheData:data forKey:key memoryStorageInterval:memoryStorageInterval discStorageInterval:discStorageInterval];
-        if(completed != nil) {
-            completed();
+        if(complete != nil) {
+            complete();
         }
     });
 }
@@ -287,10 +287,10 @@
     return result;
 }
 
-- (void)cacheDataForKey:(NSString*)key completed:(MobilyCacheDataForKey)completed {
-    if(completed != nil) {
+- (void)cacheDataForKey:(NSString*)key complete:(MobilyCacheDataForKey)complete {
+    if(complete != nil) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            completed([self cacheDataForKey:key]);
+            complete([self cacheDataForKey:key]);
         });
     }
 }
@@ -312,11 +312,11 @@
     }
 }
 
-- (void)removeCacheDataForKey:(NSString*)key completed:(MobilyCacheCompleted)completed {
+- (void)removeCacheDataForKey:(NSString*)key complete:(MobilyCacheComplete)complete {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self removeCacheDataForKey:key];
-        if(completed != nil) {
-            completed();
+        if(complete != nil) {
+            complete();
         }
     });
 }
@@ -333,11 +333,11 @@
     }
 }
 
-- (void)removeAllCachedDataCompleted:(MobilyCacheCompleted)completed {
+- (void)removeAllCachedDataComplete:(MobilyCacheComplete)complete {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self removeAllCachedData];
-        if(completed != nil) {
-            completed();
+        if(complete != nil) {
+            complete();
         }
     });
 }
