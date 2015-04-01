@@ -149,6 +149,8 @@
         }
         _pressGestureRecognizer = pressGestureRecognizer;
         if(_pressGestureRecognizer != nil) {
+            _pressGestureRecognizer.delaysTouchesBegan = YES;
+            _pressGestureRecognizer.delaysTouchesEnded = YES;
             _pressGestureRecognizer.minimumPressDuration = 0.01f;
             _pressGestureRecognizer.delegate = self;
             [_rootView addGestureRecognizer:_pressGestureRecognizer];
@@ -163,6 +165,8 @@
         }
         _tapGestureRecognizer = tapGestureRecognizer;
         if(_tapGestureRecognizer != nil) {
+            _tapGestureRecognizer.delaysTouchesBegan = YES;
+            _tapGestureRecognizer.delaysTouchesEnded = YES;
             _tapGestureRecognizer.delegate = self;
             [_rootView addGestureRecognizer:_tapGestureRecognizer];
         }
@@ -176,6 +180,8 @@
         }
         _longPressGestureRecognizer = longPressGestureRecognizer;
         if(_longPressGestureRecognizer != nil) {
+            _longPressGestureRecognizer.delaysTouchesBegan = YES;
+            _longPressGestureRecognizer.delaysTouchesEnded = YES;
             _longPressGestureRecognizer.delegate = self;
             [_rootView addGestureRecognizer:_longPressGestureRecognizer];
         }
@@ -370,6 +376,10 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
     return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldReceiveTouch:(UITouch*)touch {
+    return (touch.view == _rootView);
 }
 
 @end

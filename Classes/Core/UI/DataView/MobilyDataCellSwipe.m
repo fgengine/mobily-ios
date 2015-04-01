@@ -205,6 +205,8 @@
         }
         _panGestureRecognizer = panGestureRecognizer;
         if(_panGestureRecognizer != nil) {
+            _panGestureRecognizer.delaysTouchesBegan = YES;
+            _panGestureRecognizer.delaysTouchesEnded = YES;
             _panGestureRecognizer.delegate = self;
             [_rootView addGestureRecognizer:_panGestureRecognizer];
         }
