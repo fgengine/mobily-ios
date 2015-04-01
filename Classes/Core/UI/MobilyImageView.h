@@ -43,6 +43,7 @@ typedef void (^MobilyImageViewBlock)();
 
 @interface MobilyImageView : UIImageView< MobilyBuilderObject >
 
+@property(nonatomic, readwrite, assign) IBInspectable BOOL roundCorners;
 @property(nonatomic, readwrite, strong) IBInspectable UIImage* defaultImage;
 @property(nonatomic, readwrite, strong) IBInspectable NSURL* imageUrl;
 

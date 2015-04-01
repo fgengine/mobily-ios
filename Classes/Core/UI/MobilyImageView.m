@@ -123,7 +123,34 @@
     return [MobilyBuilderForm object:self forSelector:selector];
 }
 
+#pragma mark Property override
+
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    if(_roundCorners == YES) {
+        self.cornerRadius = ceil(MAX(frame.size.width - 1, frame.size.height - 1) * 0.5f);
+    }
+}
+
+- (void)setBounds:(CGRect)bounds {
+    [super setBounds:bounds];
+    if(_roundCorners == YES) {
+        self.cornerRadius = ceil(MAX(bounds.size.width - 1, bounds.size.height - 1) * 0.5f);
+    }
+}
+
 #pragma mark Property
+
+- (void)setRoundCorners:(BOOL)roundCorners {
+    if(_roundCorners != roundCorners) {
+        _roundCorners = roundCorners;
+        if(_roundCorners == YES) {
+            self.cornerRadius = ceil(MAX(self.frameWidth - 1, self.frameHeight - 1) * 0.5f);
+        } else {
+            self.cornerRadius = 0.0f;
+        }
+    }
+}
 
 - (void)setImage:(UIImage*)image {
     if(image == nil) {
