@@ -1423,7 +1423,7 @@
                 if(_bouncesLeft == NO) {
                     contentOffset.x = MAX(0.0f, contentOffset.x);
                 }
-                if(_bouncesRight == NO) {
+                if((_bouncesRight == NO) && (contentSize.width > FLT_EPSILON)) {
                     contentOffset.x = MIN(contentSize.width - frameSize.width, contentOffset.x);
                 }
             }
@@ -1431,7 +1431,7 @@
                 if(_bouncesTop == NO) {
                     contentOffset.y = MAX(0.0f, contentOffset.y);
                 }
-                if(_bouncesBottom == NO) {
+                if((_bouncesBottom == NO) && (contentSize.height > FLT_EPSILON)) {
                     contentOffset.y = MIN(contentSize.height - frameSize.height, contentOffset.y);
                 }
             }
