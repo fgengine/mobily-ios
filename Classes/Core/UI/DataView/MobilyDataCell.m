@@ -379,7 +379,10 @@
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldReceiveTouch:(UITouch*)touch {
-    return (touch.view == _rootView);
+    if((touch.view == _rootView) || (touch.view.canBecomeFirstResponder == NO)) {
+        return YES;
+    }
+    return NO;
 }
 
 @end
