@@ -54,7 +54,8 @@ typedef NS_ENUM(NSUInteger, MobilyDataRefreshViewState) {
     MobilyDataRefreshViewStateIdle,
     MobilyDataRefreshViewStatePull,
     MobilyDataRefreshViewStateRelease,
-    MobilyDataRefreshViewStateLoading
+    MobilyDataRefreshViewStateLoading,
+    MobilyDataRefreshViewStateDisable
 };
 
 /*----------------------------------------------*/

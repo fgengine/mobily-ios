@@ -37,6 +37,7 @@
 
 /*--------------------------------------------------*/
 
+@class MobilyDataView;
 @class MobilyDataItem;
 
 /*--------------------------------------------------*/
@@ -44,6 +45,7 @@
 @interface MobilyDataCell : UIView< MobilyObject, UIGestureRecognizerDelegate >
 
 @property(nonatomic, readonly, strong) NSString* identifier;
+@property(nonatomic, readonly, weak) MobilyDataView* view;
 @property(nonatomic, readwrite, weak) MobilyDataItem* item;
 @property(nonatomic, readwrite, assign, getter=isSelected) BOOL selected;
 @property(nonatomic, readwrite, assign, getter=isHighlighted) BOOL highlighted;
@@ -71,13 +73,9 @@
 - (BOOL)containsEventForIdentifier:(NSString*)identifier forKey:(id)key;
 
 - (void)fireEventForKey:(id)key byObject:(id)object;
-- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object;
 - (id)fireEventForKey:(id)key byObject:(id)object orDefault:(id)orDefault;
-- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object orDefault:(id)orDefault;
 - (void)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
-- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object;
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
-- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated;
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated;

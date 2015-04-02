@@ -750,6 +750,7 @@
         if(cell == nil) {
             cell = [[_registersViews[identifier] alloc] initWithIdentifier:identifier];
             if(cell != nil) {
+                cell.view = self;
                 __block NSUInteger viewIndex = NSNotFound;
                 [self.subviews enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
                     if([view isKindOfClass:MobilyDataCell.class] == YES) {
@@ -1125,6 +1126,7 @@
     [_queueCells each:^(NSString* identifier, NSArray* cells) {
         for(MobilyDataCell* cell in cells) {
             [cell removeFromSuperview];
+            cell.view = nil;
         }
     }];
     [_queueCells removeAllObjects];
@@ -1382,22 +1384,38 @@
     if(self.pagingEnabled == NO) {
         if(_refreshDragging == NO) {
             if(_topRefreshView != nil) {
-                self.canTopRefresh = ([_topRefreshView state] != MobilyDataRefreshViewStateLoading);
+                switch(_topRefreshView.state) {
+                    case MobilyDataRefreshViewStateLoading:
+                    case MobilyDataRefreshViewStateDisable: self.canTopRefresh = NO; break;
+                    default: self.canTopRefresh = YES; break;
+                }
             } else {
                 self.canTopRefresh = NO;
             }
             if(_bottomRefreshView != nil) {
-                self.canBottomRefresh = ([_bottomRefreshView state] != MobilyDataRefreshViewStateLoading);
+                switch(_bottomRefreshView.state) {
+                    case MobilyDataRefreshViewStateLoading:
+                    case MobilyDataRefreshViewStateDisable: self.canBottomRefresh = NO; break;
+                    default: self.canBottomRefresh = YES; break;
+                }
             } else {
                 self.canBottomRefresh = NO;
             }
             if(_leftRefreshView != nil) {
-                self.canLeftRefresh = ([_leftRefreshView state] != MobilyDataRefreshViewStateLoading);
+                switch(_leftRefreshView.state) {
+                    case MobilyDataRefreshViewStateLoading:
+                    case MobilyDataRefreshViewStateDisable: self.canLeftRefresh = NO; break;
+                    default: self.canLeftRefresh = YES; break;
+                }
             } else {
                 self.canLeftRefresh = NO;
             }
             if(_rightRefreshView != nil) {
-                self.canRightRefresh = ([_rightRefreshView state] != MobilyDataRefreshViewStateLoading);
+                switch(_rightRefreshView.state) {
+                    case MobilyDataRefreshViewStateLoading:
+                    case MobilyDataRefreshViewStateDisable: self.canRightRefresh = NO; break;
+                    default: self.canRightRefresh = YES; break;
+                }
             } else {
                 self.canRightRefresh = NO;
             }

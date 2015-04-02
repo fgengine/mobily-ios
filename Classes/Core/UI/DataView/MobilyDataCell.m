@@ -42,6 +42,7 @@
 #pragma mark Synthesize
 
 @synthesize identifier = _identifier;
+@synthesize view = _view;
 @synthesize item = _item;
 @synthesize selected = _selected;
 @synthesize highlighted = _highlighted;
@@ -290,43 +291,27 @@
 }
 
 - (BOOL)containsEventForKey:(id)key {
-    return [_item containsEventForKey:key];
+    return [_view containsEventForKey:key];
 }
 
 - (BOOL)containsEventForIdentifier:(NSString*)identifier forKey:(id)key {
-    return [_item containsEventForIdentifier:identifier forKey:key];
+    return [_view containsEventForIdentifier:identifier forKey:key];
 }
 
 - (void)fireEventForKey:(id)key byObject:(id)object {
-    [_item fireEventForKey:key bySender:self byObject:object];
-}
-
-- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object {
-    [_item fireEventForIdentifier:identifier forKey:key bySender:self byObject:object];
+    [_view fireEventForIdentifier:_identifier forKey:key bySender:self byObject:object];
 }
 
 - (id)fireEventForKey:(id)key byObject:(id)object orDefault:(id)orDefault {
-    return [_item fireEventForKey:key bySender:self byObject:object orDefault:orDefault];
-}
-
-- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object orDefault:(id)orDefault {
-    return [_item fireEventForIdentifier:identifier forKey:key bySender:self byObject:object orDefault:orDefault];
+    return [_view fireEventForIdentifier:_identifier forKey:key bySender:self byObject:object orDefault:orDefault];
 }
 
 - (void)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
-    [_item fireEventForKey:key bySender:sender byObject:object];
-}
-
-- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object {
-    [_item fireEventForIdentifier:identifier forKey:key bySender:sender byObject:object];
+    [_view fireEventForIdentifier:_identifier forKey:key bySender:sender byObject:object];
 }
 
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
-    return [_item fireEventForKey:key bySender:sender byObject:object orDefault:orDefault];
-}
-
-- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
-    return [_item fireEventForIdentifier:identifier forKey:key bySender:sender byObject:object orDefault:orDefault];
+    return [_view fireEventForIdentifier:_identifier forKey:key bySender:sender byObject:object orDefault:orDefault];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL __unused)animated {
@@ -361,7 +346,7 @@
 
 - (void)_handlerTapGestureRecognizer:(UITapGestureRecognizer*)gestureRecognizer {
     if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-        [_item.view _pressedItem:_item animated:YES];
+        [_view _pressedItem:_item animated:YES];
         [self fireEventForKey:MobilyDataCellPressed byObject:_item];
     }
 }

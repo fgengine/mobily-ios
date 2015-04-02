@@ -42,6 +42,7 @@
 @interface MobilyDataCell () {
 @protected
     NSString* _identifier;
+    __weak MobilyDataView* _view;
     __weak MobilyDataItem* _item;
     BOOL _selected;
     BOOL _highlighted;
@@ -58,7 +59,7 @@
     NSLayoutConstraint* _constraintRootViewHeight;
 }
 
-@property(nonatomic, readwrite, strong) NSString* identifier;
+@property(nonatomic, readwrite, weak) MobilyDataView* view;
 @property(nonatomic, readwrite, strong) UILongPressGestureRecognizer* pressGestureRecognizer;
 @property(nonatomic, readwrite, strong) UITapGestureRecognizer* tapGestureRecognizer;
 @property(nonatomic, readwrite, strong) UILongPressGestureRecognizer* longPressGestureRecognizer;

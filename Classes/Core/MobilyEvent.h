@@ -78,6 +78,8 @@ typedef id (^MobilyEventBlockType)(id sender, id object);
 
 @interface MobilyEvents: NSObject< MobilyObject >
 
+@property(nonatomic, readwrite, strong) id defaultGroup;
+
 - (void)addEventWithTarget:(id)target action:(SEL)action forKey:(id)key;
 - (void)addEventWithTarget:(id)target action:(SEL)action forGroup:(id)group forKey:(id)key;
 - (void)addEventWithBlock:(MobilyEventBlockType)block forKey:(id)key;

@@ -254,17 +254,17 @@
 }
 
 - (void)setup {
+    self.defaultGroup = NSNull.null;
     self.groupsEvents = NSMutableDictionary.dictionary;
 }
 
 - (void)dealloc {
-    self.groupsEvents = nil;
 }
 
 #pragma mark Public
 
 - (void)addEventWithTarget:(id)target action:(SEL)action forKey:(id)key {
-    [self addEventWithTarget:target action:action forGroup:[NSNull null] forKey:key];
+    [self addEventWithTarget:target action:action forGroup:_defaultGroup forKey:key];
 }
 
 - (void)addEventWithTarget:(id)target action:(SEL)action forGroup:(id)group forKey:(id)key {
@@ -272,7 +272,7 @@
 }
 
 - (void)addEventWithBlock:(MobilyEventBlockType)block forKey:(id)key {
-    [self addEventWithBlock:block forGroup:[NSNull null] forKey:key];
+    [self addEventWithBlock:block forGroup:_defaultGroup forKey:key];
 }
 
 - (void)addEventWithBlock:(MobilyEventBlockType)block forGroup:(id)group forKey:(id)key {
@@ -280,7 +280,7 @@
 }
 
 - (void)addEvent:(id< MobilyEvent >)event forKey:(id)key {
-    [self addEvent:event forGroup:[NSNull null] forKey:key];
+    [self addEvent:event forGroup:_defaultGroup forKey:key];
 }
 
 - (void)addEvent:(id< MobilyEvent >)event forGroup:(id)group forKey:(id)key {
@@ -294,7 +294,7 @@
 }
 
 - (void)removeEventForKey:(id)key {
-    [self removeEventInGroup:[NSNull null] forKey:key];
+    [self removeEventInGroup:_defaultGroup forKey:key];
 }
 
 - (void)removeEventInGroup:(id)group forKey:(id)key {
@@ -313,7 +313,11 @@
 }
 
 - (BOOL)containsEventForKey:(id)key {
-    return [self containsEventInGroup:[NSNull null] forKey:key];
+    NSMutableDictionary* events = _groupsEvents[_defaultGroup];
+    if(events != nil) {
+        return (events[key] != nil);
+    }
+    return NO;
 }
 
 - (BOOL)containsEventInGroup:(id)group forKey:(id)key {
@@ -325,7 +329,7 @@
 }
 
 - (void)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object {
-    [self fireEventInGroup:[NSNull null] forKey:key bySender:sender byObject:object orDefault:nil];
+    [self fireEventForKey:key bySender:sender byObject:object orDefault:nil];
 }
 
 - (void)fireEventInGroup:(id)group forKey:(id)key bySender:(id)sender byObject:(id)object {
@@ -333,12 +337,23 @@
 }
 
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
-    return [self fireEventInGroup:[NSNull null] forKey:key bySender:sender byObject:object orDefault:orDefault];
+    id< MobilyEvent > event = nil;
+    NSMutableDictionary* events = _groupsEvents[_defaultGroup];
+    if(events != nil) {
+        event = events[key];
+    }
+    if(event != nil) {
+        return [event fireSender:sender object:object];
+    }
+    return orDefault;
 }
 
 - (id)fireEventInGroup:(id)group forKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
     id< MobilyEvent > event = nil;
     NSMutableDictionary* events = _groupsEvents[group];
+    if(events == nil) {
+        events = _groupsEvents[_defaultGroup];
+    }
     if(events != nil) {
         event = events[key];
     }

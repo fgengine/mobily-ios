@@ -125,12 +125,12 @@
 - (void)setState:(MobilyDataRefreshViewState)state {
     if(_state != state) {
         _state = state;
-        
         switch(_state) {
             case MobilyDataRefreshViewStateIdle: [self didIdle]; break;
             case MobilyDataRefreshViewStatePull: [self didPull]; break;
             case MobilyDataRefreshViewStateRelease: [self didRelease]; break;
             case MobilyDataRefreshViewStateLoading: [self didLoading]; break;
+            default: break;
         }
     }
 }

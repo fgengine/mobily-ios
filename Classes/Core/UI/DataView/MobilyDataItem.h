@@ -74,13 +74,9 @@
 - (BOOL)containsEventForIdentifier:(NSString*)identifier forKey:(id)key;
 
 - (void)fireEventForKey:(id)key byObject:(id)object;
-- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object;
 - (id)fireEventForKey:(id)key byObject:(id)object orDefault:(id)orDefault;
-- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key byObject:(id)object orDefault:(id)orDefault;
 - (void)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
-- (void)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object;
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
-- (id)fireEventForIdentifier:(NSString*)identifier forKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
 
 - (void)didBeginUpdateAnimated:(BOOL)animated;
 - (void)didEndUpdateAnimated:(BOOL)animated;
