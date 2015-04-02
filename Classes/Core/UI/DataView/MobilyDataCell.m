@@ -359,6 +359,13 @@
 
 #pragma mark UIGestureRecognizerDelegate
 
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer {
+    if((_view.isDragging == YES) || (_view.isDecelerating == YES)) {
+        return NO;
+    }
+    return YES;
+}
+
 - (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
     return YES;
 }

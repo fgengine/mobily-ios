@@ -622,26 +622,29 @@
 #pragma mark UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer {
-    if(gestureRecognizer == _panGestureRecognizer) {
-        if((_swipeEnabled == YES) && (_swipeDragging == NO) && (_swipeDecelerating == NO)) {
-            if([self.item.view shouldBeganEditItem:self.item] == YES) {
-                CGPoint translation = [_panGestureRecognizer translationInView:self];
-                if(fabs(translation.x) >= fabs(translation.y)) {
-                    if((_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (translation.x < 0.0f)) {
-                        return YES;
-                    } else if((_showedRightSwipeView == YES) && (_rightSwipeView != nil) && (translation.x > 0.0f)) {
-                        return YES;
-                    } else if((_showedLeftSwipeView == NO) && (_leftSwipeView != nil) && (translation.x > 0.0f)) {
-                        return YES;
-                    } else if((_showedRightSwipeView == NO) && (_rightSwipeView != nil) && (translation.x < 0.0f)) {
-                        return YES;
+    BOOL result = [super gestureRecognizerShouldBegin:gestureRecognizer];
+    if(result == YES) {
+        if(gestureRecognizer == _panGestureRecognizer) {
+            if((_swipeEnabled == YES) && (_swipeDragging == NO) && (_swipeDecelerating == NO)) {
+                if([self.item.view shouldBeganEditItem:self.item] == YES) {
+                    CGPoint translation = [_panGestureRecognizer translationInView:self];
+                    if(fabs(translation.x) >= fabs(translation.y)) {
+                        if((_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (translation.x < 0.0f)) {
+                            return YES;
+                        } else if((_showedRightSwipeView == YES) && (_rightSwipeView != nil) && (translation.x > 0.0f)) {
+                            return YES;
+                        } else if((_showedLeftSwipeView == NO) && (_leftSwipeView != nil) && (translation.x > 0.0f)) {
+                            return YES;
+                        } else if((_showedRightSwipeView == NO) && (_rightSwipeView != nil) && (translation.x < 0.0f)) {
+                            return YES;
+                        }
+                        return NO;
                     }
-                    return NO;
                 }
             }
         }
     }
-    return [super gestureRecognizerShouldBegin:gestureRecognizer];
+    return result;
 }
 
 @end

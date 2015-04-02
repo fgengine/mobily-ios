@@ -1252,7 +1252,7 @@
                 [self _disappearItem:item];
             }
         } else {
-            for(MobilyDataItem* item in items) {
+            for(MobilyDataItem* item in originItems) {
                 MobilyDataCell* cell = item.cell;
                 if(cell != nil) {
                     cell.zPosition = 0.0f;
