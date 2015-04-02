@@ -158,14 +158,11 @@
         _cell = cell;
         if(_cell != nil) {
             [UIView performWithoutAnimation:^{
-                if(CGRectIsNull(_originFrame) == NO) {
-                    _cell.frame = _originFrame;
-                }
+                _cell.frame = self.frame;
                 _cell.selected = _selected;
                 _cell.highlighted = _highlighted;
                 _cell.item = self;
             }];
-            _cell.frame = self.frame;
         }
     }
 }
