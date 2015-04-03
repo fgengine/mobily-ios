@@ -33,67 +33,27 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_CORE
-#   import "MobilyCore.h"
-#   import "MobilyNS.h"
-#   import "MobilyCG.h"
-#   import "MobilyMap.h"
-#   import "MobilyGrid.h"
-#   import "MobilyEvent.h"
-#   import "MobilyTimer.h"
-#   import "MobilyTimeout.h"
-#   import "MobilyModel.h"
-#   import "MobilyModelJson.h"
-#   import "MobilyCache.h"
-#   import "MobilyTaskManager.h"
-#   import "MobilyHttpQuery.h"
-#   import "MobilyDownloader.h"
-#   import "MobilyRegExpParser.h"
-#   import "MobilyKVO.h"
-#   import "MobilyApiManager.h"
-#   import "MobilyApiProvider.h"
-#   import "MobilyApiRequest.h"
-#   import "MobilyApiResponse.h"
-#   import "MobilyUI.h"
-#   import "MobilyContext.h"
-#   import "MobilyApplication.h"
-#   import "MobilyWindow.h"
-#   import "MobilyController.h"
-#   import "MobilyNavigationController.h"
-#   import "MobilyTabBarController.h"
-#   import "MobilySlideController.h"
-#   import "MobilyViewController.h"
-#   import "MobilyView.h"
-#   import "MobilyButton.h"
-#   import "MobilyTextField.h"
-#   import "MobilyDateField.h"
-#   import "MobilyListField.h"
-#   import "MobilyImageView.h"
-#   import "MobilyBlurView.h"
-#   import "MobilyScrollView.h"
-#   import "MobilyTableView.h"
-#   import "MobilyFieldValidation.h"
-#   import "MobilyDataView.h"
-#   import "MobilyDataRefreshView.h"
-#   import "MobilyDataContainer.h"
-#   import "MobilyDataItem.h"
-#   import "MobilyDataCell.h"
-#   import "MobilyPopoverController.h"
-#   import "MobilyAV.h"
-#   import "MobilyAudioRecorder.h"
-#   import "MobilyAudioPlayer.h"
-#   import "MobilyGeoLocationManager.h"
-#   import "MobilySharedManager.h"
-#endif
+#import "MobilyUI.h"
 
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_SOCIAL
-#   import "MobilySocialManager.h"
-#   import "MobilySocialProvider.h"
-#   import "MobilySocialFacebookProvider.h"
-#   import "MobilySocialVKontakteProvider.h"
-#   import "MobilySocialTwitterProvider.h"
-#endif
+@interface MobilyPopoverController : NSObject <MobilyObject>
+
++ (instancetype)presentController:(UIViewController*)controller fromView:(UIView*)view arrowTargetView:(UIView*)arrowTargetView arrowDirection:(UIPopoverArrowDirection)arrowDirection animated:(BOOL)animated;
+
+- (instancetype)initWithContentViewController:(UIViewController *)viewController fromView:(UIView*)view arrowTargetView:(UIView*)arrowTargetView arrowDirection:(UIPopoverArrowDirection)arrowDirection;
+
+- (void)presentAnimated:(BOOL)animated;
+- (void)dismissAnimated:(BOOL)animated;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface UIViewController (MobilyPopoverController)
+
+@property(nonatomic, readwrite, strong) MobilyPopoverController* popoverController;
+
+@end
 
 /*--------------------------------------------------*/
