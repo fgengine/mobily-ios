@@ -113,7 +113,7 @@ static char const* const popoverControllerKey = "popoverControllerKey";
 
 @implementation UIViewController (MobilyPopoverController)
 
-- (void)setPopoverController:(MobilySlideController*)popoverController {
+- (void)setPopoverController:(MobilyPopoverController*)popoverController {
     objc_setAssociatedObject(self, popoverControllerKey, popoverController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
