@@ -58,12 +58,6 @@
 
 - (void)dealloc {
     [self unregisterAdjustmentResponder];
-    
-    self.objectName = nil;
-    self.objectParent = nil;
-    self.objectChilds = nil;
-    
-    self.rootView = nil;
 }
 
 #pragma mark MobilyBuilderObject
@@ -104,77 +98,29 @@
 
 #pragma mark Property
 
-- (void)setConstraintRootViewL:(NSLayoutConstraint*)constraintRootViewL {
-    if(_constraintRootViewL != constraintRootViewL) {
-        if(_constraintRootViewL != nil) {
-            [self removeConstraint:_constraintRootViewL];
-        }
-        _constraintRootViewL = constraintRootViewL;
-        if(_constraintRootViewL != nil) {
-            [self addConstraint:_constraintRootViewL];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRootViewL, constraintRootViewL, self, {
+}, {
+})
 
-- (void)setConstraintRootViewT:(NSLayoutConstraint*)constraintRootViewT {
-    if(_constraintRootViewT != constraintRootViewT) {
-        if(_constraintRootViewT != nil) {
-            [self removeConstraint:_constraintRootViewT];
-        }
-        _constraintRootViewT = constraintRootViewT;
-        if(_constraintRootViewT != nil) {
-            [self addConstraint:_constraintRootViewT];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRootViewT, constraintRootViewT, self, {
+}, {
+})
 
-- (void)setConstraintRootViewR:(NSLayoutConstraint*)constraintRootViewR {
-    if(_constraintRootViewR != constraintRootViewR) {
-        if(_constraintRootViewR != nil) {
-            [self removeConstraint:_constraintRootViewR];
-        }
-        _constraintRootViewR = constraintRootViewR;
-        if(_constraintRootViewR != nil) {
-            [self addConstraint:_constraintRootViewR];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRootViewR, constraintRootViewR, self, {
+}, {
+})
 
-- (void)setConstraintRootViewB:(NSLayoutConstraint*)constraintRootViewB {
-    if(_constraintRootViewB != constraintRootViewB) {
-        if(_constraintRootViewB != nil) {
-            [self removeConstraint:_constraintRootViewB];
-        }
-        _constraintRootViewB = constraintRootViewB;
-        if(_constraintRootViewB != nil) {
-            [self addConstraint:_constraintRootViewB];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRootViewB, constraintRootViewB, self, {
+}, {
+})
 
-- (void)setConstraintRootViewW:(NSLayoutConstraint*)constraintRootViewW {
-    if(_constraintRootViewW != constraintRootViewW) {
-        if(_constraintRootViewW != nil) {
-            [self removeConstraint:_constraintRootViewW];
-        }
-        _constraintRootViewW = constraintRootViewW;
-        if(_constraintRootViewW != nil) {
-            [self addConstraint:_constraintRootViewW];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRootViewW, constraintRootViewW, self, {
+}, {
+})
 
-- (void)setConstraintRootViewH:(NSLayoutConstraint*)constraintRootViewH {
-    if(_constraintRootViewH != constraintRootViewH) {
-        if(_constraintRootViewH != nil) {
-            [self removeConstraint:_constraintRootViewH];
-        }
-        _constraintRootViewH = constraintRootViewH;
-        if(_constraintRootViewH != nil) {
-            [self addConstraint:_constraintRootViewH];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRootViewH, constraintRootViewH, self, {
+}, {
+})
 
 - (void)setDirection:(MobilyScrollViewDirection)direction {
     if(_direction != direction) {

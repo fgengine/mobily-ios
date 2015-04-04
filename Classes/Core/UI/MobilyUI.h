@@ -496,3 +496,20 @@ typedef NS_ENUM(NSInteger, MobilyDeviceDisplay) {
 #define MOBILY_DEFINE_VALIDATE_TEXT_BORDER_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToTextBorderStyle]])
 
 /*--------------------------------------------------*/
+
+#define MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(property, field, view, unuseBlock, useBlock) \
+- (void)set##property:(NSLayoutConstraint*)field { \
+    if(_##field != field) { \
+        if(_##field != nil) { \
+            unuseBlock \
+            [view removeConstraint:_##field]; \
+        } \
+        _##field = field; \
+        if(_##field != nil) { \
+            useBlock \
+            [view addConstraint:_##field]; \
+        } \
+    } \
+}
+
+/*--------------------------------------------------*/

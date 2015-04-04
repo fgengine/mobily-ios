@@ -251,53 +251,21 @@
     }
 }
 
-- (void)setConstraintLeftSwipeViewOffsetX:(NSLayoutConstraint*)constraintLeftSwipeViewOffsetX {
-    if(_constraintLeftSwipeViewOffsetX != constraintLeftSwipeViewOffsetX) {
-        if(_constraintLeftSwipeViewOffsetX != nil) {
-            [self removeConstraint:_constraintLeftSwipeViewOffsetX];
-        }
-        _constraintLeftSwipeViewOffsetX = constraintLeftSwipeViewOffsetX;
-        if(_constraintLeftSwipeViewOffsetX != nil) {
-            [self addConstraint:_constraintLeftSwipeViewOffsetX];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintLeftSwipeViewOffsetX, constraintLeftSwipeViewOffsetX, self, {
+}, {
+})
 
-- (void)setConstraintLeftSwipeViewCenterY:(NSLayoutConstraint*)constraintLeftSwipeViewCenterY {
-    if(_constraintLeftSwipeViewCenterY != constraintLeftSwipeViewCenterY) {
-        if(_constraintLeftSwipeViewCenterY != nil) {
-            [self removeConstraint:_constraintLeftSwipeViewCenterY];
-        }
-        _constraintLeftSwipeViewCenterY = constraintLeftSwipeViewCenterY;
-        if(_constraintLeftSwipeViewCenterY != nil) {
-            [self addConstraint:_constraintLeftSwipeViewCenterY];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintLeftSwipeViewCenterY, constraintLeftSwipeViewCenterY, self, {
+}, {
+})
 
-- (void)setConstraintLeftSwipeViewWidth:(NSLayoutConstraint*)constraintLeftSwipeViewWidth {
-    if(_constraintLeftSwipeViewWidth != constraintLeftSwipeViewWidth) {
-        if(_constraintLeftSwipeViewWidth != nil) {
-            [self removeConstraint:_constraintLeftSwipeViewWidth];
-        }
-        _constraintLeftSwipeViewWidth = constraintLeftSwipeViewWidth;
-        if(_constraintLeftSwipeViewWidth != nil) {
-            [self addConstraint:_constraintLeftSwipeViewWidth];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintLeftSwipeViewWidth, constraintLeftSwipeViewWidth, self, {
+}, {
+})
 
-- (void)setConstraintLeftSwipeViewHeight:(NSLayoutConstraint*)constraintLeftSwipeViewHeight {
-    if(_constraintLeftSwipeViewHeight != constraintLeftSwipeViewHeight) {
-        if(_constraintLeftSwipeViewHeight != nil) {
-            [self removeConstraint:_constraintLeftSwipeViewHeight];
-        }
-        _constraintLeftSwipeViewHeight = constraintLeftSwipeViewHeight;
-        if(_constraintLeftSwipeViewHeight != nil) {
-            [self addConstraint:_constraintLeftSwipeViewHeight];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintLeftSwipeViewHeight, constraintLeftSwipeViewHeight, self, {
+}, {
+})
 
 - (void)setLeftSwipeOffset:(CGFloat)leftSwipeOffset {
     if(_leftSwipeOffset != leftSwipeOffset) {
@@ -338,53 +306,21 @@
     }
 }
 
-- (void)setConstraintRightSwipeViewOffsetX:(NSLayoutConstraint*)constraintRightSwipeViewOffsetX {
-    if(_constraintRightSwipeViewOffsetX != constraintRightSwipeViewOffsetX) {
-        if(_constraintRightSwipeViewOffsetX != nil) {
-            [self removeConstraint:_constraintRightSwipeViewOffsetX];
-        }
-        _constraintRightSwipeViewOffsetX = constraintRightSwipeViewOffsetX;
-        if(_constraintRightSwipeViewOffsetX != nil) {
-            [self addConstraint:_constraintRightSwipeViewOffsetX];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewOffsetX, constraintRightSwipeViewOffsetX, self, {
+}, {
+})
 
-- (void)setConstraintRightSwipeViewCenterY:(NSLayoutConstraint*)constraintRightSwipeViewCenterY {
-    if(_constraintRightSwipeViewCenterY != constraintRightSwipeViewCenterY) {
-        if(_constraintRightSwipeViewCenterY != nil) {
-            [self removeConstraint:_constraintRightSwipeViewCenterY];
-        }
-        _constraintRightSwipeViewCenterY = constraintRightSwipeViewCenterY;
-        if(_constraintRightSwipeViewCenterY != nil) {
-            [self addConstraint:_constraintRightSwipeViewCenterY];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewCenterY, constraintRightSwipeViewCenterY, self, {
+}, {
+})
 
-- (void)setConstraintRightSwipeViewWidth:(NSLayoutConstraint*)constraintRightSwipeViewWidth {
-    if(_constraintRightSwipeViewWidth != constraintRightSwipeViewWidth) {
-        if(_constraintRightSwipeViewWidth != nil) {
-            [self removeConstraint:_constraintRightSwipeViewWidth];
-        }
-        _constraintRightSwipeViewWidth = constraintRightSwipeViewWidth;
-        if(_constraintRightSwipeViewWidth != nil) {
-            [self addConstraint:_constraintRightSwipeViewWidth];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewWidth, constraintRightSwipeViewWidth, self, {
+}, {
+})
 
-- (void)setConstraintRightSwipeViewHeight:(NSLayoutConstraint*)constraintRightSwipeViewHeight {
-    if(_constraintRightSwipeViewHeight != constraintRightSwipeViewHeight) {
-        if(_constraintRightSwipeViewHeight != nil) {
-            [self removeConstraint:_constraintRightSwipeViewHeight];
-        }
-        _constraintRightSwipeViewHeight = constraintRightSwipeViewHeight;
-        if(_constraintRightSwipeViewHeight != nil) {
-            [self addConstraint:_constraintRightSwipeViewHeight];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constraintRightSwipeViewHeight, self, {
+}, {
+})
 
 - (void)setRightSwipeOffset:(CGFloat)rightSwipeOffset {
     if(_rightSwipeOffset != rightSwipeOffset) {

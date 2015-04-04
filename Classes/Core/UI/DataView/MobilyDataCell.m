@@ -203,53 +203,21 @@
     }
 }
 
-- (void)setConstraintRootViewCenterX:(NSLayoutConstraint*)constraintRootViewCenterX {
-    if(_constraintRootViewCenterX != constraintRootViewCenterX) {
-        if(_constraintRootViewCenterX != nil) {
-            [self removeConstraint:_constraintRootViewCenterX];
-        }
-        _constraintRootViewCenterX = constraintRootViewCenterX;
-        if(_constraintRootViewCenterX != nil) {
-            [self addConstraint:_constraintRootViewCenterX];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRootViewCenterX, constraintRootViewCenterX, self, {
+}, {
+})
 
-- (void)setConstraintRootViewCenterY:(NSLayoutConstraint*)constraintRootViewCenterY {
-    if(_constraintRootViewCenterY != constraintRootViewCenterY) {
-        if(_constraintRootViewCenterY != nil) {
-            [self removeConstraint:_constraintRootViewCenterY];
-        }
-        _constraintRootViewCenterY = constraintRootViewCenterY;
-        if(_constraintRootViewCenterY != nil) {
-            [self addConstraint:_constraintRootViewCenterY];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRootViewCenterY, constraintRootViewCenterY, self, {
+}, {
+})
 
-- (void)setConstraintRootViewWidth:(NSLayoutConstraint*)constraintRootViewWidth {
-    if(_constraintRootViewWidth != constraintRootViewWidth) {
-        if(_constraintRootViewWidth != nil) {
-            [self removeConstraint:_constraintRootViewWidth];
-        }
-        _constraintRootViewWidth = constraintRootViewWidth;
-        if(_constraintRootViewWidth != nil) {
-            [self addConstraint:_constraintRootViewWidth];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRootViewWidth, constraintRootViewWidth, self, {
+}, {
+})
 
-- (void)setConstraintRootViewHeight:(NSLayoutConstraint*)constraintRootViewHeight {
-    if(_constraintRootViewHeight != constraintRootViewHeight) {
-        if(_constraintRootViewHeight != nil) {
-            [self removeConstraint:_constraintRootViewHeight];
-        }
-        _constraintRootViewHeight = constraintRootViewHeight;
-        if(_constraintRootViewHeight != nil) {
-            [self addConstraint:_constraintRootViewHeight];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRootViewHeight, constraintRootViewHeight, self, {
+}, {
+})
 
 - (void)setRootOffsetOfCenter:(UIOffset)rootOffsetOfCenter {
     if(UIOffsetEqualToOffset(_rootOffsetOfCenter, rootOffsetOfCenter) == NO) {

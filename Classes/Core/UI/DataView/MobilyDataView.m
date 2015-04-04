@@ -359,55 +359,20 @@
     }
 }
 
-- (void)setConstraintTopRefreshTop:(NSLayoutConstraint*)constraintTopRefreshTop {
-    if(_constraintTopRefreshTop != constraintTopRefreshTop) {
-        if(_constraintTopRefreshTop != nil) {
-            [self.superview removeConstraint:_constraintTopRefreshTop];
-        }
-        _constraintTopRefreshTop = constraintTopRefreshTop;
-        if(_constraintTopRefreshTop != nil) {
-            _topRefreshView.constraintOffset = _constraintTopRefreshTop;
-            [self.superview addConstraint:_constraintTopRefreshTop];
-        }
-    }
-}
-
-- (void)setConstraintTopRefreshLeft:(NSLayoutConstraint*)constraintTopRefreshLeft {
-    if(_constraintTopRefreshLeft != constraintTopRefreshLeft) {
-        if(_constraintTopRefreshLeft != nil) {
-            [self.superview removeConstraint:_constraintTopRefreshLeft];
-        }
-        _constraintTopRefreshLeft = constraintTopRefreshLeft;
-        if(_constraintTopRefreshLeft != nil) {
-            [self.superview addConstraint:_constraintTopRefreshLeft];
-        }
-    }
-}
-
-- (void)setConstraintTopRefreshRight:(NSLayoutConstraint*)constraintTopRefreshRight {
-    if(_constraintTopRefreshRight != constraintTopRefreshRight) {
-        if(_constraintTopRefreshRight != nil) {
-            [self.superview removeConstraint:_constraintTopRefreshRight];
-        }
-        _constraintTopRefreshRight = constraintTopRefreshRight;
-        if(_constraintTopRefreshRight != nil) {
-            [self.superview addConstraint:_constraintTopRefreshRight];
-        }
-    }
-}
-
-- (void)setConstraintTopRefreshSize:(NSLayoutConstraint*)constraintTopRefreshSize {
-    if(_constraintTopRefreshSize != constraintTopRefreshSize) {
-        if(_constraintTopRefreshSize != nil) {
-            [self.superview removeConstraint:_constraintTopRefreshSize];
-        }
-        _constraintTopRefreshSize = constraintTopRefreshSize;
-        if(_constraintTopRefreshSize != nil) {
-            _topRefreshView.constraintSize = _constraintTopRefreshSize;
-            [self.superview addConstraint:_constraintTopRefreshSize];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintTopRefreshTop, constraintTopRefreshTop, self.superview, {
+}, {
+    _topRefreshView.constraintOffset = _constraintTopRefreshTop;
+})
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintTopRefreshLeft, constraintTopRefreshLeft, self.superview, {
+}, {
+})
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintTopRefreshRight, constraintTopRefreshRight, self.superview, {
+}, {
+})
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintTopRefreshSize, constraintTopRefreshSize, self.superview, {
+}, {
+    _topRefreshView.constraintSize = _constraintTopRefreshSize;
+})
 
 - (void)setBottomRefreshView:(MobilyDataRefreshView*)bottomRefreshView {
     if(_bottomRefreshView != bottomRefreshView) {
@@ -432,55 +397,23 @@
     }
 }
 
-- (void)setConstraintBottomRefreshBottom:(NSLayoutConstraint*)constraintBottomRefreshBottom {
-    if(_constraintBottomRefreshBottom != constraintBottomRefreshBottom) {
-        if(_constraintBottomRefreshBottom != nil) {
-            [self.superview removeConstraint:_constraintBottomRefreshBottom];
-        }
-        _constraintBottomRefreshBottom = constraintBottomRefreshBottom;
-        if(_constraintBottomRefreshBottom != nil) {
-            _bottomRefreshView.constraintOffset = _constraintBottomRefreshBottom;
-            [self.superview addConstraint:_constraintBottomRefreshBottom];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintBottomRefreshBottom, constraintBottomRefreshBottom, self.superview, {
+}, {
+    _bottomRefreshView.constraintOffset = _constraintBottomRefreshBottom;
+})
 
-- (void)setConstraintBottomRefreshLeft:(NSLayoutConstraint*)constraintBottomRefreshLeft {
-    if(_constraintBottomRefreshLeft != constraintBottomRefreshLeft) {
-        if(_constraintBottomRefreshLeft != nil) {
-            [self.superview removeConstraint:_constraintBottomRefreshLeft];
-        }
-        _constraintBottomRefreshLeft = constraintBottomRefreshLeft;
-        if(_constraintBottomRefreshLeft != nil) {
-            [self.superview addConstraint:_constraintBottomRefreshLeft];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintBottomRefreshLeft, constraintBottomRefreshLeft, self.superview, {
+}, {
+})
 
-- (void)setConstraintBottomRefreshRight:(NSLayoutConstraint*)constraintBottomRefreshRight {
-    if(_constraintBottomRefreshRight != constraintBottomRefreshRight) {
-        if(_constraintBottomRefreshRight != nil) {
-            [self.superview removeConstraint:_constraintBottomRefreshRight];
-        }
-        _constraintBottomRefreshRight = constraintBottomRefreshRight;
-        if(_constraintBottomRefreshRight != nil) {
-            [self.superview addConstraint:_constraintBottomRefreshRight];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintBottomRefreshRight, constraintBottomRefreshRight, self.superview, {
+}, {
+})
 
-- (void)setConstraintBottomRefreshSize:(NSLayoutConstraint*)constraintBottomRefreshSize {
-    if(_constraintBottomRefreshSize != constraintBottomRefreshSize) {
-        if(_constraintBottomRefreshSize != nil) {
-            [self.superview removeConstraint:_constraintBottomRefreshSize];
-        }
-        _constraintBottomRefreshSize = constraintBottomRefreshSize;
-        if(_constraintBottomRefreshSize != nil) {
-            _bottomRefreshView.constraintSize = _constraintBottomRefreshSize;
-            [self.superview addConstraint:_constraintBottomRefreshSize];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintBottomRefreshSize, constraintBottomRefreshSize, self.superview, {
+}, {
+    _bottomRefreshView.constraintSize = _constraintBottomRefreshSize;
+})
 
 - (void)setLeftRefreshView:(MobilyDataRefreshView*)leftRefreshView {
     if(_leftRefreshView != leftRefreshView) {
@@ -505,55 +438,23 @@
     }
 }
 
-- (void)setConstraintLeftRefreshTop:(NSLayoutConstraint*)constraintLeftRefreshTop {
-    if(_constraintLeftRefreshTop != constraintLeftRefreshTop) {
-        if(_constraintLeftRefreshTop != nil) {
-            [self.superview removeConstraint:_constraintLeftRefreshTop];
-        }
-        _constraintLeftRefreshTop = constraintLeftRefreshTop;
-        if(_constraintLeftRefreshTop != nil) {
-            [self.superview addConstraint:_constraintLeftRefreshTop];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintLeftRefreshTop, constraintLeftRefreshTop, self.superview, {
+}, {
+})
 
-- (void)setConstraintLeftRefreshBottom:(NSLayoutConstraint*)constraintLeftRefreshBottom {
-    if(_constraintLeftRefreshBottom != constraintLeftRefreshBottom) {
-        if(_constraintLeftRefreshBottom != nil) {
-            [self.superview removeConstraint:_constraintLeftRefreshBottom];
-        }
-        _constraintLeftRefreshBottom = constraintLeftRefreshBottom;
-        if(_constraintLeftRefreshBottom != nil) {
-            [self.superview addConstraint:_constraintLeftRefreshBottom];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintLeftRefreshBottom, constraintLeftRefreshBottom, self.superview, {
+}, {
+})
 
-- (void)setConstraintLeftRefreshLeft:(NSLayoutConstraint*)constraintLeftRefreshLeft {
-    if(_constraintLeftRefreshLeft != constraintLeftRefreshLeft) {
-        if(_constraintLeftRefreshLeft != nil) {
-            [self.superview removeConstraint:_constraintLeftRefreshLeft];
-        }
-        _constraintLeftRefreshLeft = constraintLeftRefreshLeft;
-        if(_constraintLeftRefreshLeft != nil) {
-            _leftRefreshView.constraintOffset = _constraintLeftRefreshLeft;
-            [self.superview addConstraint:_constraintLeftRefreshLeft];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintLeftRefreshLeft, constraintLeftRefreshLeft, self.superview, {
+}, {
+    _leftRefreshView.constraintOffset = _constraintLeftRefreshLeft;
+})
 
-- (void)setConstraintLeftRefreshSize:(NSLayoutConstraint*)constraintLeftRefreshSize {
-    if(_constraintLeftRefreshSize != constraintLeftRefreshSize) {
-        if(_constraintLeftRefreshSize != nil) {
-            [self.superview removeConstraint:_constraintLeftRefreshSize];
-        }
-        _constraintLeftRefreshSize = constraintLeftRefreshSize;
-        if(_constraintLeftRefreshSize != nil) {
-            _leftRefreshView.constraintSize = _constraintLeftRefreshSize;
-            [self.superview addConstraint:_constraintLeftRefreshSize];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintLeftRefreshSize, constraintLeftRefreshSize, self.superview, {
+}, {
+    _leftRefreshView.constraintSize = _constraintLeftRefreshSize;
+})
 
 - (void)setRightRefreshView:(MobilyDataRefreshView*)rightRefreshView {
     if(_rightRefreshView != rightRefreshView) {
@@ -578,55 +479,23 @@
     }
 }
 
-- (void)setConstraintRightRefreshTop:(NSLayoutConstraint*)constraintRightRefreshTop {
-    if(_constraintRightRefreshTop != constraintRightRefreshTop) {
-        if(_constraintRightRefreshTop != nil) {
-            [self.superview removeConstraint:_constraintRightRefreshTop];
-        }
-        _constraintRightRefreshTop = constraintRightRefreshTop;
-        if(_constraintRightRefreshTop != nil) {
-            [self.superview addConstraint:_constraintRightRefreshTop];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshTop, constraintRightRefreshTop, self.superview, {
+}, {
+})
 
-- (void)setConstraintRightRefreshBottom:(NSLayoutConstraint*)constraintRightRefreshBottom {
-    if(_constraintRightRefreshBottom != constraintRightRefreshBottom) {
-        if(_constraintRightRefreshBottom != nil) {
-            [self.superview removeConstraint:_constraintRightRefreshBottom];
-        }
-        _constraintRightRefreshBottom = constraintRightRefreshBottom;
-        if(_constraintRightRefreshBottom != nil) {
-            [self.superview addConstraint:_constraintRightRefreshBottom];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshBottom, constraintRightRefreshBottom, self.superview, {
+}, {
+})
 
-- (void)setConstraintRightRefreshRight:(NSLayoutConstraint*)constraintRightRefreshRight {
-    if(_constraintRightRefreshRight != constraintRightRefreshRight) {
-        if(_constraintRightRefreshRight != nil) {
-            [self.superview removeConstraint:_constraintRightRefreshRight];
-        }
-        _constraintRightRefreshRight = constraintRightRefreshRight;
-        if(_constraintRightRefreshRight != nil) {
-            _rightRefreshView.constraintOffset = _constraintRightRefreshRight;
-            [self.superview addConstraint:_constraintRightRefreshRight];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshRight, constraintRightRefreshRight, self.superview, {
+}, {
+    _rightRefreshView.constraintOffset = _constraintRightRefreshRight;
+})
 
-- (void)setConstraintRightRefreshSize:(NSLayoutConstraint*)constraintRightRefreshSize {
-    if(_constraintRightRefreshSize != constraintRightRefreshSize) {
-        if(_constraintRightRefreshSize != nil) {
-            [self.superview removeConstraint:_constraintRightRefreshSize];
-        }
-        _constraintRightRefreshSize = constraintRightRefreshSize;
-        if(_constraintRightRefreshSize != nil) {
-            _rightRefreshView.constraintSize = _constraintRightRefreshSize;
-            [self.superview addConstraint:_constraintRightRefreshSize];
-        }
-    }
-}
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRightRefreshSize, self.superview, {
+}, {
+    _rightRefreshView.constraintSize = _constraintRightRefreshSize;
+})
 
 #pragma mark Public
 

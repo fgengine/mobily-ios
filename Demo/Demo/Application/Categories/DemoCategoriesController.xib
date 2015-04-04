@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
@@ -17,15 +17,25 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VEl-0G-sdh" customClass="MobilyDataView">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                    <rect key="frame" x="0.0" y="50" width="320" height="430"/>
                 </scrollView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vyK-qm-Jdb" customClass="MobilySearchBar">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="tr8-zB-jYb"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="VEl-0G-sdh" secondAttribute="bottom" id="46I-Qg-8rp"/>
-                <constraint firstItem="VEl-0G-sdh" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Gkh-ZI-Ta0"/>
+                <constraint firstItem="vyK-qm-Jdb" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="5Kn-Ne-800"/>
                 <constraint firstAttribute="trailing" secondItem="VEl-0G-sdh" secondAttribute="trailing" id="Ldk-nl-UwR"/>
+                <constraint firstItem="VEl-0G-sdh" firstAttribute="top" secondItem="vyK-qm-Jdb" secondAttribute="bottom" id="XLS-F7-wg6"/>
                 <constraint firstItem="VEl-0G-sdh" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="d2O-vo-XG3"/>
+                <constraint firstAttribute="trailing" secondItem="vyK-qm-Jdb" secondAttribute="trailing" id="dk5-mX-tvv"/>
+                <constraint firstItem="vyK-qm-Jdb" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="mXz-hY-wUu"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="-800" y="-138"/>

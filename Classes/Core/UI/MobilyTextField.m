@@ -368,7 +368,7 @@ const NSString* kPhoneEmptySymbol = @"_";
 }
 
 - (void)pressedDone {
-    [self resignFirstResponder];
+    [self endEditing:NO];
 }
 
 @end

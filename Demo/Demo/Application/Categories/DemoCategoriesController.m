@@ -126,7 +126,7 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
     
     [self.dataView registerIdentifier:DemoCategoriesHeaderIdentifier withViewClass:DemoCategoriesHeaderCell.class];
     [self.dataView registerIdentifier:DemoCategoriesIdentifier withViewClass:DemoCategoriesCell.class];
-    [self.dataView registerEventWithTarget:self action:@selector(pressedDataCell:dataItem:) forKey:MobilyDataCellPressed];
+    [self.dataView registerEventWithTarget:self action:@selector(pressedDataCell:dataItem:) forIdentifier:DemoCategoriesIdentifier forKey:MobilyDataCellPressed];
     self.dataView.container = self.sections;
 }
 
