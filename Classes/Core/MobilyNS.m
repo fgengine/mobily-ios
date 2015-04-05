@@ -470,13 +470,17 @@
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
-- (NSDate*)addHonths:(NSInteger)months {
+- (NSDate*)addMonths:(NSInteger)months {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = [NSDateComponents new];
         components.month = months;
     }
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
+}
+
+- (NSDate*)addWeeks:(NSInteger)weeks {
+    return [self dateByAddingTimeInterval:(MOBILY_DAY * 7)*weeks];
 }
 
 - (NSDate*)addDays:(NSInteger)days {
