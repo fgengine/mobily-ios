@@ -358,6 +358,14 @@
 
 #pragma mark MobilySearchBarDelegate
 
+- (void)searchBarBeginSearch:(MobilySearchBar*)searchBar {
+    [_cell searchBarBeginSearch:searchBar];
+}
+
+- (void)searchBarEndSearch:(MobilySearchBar*)searchBar {
+    [_cell searchBarEndSearch:searchBar];
+}
+
 - (void)searchBarBeginEditing:(MobilySearchBar*)searchBar {
     [_cell searchBarBeginEditing:searchBar];
 }

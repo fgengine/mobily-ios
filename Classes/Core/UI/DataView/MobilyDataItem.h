@@ -64,7 +64,7 @@
 @property(nonatomic, readonly, strong) MobilyDataCell* cell;
 
 + (instancetype)itemWithDataItem:(MobilyDataItem*)dataItem;
-+ (instancetype)itemWithIdentifier:(NSString*)identifier order:(NSUInteger)order data:(id)data ;
++ (instancetype)itemWithIdentifier:(NSString*)identifier order:(NSUInteger)order data:(id)data;
 + (NSArray*)dataItemsWithIdentifier:(NSString*)identifier order:(NSUInteger)order dataArray:(NSArray*)dataArray;
 
 - (instancetype)initWithDataItem:(MobilyDataItem*)dataItem;

@@ -62,7 +62,6 @@ typedef void (^MobilyActivityViewBlock)();
 
 /*--------------------------------------------------*/
 
-IB_DESIGNABLE
 @interface MobilyActivityView : UIView < MobilyObject >
 
 @property(nonatomic, readonly, assign) MobilyActivityViewStyle style;

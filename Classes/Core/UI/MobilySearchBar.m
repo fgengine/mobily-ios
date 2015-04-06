@@ -265,6 +265,9 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
 
 - (void)changeTextField {
     if((_searching == NO) && (self.searchField.text.length > 0)) {
+        if([_delegate respondsToSelector:@selector(searchBarBeginSearch:)]) {
+            [_delegate searchBarBeginSearch:self];
+        }
         [self setSearching:YES animated:YES complete:nil];
     }
     if(self.searchField.text.length > 0) {
@@ -304,6 +307,9 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
         [_delegate searchBarEndEditing:self];
     }
     if(self.searchField.text.length < 1) {
+        if([_delegate respondsToSelector:@selector(searchBarEndSearch:)]) {
+            [_delegate searchBarEndSearch:self];
+        }
         [self setSearching:NO animated:YES complete:nil];
     }
     [self setEditing:NO animated:YES complete:nil];

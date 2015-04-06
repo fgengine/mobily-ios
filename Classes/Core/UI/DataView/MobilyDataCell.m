@@ -347,6 +347,12 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRootViewHeight, constraintRootV
 
 #pragma mark MobilySearchBarDelegate
 
+- (void)searchBarBeginSearch:(MobilySearchBar*)searchBar {
+}
+
+- (void)searchBarEndSearch:(MobilySearchBar*)searchBar {
+}
+
 - (void)searchBarBeginEditing:(MobilySearchBar*)searchBar {
 }
 

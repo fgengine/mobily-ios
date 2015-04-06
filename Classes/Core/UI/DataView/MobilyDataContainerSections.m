@@ -250,6 +250,18 @@
 
 #pragma mark MobilySearchBarDelegate
 
+- (void)searchBarBeginSearch:(MobilySearchBar*)searchBar {
+    for(MobilyDataContainer* section in _sections) {
+        [section searchBarBeginSearch:searchBar];
+    }
+}
+
+- (void)searchBarEndSearch:(MobilySearchBar*)searchBar {
+    for(MobilyDataContainer* section in _sections) {
+        [section searchBarEndSearch:searchBar];
+    }
+}
+
 - (void)searchBarBeginEditing:(MobilySearchBar*)searchBar {
     for(MobilyDataContainer* section in _sections) {
         [section searchBarBeginEditing:searchBar];

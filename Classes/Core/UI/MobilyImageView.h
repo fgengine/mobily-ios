@@ -41,7 +41,6 @@ typedef void (^MobilyImageViewBlock)();
 
 /*--------------------------------------------------*/
 
-IB_DESIGNABLE
 @interface MobilyImageView : UIImageView< MobilyBuilderObject >
 
 @property(nonatomic, readwrite, assign) IBInspectable BOOL roundCorners;

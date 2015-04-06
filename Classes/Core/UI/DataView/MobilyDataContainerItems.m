@@ -273,6 +273,18 @@
 
 #pragma mark MobilySearchBarDelegate
 
+- (void)searchBarBeginSearch:(MobilySearchBar*)searchBar {
+    for(MobilyDataItem* entry in _entries) {
+        [entry searchBarBeginSearch:searchBar];
+    }
+}
+
+- (void)searchBarEndSearch:(MobilySearchBar*)searchBar {
+    for(MobilyDataItem* entry in _entries) {
+        [entry searchBarEndSearch:searchBar];
+    }
+}
+
 - (void)searchBarBeginEditing:(MobilySearchBar*)searchBar {
     for(MobilyDataItem* entry in _entries) {
         [entry searchBarBeginEditing:searchBar];

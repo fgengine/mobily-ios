@@ -40,7 +40,7 @@
 @implementation MobilySpinnerViewFadingCircleAlt
 
 - (void)prepareAnimation {
-    NSTimeInterval beginTime = CACurrentMediaTime() ;
+    NSTimeInterval beginTime = CACurrentMediaTime();
     CGFloat squareSize = self.size * 0.25f;
     CGFloat squareSize2 = squareSize * 0.5f;
     CGFloat radius = self.size * 0.5f;

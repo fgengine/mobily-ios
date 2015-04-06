@@ -276,6 +276,12 @@
 
 #pragma mark MobilySearchBarDelegate
 
+- (void)searchBarBeginSearch:(MobilySearchBar*)searchBar {
+}
+
+- (void)searchBarEndSearch:(MobilySearchBar*)searchBar {
+}
+
 - (void)searchBarBeginEditing:(MobilySearchBar*)searchBar {
 }
 

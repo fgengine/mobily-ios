@@ -43,7 +43,6 @@
 
 /*--------------------------------------------------*/
 
-IB_DESIGNABLE
 @interface MobilySearchBar : MobilyBlurView
 
 @property(nonatomic, readwrite, assign, getter=isSearching) IBInspectable BOOL searching;
@@ -68,6 +67,9 @@ IB_DESIGNABLE
 @protocol MobilySearchBarDelegate < NSObject >
 
 @optional
+- (void)searchBarBeginSearch:(MobilySearchBar*)searchBar;
+- (void)searchBarEndSearch:(MobilySearchBar*)searchBar;
+
 - (void)searchBarBeginEditing:(MobilySearchBar*)searchBar;
 - (void)searchBar:(MobilySearchBar*)searchBar textChanged:(NSString*)textChanged;
 - (void)searchBarEndEditing:(MobilySearchBar*)searchBar;

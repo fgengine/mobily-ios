@@ -16,11 +16,8 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VEl-0G-sdh" customClass="MobilyDataView">
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VEl-0G-sdh" customClass="MobilyDataView">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
-                    <connections>
-                        <outlet property="searchBar" destination="vyK-qm-Jdb" id="shS-sp-dk0"/>
-                    </connections>
                 </scrollView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -31,15 +28,7 @@
                 <constraint firstItem="VEl-0G-sdh" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="sJx-SP-uQc"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-915" y="-320"/>
-        </view>
-        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vyK-qm-Jdb" customClass="MobilySearchBar">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
-            <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-            <nil key="simulatedStatusBarMetrics"/>
-            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-561" y="-535"/>
+            <point key="canvasLocation" x="-953" y="-220"/>
         </view>
     </objects>
 </document>

@@ -82,7 +82,11 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
     BOOL _animating;
     BOOL _updating;
     BOOL _invalidLayout;
+    BOOL _showedSearchBar;
+    MobilyDataViewSearchBarStyle _searchBarStyle;
+    CGFloat _searchBarOverlayLastOffset;
     __weak MobilySearchBar* _searchBar;
+    UIEdgeInsets _searchBarInsets;
     __weak NSLayoutConstraint* _constraintSearchBarTop;
     __weak NSLayoutConstraint* _constraintSearchBarLeft;
     __weak NSLayoutConstraint* _constraintSearchBarRight;
@@ -107,6 +111,9 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
     __weak NSLayoutConstraint* _constraintRightRefreshBottom;
     __weak NSLayoutConstraint* _constraintRightRefreshRight;
     __weak NSLayoutConstraint* _constraintRightRefreshSize;
+    UIEdgeInsets _refreshViewInsets;
+    BOOL _searchBarDragging;
+    BOOL _canSearchBar;
     BOOL _refreshDragging;
     BOOL _canTopRefresh;
     BOOL _canBottomRefresh;
@@ -129,6 +136,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
 @property(nonatomic, readwrite, assign, getter=isUpdating) BOOL updating;
 @property(nonatomic, readwrite, assign) BOOL invalidLayout;
 
+@property(nonatomic, readwrite, assign) CGFloat searchBarOverlayLastOffset;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintSearchBarTop;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintSearchBarLeft;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintSearchBarRight;
@@ -153,6 +161,8 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintRightRefreshRight;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintRightRefreshSize;
 
+@property(nonatomic, readwrite, assign, getter=isSearchBarDragging) BOOL searchBarDragging;
+@property(nonatomic, readwrite, assign) BOOL canSearchBar;
 @property(nonatomic, readwrite, assign, getter=isRefreshDragging) BOOL refreshDragging;
 @property(nonatomic, readwrite, assign) BOOL canTopRefresh;
 @property(nonatomic, readwrite, assign) BOOL canBottomRefresh;
@@ -178,6 +188,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
 - (void)_layoutForVisible;
 
 - (void)_updateSuperviewConstraints;
+- (void)_updateInsets;
 
 - (void)_willBeginDragging;
 - (void)_didScrollDragging:(BOOL)dragging decelerating:(BOOL)decelerating;
@@ -186,6 +197,18 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
 - (void)_willBeginDecelerating;
 - (void)_didEndDecelerating;
 - (void)_didEndScrollingAnimation;
+
+- (void)_showSearchBarAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_hideSearchBarAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
+
+- (void)_showTopRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_hideTopRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_showBottomRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_hideBottomRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_showLeftRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_hideLeftRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_showRightRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_hideRightRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
 
 - (void)_batchUpdate:(MobilyDataViewUpdateBlock)update animated:(BOOL)animated;
 - (void)_batchComplete:(MobilyDataViewUpdateBlock)complete animated:(BOOL)animated;

@@ -69,7 +69,6 @@ typedef NS_ENUM(NSUInteger, MobilyDataRefreshViewState) {
 @property(nonatomic, readonly, assign) MobilyDataRefreshViewState state;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat size;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat threshold;
-@property(nonatomic, readwrite, assign) IBInspectable CGFloat velocity;
 
 - (void)didIdle;
 - (void)didPull;

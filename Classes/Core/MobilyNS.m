@@ -124,7 +124,7 @@
         static NSDateFormatter* formatter = nil;
         if(formatter == nil) {
             formatter = [NSDateFormatter new];
-            formatter.dateFormat = NSLocalizedString(@"M/d/yy", @"Date format: 7/27/09") ;
+            formatter.dateFormat = NSLocalizedString(@"M/d/yy", @"Date format: 7/27/09");
             formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")];
             formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         }

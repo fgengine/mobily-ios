@@ -49,11 +49,18 @@ typedef void(^MobilyDataViewCompleteBlock)(BOOL finished);
 
 /*--------------------------------------------------*/
 
+typedef NS_ENUM(NSUInteger, MobilyDataViewSearchBarStyle) {
+    MobilyDataViewSearchBarStyleStatic,
+    MobilyDataViewSearchBarStyleInside,
+    MobilyDataViewSearchBarStyleOverlay
+};
+
+/*--------------------------------------------------*/
+
 @protocol MobilyDataRefreshView;
 
 /*--------------------------------------------------*/
 
-IB_DESIGNABLE
 @interface MobilyDataView : UIScrollView< MobilyBuilderObject, MobilySearchBarDelegate >
 
 @property(nonatomic, readwrite, assign) IBInspectable BOOL allowsSelection;
@@ -78,11 +85,16 @@ IB_DESIGNABLE
 @property(nonatomic, readonly, assign, getter=isAnimating) BOOL animating;
 @property(nonatomic, readonly, assign, getter=isUpdating) BOOL updating;
 
+@property(nonatomic, readwrite, assign, getter=isShowedSearchBar) BOOL showedSearchBar;
+@property(nonatomic, readwrite, assign) MobilyDataViewSearchBarStyle searchBarStyle;
 @property(nonatomic, readwrite, weak) IBOutlet MobilySearchBar* searchBar;
+@property(nonatomic, readwrite, assign) UIEdgeInsets searchBarInsets;
+
 @property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* topRefreshView;
 @property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* bottomRefreshView;
 @property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* leftRefreshView;
 @property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* rightRefreshView;
+@property(nonatomic, readwrite, assign) UIEdgeInsets refreshViewInsets;
 
 - (void)registerIdentifier:(NSString*)identifier withViewClass:(Class)viewClass;
 - (void)unregisterIdentifier:(NSString*)identifier;
@@ -157,6 +169,9 @@ IB_DESIGNABLE
 - (void)scrollToItem:(MobilyDataItem*)item scrollPosition:(MobilyDataViewPosition)scrollPosition animated:(BOOL)animated;
 - (void)scrollToRect:(CGRect)rect scrollPosition:(MobilyDataViewPosition)scrollPosition animated:(BOOL)animated;
 
+- (void)showSearchBarAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
+- (void)hideSearchBarAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
+
 - (void)showTopRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
 - (void)hideTopRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
 - (void)showBottomRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete;
@@ -172,6 +187,17 @@ IB_DESIGNABLE
 
 extern NSString* MobilyDataViewSelectItem;
 extern NSString* MobilyDataViewDeselectItem;
+
+/*--------------------------------------------------*/
+
+extern NSString* MobilyDataViewSearchBegin;
+extern NSString* MobilyDataViewSearchEnd;
+extern NSString* MobilyDataViewSearchBeginEditing;
+extern NSString* MobilyDataViewSearchTextChanged;
+extern NSString* MobilyDataViewSearchEndEditing;
+extern NSString* MobilyDataViewSearchPressedClear;
+extern NSString* MobilyDataViewSearchPressedReturn;
+extern NSString* MobilyDataViewSearchPressedCancel;
 
 /*--------------------------------------------------*/
 
