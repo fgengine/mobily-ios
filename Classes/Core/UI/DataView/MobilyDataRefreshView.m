@@ -158,15 +158,29 @@
 
 #pragma mark Private
 
-- (void)_showAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataRefreshViewCompleteBlock)complete {
+- (void)_showAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataRefreshViewCompleteBlock)complete {
     self.state = MobilyDataRefreshViewStateLoading;
     
     UIEdgeInsets refreshViewInsets = _view.refreshViewInsets;
-    switch (_type) {
-        case MobilyDataRefreshViewTypeTop: refreshViewInsets.top = _size; break;
-        case MobilyDataRefreshViewTypeBottom: refreshViewInsets.bottom = _size; break;
-        case MobilyDataRefreshViewTypeLeft: refreshViewInsets.left = _size; break;
-        case MobilyDataRefreshViewTypeRight: refreshViewInsets.right = _size; break;
+    switch(_type) {
+        case MobilyDataRefreshViewTypeTop:
+            refreshViewInsets.top = _size;
+            if(offset != NULL) {
+                *offset = -_size;
+            }
+            break;
+        case MobilyDataRefreshViewTypeBottom:
+            refreshViewInsets.bottom = _size;
+            break;
+        case MobilyDataRefreshViewTypeLeft:
+            refreshViewInsets.left = _size;
+            if(offset != NULL) {
+                *offset = -_size;
+            }
+            break;
+        case MobilyDataRefreshViewTypeRight:
+            refreshViewInsets.right = _size;
+            break;
     }
     CGFloat fromConstraint = _constraintSize.constant;
     CGFloat toConstraint = _size;
@@ -193,15 +207,21 @@
     }
 }
 
-- (void)_hideAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataRefreshViewCompleteBlock)complete {
-    self.state = MobilyDataRefreshViewStateIdle;
-    
+- (void)_hideAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataRefreshViewCompleteBlock)complete {
     UIEdgeInsets refreshViewInsets = _view.refreshViewInsets;
-    switch (_type) {
-        case MobilyDataRefreshViewTypeTop: refreshViewInsets.top = 0.0f; break;
-        case MobilyDataRefreshViewTypeBottom: refreshViewInsets.bottom = 0.0f; break;
-        case MobilyDataRefreshViewTypeLeft: refreshViewInsets.left = 0.0f; break;
-        case MobilyDataRefreshViewTypeRight: refreshViewInsets.right = 0.0f; break;
+    switch(_type) {
+        case MobilyDataRefreshViewTypeTop:
+            refreshViewInsets.top = 0.0f;
+            break;
+        case MobilyDataRefreshViewTypeBottom:
+            refreshViewInsets.bottom = 0.0f;
+            break;
+        case MobilyDataRefreshViewTypeLeft:
+            refreshViewInsets.left = 0.0f;
+            break;
+        case MobilyDataRefreshViewTypeRight:
+            refreshViewInsets.right = 0.0f;
+            break;
     }
     CGFloat fromConstraint = _constraintSize.constant;
     CGFloat toConstraint = 0.0f;
@@ -215,11 +235,13 @@
                              [self.superview layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
+                             self.state = MobilyDataRefreshViewStateIdle;
                              if(complete != nil) {
                                  complete(finished);
                              }
                          }];
     } else {
+        self.state = MobilyDataRefreshViewStateIdle;
         _view.refreshViewInsets = refreshViewInsets;
         _constraintSize.constant = toConstraint;
         if(complete != nil) {

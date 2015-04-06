@@ -106,12 +106,19 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 - (void)setup {
     [super setup];
     
-    self.swipeThreshold = 2.0f;
-    self.swipeSpeed = 1050.0f;
-    self.swipeVelocity = 570.0f;
-    
-    self.leftControllerWidth = 280.0f;
-    self.rightControllerWidth = 280.0f;
+    if([UIDevice isIPhone] == YES) {
+        _swipeThreshold = 2.0f;
+        _swipeSpeed = 1050.0f;
+        _swipeVelocity = 570.0f;
+        _leftControllerWidth = 280.0f;
+        _rightControllerWidth = 280.0f;
+    } else if([UIDevice isIPad] == YES) {
+        _swipeThreshold = 2.0f;
+        _swipeSpeed = 1600.0f;
+        _swipeVelocity = 1200.0f;
+        _leftControllerWidth = 320.0f;
+        _rightControllerWidth = 320.0f;
+    }
 }
 
 - (void)dealloc {

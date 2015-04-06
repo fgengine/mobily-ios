@@ -63,6 +63,10 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewSearchBarStyle) {
 
 @interface MobilyDataView : UIScrollView< MobilyBuilderObject, MobilySearchBarDelegate >
 
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat velocity;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat velocityMin;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat velocityMax;
+
 @property(nonatomic, readwrite, assign) IBInspectable BOOL allowsSelection;
 @property(nonatomic, readwrite, assign) IBInspectable BOOL allowsOnceSelection;
 @property(nonatomic, readwrite, assign) IBInspectable BOOL allowsMultipleSelection;
