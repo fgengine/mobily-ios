@@ -43,19 +43,20 @@
 
 /*--------------------------------------------------*/
 
+IB_DESIGNABLE
 @interface MobilySearchBar : MobilyBlurView
 
-@property(nonatomic, readwrite, assign, getter=isSearching) BOOL searching;
+@property(nonatomic, readwrite, assign, getter=isSearching) IBInspectable BOOL searching;
 @property(nonatomic, readonly, assign, getter=isEditing) BOOL editing;
-@property(nonatomic, readwrite, assign) UIEdgeInsets margin;
-@property(nonatomic, readwrite, assign) CGFloat spacing;
+@property(nonatomic, readwrite, assign) IBInspectable UIEdgeInsets margin;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat spacing;
 
-@property(nonatomic, readwrite, weak) id< MobilySearchBarDelegate > delegate;
+@property(nonatomic, readwrite, weak) IBOutlet id< MobilySearchBarDelegate > delegate;
 
-@property(nonatomic, readonly, strong) MobilyTextField* searchField;
+@property(nonatomic, readonly, weak) IBOutlet MobilyTextField* searchField;
 
 @property(nonatomic, readwrite, assign) BOOL showCancelButton;
-@property(nonatomic, readonly, strong) MobilyButton* cancelButton;
+@property(nonatomic, readonly, weak) IBOutlet MobilyButton* cancelButton;
 
 - (void)setSearching:(BOOL)searching animated:(BOOL)animated complete:(MobilySimpleBlock)complete;
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated complete:(MobilySimpleBlock)complete;

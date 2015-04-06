@@ -36,6 +36,7 @@
 #import "MobilyUI.h"
 #import "MobilyEvent.h"
 #import "MobilyBuilder.h"
+#import "MobilySearchBar.h"
 
 /*--------------------------------------------------*/
 

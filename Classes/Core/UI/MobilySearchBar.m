@@ -44,14 +44,14 @@
     UIEdgeInsets _margin;
     CGFloat _spacing;
     __weak id< MobilySearchBarDelegate > _delegate;
-    MobilyTextField* _searchField;
+    __weak MobilyTextField* _searchField;
     BOOL _showCancelButton;
-    MobilyButton* _cancelButton;
+    __weak MobilyButton* _cancelButton;
     NSMutableArray* _contentConstraints;
 }
 
-@property(nonatomic, readwrite, strong) MobilyTextField* searchField;
-@property(nonatomic, readwrite, strong) MobilyButton* cancelButton;
+@property(nonatomic, readwrite, weak) MobilyTextField* searchField;
+@property(nonatomic, readwrite, weak) MobilyButton* cancelButton;
 
 - (void)updateAnimated:(BOOL)animated complete:(MobilySimpleBlock)complete;
 
@@ -89,6 +89,18 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
 
 - (void)dealloc {
 }
+
+#pragma mark InterfaceBuilder
+
+#if TARGET_INTERFACE_BUILDER
+- (void)prepareForInterfaceBuilder {
+    [super prepareForInterfaceBuilder];
+    if(self.searchField != nil) {
+    }
+    if(self.cancelButton != nil) {
+    }
+}
+#endif
 
 #pragma mark Property
 

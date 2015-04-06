@@ -38,6 +38,7 @@
 
 /*--------------------------------------------------*/
 
+IB_DESIGNABLE
 @interface MobilyWindow : UIWindow< MobilyBuilderObject >
 
 @property(nonatomic, readwrite, assign, getter=isAutomaticallyHideKeyboard) BOOL automaticallyHideKeyboard;

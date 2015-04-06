@@ -71,6 +71,10 @@
 @synthesize animating = _animating;
 @synthesize updating = _updating;
 @synthesize invalidLayout = _invalidLayout;
+@synthesize searchBar = _searchBar;
+@synthesize constraintSearchBarTop = _constraintSearchBarTop;
+@synthesize constraintSearchBarLeft = _constraintSearchBarLeft;
+@synthesize constraintSearchBarRight = _constraintSearchBarRight;
 @synthesize topRefreshView = _topRefreshView;
 @synthesize constraintTopRefreshTop = _constraintTopRefreshTop;
 @synthesize constraintTopRefreshLeft = _constraintTopRefreshLeft;
@@ -336,6 +340,37 @@
     return result;
 }
 
+- (void)setSearchBar:(MobilySearchBar*)searchBar {
+    if(_searchBar != searchBar) {
+        if(_searchBar != nil) {
+            self.constraintSearchBarTop = nil;
+            self.constraintSearchBarLeft = nil;
+            self.constraintSearchBarRight = nil;
+            [_searchBar removeFromSuperview];
+        }
+        _searchBar = searchBar;
+        if(_searchBar != nil) {
+            _searchBar.translatesAutoresizingMaskIntoConstraints = NO;
+            if(self.superview != nil) {
+                [self.superview insertSubview:_searchBar aboveSubview:self];
+                [self _updateSuperviewConstraints];
+            }
+        }
+    }
+}
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintSearchBarTop, constraintSearchBarTop, self.superview, {
+}, {
+})
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintSearchBarLeft, constraintSearchBarLeft, self.superview, {
+}, {
+})
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintSearchBarRight, constraintSearchBarRight, self.superview, {
+}, {
+})
+
 - (void)setTopRefreshView:(MobilyDataRefreshView*)topRefreshView {
     if(_topRefreshView != topRefreshView) {
         if(_topRefreshView != nil) {
@@ -363,12 +398,15 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintTopRefreshTop, constraintTopRef
 }, {
     _topRefreshView.constraintOffset = _constraintTopRefreshTop;
 })
+
 MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintTopRefreshLeft, constraintTopRefreshLeft, self.superview, {
 }, {
 })
+
 MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintTopRefreshRight, constraintTopRefreshRight, self.superview, {
 }, {
 })
+
 MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintTopRefreshSize, constraintTopRefreshSize, self.superview, {
 }, {
     _topRefreshView.constraintSize = _constraintTopRefreshSize;
@@ -1167,6 +1205,21 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 }
 
 - (void)_updateSuperviewConstraints {
+    if(_searchBar != nil) {
+        if(_constraintSearchBarTop == nil) {
+            self.constraintSearchBarTop = [NSLayoutConstraint constraintWithItem:_searchBar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+        }
+        if(_constraintSearchBarLeft == nil) {
+            self.constraintSearchBarLeft = [NSLayoutConstraint constraintWithItem:_searchBar attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
+        }
+        if(_constraintSearchBarRight == nil) {
+            self.constraintSearchBarRight = [NSLayoutConstraint constraintWithItem:_searchBar attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
+        }
+    } else {
+        self.constraintSearchBarTop = nil;
+        self.constraintSearchBarLeft = nil;
+        self.constraintSearchBarRight = nil;
+    }
     if(_topRefreshView != nil) {
         if(_constraintTopRefreshTop == nil) {
             self.constraintTopRefreshTop = [NSLayoutConstraint constraintWithItem:_topRefreshView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
@@ -1711,6 +1764,32 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
     if(complete != nil) {
         complete();
     }
+}
+
+#pragma mark MobilySearchBarDelegate
+
+- (void)searchBarBeginEditing:(MobilySearchBar*)searchBar {
+    [_container searchBarBeginEditing:searchBar];
+}
+
+- (void)searchBar:(MobilySearchBar*)searchBar textChanged:(NSString*)textChanged {
+    [_container searchBar:searchBar textChanged:textChanged];
+}
+
+- (void)searchBarEndEditing:(MobilySearchBar*)searchBar {
+    [_container searchBarEndEditing:searchBar];
+}
+
+- (void)searchBarPressedClear:(MobilySearchBar*)searchBar {
+    [_container searchBarPressedClear:searchBar];
+}
+
+- (void)searchBarPressedReturn:(MobilySearchBar*)searchBar {
+    [_container searchBarPressedReturn:searchBar];
+}
+
+- (void)searchBarPressedCancel:(MobilySearchBar*)searchBar {
+    [_container searchBarPressedCancel:searchBar];
 }
 
 @end

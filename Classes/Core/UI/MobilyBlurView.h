@@ -37,6 +37,7 @@
 
 /*--------------------------------------------------*/
 
+IB_DESIGNABLE
 @interface MobilyBlurView : UIView< MobilyBuilderObject >
 
 @property(nonatomic, readwrite, assign, getter = isBlurEnabled) IBInspectable BOOL blurEnabled;

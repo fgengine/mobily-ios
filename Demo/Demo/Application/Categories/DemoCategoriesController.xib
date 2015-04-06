@@ -17,28 +17,29 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VEl-0G-sdh" customClass="MobilyDataView">
-                    <rect key="frame" x="0.0" y="50" width="320" height="430"/>
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                    <connections>
+                        <outlet property="searchBar" destination="vyK-qm-Jdb" id="shS-sp-dk0"/>
+                    </connections>
                 </scrollView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vyK-qm-Jdb" customClass="MobilySearchBar">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
-                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="50" id="tr8-zB-jYb"/>
-                    </constraints>
-                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="VEl-0G-sdh" secondAttribute="bottom" id="46I-Qg-8rp"/>
-                <constraint firstItem="vyK-qm-Jdb" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="5Kn-Ne-800"/>
                 <constraint firstAttribute="trailing" secondItem="VEl-0G-sdh" secondAttribute="trailing" id="Ldk-nl-UwR"/>
-                <constraint firstItem="VEl-0G-sdh" firstAttribute="top" secondItem="vyK-qm-Jdb" secondAttribute="bottom" id="XLS-F7-wg6"/>
                 <constraint firstItem="VEl-0G-sdh" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="d2O-vo-XG3"/>
-                <constraint firstAttribute="trailing" secondItem="vyK-qm-Jdb" secondAttribute="trailing" id="dk5-mX-tvv"/>
-                <constraint firstItem="vyK-qm-Jdb" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="mXz-hY-wUu"/>
+                <constraint firstItem="VEl-0G-sdh" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="sJx-SP-uQc"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-800" y="-138"/>
+            <point key="canvasLocation" x="-915" y="-320"/>
+        </view>
+        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vyK-qm-Jdb" customClass="MobilySearchBar">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+            <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-561" y="-535"/>
         </view>
     </objects>
 </document>

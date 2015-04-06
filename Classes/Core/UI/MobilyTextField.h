@@ -38,6 +38,7 @@
 
 /*--------------------------------------------------*/
 
+IB_DESIGNABLE
 @interface MobilyTextField : UITextField< MobilyBuilderObject, MobilyValidatedObject >
 
 @property(nonatomic, readwrite, assign) IBInspectable BOOL hiddenToolbar;

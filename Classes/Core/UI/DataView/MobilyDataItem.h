@@ -43,7 +43,7 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataItem : NSObject< MobilyObject, NSCopying >
+@interface MobilyDataItem : NSObject< MobilyObject, NSCopying, MobilySearchBarDelegate >
 
 @property(nonatomic, readonly, weak) MobilyDataView* view;
 @property(nonatomic, readonly, weak) MobilyDataContainer* parent;

@@ -67,7 +67,7 @@ typedef NS_OPTIONS(NSUInteger, MobilyDataContainerAlign) {
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataContainer : NSObject< MobilyObject >
+@interface MobilyDataContainer : NSObject< MobilyObject, MobilySearchBarDelegate >
 
 @property(nonatomic, readonly, weak) MobilyDataView* view;
 @property(nonatomic, readonly, weak) MobilyDataContainer* parent;

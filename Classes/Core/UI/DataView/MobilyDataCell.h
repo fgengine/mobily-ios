@@ -42,7 +42,7 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataCell : UIView< MobilyObject, UIGestureRecognizerDelegate >
+@interface MobilyDataCell : UIView< MobilyObject, UIGestureRecognizerDelegate, MobilySearchBarDelegate >
 
 @property(nonatomic, readonly, strong) NSString* identifier;
 @property(nonatomic, readonly, weak) MobilyDataView* view;

@@ -37,10 +37,8 @@
 
 /*--------------------------------------------------*/
 
+IB_DESIGNABLE
 @interface MobilyView : UIView< MobilyBuilderObject >
-
-
-
 @end
 
 /*--------------------------------------------------*/

@@ -41,6 +41,7 @@
 
 /*--------------------------------------------------*/
 
+IB_DESIGNABLE
 @interface MobilyListField : MobilyTextField< MobilyBuilderObject >
 
 @property(nonatomic, readwrite, strong) NSArray* items;

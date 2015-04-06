@@ -345,6 +345,26 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRootViewHeight, constraintRootV
     return NO;
 }
 
+#pragma mark MobilySearchBarDelegate
+
+- (void)searchBarBeginEditing:(MobilySearchBar*)searchBar {
+}
+
+- (void)searchBar:(MobilySearchBar*)searchBar textChanged:(NSString*)textChanged {
+}
+
+- (void)searchBarEndEditing:(MobilySearchBar*)searchBar {
+}
+
+- (void)searchBarPressedClear:(MobilySearchBar*)searchBar {
+}
+
+- (void)searchBarPressedReturn:(MobilySearchBar*)searchBar {
+}
+
+- (void)searchBarPressedCancel:(MobilySearchBar*)searchBar {
+}
+
 @end
 
 /*--------------------------------------------------*/

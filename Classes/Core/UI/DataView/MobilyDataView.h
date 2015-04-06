@@ -53,7 +53,8 @@ typedef void(^MobilyDataViewCompleteBlock)(BOOL finished);
 
 /*--------------------------------------------------*/
 
-@interface MobilyDataView : UIScrollView< MobilyBuilderObject >
+IB_DESIGNABLE
+@interface MobilyDataView : UIScrollView< MobilyBuilderObject, MobilySearchBarDelegate >
 
 @property(nonatomic, readwrite, assign) IBInspectable BOOL allowsSelection;
 @property(nonatomic, readwrite, assign) IBInspectable BOOL allowsOnceSelection;
@@ -77,10 +78,11 @@ typedef void(^MobilyDataViewCompleteBlock)(BOOL finished);
 @property(nonatomic, readonly, assign, getter=isAnimating) BOOL animating;
 @property(nonatomic, readonly, assign, getter=isUpdating) BOOL updating;
 
-@property(nonatomic, readwrite, strong) IBOutlet MobilyDataRefreshView* topRefreshView;
-@property(nonatomic, readwrite, strong) IBOutlet MobilyDataRefreshView* bottomRefreshView;
-@property(nonatomic, readwrite, strong) IBOutlet MobilyDataRefreshView* leftRefreshView;
-@property(nonatomic, readwrite, strong) IBOutlet MobilyDataRefreshView* rightRefreshView;
+@property(nonatomic, readwrite, weak) IBOutlet MobilySearchBar* searchBar;
+@property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* topRefreshView;
+@property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* bottomRefreshView;
+@property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* leftRefreshView;
+@property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* rightRefreshView;
 
 - (void)registerIdentifier:(NSString*)identifier withViewClass:(Class)viewClass;
 - (void)unregisterIdentifier:(NSString*)identifier;

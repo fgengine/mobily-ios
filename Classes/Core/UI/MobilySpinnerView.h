@@ -37,6 +37,7 @@
 
 /*--------------------------------------------------*/
 
+IB_DESIGNABLE
 @interface MobilySpinnerView : UIView < MobilyObject >
 
 @property(nonatomic, readwrite, strong) UIColor* color;

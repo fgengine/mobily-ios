@@ -356,6 +356,32 @@
     }
 }
 
+#pragma mark MobilySearchBarDelegate
+
+- (void)searchBarBeginEditing:(MobilySearchBar*)searchBar {
+    [_cell searchBarBeginEditing:searchBar];
+}
+
+- (void)searchBar:(MobilySearchBar*)searchBar textChanged:(NSString*)textChanged {
+    [_cell searchBar:searchBar textChanged:textChanged];
+}
+
+- (void)searchBarEndEditing:(MobilySearchBar*)searchBar {
+    [_cell searchBarEndEditing:searchBar];
+}
+
+- (void)searchBarPressedClear:(MobilySearchBar*)searchBar {
+    [_cell searchBarPressedClear:searchBar];
+}
+
+- (void)searchBarPressedReturn:(MobilySearchBar*)searchBar {
+    [_cell searchBarPressedReturn:searchBar];
+}
+
+- (void)searchBarPressedCancel:(MobilySearchBar*)searchBar {
+    [_cell searchBarPressedCancel:searchBar];
+}
+
 @end
 
 /*--------------------------------------------------*/
