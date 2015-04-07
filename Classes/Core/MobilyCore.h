@@ -49,6 +49,14 @@
 
 /*--------------------------------------------------*/
 
+#ifdef MOBILY_SOURCE
+#   define MOBILY_REQUIRES_PROPERTY_DEFINITIONS     NS_REQUIRES_PROPERTY_DEFINITIONS
+#else
+#   define MOBILY_REQUIRES_PROPERTY_DEFINITIONS
+#endif
+
+/*--------------------------------------------------*/
+
 #define MOBILY_DEBUG_LEVEL_ERROR                    0x01
 #define MOBILY_DEBUG_LEVEL_WARNING                  0x02
 #define MOBILY_DEBUG_LEVEL_INFO                     0x04

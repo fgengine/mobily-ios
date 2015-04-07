@@ -32,6 +32,8 @@
 /* OTHER DEALINGS IN THE SOFTWARE.                  */
 /*                                                  */
 /*--------------------------------------------------*/
+#define MOBILY_SOURCE
+/*--------------------------------------------------*/
 
 #import "MobilyViewController.h"
 #import "MobilyBuilder.h"

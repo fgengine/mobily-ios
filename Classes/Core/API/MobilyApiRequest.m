@@ -32,6 +32,8 @@
 /* OTHER DEALINGS IN THE SOFTWARE.                  */
 /*                                                  */
 /*--------------------------------------------------*/
+#define MOBILY_SOURCE
+/*--------------------------------------------------*/
 
 #import "MobilyApiRequest.h"
 #import "MobilyApiResponse.h"

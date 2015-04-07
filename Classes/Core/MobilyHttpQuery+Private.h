@@ -32,43 +32,34 @@
 /* OTHER DEALINGS IN THE SOFTWARE.                  */
 /*                                                  */
 /*--------------------------------------------------*/
-#define MOBILY_SOURCE
-/*--------------------------------------------------*/
 
-#import "MobilySpinnerView.h"
+#import "MobilyHttpQuery.h"
 
 /*--------------------------------------------------*/
 
-@implementation MobilySpinnerViewCircleFlip
-
-- (void)prepareAnimation {
-    CALayer* circle = [CALayer layer];
-    circle.frame = CGRectInset(CGRectMake(0.0f, 0.0f, self.size, self.size), 2.0f, 2.0f);
-    circle.backgroundColor = self.color.CGColor;
-    circle.cornerRadius = self.size * 0.5f;
-    circle.anchorPoint = CGPointMake(0.5f, 0.5f);
-    circle.anchorPointZ = 0.5;
-    circle.shouldRasterize = YES;
-    circle.rasterizationScale = UIScreen.mainScreen.scale;
-    [self.layer addSublayer:circle];
+@interface MobilyHttpQuery () < NSURLConnectionDelegate, NSURLConnectionDataDelegate > {
+@protected
+    NSString* _certificateFilename;
+    NSError* _error;
+    __weak id< MobilyHttpQueryDelegate > _delegate;
+    MobilyHttpQueryBlock _startCallback;
+    MobilyHttpQueryBlock _cancelCallback;
+    MobilyHttpQueryBlock _finishCallback;
+    MobilyHttpQueryErrorBlock _errorCallback;
     
-    CAKeyframeAnimation* circleAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
-    circleAnimation.removedOnCompletion = NO;
-    circleAnimation.repeatCount = HUGE_VALF;
-    circleAnimation.duration = 1.2;
-    circleAnimation.keyTimes = @[@(0.0), @(0.5), @(1.0)];
-    circleAnimation.timingFunctions = @[
-        [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
-        [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
-        [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]
-    ];
-    circleAnimation.values = @[
-        [NSValue valueWithCATransform3D:MobilyTransform3DRotationWithPerspective(1.0f / 120.0f, 0.0f, 0.0f, 0.0f, 0.0f)],
-        [NSValue valueWithCATransform3D:MobilyTransform3DRotationWithPerspective(1.0f / 120.0f, M_PI, 0.0f, 1.0f, 0.0f)],
-        [NSValue valueWithCATransform3D:MobilyTransform3DRotationWithPerspective(1.0f / 120.0f, M_PI, 0.0f, 0.0f, 1.0f)]
-    ];
-    [circle addAnimation:circleAnimation forKey:@"circle"];
+    NSURLConnection* _connection;
+    NSMutableURLRequest* _request;
+    NSHTTPURLResponse* _response;
+    NSMutableData* _mutableResponseData;
 }
+
+@property(nonatomic, readwrite, strong) NSURLConnection* connection;
+@property(nonatomic, readwrite, strong) NSMutableURLRequest* request;
+@property(nonatomic, readwrite, strong) NSHTTPURLResponse* response;
+@property(nonatomic, readwrite, strong) NSMutableData* mutableResponseData;
+
+- (NSDictionary*)_formDataFromDictionary:(NSDictionary*)dictionary;
+- (void)_formDataFromDictionary:(NSMutableDictionary*)dictionary value:(id)value keyPath:(NSString*)keyPath;
 
 @end
 

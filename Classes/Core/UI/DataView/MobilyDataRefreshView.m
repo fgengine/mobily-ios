@@ -32,6 +32,8 @@
 /* OTHER DEALINGS IN THE SOFTWARE.                  */
 /*                                                  */
 /*--------------------------------------------------*/
+#define MOBILY_SOURCE
+/*--------------------------------------------------*/
 
 #import "MobilyDataRefreshView+Private.h"
 
@@ -44,6 +46,7 @@
 @synthesize objectName = _objectName;
 @synthesize objectParent = _objectParent;
 @synthesize objectChilds = _objectChilds;
+@synthesize type = _type;
 @synthesize view = _view;
 @synthesize constraintOffset = _constraintOffset;
 @synthesize constraintSize = _constraintSize;
@@ -115,8 +118,6 @@
 }
 
 #pragma mark UIView
-
-
 
 #pragma mark Property
 

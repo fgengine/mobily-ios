@@ -61,6 +61,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewSearchBarStyle) {
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyDataView : UIScrollView< MobilyBuilderObject, MobilySearchBarDelegate >
 
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat velocity;

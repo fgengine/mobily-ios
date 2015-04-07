@@ -42,6 +42,7 @@
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyDataCell : UIView< MobilyObject, UIGestureRecognizerDelegate, MobilySearchBarDelegate >
 
 @property(nonatomic, readonly, strong) NSString* identifier;

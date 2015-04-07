@@ -32,12 +32,14 @@
 /* OTHER DEALINGS IN THE SOFTWARE.                  */
 /*                                                  */
 /*--------------------------------------------------*/
+#define MOBILY_SOURCE
+/*--------------------------------------------------*/
 
 #import "MobilySharedManager.h"
 
 /*--------------------------------------------------*/
 
-static NSString*  const MobilySharedManagerNotification = @"MobilySharedManagerNotification";
+static NSString* const MobilySharedManagerNotification = @"MobilySharedManagerNotification";
 
 /*--------------------------------------------------*/
 

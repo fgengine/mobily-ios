@@ -60,6 +60,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataRefreshViewState) {
 
 /*----------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyDataRefreshView : UIView< MobilyBuilderObject >
 
 @property(nonatomic, readwrite, assign) MobilyDataRefreshViewType type;

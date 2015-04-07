@@ -32,6 +32,8 @@
 /* OTHER DEALINGS IN THE SOFTWARE.                  */
 /*                                                  */
 /*--------------------------------------------------*/
+#define MOBILY_SOURCE
+/*--------------------------------------------------*/
 
 #import "MobilySlideController.h"
 
@@ -108,14 +110,12 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
     
     if([UIDevice isIPhone] == YES) {
         _swipeThreshold = 2.0f;
-        _swipeSpeed = 1050.0f;
-        _swipeVelocity = 570.0f;
+        _swipeVelocity = 1050.0f;
         _leftControllerWidth = 280.0f;
         _rightControllerWidth = 280.0f;
     } else if([UIDevice isIPad] == YES) {
         _swipeThreshold = 2.0f;
-        _swipeSpeed = 1600.0f;
-        _swipeVelocity = 1200.0f;
+        _swipeVelocity = 3000.0f;
         _leftControllerWidth = 320.0f;
         _rightControllerWidth = 320.0f;
     }
@@ -392,7 +392,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         CGFloat diffH = ABS(leftFrame.size.height - centerFrame.size.height);
         CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
         if(animated == YES) {
-            [UIView animateWithDuration:speed / _swipeSpeed animations:^{
+            [UIView animateWithDuration:speed / _swipeVelocity animations:^{
                 _leftView.frame = leftFrame;
                 _centerView.frame = centerFrame;
             } completion:^(BOOL finished __unused) {
@@ -430,7 +430,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         CGFloat diffH = ABS(leftFrame.size.height - centerFrame.size.height);
         CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
         if(animated == YES) {
-            [UIView animateWithDuration:speed / _swipeSpeed animations:^{
+            [UIView animateWithDuration:speed / _swipeVelocity animations:^{
                 _leftView.frame = leftFrame;
                 _centerView.frame = centerFrame;
             } completion:^(BOOL finished __unused) {
@@ -468,7 +468,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         CGFloat diffH = ABS(centerFrame.size.height - rightFrame.size.height);
         CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
         if(animated == YES) {
-            [UIView animateWithDuration:speed / _swipeSpeed animations:^{
+            [UIView animateWithDuration:speed / _swipeVelocity animations:^{
                 _centerView.frame = centerFrame;
                 _rightView.frame = rightFrame;
             } completion:^(BOOL finished __unused) {
@@ -506,7 +506,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         CGFloat diffH = ABS(centerFrame.size.height - rightFrame.size.height);
         CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
         if(animated == YES) {
-            [UIView animateWithDuration:speed / _swipeSpeed animations:^{
+            [UIView animateWithDuration:speed / _swipeVelocity animations:^{
                 _centerView.frame = centerFrame;
                 _rightView.frame = rightFrame;
             } completion:^(BOOL finished __unused) {
@@ -637,7 +637,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         _swipeProgress = normalizedSwipeProgress;
         
         CGRect bounds = self.view.bounds;
-        [UIView animateWithDuration:ABS(speed) / _swipeSpeed
+        [UIView animateWithDuration:ABS(speed) / _swipeVelocity
                          animations:^{
                              _leftView.frame = [self leftViewFrameFromBounds:bounds byPercent:_swipeProgress];
                              _centerView.frame = [self centerViewFrameFromBounds:bounds byPercent:_swipeProgress];

@@ -32,6 +32,8 @@
 /* OTHER DEALINGS IN THE SOFTWARE.                  */
 /*                                                  */
 /*--------------------------------------------------*/
+#define MOBILY_SOURCE
+/*--------------------------------------------------*/
 
 #import "MobilyDataContainer+Private.h"
 
@@ -66,7 +68,6 @@
 @synthesize monthItem = _monthItem;
 @synthesize weekdayItems = _weekdayItems;
 @synthesize dayItems = _dayItems;
-
 
 #pragma mark Init / Free
 

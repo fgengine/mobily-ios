@@ -32,16 +32,17 @@
 /* OTHER DEALINGS IN THE SOFTWARE.                  */
 /*                                                  */
 /*--------------------------------------------------*/
+#define MOBILY_SOURCE
+/*--------------------------------------------------*/
 
 #import "MobilyRegExpParser.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyRegExpParser ()
-
-@property(nonatomic, readwrite, strong) NSArray* matches;
-@property(nonatomic, readwrite, strong) NSString* result;
-@property(nonatomic, readwrite, assign, getter=isNeedApplyParser) BOOL needApplyParser;
+@interface MobilyRegExpParser () {
+@protected
+    BOOL _needApplyParser;
+}
 
 - (void)applyParserIfNeed;
 - (void)applyParser;
@@ -68,12 +69,20 @@
 
 @implementation MobilyRegExpParser
 
+#pragma mark Synthesize
+
+@synthesize string = _string;
+@synthesize expression = _expression;
+@synthesize pattern = _pattern;
+@synthesize matches = _matches;
+@synthesize result = _result;
+
 #pragma mark Init / Free
 
 - (instancetype)init {
     self = [super init];
     if(self != nil) {
-        self.needApplyParser = NO;
+        _needApplyParser = NO;
         [self setup];
     }
     return self;
@@ -82,9 +91,9 @@
 - (instancetype)initWithExpression:(NSString*)expression pattern:(NSString*)pattern {
     self = [super init];
     if(self != nil) {
-        self.expression = expression;
-        self.pattern = pattern;
-        self.needApplyParser = NO;
+        _expression = expression;
+        _pattern = pattern;
+        _needApplyParser = NO;
         [self setup];
     }
     return self;
@@ -93,10 +102,10 @@
 - (instancetype)initWithSting:(NSString*)string expression:(NSString*)expression pattern:(NSString*)pattern {
     self = [super init];
     if(self != nil) {
-        self.string = string;
-        self.expression = expression;
-        self.pattern = pattern;
-        self.needApplyParser = YES;
+        _string = string;
+        _expression = expression;
+        _pattern = pattern;
+        _needApplyParser = YES;
         [self setup];
     }
     return self;
@@ -105,34 +114,26 @@
 - (void)setup {
 }
 
-- (void)dealloc {
-    self.string = nil;
-    self.expression = nil;
-    self.pattern = nil;
-    self.matches = nil;
-    self.result = nil;
-}
-
 #pragma mark Property
 
 - (void)setString:(NSString*)string {
     if([_string isEqualToString:string] == NO) {
         _string = string;
-        self.needApplyParser = YES;
+        _needApplyParser = YES;
     }
 }
 
 - (void)setExpression:(NSString*)expression {
     if([_expression isEqualToString:expression] == NO) {
         _expression = expression;
-        self.needApplyParser = YES;
+        _needApplyParser = YES;
     }
 }
 
 - (void)setPattern:(NSString*)pattern {
     if([_pattern isEqualToString:pattern] == NO) {
         _pattern = pattern;
-        self.needApplyParser = YES;
+        _needApplyParser = YES;
     }
 }
 
@@ -150,7 +151,7 @@
 
 - (void)applyParserIfNeed {
     if(_needApplyParser == YES) {
-        self.needApplyParser = NO;
+        _needApplyParser = NO;
         [self applyParser];
     }
 }
@@ -194,11 +195,11 @@
                 offset += (matchResultRange.length - matchOriginalRange.length);
             }];
         }
-        self.matches = [resultMatches copy];
-        self.result = [resultString copy];
+        _matches = [resultMatches copy];
+        _result = [resultString copy];
     } else {
-        self.matches = nil;
-        self.result = nil;
+        _matches = nil;
+        _result = nil;
     }
 }
 
@@ -209,6 +210,14 @@
 /*--------------------------------------------------*/
 
 @implementation MobilyRegExpMatch
+
+#pragma mark Synthesize
+
+@synthesize originalString = _originalString;
+@synthesize originalSubStrings = _originalSubStrings;
+@synthesize originalRange = _originalRange;
+@synthesize resultString = _resultString;
+@synthesize resultRange = _resultRange;
 
 #pragma mark Init / Free
 
@@ -221,12 +230,6 @@
 }
 
 - (void)setup {
-}
-
-- (void)dealloc {
-    self.originalString = nil;
-    self.originalSubStrings = nil;
-    self.resultString = nil;
 }
 
 @end

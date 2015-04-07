@@ -45,7 +45,6 @@ typedef void(^MobilySlideControllerBlock)();
 
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeThreshold;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeVelocity;
-@property(nonatomic, readwrite, assign) IBInspectable CGFloat swipeSpeed;
 @property(nonatomic, readwrite, strong) IBOutlet UIViewController* backgroundController;
 @property(nonatomic, readwrite, assign, getter=isShowedLeftController) IBInspectable BOOL showedLeftController;
 @property(nonatomic, readwrite, strong) IBOutlet UIViewController* leftController;

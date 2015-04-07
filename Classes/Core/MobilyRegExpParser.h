@@ -41,6 +41,7 @@
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyRegExpParser : NSObject < MobilyObject >
 
 @property(nonatomic, readwrite, strong) NSString* string;
@@ -58,6 +59,7 @@
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyRegExpMatch : NSObject < MobilyObject >
 
 @property(nonatomic, readonly, strong) NSString* originalString;

@@ -49,7 +49,7 @@ typedef id (^MobilyEventBlockType)(id sender, id object);
 
 /*--------------------------------------------------*/
 
-NS_REQUIRES_PROPERTY_DEFINITIONS
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyEventSelector : NSObject< MobilyEvent >
 
 @property(nonatomic, readonly, weak) id target;
@@ -66,7 +66,7 @@ NS_REQUIRES_PROPERTY_DEFINITIONS
 
 /*--------------------------------------------------*/
 
-NS_REQUIRES_PROPERTY_DEFINITIONS
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyEventBlock : NSObject< MobilyEvent >
 
 @property(nonatomic, readonly, copy) MobilyEventBlockType block;
@@ -82,7 +82,7 @@ NS_REQUIRES_PROPERTY_DEFINITIONS
 
 /*--------------------------------------------------*/
 
-NS_REQUIRES_PROPERTY_DEFINITIONS
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyEvents: NSObject< MobilyObject >
 
 @property(nonatomic, readwrite, strong) id defaultGroup;

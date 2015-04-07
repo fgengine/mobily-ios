@@ -220,6 +220,7 @@
     MobilyDataContainerOrientation _orientation;
     UIEdgeInsets _margin;
     UIOffset _spacing;
+    CGSize _defaultSize;
 }
 
 @property(nonatomic, readwrite, strong) NSCalendar* calendar;

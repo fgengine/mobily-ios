@@ -32,6 +32,8 @@
 /* OTHER DEALINGS IN THE SOFTWARE.                  */
 /*                                                  */
 /*--------------------------------------------------*/
+#define MOBILY_SOURCE
+/*--------------------------------------------------*/
 
 #import "MobilyDataContainer+Private.h"
 
@@ -45,6 +47,7 @@
 @synthesize orientation = _orientation;
 @synthesize margin = _margin;
 @synthesize spacing = _spacing;
+@synthesize defaultSize = _defaultSize;
 
 #pragma mark Init / Free
 

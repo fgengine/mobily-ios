@@ -37,6 +37,7 @@
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyMap : NSObject< MobilyObject, NSCopying, NSCoding, NSFastEnumeration >
 
 + (instancetype)map;

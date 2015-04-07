@@ -32,6 +32,8 @@
 /* OTHER DEALINGS IN THE SOFTWARE.                  */
 /*                                                  */
 /*--------------------------------------------------*/
+#define MOBILY_SOURCE
+/*--------------------------------------------------*/
 
 #import "MobilyDataView+Private.h"
 
@@ -139,9 +141,9 @@
         _velocityMin = 300.0f;
         _velocityMax = 900.0f;
     } else if([UIDevice isIPad] == YES) {
-        _velocity = 800.0f;
-        _velocityMin = 600.0f;
-        _velocityMax = 1800.0f;
+        _velocity = 2000.0f;
+        _velocityMin = 3000.0f;
+        _velocityMax = 6000.0f;
     }
     
     _bouncesTop = YES;

@@ -177,7 +177,7 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
     [super prepareForUse];
     
     DemoCategoriesModel* model = self.item.data;
-    self.textView.text = model.title;
+    _textView.text = model.title;
 }
 
 @end

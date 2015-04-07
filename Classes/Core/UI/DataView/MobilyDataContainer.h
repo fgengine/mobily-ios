@@ -67,6 +67,7 @@ typedef NS_OPTIONS(NSUInteger, MobilyDataContainerAlign) {
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyDataContainer : NSObject< MobilyObject, MobilySearchBarDelegate >
 
 @property(nonatomic, readonly, weak) MobilyDataView* view;
@@ -302,14 +303,12 @@ extern NSString* MobilyDataContainerCurrentSectionChanged;
 @property(nonatomic, readwrite, assign) UIEdgeInsets monthMargin;
 @property(nonatomic, readwrite, assign) CGFloat monthHeight;
 @property(nonatomic, readwrite, assign) CGFloat monthSpacing;
-@property(nonatomic, readwrite, assign) BOOL canSnapToEdgeMonth;
 
 @property(nonatomic, readwrite, assign) BOOL canShowWeekdays;
 @property(nonatomic, readwrite, assign) BOOL canSelectWeekdays;
 @property(nonatomic, readwrite, assign) UIEdgeInsets weekdaysMargin;
 @property(nonatomic, readwrite, assign) CGFloat weekdaysHeight;
 @property(nonatomic, readwrite, assign) UIOffset weekdaysSpacing;
-@property(nonatomic, readwrite, assign) BOOL canSnapToEdgeWeekdays;
 
 @property(nonatomic, readwrite, assign) BOOL canShowDays;
 @property(nonatomic, readwrite, assign) BOOL canSelectDays;

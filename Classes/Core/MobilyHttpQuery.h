@@ -46,6 +46,7 @@ typedef void (^MobilyHttpQueryErrorBlock)(NSError* error);
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyHttpQuery : NSObject < MobilyObject >
 
 @property(nonatomic, readwrite, strong) NSString* certificateFilename;

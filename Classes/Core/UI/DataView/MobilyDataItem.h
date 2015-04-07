@@ -43,6 +43,7 @@
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyDataItem : NSObject< MobilyObject, NSCopying, MobilySearchBarDelegate >
 
 @property(nonatomic, readonly, weak) MobilyDataView* view;
