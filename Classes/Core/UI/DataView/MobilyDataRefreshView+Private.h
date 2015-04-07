@@ -58,8 +58,8 @@ typedef void(^MobilyDataRefreshViewCompleteBlock)(BOOL finished);
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintSize;
 @property(nonatomic, readwrite, assign) MobilyDataRefreshViewState state;
 
-- (void)_showAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataRefreshViewCompleteBlock)complete;
-- (void)_hideAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataRefreshViewCompleteBlock)complete;
+- (void)_showAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataRefreshViewCompleteBlock)complete;
+- (void)_hideAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataRefreshViewCompleteBlock)complete;
 
 @end
 

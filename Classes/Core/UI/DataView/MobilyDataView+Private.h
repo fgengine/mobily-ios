@@ -201,17 +201,17 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
 - (void)_didEndDecelerating;
 - (void)_didEndScrollingAnimation;
 
-- (void)_showSearchBarAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete;
-- (void)_hideSearchBarAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_showSearchBarAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_hideSearchBarAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
 
-- (void)_showTopRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete;
-- (void)_hideTopRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete;
-- (void)_showBottomRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete;
-- (void)_hideBottomRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete;
-- (void)_showLeftRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete;
-- (void)_hideLeftRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete;
-- (void)_showRightRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete;
-- (void)_hideRightRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_showTopRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_hideTopRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_showBottomRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_hideBottomRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_showLeftRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_hideLeftRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_showRightRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
+- (void)_hideRightRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete;
 
 - (void)_batchUpdate:(MobilyDataViewUpdateBlock)update animated:(BOOL)animated;
 - (void)_batchComplete:(MobilyDataViewUpdateBlock)complete animated:(BOOL)animated;

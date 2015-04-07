@@ -90,11 +90,17 @@
 }
 
 - (void)_willLayoutForBounds:(CGRect)bounds {
-    [self _willSectionsLayoutForBounds:CGRectIntersection(bounds, _frame)];
+    CGRect intersect = CGRectIntersection(bounds, _frame);
+    if(CGRectIsEmpty(intersect) == NO) {
+        [self _willSectionsLayoutForBounds:intersect];
+    }
 }
 
 - (void)_didLayoutForBounds:(CGRect)bounds {
-    [self _didSectionsLayoutForBounds:CGRectIntersection(bounds, _frame)];
+    CGRect intersect = CGRectIntersection(bounds, _frame);
+    if(CGRectIsEmpty(intersect) == NO) {
+        [self _didSectionsLayoutForBounds:intersect];
+    }
 }
 
 #pragma mark Public override

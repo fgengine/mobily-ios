@@ -245,6 +245,14 @@
     }
 }
 
+- (void)setContentOffset:(CGPoint)contentOffset {
+    [super setContentOffset:contentOffset];
+}
+
+- (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated {
+    [super setContentOffset:contentOffset animated:animated];
+}
+
 - (void)setDelegateProxy:(MobilyDataViewDelegateProxy*)delegateProxy {
     if(_delegateProxy != delegateProxy) {
         if(_delegateProxy != nil) {
@@ -1047,43 +1055,43 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 }
 
 - (void)showSearchBarAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
-    [self _showSearchBarAnimated:animated velocity:_velocity offset:NULL complete:complete];
+    [self _showSearchBarAnimated:animated velocity:_velocity complete:complete];
 }
 
 - (void)hideSearchBarAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
-    [self _hideSearchBarAnimated:animated velocity:_velocity offset:NULL complete:complete];
+    [self _hideSearchBarAnimated:animated velocity:_velocity complete:complete];
 }
 
 - (void)showTopRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
-    [self _showTopRefreshAnimated:animated velocity:_velocity offset:NULL complete:complete];
+    [self _showTopRefreshAnimated:animated velocity:_velocity complete:complete];
 }
 
 - (void)hideTopRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
-    [self _hideTopRefreshAnimated:animated velocity:_velocity offset:NULL complete:complete];
+    [self _hideTopRefreshAnimated:animated velocity:_velocity complete:complete];
 }
 
 - (void)showBottomRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
-    [self _showBottomRefreshAnimated:animated velocity:_velocity offset:NULL complete:complete];
+    [self _showBottomRefreshAnimated:animated velocity:_velocity complete:complete];
 }
 
 - (void)hideBottomRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
-    [self _hideBottomRefreshAnimated:animated velocity:_velocity offset:NULL complete:complete];
+    [self _hideBottomRefreshAnimated:animated velocity:_velocity complete:complete];
 }
 
 - (void)showLeftRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
-    [self _showLeftRefreshAnimated:animated velocity:_velocity offset:NULL complete:complete];
+    [self _showLeftRefreshAnimated:animated velocity:_velocity complete:complete];
 }
 
 - (void)hideLeftRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
-    [self _hideLeftRefreshAnimated:animated velocity:_velocity offset:NULL complete:complete];
+    [self _hideLeftRefreshAnimated:animated velocity:_velocity complete:complete];
 }
 
 - (void)showRightRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
-    [self _showRightRefreshAnimated:animated velocity:_velocity offset:NULL complete:complete];
+    [self _showRightRefreshAnimated:animated velocity:_velocity complete:complete];
 }
 
 - (void)hideRightRefreshAnimated:(BOOL)animated complete:(MobilyDataViewCompleteBlock)complete {
-    [self _hideRightRefreshAnimated:animated velocity:_velocity offset:NULL complete:complete];
+    [self _hideRightRefreshAnimated:animated velocity:_velocity complete:complete];
 }
 
 #pragma mark Private
@@ -1234,16 +1242,28 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 - (void)_validateLayout {
     CGRect layoutRect = CGRectZero;
     if(_container != nil) {
-        layoutRect = [_container _validateLayoutForAvailableFrame:CGRectMakeOriginAndSize(CGPointZero, self.boundsSize)];
+        layoutRect = [_container _validateLayoutForAvailableFrame:CGRectMakeOriginAndSize(CGPointZero, self.frameSize)];
     }
     self.contentSize = layoutRect.size;
+    if(self.bounces == YES) {
+        CGSize frameSize = self.frameSize;
+        CGPoint contentOffset = self.contentOffset;
+        CGSize contentSize = self.contentSize;
+        UIEdgeInsets contentInsets = self.contentInset;
+        CGFloat finalWidth = (frameSize.width < contentSize.width) ? contentSize.width - frameSize.width : contentSize.width;
+        CGFloat finalHeight = (frameSize.height < contentSize.height) ? contentSize.height - frameSize.height : contentSize.height;
+        CGRect normalizedRect = UIEdgeInsetsInsetRect(CGRectMake(0.0f, 0.0f, finalWidth, finalHeight), UIEdgeInsetsMake(-contentInsets.top, -contentInsets.left, -contentInsets.bottom, -contentInsets.right));
+        CGFloat x = MAX(normalizedRect.origin.x, MIN(contentOffset.x, normalizedRect.origin.x + normalizedRect.size.width));
+        CGFloat y = MAX(normalizedRect.origin.y, MIN(contentOffset.y, normalizedRect.origin.y + normalizedRect.size.height));
+        self.contentOffset = CGPointMake(x, y);
+    }
 }
 
 - (void)_layoutForVisible {
+    CGRect bounds = self.visibleBounds;
     if((self.dragging == YES) || (self.decelerating == YES)) {
-        [_container _willLayoutForBounds:self.visibleBounds];
+        [_container _willLayoutForBounds:bounds];
         dispatch_async(dispatch_get_main_queue(), ^{
-            CGRect bounds = self.visibleBounds;
             if(_updating == NO) {
                 [_visibleItems each:^(MobilyDataItem* item) {
                     [item invalidateLayoutForBounds:bounds];
@@ -1252,7 +1272,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             [_container _didLayoutForBounds:bounds];
         });
     } else {
-        CGRect bounds = self.visibleBounds;
         [_container _willLayoutForBounds:bounds];
         if(_updating == NO) {
             [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex __unused, BOOL* itemStop __unused) {
@@ -1379,16 +1398,12 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                                                  _searchBarInsets.bottom + _refreshViewInsets.bottom,
                                                  _searchBarInsets.right + _refreshViewInsets.right);
     UIEdgeInsets contentInset = _searchBarInsets;
-    if(_topRefreshView.state == MobilyDataRefreshViewStateLoading) {
+    if((_topRefreshView.state == MobilyDataRefreshViewStateLoading) || (_bottomRefreshView.state == MobilyDataRefreshViewStateLoading)) {
         contentInset.top += _refreshViewInsets.top;
-    }
-    if(_bottomRefreshView.state == MobilyDataRefreshViewStateLoading) {
         contentInset.bottom += _refreshViewInsets.bottom;
     }
-    if(_leftRefreshView.state == MobilyDataRefreshViewStateLoading) {
+    if((_leftRefreshView.state == MobilyDataRefreshViewStateLoading) || (_rightRefreshView.state == MobilyDataRefreshViewStateLoading)) {
         contentInset.left += _refreshViewInsets.left;
-    }
-    if(_rightRefreshView.state == MobilyDataRefreshViewStateLoading) {
         contentInset.right += _refreshViewInsets.right;
     }
     self.scrollIndicatorInsets = scrollInsets;
@@ -1462,7 +1477,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 }
 
 - (void)_didScrollDragging:(BOOL)dragging decelerating:(BOOL)decelerating {
-    if(self.pagingEnabled == NO) {
+    if((self.pagingEnabled == NO) && ((dragging == YES) || (decelerating == YES))) {
         CGSize frameSize = self.frameSize;
         CGPoint originOffset = self.contentOffset;
         CGPoint contentOffset = originOffset;
@@ -1487,9 +1502,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     contentOffset.y = MIN(contentSize.height - frameSize.height, contentOffset.y);
                 }
             }
-            if((ABS(originOffset.x - contentOffset.x) >= 1.0f) || (ABS(originOffset.y - contentOffset.y) >= 1.0f)) {
-                self.contentOffset = contentOffset;
-            }
         }
         if(self.directionalLockEnabled == YES) {
             switch(_scrollDirection) {
@@ -1508,159 +1520,158 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 case MobilyDataViewDirectionHorizontal: contentOffset.y = _scrollBeginPosition.y; break;
                 case MobilyDataViewDirectionVertical: contentOffset.x = _scrollBeginPosition.x; break;
             }
-            if((ABS(originOffset.x - contentOffset.x) >= 1.0f) || (ABS(originOffset.y - contentOffset.y) >= 1.0f)) {
-                self.contentOffset = contentOffset;
-            }
         }
-        if((dragging == YES) && (decelerating == NO)) {
-            if(_searchBarDragging == YES) {
-                if(_canSearchBar == YES) {
-                    CGFloat searchBarHeight = _searchBar.frameHeight;
-                    switch(_searchBarStyle) {
-                        case MobilyDataViewSearchBarStyleStatic:
-                            break;
-                        case MobilyDataViewSearchBarStyleInside: {
-                            CGFloat offset = contentOffset.y + searchBarInsets.top;
-                            searchBarInsets.top = MAX(0.0f, MIN(searchBarInsets.top - offset, searchBarHeight));
+        if((_searchBarDragging == YES) && (decelerating == NO)) {
+            if(_canSearchBar == YES) {
+                CGFloat searchBarHeight = _searchBar.frameHeight;
+                switch(_searchBarStyle) {
+                    case MobilyDataViewSearchBarStyleStatic:
+                        break;
+                    case MobilyDataViewSearchBarStyleInside: {
+                        CGFloat offset = contentOffset.y + searchBarInsets.top;
+                        searchBarInsets.top = MAX(0.0f, MIN(searchBarInsets.top - offset, searchBarHeight));
+                        if(_showedSearchBar == YES) {
+                            _constraintSearchBarTop.constant = -(searchBarHeight - searchBarInsets.top);
+                        } else {
+                            _constraintSearchBarTop.constant = searchBarInsets.top;
+                        }
+                        break;
+                    }
+                    case MobilyDataViewSearchBarStyleOverlay: {
+                        CGFloat offset = contentOffset.y;
+                        CGFloat diff = offset - _searchBarOverlayLastOffset;
+                        if(ABS(diff) > (searchBarHeight * 0.5f)) {
+                            if(diff < 0.0f) {
+                                searchBarInsets.top = searchBarHeight;
+                            } else {
+                                searchBarInsets.top = 0.0f;
+                            }
                             if(_showedSearchBar == YES) {
                                 _constraintSearchBarTop.constant = -(searchBarHeight - searchBarInsets.top);
                             } else {
                                 _constraintSearchBarTop.constant = searchBarInsets.top;
                             }
-                            break;
+                            self.searchBarOverlayLastOffset = offset;
+                            duration = 0.1f;
                         }
-                        case MobilyDataViewSearchBarStyleOverlay: {
-                            CGFloat offset = contentOffset.y;
-                            CGFloat diff = offset - _searchBarOverlayLastOffset;
-                            if(ABS(diff) > (searchBarHeight * 0.5f)) {
-                                if(diff < 0.0f) {
-                                    searchBarInsets.top = searchBarHeight;
-                                } else {
-                                    searchBarInsets.top = 0.0f;
-                                }
-                                if(_showedSearchBar == YES) {
-                                    _constraintSearchBarTop.constant = -(searchBarHeight - searchBarInsets.top);
-                                } else {
-                                    _constraintSearchBarTop.constant = searchBarInsets.top;
-                                }
-                                self.searchBarOverlayLastOffset = offset;
-                                duration = 0.1f;
-                            }
-                            break;
-                        }
+                        break;
                     }
                 }
             }
-            if(_refreshDragging == YES) {
-                if(_canTopRefresh == YES) {
-                    CGFloat offset = contentOffset.y + (refreshViewInsets.top + searchBarInsets.top);
-                    CGFloat progress = MAX(0.0f, refreshViewInsets.top - offset);
-                    switch(_topRefreshView.state) {
+        }
+        if((_refreshDragging == YES) && (decelerating == NO)) {
+            if(_canTopRefresh == YES) {
+                CGFloat offset = contentOffset.y + (refreshViewInsets.top + searchBarInsets.top);
+                CGFloat progress = MAX(0.0f, refreshViewInsets.top - offset);
+                switch(_topRefreshView.state) {
+                    case MobilyDataRefreshViewStateIdle:
+                        if(progress > 0.0f) {
+                            _topRefreshView.state = MobilyDataRefreshViewStatePull;
+                        }
+                        break;
+                    case MobilyDataRefreshViewStatePull:
+                    case MobilyDataRefreshViewStateRelease:
+                        if(progress < 0.0f) {
+                            _topRefreshView.state = MobilyDataRefreshViewStateIdle;
+                        } else if(progress >= _topRefreshView.threshold) {
+                            if(_topRefreshView.state != MobilyDataRefreshViewStateRelease) {
+                                _topRefreshView.state = MobilyDataRefreshViewStateRelease;
+                            }
+                        } else {
+                            _topRefreshView.state = MobilyDataRefreshViewStatePull;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                _constraintTopRefreshSize.constant = refreshViewInsets.top = progress;
+                refreshViewInsets.bottom = -progress;
+            }
+            if(_canBottomRefresh == YES) {
+                if(contentSize.height >= frameSize.height) {
+                    CGFloat limit = contentSize.height - frameSize.height;
+                    CGFloat offset = (contentOffset.y - refreshViewInsets.bottom) - limit;
+                    CGFloat progress = MAX(0.0f, refreshViewInsets.bottom + offset);
+                    switch(_bottomRefreshView.state) {
                         case MobilyDataRefreshViewStateIdle:
                             if(progress > 0.0f) {
-                                _topRefreshView.state = MobilyDataRefreshViewStatePull;
+                                _bottomRefreshView.state = MobilyDataRefreshViewStatePull;
                             }
                             break;
                         case MobilyDataRefreshViewStatePull:
                         case MobilyDataRefreshViewStateRelease:
                             if(progress < 0.0f) {
-                                _topRefreshView.state = MobilyDataRefreshViewStateIdle;
-                            } else if(progress >= _topRefreshView.threshold) {
-                                if(_topRefreshView.state != MobilyDataRefreshViewStateRelease) {
-                                    _topRefreshView.state = MobilyDataRefreshViewStateRelease;
+                                _bottomRefreshView.state = MobilyDataRefreshViewStateIdle;
+                            } else if(progress >= _bottomRefreshView.threshold) {
+                                if(_bottomRefreshView.state != MobilyDataRefreshViewStateRelease) {
+                                    _bottomRefreshView.state = MobilyDataRefreshViewStateRelease;
                                 }
                             } else {
-                                _topRefreshView.state = MobilyDataRefreshViewStatePull;
+                                _bottomRefreshView.state = MobilyDataRefreshViewStatePull;
                             }
                             break;
                         default:
                             break;
                     }
-                    _constraintTopRefreshSize.constant = refreshViewInsets.top = progress;
+                    _constraintBottomRefreshSize.constant = refreshViewInsets.bottom = progress;
+                    refreshViewInsets.top = -progress;
                 }
-                if(_canBottomRefresh == YES) {
-                    if(contentSize.height >= frameSize.height) {
-                        CGFloat limit = contentSize.height - frameSize.height;
-                        CGFloat offset = (contentOffset.y - refreshViewInsets.bottom) - limit;
-                        CGFloat progress = MAX(0.0f, refreshViewInsets.bottom + offset);
-                        switch(_bottomRefreshView.state) {
-                            case MobilyDataRefreshViewStateIdle:
-                                if(progress > 0.0f) {
-                                    _bottomRefreshView.state = MobilyDataRefreshViewStatePull;
-                                }
-                                break;
-                            case MobilyDataRefreshViewStatePull:
-                            case MobilyDataRefreshViewStateRelease:
-                                if(progress < 0.0f) {
-                                    _bottomRefreshView.state = MobilyDataRefreshViewStateIdle;
-                                } else if(progress >= _bottomRefreshView.threshold) {
-                                    if(_bottomRefreshView.state != MobilyDataRefreshViewStateRelease) {
-                                        _bottomRefreshView.state = MobilyDataRefreshViewStateRelease;
-                                    }
-                                } else {
-                                    _bottomRefreshView.state = MobilyDataRefreshViewStatePull;
-                                }
-                                break;
-                            default:
-                                break;
+            }
+            if(_canLeftRefresh == YES) {
+                CGFloat offset = contentOffset.x + refreshViewInsets.left;
+                CGFloat progress = MAX(0.0f, refreshViewInsets.left - offset);
+                switch(_leftRefreshView.state) {
+                    case MobilyDataRefreshViewStateIdle:
+                        if(progress > 0.0f) {
+                            _leftRefreshView.state = MobilyDataRefreshViewStatePull;
                         }
-                        _constraintBottomRefreshSize.constant = refreshViewInsets.bottom = progress;
-                    }
+                        break;
+                    case MobilyDataRefreshViewStatePull:
+                    case MobilyDataRefreshViewStateRelease:
+                        if(progress < 0.0f) {
+                            _leftRefreshView.state = MobilyDataRefreshViewStateIdle;
+                        } else if(progress >= _leftRefreshView.threshold) {
+                            if(_leftRefreshView.state != MobilyDataRefreshViewStateRelease) {
+                                _leftRefreshView.state = MobilyDataRefreshViewStateRelease;
+                            }
+                        } else {
+                            _leftRefreshView.state = MobilyDataRefreshViewStatePull;
+                        }
+                        break;
+                    default:
+                        break;
                 }
-                if(_canLeftRefresh == YES) {
-                    CGFloat offset = contentOffset.x + refreshViewInsets.left;
-                    CGFloat progress = MAX(0.0f, refreshViewInsets.left - offset);
-                    switch(_leftRefreshView.state) {
+                _constraintLeftRefreshSize.constant = refreshViewInsets.left = progress;
+                refreshViewInsets.right = -progress;
+            }
+            if(_canRightRefresh == YES) {
+                if(contentSize.width >= frameSize.width) {
+                    CGFloat limit = contentSize.width - frameSize.width;
+                    CGFloat offset = (contentOffset.x - refreshViewInsets.right) - limit;
+                    CGFloat progress = MAX(0.0f, refreshViewInsets.right + offset);
+                    switch(_rightRefreshView.state) {
                         case MobilyDataRefreshViewStateIdle:
                             if(progress > 0.0f) {
-                                _leftRefreshView.state = MobilyDataRefreshViewStatePull;
+                                _rightRefreshView.state = MobilyDataRefreshViewStatePull;
                             }
                             break;
                         case MobilyDataRefreshViewStatePull:
                         case MobilyDataRefreshViewStateRelease:
                             if(progress < 0.0f) {
-                                _leftRefreshView.state = MobilyDataRefreshViewStateIdle;
-                            } else if(progress >= _leftRefreshView.threshold) {
-                                if(_leftRefreshView.state != MobilyDataRefreshViewStateRelease) {
-                                    _leftRefreshView.state = MobilyDataRefreshViewStateRelease;
+                                _rightRefreshView.state = MobilyDataRefreshViewStateIdle;
+                            } else if(progress >= _rightRefreshView.threshold) {
+                                if(_rightRefreshView.state != MobilyDataRefreshViewStateRelease) {
+                                    _rightRefreshView.state = MobilyDataRefreshViewStateRelease;
                                 }
                             } else {
-                                _leftRefreshView.state = MobilyDataRefreshViewStatePull;
+                                _rightRefreshView.state = MobilyDataRefreshViewStatePull;
                             }
                             break;
                         default:
                             break;
                     }
-                    _constraintLeftRefreshSize.constant = refreshViewInsets.left = progress;
-                }
-                if(_canRightRefresh == YES) {
-                    if(contentSize.width >= frameSize.width) {
-                        CGFloat limit = contentSize.width - frameSize.width;
-                        CGFloat offset = (contentOffset.x - refreshViewInsets.right) - limit;
-                        CGFloat progress = MAX(0.0f, refreshViewInsets.right + offset);
-                        switch(_rightRefreshView.state) {
-                            case MobilyDataRefreshViewStateIdle:
-                                if(progress > 0.0f) {
-                                    _rightRefreshView.state = MobilyDataRefreshViewStatePull;
-                                }
-                                break;
-                            case MobilyDataRefreshViewStatePull:
-                            case MobilyDataRefreshViewStateRelease:
-                                if(progress < 0.0f) {
-                                    _rightRefreshView.state = MobilyDataRefreshViewStateIdle;
-                                } else if(progress >= _rightRefreshView.threshold) {
-                                    if(_rightRefreshView.state != MobilyDataRefreshViewStateRelease) {
-                                        _rightRefreshView.state = MobilyDataRefreshViewStateRelease;
-                                    }
-                                } else {
-                                    _rightRefreshView.state = MobilyDataRefreshViewStatePull;
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-                        _constraintRightRefreshSize.constant = refreshViewInsets.right = progress;
-                    }
+                    _constraintRightRefreshSize.constant = refreshViewInsets.right = progress;
+                    refreshViewInsets.left = -progress;
                 }
             }
         }
@@ -1671,12 +1682,18 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                              animations:^{
                                  self.searchBarInsets = searchBarInsets;
                                  self.refreshViewInsets = refreshViewInsets;
+                                 if((ABS(originOffset.x - contentOffset.x) >= 1.0f) || (ABS(originOffset.y - contentOffset.y) >= 1.0f)) {
+                                     self.contentOffset = contentOffset;
+                                 }
                                  [self.superview layoutIfNeeded];
                              }
                              completion:nil];
         } else {
             self.searchBarInsets = searchBarInsets;
             self.refreshViewInsets = refreshViewInsets;
+            if((ABS(originOffset.x - contentOffset.x) >= 1.0f) || (ABS(originOffset.y - contentOffset.y) >= 1.0f)) {
+                self.contentOffset = contentOffset;
+            }
         }
     }
     if(_container != nil) {
@@ -1695,15 +1712,15 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     case MobilyDataViewSearchBarStyleInside:
                     case MobilyDataViewSearchBarStyleOverlay: {
                         CGFloat offset = MAX(0.0f, MIN(_searchBarInsets.top - (contentOffset->y + _searchBarInsets.top), searchBarHeight));
+                        if(contentOffset->y > -searchBarHeight) {
+                            contentOffset->y = -searchBarHeight;
+                        }
                         if(offset >= (searchBarHeight * 0.33f)) {
-                            if(contentOffset->y > -searchBarHeight) {
-                                contentOffset->y = -searchBarHeight;
-                            }
-                            [self _showSearchBarAnimated:YES velocity:velocity.y offset:&contentOffset->y complete:^(BOOL finished) {
+                            [self _showSearchBarAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
                                 self.searchBarDragging = NO;
                             }];
                         } else {
-                            [self _hideSearchBarAnimated:YES velocity:velocity.y offset:&contentOffset->y complete:^(BOOL finished) {
+                            [self _hideSearchBarAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
                                 self.searchBarDragging = NO;
                             }];
                         }
@@ -1716,22 +1733,29 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             if(_canTopRefresh == YES) {
                 switch(_topRefreshView.state) {
                     case MobilyDataRefreshViewStateRelease: {
+                        contentOffset->y = -_topRefreshView.size;
                         if([self containsEventForKey:MobilyDataViewTopRefreshTriggered] == YES) {
-                            [self _showTopRefreshAnimated:YES velocity:velocity.y offset:&contentOffset->y complete:^(BOOL finished __unused) {
+                            [self _showTopRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished __unused) {
                                 [self fireEventForKey:MobilyDataViewTopRefreshTriggered byObject:_topRefreshView];
                                 self.refreshDragging = NO;
                             }];
                         } else {
-                            [self _hideTopRefreshAnimated:YES velocity:velocity.y offset:&contentOffset->y complete:^(BOOL finished) {
+                            [self _hideTopRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
                                 self.refreshDragging = NO;
                             }];
                         }
                         break;
                     }
-                    default: {
-                        [self _hideTopRefreshAnimated:YES velocity:velocity.y offset:&contentOffset->y complete:^(BOOL finished) {
+                    case MobilyDataRefreshViewStatePull: {
+                        contentOffset->y = -_topRefreshView.size;
+                        [self _hideTopRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
                             self.refreshDragging = NO;
                         }];
+                        break;
+                    }
+                    case MobilyDataRefreshViewStateIdle:
+                    case MobilyDataRefreshViewStateLoading:
+                    case MobilyDataRefreshViewStateDisable: {
                         break;
                     }
                 }
@@ -1740,21 +1764,26 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 switch(_bottomRefreshView.state) {
                     case MobilyDataRefreshViewStateRelease: {
                         if([self containsEventForKey:MobilyDataViewBottomRefreshTriggered] == YES) {
-                            [self _showBottomRefreshAnimated:YES velocity:velocity.y offset:&contentOffset->y complete:^(BOOL finished __unused) {
+                            [self _showBottomRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished __unused) {
                                 [self fireEventForKey:MobilyDataViewBottomRefreshTriggered byObject:_bottomRefreshView];
                                 self.refreshDragging = NO;
                             }];
                         } else {
-                            [self _hideBottomRefreshAnimated:YES velocity:velocity.y offset:&contentOffset->y complete:^(BOOL finished) {
+                            [self _hideBottomRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
                                 self.refreshDragging = NO;
                             }];
                         }
                         break;
                     }
-                    default: {
-                        [self _hideBottomRefreshAnimated:YES velocity:velocity.y offset:&contentOffset->y complete:^(BOOL finished) {
+                    case MobilyDataRefreshViewStatePull: {
+                        [self _hideBottomRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
                             self.refreshDragging = NO;
                         }];
+                        break;
+                    }
+                    case MobilyDataRefreshViewStateIdle:
+                    case MobilyDataRefreshViewStateLoading:
+                    case MobilyDataRefreshViewStateDisable: {
                         break;
                     }
                 }
@@ -1762,22 +1791,29 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             if(_canLeftRefresh == YES) {
                 switch(_leftRefreshView.state) {
                     case MobilyDataRefreshViewStateRelease: {
+                        contentOffset->x = -_leftRefreshView.size;
                         if([self containsEventForKey:MobilyDataViewLeftRefreshTriggered] == YES) {
-                            [self _showLeftRefreshAnimated:YES velocity:velocity.x offset:&contentOffset->x complete:^(BOOL finished __unused) {
+                            [self _showLeftRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished __unused) {
                                 [self fireEventForKey:MobilyDataViewLeftRefreshTriggered byObject:_leftRefreshView];
                                 self.refreshDragging = NO;
                             }];
                         } else {
-                            [self _hideLeftRefreshAnimated:YES velocity:velocity.x offset:&contentOffset->x complete:^(BOOL finished) {
+                            [self _hideLeftRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished) {
                                 self.refreshDragging = NO;
                             }];
                         }
                         break;
                     }
-                    default: {
-                        [self _hideLeftRefreshAnimated:YES velocity:velocity.x offset:&contentOffset->x complete:^(BOOL finished) {
+                    case MobilyDataRefreshViewStatePull: {
+                        contentOffset->x = -_leftRefreshView.size;
+                        [self _hideLeftRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished) {
                             self.refreshDragging = NO;
                         }];
+                        break;
+                    }
+                    case MobilyDataRefreshViewStateIdle:
+                    case MobilyDataRefreshViewStateLoading:
+                    case MobilyDataRefreshViewStateDisable: {
                         break;
                     }
                 }
@@ -1786,21 +1822,26 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 switch(_rightRefreshView.state) {
                     case MobilyDataRefreshViewStateRelease: {
                         if([self containsEventForKey:MobilyDataViewRightRefreshTriggered] == YES) {
-                            [self _showRightRefreshAnimated:YES velocity:velocity.x offset:&contentOffset->x complete:^(BOOL finished __unused) {
+                            [self _showRightRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished __unused) {
                                 [self fireEventForKey:MobilyDataViewRightRefreshTriggered byObject:_rightRefreshView];
                                 self.refreshDragging = NO;
                             }];
                         } else {
-                            [self _hideRightRefreshAnimated:YES velocity:velocity.x offset:&contentOffset->x complete:^(BOOL finished) {
+                            [self _hideRightRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished) {
                                 self.refreshDragging = NO;
                             }];
                         }
                         break;
                     }
-                    default: {
-                        [self _hideRightRefreshAnimated:YES velocity:velocity.x offset:&contentOffset->x complete:^(BOOL finished) {
+                    case MobilyDataRefreshViewStatePull: {
+                        [self _hideRightRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished) {
                             self.refreshDragging = NO;
                         }];
+                        break;
+                    }
+                    case MobilyDataRefreshViewStateIdle:
+                    case MobilyDataRefreshViewStateLoading:
+                    case MobilyDataRefreshViewStateDisable: {
                         break;
                     }
                 }
@@ -1836,7 +1877,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
     }
 }
 
-- (void)_showSearchBarAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete {
+- (void)_showSearchBarAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete {
     _showedSearchBar = YES;
     
     UIEdgeInsets from = self.searchBarInsets;
@@ -1864,7 +1905,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
     }
 }
 
-- (void)_hideSearchBarAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete {
+- (void)_hideSearchBarAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete {
     _showedSearchBar = NO;
     
     UIEdgeInsets from = self.searchBarInsets;
@@ -1892,36 +1933,36 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
     }
 }
 
-- (void)_showTopRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete {
-    [_topRefreshView _showAnimated:animated velocity:velocity offset:offset complete:complete];
+- (void)_showTopRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete {
+    [_topRefreshView _showAnimated:animated velocity:velocity complete:complete];
 }
 
-- (void)_hideTopRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete {
-    [_topRefreshView _hideAnimated:animated velocity:velocity offset:offset complete:complete];
+- (void)_hideTopRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete {
+    [_topRefreshView _hideAnimated:animated velocity:velocity complete:complete];
 }
 
-- (void)_showBottomRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete {
-    [_bottomRefreshView _showAnimated:animated velocity:velocity offset:offset complete:complete];
+- (void)_showBottomRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete {
+    [_bottomRefreshView _showAnimated:animated velocity:velocity complete:complete];
 }
 
-- (void)_hideBottomRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete {
-    [_bottomRefreshView _hideAnimated:animated velocity:velocity offset:offset complete:complete];
+- (void)_hideBottomRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete {
+    [_bottomRefreshView _hideAnimated:animated velocity:velocity complete:complete];
 }
 
-- (void)_showLeftRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete {
-    [_leftRefreshView _showAnimated:animated velocity:velocity offset:offset complete:complete];
+- (void)_showLeftRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete {
+    [_leftRefreshView _showAnimated:animated velocity:velocity complete:complete];
 }
 
-- (void)_hideLeftRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete {
-    [_leftRefreshView _hideAnimated:animated velocity:velocity offset:offset complete:complete];
+- (void)_hideLeftRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete {
+    [_leftRefreshView _hideAnimated:animated velocity:velocity complete:complete];
 }
 
-- (void)_showRightRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete {
-    [_rightRefreshView _showAnimated:animated velocity:velocity offset:offset complete:complete];
+- (void)_showRightRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete {
+    [_rightRefreshView _showAnimated:animated velocity:velocity complete:complete];
 }
 
-- (void)_hideRightRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity offset:(inout CGFloat*)offset complete:(MobilyDataViewCompleteBlock)complete {
-    [_rightRefreshView _hideAnimated:animated velocity:velocity offset:offset complete:complete];
+- (void)_hideRightRefreshAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataViewCompleteBlock)complete {
+    [_rightRefreshView _hideAnimated:animated velocity:velocity complete:complete];
 }
 
 - (void)_batchUpdate:(MobilyDataViewUpdateBlock)update animated:(BOOL)animated {
