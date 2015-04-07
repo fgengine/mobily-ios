@@ -166,20 +166,24 @@
     switch(_type) {
         case MobilyDataRefreshViewTypeTop:
             refreshViewInsets.top = _size;
+            refreshViewInsets.bottom = -_size;
             if(offset != NULL) {
                 *offset = -_size;
             }
             break;
         case MobilyDataRefreshViewTypeBottom:
+            refreshViewInsets.top = -_size;
             refreshViewInsets.bottom = _size;
             break;
         case MobilyDataRefreshViewTypeLeft:
             refreshViewInsets.left = _size;
+            refreshViewInsets.right = -_size;
             if(offset != NULL) {
                 *offset = -_size;
             }
             break;
         case MobilyDataRefreshViewTypeRight:
+            refreshViewInsets.left = -_size;
             refreshViewInsets.right = _size;
             break;
     }
@@ -213,14 +217,18 @@
     switch(_type) {
         case MobilyDataRefreshViewTypeTop:
             refreshViewInsets.top = 0.0f;
+            refreshViewInsets.bottom = 0.0f;
             break;
         case MobilyDataRefreshViewTypeBottom:
+            refreshViewInsets.top = 0.0f;
             refreshViewInsets.bottom = 0.0f;
             break;
         case MobilyDataRefreshViewTypeLeft:
             refreshViewInsets.left = 0.0f;
+            refreshViewInsets.right = 0.0f;
             break;
         case MobilyDataRefreshViewTypeRight:
+            refreshViewInsets.left = 0.0f;
             refreshViewInsets.right = 0.0f;
             break;
     }
