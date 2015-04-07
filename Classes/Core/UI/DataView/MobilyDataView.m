@@ -1409,7 +1409,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                         break;
                     case MobilyDataViewSearchBarStyleInside:
                     case MobilyDataViewSearchBarStyleOverlay:
-                        self.searchBarOverlayLastOffset = self.contentOffset.y;
+                        self.searchBarOverlayLastOffset = _scrollBeginPosition.y;
                         self.canSearchBar = YES;
                         break;
                 }
@@ -1464,7 +1464,8 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 - (void)_didScrollDragging:(BOOL)dragging decelerating:(BOOL)decelerating {
     if(self.pagingEnabled == NO) {
         CGSize frameSize = self.frameSize;
-        CGPoint contentOffset = self.contentOffset;
+        CGPoint originOffset = self.contentOffset;
+        CGPoint contentOffset = originOffset;
         CGSize contentSize = self.contentSize;
         UIEdgeInsets searchBarInsets = self.searchBarInsets;
         UIEdgeInsets refreshViewInsets = self.refreshViewInsets;
@@ -1486,7 +1487,9 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     contentOffset.y = MIN(contentSize.height - frameSize.height, contentOffset.y);
                 }
             }
-            self.contentOffset = contentOffset;
+            if((ABS(originOffset.x - contentOffset.x) >= 1.0f) || (ABS(originOffset.y - contentOffset.y) >= 1.0f)) {
+                self.contentOffset = contentOffset;
+            }
         }
         if(self.directionalLockEnabled == YES) {
             switch(_scrollDirection) {
@@ -1505,7 +1508,9 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 case MobilyDataViewDirectionHorizontal: contentOffset.y = _scrollBeginPosition.y; break;
                 case MobilyDataViewDirectionVertical: contentOffset.x = _scrollBeginPosition.x; break;
             }
-            self.contentOffset = contentOffset;
+            if((ABS(originOffset.x - contentOffset.x) >= 1.0f) || (ABS(originOffset.y - contentOffset.y) >= 1.0f)) {
+                self.contentOffset = contentOffset;
+            }
         }
         if((dragging == YES) && (decelerating == NO)) {
             if(_searchBarDragging == YES) {
