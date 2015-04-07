@@ -58,6 +58,8 @@ typedef void (^MobilyCacheComplete)();
 - (instancetype)initWithName:(NSString*)name memoryCapacity:(NSUInteger)memoryCapacity discCapacity:(NSUInteger)discCapacity;
 - (instancetype)initWithName:(NSString*)name memoryCapacity:(NSUInteger)memoryCapacity memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discCapacity:(NSUInteger)discCapacity discStorageInterval:(NSTimeInterval)discStorageInterval;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)setCacheData:(NSData*)data forKey:(NSString*)key;
 - (void)setCacheData:(NSData*)data forKey:(NSString*)key complete:(MobilyCacheComplete)complete;
 - (void)setCacheData:(NSData*)data forKey:(NSString*)key memoryStorageInterval:(NSTimeInterval)memoryStorageInterval;

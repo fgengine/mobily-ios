@@ -49,6 +49,7 @@ typedef id (^MobilyEventBlockType)(id sender, id object);
 
 /*--------------------------------------------------*/
 
+NS_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyEventSelector : NSObject< MobilyEvent >
 
 @property(nonatomic, readonly, weak) id target;
@@ -59,10 +60,13 @@ typedef id (^MobilyEventBlockType)(id sender, id object);
 + (id)eventWithTarget:(id)target action:(SEL)action inCurrentThread:(BOOL)inCurrentThread;
 - (instancetype)initWithTarget:(id)target action:(SEL)action thread:(NSThread*)thread;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 @end
 
 /*--------------------------------------------------*/
 
+NS_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyEventBlock : NSObject< MobilyEvent >
 
 @property(nonatomic, readonly, copy) MobilyEventBlockType block;
@@ -72,13 +76,18 @@ typedef id (^MobilyEventBlockType)(id sender, id object);
 + (id)eventWithBlock:(MobilyEventBlockType)block inCurrentQueue:(BOOL)inCurrentQueue;
 - (instancetype)initWithBlock:(MobilyEventBlockType)block queue:(dispatch_queue_t)queue;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 @end
 
 /*--------------------------------------------------*/
 
+NS_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyEvents: NSObject< MobilyObject >
 
 @property(nonatomic, readwrite, strong) id defaultGroup;
+
+- (void)setup NS_REQUIRES_SUPER;
 
 - (void)addEventWithTarget:(id)target action:(SEL)action forKey:(id)key;
 - (void)addEventWithTarget:(id)target action:(SEL)action forGroup:(id)group forKey:(id)key;

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name = 'Mobily'
-    s.version = '2.1.27'
+    s.version = '2.1.28'
     s.summary = 'Mobily framework for iOS'
     s.homepage = 'https://github.com/fgengine/mobily-ios/tree/v2'
     s.license = {
@@ -37,6 +37,7 @@ Pod::Spec.new do |s|
         ss.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'MOBILY_POD_CORE' }
         ss.frameworks = 'Foundation', 'CoreGraphics', 'UIKit', 'AVFoundation', 'CoreLocation'
         ss.dependency 'Mobily/CocoaPods'
+        ss.library = 'sqlite3'
     end
 
     s.subspec 'Social' do |ss|

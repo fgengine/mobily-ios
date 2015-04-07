@@ -47,6 +47,8 @@ typedef void (^MobilyImageViewBlock)();
 @property(nonatomic, readwrite, strong) IBInspectable UIImage* defaultImage;
 @property(nonatomic, readwrite, strong) IBInspectable NSURL* imageUrl;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)setImageUrl:(NSURL*)imageUrl complete:(MobilyImageViewBlock)complete failure:(MobilyImageViewBlock)failure;
 
 @end

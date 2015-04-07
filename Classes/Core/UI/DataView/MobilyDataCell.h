@@ -66,6 +66,8 @@
 - (instancetype)initWithIdentifier:(NSString*)identifier;
 - (instancetype)initWithIdentifier:(NSString*)identifier nib:(UINib*)nib;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)prepareForUse;
 - (void)prepareForUnuse;
 
@@ -77,9 +79,9 @@
 - (void)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object;
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault;
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated;
-- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated;
-- (void)setEditing:(BOOL)editing animated:(BOOL)animated;
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated NS_REQUIRES_SUPER;
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated NS_REQUIRES_SUPER;
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated NS_REQUIRES_SUPER;
 
 - (void)validateLayoutForBounds:(CGRect)bounds;
 - (void)invalidateLayoutForBounds:(CGRect)bounds;
@@ -124,11 +126,11 @@ typedef NS_ENUM(NSUInteger, MobilyDataSwipeCellStyle) {
 - (void)setShowedRightSwipeView:(BOOL)showedRightSwipeView animated:(BOOL)animated;
 - (void)hideAnySwipeViewAnimated:(BOOL)animated;
 
-- (void)willBeganSwipe;
-- (void)didBeganSwipe;
-- (void)movingSwipe:(CGFloat)progress;
-- (void)willEndedSwipe;
-- (void)didEndedSwipe;
+- (void)willBeganSwipe NS_REQUIRES_SUPER;
+- (void)didBeganSwipe NS_REQUIRES_SUPER;
+- (void)movingSwipe:(CGFloat)progress NS_REQUIRES_SUPER;
+- (void)willEndedSwipe NS_REQUIRES_SUPER;
+- (void)didEndedSwipe NS_REQUIRES_SUPER;
 
 @end
 

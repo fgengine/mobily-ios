@@ -49,6 +49,8 @@
 
 @property(nonatomic, readwrite, strong) NSString* phoneFormat;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)setHiddenToolbar:(BOOL)hiddenToolbar animated:(BOOL)animated;
 
 - (void)didBeginEditing;

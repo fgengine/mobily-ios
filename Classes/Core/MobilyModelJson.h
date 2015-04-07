@@ -49,6 +49,8 @@ typedef id (^MobilyModelJsonUndefinedBehaviour)(id modelJson, id value);
 - (instancetype)initWithUndefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithPath:(NSString*)path undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (id)parseJson:(id)json;
 
 - (id)convertValue:(id)value;

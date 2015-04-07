@@ -52,6 +52,9 @@ typedef void (^MobilyKVOBlock)(MobilyKVO* kvo, id oldValue, id newValue);
 @property(nonatomic, readwrite, copy) MobilyKVOBlock block;
 
 - (instancetype)initWithSubject:(id)subject keyPath:(NSString*)keyPath block:(MobilyKVOBlock)block;
+
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)stopObservation;
 
 @end

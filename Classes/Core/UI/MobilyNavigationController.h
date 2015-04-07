@@ -52,9 +52,11 @@
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventWillDisappear;
 @property(nonatomic, readwrite, strong) id< MobilyEvent > eventDidDisappear;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)setNeedUpdate;
-- (void)update;
-- (void)clear;
+- (void)update NS_REQUIRES_SUPER;
+- (void)clear NS_REQUIRES_SUPER;
 
 @end
 

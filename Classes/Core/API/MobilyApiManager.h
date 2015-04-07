@@ -52,6 +52,8 @@
 
 + (instancetype)shared;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)registerProvider:(MobilyApiProvider*)provider;
 - (void)unregisterProvider:(MobilyApiProvider*)provider;
 

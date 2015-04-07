@@ -53,6 +53,8 @@ typedef NS_OPTIONS(NSUInteger, MobilyApplicationNotificationType) {
 @property(nonatomic, readonly, assign) UIApplicationState state;
 @property(nonatomic, readonly, strong) NSData* deviceToken;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (BOOL)launchingWithOptions:(NSDictionary*)options;
 - (void)terminate;
 - (void)receiveMemoryWarning;
@@ -79,6 +81,8 @@ typedef NS_OPTIONS(NSUInteger, MobilyApplicationNotificationType) {
 @property(nonatomic, readonly, strong) NSString* identifier;
 @property(nonatomic, readonly, strong) NSArray* actions;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 @end
 
 /*--------------------------------------------------*/
@@ -90,6 +94,8 @@ typedef NS_OPTIONS(NSUInteger, MobilyApplicationNotificationType) {
 @property(nonatomic, readonly, assign) UIUserNotificationActivationMode activationMode;
 @property(nonatomic, readonly, assign, getter=isAuthenticationRequired) BOOL authenticationRequired;
 @property(nonatomic, readonly, assign, getter=isDestructive) BOOL destructive;
+
+- (void)setup NS_REQUIRES_SUPER;
 
 @end
 

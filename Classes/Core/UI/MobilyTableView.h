@@ -45,6 +45,8 @@
 
 @property(nonatomic, readwrite, weak) MobilyTableSwipeCell* currentSwipeCell;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)setCurrentSwipeCell:(MobilyTableSwipeCell*)currentSwipeCell animated:(BOOL)animated;
 
 - (void)registerCellClass:(Class)cellClass;
@@ -63,6 +65,8 @@
 @property(nonatomic, readwrite, weak) MobilyTableView* tableView;
 @property(nonatomic, readwrite, strong) IBOutlet UIView* rootView;
 @property(nonatomic, readwrite, weak) id model;
+
+- (void)setup NS_REQUIRES_SUPER;
 
 - (void)didLoadFromNib;
 

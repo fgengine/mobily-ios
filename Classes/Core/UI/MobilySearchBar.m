@@ -81,6 +81,8 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
 #pragma mark Init / Free
 
 - (void)setup {
+    [super setup];
+    
     _margin = UIEdgeInsetsMake(8.0f, 8.0f, 8.0f, 8.0f);
     _spacing = 8.0f;
     _showCancelButton = YES;

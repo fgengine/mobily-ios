@@ -310,6 +310,7 @@ typedef void (^MobilyDownloaderBlock)();
 }
 
 - (void)setup {
+    [super setup];
 }
 
 - (void)dealloc {

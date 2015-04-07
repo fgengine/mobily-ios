@@ -70,6 +70,8 @@
 - (instancetype)initWithDataItem:(MobilyDataItem*)dataItem;
 - (instancetype)initWithIdentifier:(NSString*)identifier order:(NSUInteger)order data:(id)data;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (BOOL)containsEventForKey:(id)key;
 - (BOOL)containsEventForIdentifier:(NSString*)identifier forKey:(id)key;
 
@@ -81,9 +83,9 @@
 - (void)didBeginUpdateAnimated:(BOOL)animated;
 - (void)didEndUpdateAnimated:(BOOL)animated;
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated;
-- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated;
-- (void)setEditing:(BOOL)editing animated:(BOOL)animated;
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated NS_REQUIRES_SUPER;
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated NS_REQUIRES_SUPER;
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated NS_REQUIRES_SUPER;
 
 - (void)setNeedUpdateSize;
 - (CGSize)sizeForAvailableSize:(CGSize)size;

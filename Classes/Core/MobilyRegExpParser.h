@@ -52,6 +52,8 @@
 - (instancetype)initWithExpression:(NSString*)expression pattern:(NSString*)pattern;
 - (instancetype)initWithSting:(NSString*)string expression:(NSString*)expression pattern:(NSString*)pattern;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 @end
 
 /*--------------------------------------------------*/
@@ -64,6 +66,8 @@
 
 @property(nonatomic, readonly, strong) NSString* resultString;
 @property(nonatomic, readonly, assign) NSRange resultRange;
+
+- (void)setup NS_REQUIRES_SUPER;
 
 @end
 

@@ -77,6 +77,8 @@ typedef NS_OPTIONS(NSUInteger, MobilyDataContainerAlign) {
 @property(nonatomic, readwrite, assign) MobilyDataContainerAlign alignPosition;
 @property(nonatomic, readwrite, assign) UIOffset alignThreshold;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (NSArray*)allItems;
 
 - (MobilyDataItem*)itemForPoint:(CGPoint)point;

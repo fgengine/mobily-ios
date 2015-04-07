@@ -38,6 +38,9 @@
 /*--------------------------------------------------*/
 
 @interface MobilyView : UIView< MobilyBuilderObject >
+
+- (void)setup NS_REQUIRES_SUPER;
+
 @end
 
 /*--------------------------------------------------*/

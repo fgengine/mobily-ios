@@ -117,11 +117,7 @@
                 NSNumber* memoryStorageInterval = [bundle objectForInfoDictionaryKey:@"MobilyCacheMemoryStorageInterval" defaultValue:@(MOBILY_CACHE_MEMORY_STORAGE_INTERVAL)];
                 NSNumber* discCapacity = [bundle objectForInfoDictionaryKey:@"MobilyCacheDiscCapacity" defaultValue:@(MOBILY_CACHE_DISC_CAPACITY)];
                 NSNumber* discStorageInterval = [bundle objectForInfoDictionaryKey:@"MobilyCacheDiscStorageInterval" defaultValue:@(MOBILY_CACHE_DISC_STORAGE_INTERVAL)];
-                shared = [[self alloc] initWithName:name
-                                     memoryCapacity:memoryCapacity.unsignedIntegerValue
-                              memoryStorageInterval:memoryStorageInterval.doubleValue
-                                       discCapacity:discCapacity.unsignedIntegerValue
-                                discStorageInterval:discStorageInterval.doubleValue];
+                shared = [[self alloc] initWithName:name memoryCapacity:memoryCapacity.unsignedIntegerValue memoryStorageInterval:memoryStorageInterval.doubleValue discCapacity:discCapacity.unsignedIntegerValue discStorageInterval:discStorageInterval.doubleValue];
             }
         }
     }

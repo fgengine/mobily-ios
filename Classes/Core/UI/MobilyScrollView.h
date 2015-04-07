@@ -50,6 +50,8 @@ typedef NS_ENUM(NSInteger, MobilyScrollViewDirection) {
 @property(nonatomic, readwrite, assign) IBInspectable MobilyScrollViewDirection direction;
 @property(nonatomic, readwrite, strong) IBOutlet UIView* rootView;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 @end
 
 /*--------------------------------------------------*/

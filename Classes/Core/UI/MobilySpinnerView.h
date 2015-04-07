@@ -44,6 +44,8 @@
 @property(nonatomic, readwrite, assign) BOOL hidesWhenStopped;
 @property(nonatomic, readonly, assign, getter=isAnimating) BOOL animating;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)startAnimating;
 - (void)stopAnimating;
 

@@ -45,12 +45,14 @@
 @property(nonatomic, readwrite, weak) NSArray* compareMap;
 @property(nonatomic, readwrite, weak) NSArray* serializeMap;
 @property(nonatomic, readwrite, weak) NSDictionary* jsonMap;
+@property(nonatomic, readwrite, weak) NSDictionary* sqlMap;
 
 + (NSArray*)arrayMap:(NSMutableDictionary*)cache class:(Class)class selector:(SEL)selector;
 + (NSDictionary*)dictionaryMap:(NSMutableDictionary*)cache class:(Class)class selector:(SEL)selector;
 + (NSArray*)buildCompareMap;
 + (NSArray*)buildSerializeMap;
 + (NSDictionary*)buildJsonMap;
++ (NSDictionary*)buildSqlMap;
 
 @end
 
@@ -227,6 +229,13 @@
     return _jsonMap;
 }
 
+- (NSDictionary*)sqlMap {
+    if(_sqlMap == nil) {
+        self.sqlMap = [self.class buildSqlMap];
+    }
+    return _sqlMap;
+}
+
 #pragma mark Public
 
 + (NSArray*)compareMap {
@@ -238,6 +247,14 @@
 }
 
 + (NSDictionary*)jsonMap {
+    return nil;
+}
+
++ (NSUInteger)sqlVersion {
+    return 1;
+}
+
++ (NSDictionary*)sqlMap {
     return nil;
 }
 
@@ -416,6 +433,28 @@
     return map;
 }
 
++ (NSDictionary*)dictionaryMap:(NSMutableDictionary*)cache class:(Class)class selector:(SEL)selector version:(NSUInteger)version {
+    NSString* className = [NSString stringWithFormat:@"%@_%d", NSStringFromClass(class), (int)version];
+    NSMutableDictionary* map = cache[className];
+    if(map == nil) {
+        map = NSMutableDictionary.dictionary;
+        while(class != nil) {
+            if([class respondsToSelector:selector] == YES) {
+                NSDictionary* mapPart = [class performSelector:selector];
+                if([mapPart isKindOfClass:NSDictionary.class] == YES) {
+                    NSDictionary* mapVersion = mapPart[@(version)];
+                    if([mapVersion isKindOfClass:NSDictionary.class] == YES) {
+                        [map addEntriesFromDictionary:mapVersion];
+                    }
+                }
+            }
+            class = [class superclass];
+        }
+        cache[className] = map;
+    }
+    return map;
+}
+
 #pragma clang diagnostic pop
 
 + (NSArray*)buildCompareMap {
@@ -440,6 +479,14 @@
         cache = NSMutableDictionary.dictionary;
     }
     return [self dictionaryMap:cache class:self.class selector:@selector(jsonMap)];
+}
+
++ (NSDictionary*)buildSqlMap {
+    static NSMutableDictionary* cache = nil;
+    if(cache == nil) {
+        cache = NSMutableDictionary.dictionary;
+    }
+    return [self dictionaryMap:cache class:self.class selector:@selector(sqlMap) version:[self sqlVersion]];
 }
 
 @end

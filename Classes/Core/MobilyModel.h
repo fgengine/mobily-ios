@@ -48,9 +48,13 @@ typedef void (^MobilyModelBlock)();
 - (instancetype)initWithUserDefaultsKey:(NSString*)userDefaultsKey;
 - (instancetype)initWithJson:(id)json;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 + (NSArray*)compareMap;
 + (NSArray*)serializeMap;
 + (NSDictionary*)jsonMap;
++ (NSUInteger)sqlVersion;
++ (NSDictionary*)sqlMap;
 
 - (void)fromJson:(id)json;
 
@@ -84,6 +88,8 @@ typedef void (^MobilyModelCollectionEnumBlock)(id item, BOOL* stop);
 - (instancetype)initWithUserDefaultsKey:(NSString*)userDefaultsKey;
 - (instancetype)initWithFileName:(NSString*)fileName;
 - (instancetype)initWithJson:(id)json storageItemClass:(Class)storageItemClass;
+
+- (void)setup NS_REQUIRES_SUPER;
 
 - (void)fromJson:(id)json modelClass:(Class)storageItemClass;
 
@@ -141,6 +147,8 @@ typedef MobilyModelQuerySortResult (^MobilyModelQueryResortBlock)(id item1, id i
 @property(nonatomic, readonly, assign) NSArray* models;
 
 - (instancetype)initWithCollection:(MobilyModelCollection*)collection;
+
+- (void)setup NS_REQUIRES_SUPER;
 
 - (void)setNeedReload;
 - (void)setNeedResort;

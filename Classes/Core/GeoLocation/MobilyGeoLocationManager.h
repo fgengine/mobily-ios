@@ -80,6 +80,8 @@ typedef void(^MobilyGeoLocationReverseGeocodeBlock)(NSArray* placemarks, NSError
 
 + (instancetype)shared;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (MobilyGeoLocationRequest*)requestWithDesiredAccuracy:(MobilyGeoLocationAccuracy)desiredAccuracy complete:(MobilyGeoLocationRequestComplete)complete failure:(MobilyGeoLocationRequestFailure)failure;
 - (MobilyGeoLocationRequest*)requestWithDesiredAccuracy:(MobilyGeoLocationAccuracy)desiredAccuracy timeout:(NSTimeInterval)timeout complete:(MobilyGeoLocationRequestComplete)complete failure:(MobilyGeoLocationRequestFailure)failure;
 - (MobilyGeoLocationRequest*)requestWithDesiredAccuracy:(MobilyGeoLocationAccuracy)desiredAccuracy timeout:(NSTimeInterval)timeout delayUntilAuthorized:(BOOL)delayUntilAuthorized complete:(MobilyGeoLocationRequestComplete)complete failure:(MobilyGeoLocationRequestFailure)failure;

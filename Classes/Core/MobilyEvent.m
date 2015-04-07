@@ -33,25 +33,18 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyEvent.h"
-
-/*--------------------------------------------------*/
-
-@interface MobilyEventSelector ()
-
-@property(nonatomic, readwrite, weak) id target;
-@property(nonatomic, readwrite, assign) SEL action;
-@property(nonatomic, readwrite, weak) NSThread* safeThread;
-
-- (void)safeFireParams:(NSMutableDictionary*)params;
-
-@end
+#import "MobilyEvent+Private.h"
 
 /*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
 @implementation MobilyEventSelector
+
+#pragma mark Synthesize
+
+@synthesize target = _target;
+@synthesize action = _action;
 
 #pragma mark Init / Free
 
@@ -70,7 +63,7 @@
 - (instancetype)initWithCoder:(NSCoder*)coder {
     self = [super init];
     if(self != nil) {
-        self.action = NSSelectorFromString([coder decodeObjectForKey:@"action"]);
+        _action = NSSelectorFromString([coder decodeObjectForKey:@"action"]);
         [self setup];
     }
     return self;
@@ -79,20 +72,15 @@
 - (instancetype)initWithTarget:(id)target action:(SEL)action thread:(NSThread*)thread {
     self = [super init];
     if(self != nil) {
-        self.target = target;
-        self.action = action;
-        self.safeThread = thread;
+        _target = target;
+        _action = action;
+        _safeThread = thread;
         [self setup];
     }
     return self;
 }
 
 - (void)setup {
-}
-
-- (void)dealloc {
-    self.target = nil;
-    self.safeThread = nil;
 }
 
 #pragma mark NSCoding
@@ -128,7 +116,7 @@
                 [invocation retainArguments];
             }
             if(_safeThread != nil) {
-                [self performSelector:@selector(safeFireParams:) onThread:_safeThread withObject:invocation waitUntilDone:YES];
+                [self performSelector:@selector(_safeFireParams:) onThread:_safeThread withObject:invocation waitUntilDone:YES];
             } else {
                 [invocation invoke];
             }
@@ -142,7 +130,7 @@
 
 #pragma mark Private
 
-- (void)safeFireParams:(NSInvocation*)invocation {
+- (void)_safeFireParams:(NSInvocation*)invocation {
     [invocation invoke];
 }
 
@@ -152,18 +140,11 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilyEventBlock ()
-
-@property(nonatomic, readwrite, copy) MobilyEventBlockType block;
-@property(nonatomic, readwrite, assign) dispatch_queue_t safeQueue;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
 @implementation MobilyEventBlock
+
+#pragma mark Synthesize
+
+@synthesize block = _block;
 
 #pragma mark Init / Free
 
@@ -190,18 +171,14 @@
 - (instancetype)initWithBlock:(MobilyEventBlockType)block queue:(dispatch_queue_t)queue {
     self = [super init];
     if(self != nil) {
-        self.block = block;
-        self.safeQueue = queue;
+        _block = block;
+        _safeQueue = queue;
         [self setup];
     }
     return self;
 }
 
 - (void)setup {
-}
-
-- (void)dealloc {
-    self.block = nil;
 }
 
 #pragma mark NSCoding
@@ -231,17 +208,11 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilyEvents ()
-
-@property(nonatomic, readwrite, strong) NSMutableDictionary* groupsEvents;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
-/*--------------------------------------------------*/
-
 @implementation MobilyEvents
+
+#pragma mark Synthesize
+
+@synthesize defaultGroup = _defaultGroup;
 
 #pragma mark Init / Free
 
@@ -254,8 +225,8 @@
 }
 
 - (void)setup {
-    self.defaultGroup = NSNull.null;
-    self.groupsEvents = NSMutableDictionary.dictionary;
+    _defaultGroup = NSNull.null;
+    _groupsEvents = NSMutableDictionary.dictionary;
 }
 
 - (void)dealloc {

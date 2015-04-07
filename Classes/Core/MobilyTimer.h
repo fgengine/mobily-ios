@@ -73,6 +73,8 @@ typedef void(^MobilyTimerBlock)();
 - (instancetype)initWithInterval:(NSTimeInterval)interval repeat:(NSUInteger)repeat;
 - (instancetype)initWithDelay:(NSTimeInterval)delay interval:(NSTimeInterval)interval repeat:(NSUInteger)repeat;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)start;
 - (void)stop;
 

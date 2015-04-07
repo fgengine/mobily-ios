@@ -47,6 +47,8 @@
 
 + (instancetype)shared;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)registerProvider:(MobilySocialProvider*)provider;
 - (void)unregisterProvider:(MobilySocialProvider*)provider;
 

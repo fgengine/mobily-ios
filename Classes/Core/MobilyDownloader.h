@@ -57,6 +57,8 @@ typedef void (^MobilyDownloaderFailureBlock)(NSURL* url);
 
 - (instancetype)initWithDelegate:(id< MobilyDownloaderDelegate >)delegate;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (BOOL)isExistEntryByUrl:(NSURL*)url;
 - (BOOL)setEntry:(id)entry byUrl:(NSURL*)url;
 - (void)removeEntryByUrl:(NSURL*)url;

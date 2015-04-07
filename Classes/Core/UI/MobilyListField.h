@@ -52,7 +52,7 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyListFieldItem : NSObject
+@interface MobilyListFieldItem : NSObject< MobilyObject >
 
 @property(nonatomic, readwrite, strong) NSString* title;
 @property(nonatomic, readwrite, strong) UIFont* font;
@@ -62,6 +62,8 @@
 - (instancetype)initWithTitle:(NSString*)title value:(id)value;
 - (instancetype)initWithTitle:(NSString*)title color:(UIColor*)color value:(id)value;
 - (instancetype)initWithTitle:(NSString*)title font:(UIFont*)font color:(UIColor*)color value:(id)value;
+
+- (void)setup NS_REQUIRES_SUPER;
 
 @end
 

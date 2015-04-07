@@ -55,6 +55,8 @@ typedef void (^MobilySocialProviderFailureBlock)(NSError* error);
 
 - (instancetype)initWithName:(NSString*)name;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;
 
 - (void)didBecomeActive;

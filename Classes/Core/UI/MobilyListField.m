@@ -51,13 +51,6 @@
 
 #pragma mark Init / Free
 
-- (void)dealloc {
-    self.pickerView = nil;
-    
-    self.items = nil;
-    self.selectedItem = nil;
-}
-
 #pragma mark Public
 
 - (void)didBeginEditing {
@@ -178,6 +171,7 @@
         self.font = [UIFont systemFontOfSize:UIFont.systemFontSize];
         self.color = UIColor.blackColor;
         self.value = value;
+        [self setup];
     }
     return self;
 }
@@ -189,6 +183,7 @@
         self.font = [UIFont systemFontOfSize:UIFont.systemFontSize];
         self.color = color;
         self.value = value;
+        [self setup];
     }
     return self;
 }
@@ -200,15 +195,12 @@
         self.font = font;
         self.color = color;
         self.value = value;
+        [self setup];
     }
     return self;
 }
 
-- (void)dealloc {
-    self.title = nil;
-    self.font = nil;
-    self.color = nil;
-    self.value = nil;
+- (void)setup {
 }
 
 @end

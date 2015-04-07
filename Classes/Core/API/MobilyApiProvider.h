@@ -57,6 +57,8 @@ typedef void (^MobilyApiProviderCompleteBlock)(id request, id response);
 
 - (instancetype)initWithName:(NSString*)name url:(NSURL*)url;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target completeSelector:(SEL)completeSelector;
 - (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target completeBlock:(MobilyApiProviderCompleteBlock)completeBlock;
 - (void)cancelByRequest:(MobilyApiRequest*)request;

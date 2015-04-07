@@ -33,31 +33,38 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyObject.h"
+#import "MobilyEvent.h"
 
 /*--------------------------------------------------*/
 
-typedef void (^MobilySharedManagerListenerBlock)(id messageObject);
+@interface MobilyEventSelector () {
+@protected
+    __weak id _target;
+    SEL _action;
+    __weak NSThread* _safeThread;
+}
+
+- (void)_safeFireParams:(NSMutableDictionary*)params;
+
+@end
 
 /*--------------------------------------------------*/
 
-@interface MobilySharedManager : NSObject< MobilyObject >
+@interface MobilyEventBlock () {
+@protected
+    MobilyEventBlockType _block;
+    dispatch_queue_t _safeQueue;
+}
 
-+ (BOOL)isSupported;
+@end
 
-- (instancetype)initWithApplicationGroupIdentifier:(NSString*)identifier optionalDirectory:(NSString*)directory;
+/*--------------------------------------------------*/
 
-- (void)setup NS_REQUIRES_SUPER;
-
-- (void)passMessageObject:(id< NSCoding >)messageObject identifier:(NSString*)identifier;
-
-- (id)messageWithIdentifier:(NSString*)identifier;
-
-- (void)clearMessageContentsForIdentifier:(NSString*)identifier;
-- (void)clearAllMessageContents;
-
-- (void)listenForMessageWithIdentifier:(NSString*)identifier listener:(MobilySharedManagerListenerBlock)listener;
-- (void)stopListeningForMessageWithIdentifier:(NSString*)identifier;
+@interface MobilyEvents () {
+@protected
+    id _defaultGroup;
+    NSMutableDictionary* _groupsEvents;
+}
 
 @end
 

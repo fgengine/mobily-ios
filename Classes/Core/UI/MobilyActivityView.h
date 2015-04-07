@@ -83,6 +83,8 @@ typedef void (^MobilyActivityViewBlock)();
 
 - (instancetype)initWithInView:(UIView*)view style:(MobilyActivityViewStyle)style text:(NSString*)text textWidth:(NSUInteger)textWidth;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)show;
 - (void)showComplete:(MobilyActivityViewBlock)complete;
 - (void)showPrepare:(MobilyActivityViewBlock)prepare complete:(MobilyActivityViewBlock)complete;

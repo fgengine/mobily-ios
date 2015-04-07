@@ -48,6 +48,8 @@
 @property(nonatomic, readwrite, strong) IBInspectable NSDate* maximumDate;
 @property(nonatomic, readwrite, strong) IBInspectable NSDate* date;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)setDate:(NSDate*)date animated:(BOOL)animated;
 
 @end

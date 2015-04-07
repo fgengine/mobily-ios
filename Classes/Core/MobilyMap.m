@@ -86,6 +86,7 @@
         _keys = [[NSMutableArray alloc] init];
         _objects = [[NSMutableArray alloc] init];
         _pairs = [[NSMutableDictionary alloc] init];
+        [self setup];
     }
     return self;
 }
@@ -100,6 +101,7 @@
         _keys = [[NSMutableArray alloc] initWithArray:map.allKeys copyItems:flag];
         _objects = [[NSMutableArray alloc] initWithArray:map.allObjects copyItems:flag];
         _pairs = [[NSMutableDictionary alloc] initWithObjects:_objects forKeys:_keys];
+        [self setup];
     }
     return self;
 }
@@ -123,6 +125,7 @@
             [_objects addObject:entrys[key]];
         }
         _pairs = [[NSMutableDictionary alloc] initWithObjects:_objects forKeys:_keys];
+        [self setup];
     }
     return self;
 }
@@ -135,6 +138,7 @@
         _keys = [[NSMutableArray alloc] initWithArray:orderedKeys];
         _objects = [[NSMutableArray alloc] initWithArray:orderedObjects];
         _pairs = [[NSMutableDictionary alloc] initWithObjects:_objects forKeys:_keys];
+        [self setup];
     }
     return self;
 }
@@ -143,10 +147,7 @@
     return [self initWithObjects:[decoder decodeObjectForKey:@"NSODObjects"] pairedWithKeys:[decoder decodeObjectForKey:@"NSODKeys"]];
 }
 
-- (void)dealloc {
-    _keys = nil;
-    _objects = nil;
-    _pairs = nil;
+- (void)setup {
 }
 
 #pragma mark Querying

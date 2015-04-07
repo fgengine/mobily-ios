@@ -50,6 +50,8 @@
 + (void)setUpdatesEnabled;
 + (void)setUpdatesDisabled;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)updateAsynchronously:(BOOL)async completion:(MobilySimpleBlock)completion;
 
 @end

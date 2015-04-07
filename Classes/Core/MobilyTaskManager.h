@@ -57,6 +57,8 @@ typedef void (^MobilyTaskManagerEnumBlock)(id task, BOOL* stop);
 
 @property(nonatomic, readwrite, assign) NSUInteger maxConcurrentTask;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)addTask:(MobilyTask*)task;
 - (void)addTask:(MobilyTask*)task priority:(MobilyTaskPriority)priority;
 - (void)cancelTask:(MobilyTask*)task;
@@ -82,6 +84,8 @@ typedef void (^MobilyTaskManagerEnumBlock)(id task, BOOL* stop);
 
 @property(nonatomic, readwrite, assign, getter=isNeedRework) BOOL needRework;
 @property(nonatomic, readonly, assign, getter=isCanceled) BOOL cancel;
+
+- (void)setup NS_REQUIRES_SUPER;
 
 - (BOOL)willStart;
 - (void)working;

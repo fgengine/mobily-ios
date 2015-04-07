@@ -100,6 +100,8 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewSearchBarStyle) {
 @property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* rightRefreshView;
 @property(nonatomic, readwrite, assign) UIEdgeInsets refreshViewInsets;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (void)registerIdentifier:(NSString*)identifier withViewClass:(Class)viewClass;
 - (void)unregisterIdentifier:(NSString*)identifier;
 - (void)unregisterAllIdentifiers;

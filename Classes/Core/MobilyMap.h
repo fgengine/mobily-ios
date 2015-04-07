@@ -33,11 +33,11 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyNS.h"
+#import "MobilyObject.h"
 
 /*--------------------------------------------------*/
 
-@interface MobilyMap : NSObject< NSCopying, NSFastEnumeration, NSCoding >
+@interface MobilyMap : NSObject< MobilyObject, NSCopying, NSCoding, NSFastEnumeration >
 
 + (instancetype)map;
 + (instancetype)mapWithMap:(MobilyMap*)map;
@@ -54,6 +54,8 @@
 - (instancetype)initWithContentsOfDictionary:(NSDictionary*)entries;
 - (instancetype)initWithObjects:(NSArray*)orderedObjects pairedWithKeys:(NSArray*)orderedKeys;
 - (instancetype)initWithCoder:(NSCoder*)decoder;
+
+- (void)setup NS_REQUIRES_SUPER;
 
 - (BOOL)containsObject:(id)object;
 - (BOOL)containsObject:(id)object pairedWithKey:(id< NSCopying >)key;

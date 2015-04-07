@@ -46,6 +46,8 @@
 
 @property(nonatomic, readonly, strong) MobilyActivityView* activity;
 
+- (void)setup NS_REQUIRES_SUPER;
+
 - (MobilyActivityView*)makeActivity;
 
 @end

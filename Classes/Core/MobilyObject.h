@@ -41,6 +41,7 @@ typedef void(^MobilySimpleBlock)();
 
 /*--------------------------------------------------*/
 
+NS_PROTOCOL_REQUIRES_EXPLICIT_IMPLEMENTATION
 @protocol MobilyObject < NSObject >
 
 - (void)setup;
