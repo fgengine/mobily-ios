@@ -1,9 +1,5 @@
 /*--------------------------------------------------*/
 
-#import "MobilyDataRefreshView+Private.h"
-
-/*--------------------------------------------------*/
-
 #import "___FILEBASENAME___.h"
 
 /*--------------------------------------------------*/
@@ -36,16 +32,6 @@
 }
 
 - (void)didLoading {
-}
-
-#pragma mark Private override
-
-- (void)_showAnimated:(BOOL)animated complete:(MobilyDataRefreshViewCompleteBlock)complete {
-    [super _showAnimated:animated complete:complete];
-}
-
-- (void)_hideAnimated:(BOOL)animated complete:(MobilyDataRefreshViewCompleteBlock)complete {
-    [super _hideAnimated:animated complete:complete];
 }
 
 @end
