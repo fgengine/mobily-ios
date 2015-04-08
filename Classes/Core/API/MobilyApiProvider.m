@@ -112,23 +112,15 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
         }
         _manager = manager;
         if(_manager != nil) {
+            if(_taskManager == nil) {
+                _taskManager = _manager.taskManager;
+            }
+            if(_cache == nil) {
+                _cache = _manager.cache;
+            }
             [_manager registerProvider:self];
         }
     }
-}
-
-- (MobilyTaskManager*)taskManager {
-    if((_manager != nil) && (_taskManager == nil)) {
-        _taskManager = _manager.taskManager;
-    }
-    return _taskManager;
-}
-
-- (MobilyCache*)cache {
-    if((_manager != nil) && (_cache == nil)) {
-        _cache = _manager.cache;
-    }
-    return _cache;
 }
 
 #pragma mark Public
