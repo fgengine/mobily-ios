@@ -44,6 +44,7 @@
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyApiManager : NSObject < MobilyObject >
 
 @property(nonatomic, readonly, copy) NSArray* providers;

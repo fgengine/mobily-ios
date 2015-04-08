@@ -46,6 +46,7 @@ typedef void (^MobilyApiProviderCompleteBlock)(id request, id response);
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyApiProvider : NSObject < MobilyObject >
 
 @property(nonatomic, readwrite, weak) MobilyApiManager* manager;

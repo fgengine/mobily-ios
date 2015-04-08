@@ -95,6 +95,20 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
+@interface MobilyHttpAttachment : NSObject < MobilyObject >
+
+@property(nonatomic, readonly, strong) NSString* name;
+@property(nonatomic, readonly, strong) NSString* filename;
+@property(nonatomic, readonly, strong) NSString* mimeType;
+@property(nonatomic, readonly, strong) NSData* data;
+
+- (instancetype)initWithName:(NSString*)name filename:(NSString*)filename mimeType:(NSString*)mimeType data:(NSData*)data;
+
+@end
+
+/*--------------------------------------------------*/
+
 @protocol MobilyHttpQueryDelegate < NSObject >
 
 @optional

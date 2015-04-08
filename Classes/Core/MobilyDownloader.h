@@ -47,6 +47,7 @@ typedef void (^MobilyDownloaderFailureBlock)(NSURL* url);
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyDownloader : NSObject< MobilyObject >
 
 @property(nonatomic, readwrite, weak) id< MobilyDownloaderDelegate > delegate;

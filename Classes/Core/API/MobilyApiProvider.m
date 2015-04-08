@@ -43,10 +43,14 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyApiProvider ()
-
-@property(nonatomic, readwrite, strong) NSString* name;
-@property(nonatomic, readwrite, strong) NSURL* url;
+@interface MobilyApiProvider () {
+@protected
+    __weak MobilyApiManager* _manager;
+    MobilyTaskManager* _taskManager;
+    MobilyCache* _cache;
+    NSString* _name;
+    NSURL* _url;
+}
 
 @end
 
@@ -54,6 +58,7 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyApiProviderTask : MobilyTaskHttpQuery
 
 @property(nonatomic, readwrite, weak) MobilyApiProvider* provider;
@@ -75,27 +80,27 @@
 
 @implementation MobilyApiProvider
 
+#pragma mark Synthesize
+
+@synthesize manager = _manager;
+@synthesize taskManager = _taskManager;
+@synthesize cache = _cache;
+@synthesize name = _name;
+@synthesize url = _url;
+
 #pragma mark Init / Free
 
 - (instancetype)initWithName:(NSString*)name url:(NSURL*)url {
     self = [super init];
     if(self != nil) {
-        self.name = name;
-        self.url = url;
+        _name = name;
+        _url = url;
         [self setup];
     }
     return self;
 }
 
 - (void)setup {
-}
-
-- (void)dealloc {
-    self.manager = nil;
-    self.taskManager = nil;
-    self.cache = nil;
-    self.name = nil;
-    self.url = nil;
 }
 
 #pragma mark Property
@@ -114,14 +119,14 @@
 
 - (MobilyTaskManager*)taskManager {
     if((_manager != nil) && (_taskManager == nil)) {
-        self.taskManager = _manager.taskManager;
+        _taskManager = _manager.taskManager;
     }
     return _taskManager;
 }
 
 - (MobilyCache*)cache {
     if((_manager != nil) && (_cache == nil)) {
-        self.cache = _manager.cache;
+        _cache = _manager.cache;
     }
     return _cache;
 }
@@ -129,15 +134,15 @@
 #pragma mark Public
 
 - (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target completeSelector:(SEL)completeSelector {
-    [self.taskManager addTask:[[MobilyApiProviderTask alloc] initWithProvider:self request:request target:target completeSelector:completeSelector]];
+    [_taskManager addTask:[[MobilyApiProviderTask alloc] initWithProvider:self request:request target:target completeSelector:completeSelector]];
 }
 
 - (void)sendRequest:(MobilyApiRequest*)request byTarget:(id)target completeBlock:(MobilyApiProviderCompleteBlock)completeBlock {
-    [self.taskManager addTask:[[MobilyApiProviderTask alloc] initWithProvider:self request:request target:target completeBlock:completeBlock]];
+    [_taskManager addTask:[[MobilyApiProviderTask alloc] initWithProvider:self request:request target:target completeBlock:completeBlock]];
 }
 
 - (void)cancelByRequest:(MobilyApiRequest*)request {
-    [self.taskManager enumirateTasksUsingBlock:^(MobilyApiProviderTask* task, BOOL* stop __unused) {
+    [_taskManager enumirateTasksUsingBlock:^(MobilyApiProviderTask* task, BOOL* stop __unused) {
         if([task.request isEqual:request] == YES) {
             [task cancel];
         }
@@ -145,7 +150,7 @@
 }
 
 - (void)cancelByTarget:(id)target {
-    [self.taskManager enumirateTasksUsingBlock:^(MobilyApiProviderTask* task, BOOL* stop __unused) {
+    [_taskManager enumirateTasksUsingBlock:^(MobilyApiProviderTask* task, BOOL* stop __unused) {
         if(task.target == target) {
             [task cancel];
         }
@@ -160,14 +165,23 @@
 
 @implementation MobilyApiProviderTask
 
+#pragma mark Synthesize
+
+@synthesize provider = _provider;
+@synthesize request = _request;
+@synthesize response = _response;
+@synthesize target = _target;
+@synthesize completeEvent = _completeEvent;
+@synthesize numberOfErrors = _numberOfErrors;
+
 #pragma mark Init / Free
 
 - (instancetype)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target {
     self = [super init];
     if(self != nil) {
-        self.provider = provider;
-        self.request = request;
-        self.target = target;
+        _provider = provider;
+        _request = request;
+        _target = target;
     }
     return self;
 }
@@ -175,7 +189,7 @@
 - (instancetype)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target completeSelector:(SEL)completeSelector {
     self = [self initWithProvider:provider request:request target:target];
     if(self != nil) {
-        self.completeEvent = [MobilyEventSelector eventWithTarget:target action:completeSelector inMainThread:YES];
+        _completeEvent = [MobilyEventSelector eventWithTarget:target action:completeSelector inMainThread:YES];
     }
     return self;
 }
@@ -183,7 +197,7 @@
 - (instancetype)initWithProvider:(MobilyApiProvider*)provider request:(MobilyApiRequest*)request target:(id)target completeBlock:(MobilyApiProviderCompleteBlock)completeBlock {
     self = [self initWithProvider:provider request:request target:target];
     if(self != nil) {
-        self.completeEvent = [MobilyEventBlock eventWithBlock:^id(id sender, id object) {
+        _completeEvent = [MobilyEventBlock eventWithBlock:^id(id sender, id object) {
             if(completeBlock != nil) {
                 completeBlock(sender, object);
             }
@@ -194,31 +208,28 @@
 }
 
 - (void)dealloc {
-    self.target = nil;
-    self.completeEvent = nil;
+    _target = nil;
+    _completeEvent = nil;
 }
 
 #pragma mark MobilyTaskHttpQuery
 
 - (BOOL)willStart {
-    MobilyHttpQuery* httpQuery = [_request httpQueryByBaseUrl:_provider.url];
-    if(httpQuery != nil) {
-        self.httpQuery = httpQuery;
-    }
+    _httpQuery = [_request httpQueryByBaseUrl:_provider.url];
     return [super willStart];
 }
 
 - (void)working {
     [super working];
     
-    self.response = [_request responseByHttpQuery:self.httpQuery];
+    _response = [_request responseByHttpQuery:self.httpQuery];
     if(_response.isValidResponse == NO) {
         if(_request.numberOfRetries == NSNotFound) {
-            self.needRework = YES;
+            [self setNeedRework];
         } else {
             if(_numberOfErrors != _request.numberOfRetries) {
-                self.numberOfErrors = _numberOfErrors + 1;
-                self.needRework = YES;
+                _numberOfErrors = _numberOfErrors + 1;
+                [self setNeedRework];
             }
         }
     }

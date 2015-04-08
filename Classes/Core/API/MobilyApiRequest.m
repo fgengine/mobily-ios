@@ -41,7 +41,15 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyApiRequest ()
+@interface MobilyApiRequest () {
+    NSString* _method;
+    NSString* _relativeUrl;
+    NSDictionary* _urlParams;
+    NSDictionary* _headers;
+    NSDictionary* _bodyParams;
+    NSArray* _attachments;
+    NSUInteger _numberOfRetries;
+}
 
 @end
 
@@ -50,6 +58,16 @@
 /*--------------------------------------------------*/
 
 @implementation MobilyApiRequest
+
+#pragma mark MobilyModel
+
+@synthesize method = _method;
+@synthesize relativeUrl = _relativeUrl;
+@synthesize urlParams = _urlParams;
+@synthesize headers = _headers;
+@synthesize bodyParams = _bodyParams;
+@synthesize attachments = _attachments;
+@synthesize numberOfRetries = _numberOfRetries;
 
 #pragma mark MobilyModel
 
@@ -157,25 +175,55 @@
 - (instancetype)initWithMethod:(NSString*)method relativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams headers:(NSDictionary*)headers bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries {
     self = [super init];
     if(self != nil) {
-        self.method = method;
-        self.relativeUrl = relativeUrl;
-        self.urlParams = urlParams;
-        self.headers = headers;
-        self.bodyParams = bodyParams;
-        self.attachments = attachments;
-        self.numberOfRetries = numberOfRetries;
+        _method = method;
+        _relativeUrl = relativeUrl;
+        _urlParams = urlParams;
+        _headers = headers;
+        _bodyParams = bodyParams;
+        _attachments = attachments;
+        _numberOfRetries = numberOfRetries;
         [self setup];
     }
     return self;
 }
 
-- (void)dealloc {
-    self.method = nil;
-    self.relativeUrl = nil;
-    self.urlParams = nil;
-    self.headers = nil;
-    self.bodyParams = nil;
-    self.attachments = nil;
+#pragma mark Debug
+
+- (NSString*)description {
+    NSMutableArray* result = NSMutableArray.array;
+    [result addObject:[NSMutableString stringWithFormat:@"Method = \"%@\";", _method]];
+    if(_relativeUrl.length > 0) {
+        [result addObject:[NSMutableString stringWithFormat:@"RelativeURL = \"%@\";", _relativeUrl]];
+    }
+    if(_urlParams.count > 0) {
+        NSMutableArray* temp = NSMutableArray.array;
+        [_urlParams each:^(id key, id value) {
+            [temp addObject:[NSString stringWithFormat:@"\"%@\" = \"%@\";", [key description], [value description]]];
+        }];
+        [result addObject:[NSString stringWithFormat:@"UrlParams [%@]", [temp componentsJoinedByString:@", "]]];
+    }
+    if(_headers.count > 0) {
+        NSMutableArray* temp = NSMutableArray.array;
+        [_headers each:^(id key, id value) {
+            [temp addObject:[NSString stringWithFormat:@"\t\"%@\" = \"%@\";", [key description], [value description]]];
+        }];
+        [result addObject:[NSString stringWithFormat:@"Headers [%@];", [temp componentsJoinedByString:@", "]]];
+    }
+    if(_bodyParams.count > 0) {
+        NSMutableArray* temp = NSMutableArray.array;
+        [_bodyParams each:^(id key, id value) {
+            [temp addObject:[NSString stringWithFormat:@"\t\"%@\" = \"%@\";", [key description], [value description]]];
+        }];
+        [result addObject:[NSString stringWithFormat:@"BodyParams [%@];", [temp componentsJoinedByString:@", "]]];
+    }
+    if(_attachments.count > 0) {
+        NSMutableArray* temp = NSMutableArray.array;
+        for(MobilyHttpAttachment* attachment in _attachments) {
+            [temp addObject:[attachment description]];
+        }
+        [result addObject:[NSString stringWithFormat:@"Attachments [%@];", [temp componentsJoinedByString:@", "]]];
+    }
+    return [result componentsJoinedByString:@", "];
 }
 
 #pragma mark Public

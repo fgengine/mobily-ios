@@ -39,11 +39,11 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyTaskManager ()
-
-@property(nonatomic, readwrite, strong) NSOperationQueue* queueManager;
-@property(nonatomic, readwrite, assign) UIBackgroundTaskIdentifier backgroundTaskId;
-@property(nonatomic, readwrite, assign) NSUInteger updateCount;
+@interface MobilyTaskManager () {
+    NSOperationQueue* _queueManager;
+    UIBackgroundTaskIdentifier _backgroundTaskId;
+    NSUInteger _updateCount;
+}
 
 @end
 
@@ -55,9 +55,12 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyTask ()
+@interface MobilyTask () {
+    __weak MobilyTaskManager* _taskManager;
+    __weak MobilyTaskOperation* _taskOperation;
+    BOOL _needRework;
+}
 
-@property(nonatomic, readwrite, weak) MobilyTaskManager* taskManager;
 @property(nonatomic, readwrite, weak) MobilyTaskOperation* taskOperation;
 
 @end
@@ -66,10 +69,12 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilyTaskOperation : NSOperation
+@interface MobilyTaskOperation : NSOperation {
+    __weak MobilyTaskManager* _taskManager;
+    MobilyTask* _task;
+}
 
-@property(nonatomic, readwrite, weak) MobilyTaskManager* taskManager;
-@property(nonatomic, readwrite, strong) MobilyTask* task;
+@property(nonatomic, readonly, strong) MobilyTask* task;
 
 - (instancetype)initWithTaskManager:(MobilyTaskManager*)taskManager task:(MobilyTask*)task;
 
@@ -86,18 +91,14 @@
 - (instancetype)init {
     self = [super init];
     if(self != nil) {
-        self.queueManager = [NSOperationQueue new];
-        self.backgroundTaskId = UIBackgroundTaskInvalid;
+        _queueManager = [NSOperationQueue new];
+        _backgroundTaskId = UIBackgroundTaskInvalid;
         [self setup];
     }
     return self;
 }
 
 - (void)setup {
-}
-
-- (void)dealloc {
-    self.queueManager = nil;
 }
 
 #pragma mark Public
@@ -214,6 +215,11 @@
 
 @implementation MobilyTask
 
+#pragma mark Synthesize
+
+@synthesize taskOperation = _taskOperation;
+@synthesize needRework = _needRework;
+
 #pragma mark Init / Free
 
 - (instancetype)init {
@@ -227,15 +233,14 @@
 - (void)setup {
 }
 
-- (void)dealloc {
-    self.taskManager = nil;
-    self.taskOperation = nil;
-}
-
 #pragma mark Public
 
 - (BOOL)isCanceled {
     return [_taskOperation isCancelled];
+}
+
+- (void)setNeedRework {
+    _needRework = YES;
 }
 
 - (BOOL)willStart {
@@ -243,6 +248,7 @@
 }
 
 - (void)working {
+    _needRework = NO;
 }
 
 - (void)didComplete {
@@ -265,13 +271,17 @@
 
 @implementation MobilyTaskOperation
 
+#pragma mark Synthesize
+
+@synthesize task = _task;
+
 #pragma mark Init / Free
 
 - (instancetype)initWithTaskManager:(MobilyTaskManager*)taskManager task:(MobilyTask*)task {
     self = [super init];
     if(self != nil) {
-        self.taskManager = taskManager;
-        self.task = task;
+        _taskManager = taskManager;
+        _task = task;
         
         _task.taskOperation = self;
         
@@ -289,11 +299,6 @@
         };
     }
     return self;
-}
-
-- (void)dealloc {
-    self.taskManager = nil;
-    self.task = nil;
 }
 
 #pragma mark NSOperation
@@ -331,26 +336,26 @@
 
 @implementation MobilyTaskHttpQuery
 
-#pragma mark Init / Free
+#pragma mark MobilyTask
 
-- (void)dealloc {
-    self.httpQuery = nil;
-}
+@synthesize httpQuery = _httpQuery;
 
 #pragma mark MobilyTask
 
 - (BOOL)willStart {
-    return (_httpQuery != nil);
+    if([super willStart] == YES) {
+        return (_httpQuery != nil);
+    }
+    return NO;
 }
 
 - (void)working {
+    [super working];
     [_httpQuery start];
 }
 
 - (void)cancel {
-    if(_httpQuery != nil) {
-        [_httpQuery cancel];
-    }
+    [_httpQuery cancel];
     [super cancel];
 }
 

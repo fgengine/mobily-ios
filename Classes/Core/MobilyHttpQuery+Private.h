@@ -64,3 +64,14 @@
 @end
 
 /*--------------------------------------------------*/
+
+@interface MobilyHttpAttachment () {
+    NSString* _name;
+    NSString* _filename;
+    NSString* _mimeType;
+    NSData* _data;
+}
+
+@end
+
+/*--------------------------------------------------*/

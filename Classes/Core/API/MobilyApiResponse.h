@@ -42,6 +42,7 @@
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyApiResponse : MobilyModel
 
 @property(nonatomic, readwrite, strong) NSError* httpError;

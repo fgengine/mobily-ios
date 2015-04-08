@@ -53,6 +53,7 @@ typedef void (^MobilyTaskManagerEnumBlock)(id task, BOOL* stop);
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyTaskManager : NSObject < MobilyObject >
 
 @property(nonatomic, readwrite, assign) NSUInteger maxConcurrentTask;
@@ -80,17 +81,20 @@ typedef void (^MobilyTaskManagerEnumBlock)(id task, BOOL* stop);
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyTask : NSObject < MobilyObject >
 
-@property(nonatomic, readwrite, assign, getter=isNeedRework) BOOL needRework;
+@property(nonatomic, readonly, assign, getter=isNeedRework) BOOL needRework;
 @property(nonatomic, readonly, assign, getter=isCanceled) BOOL cancel;
 
 - (void)setup NS_REQUIRES_SUPER;
 
-- (BOOL)willStart;
-- (void)working;
-- (void)didComplete;
-- (void)didCancel;
+- (void)setNeedRework;
+
+- (BOOL)willStart NS_REQUIRES_SUPER;
+- (void)working NS_REQUIRES_SUPER;
+- (void)didComplete NS_REQUIRES_SUPER;
+- (void)didCancel NS_REQUIRES_SUPER;
 
 - (void)cancel;
 
@@ -98,7 +102,11 @@ typedef void (^MobilyTaskManagerEnumBlock)(id task, BOOL* stop);
 
 /*--------------------------------------------------*/
 
-@interface MobilyTaskHttpQuery : MobilyTask < MobilyHttpQueryDelegate >
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
+@interface MobilyTaskHttpQuery : MobilyTask < MobilyHttpQueryDelegate > {
+@protected
+    MobilyHttpQuery* _httpQuery;
+}
 
 @property(nonatomic, readwrite, strong) MobilyHttpQuery* httpQuery;
 

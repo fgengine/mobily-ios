@@ -43,6 +43,7 @@
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyApiRequest : MobilyModel
 
 @property(nonatomic, readwrite, strong) NSString* method;

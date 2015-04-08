@@ -53,8 +53,6 @@ typedef void (^MobilyModelBlock)();
 + (NSArray*)compareMap;
 + (NSArray*)serializeMap;
 + (NSDictionary*)jsonMap;
-+ (NSUInteger)sqlVersion;
-+ (NSDictionary*)sqlMap;
 
 - (void)fromJson:(id)json;
 

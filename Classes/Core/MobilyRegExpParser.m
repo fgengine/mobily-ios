@@ -41,6 +41,11 @@
 
 @interface MobilyRegExpParser () {
 @protected
+    NSString* _string;
+    NSString* _expression;
+    NSString* _pattern;
+    NSArray* _matches;
+    NSString* _result;
     BOOL _needApplyParser;
 }
 
@@ -53,7 +58,14 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilyRegExpMatch ()
+@interface MobilyRegExpMatch () {
+@protected
+    NSString* _originalString;
+    NSArray* _originalSubStrings;
+    NSRange _originalRange;
+    NSString* _resultString;
+    NSRange _resultRange;
+}
 
 @property(nonatomic, readwrite, strong) NSString* originalString;
 @property(nonatomic, readwrite, strong) NSArray* originalSubStrings;

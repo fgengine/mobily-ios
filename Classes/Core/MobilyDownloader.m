@@ -44,10 +44,11 @@ typedef void (^MobilyDownloaderBlock)();
 
 /*--------------------------------------------------*/
 
-@interface MobilyDownloader ()
-
-@property(nonatomic, readwrite, strong) MobilyTaskManager* taskManager;
-@property(nonatomic, readwrite, strong) MobilyCache* cache;
+@interface MobilyDownloader () {
+    __weak id< MobilyDownloaderDelegate > _delegate;
+    MobilyTaskManager* _taskManager;
+    MobilyCache* _cache;
+}
 
 @end
 
@@ -55,17 +56,20 @@ typedef void (^MobilyDownloaderBlock)();
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilyDownloaderTask : MobilyTask
+@interface MobilyDownloaderTask : MobilyTask {
+    __weak MobilyDownloader* _downloader;
+    __weak id< MobilyDownloaderDelegate > _downloaderDelegate;
+    __weak MobilyCache* _downloaderCache;
+    id _target;
+    NSURL* _url;
+    id _entry;
+    NSUInteger _countErrors;
+    id< MobilyEvent > _completeEvent;
+    id< MobilyEvent > _failureEvent;
+}
 
-@property(nonatomic, readwrite, weak) MobilyDownloader* downloader;
-@property(nonatomic, readwrite, weak) id< MobilyDownloaderDelegate > downloaderDelegate;
-@property(nonatomic, readwrite, weak) MobilyCache* downloaderCache;
-@property(nonatomic, readwrite, strong) id target;
-@property(nonatomic, readwrite, strong) NSURL* url;
-@property(nonatomic, readwrite, strong) id entry;
-@property(nonatomic, readwrite, assign) NSUInteger countErrors;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > completeEvent;
-@property(nonatomic, readwrite, strong) id< MobilyEvent > failureEvent;
+@property(nonatomic, readonly, strong) id target;
+@property(nonatomic, readonly, strong) NSURL* url;
 
 - (instancetype)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target;
 - (instancetype)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector;
@@ -82,6 +86,12 @@ typedef void (^MobilyDownloaderBlock)();
 /*--------------------------------------------------*/
 
 @implementation MobilyDownloader
+
+#pragma mark Synthesize
+
+@synthesize delegate = _delegate;
+@synthesize taskManager = _taskManager;
+@synthesize cache = _cache;
 
 #pragma mark Singleton
 
@@ -106,12 +116,12 @@ typedef void (^MobilyDownloaderBlock)();
 - (instancetype)initWithDelegate:(id< MobilyDownloaderDelegate >)delegate {
     self = [super init];
     if(self != nil) {
-        self.delegate = delegate;
-        self.taskManager = [MobilyTaskManager new];
+        _delegate = delegate;
+        _taskManager = [MobilyTaskManager new];
         if(_taskManager != nil) {
             _taskManager.maxConcurrentTask = MOBILY_LOADER_MAX_CONCURRENT_TASK;
         }
-        self.cache = [MobilyCache shared];
+        _cache = [MobilyCache shared];
         
         [self setup];
     }
@@ -119,11 +129,6 @@ typedef void (^MobilyDownloaderBlock)();
 }
 
 - (void)setup {
-}
-
-- (void)dealloc {
-    self.taskManager = nil;
-    self.cache = nil;
 }
 
 #pragma mark Public
@@ -242,7 +247,7 @@ typedef void (^MobilyDownloaderBlock)();
 
 - (void)cancelByUrl:(NSURL*)url {
     [_taskManager enumirateTasksUsingBlock:^(MobilyDownloaderTask* task, BOOL* stop __unused) {
-        if([[task url] isEqual:url] == YES) {
+        if([task.url isEqual:url] == YES) {
             [task cancel];
         }
     }];
@@ -250,7 +255,7 @@ typedef void (^MobilyDownloaderBlock)();
 
 - (void)cancelByTarget:(id)target {
     [_taskManager enumirateTasksUsingBlock:^(MobilyDownloaderTask* task, BOOL* stop __unused) {
-        if([task target] == target) {
+        if(task.target == target) {
             [task cancel];
         }
     }];
@@ -269,16 +274,21 @@ typedef void (^MobilyDownloaderBlock)();
 
 @implementation MobilyDownloaderTask
 
+#pragma mark Synthesize
+
+@synthesize target = _target;
+@synthesize url = _url;
+
 #pragma mark Init / Free
 
 - (instancetype)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target {
     self = [super init];
     if(self != nil) {
-        self.downloader = downloader;
-        self.downloaderDelegate = _downloader.delegate;
-        self.downloaderCache = _downloader.cache;
-        self.target = target;
-        self.url = url;
+        _downloader = downloader;
+        _downloaderDelegate = _downloader.delegate;
+        _downloaderCache = _downloader.cache;
+        _target = target;
+        _url = url;
     }
     return self;
 }
@@ -286,8 +296,8 @@ typedef void (^MobilyDownloaderBlock)();
 - (instancetype)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target completeSelector:(SEL)completeSelector failureSelector:(SEL)failureSelector {
     self = [self initWithDownloader:downloader url:url target:target];
     if(self != nil) {
-        self.completeEvent = [MobilyEventSelector eventWithTarget:target action:completeSelector inMainThread:YES];
-        self.failureEvent = [MobilyEventSelector eventWithTarget:target action:failureSelector inMainThread:YES];
+        _completeEvent = [MobilyEventSelector eventWithTarget:target action:completeSelector inMainThread:YES];
+        _failureEvent = [MobilyEventSelector eventWithTarget:target action:failureSelector inMainThread:YES];
     }
     return self;
 }
@@ -295,13 +305,13 @@ typedef void (^MobilyDownloaderBlock)();
 - (instancetype)initWithDownloader:(MobilyDownloader*)downloader url:(NSURL*)url target:(id)target completeBlock:(MobilyDownloaderCompleteBlock)completeBlock failureBlock:(MobilyDownloaderFailureBlock)failureBlock {
     self = [self initWithDownloader:downloader url:url target:target];
     if(self != nil) {
-        self.completeEvent = [MobilyEventBlock eventWithBlock:^id(id entry, NSURL* url) {
+        _completeEvent = [MobilyEventBlock eventWithBlock:^id(id entry, NSURL* url) {
             if(completeBlock != nil) {
                 completeBlock(entry, url);
             }
             return nil;
         } inMainQueue:YES];
-        self.failureEvent = [MobilyEventBlock eventWithBlock:^id(id sender __unused, NSURL* url) {
+        _failureEvent = [MobilyEventBlock eventWithBlock:^id(id sender __unused, NSURL* url) {
             if(failureBlock != nil) {
                 failureBlock(url);
             }
@@ -315,20 +325,11 @@ typedef void (^MobilyDownloaderBlock)();
     [super setup];
 }
 
-- (void)dealloc {
-    self.downloader = nil;
-    self.downloaderDelegate = nil;
-    self.downloaderCache = nil;
-    self.target = nil;
-    self.url = nil;
-    self.entry = nil;
-    self.completeEvent = nil;
-    self.failureEvent = nil;
-}
-
 #pragma mark MobilyTask
 
 - (void)working {
+    [super working];
+    
     id entry = nil;
     NSData* data = [_downloaderCache cacheDataForKey:_url.absoluteString];
     if(data != nil) {
@@ -354,15 +355,12 @@ typedef void (^MobilyDownloaderBlock)();
             }
             if(entry != nil) {
                 [_downloaderCache setCacheData:data forKey:_url.absoluteString];
-                self.entry = entry;
-                self.needRework = NO;
+                _entry = entry;
             }
         } else {
             if(_countErrors < MOBILY_LOADER_TASK_ERROR_LIMITS) {
-                self.countErrors = _countErrors + 1;
-                self.needRework = YES;
-            } else {
-                self.needRework = NO;
+                _countErrors = _countErrors + 1;
+                [self setNeedRework];
             }
 #if defined(MOBILY_DEBUG)
             NSLog(@"Failure load:%@", _url);
@@ -370,11 +368,13 @@ typedef void (^MobilyDownloaderBlock)();
             [NSThread sleepForTimeInterval:MOBILY_LOADER_TASK_IMAGE_DELAY];
         }
     } else {
-        self.entry = entry;
+        _entry = entry;
     }
 }
 
 - (void)didComplete {
+    [super didComplete];
+    
     if(_entry != nil) {
         [_completeEvent fireSender:_entry object:_url];
     } else {
@@ -383,8 +383,8 @@ typedef void (^MobilyDownloaderBlock)();
 }
 
 - (void)cancel {
-    self.completeEvent = nil;
-    self.failureEvent = nil;
+    _completeEvent = nil;
+    _failureEvent = nil;
     [super cancel];
 }
 

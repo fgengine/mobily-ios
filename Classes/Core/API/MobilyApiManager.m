@@ -40,10 +40,12 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyApiManager ()
-
-
-@property(nonatomic, readwrite, strong) NSMutableArray* mutableProviders;
+@interface MobilyApiManager () {
+@protected
+    NSMutableArray* _providers;
+    MobilyTaskManager* _taskManager;
+    MobilyCache* _cache;
+}
 
 @end
 
@@ -56,6 +58,11 @@
 /*--------------------------------------------------*/
 
 @implementation MobilyApiManager
+
+#pragma mark Synthesize
+
+@synthesize taskManager = _taskManager;
+@synthesize cache = _cache;
 
 #pragma mark Singleton
 
@@ -76,11 +83,11 @@
 - (instancetype)init {
     self = [super init];
     if(self != nil) {
-        self.taskManager = [MobilyTaskManager new];
+        _taskManager = [MobilyTaskManager new];
         if(_taskManager != nil) {
             _taskManager.maxConcurrentTask = MOBILY_API_MANAGER_MAX_CONCURRENT_TASK;
         }
-        self.cache = MobilyCache.shared;
+        _cache = MobilyCache.shared;
         [self setup];
     }
     return self;
@@ -89,30 +96,24 @@
 - (void)setup {
 }
 
-- (void)dealloc {
-    self.mutableProviders = nil;
-    self.taskManager = nil;
-    self.cache = nil;
-}
-
 #pragma mark Property
 
 - (NSArray*)providers {
-    return [_mutableProviders copy];
+    return [_providers copy];
 }
 
 #pragma mark Public
 
 - (void)registerProvider:(MobilyApiProvider*)provider {
-    if([_mutableProviders containsObject:provider] == NO) {
-        [_mutableProviders addObject:provider];
+    if([_providers containsObject:provider] == NO) {
+        [_providers addObject:provider];
         provider.manager = self;
     }
 }
 
 - (void)unregisterProvider:(MobilyApiProvider*)provider {
-    if([_mutableProviders containsObject:provider] == YES) {
-        [_mutableProviders removeObject:provider];
+    if([_providers containsObject:provider] == YES) {
+        [_providers removeObject:provider];
         provider.manager = nil;
     }
 }

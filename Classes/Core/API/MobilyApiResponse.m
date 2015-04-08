@@ -39,8 +39,10 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyApiResponse ()
-
+@interface MobilyApiResponse () {
+    NSError* _httpError;
+    BOOL _validResponse;
+}
 
 @end
 
@@ -50,18 +52,22 @@
 
 @implementation MobilyApiResponse
 
+#pragma mark Synthesize
+
+@synthesize httpError = _httpError;
+@synthesize validResponse = _validResponse;
+
 #pragma mark Init / Free
 
 - (instancetype)initWithHttpQuery:(MobilyHttpQuery*)httpQuery {
     self = [super init];
     if(self != nil) {
-        self.validResponse = [self fromHttpQuery:httpQuery];
+        _validResponse = [self fromHttpQuery:httpQuery];
     }
     return self;
 }
 
 - (void)dealloc {
-    self.httpError = nil;
 }
 
 #pragma mark Public

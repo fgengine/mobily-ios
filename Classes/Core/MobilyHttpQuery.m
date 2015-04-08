@@ -122,11 +122,11 @@
         [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[[NSString stringWithFormat:@"%@\r\n", value.description] dataUsingEncoding:NSUTF8StringEncoding]];
     }];
-    for(NSDictionary* attachment in attachments) {
+    for(MobilyHttpAttachment* attachment in attachments) {
         [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", attachment[@"name"], attachment[@"filename"]] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", attachment[@"type"]] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:attachment[@"data"]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", attachment.name, attachment.filename] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", attachment.mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:attachment.data];
         [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     }
     [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -425,6 +425,42 @@
         _finishCallback(self);
     }
     UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
+}
+
+@end
+
+/*--------------------------------------------------*/
+
+@implementation MobilyHttpAttachment
+
+#pragma mark Synthesize
+
+@synthesize name = _name;
+@synthesize filename = _filename;
+@synthesize mimeType = _mimeType;
+@synthesize data = _data;
+
+#pragma mark Init / Free
+
+- (instancetype)initWithName:(NSString*)name filename:(NSString*)filename mimeType:(NSString*)mimeType data:(NSData*)data {
+    self = [super init];
+    if(self != nil) {
+        _name = name;
+        _filename = filename;
+        _mimeType = mimeType;
+        _data = data;
+        [self setup];
+    }
+    return self;
+}
+
+- (void)setup {
+}
+
+#pragma mark Debug
+
+- (NSString*)description {
+    return [NSString stringWithFormat:@"\tName = \"%@\"; Filename = \"%@\"; MimeType = \"%@\"; (%d bytes);", _name, _filename, _mimeType, (int)_data.length];
 }
 
 @end
