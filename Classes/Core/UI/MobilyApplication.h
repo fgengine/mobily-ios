@@ -69,6 +69,8 @@ typedef NS_OPTIONS(NSUInteger, MobilyApplicationNotificationType) {
 - (void)receiveLocalNotification:(UILocalNotification*)notification;
 - (void)handleActionWithIdentifier:(NSString*)identifier forLocalNotification:(UILocalNotification*)notification completionHandler:(void(^)())completionHandler;
 - (void)handleActionWithIdentifier:(NSString*)identifier forRemoteNotification:(NSDictionary*)notification completionHandler:(void(^)())completionHandler;
+- (void)handleEventsForBackgroundURLSession:(NSString*)identifier completionHandler:(void(^)())completionHandler;
+- (void)handleWatchKitExtensionRequest:(NSDictionary*)userInfo reply:(void(^)(NSDictionary* replyInfo))reply;
 
 - (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation;
 

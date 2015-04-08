@@ -308,9 +308,7 @@
             } else {
                 [_view endedEditItem:self animated:animated];
             }
-        }
-        if(_cell != nil) {
-            [_cell setEditing:_editing animated:NO];
+            [_cell setEditing:_editing animated:animated];
         }
     }
 }

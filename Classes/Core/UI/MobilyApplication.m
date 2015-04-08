@@ -246,6 +246,12 @@ MOBILY_DEFINE_VALIDATE_STRING_BASED(NotificationType, NSNumber, [NSNumber number
     completionHandler();
 }
 
+- (void)handleEventsForBackgroundURLSession:(NSString*)identifier completionHandler:(void(^)())completionHandler {
+}
+
+- (void)handleWatchKitExtensionRequest:(NSDictionary*)userInfo reply:(void(^)(NSDictionary* replyInfo))reply {
+}
+
 - (BOOL)openURL:(NSURL* __unused)url sourceApplication:(NSString* __unused)sourceApplication annotation:(id __unused)annotation {
     return NO;
 }

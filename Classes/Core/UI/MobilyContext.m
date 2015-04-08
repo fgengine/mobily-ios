@@ -258,6 +258,14 @@ static NSString* MOBILY_ACCESS_KEY = nil;
     [_application handleActionWithIdentifier:identifier forRemoteNotification:userInfo completionHandler:completionHandler];
 }
 
+- (void)application:(UIApplication*)application handleEventsForBackgroundURLSession:(NSString*)identifier completionHandler:(void(^)())completionHandler {
+    [_application handleEventsForBackgroundURLSession:identifier completionHandler:completionHandler];
+}
+
+- (void)application:(UIApplication*)application handleWatchKitExtensionRequest:(NSDictionary*)userInfo reply:(void(^)(NSDictionary* replyInfo))reply {
+    [_application handleWatchKitExtensionRequest:userInfo reply:reply];
+}
+
 - (BOOL)application:(UIApplication* __unused)application openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation {
     return [_application openURL:url sourceApplication:sourceApplication annotation:annotation];
 }

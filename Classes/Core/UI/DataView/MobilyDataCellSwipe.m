@@ -187,7 +187,7 @@
 }
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
-    [super setEditing:editing animated:NO];
+    [super setEditing:editing animated:animated];
     
     if(editing == NO) {
         [self hideAnySwipeViewAnimated:animated];
@@ -370,9 +370,9 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
     }
 }
 
-- (void)hideAnySwipeViewAnimated:(BOOL __unused)animated {
-    [self setShowedLeftSwipeView:NO animated:NO];
-    [self setShowedRightSwipeView:NO animated:NO];
+- (void)hideAnySwipeViewAnimated:(BOOL)animated {
+    [self setShowedLeftSwipeView:NO animated:animated];
+    [self setShowedRightSwipeView:NO animated:animated];
 }
 
 - (void)willBeganSwipe {
