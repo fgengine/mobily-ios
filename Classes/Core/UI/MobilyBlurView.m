@@ -498,7 +498,7 @@
             _blurViewIndex = _blurViewIndex % blurViewsCount;
             for(NSUInteger i = _blurViewIndex; i < blurViewsCount; i++) {
                 MobilyBlurView* view = _blurViews[i];
-                if((view.window != nil) && (view.hidden == NO) && (view.dynamic == YES) && ([view shouldUpdate] == YES)) {
+                if((view.window != nil) && (view.hidden == NO) && (view.alpha >= 0.05f) && (view.dynamic == YES) && ([view shouldUpdate] == YES)) {
                     NSTimeInterval nextUpdate = [view.lastUpdate timeIntervalSinceNow] + view.updateInterval;
                     if((view.lastUpdate == nil) || (nextUpdate <= 0)) {
                         self.updating = YES;
@@ -508,9 +508,7 @@
                             [self updateAsynchronously];
                         }];
                         return;
-                    }
-                    else
-                    {
+                    } else {
                         timeUntilNextUpdate = MIN(timeUntilNextUpdate, nextUpdate);
                     }
                 }

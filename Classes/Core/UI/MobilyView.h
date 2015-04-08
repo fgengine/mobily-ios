@@ -39,6 +39,8 @@
 
 @interface MobilyView : UIView< MobilyBuilderObject >
 
+@property(nonatomic, readwrite, assign) IBInspectable BOOL roundCorners;
+
 - (void)setup NS_REQUIRES_SUPER;
 
 @end

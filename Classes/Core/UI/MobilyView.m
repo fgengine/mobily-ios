@@ -77,6 +77,23 @@
 }
 
 - (void)setup {
+    self.clipsToBounds = YES;
+}
+
+#pragma mark Property override
+
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    if(_roundCorners == YES) {
+        self.cornerRadius = ceilf(MAX(frame.size.width - 1.0f, frame.size.height - 1.0f) * 0.5f);
+    }
+}
+
+- (void)setBounds:(CGRect)bounds {
+    [super setBounds:bounds];
+    if(_roundCorners == YES) {
+        self.cornerRadius = ceilf(MAX(bounds.size.width - 1.0f, bounds.size.height - 1.0f) * 0.5f);
+    }
 }
 
 #pragma mark MobilyBuilderObject

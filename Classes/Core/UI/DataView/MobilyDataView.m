@@ -231,26 +231,18 @@
 
 - (void)setFrame:(CGRect)frame {
     CGRect prev = self.frame;
-    super.frame = frame;
     if(CGSizeEqualToSize(prev.size, frame.size) == NO) {
         [self setNeedValidateLayout];
     }
+    super.frame = frame;
 }
 
 - (void)setBounds:(CGRect)bounds {
     CGRect prev = self.bounds;
-    super.bounds = bounds;
     if(CGSizeEqualToSize(prev.size, bounds.size) == NO) {
         [self setNeedValidateLayout];
     }
-}
-
-- (void)setContentOffset:(CGPoint)contentOffset {
-    [super setContentOffset:contentOffset];
-}
-
-- (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated {
-    [super setContentOffset:contentOffset animated:animated];
+    super.bounds = bounds;
 }
 
 - (void)setDelegateProxy:(MobilyDataViewDelegateProxy*)delegateProxy {
@@ -1249,25 +1241,13 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 
 - (void)_layoutForVisible {
     CGRect bounds = self.visibleBounds;
-    if((self.dragging == YES) || (self.decelerating == YES)) {
-        [_container _willLayoutForBounds:bounds];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if(_updating == NO) {
-                [_visibleItems each:^(MobilyDataItem* item) {
-                    [item invalidateLayoutForBounds:bounds];
-                }];
-            }
-            [_container _didLayoutForBounds:bounds];
-        });
-    } else {
-        [_container _willLayoutForBounds:bounds];
-        if(_updating == NO) {
-            [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex __unused, BOOL* itemStop __unused) {
-                [item invalidateLayoutForBounds:bounds];
-            }];
-        }
-        [_container _didLayoutForBounds:bounds];
+    [_container _willLayoutForBounds:bounds];
+    if(_updating == NO) {
+        [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex __unused, BOOL* itemStop __unused) {
+            [item invalidateLayoutForBounds:bounds];
+        }];
     }
+    [_container _didLayoutForBounds:bounds];
 }
 
 - (void)_updateSuperviewConstraints {
