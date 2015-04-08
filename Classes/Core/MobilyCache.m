@@ -71,14 +71,14 @@
 @property(nonatomic, readwrite, weak) MobilyCache* cache;
 @property(nonatomic, readwrite, strong) NSString* key;
 @property(nonatomic, readwrite, strong) NSString* fileName;
-@property(nonatomic, readwrite, strong) NSString* filePath;
-@property(nonatomic, readwrite, strong) NSData* data;
-@property(nonatomic, readwrite, assign) NSUInteger size;
-@property(nonatomic, readwrite, assign) NSTimeInterval memoryStorageInterval;
-@property(nonatomic, readwrite, assign) NSTimeInterval memoryStorageTime;
-@property(nonatomic, readwrite, assign) NSTimeInterval discStorageInterval;
-@property(nonatomic, readwrite, assign) NSTimeInterval discStorageTime;
-@property(nonatomic, readwrite, assign, getter=isInMemory) BOOL inMemory;
+@property(nonatomic, readonly, strong) NSString* filePath;
+@property(nonatomic, readonly, strong) NSData* data;
+@property(nonatomic, readonly, assign) NSUInteger size;
+@property(nonatomic, readonly, assign) NSTimeInterval memoryStorageInterval;
+@property(nonatomic, readonly, assign) NSTimeInterval memoryStorageTime;
+@property(nonatomic, readonly, assign) NSTimeInterval discStorageInterval;
+@property(nonatomic, readonly, assign) NSTimeInterval discStorageTime;
+@property(nonatomic, readonly, assign, getter=isInMemory) BOOL inMemory;
 
 - (instancetype)initWithCache:(MobilyCache*)cache key:(NSString*)key data:(NSData*)data memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discStorageInterval:(NSTimeInterval)discStorageInterval;
 
@@ -439,31 +439,42 @@
 
 #pragma mark Synthesize
 
+@synthesize cache = _cache;
+@synthesize key = _key;
+@synthesize fileName = _fileName;
+@synthesize filePath = _filePath;
 @synthesize data = _data;
+@synthesize size = _size;
+@synthesize memoryStorageInterval = _memoryStorageInterval;
+@synthesize memoryStorageTime =_memoryStorageTime;
+@synthesize discStorageInterval = _discStorageInterval;
+@synthesize discStorageTime = _discStorageTime;
+@synthesize inMemory = _inMemory;
 
 #pragma mark Init / Free
 
 - (instancetype)initWithCache:(MobilyCache*)cache key:(NSString*)key data:(NSData*)data memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discStorageInterval:(NSTimeInterval)discStorageInterval {
     self = [super init];
     if(self != nil) {
-        self.cache = cache;
-        self.key = key;
-        self.fileName = [[[_key stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString] stringByMD5];
-        self.data = data;
-        self.size = data.length;
-        self.memoryStorageInterval = memoryStorageInterval;
-        self.memoryStorageTime = ceil(NSDate.timeIntervalSinceReferenceDate + _memoryStorageInterval);
-        self.discStorageInterval = discStorageInterval;
-        self.discStorageTime = ceil(NSDate.timeIntervalSinceReferenceDate + _discStorageInterval);
+        _cache = cache;
+        _key = [key stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        _fileName = _key.lowercaseString.stringByMD5;
+        _filePath = [MobilyStorage.fileSystemDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", _fileName, MOBILY_CACHE_ITEM_EXTENSION]];
+        _data = data;
+        _size = _data.length;
+        _memoryStorageInterval = memoryStorageInterval;
+        _memoryStorageTime = ceil(NSDate.timeIntervalSinceReferenceDate + memoryStorageInterval);
+        _discStorageInterval = discStorageInterval;
+        _discStorageTime = ceil(NSDate.timeIntervalSinceReferenceDate + discStorageInterval);
+        
+        _cache.currentMemoryUsage = _cache.currentMemoryUsage + _size;
+        [self saveToDiscCache];
     }
     return self;
 }
 
 - (void)dealloc {
-    self.cache = nil;
-    self.key = nil;
-    self.fileName = nil;
-    self.data = nil;
+    [self clearFromMemoryCache];
 }
 
 #pragma mark MobilyModel
@@ -492,22 +503,9 @@
     if([_fileName isEqualToString:fileName] == NO) {
         _fileName = fileName;
         if(_fileName != nil) {
-            self.filePath = [MobilyStorage.fileSystemDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", _fileName, MOBILY_CACHE_ITEM_EXTENSION]];
+            _filePath = [MobilyStorage.fileSystemDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", _fileName, MOBILY_CACHE_ITEM_EXTENSION]];
         } else {
-            self.filePath = nil;
-        }
-    }
-}
-
-- (void)setData:(NSData*)data {
-    if([_data isEqualToData:data] == NO) {
-        if((_cache != nil) && (_data != nil)) {
-            _cache.currentMemoryUsage = [_cache currentMemoryUsage] - _data.length;
-        }
-        _data = data;
-        if((_cache != nil) && (_data != nil)) {
-            _cache.currentMemoryUsage = [_cache currentMemoryUsage] + _data.length;
-            [self saveToDiscCache];
+            _filePath = nil;
         }
     }
 }
@@ -516,8 +514,7 @@
     if((_data == nil) && (_filePath != nil)) {
         _data = [NSData dataWithContentsOfFile:_filePath];
         if(_data != nil) {
-            self.memoryStorageInterval = _memoryStorageInterval;
-            _cache.currentMemoryUsage = ceil([_cache currentMemoryUsage] + _data.length);
+            _cache.currentMemoryUsage = _cache.currentMemoryUsage + _size;
         }
     }
     return _data;
@@ -530,26 +527,31 @@
 #pragma mark Private
 
 - (void)updateData:(NSData*)data memoryStorageInterval:(NSTimeInterval)memoryStorageInterval discStorageInterval:(NSTimeInterval)discStorageInterval {
-    self.data = data;
-    self.memoryStorageInterval = memoryStorageInterval;
-    self.memoryStorageTime = ceil(NSDate.timeIntervalSinceReferenceDate + _memoryStorageInterval);
-    self.discStorageInterval = discStorageInterval;
-    self.discStorageTime = ceil(NSDate.timeIntervalSinceReferenceDate + _discStorageInterval);
+    _cache.currentMemoryUsage = _cache.currentMemoryUsage - _size;
+    _data = data;
+    _size = data.length;
+    _cache.currentMemoryUsage = _cache.currentMemoryUsage + _size;
+    _memoryStorageInterval = memoryStorageInterval;
+    _memoryStorageTime = ceil(NSDate.timeIntervalSinceReferenceDate + memoryStorageInterval);
+    _discStorageInterval = discStorageInterval;
+    _discStorageTime = ceil(NSDate.timeIntervalSinceReferenceDate + discStorageInterval);
+    [self saveToDiscCache];
 }
 
 - (void)saveToDiscCache {
     if([_data writeToFile:_filePath atomically:YES] == YES) {
-        _cache.currentDiscUsage = [_cache currentDiscUsage] + _size;
+        _cache.currentDiscUsage = _cache.currentDiscUsage + _size;
     }
 }
 
 - (void)clearFromMemoryCache {
-    self.data = nil;
+    _cache.currentMemoryUsage = _cache.currentMemoryUsage - _size;
+    _data = nil;
 }
 
 - (void)clearFromDiscCache {
     if([NSFileManager.defaultManager removeItemAtPath:_filePath error:nil] == YES) {
-        _cache.currentDiscUsage = [_cache currentDiscUsage] - _size;
+        _cache.currentDiscUsage = _cache.currentDiscUsage - _size;
     }
 }
 

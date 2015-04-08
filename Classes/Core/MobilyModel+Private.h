@@ -33,44 +33,65 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilySocialManager.h"
 #import "MobilyModel.h"
+#import "MobilyModelJson.h"
 
 /*--------------------------------------------------*/
 
-typedef void (^MobilySocialProviderSuccessBlock)();
-typedef void (^MobilySocialProviderFailureBlock)(NSError* error);
+@interface MobilyModel () {
+    NSString* _userDefaultsKey;
+    __weak NSArray* compareMap;
+    __weak NSArray* serializeMap;
+    __weak NSDictionary* jsonMap;
+}
 
-/*--------------------------------------------------*/
+@property(nonatomic, readonly, weak) NSArray* compareMap;
+@property(nonatomic, readonly, weak) NSArray* serializeMap;
+@property(nonatomic, readonly, weak) NSDictionary* jsonMap;
 
-@interface MobilySocialProvider : NSObject < MobilyObject >
-
-@property(nonatomic, readwrite, weak) MobilySocialManager* manager;
-@property(nonatomic, readonly, strong) NSString* name;
-@property(nonatomic, readonly, strong) NSString* userDefaultsKey;
-
-@property(nonatomic, readwrite, strong) id session;
-
-+ (Class)sessionClass;
-
-- (instancetype)initWithName:(NSString*)name;
-
-- (void)setup NS_REQUIRES_SUPER;
-
-- (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure;
-
-- (void)didBecomeActive;
-- (void)willResignActive;
-
-- (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation;
++ (NSArray*)_arrayMap:(NSMutableDictionary*)cache class:(Class)class selector:(SEL)selector;
++ (NSDictionary*)_dictionaryMap:(NSMutableDictionary*)cache class:(Class)class selector:(SEL)selector;
++ (NSArray*)_buildCompareMap;
++ (NSArray*)_buildSerializeMap;
++ (NSDictionary*)_buildJsonMap;
 
 @end
 
 /*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
 
-@interface MobilySocialSession : MobilyModel
+@interface MobilyModelCollection () {
+    NSString* _userDefaultsKey;
+    NSString* _fileName;
+    NSString* _filePath;
+    NSMutableArray* _models;
+    BOOL _needLoad;
+}
 
-- (BOOL)isValid;
+- (NSMutableArray*)_mutableModels;
+- (void)_loadIsNeed;
+- (void)_load;
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@interface MobilyModelQuery () {
+    __weak MobilyModelCollection* _collection;
+    __weak id< MobilyModelQueryDelegate > _delegate;
+    MobilyModelQueryReloadBlock _reloadBlock;
+    MobilyModelQueryResortBlock _resortBlock;
+    BOOL _resortInvert;
+    NSMutableArray* _models;
+    BOOL _needReload;
+    BOOL _needResort;
+}
+
+- (void)_reload;
+- (void)_resort;
 
 @end
 

@@ -173,15 +173,23 @@
 
 @implementation MobilySocialTwitterSession
 
+#pragma mark Synthesize
+
+@synthesize authToken = _authToken;
+@synthesize authTokenSecret = _authTokenSecret;
+@synthesize userId = _userId;
+@synthesize userName = _userName;
+@synthesize email = _email;
+
 #pragma mark Init / Free
 
 - (instancetype)initWithSession:(TWTRSession*)session {
     self = [super init];
     if(self != nil) {
-        self.authToken = session.authToken;
-        self.authTokenSecret = session.authTokenSecret;
-        self.userId = session.userID;
-        self.userName = session.userName;
+        _authToken = session.authToken;
+        _authTokenSecret = session.authTokenSecret;
+        _userId = session.userID;
+        _userName = session.userName;
     }
     return self;
 }

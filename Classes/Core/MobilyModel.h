@@ -41,6 +41,7 @@ typedef void (^MobilyModelBlock)();
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyModel : NSObject < MobilyObject, NSCopying >
 
 @property(nonatomic, readwrite, strong) NSString* userDefaultsKey;
@@ -76,6 +77,7 @@ typedef void (^MobilyModelCollectionEnumBlock)(id item, BOOL* stop);
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyModelCollection : NSObject < MobilyObject, NSCopying >
 
 @property(nonatomic, readwrite, strong) NSString* userDefaultsKey;
@@ -136,13 +138,14 @@ typedef MobilyModelQuerySortResult (^MobilyModelQueryResortBlock)(id item1, id i
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyModelQuery : NSObject < MobilyObject >
 
 @property(nonatomic, readwrite, weak) id< MobilyModelQueryDelegate > delegate;
 @property(nonatomic, readwrite, copy) MobilyModelQueryReloadBlock reloadBlock;
 @property(nonatomic, readwrite, copy) MobilyModelQueryResortBlock resortBlock;
 @property(nonatomic, readwrite, assign) BOOL resortInvert;
-@property(nonatomic, readonly, assign) NSArray* models;
+@property(nonatomic, readonly, strong) NSArray* models;
 
 - (instancetype)initWithCollection:(MobilyModelCollection*)collection;
 

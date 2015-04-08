@@ -171,14 +171,20 @@
 
 @implementation MobilySocialFacebookSession
 
+#pragma mark Synthesize
+
+@synthesize readPermissions = _readPermissions;
+@synthesize accessToken = _accessToken;
+@synthesize expirationDate = _expirationDate;
+
 #pragma mark Init / Free
 
 - (instancetype)initWithReadPermissions:(NSArray*)readPermissions facebookSession:(FBSession*)facebookSession {
     self = [super init];
     if(self != nil) {
-        self.readPermissions = readPermissions;
-        self.accessToken = facebookSession.accessTokenData.accessToken;
-        self.expirationDate = facebookSession.accessTokenData.expirationDate;
+        _readPermissions = readPermissions;
+        _accessToken = facebookSession.accessTokenData.accessToken;
+        _expirationDate = facebookSession.accessTokenData.expirationDate;
     }
     return self;
 }

@@ -199,20 +199,28 @@
 
 @implementation MobilySocialVKontakteSession
 
+#pragma mark Synthesize
+
+@synthesize permissions = _permissions;
+@synthesize accessToken = _accessToken;
+@synthesize expirationDate = _expirationDate;
+@synthesize userId = _userId;
+@synthesize email = _email;
+
 #pragma mark Init / Free
 
 - (instancetype)initWithAccessToken:(VKAccessToken*)accessToken {
     self = [super init];
     if(self != nil) {
-        self.permissions = accessToken.permissions;
-        self.accessToken = accessToken.accessToken;
+        _permissions = accessToken.permissions;
+        _accessToken = accessToken.accessToken;
         if(accessToken.expiresIn.intValue > 0) {
-            self.expirationDate = [NSDate dateWithTimeIntervalSince1970:accessToken.created + accessToken.expiresIn.intValue];
+            _expirationDate = [NSDate dateWithTimeIntervalSince1970:accessToken.created + accessToken.expiresIn.intValue];
         } else {
-            self.expirationDate = [NSDate dateWithTimeIntervalSince1970:accessToken.created + MOBILY_YEAR];
+            _expirationDate = [NSDate dateWithTimeIntervalSince1970:accessToken.created + MOBILY_YEAR];
         }
-        self.userId = accessToken.userId;
-        self.email = accessToken.email;
+        _userId = accessToken.userId;
+        _email = accessToken.email;
     }
     return self;
 }
