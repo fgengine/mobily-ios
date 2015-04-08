@@ -346,6 +346,7 @@
         }
     } else {
         [_cell validateLayoutForBounds:bounds];
+
     }
 }
 

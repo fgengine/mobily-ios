@@ -50,12 +50,14 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
 /*--------------------------------------------------*/
 
 @class MobilyDataViewDelegateProxy;
+@class MobilyDataContentView;
 
 /*--------------------------------------------------*/
 
 @interface MobilyDataView () {
 @protected
     MobilyDataViewDelegateProxy* _delegateProxy;
+    MobilyDataContentView* _contentView;
     CGFloat _velocity;
     CGFloat _velocityMin;
     CGFloat _velocityMax;
@@ -125,6 +127,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
 }
 
 @property(nonatomic, readwrite, strong) MobilyDataViewDelegateProxy* delegateProxy;
+@property(nonatomic, readonly, strong) MobilyDataContentView* contentView;
 @property(nonatomic, readwrite, assign) CGPoint scrollBeginPosition;
 @property(nonatomic, readwrite, assign) MobilyDataViewDirection scrollDirection;
 
@@ -219,7 +222,11 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
 @end
 
 /*--------------------------------------------------*/
-#pragma mark -
+
+@interface MobilyDataContentView : UIView< MobilyObject >
+
+@end
+
 /*--------------------------------------------------*/
 
 @interface MobilyDataViewDelegateProxy : NSObject< UIScrollViewDelegate > {

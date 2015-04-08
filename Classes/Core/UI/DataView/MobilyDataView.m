@@ -47,6 +47,7 @@
 @synthesize objectParent = _objectParent;
 @synthesize objectChilds = _objectChilds;
 @synthesize delegateProxy = _delegateProxy;
+@synthesize contentView = _contentView;
 @synthesize velocity = _velocity;
 @synthesize velocityMin = _velocityMin;
 @synthesize velocityMax = _velocityMax;
@@ -120,7 +121,6 @@
 - (instancetype)initWithCoder:(NSCoder*)coder {
     self = [super initWithCoder:coder];
     if(self != nil) {
-        self.delegateProxy = [MobilyDataViewDelegateProxy new];
         [self setup];
     }
     return self;
@@ -129,13 +129,14 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self != nil) {
-        self.delegateProxy = [MobilyDataViewDelegateProxy new];
         [self setup];
     }
     return self;
 }
 
 - (void)setup {
+    self.delegateProxy = [MobilyDataViewDelegateProxy new];
+    
     if([UIDevice isIPhone] == YES) {
         _velocity = 400.0f;
         _velocityMin = 300.0f;
@@ -245,6 +246,11 @@
     super.bounds = bounds;
 }
 
+- (void)setContentSize:(CGSize)contentSize {
+    [super setContentSize:contentSize];
+    self.contentView.frameSize = contentSize;
+}
+
 - (void)setDelegateProxy:(MobilyDataViewDelegateProxy*)delegateProxy {
     if(_delegateProxy != delegateProxy) {
         if(_delegateProxy != nil) {
@@ -269,6 +275,14 @@
 
 - (id< UIScrollViewDelegate >)delegate {
     return _delegateProxy.delegate;
+}
+
+- (MobilyDataContentView*)contentView {
+    if(_contentView == nil) {
+        _contentView = [[MobilyDataContentView alloc] initWithFrame:CGRectMakeOriginAndSize(CGPointZero, self.contentSize)];
+        [self addSubview:_contentView];
+    }
+    return _contentView;
 }
 
 - (void)setContainer:(MobilyDataContainer*)container {
@@ -726,7 +740,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             if(cell != nil) {
                 cell.view = self;
                 __block NSUInteger viewIndex = NSNotFound;
-                [self.subviews enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
+                [self.contentView.subviews enumerateObjectsUsingBlock:^(UIView* view, NSUInteger index, BOOL* stop) {
                     if([view isKindOfClass:MobilyDataCell.class] == YES) {
                         MobilyDataCell* existCell = (MobilyDataCell*)view;
                         if(item.order > existCell.item.order) {
@@ -737,9 +751,9 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     }
                 }];
                 if(viewIndex != NSNotFound) {
-                    [self insertSubview:cell atIndex:viewIndex + 1];
+                    [self.contentView insertSubview:cell atIndex:viewIndex + 1];
                 } else {
-                    [self insertSubview:cell atIndex:0];
+                    [self.contentView insertSubview:cell atIndex:0];
                 }
             }
         } else {
@@ -1240,14 +1254,27 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 }
 
 - (void)_layoutForVisible {
-    CGRect bounds = self.visibleBounds;
-    [_container _willLayoutForBounds:bounds];
-    if(_updating == NO) {
-        [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex __unused, BOOL* itemStop __unused) {
-            [item invalidateLayoutForBounds:bounds];
-        }];
+    if((self.dragging == YES) || (self.decelerating == YES)) {
+        [_container _willLayoutForBounds:self.visibleBounds];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            CGRect bounds = self.visibleBounds;
+            if(_updating == NO) {
+                [_visibleItems each:^(MobilyDataItem* item) {
+                    [item invalidateLayoutForBounds:bounds];
+                }];
+            }
+            [_container _didLayoutForBounds:bounds];
+        });
+    } else {
+        CGRect bounds = self.visibleBounds;
+        [_container _willLayoutForBounds:bounds];
+        if(_updating == NO) {
+            [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex __unused, BOOL* itemStop __unused) {
+                [item invalidateLayoutForBounds:bounds];
+            }];
+        }
+        [_container _didLayoutForBounds:bounds];
     }
-    [_container _didLayoutForBounds:bounds];
 }
 
 - (void)_updateSuperviewConstraints {
@@ -2095,6 +2122,38 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 - (void)searchBarPressedCancel:(MobilySearchBar*)searchBar {
     [self fireEventForKey:MobilyDataViewSearchPressedCancel byObject:nil];
     [_container searchBarPressedCancel:searchBar];
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation MobilyDataContentView
+
+#pragma mark NSKeyValueCoding
+
+#pragma mark Init / Free
+
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    self = [super initWithCoder:coder];
+    if(self != nil) {
+        [self setup];
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if(self != nil) {
+        [self setup];
+    }
+    return self;
+}
+
+- (void)setup {
+    self.clipsToBounds = YES;
 }
 
 @end
