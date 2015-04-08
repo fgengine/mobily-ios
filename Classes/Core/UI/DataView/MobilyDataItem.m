@@ -163,6 +163,7 @@
                 _cell.frame = self.frame;
                 _cell.selected = _selected;
                 _cell.highlighted = _highlighted;
+                _cell.editing = _editing;
                 _cell.item = self;
             }];
         }

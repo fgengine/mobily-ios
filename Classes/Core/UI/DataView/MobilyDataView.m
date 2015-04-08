@@ -1245,18 +1245,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         layoutRect = [_container _validateLayoutForAvailableFrame:CGRectMakeOriginAndSize(CGPointZero, self.frameSize)];
     }
     self.contentSize = layoutRect.size;
-    if(self.bounces == YES) {
-        CGSize frameSize = self.frameSize;
-        CGPoint contentOffset = self.contentOffset;
-        CGSize contentSize = self.contentSize;
-        UIEdgeInsets contentInsets = self.contentInset;
-        CGFloat finalWidth = (frameSize.width < contentSize.width) ? contentSize.width - frameSize.width : contentSize.width;
-        CGFloat finalHeight = (frameSize.height < contentSize.height) ? contentSize.height - frameSize.height : contentSize.height;
-        CGRect normalizedRect = UIEdgeInsetsInsetRect(CGRectMake(0.0f, 0.0f, finalWidth, finalHeight), UIEdgeInsetsMake(-contentInsets.top, -contentInsets.left, -contentInsets.bottom, -contentInsets.right));
-        CGFloat x = MAX(normalizedRect.origin.x, MIN(contentOffset.x, normalizedRect.origin.x + normalizedRect.size.width));
-        CGFloat y = MAX(normalizedRect.origin.y, MIN(contentOffset.y, normalizedRect.origin.y + normalizedRect.size.height));
-        self.contentOffset = CGPointMake(x, y);
-    }
 }
 
 - (void)_layoutForVisible {
@@ -1503,7 +1491,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 }
             }
         }
-        if(self.directionalLockEnabled == YES) {
+        if((self.directionalLockEnabled == YES) && (dragging == YES)) {
             switch(_scrollDirection) {
                 case MobilyDataViewDirectionUnknown: {
                     CGFloat dx = ABS(contentOffset.x - _scrollBeginPosition.x);
@@ -1517,8 +1505,12 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     }
                     break;
                 }
-                case MobilyDataViewDirectionHorizontal: contentOffset.y = _scrollBeginPosition.y; break;
-                case MobilyDataViewDirectionVertical: contentOffset.x = _scrollBeginPosition.x; break;
+                case MobilyDataViewDirectionHorizontal:
+                    contentOffset.y = _scrollBeginPosition.y;
+                    break;
+                case MobilyDataViewDirectionVertical:
+                    contentOffset.x = _scrollBeginPosition.x;
+                    break;
             }
         }
         if((_searchBarDragging == YES) && (decelerating == NO)) {
