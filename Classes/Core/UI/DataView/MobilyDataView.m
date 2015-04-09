@@ -1254,27 +1254,14 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 }
 
 - (void)_layoutForVisible {
-    if((self.dragging == YES) || (self.decelerating == YES)) {
-        [_container _willLayoutForBounds:self.visibleBounds];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            CGRect bounds = self.visibleBounds;
-            if(_updating == NO) {
-                [_visibleItems each:^(MobilyDataItem* item) {
-                    [item invalidateLayoutForBounds:bounds];
-                }];
-            }
-            [_container _didLayoutForBounds:bounds];
-        });
-    } else {
-        CGRect bounds = self.visibleBounds;
-        [_container _willLayoutForBounds:bounds];
-        if(_updating == NO) {
-            [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex __unused, BOOL* itemStop __unused) {
-                [item invalidateLayoutForBounds:bounds];
-            }];
-        }
-        [_container _didLayoutForBounds:bounds];
+    CGRect bounds = self.visibleBounds;
+    [_container _willLayoutForBounds:bounds];
+    if(_updating == NO) {
+        [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex __unused, BOOL* itemStop __unused) {
+            [item invalidateLayoutForBounds:bounds];
+        }];
     }
+    [_container _didLayoutForBounds:bounds];
 }
 
 - (void)_updateSuperviewConstraints {

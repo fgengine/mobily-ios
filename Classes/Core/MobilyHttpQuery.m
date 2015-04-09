@@ -231,7 +231,7 @@
 }
 
 - (void)setRequestBody:(NSData*)requestBody {
-    _request.hTTPBody = requestBody;
+    _request.HTTPBody = requestBody;
 }
 
 - (NSData*)requestBody {
