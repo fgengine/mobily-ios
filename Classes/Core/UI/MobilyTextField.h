@@ -47,17 +47,18 @@
 @property(nonatomic, readwrite, strong) UIBarButtonItem* flexButton;
 @property(nonatomic, readwrite, strong) UIBarButtonItem* doneButton;
 
+@property(nonatomic, readwrite, strong) NSString* phonePrefix;
 @property(nonatomic, readwrite, strong) NSString* phoneFormat;
 
 - (void)setup NS_REQUIRES_SUPER;
 
 - (void)setHiddenToolbar:(BOOL)hiddenToolbar animated:(BOOL)animated;
+- (void)setPhoneFormat:(NSString *)phoneFormat withPrefix:(NSString*)phonePrefix;
 
 - (void)didBeginEditing;
 - (void)didEndEditing;
 - (void)didValueChanged;
 
-- (NSString*)getDigitsOnly;
 - (void)validate;
 
 @end
