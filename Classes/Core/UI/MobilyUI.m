@@ -2275,6 +2275,7 @@ static MobilyDeviceModel Mobily_DeviceModel = MobilyDeviceModelUnknown;
         switch(UI_USER_INTERFACE_IDIOM()) {
             case UIUserInterfaceIdiomPhone: Mobily_DeviceModel = MobilyDeviceModelSimulatorPhone; break;
             case UIUserInterfaceIdiomPad: Mobily_DeviceModel = MobilyDeviceModelSimulatorPad; break;
+            default: break;
         }
 #else
         NSDictionary* familyModelManifest = @{
