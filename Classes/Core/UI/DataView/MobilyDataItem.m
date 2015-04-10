@@ -323,7 +323,7 @@
         
         Class cellClass = [_view cellClassWithItem:self];
         if(cellClass != nil) {
-            _size = [cellClass sizeForItem:_data availableSize:size];
+            _size = [cellClass sizeForItem:self availableSize:size];
         }
     }
     return _size;

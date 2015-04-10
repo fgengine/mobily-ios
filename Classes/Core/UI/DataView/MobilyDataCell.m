@@ -62,8 +62,21 @@
 
 #pragma mark Calculating size
 
-+ (CGSize)sizeForItem:(MobilyDataItem* __unused)item availableSize:(CGSize)size {
-    return size;
++ (CGSize)sizeForItem:(MobilyDataItem*)item availableSize:(CGSize)size {
+    static NSMutableDictionary* cacheCells = nil;
+    if(cacheCells == nil) {
+        cacheCells = [NSMutableDictionary dictionary];
+    }
+    id cell = cacheCells[item.identifier];
+    if (cell == nil) {
+        cell = [[item.view.registersViews[item.identifier] alloc] initWithIdentifier:item.identifier];
+    }
+    [cell setFrame:CGRectMake(0.0f, 0.0f, size.width, size.height)];
+    [cell setSelected:item.selected];
+    [cell setHighlighted:item.highlighted];
+    [cell setEditing:item.editing];
+    [cell setItem:item];
+    return [cell systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
 }
 
 #pragma mark Init / Free
