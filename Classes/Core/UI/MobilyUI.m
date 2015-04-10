@@ -66,7 +66,7 @@
         NSMutableParagraphStyle* paragraphStyle = [NSMutableParagraphStyle new];
         paragraphStyle.lineBreakMode = lineBreakMode;
         NSDictionary* attributes = @{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle };
-        CGRect textRect = [self boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attributes context:nil];
+        CGRect textRect = [self boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil];
         if(textRect.size.height < font.lineHeight) {
             textRect.size.height = font.lineHeight;
         }
@@ -587,49 +587,42 @@
 }
 
 - (void)drawAtPoint:(CGPoint)point font:(UIFont*)font color:(UIColor*)color vAlignment:(MobilyVerticalAlignment)vAlignment hAlignment:(MobilyHorizontalAlignment)hAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode {
-    if((hAlignment != MobilyHorizontalAlignmentLeft) || (vAlignment != MobilyVerticalAlignmentTop)) {
-        CGSize size = [self implicitSizeWithFont:font lineBreakMode:lineBreakMode];
-        switch(hAlignment) {
-            case MobilyHorizontalAlignmentCenter: point.x -= size.width * 0.5f; break;
-            case MobilyHorizontalAlignmentRight: point.x -= size.width; break;
-            default: break;
-        }
-        switch(vAlignment) {
-            case MobilyVerticalAlignmentCenter: point.y -= size.height * 0.5f; break;
-            case MobilyVerticalAlignmentBottom: point.y -= size.height; break;
-            default: break;
-        }
-    }
+    NSStringDrawingOptions options = NSStringDrawingUsesLineFragmentOrigin;
     NSMutableParagraphStyle* paragraphStyle = [NSMutableParagraphStyle new];
     paragraphStyle.lineBreakMode = lineBreakMode;
-    [self drawAtPoint:point withAttributes:@{
-        NSFontAttributeName: font,
-        NSForegroundColorAttributeName: color,
-        NSParagraphStyleAttributeName: paragraphStyle
-    }];
+    NSDictionary* attributes = @{ NSFontAttributeName: font, NSForegroundColorAttributeName: color, NSParagraphStyleAttributeName: paragraphStyle };
+    CGRect boundingRect = [self boundingRectWithSize:CGSizeMake(NSIntegerMax, NSIntegerMax) options:options attributes:attributes context:nil];
+    CGRect rect = CGRectMake(point.x, point.y, boundingRect.size.width, boundingRect.size.height);
+    switch(hAlignment) {
+        case MobilyHorizontalAlignmentCenter: rect.origin.x -= rect.size.width * 0.5f; break;
+        case MobilyHorizontalAlignmentRight: rect.origin.x -= rect.size.width; break;
+        default: break;
+    }
+    switch(vAlignment) {
+        case MobilyVerticalAlignmentCenter: rect.origin.y -= rect.size.height * 0.5f; break;
+        case MobilyVerticalAlignmentBottom: rect.origin.y -= rect.size.height; break;
+        default: break;
+    }
+    [self drawWithRect:CGRectMake(floorf(rect.origin.x), floorf(rect.origin.y), ceilf(rect.size.width), ceilf(rect.size.height)) options:options attributes:attributes context:nil];
 }
 
 - (void)drawInRect:(CGRect)rect font:(UIFont*)font color:(UIColor*)color vAlignment:(MobilyVerticalAlignment)vAlignment hAlignment:(MobilyHorizontalAlignment)hAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode {
-    if((hAlignment != MobilyHorizontalAlignmentLeft) || (vAlignment != MobilyVerticalAlignmentTop)) {
-        CGSize size = [self implicitSizeWithFont:font lineBreakMode:lineBreakMode];
-        switch(hAlignment) {
-            case MobilyHorizontalAlignmentCenter: rect.origin.x -= (size.width * 0.5f) - (rect.size.width * 0.5f); break;
-            case MobilyHorizontalAlignmentRight: rect.origin.x -= size.width - rect.size.width; break;
-            default: break;
-        }
-        switch(vAlignment) {
-            case MobilyVerticalAlignmentCenter: rect.origin.y -= (size.height * 0.5f) - (rect.size.height * 0.5f); break;
-            case MobilyVerticalAlignmentBottom: rect.origin.y -= size.height - rect.size.height; break;
-            default: break;
-        }
-    }
+    NSStringDrawingOptions options = NSStringDrawingUsesLineFragmentOrigin;
     NSMutableParagraphStyle* paragraphStyle = [NSMutableParagraphStyle new];
     paragraphStyle.lineBreakMode = lineBreakMode;
-    [self drawInRect:rect withAttributes:@{
-        NSFontAttributeName: font,
-        NSForegroundColorAttributeName: color,
-        NSParagraphStyleAttributeName: paragraphStyle
-    }];
+    NSDictionary* attributes = @{ NSFontAttributeName: font, NSForegroundColorAttributeName: color, NSParagraphStyleAttributeName: paragraphStyle };
+    CGRect boundingRect = [self boundingRectWithSize:CGSizeMake(NSIntegerMax, NSIntegerMax) options:options attributes:attributes context:nil];
+    switch(hAlignment) {
+        case MobilyHorizontalAlignmentCenter: rect.origin.x -= (boundingRect.size.width * 0.5f) - (rect.size.width * 0.5f); break;
+        case MobilyHorizontalAlignmentRight: rect.origin.x -= boundingRect.size.width - rect.size.width; break;
+        default: break;
+    }
+    switch(vAlignment) {
+        case MobilyVerticalAlignmentCenter: rect.origin.y -= (boundingRect.size.height * 0.5f) - (rect.size.height * 0.5f); break;
+        case MobilyVerticalAlignmentBottom: rect.origin.y -= boundingRect.size.height - rect.size.height; break;
+        default: break;
+    }
+    [self drawWithRect:CGRectMake(floorf(rect.origin.x), floorf(rect.origin.y), ceilf(rect.size.width), ceilf(rect.size.height)) options:options attributes:attributes context:nil];
 }
 
 @end
