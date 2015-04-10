@@ -566,7 +566,9 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
             if((_swipeEnabled == YES) && (_swipeDragging == NO) && (_swipeDecelerating == NO)) {
                 if([self.item.view shouldBeganEditItem:self.item] == YES) {
                     CGPoint translation = [_panGestureRecognizer translationInView:self];
-                    if(fabs(translation.x) >= fabs(translation.y)) {
+                    CGFloat absX = ABS(translation.x);
+                    CGFloat absY = ABS(translation.y);
+                    if((absX >= absY) && (absX >= 2.0f)) {
                         if((_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (translation.x < 0.0f)) {
                             return YES;
                         } else if((_showedRightSwipeView == YES) && (_rightSwipeView != nil) && (translation.x > 0.0f)) {
@@ -576,13 +578,20 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
                         } else if((_showedRightSwipeView == NO) && (_rightSwipeView != nil) && (translation.x < 0.0f)) {
                             return YES;
                         }
-                        return NO;
                     }
                 }
             }
+            return NO;
         }
     }
     return result;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
+    if((gestureRecognizer == _panGestureRecognizer) && ([self.rootView.gestureRecognizers containsObject:otherGestureRecognizer] == NO)) {
+        return NO;
+    }
+    return [super gestureRecognizer:gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer];
 }
 
 @end
