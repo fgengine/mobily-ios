@@ -809,6 +809,40 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     return image;
 }
 
+- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment {
+    return [self drawInRect:rect alignment:alignment corners:UIRectCornerAllCorners radius:0.0f blendMode:kCGBlendModeNormal alpha:1.0f];
+}
+
+- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha {
+    return [self drawInRect:rect alignment:alignment corners:UIRectCornerAllCorners radius:0.0f blendMode:blendMode alpha:alpha];
+}
+
+- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment radius:(CGFloat)radius {
+    return [self drawInRect:rect alignment:alignment corners:UIRectCornerAllCorners radius:radius blendMode:kCGBlendModeNormal alpha:1.0f];
+}
+
+- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment radius:(CGFloat)radius blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha {
+    return [self drawInRect:rect alignment:alignment corners:UIRectCornerAllCorners radius:radius blendMode:blendMode alpha:alpha];
+}
+
+- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment corners:(UIRectCorner)corners radius:(CGFloat)radius {
+    return [self drawInRect:rect alignment:alignment corners:corners radius:radius blendMode:kCGBlendModeNormal alpha:1.0f];
+}
+
+- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment corners:(UIRectCorner)corners radius:(CGFloat)radius blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha {
+    CGContextRef contextRef = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(contextRef);
+    UIBezierPath* path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:corners cornerRadii:CGSizeMake(radius, radius)];
+    [path addClip];
+    switch(alignment) {
+        case MobilyImageAlignmentStretch: break;
+        case MobilyImageAlignmentAspectFill: rect = CGRectAspectFillFromBoundsAndSize(rect, self.size); break;
+        case MobilyImageAlignmentAspectFit: rect = CGRectAspectFitFromBoundsAndSize(rect, self.size); break;
+    }
+    [self drawInRect:rect blendMode:blendMode alpha:alpha];
+    CGContextRestoreGState(contextRef);
+}
+
 @end
 
 /*--------------------------------------------------*/
@@ -885,35 +919,43 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     }
 }
 
-+ (void)drawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges width:(UIEdgeInsets)width fillColor:(UIColor*)fillColor {
++ (void)drawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges width:(CGFloat)width fillColor:(UIColor*)fillColor {
+    [self drawSeparatorRect:rect edges:edges widthEdges:UIEdgeInsetsMake(width, width, width, width) edgeInsets:UIEdgeInsetsZero fillColor:fillColor];
+}
+
++ (void)drawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges width:(CGFloat)width edgeInsets:(UIEdgeInsets)edgeInsets fillColor:(UIColor*)fillColor {
+    [self drawSeparatorRect:rect edges:edges widthEdges:UIEdgeInsetsMake(width, width, width, width) edgeInsets:edgeInsets fillColor:fillColor];
+}
+
++ (void)drawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges widthEdges:(UIEdgeInsets)widthEdges edgeInsets:(UIEdgeInsets)edgeInsets fillColor:(UIColor*)fillColor {
     UIBezierPath* path = [UIBezierPath bezierPath];
     if((edges & MobilyBezierPathSeparatorEdgeTop) != 0) {
-        UIEdgeInsets insets = UIEdgeInsetsZero;
-        CGRect lineRect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, width.top);
-        if((edges & MobilyBezierPathSeparatorEdgeLeft) != 0) { insets.left = width.left; }
-        if((edges & MobilyBezierPathSeparatorEdgeRight) != 0) { insets.right = width.right; }
-        [path appendPath:[UIBezierPath bezierPathWithRect:UIEdgeInsetsInsetRect(lineRect, insets)]];
-    }
-    if((edges & MobilyBezierPathSeparatorEdgeLeft) != 0) {
-        UIEdgeInsets insets = UIEdgeInsetsZero;
-        CGRect lineRect = CGRectMake(rect.origin.x, rect.origin.y, width.left, rect.size.height);
-        if((edges & MobilyBezierPathSeparatorEdgeTop) != 0) { insets.top = width.top; }
-        if((edges & MobilyBezierPathSeparatorEdgeBottom) != 0) { insets.bottom = width.bottom; }
-        [path appendPath:[UIBezierPath bezierPathWithRect:UIEdgeInsetsInsetRect(lineRect, insets)]];
-    }
-    if((edges & MobilyBezierPathSeparatorEdgeBottom) != 0) {
-        UIEdgeInsets insets = UIEdgeInsetsZero;
-        CGRect lineRect = CGRectMake(rect.origin.x, (rect.origin.y + rect.size.height) - width.bottom, rect.size.width, width.bottom);
-        if((edges & MobilyBezierPathSeparatorEdgeLeft) != 0) { insets.left = width.left; }
-        if((edges & MobilyBezierPathSeparatorEdgeRight) != 0) { insets.right = width.right; }
-        [path appendPath:[UIBezierPath bezierPathWithRect:UIEdgeInsetsInsetRect(lineRect, insets)]];
+        CGRect lineRect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, widthEdges.top);
+        UIEdgeInsets lineInsets = UIEdgeInsetsZero;
+        if((edges & MobilyBezierPathSeparatorEdgeLeft) == 0) { lineInsets.left = edgeInsets.left; }
+        if((edges & MobilyBezierPathSeparatorEdgeRight) != 0) { lineInsets.right = widthEdges.right; }
+        [path appendPath:[UIBezierPath bezierPathWithRect:UIEdgeInsetsInsetRect(lineRect, lineInsets)]];
     }
     if((edges & MobilyBezierPathSeparatorEdgeRight) != 0) {
-        UIEdgeInsets insets = UIEdgeInsetsZero;
-        CGRect lineRect = CGRectMake((rect.origin.x + rect.size.width) - width.right, rect.origin.y, width.right, rect.size.height);
-        if((edges & MobilyBezierPathSeparatorEdgeTop) != 0) { insets.top = width.top; }
-        if((edges & MobilyBezierPathSeparatorEdgeBottom) != 0) { insets.bottom = width.bottom; }
-        [path appendPath:[UIBezierPath bezierPathWithRect:UIEdgeInsetsInsetRect(lineRect, insets)]];
+        CGRect lineRect = CGRectMake((rect.origin.x + rect.size.width) - widthEdges.right, rect.origin.y, widthEdges.right, rect.size.height);
+        UIEdgeInsets lineInsets = UIEdgeInsetsZero;
+        if((edges & MobilyBezierPathSeparatorEdgeTop) == 0) { lineInsets.top = edgeInsets.top; }
+        if((edges & MobilyBezierPathSeparatorEdgeBottom) != 0) { lineInsets.bottom = widthEdges.bottom; }
+        [path appendPath:[UIBezierPath bezierPathWithRect:UIEdgeInsetsInsetRect(lineRect, lineInsets)]];
+    }
+    if((edges & MobilyBezierPathSeparatorEdgeBottom) != 0) {
+        CGRect lineRect = CGRectMake(rect.origin.x, (rect.origin.y + rect.size.height) - widthEdges.bottom, rect.size.width, widthEdges.bottom);
+        UIEdgeInsets lineInsets = UIEdgeInsetsZero;
+        if((edges & MobilyBezierPathSeparatorEdgeLeft) != 0) { lineInsets.left = widthEdges.left; }
+        if((edges & MobilyBezierPathSeparatorEdgeRight) == 0) { lineInsets.right = edgeInsets.right; }
+        [path appendPath:[UIBezierPath bezierPathWithRect:UIEdgeInsetsInsetRect(lineRect, lineInsets)]];
+    }
+    if((edges & MobilyBezierPathSeparatorEdgeLeft) != 0) {
+        CGRect lineRect = CGRectMake(rect.origin.x, rect.origin.y, widthEdges.left, rect.size.height);
+        UIEdgeInsets lineInsets = UIEdgeInsetsZero;
+        if((edges & MobilyBezierPathSeparatorEdgeTop) != 0) { lineInsets.top = widthEdges.top; }
+        if((edges & MobilyBezierPathSeparatorEdgeBottom) == 0) { lineInsets.bottom = edgeInsets.bottom; }
+        [path appendPath:[UIBezierPath bezierPathWithRect:UIEdgeInsetsInsetRect(lineRect, lineInsets)]];
     }
     if(fillColor != nil) {
         [fillColor setFill];

@@ -141,6 +141,14 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 /*--------------------------------------------------*/
 
+typedef NS_OPTIONS(NSUInteger, MobilyImageAlignment) {
+    MobilyImageAlignmentStretch,
+    MobilyImageAlignmentAspectFill,
+    MobilyImageAlignmentAspectFit
+};
+
+/*--------------------------------------------------*/
+
 @interface UIImage (MobilyUI)
 
 + (UIImage*)imageNamed:(NSString*)name capInsets:(UIEdgeInsets)capInsets;
@@ -149,15 +157,22 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 - (UIImage*)blurredImageWithRadius:(CGFloat)radius iterations:(NSUInteger)iterations tintColor:(UIColor*)tintColor;
 
+- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment;
+- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
+- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment radius:(CGFloat)radius;
+- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment radius:(CGFloat)radius blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
+- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment corners:(UIRectCorner)corners radius:(CGFloat)radius;
+- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment corners:(UIRectCorner)corners radius:(CGFloat)radius blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
+
 @end
 
 /*--------------------------------------------------*/
 
 typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
     MobilyBezierPathSeparatorEdgeTop = 1 << 0,
-    MobilyBezierPathSeparatorEdgeLeft = 1 << 1,
+    MobilyBezierPathSeparatorEdgeRight = 1 << 1,
     MobilyBezierPathSeparatorEdgeBottom = 1 << 2,
-    MobilyBezierPathSeparatorEdgeRight = 1 << 3,
+    MobilyBezierPathSeparatorEdgeLeft = 1 << 3,
     MobilyBezierPathSeparatorEdgeAll  = (MobilyBezierPathSeparatorEdgeTop | MobilyBezierPathSeparatorEdgeLeft | MobilyBezierPathSeparatorEdgeBottom | MobilyBezierPathSeparatorEdgeRight)
 };
 
@@ -177,7 +192,9 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 + (void)drawRoundedRect:(CGRect)rect corners:(UIRectCorner)corners radius:(CGSize)radius fillColor:(UIColor*)fillColor;
 + (void)drawRoundedRect:(CGRect)rect corners:(UIRectCorner)corners radius:(CGSize)radius fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth;
 
-+ (void)drawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges width:(UIEdgeInsets)width fillColor:(UIColor*)fillColor;
++ (void)drawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges width:(CGFloat)width fillColor:(UIColor*)fillColor;
++ (void)drawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges width:(CGFloat)width edgeInsets:(UIEdgeInsets)edgeInsets fillColor:(UIColor*)fillColor;
++ (void)drawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges widthEdges:(UIEdgeInsets)widthEdges edgeInsets:(UIEdgeInsets)edgeInsets fillColor:(UIColor*)fillColor;
 
 @end
 
