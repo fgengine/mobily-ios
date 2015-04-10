@@ -43,6 +43,20 @@
 
 /*--------------------------------------------------*/
 
+typedef NS_OPTIONS(NSUInteger, MobilyVerticalAlignment) {
+    MobilyVerticalAlignmentTop,
+    MobilyVerticalAlignmentCenter,
+    MobilyVerticalAlignmentBottom
+};
+
+typedef NS_OPTIONS(NSUInteger, MobilyHorizontalAlignment) {
+    MobilyHorizontalAlignmentLeft,
+    MobilyHorizontalAlignmentCenter,
+    MobilyHorizontalAlignmentRight
+};
+
+/*--------------------------------------------------*/
+
 @interface NSString (MobilyUI)
 
 - (CGSize)implicitSizeWithFont:(UIFont*)font lineBreakMode:(NSLineBreakMode)lineBreakMode;
@@ -89,6 +103,9 @@
 - (UISearchBarStyle)convertToSearchBarStyle;
 - (UIProgressViewStyle)convertToProgressViewStyle;
 - (UITextBorderStyle)convertToTextBorderStyle;
+
+- (void)drawAtPoint:(CGPoint)point font:(UIFont*)font color:(UIColor*)color vAlignment:(MobilyVerticalAlignment)vAlignment hAlignment:(MobilyHorizontalAlignment)hAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode;
+- (void)drawInRect:(CGRect)rect font:(UIFont*)font color:(UIColor*)color vAlignment:(MobilyVerticalAlignment)vAlignment hAlignment:(MobilyHorizontalAlignment)hAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode;
 
 @end
 

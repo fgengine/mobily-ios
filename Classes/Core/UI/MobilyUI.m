@@ -586,6 +586,52 @@
     return UITextBorderStyleNone;
 }
 
+- (void)drawAtPoint:(CGPoint)point font:(UIFont*)font color:(UIColor*)color vAlignment:(MobilyVerticalAlignment)vAlignment hAlignment:(MobilyHorizontalAlignment)hAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode {
+    if((hAlignment != MobilyHorizontalAlignmentLeft) || (vAlignment != MobilyVerticalAlignmentTop)) {
+        CGSize size = [self implicitSizeWithFont:font lineBreakMode:lineBreakMode];
+        switch(hAlignment) {
+            case MobilyHorizontalAlignmentCenter: point.x -= size.width * 0.5f; break;
+            case MobilyHorizontalAlignmentRight: point.x -= size.width; break;
+            default: break;
+        }
+        switch(vAlignment) {
+            case MobilyVerticalAlignmentCenter: point.y -= size.height * 0.5f; break;
+            case MobilyVerticalAlignmentBottom: point.y -= size.height; break;
+            default: break;
+        }
+    }
+    NSMutableParagraphStyle* paragraphStyle = [NSMutableParagraphStyle new];
+    paragraphStyle.lineBreakMode = lineBreakMode;
+    [self drawAtPoint:point withAttributes:@{
+        NSFontAttributeName: font,
+        NSForegroundColorAttributeName: color,
+        NSParagraphStyleAttributeName: paragraphStyle
+    }];
+}
+
+- (void)drawInRect:(CGRect)rect font:(UIFont*)font color:(UIColor*)color vAlignment:(MobilyVerticalAlignment)vAlignment hAlignment:(MobilyHorizontalAlignment)hAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode {
+    if((hAlignment != MobilyHorizontalAlignmentLeft) || (vAlignment != MobilyVerticalAlignmentTop)) {
+        CGSize size = [self implicitSizeWithFont:font lineBreakMode:lineBreakMode];
+        switch(hAlignment) {
+            case MobilyHorizontalAlignmentCenter: rect.origin.x -= (size.width * 0.5f) - (rect.size.width * 0.5f); break;
+            case MobilyHorizontalAlignmentRight: rect.origin.x -= size.width - rect.size.width; break;
+            default: break;
+        }
+        switch(vAlignment) {
+            case MobilyVerticalAlignmentCenter: rect.origin.y -= (size.height * 0.5f) - (rect.size.height * 0.5f); break;
+            case MobilyVerticalAlignmentBottom: rect.origin.y -= size.height - rect.size.height; break;
+            default: break;
+        }
+    }
+    NSMutableParagraphStyle* paragraphStyle = [NSMutableParagraphStyle new];
+    paragraphStyle.lineBreakMode = lineBreakMode;
+    [self drawInRect:rect withAttributes:@{
+        NSFontAttributeName: font,
+        NSForegroundColorAttributeName: color,
+        NSParagraphStyleAttributeName: paragraphStyle
+    }];
+}
+
 @end
 
 /*--------------------------------------------------*/
