@@ -153,6 +153,36 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 /*--------------------------------------------------*/
 
+typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
+    MobilyBezierPathSeparatorEdgeTop = 1 << 0,
+    MobilyBezierPathSeparatorEdgeLeft = 1 << 1,
+    MobilyBezierPathSeparatorEdgeBottom = 1 << 2,
+    MobilyBezierPathSeparatorEdgeRight = 1 << 3,
+    MobilyBezierPathSeparatorEdgeAll  = (MobilyBezierPathSeparatorEdgeTop | MobilyBezierPathSeparatorEdgeLeft | MobilyBezierPathSeparatorEdgeBottom | MobilyBezierPathSeparatorEdgeRight)
+};
+
+/*--------------------------------------------------*/
+
+@interface UIBezierPath (MobilyUI)
+
++ (void)drawRect:(CGRect)rect fillColor:(UIColor*)fillColor;
++ (void)drawRect:(CGRect)rect fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth;
+
++ (void)drawOvalInRect:(CGRect)rect fillColor:(UIColor*)fillColor;
++ (void)drawOvalInRect:(CGRect)rect fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth;
+
++ (void)drawRoundedRect:(CGRect)rect radius:(CGFloat)radius fillColor:(UIColor*)fillColor;
++ (void)drawRoundedRect:(CGRect)rect radius:(CGFloat)radius fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth;
+
++ (void)drawRoundedRect:(CGRect)rect corners:(UIRectCorner)corners radius:(CGSize)radius fillColor:(UIColor*)fillColor;
++ (void)drawRoundedRect:(CGRect)rect corners:(UIRectCorner)corners radius:(CGSize)radius fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth;
+
++ (void)drawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges width:(UIEdgeInsets)width fillColor:(UIColor*)fillColor;
+
+@end
+
+/*--------------------------------------------------*/
+
 @interface UINib (MobilyUI)
 
 + (id)viewWithNibName:(NSString*)nibName withClass:(Class)class;

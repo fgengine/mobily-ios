@@ -815,6 +815,118 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 #pragma mark -
 /*--------------------------------------------------*/
 
+@implementation UIBezierPath (MobilyUI)
+
++ (void)drawRect:(CGRect)rect fillColor:(UIColor*)fillColor {
+    [self drawRect:rect fillColor:fillColor strokeColor:nil strokeWidth:0.0f];
+}
+
++ (void)drawRect:(CGRect)rect fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth {
+    UIBezierPath* path = [UIBezierPath bezierPathWithRect:rect];
+    if(fillColor != nil) {
+        [fillColor setFill];
+        [path fill];
+    }
+    if(strokeColor != nil) {
+        [strokeColor setStroke];
+        [path setLineWidth:strokeWidth];
+        [path stroke];
+    }
+}
+
++ (void)drawOvalInRect:(CGRect)rect fillColor:(UIColor*)fillColor {
+    [self drawOvalInRect:rect fillColor:fillColor strokeColor:nil strokeWidth:0.0f];
+}
+
++ (void)drawOvalInRect:(CGRect)rect fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth {
+    UIBezierPath* path = [UIBezierPath bezierPathWithOvalInRect:rect];
+    if(fillColor != nil) {
+        [fillColor setFill];
+        [path fill];
+    }
+    if(strokeColor != nil) {
+        [strokeColor setStroke];
+        [path setLineWidth:strokeWidth];
+        [path stroke];
+    }
+}
+
++ (void)drawRoundedRect:(CGRect)rect radius:(CGFloat)radius fillColor:(UIColor*)fillColor {
+    [self drawRoundedRect:rect radius:radius fillColor:fillColor strokeColor:nil strokeWidth:0.0f];
+}
+
++ (void)drawRoundedRect:(CGRect)rect radius:(CGFloat)radius fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth {
+    UIBezierPath* path = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:radius];
+    if(fillColor != nil) {
+        [fillColor setFill];
+        [path fill];
+    }
+    if(strokeColor != nil) {
+        [strokeColor setStroke];
+        [path setLineWidth:strokeWidth];
+        [path stroke];
+    }
+}
+
++ (void)drawRoundedRect:(CGRect)rect corners:(UIRectCorner)corners radius:(CGSize)radius fillColor:(UIColor*)fillColor {
+    [self drawRoundedRect:rect corners:corners radius:radius fillColor:fillColor strokeColor:nil strokeWidth:0.0f];
+}
+
++ (void)drawRoundedRect:(CGRect)rect corners:(UIRectCorner)corners radius:(CGSize)radius fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth {
+    UIBezierPath* path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:corners cornerRadii:radius];
+    if(fillColor != nil) {
+        [fillColor setFill];
+        [path fill];
+    }
+    if(strokeColor != nil) {
+        [strokeColor setStroke];
+        [path setLineWidth:strokeWidth];
+        [path stroke];
+    }
+}
+
++ (void)drawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges width:(UIEdgeInsets)width fillColor:(UIColor*)fillColor {
+    UIBezierPath* path = [UIBezierPath bezierPath];
+    if((edges & MobilyBezierPathSeparatorEdgeTop) != 0) {
+        UIEdgeInsets insets = UIEdgeInsetsZero;
+        CGRect lineRect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, width.top);
+        if((edges & MobilyBezierPathSeparatorEdgeLeft) != 0) { insets.left = width.left; }
+        if((edges & MobilyBezierPathSeparatorEdgeRight) != 0) { insets.right = width.right; }
+        [path appendPath:[UIBezierPath bezierPathWithRect:UIEdgeInsetsInsetRect(lineRect, insets)]];
+    }
+    if((edges & MobilyBezierPathSeparatorEdgeLeft) != 0) {
+        UIEdgeInsets insets = UIEdgeInsetsZero;
+        CGRect lineRect = CGRectMake(rect.origin.x, rect.origin.y, width.left, rect.size.height);
+        if((edges & MobilyBezierPathSeparatorEdgeTop) != 0) { insets.top = width.top; }
+        if((edges & MobilyBezierPathSeparatorEdgeBottom) != 0) { insets.bottom = width.bottom; }
+        [path appendPath:[UIBezierPath bezierPathWithRect:UIEdgeInsetsInsetRect(lineRect, insets)]];
+    }
+    if((edges & MobilyBezierPathSeparatorEdgeBottom) != 0) {
+        UIEdgeInsets insets = UIEdgeInsetsZero;
+        CGRect lineRect = CGRectMake(rect.origin.x, (rect.origin.y + rect.size.height) - width.bottom, rect.size.width, width.bottom);
+        if((edges & MobilyBezierPathSeparatorEdgeLeft) != 0) { insets.left = width.left; }
+        if((edges & MobilyBezierPathSeparatorEdgeRight) != 0) { insets.right = width.right; }
+        [path appendPath:[UIBezierPath bezierPathWithRect:UIEdgeInsetsInsetRect(lineRect, insets)]];
+    }
+    if((edges & MobilyBezierPathSeparatorEdgeRight) != 0) {
+        UIEdgeInsets insets = UIEdgeInsetsZero;
+        CGRect lineRect = CGRectMake((rect.origin.x + rect.size.width) - width.right, rect.origin.y, width.right, rect.size.height);
+        if((edges & MobilyBezierPathSeparatorEdgeTop) != 0) { insets.top = width.top; }
+        if((edges & MobilyBezierPathSeparatorEdgeBottom) != 0) { insets.bottom = width.bottom; }
+        [path appendPath:[UIBezierPath bezierPathWithRect:UIEdgeInsetsInsetRect(lineRect, insets)]];
+    }
+    if(fillColor != nil) {
+        [fillColor setFill];
+        [path fill];
+    }
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
 @implementation UINib (MobilyUI)
 
 + (id)viewWithNibName:(NSString*)nibName withClass:(Class)class {
