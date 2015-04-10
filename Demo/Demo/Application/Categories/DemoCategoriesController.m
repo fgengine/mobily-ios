@@ -143,6 +143,10 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
     }
 }
 
+- (DemoApplication*)app {
+    return [super app];
+}
+
 @end
 
 /*--------------------------------------------------*/
@@ -150,10 +154,6 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
 /*--------------------------------------------------*/
 
 @implementation DemoCategoriesHeaderCell
-
-+ (CGSize)sizeForItem:(MobilyDataItem*)item availableSize:(CGSize)size {
-    return CGSizeMake(size.width, 21.0f);
-}
 
 - (void)prepareForUse {
     [super prepareForUse];
@@ -168,10 +168,6 @@ typedef NS_ENUM(NSUInteger, DemoCategoriesType) {
 /*--------------------------------------------------*/
 
 @implementation DemoCategoriesCell
-
-+ (CGSize)sizeForItem:(MobilyDataItem*)item availableSize:(CGSize)size {
-    return CGSizeMake(size.width, 88.0f);
-}
 
 - (void)prepareForUse {
     [super prepareForUse];

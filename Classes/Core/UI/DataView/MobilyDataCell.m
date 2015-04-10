@@ -67,15 +67,19 @@
     if(cacheCells == nil) {
         cacheCells = [NSMutableDictionary dictionary];
     }
-    id cell = cacheCells[item.identifier];
+    NSString* identifier = item.identifier;
+    id cell = cacheCells[identifier];
     if (cell == nil) {
-        cell = [[item.view.registersViews[item.identifier] alloc] initWithIdentifier:item.identifier];
+        cell = [[item.view.registersViews[identifier] alloc] initWithIdentifier:identifier];
+        cacheCells[identifier] = cell;
     }
     [cell setFrame:CGRectMake(0.0f, 0.0f, size.width, size.height)];
     [cell setSelected:item.selected];
     [cell setHighlighted:item.highlighted];
     [cell setEditing:item.editing];
     [cell setItem:item];
+    [cell setNeedsLayout];
+    [cell layoutIfNeeded];
     return [cell systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
 }
 
