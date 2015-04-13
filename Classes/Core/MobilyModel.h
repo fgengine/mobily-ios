@@ -45,8 +45,11 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyModel : NSObject < MobilyObject, NSCopying >
 
 @property(nonatomic, readwrite, strong) NSString* userDefaultsKey;
+@property(nonatomic, readwrite, strong) NSString* fileName;
+@property(nonatomic, readonly, strong) NSString* filePath;
 
 - (instancetype)initWithUserDefaultsKey:(NSString*)userDefaultsKey;
+- (instancetype)initWithFileName:(NSString*)fileName;
 - (instancetype)initWithJson:(id)json;
 
 - (void)setup NS_REQUIRES_SUPER;

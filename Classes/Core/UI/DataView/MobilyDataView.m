@@ -246,6 +246,14 @@
     super.bounds = bounds;
 }
 
+- (void)setContentOffset:(CGPoint)contentOffset {
+    [super setContentOffset:contentOffset];
+}
+
+- (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated {
+    [super setContentOffset:contentOffset animated:animated];
+}
+
 - (void)setContentSize:(CGSize)contentSize {
     [super setContentSize:contentSize];
     self.contentView.frameSize = contentSize;

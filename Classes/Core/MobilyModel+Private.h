@@ -40,6 +40,8 @@
 
 @interface MobilyModel () {
     NSString* _userDefaultsKey;
+    NSString* _fileName;
+    NSString* _filePath;
     __weak NSArray* compareMap;
     __weak NSArray* serializeMap;
     __weak NSDictionary* jsonMap;

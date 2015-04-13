@@ -41,11 +41,17 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
+#define MOBILY_MODEL_EXTENSION                      @"model"
+
+/*--------------------------------------------------*/
+
 @implementation MobilyModel
 
 #pragma mark Synthesize
 
 @synthesize userDefaultsKey = _userDefaultsKey;
+@synthesize fileName = _fileName;
+@synthesize filePath = _filePath;
 @synthesize compareMap = _compareMap;
 @synthesize serializeMap = _serializeMap;
 @synthesize jsonMap = _jsonMap;
@@ -69,6 +75,16 @@
                 [self setValue:value forKey:field];
             }
         }
+        [self setup];
+    }
+    return self;
+}
+
+- (instancetype)initWithFileName:(NSString*)fileName {
+    self = [super init];
+    if(self != nil) {
+        self.fileName = fileName;
+        [self load];
         [self setup];
     }
     return self;
@@ -155,6 +171,17 @@
 
 #pragma mark Property
 
+- (void)setFileName:(NSString*)fileName {
+    if(_fileName != fileName) {
+        _fileName = fileName;
+        if(_fileName != nil) {
+            _filePath = [MobilyStorage.fileSystemDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", _fileName, MOBILY_MODEL_EXTENSION]];
+        } else {
+            _filePath = nil;
+        }
+    }
+}
+
 - (NSArray*)compareMap {
     if(_compareMap == nil) {
         _compareMap = [self.class _buildCompareMap];
@@ -238,8 +265,12 @@
                     NSLog(@"MobilyModel::saveItem:%@ Exception = %@ Field=%@", _userDefaultsKey, exception, field);
                 }
             }
-            [NSUserDefaults.standardUserDefaults setObject:dict forKey:_userDefaultsKey];
-            return [NSUserDefaults.standardUserDefaults synchronize];
+            if(_userDefaultsKey.length > 0) {
+                [NSUserDefaults.standardUserDefaults setObject:dict forKey:_userDefaultsKey];
+                return [NSUserDefaults.standardUserDefaults synchronize];
+            } else if(_filePath.length > 0) {
+                return [NSKeyedArchiver archiveRootObject:dict toFile:_filePath];
+            }
         }
     }
     @catch(NSException* exception) {
@@ -268,7 +299,12 @@
 
 - (void)load {
     @try {
-        NSDictionary* dict = [NSUserDefaults.standardUserDefaults objectForKey:_userDefaultsKey];
+        NSDictionary* dict = nil;
+        if(_userDefaultsKey.length > 0) {
+            dict = [NSUserDefaults.standardUserDefaults objectForKey:_userDefaultsKey];
+        } else if(_filePath.length > 0) {
+            dict = [NSKeyedUnarchiver unarchiveObjectWithFile:_filePath];
+        }
         if(dict != nil) {
             for(NSString* field in self.serializeMap) {
                 id value = dict[field];
@@ -614,14 +650,15 @@
     @try {
         if(_needLoad == NO) {
             if(_userDefaultsKey.length > 0) {
-                NSData* data = [NSUserDefaults.standardUserDefaults objectForKey:_userDefaultsKey];
-                if([data isKindOfClass:NSData.class] == YES) {
-                    id items = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-                    if([items isKindOfClass:NSArray.class] == YES) {
-                        _models.array = items;
-                    } else {
-                        [_models removeAllObjects];
-                    }
+                @try {
+                    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:_models];
+                    [NSUserDefaults.standardUserDefaults setObject:data forKey:_userDefaultsKey];
+                }
+                @catch(NSException* exception) {
+#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
+                    NSLog(@"ERROR: [%@:%@]: Exception = %@", self.class, NSStringFromSelector(_cmd), exception);
+#endif
+                    [_models removeAllObjects];
                 }
             } else if(_filePath.length > 0) {
                 return [NSKeyedArchiver archiveRootObject:_models toFile:_filePath];
