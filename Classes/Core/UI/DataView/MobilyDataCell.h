@@ -63,6 +63,8 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @property(nonatomic, readonly, strong) NSArray* orderedSubviews;
 
 + (CGSize)sizeForItem:(id)item availableSize:(CGSize)size;
++ (UILayoutPriority)fittingHorizontalPriority;
++ (UILayoutPriority)fittingVerticalPriority;
 
 - (instancetype)initWithIdentifier:(NSString*)identifier;
 - (instancetype)initWithIdentifier:(NSString*)identifier nib:(UINib*)nib;

@@ -80,7 +80,18 @@
     [cell setItem:item];
     [cell setNeedsLayout];
     [cell layoutIfNeeded];
+    if([UIDevice systemVersion] >= 8.0f) {
+        return [cell systemLayoutSizeFittingSize:CGSizeMake(size.width, size.height) withHorizontalFittingPriority:[self fittingHorizontalPriority] verticalFittingPriority:[self fittingVerticalPriority]];
+    }
     return [cell systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+}
+
++ (UILayoutPriority)fittingHorizontalPriority {
+    return UILayoutPriorityRequired;
+}
+
++ (UILayoutPriority)fittingVerticalPriority {
+    return UILayoutPriorityFittingSizeLevel;
 }
 
 #pragma mark Init / Free
