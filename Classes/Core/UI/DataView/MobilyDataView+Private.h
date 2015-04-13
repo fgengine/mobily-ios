@@ -80,6 +80,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
     NSMutableDictionary* _registersViews;
     MobilyEvents* _registersEvents;
     NSMutableDictionary* _queueCells;
+    NSMutableArray* _queueBatch;
     NSMutableArray* _reloadedBeforeItems;
     NSMutableArray* _reloadedAfterItems;
     NSMutableArray* _deletedItems;
@@ -134,6 +135,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
 @property(nonatomic, readwrite, strong) NSMutableDictionary* registersViews;
 @property(nonatomic, readwrite, strong) MobilyEvents* registersEvents;
 @property(nonatomic, readwrite, strong) NSMutableDictionary* queueCells;
+@property(nonatomic, readwrite, strong) NSMutableArray* queueBatch;
 @property(nonatomic, readwrite, strong) NSMutableArray* reloadedBeforeItems;
 @property(nonatomic, readwrite, strong) NSMutableArray* reloadedAfterItems;
 @property(nonatomic, readwrite, strong) NSMutableArray* deletedItems;
@@ -224,6 +226,18 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
 /*--------------------------------------------------*/
 
 @interface MobilyDataContentView : UIView< MobilyObject >
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyDataBatch : NSObject< MobilyObject >
+
+@property(nonatomic, readonly, assign) NSTimeInterval duration;
+@property(nonatomic, readonly, copy) MobilyDataViewUpdateBlock update;
+@property(nonatomic, readonly, copy) MobilyDataViewCompleteBlock complete;
+
+- (instancetype)initWithDuration:(NSTimeInterval)duration update:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete;
 
 @end
 

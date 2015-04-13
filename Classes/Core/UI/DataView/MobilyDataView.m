@@ -70,6 +70,7 @@
 @synthesize registersViews = _registersViews;
 @synthesize registersEvents = _registersEvents;
 @synthesize queueCells = _queueCells;
+@synthesize queueBatch = _queueBatch;
 @synthesize reloadedBeforeItems = _reloadedBeforeItems;
 @synthesize reloadedAfterItems = _reloadedAfterItems;
 @synthesize deletedItems = _deletedItems;
@@ -162,6 +163,7 @@
     _registersViews = NSMutableDictionary.dictionary;
     _registersEvents = [MobilyEvents new];
     _queueCells = NSMutableDictionary.dictionary;
+    _queueBatch = NSMutableArray.array;
     _reloadedBeforeItems = NSMutableArray.array;
     _reloadedAfterItems = NSMutableArray.array;
     _deletedItems = NSMutableArray.array;
@@ -931,71 +933,43 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 }
 
 - (void)batchUpdate:(MobilyDataViewUpdateBlock)update {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(_updating != NO) {
-        NSLog(@"ERROR: [%@:%@] %@", self.class, NSStringFromSelector(_cmd), update);
-        return;
-    }
-#endif
-    [self _batchUpdate:^{
-        if(update != nil) {
-            update();
-        }
-        [self _batchComplete:nil animated:NO];
-    } animated:NO];
+    [self batchDuration:0.0f update:update complete:nil];
 }
 
 - (void)batchUpdate:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(_updating != NO) {
-        NSLog(@"ERROR: [%@:%@] %@ - %@", self.class, NSStringFromSelector(_cmd), update, complete);
-        return;
-    }
-#endif
-    [self _batchUpdate:^{
-        if(update != nil) {
-            update();
-        }
-        [self _batchComplete:^() {
-            if(complete != nil) {
-                complete(YES);
-            }
-        } animated:NO];
-    } animated:NO];
+    [self batchDuration:0.0f update:update complete:complete];
 }
 
 - (void)batchDuration:(NSTimeInterval)duration update:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-    if(_updating != NO) {
-        NSLog(@"ERROR: [%@:%@] %0.2f - %@ - %@", self.class, NSStringFromSelector(_cmd), duration, update, complete);
-        return;
-    }
-#endif
-    if(duration > FLT_EPSILON) {
-        [UIView animateWithDuration:duration
-                              delay:0.0f
-                            options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
-                         animations:^{
-                             [self _batchUpdate:update animated:YES];
-                         }
-                         completion:^(BOOL finished) {
-                             [self _batchComplete:^() {
-                                 if(complete != nil) {
-                                     complete(finished);
-                                 }
-                             } animated:YES];
-                         }];
-    } else {
-        [self _batchUpdate:^{
-            if(update != nil) {
-                update();
-            }
-            [self _batchComplete:^() {
-                if(complete != nil) {
-                    complete(YES);
+    if(_updating == NO) {
+        if(duration > FLT_EPSILON) {
+            [UIView animateWithDuration:duration
+                                  delay:0.0f
+                                options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
+                             animations:^{
+                                 [self _batchUpdate:update animated:YES];
+                             }
+                             completion:^(BOOL finished) {
+                                 [self _batchComplete:^() {
+                                     if(complete != nil) {
+                                         complete(finished);
+                                     }
+                                 } animated:YES];
+                             }];
+        } else {
+            [self _batchUpdate:^{
+                if(update != nil) {
+                    update();
                 }
+                [self _batchComplete:^() {
+                    if(complete != nil) {
+                        complete(YES);
+                    }
+                } animated:NO];
             } animated:NO];
-        } animated:NO];
+        }
+    } else {
+        [_queueBatch addObject:[[MobilyDataBatch alloc] initWithDuration:duration update:update complete:complete]];
     }
 }
 
@@ -2071,9 +2045,13 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
     self.animating = NO;
     self.updating = NO;
     [self _layoutForVisible];
-    
     if(complete != nil) {
         complete();
+    }
+    if(_queueBatch.count > 0) {
+        MobilyDataBatch* batch = _queueBatch.firstObject;
+        [_queueBatch removeObjectAtIndex:0];
+        [self batchDuration:batch.duration update:batch.update complete:batch.complete];
     }
 }
 
@@ -2149,6 +2127,30 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 
 - (void)setup {
     self.clipsToBounds = YES;
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation MobilyDataBatch
+
+#pragma mark Init / Free
+
+- (instancetype)initWithDuration:(NSTimeInterval)duration update:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete {
+    self = [super init];
+    if(self != nil) {
+        _duration = duration;
+        _update = update;
+        _complete = complete;
+        [self setup];
+    }
+    return self;
+}
+
+- (void)setup {
 }
 
 @end
