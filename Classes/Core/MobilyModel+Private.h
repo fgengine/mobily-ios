@@ -44,17 +44,20 @@
     NSString* _filePath;
     __weak NSArray* compareMap;
     __weak NSArray* serializeMap;
+    __weak NSArray* copyMap;
     __weak NSDictionary* jsonMap;
 }
 
 @property(nonatomic, readonly, weak) NSArray* compareMap;
 @property(nonatomic, readonly, weak) NSArray* serializeMap;
+@property(nonatomic, readonly, weak) NSArray* copyMap;
 @property(nonatomic, readonly, weak) NSDictionary* jsonMap;
 
 + (NSArray*)_arrayMap:(NSMutableDictionary*)cache class:(Class)class selector:(SEL)selector;
 + (NSDictionary*)_dictionaryMap:(NSMutableDictionary*)cache class:(Class)class selector:(SEL)selector;
 + (NSArray*)_buildCompareMap;
 + (NSArray*)_buildSerializeMap;
++ (NSArray*)_buildCopyMap;
 + (NSDictionary*)_buildJsonMap;
 
 @end

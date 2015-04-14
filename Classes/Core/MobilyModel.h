@@ -56,6 +56,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 
 + (NSArray*)compareMap;
 + (NSArray*)serializeMap;
++ (NSArray*)copyMap;
 + (NSDictionary*)jsonMap;
 
 - (void)fromJson:(id)json;

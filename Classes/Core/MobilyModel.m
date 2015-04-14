@@ -35,7 +35,7 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyModel+private.h"
+#import "MobilyModel+Private.h"
 
 /*--------------------------------------------------*/
 #pragma mark -
@@ -54,6 +54,7 @@
 @synthesize filePath = _filePath;
 @synthesize compareMap = _compareMap;
 @synthesize serializeMap = _serializeMap;
+@synthesize copyMap = _copyMap;
 @synthesize jsonMap = _jsonMap;
 
 #pragma mark Init / Free
@@ -116,15 +117,21 @@
 
 - (BOOL)isEqual:(id)object {
     BOOL result = NO;
-    if(([object isKindOfClass:self.class] == YES) && (self.serializeMap.count > 0)) {
-        result = YES;
-        for(NSString* field in self.serializeMap) {
-            id value1 = [self valueForKey:field];
-            id value2 = [object valueForKey:field];
-            if(value1 != value2) {
-                if([value1 isEqual:value2] == NO) {
-                    result = NO;
-                    break;
+    if([object isKindOfClass:self.class] == YES) {
+        NSArray* map = self.compareMap;
+        if(map == nil) {
+            map = self.serializeMap;
+        }
+        if(map.count > 0) {
+            result = YES;
+            for(NSString* field in map) {
+                id value1 = [self valueForKey:field];
+                id value2 = [object valueForKey:field];
+                if(value1 != value2) {
+                    if([value1 isEqual:value2] == NO) {
+                        result = NO;
+                        break;
+                    }
                 }
             }
         }
@@ -151,9 +158,28 @@
     MobilyModel* result = [[self.class allocWithZone:zone] init];
     if(result != nil) {
         result.userDefaultsKey = _userDefaultsKey;
-        
-        for(NSString* field in self.serializeMap) {
-            [result setValue:[[self valueForKey:field] copyWithZone:zone] forKey:field];
+        result.fileName = _fileName;
+        NSArray* map = self.copyMap;
+        if(map == nil) {
+            map = self.serializeMap;
+        }
+        for(NSString* field in map) {
+            id value = [self valueForKey:field];
+            if([value isKindOfClass:NSArray.class] == YES) {
+                NSMutableArray* array = [NSMutableArray arrayWithCapacity:[value count]];
+                for(id item in value) {
+                    [array addObject:[item copyWithZone:zone]];
+                }
+                [result setValue:array forKey:field];
+            } else if([value isKindOfClass:NSDictionary.class] == YES) {
+                NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithCapacity:[value count]];
+                [value each:^(id key, id item) {
+                    dict[key] = [item copyWithZone:zone];
+                }];
+                [result setValue:dict forKey:field];
+            } else {
+                [result setValue:[value copyWithZone:zone] forKey:field];
+            }
         }
     }
     return result;
@@ -196,6 +222,13 @@
     return _serializeMap;
 }
 
+- (NSArray*)copyMap {
+    if(_copyMap == nil) {
+        _copyMap = [self.class _buildCopyMap];
+    }
+    return _copyMap;
+}
+
 - (NSDictionary*)jsonMap {
     if(_jsonMap == nil) {
         _jsonMap = [self.class _buildJsonMap];
@@ -210,6 +243,10 @@
 }
 
 + (NSArray*)serializeMap {
+    return nil;
+}
+
++ (NSArray*)copyMap {
     return nil;
 }
 
@@ -417,6 +454,14 @@
         cache = NSMutableDictionary.dictionary;
     }
     return [self _arrayMap:cache class:self.class selector:@selector(serializeMap)];
+}
+
++ (NSArray*)_buildCopyMap {
+    static NSMutableDictionary* cache = nil;
+    if(cache == nil) {
+        cache = NSMutableDictionary.dictionary;
+    }
+    return [self _arrayMap:cache class:self.class selector:@selector(copyMap)];
 }
 
 + (NSDictionary*)_buildJsonMap {

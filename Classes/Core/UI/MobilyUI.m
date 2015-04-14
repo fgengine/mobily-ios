@@ -611,7 +611,7 @@
     NSMutableParagraphStyle* paragraphStyle = [NSMutableParagraphStyle new];
     paragraphStyle.lineBreakMode = lineBreakMode;
     NSDictionary* attributes = @{ NSFontAttributeName: font, NSForegroundColorAttributeName: color, NSParagraphStyleAttributeName: paragraphStyle };
-    CGRect boundingRect = [self boundingRectWithSize:CGSizeMake(NSIntegerMax, NSIntegerMax) options:options attributes:attributes context:nil];
+    CGRect boundingRect = [self boundingRectWithSize:rect.size options:options attributes:attributes context:nil];
     switch(hAlignment) {
         case MobilyHorizontalAlignmentCenter: rect.origin.x -= (boundingRect.size.width * 0.5f) - (rect.size.width * 0.5f); break;
         case MobilyHorizontalAlignmentRight: rect.origin.x -= boundingRect.size.width - rect.size.width; break;
