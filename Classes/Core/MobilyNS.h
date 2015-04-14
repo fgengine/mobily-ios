@@ -246,6 +246,7 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 - (void)each:(void(^)(id object))block options:(NSEnumerationOptions)options;
 - (void)eachWithIndex:(void(^)(id object, NSUInteger index))block options:(NSEnumerationOptions)options;
 - (NSArray*)map:(id(^)(id object))block;
+- (NSDictionary*)groupBy:(id(^)(id object))block;
 - (NSArray*)select:(BOOL(^)(id object))block;
 - (NSArray*)reject:(BOOL(^)(id object))block;
 - (id)find:(BOOL(^)(id object))block;

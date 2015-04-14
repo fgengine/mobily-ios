@@ -1012,6 +1012,19 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return array;
 }
 
+- (NSDictionary*)groupBy:(id(^)(id object))block {
+    NSMutableDictionary* dictionary = NSMutableDictionary.dictionary;
+    for(id object in self) {
+        id temp = block(object);
+        if([dictionary hasKey:temp]) {
+            [dictionary[temp] addObject:object];
+        } else {
+            dictionary[temp] = [NSMutableArray arrayWithObject:object];
+        }
+    }
+    return dictionary;
+}
+
 - (NSArray*)select:(BOOL(^)(id object))block {
     return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings __unused) {
         return (block(evaluatedObject) == YES);
