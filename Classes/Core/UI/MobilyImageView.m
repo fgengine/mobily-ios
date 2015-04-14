@@ -94,7 +94,10 @@
 #pragma mark MobilyBuilderObject
 
 - (NSArray*)relatedObjects {
-    return [_objectChilds unionWithArray:self.subviews];
+    if(_objectChilds.count > 0) {
+        return [_objectChilds unionWithArrays:self.subviews, nil];
+    }
+    return self.subviews;
 }
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
