@@ -587,7 +587,7 @@
 }
 
 - (void)drawAtPoint:(CGPoint)point font:(UIFont*)font color:(UIColor*)color vAlignment:(MobilyVerticalAlignment)vAlignment hAlignment:(MobilyHorizontalAlignment)hAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode {
-    NSStringDrawingOptions options = NSStringDrawingUsesLineFragmentOrigin;
+    NSStringDrawingOptions options = NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine;
     NSMutableParagraphStyle* paragraphStyle = [NSMutableParagraphStyle new];
     paragraphStyle.lineBreakMode = lineBreakMode;
     NSDictionary* attributes = @{ NSFontAttributeName: font, NSForegroundColorAttributeName: color, NSParagraphStyleAttributeName: paragraphStyle };
@@ -607,7 +607,7 @@
 }
 
 - (void)drawInRect:(CGRect)rect font:(UIFont*)font color:(UIColor*)color vAlignment:(MobilyVerticalAlignment)vAlignment hAlignment:(MobilyHorizontalAlignment)hAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode {
-    NSStringDrawingOptions options = NSStringDrawingUsesLineFragmentOrigin;
+    NSStringDrawingOptions options = NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine;
     NSMutableParagraphStyle* paragraphStyle = [NSMutableParagraphStyle new];
     paragraphStyle.lineBreakMode = lineBreakMode;
     NSDictionary* attributes = @{ NSFontAttributeName: font, NSForegroundColorAttributeName: color, NSParagraphStyleAttributeName: paragraphStyle };
