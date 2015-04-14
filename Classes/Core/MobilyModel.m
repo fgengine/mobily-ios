@@ -119,7 +119,7 @@
     BOOL result = NO;
     if([object isKindOfClass:self.class] == YES) {
         NSArray* map = self.compareMap;
-        if(map == nil) {
+        if(map.count < 1) {
             map = self.serializeMap;
         }
         if(map.count > 0) {
@@ -160,7 +160,7 @@
         result.userDefaultsKey = _userDefaultsKey;
         result.fileName = _fileName;
         NSArray* map = self.copyMap;
-        if(map == nil) {
+        if(map.count < 1) {
             map = self.serializeMap;
         }
         for(NSString* field in map) {
