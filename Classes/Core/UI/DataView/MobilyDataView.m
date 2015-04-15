@@ -1492,7 +1492,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     break;
             }
         }
-        if((_searchBarDragging == YES) && (decelerating == NO)) {
+        if(_searchBarDragging == YES) {
             if(_canSearchBar == YES) {
                 CGFloat searchBarHeight = _searchBar.frameHeight;
                 switch(_searchBarStyle) {
@@ -1525,6 +1525,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                             self.searchBarOverlayLastOffset = offset;
                             duration = 0.1f;
                         }
+                        NSLog(@"%f", _constraintSearchBarTop.constant);
                         break;
                     }
                 }
@@ -1680,13 +1681,24 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 switch(_searchBarStyle) {
                     case MobilyDataViewSearchBarStyleStatic:
                         break;
-                    case MobilyDataViewSearchBarStyleInside:
-                    case MobilyDataViewSearchBarStyleOverlay: {
+                    case MobilyDataViewSearchBarStyleInside: {
                         CGFloat offset = MAX(0.0f, MIN(_searchBarInsets.top - (contentOffset->y + _searchBarInsets.top), searchBarHeight));
                         if(contentOffset->y > -searchBarHeight) {
                             contentOffset->y = -searchBarHeight;
                         }
                         if(offset >= (searchBarHeight * 0.33f)) {
+                            [self _showSearchBarAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
+                                self.searchBarDragging = NO;
+                            }];
+                        } else {
+                            [self _hideSearchBarAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
+                                self.searchBarDragging = NO;
+                            }];
+                        }
+                        break;
+                    }
+                    case MobilyDataViewSearchBarStyleOverlay: {
+                        if(_searchBarInsets.top > 0.0f) {
                             [self _showSearchBarAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
                                 self.searchBarDragging = NO;
                             }];

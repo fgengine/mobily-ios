@@ -464,37 +464,42 @@
 #pragma mark Private override
 
 - (CGRect)_validateEntriesForAvailableFrame:(CGRect)frame {
-    CGSize headerColumnSize = CGSizeZero, footerColumnSize = CGSizeZero;
-    CGSize headerRowSize = CGSizeZero, footerRowSize = CGSizeZero;
-    CGSize contentSize = CGSizeZero;
+    CGFloat maxColumnHeight = 0.0f;
+    NSMutableArray* columnsSize = [NSMutableArray array];
     for(MobilyDataItem* headerColumn in _headerColumns) {
         CGSize itemSize = [headerColumn sizeForAvailableSize:_defaultColumnSize];
         if((itemSize.width > 0.0f) && (itemSize.height > 0.0f)) {
-            headerColumnSize.width = MAX(headerColumnSize.width, itemSize.width);
-            headerColumnSize.height = MAX(headerColumnSize.height, itemSize.height);
+            [columnsSize addObject:[NSValue valueWithCGSize:itemSize]];
+            maxColumnHeight = MAX(maxColumnHeight, itemSize.height);
         }
     }
+    CGFloat footerColumnHeight = 0.0f;
     for(MobilyDataItem* footerColumn in _footerColumns) {
         CGSize itemSize = [footerColumn sizeForAvailableSize:_defaultColumnSize];
         if((itemSize.width > 0.0f) && (itemSize.height > 0.0f)) {
-            footerColumnSize.width = MAX(footerColumnSize.width, itemSize.width);
-            footerColumnSize.height = MAX(footerColumnSize.height, itemSize.height);
+            maxColumnHeight = MAX(maxColumnHeight, itemSize.height);
         }
     }
+    CGFloat maxRowWidth = 0.0f;
+    NSMutableArray* rowsSize = [NSMutableArray array];
     for(MobilyDataItem* headerRow in _headerRows) {
         CGSize itemSize = [headerRow sizeForAvailableSize:_defaultRowSize];
         if((itemSize.width > 0.0f) && (itemSize.height > 0.0f)) {
-            headerRowSize.width = MAX(headerRowSize.width, itemSize.width);
-            headerRowSize.height = MAX(headerRowSize.height, itemSize.height);
+            [rowsSize addObject:[NSValue valueWithCGSize:itemSize]];
+            maxRowWidth = MAX(maxRowWidth, itemSize.width);
         }
     }
+    CGFloat footerRowWidth = 0.0f;
     for(MobilyDataItem* footerRow in _footerRows) {
         CGSize itemSize = [footerRow sizeForAvailableSize:_defaultRowSize];
         if((itemSize.width > 0.0f) && (itemSize.height > 0.0f)) {
-            footerRowSize.width = MAX(footerRowSize.width, itemSize.width);
-            footerRowSize.height = MAX(footerRowSize.height, itemSize.height);
+            maxRowWidth = MAX(maxRowWidth, itemSize.width);
         }
     }
+    /*
+    CGSize contentSize = CGSizeZero;
+    [_content eachColumnsRows:^(id object, NSUInteger column, NSUInteger row) {
+    }];
     CGPoint offset = CGPointMake(frame.origin.x + _margin.left, frame.origin.y + _margin.top);
     CGPoint headerOffset = CGPointMake(offset.x + headerRowSize.width, offset.y + headerColumnSize.height);
     CGPoint footerOffset = CGPointMake(headerOffset.x + contentSize.width, headerOffset.y + contentSize.height);
@@ -514,6 +519,8 @@
                       frame.origin.y,
                       _margin.left + headerRowSize.width + contentSize.width + footerRowSize.width + _margin.right,
                       _margin.top + headerColumnSize.height + contentSize.height + footerRowSize.height + _margin.bottom);
+    */
+    return CGRectZero;
 }
 
 - (void)_willEntriesLayoutForBounds:(CGRect __unused)bounds {
