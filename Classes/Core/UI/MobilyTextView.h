@@ -33,68 +33,36 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_CORE
-#   import "MobilyCore.h"
-#   import "MobilyNS.h"
-#   import "MobilyCG.h"
-#   import "MobilyMap.h"
-#   import "MobilyGrid.h"
-#   import "MobilyEvent.h"
-#   import "MobilyTimer.h"
-#   import "MobilyTimeout.h"
-#   import "MobilyModel.h"
-#   import "MobilyModelJson.h"
-#   import "MobilyCache.h"
-#   import "MobilyTaskManager.h"
-#   import "MobilyHttpQuery.h"
-#   import "MobilyDownloader.h"
-#   import "MobilyRegExpParser.h"
-#   import "MobilyKVO.h"
-#   import "MobilyApiManager.h"
-#   import "MobilyApiProvider.h"
-#   import "MobilyApiRequest.h"
-#   import "MobilyApiResponse.h"
-#   import "MobilyUI.h"
-#   import "MobilyContext.h"
-#   import "MobilyApplication.h"
-#   import "MobilyWindow.h"
-#   import "MobilyController.h"
-#   import "MobilyNavigationController.h"
-#   import "MobilyTabBarController.h"
-#   import "MobilySlideController.h"
-#   import "MobilyViewController.h"
-#   import "MobilyView.h"
-#   import "MobilyButton.h"
-#   import "MobilyTextView.h"
-#   import "MobilyTextField.h"
-#   import "MobilyDateField.h"
-#   import "MobilyListField.h"
-#   import "MobilyImageView.h"
-#   import "MobilyBlurView.h"
-#   import "MobilyScrollView.h"
-#   import "MobilyTableView.h"
-#   import "MobilyFieldValidation.h"
-#   import "MobilyDataView.h"
-#   import "MobilyDataRefreshView.h"
-#   import "MobilyDataContainer.h"
-#   import "MobilyDataItem.h"
-#   import "MobilyDataCell.h"
-#   import "MobilyPopoverController.h"
-#   import "MobilyAV.h"
-#   import "MobilyAudioRecorder.h"
-#   import "MobilyAudioPlayer.h"
-#   import "MobilyGeoLocationManager.h"
-#   import "MobilySharedManager.h"
-#endif
+#import <Mobily/MobilyBuilder.h>
+#import <Mobily/MobilyValidatedObject.h>
 
 /*--------------------------------------------------*/
 
-#ifdef MOBILY_POD_SOCIAL
-#   import "MobilySocialManager.h"
-#   import "MobilySocialProvider.h"
-#   import "MobilySocialFacebookProvider.h"
-#   import "MobilySocialVKontakteProvider.h"
-#   import "MobilySocialTwitterProvider.h"
-#endif
+@interface MobilyTextView : UITextView< MobilyBuilderObject, MobilyValidatedObject >
+
+@property(nonatomic, readonly, assign, getter=isEditing) BOOL editing;
+
+@property(nonatomic, readwrite, copy) IBInspectable NSString* placeholder;
+@property(nonatomic, readwrite, strong) IBInspectable UIFont* placeholderFont;
+@property(nonatomic, readwrite, strong) IBInspectable UIColor* placeholderColor;
+
+@property(nonatomic, readwrite, assign) IBInspectable BOOL hiddenToolbar;
+@property(nonatomic, readwrite, strong) UIToolbar* toolbar;
+@property(nonatomic, readwrite, strong) UIBarButtonItem* prevButton;
+@property(nonatomic, readwrite, strong) UIBarButtonItem* nextButton;
+@property(nonatomic, readwrite, strong) UIBarButtonItem* flexButton;
+@property(nonatomic, readwrite, strong) UIBarButtonItem* doneButton;
+
+- (void)setup NS_REQUIRES_SUPER;
+
+- (void)setHiddenToolbar:(BOOL)hiddenToolbar animated:(BOOL)animated;
+
+- (void)didBeginEditing;
+- (void)didEndEditing;
+- (void)didValueChanged;
+
+- (void)validate;
+
+@end
 
 /*--------------------------------------------------*/
