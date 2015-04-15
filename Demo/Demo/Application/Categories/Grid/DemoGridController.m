@@ -77,7 +77,6 @@
                           byHeaderData:[NSString stringWithFormat:@"R%d", (int)row]
                           byFooterData:[NSString stringWithFormat:@"r%d", (int)row]];
     }
-    /*
     for(NSUInteger column = 0; column < _dataGrid.numberOfColumns; column++) {
         for(NSUInteger row = 0; row < _dataGrid.numberOfRows; row++) {
             [_dataGrid insertContentIdentifier:DemoGridIdentifier
@@ -86,7 +85,6 @@
                                          atRow:row];
         }
     }
-    */
 }
 
 #pragma mark Action
@@ -105,6 +103,8 @@
 
 - (void)prepareForUse {
     [super prepareForUse];
+    
+    _textView.text = self.item.data;
 }
 
 - (void)prepareForUnuse {
@@ -125,6 +125,8 @@ NSString* DemoGridColumnIdentifier = @"DemoGridColumnIdentifier";
 
 - (void)prepareForUse {
     [super prepareForUse];
+    
+    _textView.text = self.item.data;
 }
 
 - (void)prepareForUnuse {
@@ -149,6 +151,8 @@ NSString* DemoGridRowIdentifier = @"DemoGridRowIdentifier";
 
 - (void)prepareForUnuse {
     [super prepareForUnuse];
+    
+    _textView.text = self.item.data;
 }
 
 @end
