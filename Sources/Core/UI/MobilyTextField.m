@@ -162,6 +162,19 @@ const NSString* kPhoneEmptySymbol = @"_";
     [self setHiddenToolbar:hiddenToolbar animated:NO];
 }
 
+- (void)setHiddenToolbarArrows:(BOOL)hiddenToolbarArrows {
+    if(_hiddenToolbarArrows != hiddenToolbarArrows) {
+        _hiddenToolbarArrows = hiddenToolbarArrows;
+        if([self isEditing] == YES) {
+            if(_hiddenToolbarArrows == YES) {
+                _toolbar.items = @[ _flexButton, _doneButton ];
+            } else {
+                _toolbar.items = @[ _prevButton, _nextButton, _flexButton, _doneButton ];
+            }
+        }
+    }
+}
+
 - (void)setPhonePrefix:(NSString *)phonePrefix {
     if([_phonePrefix isEqualToString:phonePrefix] == NO) {
         _phonePrefix = phonePrefix;
@@ -210,24 +223,27 @@ const NSString* kPhoneEmptySymbol = @"_";
     if(_toolbar == nil) {
         CGRect windowBounds = self.window.bounds;
         self.toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(windowBounds.origin.x, windowBounds.origin.y, windowBounds.size.width, MOBILY_TOOLBAR_HEIGHT)];
-        if(_toolbar != nil) {
-            self.prevButton = [[UIBarButtonItem alloc] initWithTitle:@"<" style:UIBarButtonItemStyleBordered target:self action:@selector(pressedPrev)];
-            self.nextButton = [[UIBarButtonItem alloc] initWithTitle:@">" style:UIBarButtonItemStyleBordered target:self action:@selector(pressedNext)];
-            self.flexButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-            self.doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(pressedDone)];
-            
-            _toolbar.items = @[_prevButton, _nextButton, _flexButton, _doneButton];
-            _toolbar.barStyle = UIBarStyleDefault;
-            _toolbar.clipsToBounds = YES;
-        }
+        self.prevButton = [[UIBarButtonItem alloc] initWithTitle:@"<" style:UIBarButtonItemStyleBordered target:self action:@selector(pressedPrev)];
+        self.nextButton = [[UIBarButtonItem alloc] initWithTitle:@">" style:UIBarButtonItemStyleBordered target:self action:@selector(pressedNext)];
+        self.flexButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+        self.doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(pressedDone)];
+        
+        _toolbar.barStyle = UIBarStyleDefault;
+        _toolbar.clipsToBounds = YES;
     }
     if(_toolbar != nil) {
         _prevInputResponder = [UIResponder prevResponderFromView:self];
         _nextInputResponder = [UIResponder nextResponderFromView:self];
+        if(_hiddenToolbarArrows == YES) {
+            _toolbar.items = @[ _flexButton, _doneButton ];
+        } else {
+            _toolbar.items = @[ _prevButton, _nextButton, _flexButton, _doneButton ];
+        }
         _prevButton.enabled = (_prevInputResponder != nil);
         _nextButton.enabled = (_nextInputResponder != nil);
         _toolbar.frameHeight = (_hiddenToolbar == NO) ? MOBILY_TOOLBAR_HEIGHT : 0.0f;
         self.inputAccessoryView = _toolbar;
+        [self reloadInputViews];
     }
 }
 

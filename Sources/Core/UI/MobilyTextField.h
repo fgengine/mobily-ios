@@ -41,6 +41,7 @@
 @interface MobilyTextField : UITextField< MobilyBuilderObject, MobilyValidatedObject >
 
 @property(nonatomic, readwrite, assign) IBInspectable BOOL hiddenToolbar;
+@property(nonatomic, readwrite, assign) IBInspectable BOOL hiddenToolbarArrows;
 @property(nonatomic, readwrite, strong) UIToolbar* toolbar;
 @property(nonatomic, readwrite, strong) UIBarButtonItem* prevButton;
 @property(nonatomic, readwrite, strong) UIBarButtonItem* nextButton;
