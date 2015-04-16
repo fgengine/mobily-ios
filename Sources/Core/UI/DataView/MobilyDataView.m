@@ -474,7 +474,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintSearchBarRight, constraintSearc
             _topRefreshView.type = MobilyDataRefreshViewTypeTop;
             _topRefreshView.view = self;
             if(self.superview != nil) {
-                [self.superview insertSubview:_topRefreshView aboveSubview:self];
+                [self.superview insertSubview:_topRefreshView belowSubview:self];
                 [self _updateSuperviewConstraints];
             }
         }
@@ -515,7 +515,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintTopRefreshSize, constraintTopRe
             _bottomRefreshView.type = MobilyDataRefreshViewTypeBottom;
             _bottomRefreshView.view = self;
             if(self.superview != nil) {
-                [self.superview insertSubview:_bottomRefreshView aboveSubview:self];
+                [self.superview insertSubview:_bottomRefreshView belowSubview:self];
                 [self _updateSuperviewConstraints];
             }
         }
@@ -556,7 +556,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintBottomRefreshSize, constraintBo
             _leftRefreshView.type = MobilyDataRefreshViewTypeLeft;
             _leftRefreshView.view = self;
             if(self.superview != nil) {
-                [self.superview insertSubview:_leftRefreshView aboveSubview:self];
+                [self.superview insertSubview:_leftRefreshView belowSubview:self];
                 [self _updateSuperviewConstraints];
             }
         }
@@ -597,7 +597,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintLeftRefreshSize, constraintLeft
             _rightRefreshView.type = MobilyDataRefreshViewTypeRight;
             _rightRefreshView.view = self;
             if(self.superview != nil) {
-                [self.superview insertSubview:_rightRefreshView aboveSubview:self];
+                [self.superview insertSubview:_rightRefreshView belowSubview:self];
                 [self _updateSuperviewConstraints];
             }
         }
