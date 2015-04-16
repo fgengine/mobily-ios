@@ -369,10 +369,11 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRootViewHeight, constraintRootV
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldReceiveTouch:(UITouch*)touch {
-    if((touch.view == _rootView) || (touch.view.canBecomeFirstResponder == NO)) {
-        return YES;
+    UIView* view = touch.view;
+    if([view isKindOfClass:[UIControl class]] == YES) {
+        return NO;
     }
-    return NO;
+    return (view == _rootView) || (view.canBecomeFirstResponder == NO);
 }
 
 #pragma mark MobilySearchBarDelegate
