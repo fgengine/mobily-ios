@@ -176,7 +176,7 @@
             [attributes addEntriesFromDictionary:self.typingAttributes];
         } else {
             attributes[NSFontAttributeName] = (_placeholderFont != nil) ? _placeholderFont : self.font;
-            attributes[NSForegroundColorAttributeName] = (_placeholderColor != nil) ? _placeholderColor : [UIColor colorWithWhite:0.84f alpha:1.0f];
+            attributes[NSForegroundColorAttributeName] = (_placeholderColor != nil) ? _placeholderColor : [UIColor colorWithRed:170.0f/255 green:170.0f/255 blue:170.0f/255 alpha:1.0f];
             if(self.textAlignment != NSTextAlignmentLeft) {
                 NSMutableParagraphStyle* paragraph = [[NSMutableParagraphStyle alloc] init];
                 paragraph.alignment = self.textAlignment;
