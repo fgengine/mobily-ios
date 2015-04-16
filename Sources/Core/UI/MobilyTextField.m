@@ -231,6 +231,13 @@ const NSString* kPhoneEmptySymbol = @"_";
     }
 }
 
+- (void)didValueChanged {
+    if(_phoneFormat != nil) {
+        [self updateTextWithPhoneFormat];
+    }
+    [self validate];
+}
+
 - (void)didEndEditing {
     if(_phoneFormat != nil) {
         NSArray* digits = [self getDigits];
@@ -251,14 +258,6 @@ const NSString* kPhoneEmptySymbol = @"_";
             [_form validatedFail:self andValue:self.text];
         }
     }
-}
-
-- (void)didValueChanged {
-    if(_phoneFormat != nil) {
-        [self updateTextWithPhoneFormat];
-    }
-    
-    [self validate];
 }
 
 #pragma mark Private

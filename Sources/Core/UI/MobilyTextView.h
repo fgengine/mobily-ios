@@ -43,6 +43,7 @@
 @property(nonatomic, readonly, assign, getter=isEditing) BOOL editing;
 
 @property(nonatomic, readwrite, copy) IBInspectable NSString* placeholder;
+@property(nonatomic, readwrite, copy) IBInspectable NSAttributedString* attributedPlaceholder;
 @property(nonatomic, readwrite, strong) IBInspectable UIFont* placeholderFont;
 @property(nonatomic, readwrite, strong) IBInspectable UIColor* placeholderColor;
 
@@ -62,6 +63,8 @@
 - (void)didValueChanged;
 
 - (void)validate;
+
+- (CGRect)placeholderRectForBounds:(CGRect)bounds;
 
 @end
 

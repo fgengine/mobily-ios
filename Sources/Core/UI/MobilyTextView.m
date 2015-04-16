@@ -135,10 +135,89 @@
     return [MobilyBuilderForm object:self forSelector:selector];
 }
 
+#pragma mark Public override
+
+- (void)insertText:(NSString*)string {
+    [super insertText:string];
+    [self setNeedsDisplay];
+}
+
 #pragma mark Property
+
+- (void)setContentInset:(UIEdgeInsets)contentInset {
+    [super setContentInset:contentInset];
+    [self setNeedsDisplay];
+}
+
+- (void)setText:(NSString*)string {
+    [super setText:string];
+    [self setNeedsDisplay];
+}
+
+- (void)setAttributedText:(NSAttributedString*)attributedText {
+    [super setAttributedText:attributedText];
+    [self setNeedsDisplay];
+}
+
+- (void)setFont:(UIFont *)font {
+    [super setFont:font];
+    [self setNeedsDisplay];
+}
+
+- (void)setTextAlignment:(NSTextAlignment)textAlignment {
+    [super setTextAlignment:textAlignment];
+    [self setNeedsDisplay];
+}
+
+- (void)setPlaceholder:(NSString*)string {
+    if([string isEqualToString:_attributedPlaceholder.string] == NO) {
+        NSMutableDictionary* attributes = [[NSMutableDictionary alloc] init];
+        if(([self isFirstResponder] == YES) && (self.typingAttributes != nil)) {
+            [attributes addEntriesFromDictionary:self.typingAttributes];
+        } else {
+            attributes[NSFontAttributeName] = (_placeholderFont != nil) ? _placeholderFont : self.font;
+            attributes[NSForegroundColorAttributeName] = (_placeholderColor != nil) ? _placeholderColor : [self.textColor colorWithAlphaComponent:0.5f];
+            if(self.textAlignment != NSTextAlignmentLeft) {
+                NSMutableParagraphStyle* paragraph = [[NSMutableParagraphStyle alloc] init];
+                paragraph.alignment = self.textAlignment;
+                attributes[NSParagraphStyleAttributeName] = paragraph;
+            }
+        }
+        _attributedPlaceholder = [[NSAttributedString alloc] initWithString:string attributes:attributes];
+        [self setNeedsDisplay];
+    }
+}
+
+- (NSString*)placeholder {
+    return _attributedPlaceholder.string;
+}
+
+- (void)setAttributedPlaceholder:(NSAttributedString *)attributedPlaceholder {
+    if([_attributedPlaceholder isEqualToAttributedString:attributedPlaceholder] == NO) {
+        _attributedPlaceholder = attributedPlaceholder;
+        [self setNeedsDisplay];
+    }
+}
 
 - (void)setHiddenToolbar:(BOOL)hiddenToolbar {
     [self setHiddenToolbar:hiddenToolbar animated:NO];
+}
+
+#pragma mark Public override
+
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    if((_attributedPlaceholder != nil) && (self.text.length < 1)) {
+        [_attributedPlaceholder drawInRect:[self placeholderRectForBounds:self.bounds]];
+    }
+}
+
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    if((_attributedPlaceholder != nil) && (self.text.length < 1)) {
+        [self setNeedsDisplay];
+    }
 }
 
 #pragma mark Public
@@ -187,6 +266,11 @@
     }
 }
 
+- (void)didValueChanged {
+    [self setNeedsDisplay];
+    [self validate];
+}
+
 - (void)didEndEditing {
     _prevInputResponder = nil;
     _nextInputResponder = nil;
@@ -202,8 +286,20 @@
     }
 }
 
-- (void)didValueChanged {
-    [self validate];
+- (CGRect)placeholderRectForBounds:(CGRect)bounds {
+    CGRect rect = UIEdgeInsetsInsetRect(bounds, self.contentInset);
+    if([self respondsToSelector:@selector(textContainer)] == YES) {
+        rect = UIEdgeInsetsInsetRect(rect, self.textContainerInset);
+        CGFloat padding = self.textContainer.lineFragmentPadding;
+        rect.origin.x += padding;
+        rect.size.width -= padding * 2.0f;
+    } else {
+        if(self.contentInset.left == 0.0f) {
+            rect.origin.x += 8.0f;
+        }
+        rect.origin.y += 8.0f;
+    }
+    return rect;
 }
 
 #pragma mark Private
