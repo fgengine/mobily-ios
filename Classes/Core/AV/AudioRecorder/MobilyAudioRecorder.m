@@ -35,7 +35,7 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyAudioRecorder.h"
+#import <Mobily/MobilyAudioRecorder.h>
 
 /*--------------------------------------------------*/
 

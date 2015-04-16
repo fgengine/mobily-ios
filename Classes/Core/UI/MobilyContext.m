@@ -35,7 +35,7 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyContext.h"
+#import <Mobily/MobilyContext.h>
 
 /*--------------------------------------------------*/
 

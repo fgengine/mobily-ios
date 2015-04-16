@@ -33,13 +33,13 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyObject.h"
-#import "MobilyCG.h"
-#import "MobilyCA.h"
+#import <Mobily/MobilyObject.h>
+#import <Mobily/MobilyCG.h>
+#import <Mobily/MobilyCA.h>
 
 /*--------------------------------------------------*/
 
-#import "MobilyEvent.h"
+#import <Mobily/MobilyEvent.h>
 
 /*--------------------------------------------------*/
 

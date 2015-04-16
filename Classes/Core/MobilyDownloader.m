@@ -35,8 +35,8 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyDownloader.h"
-#import "MobilyEvent.h"
+#import <Mobily/MobilyDownloader.h>
+#import <Mobily/MobilyEvent.h>
 
 /*--------------------------------------------------*/
 

@@ -33,8 +33,8 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyTaskManager.h"
-#import "MobilyCache.h"
+#import <Mobily/MobilyTaskManager.h>
+#import <Mobily/MobilyCache.h>
 
 /*--------------------------------------------------*/
 

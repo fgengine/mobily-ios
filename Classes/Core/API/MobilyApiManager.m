@@ -35,8 +35,8 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyApiManager.h"
-#import "MobilyApiProvider.h"
+#import <Mobily/MobilyApiManager.h>
+#import <Mobily/MobilyApiProvider.h>
 
 /*--------------------------------------------------*/
 

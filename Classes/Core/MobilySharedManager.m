@@ -35,7 +35,7 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilySharedManager.h"
+#import <Mobily/MobilySharedManager.h>
 
 /*--------------------------------------------------*/
 

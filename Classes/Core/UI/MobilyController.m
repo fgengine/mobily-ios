@@ -35,11 +35,11 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyController.h"
-#import "MobilyNavigationController.h"
-#import "MobilyTabBarController.h"
-#import "MobilyContext.h"
-#import "MobilyEvent.h"
+#import <Mobily/MobilyController.h>
+#import <Mobily/MobilyNavigationController.h>
+#import <Mobily/MobilyTabBarController.h>
+#import <Mobily/MobilyContext.h>
+#import <Mobily/MobilyEvent.h>
 
 /*--------------------------------------------------*/
 

@@ -35,9 +35,9 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyDialogController.h"
-#import "MobilyApplication.h"
-#import "MobilyWindow.h"
+#import <Mobily/MobilyDialogController.h>
+#import <Mobily/MobilyApplication.h>
+#import <Mobily/MobilyWindow.h>
 
 /*--------------------------------------------------*/
 

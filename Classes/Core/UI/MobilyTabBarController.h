@@ -33,8 +33,8 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyBuilder.h"
-#import "MobilyTransitionController.h"
+#import <Mobily/MobilyBuilder.h>
+#import <Mobily/MobilyTransitionController.h>
 
 /*--------------------------------------------------*/
 

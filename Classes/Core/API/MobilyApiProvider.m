@@ -35,11 +35,11 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyApiProvider.h"
-#import "MobilyApiRequest.h"
-#import "MobilyApiResponse.h"
-#import "MobilyHttpQuery.h"
-#import "MobilyEvent.h"
+#import <Mobily/MobilyApiProvider.h>
+#import <Mobily/MobilyApiRequest.h>
+#import <Mobily/MobilyApiResponse.h>
+#import <Mobily/MobilyHttpQuery.h>
+#import <Mobily/MobilyEvent.h>
 
 /*--------------------------------------------------*/
 

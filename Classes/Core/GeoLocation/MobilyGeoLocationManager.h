@@ -33,8 +33,8 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyObject.h"
-#import "MobilyUI.h"
+#import <Mobily/MobilyObject.h>
+#import <Mobily/MobilyUI.h>
 
 /*--------------------------------------------------*/
 

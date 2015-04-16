@@ -35,7 +35,7 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyGeoLocationManager.h"
+#import <Mobily/MobilyGeoLocationManager.h>
 
 /*--------------------------------------------------*/
 

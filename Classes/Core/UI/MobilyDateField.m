@@ -35,7 +35,7 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyDateField.h"
+#import <Mobily/MobilyDateField.h>
 
 /*--------------------------------------------------*/
 

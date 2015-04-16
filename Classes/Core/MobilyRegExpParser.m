@@ -35,7 +35,7 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyRegExpParser.h"
+#import <Mobily/MobilyRegExpParser.h>
 
 /*--------------------------------------------------*/
 

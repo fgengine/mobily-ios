@@ -35,12 +35,12 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyUI.h"
-#import "MobilyCG.h"
+#import <Mobily/MobilyUI.h>
+#import <Mobily/MobilyCG.h>
 
 /*--------------------------------------------------*/
 
-#import "MobilySlideController.h"
+#import <Mobily/MobilySlideController.h>
 
 /*--------------------------------------------------*/
 

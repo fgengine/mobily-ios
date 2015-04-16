@@ -35,7 +35,7 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilySearchBar.h"
+#import <Mobily/MobilySearchBar.h>
 
 /*--------------------------------------------------*/
 

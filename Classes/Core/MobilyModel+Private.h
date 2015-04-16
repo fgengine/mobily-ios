@@ -33,8 +33,8 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyModel.h"
-#import "MobilyModelJson.h"
+#import <Mobily/MobilyModel.h>
+#import <Mobily/MobilyModelJson.h>
 
 /*--------------------------------------------------*/
 

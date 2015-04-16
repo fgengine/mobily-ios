@@ -33,8 +33,8 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyApiManager.h"
-#import "MobilyModel.h"
+#import <Mobily/MobilyApiManager.h>
+#import <Mobily/MobilyModel.h>
 
 /*--------------------------------------------------*/
 

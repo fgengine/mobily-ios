@@ -35,7 +35,7 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyBlurView.h"
+#import <Mobily/MobilyBlurView.h>
 
 /*--------------------------------------------------*/
 

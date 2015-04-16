@@ -35,8 +35,8 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyAudioPlayer.h"
-#import "MobilyDownloader.h"
+#import <Mobily/MobilyAudioPlayer.h>
+#import <Mobily/MobilyDownloader.h>
 
 /*--------------------------------------------------*/
 

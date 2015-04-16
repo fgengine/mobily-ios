@@ -35,8 +35,8 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyModelJson.h"
-#import "MobilyModel.h"
+#import <Mobily/MobilyModelJson.h>
+#import <Mobily/MobilyModel.h>
 
 /*--------------------------------------------------*/
 

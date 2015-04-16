@@ -35,13 +35,13 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyWindow.h"
-#import "MobilyApplication.h"
-#import "MobilyEvent.h"
+#import <Mobily/MobilyWindow.h>
+#import <Mobily/MobilyApplication.h>
+#import <Mobily/MobilyEvent.h>
 
 /*--------------------------------------------------*/
 
-#import "MobilyViewController.h"
+#import <Mobily/MobilyViewController.h>
 
 /*--------------------------------------------------*/
 

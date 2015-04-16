@@ -35,8 +35,4 @@ xcuserdata
 *.opensdf
 *.user
 
-# CocoaPods
-Demo/Podfile.lock
-Demo/Pods/
-
 # Project

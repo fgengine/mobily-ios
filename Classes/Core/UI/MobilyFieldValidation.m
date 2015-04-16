@@ -35,9 +35,9 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyFieldValidation.h"
-#import "MobilyValidatedObject.h"
-#import "MobilyNS.h"
+#import <Mobily/MobilyFieldValidation.h>
+#import <Mobily/MobilyValidatedObject.h>
+#import <Mobily/MobilyNS.h>
 
 /*--------------------------------------------------*/
 

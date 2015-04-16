@@ -33,6 +33,10 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
+#import <Mobily/MobilyNS.h>
+
+/*--------------------------------------------------*/
+
 @interface MobilyTimeout : NSObject
 
 + (void)executeBlock:(void (^)())block afterDelay:(NSTimeInterval)delay;

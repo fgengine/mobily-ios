@@ -35,9 +35,9 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyCache.h"
-#import "MobilyTimer.h"
-#import "MobilyModel.h"
+#import <Mobily/MobilyCache.h>
+#import <Mobily/MobilyTimer.h>
+#import <Mobily/MobilyModel.h>
 
 /*--------------------------------------------------*/
 

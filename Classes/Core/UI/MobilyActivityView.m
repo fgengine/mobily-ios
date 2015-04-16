@@ -35,9 +35,9 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyActivityView.h"
-#import "MobilyBlurView.h"
-#import "MobilySpinnerView.h"
+#import <Mobily/MobilyActivityView.h>
+#import <Mobily/MobilyBlurView.h>
+#import <Mobily/MobilySpinnerView.h>
 
 /*--------------------------------------------------*/
 

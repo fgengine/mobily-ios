@@ -35,8 +35,8 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyButton.h"
-#import "MobilyCG.h"
+#import <Mobily/MobilyButton.h>
+#import <Mobily/MobilyCG.h>
 
 /*--------------------------------------------------*/
 

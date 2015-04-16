@@ -35,7 +35,7 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilySpinnerView.h"
+#import <Mobily/MobilySpinnerView.h>
 
 /*--------------------------------------------------*/
 

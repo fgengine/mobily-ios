@@ -33,11 +33,11 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilySocialProvider.h"
+#import <Mobily/MobilySocialProvider.h>
 
 /*--------------------------------------------------*/
 
-#import <VK-ios-sdk/VKSdk.h>
+#import <VKSdk/VKSdk.h>
 
 /*--------------------------------------------------*/
 

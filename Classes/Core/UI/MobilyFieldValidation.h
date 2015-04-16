@@ -33,6 +33,10 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
+#import <Mobily/MobilyNS.h>
+
+/*--------------------------------------------------*/
+
 @protocol MobilyValidatedObject;
 @class MobilyFieldForm;
 

@@ -33,10 +33,10 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyUI.h"
-#import "MobilyEvent.h"
-#import "MobilyBuilder.h"
-#import "MobilySearchBar.h"
+#import <Mobily/MobilyUI.h>
+#import <Mobily/MobilyEvent.h>
+#import <Mobily/MobilyBuilder.h>
+#import <Mobily/MobilySearchBar.h>
 
 /*--------------------------------------------------*/
 

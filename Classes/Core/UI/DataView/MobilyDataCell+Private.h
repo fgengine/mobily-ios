@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyDataCell.h"
+#import <Mobily/MobilyDataCell.h>
 #import "MobilyDataItem+Private.h"
 #import "MobilyDataView+Private.h"
 

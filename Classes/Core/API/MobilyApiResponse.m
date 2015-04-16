@@ -35,7 +35,7 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilyApiResponse.h"
+#import <Mobily/MobilyApiResponse.h>
 
 /*--------------------------------------------------*/
 

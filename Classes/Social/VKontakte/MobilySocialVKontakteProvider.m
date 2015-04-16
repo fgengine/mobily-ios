@@ -35,8 +35,8 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import "MobilySocialVKontakteProvider.h"
-#import "MobilyUI.h"
+#import <Mobily/MobilySocialVKontakteProvider.h>
+#import <Mobily/MobilyUI.h>
 
 /*--------------------------------------------------*/
 

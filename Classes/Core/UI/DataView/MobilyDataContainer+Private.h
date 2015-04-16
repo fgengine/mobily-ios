@@ -33,10 +33,10 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyDataContainer.h"
+#import <Mobily/MobilyDataContainer.h>
 #import "MobilyDataItem+Private.h"
-#import "MobilyGrid.h"
-#import "MobilyMap.h"
+#import <Mobily/MobilyGrid.h>
+#import <Mobily/MobilyMap.h>
 
 /*--------------------------------------------------*/
 

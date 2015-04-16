@@ -33,9 +33,9 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import "MobilyBlurView.h"
-#import "MobilyTextField.h"
-#import "MobilyButton.h"
+#import <Mobily/MobilyBlurView.h>
+#import <Mobily/MobilyTextField.h>
+#import <Mobily/MobilyButton.h>
 
 /*--------------------------------------------------*/
 
