@@ -1436,8 +1436,8 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
         [result addObjectsFromArray:view.responders];
     }
     [result sortWithOptions:0 usingComparator:^NSComparisonResult(UIView* viewA, UIView* viewB) {
+        CGRect aFrame = [viewA convertRect:[viewA bounds] toView:nil], bFrame = [viewB convertRect:[viewB bounds] toView:nil];
         CGFloat aOrder = [viewA.layer zPosition], bOrder = [viewB.layer zPosition];
-        CGRect aFrame = [viewA frame], bFrame = [viewB frame];
         if(aOrder < bOrder) {
             return NSOrderedAscending;
         } else if(aOrder > bOrder) {
