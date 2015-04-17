@@ -219,6 +219,7 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 
 - (NSArray*)arrayByReplaceObject:(id)object atIndex:(NSUInteger)index;
 
+- (NSArray*)arrayByRemovedObjectAtIndex:(NSUInteger)index;
 - (NSArray*)arrayByRemovedObject:(id)object;
 - (NSArray*)arrayByRemovedObjectsFromArray:(NSArray*)array;
 

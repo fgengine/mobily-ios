@@ -844,6 +844,12 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return [NSArray arrayWithArray:result];
 }
 
+- (NSArray*)arrayByRemovedObjectAtIndex:(NSUInteger)index {
+    NSMutableArray* result = [NSMutableArray arrayWithArray:self];
+    [result removeObjectAtIndex:index];
+    return [NSArray arrayWithArray:result];
+}
+
 - (NSArray*)arrayByRemovedObject:(id)object {
     NSMutableArray* result = [NSMutableArray arrayWithArray:self];
     [result removeObject:object];
