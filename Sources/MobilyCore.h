@@ -69,6 +69,7 @@
 #import <MobilyListField.h>
 #import <MobilyImageView.h>
 #import <MobilyBlurView.h>
+#import <MobilyPageControl.h>
 #import <MobilyScrollView.h>
 #import <MobilyTableView.h>
 #import <MobilyFieldValidation.h>

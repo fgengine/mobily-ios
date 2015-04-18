@@ -34,6 +34,7 @@
 /*--------------------------------------------------*/
 
 #import <MobilyData.h>
+#import <MobilyPageControl.h>
 
 /*--------------------------------------------------*/
 
@@ -89,6 +90,8 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @property(nonatomic, readonly, strong) NSArray* editingCells;
 @property(nonatomic, readonly, assign, getter=isAnimating) BOOL animating;
 @property(nonatomic, readonly, assign, getter=isUpdating) BOOL updating;
+
+@property(nonatomic, readwrite, weak) IBOutlet MobilyPageControl* pageControl;
 
 @property(nonatomic, readwrite, assign, getter=isShowedSearchBar) BOOL showedSearchBar;
 @property(nonatomic, readwrite, assign) MobilyDataViewSearchBarStyle searchBarStyle;
