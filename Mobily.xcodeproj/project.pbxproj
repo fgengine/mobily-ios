@@ -54,7 +54,7 @@
 		40B75FDD1ADFA00A00F0CB09 /* MobilyContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B75F711ADFA00A00F0CB09 /* MobilyContext.m */; };
 		40B75FDE1ADFA00A00F0CB09 /* MobilyController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B75F731ADFA00A00F0CB09 /* MobilyController.m */; };
 		40B75FDF1ADFA00A00F0CB09 /* MobilyDateField.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B75F751ADFA00A00F0CB09 /* MobilyDateField.m */; };
-		40B75FE01ADFA00A00F0CB09 /* MobilyDialogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B75F771ADFA00A00F0CB09 /* MobilyDialogController.m */; };
+		40B75FE01ADFA00A00F0CB09 /* MobilyDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B75F771ADFA00A00F0CB09 /* MobilyDialog.m */; };
 		40B75FE11ADFA00A00F0CB09 /* MobilyFieldValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B75F791ADFA00A00F0CB09 /* MobilyFieldValidation.m */; };
 		40B75FE21ADFA00A00F0CB09 /* MobilyImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B75F7B1ADFA00A00F0CB09 /* MobilyImageView.m */; };
 		40B75FE31ADFA00A00F0CB09 /* MobilyListField.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B75F7D1ADFA00A00F0CB09 /* MobilyListField.m */; };
@@ -224,8 +224,8 @@
 		40B75F731ADFA00A00F0CB09 /* MobilyController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyController.m; sourceTree = "<group>"; };
 		40B75F741ADFA00A00F0CB09 /* MobilyDateField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyDateField.h; sourceTree = "<group>"; };
 		40B75F751ADFA00A00F0CB09 /* MobilyDateField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyDateField.m; sourceTree = "<group>"; };
-		40B75F761ADFA00A00F0CB09 /* MobilyDialogController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyDialogController.h; sourceTree = "<group>"; };
-		40B75F771ADFA00A00F0CB09 /* MobilyDialogController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyDialogController.m; sourceTree = "<group>"; };
+		40B75F761ADFA00A00F0CB09 /* MobilyDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyDialog.h; sourceTree = "<group>"; };
+		40B75F771ADFA00A00F0CB09 /* MobilyDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyDialog.m; sourceTree = "<group>"; };
 		40B75F781ADFA00A00F0CB09 /* MobilyFieldValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyFieldValidation.h; sourceTree = "<group>"; };
 		40B75F791ADFA00A00F0CB09 /* MobilyFieldValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyFieldValidation.m; sourceTree = "<group>"; };
 		40B75F7A1ADFA00A00F0CB09 /* MobilyImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyImageView.h; sourceTree = "<group>"; };
@@ -305,6 +305,7 @@
 		40B760411ADFA35600F0CB09 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		40B7604E1ADFA6A200F0CB09 /* TwitterKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TwitterKitResources.bundle; sourceTree = "<group>"; };
 		40B7604F1ADFA6A200F0CB09 /* VKSdkResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = VKSdkResources.bundle; sourceTree = "<group>"; };
+		40D359AD1AE1782D004CB40B /* MobilyDialog+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MobilyDialog+Private.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -511,8 +512,9 @@
 				40B75F731ADFA00A00F0CB09 /* MobilyController.m */,
 				40B75F741ADFA00A00F0CB09 /* MobilyDateField.h */,
 				40B75F751ADFA00A00F0CB09 /* MobilyDateField.m */,
-				40B75F761ADFA00A00F0CB09 /* MobilyDialogController.h */,
-				40B75F771ADFA00A00F0CB09 /* MobilyDialogController.m */,
+				40B75F761ADFA00A00F0CB09 /* MobilyDialog.h */,
+				40B75F771ADFA00A00F0CB09 /* MobilyDialog.m */,
+				40D359AD1AE1782D004CB40B /* MobilyDialog+Private.h */,
 				40B75F781ADFA00A00F0CB09 /* MobilyFieldValidation.h */,
 				40B75F791ADFA00A00F0CB09 /* MobilyFieldValidation.m */,
 				40B75F7A1ADFA00A00F0CB09 /* MobilyImageView.h */,
@@ -768,7 +770,7 @@
 				40B75FFA1ADFA00A00F0CB09 /* MobilyTableView.m in Sources */,
 				40B75FC21ADFA00A00F0CB09 /* MobilyModelJson.m in Sources */,
 				40B75FD81ADFA00A00F0CB09 /* MobilyApplication.m in Sources */,
-				40B75FE01ADFA00A00F0CB09 /* MobilyDialogController.m in Sources */,
+				40B75FE01ADFA00A00F0CB09 /* MobilyDialog.m in Sources */,
 				40B75FD61ADFA00A00F0CB09 /* MobilyDataView.m in Sources */,
 				40B75FCB1ADFA00A00F0CB09 /* MobilyDataContainer.m in Sources */,
 				40B75FBB1ADFA00A00F0CB09 /* MobilyDownloader.m in Sources */,
