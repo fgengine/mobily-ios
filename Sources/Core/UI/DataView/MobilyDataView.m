@@ -1525,7 +1525,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                             self.searchBarOverlayLastOffset = offset;
                             duration = 0.1f;
                         }
-                        NSLog(@"%f", _constraintSearchBarTop.constant);
                         break;
                     }
                 }
