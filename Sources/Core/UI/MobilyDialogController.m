@@ -54,6 +54,7 @@
     if(self != nil) {
         _presentationStyle = style;
         _contentViewController = viewController;
+        _contentViewController.dialogController = self;
         [self setup];
     }
     return self;
@@ -63,6 +64,21 @@
     _animationDuration = 0.4f;
     _presentationRect = CGRectZero;
     _previousWindow = UIApplication.sharedApplication.keyWindow;
+    _backgroundBlurred = YES;
+    _backgroundBlurRadius = 20.0f;
+    _backgroundBlurIterations = 4;
+    _backgroundColor = nil;
+    _backgroundTintColor = [UIColor colorWithWhite:0.5f alpha:1.0f];
+    
+    _contentColor = [UIColor whiteColor];
+    _contentAlpha = 1.0f;
+    _contentCornerRadius = 4.0f;
+    _contentBorderWidth = 0.0f;
+    _contentBorderColor = nil;
+    _contentShadowColor = [UIColor blackColor];
+    _contentShadowOpacity = 0.8f;
+    _contentShadowOffset = CGSizeZero;
+    _contentShadowRadius = 4.0f;
     
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(_notificationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
@@ -126,10 +142,6 @@
     return [_contentViewController shouldAutorotateToInterfaceOrientation:interfaceOrientation];
 }
 
-- (BOOL)wantsFullScreenLayout {
-    return YES;
-}
-
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     [self _adjustFramesForBounds:self.view.bounds contentSize:_contentView.frame.size animated:NO];
 }
@@ -137,23 +149,31 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.view.userInteractionEnabled = YES;
+    
+    _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundTouched:)];
+    [self.view addGestureRecognizer:_tapGesture];
+    _tapGesture.delegate = self;
+    
     _backgroundView = [[MobilyBlurView alloc] initWithFrame:self.view.bounds];
     _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    _backgroundView.underlyingView = _previousWindow;
     _backgroundView.blurEnabled = _backgroundBlurred;
     _backgroundView.blurRadius = _backgroundBlurRadius;
     _backgroundView.blurIterations = _backgroundBlurIterations;
     _backgroundView.backgroundColor = _backgroundColor;
+    _backgroundView.tintColor = _backgroundTintColor;
     _backgroundView.alpha = _backgroundAlpha;
     [self.view addSubview:_backgroundView];
-    
-    _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundTouched:)];
-    [_backgroundView addGestureRecognizer:_tapGesture];
-    _tapGesture.delegate = self;
     
     _rootContainerView = [[UIView alloc] initWithFrame:self.view.bounds];
     _rootContainerView.backgroundColor = [UIColor clearColor];
     _rootContainerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     _rootContainerView.clipsToBounds = YES;
+    _rootContainerView.shadowColor = _contentShadowColor;
+    _rootContainerView.shadowOpacity = _contentShadowOpacity;
+    _rootContainerView.shadowOffset = _contentShadowOffset;
+    _rootContainerView.shadowRadius = _contentShadowRadius;
     [self.view addSubview:_rootContainerView];
     
     [self addChildViewController:_contentViewController];
@@ -181,7 +201,11 @@
     
     _contentView.frame = _containerView.bounds;
     _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    _contentView.backgroundColor = _contentColor;
+    _contentView.alpha = _contentAlpha;
     _contentView.cornerRadius = _contentCornerRadius;
+    _contentView.borderWidth = _contentBorderWidth;
+    _contentView.borderColor = _contentBorderColor;
     [_containerView addSubview:_contentView];
     
     CGRect mainBounds = [self _mainBoundsForOrientation:self.interfaceOrientation];
@@ -201,7 +225,6 @@
     [_presentingWindow makeKeyAndVisible];
 
     [self _adjustFramesForBounds:self.view.bounds contentSize:_contentView.bounds.size animated:NO];
-    _backgroundView.backgroundColor = _backgroundColor;
     
     CGRect containerOriginFrame = _containerView.frame;
     _containerView.frame = _contentHiddenFrame;
@@ -352,6 +375,10 @@
     blurBgndRect.origin.y = -_containerViewRect.origin.y;
     _contentView.frame = _containerView.bounds;
     
+    if(_contentShadowColor != nil) {
+        _rootContainerView.shadowPath = [UIBezierPath bezierPathWithRoundedRect:_containerView.frame cornerRadius:_contentCornerRadius];
+    }
+    
     [self _adjustHiddenRectsForBounds:mainBounds];
 }
 
@@ -399,6 +426,36 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldReceiveTouch:(UITouch*)touch {
     return (CGRectContainsPoint(_contentViewController.view.bounds, [touch locationInView:_contentViewController.view]) == NO);
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+#import <objc/runtime.h>
+
+/*--------------------------------------------------*/
+
+static char const* const MobilyDialogControllerKey = "MobilyDialogControllerKey";
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation UIViewController (MobilyDialogController)
+
+- (void)setDialogController:(MobilyDialogController*)dialogController {
+    objc_setAssociatedObject(self, MobilyDialogControllerKey, dialogController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (MobilyDialogController*)dialogController {
+    MobilyDialogController* dialogController = objc_getAssociatedObject(self, MobilyDialogControllerKey);
+    if(dialogController == nil) {
+        dialogController = self.parentViewController.dialogController;
+    }
+    return dialogController;
 }
 
 @end

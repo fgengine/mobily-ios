@@ -72,6 +72,7 @@ typedef void(^MobilyDialogControllerTouchedOutsideContent)(MobilyDialogControlle
 @property(nonatomic, readwrite, assign) CGFloat backgroundBlurRadius;
 @property(nonatomic, readwrite, assign) NSUInteger backgroundBlurIterations;
 @property(nonatomic, readwrite, strong) UIColor* backgroundColor;
+@property(nonatomic, readwrite, strong) UIColor* backgroundTintColor;
 @property(nonatomic, readwrite, assign) CGFloat backgroundAlpha;
 
 @property(nonatomic, readwrite, strong) UIColor* contentColor;
@@ -96,6 +97,14 @@ typedef void(^MobilyDialogControllerTouchedOutsideContent)(MobilyDialogControlle
 - (void)dismissWithCompletion:(MobilySimpleBlock)completion;
 
 - (void)adjustContentSize:(CGSize)newSize animated:(BOOL)animated;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface UIViewController (MobilyDialogController)
+
+@property(nonatomic, readwrite, strong) MobilyDialogController* dialogController;
 
 @end
 
