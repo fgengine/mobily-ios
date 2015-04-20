@@ -42,6 +42,7 @@
 /*--------------------------------------------------*/
 
 #import <MobilyViewController.h>
+#import <MobilyDataCell.h>
 
 /*--------------------------------------------------*/
 
@@ -214,7 +215,10 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
                             view = _emptyView;
                         }
                     } else {
-                        view = _emptyView;
+                        UIView* superview = view.superview;
+                        if([superview isKindOfClass:[MobilyDataCell class]] == NO) {
+                            view = _emptyView;
+                        }
                     }
                 }
             }

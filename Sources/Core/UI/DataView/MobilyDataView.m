@@ -429,6 +429,7 @@
         _searchBar = searchBar;
         if(_searchBar != nil) {
             _searchBar.translatesAutoresizingMaskIntoConstraints = NO;
+            _searchBar.delegate = self;
             if(self.superview != nil) {
                 [self.superview insertSubview:_searchBar aboveSubview:self];
                 [self _updateSuperviewConstraints];
@@ -1393,7 +1394,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     case MobilyDataViewSearchBarStyleInside:
                     case MobilyDataViewSearchBarStyleOverlay:
                         self.searchBarOverlayLastOffset = _scrollBeginPosition.y;
-                        self.canSearchBar = YES;
+                        self.canSearchBar = ((_searchBar.searching == NO) && (_searchBar.editing == NO));
                         break;
                 }
             }

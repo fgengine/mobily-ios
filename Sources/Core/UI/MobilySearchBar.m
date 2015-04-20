@@ -323,16 +323,15 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
 }
 
 - (void)pressedCancel {
-    if([_delegate respondsToSelector:@selector(searchBarEndEditing:)]) {
-        [_delegate searchBarPressedCancel:self];
-    } else {
-        __weak typeof(self) wealSelf = self;
-        [self setSearching:NO animated:YES complete:^{
-            [wealSelf.searchField endEditing:NO];
-            wealSelf.searchField.clearButtonMode = UITextFieldViewModeNever;
-            wealSelf.searchField.text = @"";
-        }];
-    }
+    __weak typeof(self) wealSelf = self;
+    [self.searchField endEditing:NO];
+    [self setSearching:NO animated:YES complete:^{
+        wealSelf.searchField.clearButtonMode = UITextFieldViewModeNever;
+        wealSelf.searchField.text = @"";
+        if([wealSelf.delegate respondsToSelector:@selector(searchBarEndEditing:)]) {
+            [wealSelf.delegate searchBarPressedCancel:wealSelf];
+        }
+    }];
 }
 
 #pragma mark UITextFieldDelegate
