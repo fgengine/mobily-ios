@@ -1596,7 +1596,7 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 }
 
 - (void)setContentOffsetX:(CGFloat)contentOffsetX {
-    [self setContentOffsetX:contentOffsetX animated:NO];
+    [self setContentOffset:CGPointMake(contentOffsetX, self.contentOffset.y)];
 }
 
 - (CGFloat)contentOffsetX {
@@ -1604,7 +1604,7 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 }
 
 - (void)setContentOffsetY:(CGFloat)contentOffsetY {
-    [self setContentOffsetY:contentOffsetY animated:NO];
+    [self setContentOffset:CGPointMake(self.contentOffset.x, contentOffsetY)];
 }
 
 - (CGFloat)contentOffsetY {

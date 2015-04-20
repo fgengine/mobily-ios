@@ -96,7 +96,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @property(nonatomic, readwrite, assign, getter=isShowedSearchBar) BOOL showedSearchBar;
 @property(nonatomic, readwrite, assign) MobilyDataViewSearchBarStyle searchBarStyle;
 @property(nonatomic, readwrite, weak) IBOutlet MobilySearchBar* searchBar;
-@property(nonatomic, readwrite, assign) UIEdgeInsets searchBarInsets;
+@property(nonatomic, readwrite, assign) CGFloat searchBarInset;
 
 @property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* topRefreshView;
 @property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* bottomRefreshView;

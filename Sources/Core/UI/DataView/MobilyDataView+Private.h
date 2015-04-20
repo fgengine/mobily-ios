@@ -70,8 +70,9 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
     BOOL _bouncesLeft;
     BOOL _bouncesRight;
     BOOL _bouncesBottom;
-    CGPoint _scrollBeginPosition;
     MobilyDataViewDirection _scrollDirection;
+    CGPoint _scrollBeginPosition;
+    CGPoint _scrollLastPosition;
     MobilyDataContainer* _container;
     NSMutableArray* _visibleItems;
     NSMutableArray* _selectedItems;
@@ -91,9 +92,9 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
     __weak MobilyPageControl* _pageControl;
     BOOL _showedSearchBar;
     MobilyDataViewSearchBarStyle _searchBarStyle;
-    CGFloat _searchBarOverlayLastOffset;
+    CGFloat _searchBarOverlayLastPosition;
     __weak MobilySearchBar* _searchBar;
-    UIEdgeInsets _searchBarInsets;
+    CGFloat _searchBarInset;
     __weak NSLayoutConstraint* _constraintSearchBarTop;
     __weak NSLayoutConstraint* _constraintSearchBarLeft;
     __weak NSLayoutConstraint* _constraintSearchBarRight;
@@ -130,8 +131,9 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
 
 @property(nonatomic, readwrite, strong) MobilyDataViewDelegateProxy* delegateProxy;
 @property(nonatomic, readonly, strong) MobilyDataContentView* contentView;
-@property(nonatomic, readwrite, assign) CGPoint scrollBeginPosition;
 @property(nonatomic, readwrite, assign) MobilyDataViewDirection scrollDirection;
+@property(nonatomic, readwrite, assign) CGPoint scrollBeginPosition;
+@property(nonatomic, readwrite, assign) CGPoint scrollLastPosition;
 
 @property(nonatomic, readwrite, strong) NSMutableDictionary* registersViews;
 @property(nonatomic, readwrite, strong) MobilyEvents* registersEvents;
@@ -145,7 +147,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
 @property(nonatomic, readwrite, assign, getter=isUpdating) BOOL updating;
 @property(nonatomic, readwrite, assign) BOOL invalidLayout;
 
-@property(nonatomic, readwrite, assign) CGFloat searchBarOverlayLastOffset;
+@property(nonatomic, readwrite, assign) CGFloat searchBarOverlayLastPosition;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintSearchBarTop;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintSearchBarLeft;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintSearchBarRight;
