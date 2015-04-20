@@ -46,12 +46,14 @@
     UIEdgeInsets _margin;
     CGFloat _spacing;
     __weak id< MobilySearchBarDelegate > _delegate;
+    __weak UIView* _separatorView;
     __weak MobilyTextField* _searchField;
     BOOL _showCancelButton;
     __weak MobilyButton* _cancelButton;
     NSMutableArray* _contentConstraints;
 }
 
+@property(nonatomic, readwrite, weak) UIView* separatorView;
 @property(nonatomic, readwrite, weak) MobilyTextField* searchField;
 @property(nonatomic, readwrite, weak) MobilyButton* cancelButton;
 
@@ -63,6 +65,7 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
+static CGFloat MobilySearchBarSeparatorHeight = 0.5f;
 static CGFloat MobilySearchBarContentHeight = 34.0f;
 
 /*--------------------------------------------------*/
@@ -76,6 +79,7 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
 @synthesize margin = _margin;
 @synthesize spacing = _spacing;
 @synthesize delegate = _delegate;
+@synthesize separatorView = _separatorView;
 @synthesize searchField = _searchField;
 @synthesize showCancelButton = _showCancelButton;
 @synthesize cancelButton = _cancelButton;
@@ -84,6 +88,8 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
 
 - (void)setup {
     [super setup];
+    
+    self.tintColor = MOBILY_COLOR_RGB(197, 194, 201);
     
     _margin = UIEdgeInsetsMake(8.0f, 8.0f, 8.0f, 8.0f);
     _spacing = 8.0f;
@@ -102,6 +108,8 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
     if(self.searchField != nil) {
     }
     if(self.cancelButton != nil) {
+    }
+    if(self.separatorView != nil) {
     }
 }
 #endif
@@ -136,6 +144,31 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
     }
 }
 
+- (void)setSeparatorView:(UIView*)separatorView {
+    if(_separatorView != separatorView) {
+        if(_separatorView != nil) {
+            [_separatorView removeFromSuperview];
+        }
+        _separatorView = separatorView;
+        if(_separatorView != nil) {
+            _separatorView.translatesAutoresizingMaskIntoConstraints = NO;
+            if(_separatorView.superview == nil) {
+                [self addSubview:_separatorView];
+            }
+            [self setNeedsUpdateConstraints];
+        }
+    }
+}
+
+- (UIView*)separatorView {
+    if(_separatorView == nil) {
+        UIView* separatorView = [[UIView alloc] initWithFrame:CGRectZero];
+        separatorView.backgroundColor = MOBILY_COLOR_RGB(199, 199, 199);
+        self.separatorView = separatorView;
+    }
+    return _separatorView;
+}
+
 - (void)setSearchField:(MobilyTextField*)searchField {
     if(_searchField != searchField) {
         if(_searchField != nil) {
@@ -158,6 +191,7 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
     if(_searchField == nil) {
         MobilyTextField* textField = [[MobilyTextField alloc] initWithFrame:CGRectZero];
         textField.placeholder = NSLocalizedString(@"Search", @"MobilySearchBar search placeholder");
+        textField.borderStyle = UITextBorderStyleRoundedRect;
         textField.backgroundColor = [UIColor whiteColor];
         textField.textColor = [UIColor darkGrayColor];
         textField.cornerRadius = 4.0f;
@@ -193,7 +227,7 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
     if(_cancelButton == nil) {
         MobilyButton* button = [[MobilyButton alloc] initWithFrame:CGRectZero];
         button.normalTitle = NSLocalizedString(@"Cancel", @"MobilySearchBar cancel title");
-        button.normalTitleColor = [UIColor whiteColor];
+        button.normalTitleColor = [UIColor darkGrayColor];
         self.cancelButton = button;
     }
     return _cancelButton;
@@ -203,7 +237,8 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
 
 - (void)updateConstraints {
     NSDictionary* metrics = @{
-        @"height": @(MobilySearchBarContentHeight),
+        @"separatorHeight": @(MobilySearchBarSeparatorHeight),
+        @"contentHeight": @(MobilySearchBarContentHeight),
         @"marginTop": @(_margin.top),
         @"marginBottom": @(_margin.bottom),
         @"marginLeft": @(_margin.left),
@@ -211,6 +246,7 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
         @"spacing": @(_spacing),
     };
     NSDictionary* views = @{
+        @"separatorView": self.separatorView,
         @"searchField": self.searchField,
         @"cancelButton": self.cancelButton,
     };
@@ -218,14 +254,16 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
     [_contentConstraints removeAllObjects];
     if(((_searching == YES) || (_editing == YES)) && (_showCancelButton == YES)) {
         [_contentConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(marginLeft)-[searchField]-(spacing)-[cancelButton]-(marginRight)-|" options:0 metrics:metrics views:views]];
-        [_contentConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=marginTop)-[searchField(>=height)]-(marginBottom)-|" options:0 metrics:metrics views:views]];
-        [_contentConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=marginTop)-[cancelButton(>=height)]-(marginBottom)-|" options:0 metrics:metrics views:views]];
+        [_contentConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=marginTop)-[searchField(>=contentHeight)]-(marginBottom)-|" options:0 metrics:metrics views:views]];
+        [_contentConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=marginTop)-[cancelButton(>=contentHeight)]-(marginBottom)-|" options:0 metrics:metrics views:views]];
     } else {
         [_contentConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(marginLeft)-[searchField]-(marginRight)-|" options:0 metrics:metrics views:views]];
         [_contentConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[searchField]-(marginRight)-[cancelButton]" options:0 metrics:metrics views:views]];
-        [_contentConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=marginTop)-[searchField(>=height)]-(marginBottom)-|" options:0 metrics:metrics views:views]];
-        [_contentConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=marginTop)-[cancelButton(>=height)]-(marginBottom)-|" options:0 metrics:metrics views:views]];
+        [_contentConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=marginTop)-[searchField(>=contentHeight)]-(marginBottom)-|" options:0 metrics:metrics views:views]];
+        [_contentConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=marginTop)-[cancelButton(>=contentHeight)]-(marginBottom)-|" options:0 metrics:metrics views:views]];
     }
+    [_contentConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[separatorView]-0-|" options:0 metrics:metrics views:views]];
+    [_contentConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[separatorView(==separatorHeight)]-0-|" options:0 metrics:metrics views:views]];
     [self addConstraints:_contentConstraints];
     [super updateConstraints];
 }

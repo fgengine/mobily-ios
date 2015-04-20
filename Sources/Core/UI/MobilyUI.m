@@ -788,7 +788,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
                             if(tintColor != nil) {
                                 if(CGColorGetAlpha(tintColor.CGColor) > 0.0f) {
                                     CGContextSetFillColorWithColor(context, [[tintColor colorWithAlphaComponent:0.25] CGColor]);
-                                    CGContextSetBlendMode(context, kCGBlendModePlusLighter);
+                                    CGContextSetBlendMode(context, kCGBlendModePlusDarker);
                                     CGContextFillRect(context, CGRectMake(0, 0, buffer1.width, buffer1.height));
                                 }
                             }

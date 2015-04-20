@@ -51,9 +51,8 @@
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat spacing;
 
 @property(nonatomic, readwrite, weak) IBOutlet id< MobilySearchBarDelegate > delegate;
-
+@property(nonatomic, readonly, weak) UIView* separatorView;
 @property(nonatomic, readonly, weak) IBOutlet MobilyTextField* searchField;
-
 @property(nonatomic, readwrite, assign) BOOL showCancelButton;
 @property(nonatomic, readonly, weak) IBOutlet MobilyButton* cancelButton;
 
