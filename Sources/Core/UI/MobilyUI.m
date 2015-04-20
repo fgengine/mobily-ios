@@ -1707,12 +1707,16 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 
 - (void)registerAdjustmentResponder {
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(adjustmentNotificationKeyboardShow:) name:UIKeyboardWillShowNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(adjustmentNotificationKeyboardShow:) name:UIKeyboardDidShowNotification object:nil];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(adjustmentNotificationKeyboardHide:) name:UIKeyboardWillHideNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(adjustmentNotificationKeyboardHide:) name:UIKeyboardDidHideNotification object:nil];
 }
 
 - (void)unregisterAdjustmentResponder {
-    [NSNotificationCenter.defaultCenter removeObserver:self name:UIKeyboardWillHideNotification object:nil];
     [NSNotificationCenter.defaultCenter removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [NSNotificationCenter.defaultCenter removeObserver:self name:UIKeyboardDidShowNotification object:nil];
+    [NSNotificationCenter.defaultCenter removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+    [NSNotificationCenter.defaultCenter removeObserver:self name:UIKeyboardDidHideNotification object:nil];
 }
 
 #pragma mark UIKeyboarNotification
