@@ -107,7 +107,7 @@
 
 /*--------------------------------------------------*/
 
-static char const* const popoverControllerKey = "popoverControllerKey";
+static char const* const MobilyPopoverControllerKey = "popoverControllerKey";
 
 /*--------------------------------------------------*/
 #pragma mark -
@@ -116,11 +116,11 @@ static char const* const popoverControllerKey = "popoverControllerKey";
 @implementation UIViewController (MobilyPopoverController)
 
 - (void)setPopoverController:(MobilyPopoverController*)popoverController {
-    objc_setAssociatedObject(self, popoverControllerKey, popoverController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, MobilyPopoverControllerKey, popoverController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (MobilyPopoverController*)popoverController {
-    MobilyPopoverController* popoverController = objc_getAssociatedObject(self, popoverControllerKey);
+    MobilyPopoverController* popoverController = objc_getAssociatedObject(self, MobilyPopoverControllerKey);
     if(popoverController == nil) {
         popoverController = self.parentViewController.popoverController;
     }

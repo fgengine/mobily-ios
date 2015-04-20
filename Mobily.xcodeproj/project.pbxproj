@@ -109,6 +109,7 @@
 		40B760431ADFA35600F0CB09 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B7603F1ADFA35600F0CB09 /* CoreData.framework */; };
 		40B760441ADFA35600F0CB09 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B760401ADFA35600F0CB09 /* Social.framework */; };
 		40B760451ADFA35600F0CB09 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B760411ADFA35600F0CB09 /* Twitter.framework */; };
+		40D29C571AE2D30D004D2CB8 /* MobilyPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D29C561AE2D30D004D2CB8 /* MobilyPageControl.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -305,6 +306,8 @@
 		40B760411ADFA35600F0CB09 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		40B7604E1ADFA6A200F0CB09 /* TwitterKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TwitterKitResources.bundle; sourceTree = "<group>"; };
 		40B7604F1ADFA6A200F0CB09 /* VKSdkResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = VKSdkResources.bundle; sourceTree = "<group>"; };
+		40D29C551AE2D30D004D2CB8 /* MobilyPageControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyPageControl.h; sourceTree = "<group>"; };
+		40D29C561AE2D30D004D2CB8 /* MobilyPageControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyPageControl.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -521,6 +524,8 @@
 				40B75F7D1ADFA00A00F0CB09 /* MobilyListField.m */,
 				40B75F7E1ADFA00A00F0CB09 /* MobilyNavigationController.h */,
 				40B75F7F1ADFA00A00F0CB09 /* MobilyNavigationController.m */,
+				40D29C551AE2D30D004D2CB8 /* MobilyPageControl.h */,
+				40D29C561AE2D30D004D2CB8 /* MobilyPageControl.m */,
 				40B75F801ADFA00A00F0CB09 /* MobilyPopoverController.h */,
 				40B75F811ADFA00A00F0CB09 /* MobilyPopoverController.m */,
 				40B75F821ADFA00A00F0CB09 /* MobilyScrollView.h */,
@@ -804,6 +809,7 @@
 				40B75FF61ADFA00A00F0CB09 /* MobilySpinnerViewWanderingCubes.m in Sources */,
 				40B75FCC1ADFA00A00F0CB09 /* MobilyDataContainerCalendar.m in Sources */,
 				40B75FF21ADFA00A00F0CB09 /* MobilySpinnerViewFadingCircleAlt.m in Sources */,
+				40D29C571AE2D30D004D2CB8 /* MobilyPageControl.m in Sources */,
 				40B75FDB1ADFA00A00F0CB09 /* MobilyBuilderPreset.m in Sources */,
 				40B75FEA1ADFA00A00F0CB09 /* MobilySpinnerView9CubeGrid.m in Sources */,
 				40B75FFC1ADFA00A00F0CB09 /* MobilyTextView.m in Sources */,
@@ -929,6 +935,7 @@
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

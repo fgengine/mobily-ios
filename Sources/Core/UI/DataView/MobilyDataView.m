@@ -78,6 +78,7 @@
 @synthesize animating = _animating;
 @synthesize updating = _updating;
 @synthesize invalidLayout = _invalidLayout;
+@synthesize pageControl = _pageControl;
 @synthesize showedSearchBar = _showedSearchBar;
 @synthesize searchBar = _searchBar;
 @synthesize searchBarStyle =  _searchBarStyle;
@@ -1836,6 +1837,11 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 }
 
 - (void)_didEndDraggingWillDecelerate:(BOOL)decelerate {
+    if(decelerate == NO) {
+        if(_pageControl != nil) {
+            [_pageControl updatePageNumberForScrollView:self];
+        }
+    }
     if(_container != nil) {
         [_container _didEndDraggingWillDecelerate:decelerate];
     }
@@ -1848,12 +1854,18 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 }
 
 - (void)_didEndDecelerating {
+    if(_pageControl != nil) {
+        [_pageControl updatePageNumberForScrollView:self];
+    }
     if(_container != nil) {
         [_container _didEndDecelerating];
     }
 }
 
 - (void)_didEndScrollingAnimation {
+    if(_pageControl != nil) {
+        [_pageControl updatePageNumberForScrollView:self];
+    }
     if(_container != nil) {
         [_container _didEndScrollingAnimation];
     }

@@ -88,6 +88,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
     BOOL _animating;
     BOOL _updating;
     BOOL _invalidLayout;
+    __weak MobilyPageControl* _pageControl;
     BOOL _showedSearchBar;
     MobilyDataViewSearchBarStyle _searchBarStyle;
     CGFloat _searchBarOverlayLastOffset;
