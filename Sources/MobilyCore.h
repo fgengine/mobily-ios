@@ -60,6 +60,7 @@
 #import <MobilyNavigationController.h>
 #import <MobilyTabBarController.h>
 #import <MobilySlideController.h>
+#import <MobilyDialogController.h>
 #import <MobilyViewController.h>
 #import <MobilyView.h>
 #import <MobilyButton.h>
