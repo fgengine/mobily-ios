@@ -39,9 +39,9 @@
 
 @interface MobilySpinnerView : UIView < MobilyObject >
 
-@property(nonatomic, readwrite, strong) UIColor* color;
-@property(nonatomic, readwrite, assign) CGFloat size;
-@property(nonatomic, readwrite, assign) BOOL hidesWhenStopped;
+@property(nonatomic, readwrite, strong) IBInspectable UIColor* color;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat size;
+@property(nonatomic, readwrite, assign) IBInspectable BOOL hidesWhenStopped;
 @property(nonatomic, readonly, assign, getter=isAnimating) BOOL animating;
 
 - (void)setup NS_REQUIRES_SUPER;

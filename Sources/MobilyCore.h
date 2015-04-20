@@ -79,6 +79,7 @@
 #import <MobilyDataContainer.h>
 #import <MobilyDataItem.h>
 #import <MobilyDataCell.h>
+#import <MobilySpinnerView.h>
 #import <MobilyPopoverController.h>
 #import <MobilyAV.h>
 #import <MobilyAudioRecorder.h>

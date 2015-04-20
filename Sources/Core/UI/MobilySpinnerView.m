@@ -67,17 +67,25 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self != nil) {
-        _size = MobilySpinnerViewSize;
-        _color = MobilySpinnerViewColor;
-        _hidesWhenStopped = YES;
+        [self setup];
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    self = [super initWithCoder:coder];
+    if(self != nil) {
         [self setup];
     }
     return self;
 }
 
 - (void)setup {
-    self.backgroundColor = UIColor.clearColor;
+    _size = MobilySpinnerViewSize;
+    _color = MobilySpinnerViewColor;
+    _hidesWhenStopped = YES;
     
+    self.backgroundColor = UIColor.clearColor;
     [self applyAnimation];
     [self sizeToFit];
     

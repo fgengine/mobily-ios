@@ -1501,7 +1501,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     case MobilyDataViewSearchBarStyleStatic:
                         break;
                     case MobilyDataViewSearchBarStyleInside: {
-                        CGFloat offset = contentOffset.y + searchBarInsets.top;
+                        CGFloat offset = contentOffset.y;
                         searchBarInsets.top = MAX(0.0f, MIN(searchBarInsets.top - offset, searchBarHeight));
                         if(_showedSearchBar == YES) {
                             _constraintSearchBarTop.constant = -(searchBarHeight - searchBarInsets.top);
@@ -1514,11 +1514,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                         CGFloat offset = contentOffset.y;
                         CGFloat diff = offset - _searchBarOverlayLastOffset;
                         if(ABS(diff) > (searchBarHeight * 0.5f)) {
-                            if(diff < 0.0f) {
-                                searchBarInsets.top = searchBarHeight;
-                            } else {
-                                searchBarInsets.top = 0.0f;
-                            }
+                            searchBarInsets.top = (diff < 0.0f) ? searchBarHeight : 0.0f;
                             if(_showedSearchBar == YES) {
                                 _constraintSearchBarTop.constant = -(searchBarHeight - searchBarInsets.top);
                             } else {
@@ -1534,7 +1530,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         }
         if((_refreshDragging == YES) && (decelerating == NO)) {
             if(_canTopRefresh == YES) {
-                CGFloat offset = contentOffset.y + (refreshViewInsets.top + searchBarInsets.top);
+                CGFloat offset = contentOffset.y + searchBarInsets.top + refreshViewInsets.top;
                 CGFloat progress = MAX(0.0f, refreshViewInsets.top - offset);
                 switch(_topRefreshView.state) {
                     case MobilyDataRefreshViewStateIdle:
@@ -1591,7 +1587,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 }
             }
             if(_canLeftRefresh == YES) {
-                CGFloat offset = contentOffset.x + refreshViewInsets.left;
+                CGFloat offset = contentOffset.x + searchBarInsets.left + refreshViewInsets.left;
                 CGFloat progress = MAX(0.0f, refreshViewInsets.left - offset);
                 switch(_leftRefreshView.state) {
                     case MobilyDataRefreshViewStateIdle:
