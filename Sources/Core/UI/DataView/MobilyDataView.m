@@ -1634,7 +1634,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             _constraintLeftRefreshSize.constant = refreshViewInsets.left;
             _constraintRightRefreshSize.constant = refreshViewInsets.right;
             self.refreshViewInsets = refreshViewInsets;
-            NSLog(@"%@", NSStringFromUIEdgeInsets(refreshViewInsets));
         }
     }
     if(_container != nil) {
