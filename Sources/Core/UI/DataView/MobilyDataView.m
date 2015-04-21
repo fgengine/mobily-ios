@@ -1629,7 +1629,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             }
             if((_canDraggingRightRefresh == YES) && (contentSize.width >= frameSize.width)) {
                 CGFloat limit = (contentSize.width - frameSize.width);
-                CGFloat progress = (limit > 0.0f) ? (contentOffset.x - limit) : 0.0f;
+                CGFloat progress = (contentOffset.x > limit) ? contentOffset.x - limit : 0.0f;
                 switch(_rightRefreshView.state) {
                     case MobilyDataRefreshViewStateIdle:
                         if(progress > 0.0f) {
