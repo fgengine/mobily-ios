@@ -93,14 +93,19 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 
 @property(nonatomic, readwrite, weak) IBOutlet MobilyPageControl* pageControl;
 
-@property(nonatomic, readwrite, assign, getter=isShowedSearchBar) BOOL showedSearchBar;
-@property(nonatomic, readwrite, assign) MobilyDataViewSearchBarStyle searchBarStyle;
+@property(nonatomic, readwrite, assign) IBInspectable BOOL searchBarIteractionEnabled;
+@property(nonatomic, readwrite, assign, getter=isShowedSearchBar) IBInspectable BOOL showedSearchBar;
+@property(nonatomic, readwrite, assign) IBInspectable MobilyDataViewSearchBarStyle searchBarStyle;
 @property(nonatomic, readwrite, weak) IBOutlet MobilySearchBar* searchBar;
 @property(nonatomic, readwrite, assign) CGFloat searchBarInset;
 
+@property(nonatomic, readwrite, assign) IBInspectable BOOL topRefreshIteractionEnabled;
 @property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* topRefreshView;
+@property(nonatomic, readwrite, assign) IBInspectable BOOL bottomRefreshIteractionEnabled;
 @property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* bottomRefreshView;
+@property(nonatomic, readwrite, assign) IBInspectable BOOL leftRefreshIteractionEnabled;
 @property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* leftRefreshView;
+@property(nonatomic, readwrite, assign) IBInspectable BOOL rightRefreshIteractionEnabled;
 @property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* rightRefreshView;
 @property(nonatomic, readwrite, assign) UIEdgeInsets refreshViewInsets;
 

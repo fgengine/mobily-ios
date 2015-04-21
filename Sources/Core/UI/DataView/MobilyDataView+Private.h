@@ -90,6 +90,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
     BOOL _updating;
     BOOL _invalidLayout;
     __weak MobilyPageControl* _pageControl;
+    BOOL _searchBarIteractionEnabled;
     BOOL _showedSearchBar;
     MobilyDataViewSearchBarStyle _searchBarStyle;
     CGFloat _searchBarOverlayLastPosition;
@@ -99,21 +100,25 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
     __weak NSLayoutConstraint* _constraintSearchBarLeft;
     __weak NSLayoutConstraint* _constraintSearchBarRight;
     __weak NSLayoutConstraint* _constraintSearchBarSize;
+    BOOL _topRefreshIteractionEnabled;
     __weak MobilyDataRefreshView* _topRefreshView;
     __weak NSLayoutConstraint* _constraintTopRefreshTop;
     __weak NSLayoutConstraint* _constraintTopRefreshLeft;
     __weak NSLayoutConstraint* _constraintTopRefreshRight;
     __weak NSLayoutConstraint* _constraintTopRefreshSize;
+    BOOL _bottomRefreshIteractionEnabled;
     __weak MobilyDataRefreshView* _bottomRefreshView;
     __weak NSLayoutConstraint* _constraintBottomRefreshBottom;
     __weak NSLayoutConstraint* _constraintBottomRefreshLeft;
     __weak NSLayoutConstraint* _constraintBottomRefreshRight;
     __weak NSLayoutConstraint* _constraintBottomRefreshSize;
+    BOOL _leftRefreshIteractionEnabled;
     __weak MobilyDataRefreshView* _leftRefreshView;
     __weak NSLayoutConstraint* _constraintLeftRefreshTop;
     __weak NSLayoutConstraint* _constraintLeftRefreshBottom;
     __weak NSLayoutConstraint* _constraintLeftRefreshLeft;
     __weak NSLayoutConstraint* _constraintLeftRefreshSize;
+    BOOL _rightRefreshIteractionEnabled;
     __weak MobilyDataRefreshView* _rightRefreshView;
     __weak NSLayoutConstraint* _constraintRightRefreshTop;
     __weak NSLayoutConstraint* _constraintRightRefreshBottom;
@@ -121,12 +126,12 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
     __weak NSLayoutConstraint* _constraintRightRefreshSize;
     UIEdgeInsets _refreshViewInsets;
     BOOL _searchBarDragging;
-    BOOL _canSearchBar;
+    BOOL _canDraggingSearchBar;
     BOOL _refreshDragging;
-    BOOL _canTopRefresh;
-    BOOL _canBottomRefresh;
-    BOOL _canLeftRefresh;
-    BOOL _canRightRefresh;
+    BOOL _canDraggingTopRefresh;
+    BOOL _canDraggingBottomRefresh;
+    BOOL _canDraggingLeftRefresh;
+    BOOL _canDraggingRightRefresh;
 }
 
 @property(nonatomic, readwrite, strong) MobilyDataViewDelegateProxy* delegateProxy;
@@ -173,12 +178,12 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintRightRefreshSize;
 
 @property(nonatomic, readwrite, assign, getter=isSearchBarDragging) BOOL searchBarDragging;
-@property(nonatomic, readwrite, assign) BOOL canSearchBar;
+@property(nonatomic, readwrite, assign) BOOL canDraggingSearchBar;
 @property(nonatomic, readwrite, assign, getter=isRefreshDragging) BOOL refreshDragging;
-@property(nonatomic, readwrite, assign) BOOL canTopRefresh;
-@property(nonatomic, readwrite, assign) BOOL canBottomRefresh;
-@property(nonatomic, readwrite, assign) BOOL canLeftRefresh;
-@property(nonatomic, readwrite, assign) BOOL canRightRefresh;
+@property(nonatomic, readwrite, assign) BOOL canDraggingTopRefresh;
+@property(nonatomic, readwrite, assign) BOOL canDraggingBottomRefresh;
+@property(nonatomic, readwrite, assign) BOOL canDraggingLeftRefresh;
+@property(nonatomic, readwrite, assign) BOOL canDraggingRightRefresh;
 
 - (void)_receiveMemoryWarning;
 

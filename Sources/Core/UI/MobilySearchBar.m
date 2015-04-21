@@ -125,6 +125,9 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
         _searching = searching;
         if(_searching == NO) {
             _editing = NO;
+            self.searchField.clearButtonMode = UITextFieldViewModeNever;
+            self.searchField.text = @"";
+            [self.searchField endEditing:NO];
         }
         [self updateAnimated:animated complete:complete];
     }
@@ -137,8 +140,10 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated complete:(MobilySimpleBlock)complete {
     if(_editing != editing) {
         _editing = editing;
-        if((_editing == YES) && (self.searchField.isFirstResponder == NO)) {
+        if(_editing == YES) {
             [self.searchField becomeFirstResponder];
+        } else {
+            [self.searchField endEditing:NO];
         }
         [self updateAnimated:animated complete:complete];
     }
@@ -324,10 +329,7 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
 
 - (void)pressedCancel {
     __weak typeof(self) wealSelf = self;
-    [self.searchField endEditing:NO];
     [self setSearching:NO animated:YES complete:^{
-        wealSelf.searchField.clearButtonMode = UITextFieldViewModeNever;
-        wealSelf.searchField.text = @"";
         if([wealSelf.delegate respondsToSelector:@selector(searchBarEndEditing:)]) {
             [wealSelf.delegate searchBarPressedCancel:wealSelf];
         }
