@@ -414,22 +414,57 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 - (UIBarButtonItem*)addRightBarFixedSpace:(CGFloat)fixedSpaceWidth animated:(BOOL)animated;
 
 - (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage target:(id)target action:(SEL)action animated:(BOOL)animated;
 - (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage target:(id)target action:(SEL)action animated:(BOOL)animated;
 - (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated;
 - (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage selectedImage:(UIImage*)selectedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+
+- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated;
 - (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage selectedImage:(UIImage*)selectedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated;
 
+
 - (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font frame:(CGRect)frame target:(id)target action:(SEL)action animated:(BOOL)animated;
 - (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
 - (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
 - (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle selectedTitle:(NSString*)selectedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle
+                        highlightedTitle:(NSString*)highlightedTitle
+                           selectedTitle:(NSString*)selectedTitle
+                           disabledTitle:(NSString*)disabledTitle
+                        normalTitleColor:(UIColor*)normatTitleColor
+                   highlightedTitleColor:(UIColor*)highlightedTitleColor
+                      selectedTitleColor:(UIColor*)selectedTitleColor
+                      disabledTitleColor:(UIColor*)disabledTitleColor
+                                    font:(UIFont*)font
+                                   frame:(CGRect)frame
+                                  target:(id)target
+                                  action:(SEL)action
+                                animated:(BOOL)animated;
+
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font frame:(CGRect)frame target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
 - (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle selectedTitle:(NSString*)selectedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle
+                         highlightedTitle:(NSString*)highlightedTitle
+                            selectedTitle:(NSString*)selectedTitle
+                            disabledTitle:(NSString*)disabledTitle
+                         normalTitleColor:(UIColor*)normatTitleColor
+                    highlightedTitleColor:(UIColor*)highlightedTitleColor
+                       selectedTitleColor:(UIColor*)selectedTitleColor
+                       disabledTitleColor:(UIColor*)disabledTitleColor
+                                     font:(UIFont*)font
+                                    frame:(CGRect)frame
+                                   target:(id)target
+                                   action:(SEL)action
+                                 animated:(BOOL)animated;
 
 - (UIBarButtonItem*)addLeftBarView:(UIView*)view animated:(BOOL)animated;
 - (UIBarButtonItem*)addRightBarView:(UIView*)view animated:(BOOL)animated;

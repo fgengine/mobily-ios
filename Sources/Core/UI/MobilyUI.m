@@ -2285,47 +2285,130 @@ MOBILY_DEFINE_VALIDATE_IMAGE(BackIndicatorTransitionMaskImage)
 }
 
 - (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil target:target action:action animated:animated];
+    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
 }
 
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil target:target action:action animated:animated];
+- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
+}
+
+- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:font frame:CGRectZero target:target action:action animated:animated];
+}
+
+- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font frame:(CGRect)frame target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:font frame:frame target:target action:action animated:animated];
 }
 
 - (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:nil target:target action:action animated:animated];
-}
-
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:nil target:target action:action animated:animated];
+    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:nil normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
 }
 
 - (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:disabledTitle target:target action:action animated:animated];
-}
-
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:disabledTitle target:target action:action animated:animated];
+    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:disabledTitle normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
 }
 
 - (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle selectedTitle:(NSString*)selectedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
-    UIButton* button = [[UIButton alloc] initWithFrame:CGRectZero];
+    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:selectedTitle disabledTitle:disabledTitle normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
+}
+
+- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle
+                        highlightedTitle:(NSString*)highlightedTitle
+                           selectedTitle:(NSString*)selectedTitle
+                           disabledTitle:(NSString*)disabledTitle
+                        normalTitleColor:(UIColor*)normatTitleColor
+                   highlightedTitleColor:(UIColor*)highlightedTitleColor
+                      selectedTitleColor:(UIColor*)selectedTitleColor
+                      disabledTitleColor:(UIColor*)disabledTitleColor
+                                    font:(UIFont*)font
+                                   frame:(CGRect)frame
+                                  target:(id)target
+                                  action:(SEL)action
+                                animated:(BOOL)animated {
+    UIButton* button = [[UIButton alloc] initWithFrame:frame];
+    
+    // titles
     button.normalTitle = normalTitle;
     button.highlightedTitle = highlightedTitle;
     button.selectedTitle = selectedTitle;
     button.disabledTitle = disabledTitle;
+    
+    // title colors
+    [button setTitleColor:normatTitleColor forState:UIControlStateNormal];
+    [button setTitleColor:highlightedTitleColor forState:UIControlStateHighlighted];
+    [button setTitleColor:selectedTitleColor forState:UIControlStateSelected];
+    [button setTitleColor:disabledTitleColor forState:UIControlStateDisabled];
+    
+    // font
+    button.titleLabel.font = font;
+    
     [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
     [button sizeToFit];
     [self addLeftBarView:button animated:animated];
     return button;
 }
 
+
+// right
+
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
+}
+
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
+}
+
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:font frame:CGRectZero target:target action:action animated:animated];
+}
+
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font frame:(CGRect)frame target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:font frame:frame target:target action:action animated:animated];
+}
+
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:nil normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
+}
+
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:disabledTitle normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
+}
+
 - (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle selectedTitle:(NSString*)selectedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
-    UIButton* button = [[UIButton alloc] initWithFrame:CGRectZero];
+    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:selectedTitle disabledTitle:disabledTitle normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
+}
+
+- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle
+                         highlightedTitle:(NSString*)highlightedTitle
+                            selectedTitle:(NSString*)selectedTitle
+                            disabledTitle:(NSString*)disabledTitle
+                         normalTitleColor:(UIColor*)normatTitleColor
+                    highlightedTitleColor:(UIColor*)highlightedTitleColor
+                       selectedTitleColor:(UIColor*)selectedTitleColor
+                       disabledTitleColor:(UIColor*)disabledTitleColor
+                                     font:(UIFont*)font
+                                    frame:(CGRect)frame
+                                   target:(id)target
+                                   action:(SEL)action
+                                 animated:(BOOL)animated {
+    UIButton* button = [[UIButton alloc] initWithFrame:frame];
+    
+    // titles
     button.normalTitle = normalTitle;
     button.highlightedTitle = highlightedTitle;
     button.selectedTitle = selectedTitle;
     button.disabledTitle = disabledTitle;
+    
+    // title colors
+    [button setTitleColor:normatTitleColor forState:UIControlStateNormal];
+    [button setTitleColor:highlightedTitleColor forState:UIControlStateHighlighted];
+    [button setTitleColor:selectedTitleColor forState:UIControlStateSelected];
+    [button setTitleColor:disabledTitleColor forState:UIControlStateDisabled];
+    
+    // font
+    button.titleLabel.font = font;
+    
     [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
     [button sizeToFit];
     [self addRightBarView:button animated:animated];
