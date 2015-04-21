@@ -1504,6 +1504,12 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     case MobilyDataViewSearchBarStyleInside: {
                         CGFloat offset = contentOffset.y;
                         searchBarInset = MAX(0.0f, MIN(searchBarInset - offset, searchBarHeight));
+                        if(_showedSearchBar == YES) {
+                            _constraintSearchBarTop.constant = -(searchBarHeight - searchBarInset);
+                        } else {
+                            _constraintSearchBarTop.constant = searchBarInset;
+                        }
+                        self.searchBarInset = searchBarInset;
                         break;
                     }
                     case MobilyDataViewSearchBarStyleOverlay: {
@@ -1512,16 +1518,26 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                         if(ABS(diff) > (searchBarHeight * 0.5f)) {
                             searchBarInset = (diff < 0.0f) ? searchBarHeight : 0.0f;
                             self.searchBarOverlayLastPosition = offset;
+                            if(_searchBarInset != searchBarInset) {
+                                if(_showedSearchBar == YES) {
+                                    _constraintSearchBarTop.constant = -(searchBarHeight - searchBarInset);
+                                } else {
+                                    _constraintSearchBarTop.constant = searchBarInset;
+                                }
+                                [UIView animateKeyframesWithDuration:0.3f
+                                                               delay:0.0f
+                                                             options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut
+                                                          animations:^{
+                                                              [self.superview layoutIfNeeded];
+                                                              self.searchBarInset = searchBarInset;
+                                                          }
+                                                          completion:^(BOOL finished) {
+                                                          }];
+                            }
                         }
                         break;
                     }
                 }
-                if(_showedSearchBar == YES) {
-                    _constraintSearchBarTop.constant = -(searchBarHeight - searchBarInset);
-                } else {
-                    _constraintSearchBarTop.constant = searchBarInset;
-                }
-                self.searchBarInset = searchBarInset;
             }
         }
         if((_refreshDragging == YES) && (decelerating == NO)) {
