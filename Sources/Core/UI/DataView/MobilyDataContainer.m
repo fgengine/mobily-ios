@@ -46,6 +46,7 @@
 @synthesize view = _view;
 @synthesize parent = _parent;
 @synthesize frame = _frame;
+@synthesize hidden = _hidden;
 @synthesize allowAutoAlign = _allowAutoAlign;
 @synthesize alignInsets = _alignInsets;
 @synthesize alignPosition = _alignPosition;
@@ -90,6 +91,13 @@
 - (CGRect)frame {
     [_view validateLayoutIfNeed];
     return _frame;
+}
+
+- (void)setHidden:(BOOL)hidden {
+    if(_hidden != hidden) {
+        _hidden = hidden;
+        [_view setNeedValidateLayout];
+    }
 }
 
 #pragma mark Property private

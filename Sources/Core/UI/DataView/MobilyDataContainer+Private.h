@@ -44,6 +44,7 @@
 @protected
     __weak MobilyDataView* _view;
     __weak MobilyDataContainer* _parent;
+    BOOL _hidden;
     BOOL _allowAutoAlign;
     UIEdgeInsets _alignInsets;
     MobilyDataContainerAlign _alignPosition;

@@ -53,6 +53,7 @@
 @synthesize updateFrame = _updateFrame;
 @synthesize displayFrame = _displayFrame;
 @synthesize order = _order;
+@synthesize hidden = _hidden;
 @synthesize allowsAlign = _allowsAlign;
 @synthesize allowsSelection = _allowsSelection;
 @synthesize allowsHighlighting = _allowsHighlighting;
@@ -91,6 +92,7 @@
         _originFrame = dataItem.originFrame;
         _updateFrame = dataItem.updateFrame;
         _displayFrame = dataItem.displayFrame;
+        _hidden = dataItem.hidden;
         _allowsSelection = dataItem.allowsSelection;
         _allowsHighlighting = dataItem.allowsHighlighting;
         _allowsEditing = dataItem.allowsEditing;
@@ -219,6 +221,14 @@
     return _originFrame;
 }
 
+- (void)setHidden:(BOOL)hidden {
+    if(_hidden != hidden) {
+        _hidden = hidden;
+        [self disappear];
+        [_view setNeedValidateLayout];
+    }
+}
+
 - (void)setSelected:(BOOL)selected {
     [self setSelected:selected animated:NO];
 }
@@ -314,7 +324,10 @@
 }
 
 - (void)setNeedUpdateSize {
-    _needUpdateSize = YES;
+    if(_needUpdateSize == NO) {
+        _needUpdateSize = YES;
+        [_view setNeedValidateLayout];
+    }
 }
 
 - (CGSize)sizeForAvailableSize:(CGSize)size {
@@ -339,18 +352,17 @@
 
 - (void)validateLayoutForBounds:(CGRect)bounds {
     if(_cell == nil) {
-        if(CGRectIntersectsRect(bounds, CGRectUnion(_originFrame, self.frame)) == YES) {
+        if((CGRectIntersectsRect(bounds, CGRectUnion(_originFrame, self.frame)) == YES) && (_hidden == NO)) {
             [self appear];
         }
     } else {
         [_cell validateLayoutForBounds:bounds];
-
     }
 }
 
 - (void)invalidateLayoutForBounds:(CGRect)bounds {
     if(_cell != nil) {
-        if(CGRectIntersectsRect(bounds, self.frame) == NO) {
+        if((CGRectIntersectsRect(bounds, self.frame) == NO) || (_hidden == YES)) {
             [self disappear];
         } else {
             [_cell invalidateLayoutForBounds:bounds];

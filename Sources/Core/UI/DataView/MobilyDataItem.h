@@ -55,6 +55,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @property(nonatomic, readwrite, assign) CGRect updateFrame;
 @property(nonatomic, readwrite, assign) CGRect displayFrame;
 @property(nonatomic, readonly, assign) CGRect frame;
+@property(nonatomic, readwrite, assign, getter=isHidden) BOOL hidden;
 @property(nonatomic, readwrite, assign) BOOL allowsAlign;
 @property(nonatomic, readwrite, assign) BOOL allowsSelection;
 @property(nonatomic, readwrite, assign) BOOL allowsHighlighting;

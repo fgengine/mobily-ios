@@ -266,7 +266,7 @@
         case MobilyDataContainerOrientationVertical: {
             for(MobilyDataItem* entry in _entries) {
                 CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake(restriction.width, (_defaultSize.height > 0) ? _defaultSize.height : FLT_MAX)];
-                if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f)) {
+                if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f) && (entry.hidden == NO)) {
                     if((countOfRow > 0) && (cumulativeRow.width + entrySize.width > restriction.width)) {
                         offset.x = 0.0f;
                         offset.y += cumulativeRow.height + _spacing.vertical;
@@ -289,7 +289,7 @@
         case MobilyDataContainerOrientationHorizontal: {
             for(MobilyDataItem* entry in _entries) {
                 CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake((_defaultSize.width > 0) ? _defaultSize.width : FLT_MAX, restriction.height)];
-                if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f)) {
+                if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f) && (entry.hidden == NO)) {
                     if((countOfRow > 0) && (cumulativeRow.height + entrySize.height > restriction.height)) {
                         offset.x += cumulativeRow.width + _spacing.horizontal;
                         offset.y = 0.0f;
@@ -320,10 +320,10 @@
             CGFloat boundsAfter = bounds.origin.y + bounds.size.height;
             CGFloat entriesBefore = _frame.origin.y;
             CGFloat entriesAfter = _frame.origin.y + _frame.size.height;
-            if(_header != nil) {
+            if((_header != nil) && (_header.hidden == NO)) {
                 CGRect headerFrame = _header.updateFrame;
                 headerFrame.origin.y = boundsBefore;
-                if(_footer != nil) {
+                if((_footer != nil) && (_footer.hidden == NO)) {
                     CGRect footerFrame = _footer.updateFrame;
                     headerFrame.origin.y = MIN(headerFrame.origin.y, (boundsAfter - (_spacing.vertical + footerFrame.size.height)) - headerFrame.size.height);
                 } else {
@@ -332,10 +332,10 @@
                 headerFrame.origin.y = MAX(entriesBefore, MIN(headerFrame.origin.y, entriesAfter - headerFrame.size.height));
                 _header.displayFrame = headerFrame;
             }
-            if(_footer != nil) {
+            if((_footer != nil) && (_footer.hidden == NO)) {
                 CGRect footerFrame = _footer.updateFrame;
                 footerFrame.origin.y = boundsAfter - footerFrame.size.height;
-                if(_header != nil) {
+                if((_header != nil) && (_header.hidden == NO)) {
                     CGRect headerFrame = _header.updateFrame;
                     footerFrame.origin.y = MAX(footerFrame.origin.y, (boundsBefore + _spacing.vertical) + headerFrame.size.height);
                 } else {
@@ -351,10 +351,10 @@
             CGFloat boundsAfter = bounds.origin.x + bounds.size.width;
             CGFloat entriesBefore = _frame.origin.x;
             CGFloat entriesAfter = _frame.origin.x + _frame.size.width;
-            if(_header != nil) {
+            if((_header != nil) && (_header.hidden == NO)) {
                 CGRect headerFrame = _header.updateFrame;
                 headerFrame.origin.x = boundsBefore;
-                if(_footer != nil) {
+                if((_footer != nil) && (_footer.hidden == NO)) {
                     CGRect footerFrame = _footer.updateFrame;
                     headerFrame.origin.x = MIN(headerFrame.origin.x, (boundsAfter - (_spacing.horizontal + footerFrame.size.width)) - headerFrame.size.width);
                 } else {
@@ -363,10 +363,10 @@
                 headerFrame.origin.x = MAX(entriesBefore, MIN(headerFrame.origin.x, entriesAfter - headerFrame.size.width));
                 _header.displayFrame = headerFrame;
             }
-            if(_footer != nil) {
+            if((_footer != nil) && (_footer.hidden == NO)) {
                 CGRect footerFrame = _footer.updateFrame;
                 footerFrame.origin.x = boundsAfter - footerFrame.size.width;
-                if(_header != nil) {
+                if((_header != nil) && (_header.hidden == NO)) {
                     CGRect headerFrame = _header.updateFrame;
                     footerFrame.origin.x = MAX(footerFrame.origin.x, (boundsBefore + _spacing.horizontal) + headerFrame.size.width);
                 } else {

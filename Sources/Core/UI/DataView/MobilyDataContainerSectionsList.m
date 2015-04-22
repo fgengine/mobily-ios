@@ -217,7 +217,7 @@
         case MobilyDataContainerOrientationVertical: {
             for(MobilyDataContainer* container in _sections) {
                 CGRect containerFrame = [container _validateLayoutForAvailableFrame:CGRectMake(offset.x, offset.y, restriction.width, restriction.height)];
-                if(CGRectIsNull(containerFrame) == NO) {
+                if((CGRectIsNull(containerFrame) == NO) && (container.hidden == NO)) {
                     offset.y = (containerFrame.origin.y + containerFrame.size.height) + _spacing.vertical;
                     cumulative.width = MAX(containerFrame.size.width, restriction.width);
                     cumulative.height += containerFrame.size.height + _spacing.vertical;
@@ -229,7 +229,7 @@
         case MobilyDataContainerOrientationHorizontal: {
             for(MobilyDataContainer* container in _sections) {
                 CGRect containerFrame = [container _validateLayoutForAvailableFrame:CGRectMake(offset.x, offset.y, restriction.width, restriction.height)];
-                if(CGRectIsNull(containerFrame) == NO) {
+                if((CGRectIsNull(containerFrame) == NO) && (container.hidden == NO)) {
                     offset.x = (containerFrame.origin.x + containerFrame.size.width) + _spacing.horizontal;
                     cumulative.width += containerFrame.size.width + _spacing.horizontal;
                     cumulative.height = MAX(containerFrame.size.height, restriction.height);
