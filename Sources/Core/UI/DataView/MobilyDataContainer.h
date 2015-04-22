@@ -160,8 +160,8 @@ extern NSString* MobilyDataContainerCurrentSectionChanged;
 @property(nonatomic, readwrite, assign) UIEdgeInsets margin;
 @property(nonatomic, readwrite, assign) UIOffset spacing;
 @property(nonatomic, readwrite, assign) CGSize defaultSize;
-@property(nonatomic, readwrite, assign) MobilyDataItem* header;
-@property(nonatomic, readwrite, assign) MobilyDataItem* footer;
+@property(nonatomic, readwrite, strong) MobilyDataItem* header;
+@property(nonatomic, readwrite, strong) MobilyDataItem* footer;
 @property(nonatomic, readonly, strong) NSArray* items;
 
 + (instancetype)containerWithOrientation:(MobilyDataContainerOrientation)orientation;
@@ -193,8 +193,8 @@ extern NSString* MobilyDataContainerCurrentSectionChanged;
 @property(nonatomic, readwrite, assign) UIEdgeInsets margin;
 @property(nonatomic, readwrite, assign) UIOffset spacing;
 @property(nonatomic, readwrite, assign) CGSize defaultSize;
-@property(nonatomic, readwrite, assign) MobilyDataItem* header;
-@property(nonatomic, readwrite, assign) MobilyDataItem* footer;
+@property(nonatomic, readwrite, strong) MobilyDataItem* header;
+@property(nonatomic, readwrite, strong) MobilyDataItem* footer;
 @property(nonatomic, readonly, strong) NSArray* items;
 
 + (instancetype)containerWithOrientation:(MobilyDataContainerOrientation)orientation;
