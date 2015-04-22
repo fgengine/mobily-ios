@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		403AF5981AE78C34000B28F8 /* MobilyLoadedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 403AF5971AE78C34000B28F8 /* MobilyLoadedView.m */; };
 		40B75FB11ADFA00A00F0CB09 /* MobilyApiManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B75F111ADFA00900F0CB09 /* MobilyApiManager.m */; };
 		40B75FB21ADFA00A00F0CB09 /* MobilyApiProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B75F131ADFA00900F0CB09 /* MobilyApiProvider.m */; };
 		40B75FB31ADFA00A00F0CB09 /* MobilyApiRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B75F151ADFA00900F0CB09 /* MobilyApiRequest.m */; };
@@ -123,6 +124,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		403AF5961AE78C34000B28F8 /* MobilyLoadedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyLoadedView.h; sourceTree = "<group>"; };
+		403AF5971AE78C34000B28F8 /* MobilyLoadedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyLoadedView.m; sourceTree = "<group>"; };
 		40B75E2C1ADF82CA00F0CB09 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		40B75E2D1ADF82CA00F0CB09 /* FBAudienceNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBAudienceNetwork.framework; sourceTree = "<group>"; };
 		40B75E2E1ADF82CA00F0CB09 /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = "<group>"; };
@@ -574,6 +577,8 @@
 				40B75FAD1ADFA00A00F0CB09 /* MobilyViewController.m */,
 				40B75FAE1ADFA00A00F0CB09 /* MobilyWindow.h */,
 				40B75FAF1ADFA00A00F0CB09 /* MobilyWindow.m */,
+				403AF5961AE78C34000B28F8 /* MobilyLoadedView.h */,
+				403AF5971AE78C34000B28F8 /* MobilyLoadedView.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -751,6 +756,7 @@
 				40B75FD91ADFA00A00F0CB09 /* MobilyBlurView.m in Sources */,
 				40B75FF41ADFA00A00F0CB09 /* MobilySpinnerViewPulse.m in Sources */,
 				40B760031ADFA00A00F0CB09 /* MobilyViewController.m in Sources */,
+				403AF5981AE78C34000B28F8 /* MobilyLoadedView.m in Sources */,
 				40B75FCD1ADFA00A00F0CB09 /* MobilyDataContainerCalendarDays.m in Sources */,
 				40B75FFF1ADFA00A00F0CB09 /* MobilyTransitionControllerCrossFade.m in Sources */,
 				40B75FDC1ADFA00A00F0CB09 /* MobilyButton.m in Sources */,

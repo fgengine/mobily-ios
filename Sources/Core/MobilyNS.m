@@ -1393,6 +1393,18 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 #pragma mark -
 /*--------------------------------------------------*/
 
+@implementation NSError (MobilyNS)
+
+- (BOOL)isNoInternetConnection {
+    return ([self.domain isEqualToString:NSURLErrorDomain] || (self.code == NSURLErrorNotConnectedToInternet));
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
 @implementation MobilyStorage
 
 + (NSString*)fileSystemDirectory {

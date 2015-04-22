@@ -334,6 +334,14 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 
 /*--------------------------------------------------*/
 
+@interface NSError (MobilyNS)
+
+- (BOOL)isNoInternetConnection;
+
+@end
+
+/*--------------------------------------------------*/
+
 @interface MobilyStorage : NSObject
 
 + (NSString*)fileSystemDirectory;

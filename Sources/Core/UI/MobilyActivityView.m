@@ -256,7 +256,7 @@
 }
 
 - (BOOL)isShowed {
-    return (_showCount > 0);
+    return (_showCount != NSNotFound) && (_showCount > 0);
 }
 
 #pragma mark Public
