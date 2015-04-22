@@ -45,12 +45,13 @@
 
 @interface MobilySearchBar : MobilyBlurView
 
+@property(nonatomic, readwrite, weak) IBOutlet id< MobilySearchBarDelegate > delegate;
 @property(nonatomic, readwrite, assign, getter=isSearching) IBInspectable BOOL searching;
 @property(nonatomic, readonly, assign, getter=isEditing) BOOL editing;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat minimalHeight;
 @property(nonatomic, readwrite, assign) IBInspectable UIEdgeInsets margin;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat spacing;
-
-@property(nonatomic, readwrite, weak) IBOutlet id< MobilySearchBarDelegate > delegate;
+@property(nonatomic, readonly, strong) IBInspectable UIColor* separatorColor;
 @property(nonatomic, readonly, weak) UIView* separatorView;
 @property(nonatomic, readonly, weak) IBOutlet MobilyTextField* searchField;
 @property(nonatomic, readwrite, assign) BOOL showCancelButton;

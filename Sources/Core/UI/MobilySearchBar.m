@@ -41,11 +41,12 @@
 
 @interface MobilySearchBar () < UITextFieldDelegate > {
 @protected
+    __weak id< MobilySearchBarDelegate > _delegate;
     BOOL _searching;
     BOOL _editing;
+    CGFloat _minimalHeight;
     UIEdgeInsets _margin;
     CGFloat _spacing;
-    __weak id< MobilySearchBarDelegate > _delegate;
     __weak UIView* _separatorView;
     __weak MobilyTextField* _searchField;
     BOOL _showCancelButton;
@@ -66,7 +67,6 @@
 /*--------------------------------------------------*/
 
 static CGFloat MobilySearchBarSeparatorHeight = 0.5f;
-static CGFloat MobilySearchBarContentHeight = 34.0f;
 
 /*--------------------------------------------------*/
 
@@ -74,11 +74,12 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
 
 #pragma mark Synthesize
 
+@synthesize delegate = _delegate;
 @synthesize searching = _searching;
 @synthesize editing = _editing;
+@synthesize minimalHeight = _minimalHeight;
 @synthesize margin = _margin;
 @synthesize spacing = _spacing;
-@synthesize delegate = _delegate;
 @synthesize separatorView = _separatorView;
 @synthesize searchField = _searchField;
 @synthesize showCancelButton = _showCancelButton;
@@ -89,10 +90,11 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
 - (void)setup {
     [super setup];
     
-    self.tintColor = MOBILY_COLOR_RGB(197, 194, 201);
+    self.tintColor = MOBILY_COLOR_RGB(177, 174, 181);
     
-    _margin = UIEdgeInsetsMake(8.0f, 8.0f, 8.0f, 8.0f);
-    _spacing = 8.0f;
+    _minimalHeight = 30.0f;
+    _margin = UIEdgeInsetsMake(6.0f, 6.0f, 6.0f, 6.0f);
+    _spacing = 6.0f;
     _showCancelButton = YES;
     _contentConstraints = NSMutableArray.array;
 }
@@ -149,6 +151,14 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
     }
 }
 
+- (void)setSeparatorColor:(UIColor*)separatorColor {
+    self.separatorView.backgroundColor = separatorColor;
+}
+
+- (UIColor*)separatorColor {
+    return self.separatorView.backgroundColor;
+}
+
 - (void)setSeparatorView:(UIView*)separatorView {
     if(_separatorView != separatorView) {
         if(_separatorView != nil) {
@@ -199,6 +209,7 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
         textField.borderStyle = UITextBorderStyleRoundedRect;
         textField.backgroundColor = [UIColor whiteColor];
         textField.textColor = [UIColor darkGrayColor];
+        textField.tintColor = [UIColor blackColor];
         textField.cornerRadius = 4.0f;
         textField.hiddenToolbar = YES;
         self.searchField = textField;
@@ -243,7 +254,7 @@ static CGFloat MobilySearchBarContentHeight = 34.0f;
 - (void)updateConstraints {
     NSDictionary* metrics = @{
         @"separatorHeight": @(MobilySearchBarSeparatorHeight),
-        @"contentHeight": @(MobilySearchBarContentHeight),
+        @"contentHeight": @(_minimalHeight),
         @"marginTop": @(_margin.top),
         @"marginBottom": @(_margin.bottom),
         @"marginLeft": @(_margin.left),
