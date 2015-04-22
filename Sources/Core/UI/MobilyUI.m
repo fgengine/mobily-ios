@@ -1018,11 +1018,21 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
         switch(UIDevice.model) {
             case MobilyDeviceModelPadAir2:
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Air2"]];
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Air"]];
+                break;
+            case MobilyDeviceModelPadAir1:
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Air1"]];
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Air"]];
                 break;
             case MobilyDeviceModelPadMini3:
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini3"]];
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini"]];
+                break;
+            case MobilyDeviceModelPadMini2:
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini2"]];
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini"]];
+                break;
+            case MobilyDeviceModelPadMini1:
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini1"]];
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini"]];
                 break;
