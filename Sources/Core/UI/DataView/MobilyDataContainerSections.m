@@ -81,11 +81,7 @@
 }
 
 - (CGRect)_validateLayoutForAvailableFrame:(CGRect)frame {
-    if(_sections.count > 0) {
-        _frame = [self _validateSectionsForAvailableFrame:frame];
-    } else {
-        _frame = CGRectNull;
-    }
+    _frame = [self _validateSectionsForAvailableFrame:frame];
     return _frame;
 }
 
