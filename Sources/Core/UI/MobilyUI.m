@@ -1010,7 +1010,6 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-6Plus"]];
             case MobilyDeviceModelPhone6:
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-6"]];
-                break;
             case MobilyDeviceModelPhone5S:
             case MobilyDeviceModelPhone5C:
             case MobilyDeviceModelPhone5:
@@ -1018,34 +1017,26 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
             case MobilyDeviceModelPhone4S:
             case MobilyDeviceModelPhone4:
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-4"]];
-                break;
             case MobilyDeviceModelPhone3GS:
             case MobilyDeviceModelPhone3G:
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-3"]];
-                break;
             default:
+                [nibNames addObject:modelBaseName];
                 break;
         }
-        [nibNames addObject:modelBaseName];
     } else if([UIDevice isIPad] == YES) {
         NSString* modelBaseName = [NSString stringWithFormat:@"%@%@", baseName, @"-iPad"];
         switch(UIDevice.model) {
             case MobilyDeviceModelPadAir2:
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Air2"]];
-                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Air"]];
-                break;
             case MobilyDeviceModelPadAir1:
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Air1"]];
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Air"]];
                 break;
             case MobilyDeviceModelPadMini3:
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini3"]];
-                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini"]];
-                break;
             case MobilyDeviceModelPadMini2:
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini2"]];
-                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini"]];
-                break;
             case MobilyDeviceModelPadMini1:
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini1"]];
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini"]];
