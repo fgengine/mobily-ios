@@ -74,6 +74,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @property(nonatomic, readonly, weak) MobilyDataContainer* parent;
 @property(nonatomic, readonly, assign) CGRect frame;
 @property(nonatomic, readwrite, assign, getter=isHidden) BOOL hidden;
+@property(nonatomic, readonly, assign, getter=isHiddenInHierarchy) BOOL hiddenInHierarchy;
 @property(nonatomic, readwrite, assign) BOOL allowAutoAlign;
 @property(nonatomic, readwrite, assign) UIEdgeInsets alignInsets;
 @property(nonatomic, readwrite, assign) MobilyDataContainerAlign alignPosition;

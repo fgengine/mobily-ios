@@ -190,7 +190,7 @@
 #pragma mark Private override
 
 - (CGPoint)_alignWithVelocity:(CGPoint)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize {
-    if(_allowAutoAlign == YES) {
+    if((_allowAutoAlign == YES) && (_hidden == NO)) {
         CGPoint alingPoint = [self _alignPointWithContentOffset:contentOffset contentSize:contentSize visibleSize:visibleSize];
         if(CGRectContainsPoint(_frame, alingPoint) == YES) {
             for(MobilyDataContainer* section in _sections) {

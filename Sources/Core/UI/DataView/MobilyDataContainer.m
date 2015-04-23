@@ -100,6 +100,13 @@
     }
 }
 
+- (BOOL)isHiddenInHierarchy {
+    if(_hidden == YES) {
+        return YES;
+    }
+    return (_parent != nil) ? _parent.hiddenInHierarchy : NO;
+}
+
 #pragma mark Property private
 
 - (void)_willChangeView {

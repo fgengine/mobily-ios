@@ -229,6 +229,13 @@
     }
 }
 
+- (BOOL)isHiddenInHierarchy {
+    if(_hidden == YES) {
+        return YES;
+    }
+    return (_parent != nil) ? _parent.hiddenInHierarchy : NO;
+}
+
 - (void)setSelected:(BOOL)selected {
     [self setSelected:selected animated:NO];
 }
@@ -352,7 +359,7 @@
 
 - (void)validateLayoutForBounds:(CGRect)bounds {
     if(_cell == nil) {
-        if((CGRectIntersectsRect(bounds, CGRectUnion(_originFrame, self.frame)) == YES) && (_hidden == NO)) {
+        if((CGRectIntersectsRect(bounds, CGRectUnion(_originFrame, self.frame)) == YES) && (self.hiddenInHierarchy == NO)) {
             [self appear];
         }
     } else {
@@ -362,7 +369,7 @@
 
 - (void)invalidateLayoutForBounds:(CGRect)bounds {
     if(_cell != nil) {
-        if((CGRectIntersectsRect(bounds, self.frame) == NO) || (_hidden == YES)) {
+        if((CGRectIntersectsRect(bounds, self.frame) == NO) || (self.hiddenInHierarchy == YES)) {
             [self disappear];
         } else {
             [_cell invalidateLayoutForBounds:bounds];

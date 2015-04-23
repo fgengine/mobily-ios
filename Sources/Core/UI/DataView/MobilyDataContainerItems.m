@@ -215,7 +215,7 @@
 }
 
 - (CGPoint)_alignWithVelocity:(CGPoint __unused)velocity contentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize {
-    if(_allowAutoAlign == YES) {
+    if((_allowAutoAlign == YES) && (_hidden == NO)) {
         CGPoint alingPoint = [self _alignPointWithContentOffset:contentOffset contentSize:contentSize visibleSize:visibleSize];
         if(CGRectContainsPoint(_frame, alingPoint) == YES) {
             for(MobilyDataItem* item in _entries) {
