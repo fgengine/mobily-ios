@@ -987,32 +987,90 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     if(bundle == nil) {
         bundle = NSBundle.mainBundle;
     }
-    NSString* nib = nil;
+    NSMutableArray* nibNames = [NSMutableArray array];
     NSFileManager* fileManager = NSFileManager.defaultManager;
     if([UIDevice isIPhone] == YES) {
-        NSString* iPhoneName = [NSString stringWithFormat:@"%@%@", baseName, @"-iPhone"];
-        if([fileManager fileExistsAtPath:[bundle pathForResource:iPhoneName ofType:@"nib"]] == YES) {
-            nib = iPhoneName;
+        NSString* modelBaseName = [NSString stringWithFormat:@"%@%@", baseName, @"-iPhone"];
+        switch(UIDevice.model) {
+            case MobilyDeviceModelPhone6Plus:
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-6Plus"]];
+            case MobilyDeviceModelPhone6:
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-6"]];
+                break;
+            case MobilyDeviceModelPhone5S:
+            case MobilyDeviceModelPhone5C:
+            case MobilyDeviceModelPhone5:
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-5"]];
+            case MobilyDeviceModelPhone4S:
+            case MobilyDeviceModelPhone4:
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-4"]];
+                break;
+            case MobilyDeviceModelPhone3GS:
+            case MobilyDeviceModelPhone3G:
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-3"]];
+                break;
+            default:
+                break;
         }
+        [nibNames addObject:modelBaseName];
     } else if([UIDevice isIPad] == YES) {
-        NSString* iPadName = [NSString stringWithFormat:@"%@%@", baseName, @"-iPad"];
-        if([fileManager fileExistsAtPath:[bundle pathForResource:iPadName ofType:@"nib"]] == YES) {
-            nib = iPadName;
+        NSString* modelBaseName = [NSString stringWithFormat:@"%@%@", baseName, @"-iPad"];
+        switch(UIDevice.model) {
+            case MobilyDeviceModelPadAir2:
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Air2"]];
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Air"]];
+                break;
+            case MobilyDeviceModelPadAir1:
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Air1"]];
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Air"]];
+                break;
+            case MobilyDeviceModelPadMini3:
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini3"]];
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini"]];
+                break;
+            case MobilyDeviceModelPadMini2:
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini2"]];
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini"]];
+                break;
+            case MobilyDeviceModelPadMini1:
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini1"]];
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Mini"]];
+                break;
+            case MobilyDeviceModelPad4:
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-4"]];
+            case MobilyDeviceModelPad3:
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-3"]];
+            case MobilyDeviceModelPad2:
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-2"]];
+            case MobilyDeviceModelPad1:
+                [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-1"]];
+                break;
+            default:
+                break;
+        }
+        [nibNames addObject:modelBaseName];
+    }
+    [nibNames addObject:baseName];
+    
+    NSString* existNibName = nil;
+    for(NSString* nibName in nibNames) {
+        if([fileManager fileExistsAtPath:[bundle pathForResource:nibName ofType:@"nib"]] == YES) {
+            existNibName = nibName;
+            break;
         }
     }
-    if(nib == nil) {
-        if([fileManager fileExistsAtPath:[bundle pathForResource:baseName ofType:@"nib"]] == YES) {
-            nib = baseName;
-        }
-    }
-    if(nib != nil) {
-        return [self nibWithNibName:nib bundle:bundle];
+    if(existNibName != nil) {
+        return [self nibWithNibName:existNibName bundle:bundle];
     }
     return nil;
 }
 
 + (UINib*)nibWithClass:(Class)class bundle:(NSBundle*)bundle {
-    return [self nibWithBaseName:NSStringFromClass(class) bundle:bundle];
+    UINib* nib = [self nibWithBaseName:NSStringFromClass(class) bundle:bundle];
+    if((nib == nil) && ([class superclass] != nil)) {
+        nib = [self nibWithClass:[class superclass] bundle:bundle];
+    }
+    return nib;
 }
 
 - (id)instantiateWithClass:(Class)class owner:(id)owner options:(NSDictionary*)options {
@@ -2553,7 +2611,15 @@ static MobilyDeviceModel Mobily_DeviceModel = MobilyDeviceModelUnknown;
     if(Mobily_DeviceModel == MobilyDeviceModelUnknown) {
 #ifdef MOBILY_SIMULATOR
         switch(UI_USER_INTERFACE_IDIOM()) {
-            case UIUserInterfaceIdiomPhone: Mobily_DeviceModel = MobilyDeviceModelSimulatorPhone; break;
+            case UIUserInterfaceIdiomPhone:
+                switch(self.display) {
+                    case MobilyDeviceDisplayPhone35Inch: Mobily_DeviceModel = MobilyDeviceModelPhone4S; break;
+                    case MobilyDeviceDisplayPhone4Inch: Mobily_DeviceModel = MobilyDeviceModelPhone5S; break;
+                    case MobilyDeviceDisplayPhone47Inch: Mobily_DeviceModel = MobilyDeviceModelPhone6; break;
+                    case MobilyDeviceDisplayPhone55Inch: Mobily_DeviceModel = MobilyDeviceModelPhone6Plus; break;
+                    default: Mobily_DeviceModel = MobilyDeviceModelSimulatorPhone; break;
+                }
+                break;
             case UIUserInterfaceIdiomPad: Mobily_DeviceModel = MobilyDeviceModelSimulatorPad; break;
             default: break;
         }
