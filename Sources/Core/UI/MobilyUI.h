@@ -152,6 +152,7 @@ typedef NS_OPTIONS(NSUInteger, MobilyImageAlignment) {
 @interface UIImage (MobilyUI)
 
 + (UIImage*)imageNamed:(NSString*)name capInsets:(UIEdgeInsets)capInsets;
++ (UIImage*)imageWithColor:(UIColor*)color;
 
 - (UIImage*)scaleToSize:(CGSize)size;
 
