@@ -110,6 +110,7 @@
 		40B760431ADFA35600F0CB09 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B7603F1ADFA35600F0CB09 /* CoreData.framework */; };
 		40B760441ADFA35600F0CB09 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B760401ADFA35600F0CB09 /* Social.framework */; };
 		40B760451ADFA35600F0CB09 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B760411ADFA35600F0CB09 /* Twitter.framework */; };
+		40D1799F1AEA5D4700B73908 /* MobilyPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D1799E1AEA5D4700B73908 /* MobilyPageController.m */; };
 		40D29C571AE2D30D004D2CB8 /* MobilyPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D29C561AE2D30D004D2CB8 /* MobilyPageControl.m */; };
 /* End PBXBuildFile section */
 
@@ -309,6 +310,8 @@
 		40B760411ADFA35600F0CB09 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		40B7604E1ADFA6A200F0CB09 /* TwitterKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TwitterKitResources.bundle; sourceTree = "<group>"; };
 		40B7604F1ADFA6A200F0CB09 /* VKSdkResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = VKSdkResources.bundle; sourceTree = "<group>"; };
+		40D1799D1AEA5D4700B73908 /* MobilyPageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyPageController.h; sourceTree = "<group>"; };
+		40D1799E1AEA5D4700B73908 /* MobilyPageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyPageController.m; sourceTree = "<group>"; };
 		40D29C551AE2D30D004D2CB8 /* MobilyPageControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyPageControl.h; sourceTree = "<group>"; };
 		40D29C561AE2D30D004D2CB8 /* MobilyPageControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyPageControl.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -529,6 +532,8 @@
 				40B75F7F1ADFA00A00F0CB09 /* MobilyNavigationController.m */,
 				40D29C551AE2D30D004D2CB8 /* MobilyPageControl.h */,
 				40D29C561AE2D30D004D2CB8 /* MobilyPageControl.m */,
+				40D1799D1AEA5D4700B73908 /* MobilyPageController.h */,
+				40D1799E1AEA5D4700B73908 /* MobilyPageController.m */,
 				40B75F801ADFA00A00F0CB09 /* MobilyPopoverController.h */,
 				40B75F811ADFA00A00F0CB09 /* MobilyPopoverController.m */,
 				40B75F821ADFA00A00F0CB09 /* MobilyScrollView.h */,
@@ -786,6 +791,7 @@
 				40B75FDA1ADFA00A00F0CB09 /* MobilyBuilderForm.m in Sources */,
 				40B75FE41ADFA00A00F0CB09 /* MobilyNavigationController.m in Sources */,
 				40B75FCF1ADFA00A00F0CB09 /* MobilyDataContainerItemsFlow.m in Sources */,
+				40D1799F1AEA5D4700B73908 /* MobilyPageController.m in Sources */,
 				40B75FEF1ADFA00A00F0CB09 /* MobilySpinnerViewCircle.m in Sources */,
 				40B75FC11ADFA00A00F0CB09 /* MobilyModel.m in Sources */,
 				40B75FC71ADFA00A00F0CB09 /* MobilyTimeout.m in Sources */,
