@@ -264,9 +264,10 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-    self.appearedCount = _appearedCount - 1;
-    [_eventDidDisappear fireSender:self object:nil];
-    
+    if(_appearedCount > 0) {
+        self.appearedCount = _appearedCount - 1;
+        [_eventDidDisappear fireSender:self object:nil];
+    }
     [super viewDidDisappear:animated];
 }
 
