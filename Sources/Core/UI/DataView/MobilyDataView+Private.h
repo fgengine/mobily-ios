@@ -72,7 +72,6 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
     BOOL _bouncesBottom;
     MobilyDataViewDirection _scrollDirection;
     CGPoint _scrollBeginPosition;
-    CGPoint _scrollLastPosition;
     MobilyDataContainer* _container;
     NSMutableArray* _visibleItems;
     NSMutableArray* _selectedItems;
@@ -138,7 +137,6 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
 @property(nonatomic, readonly, strong) MobilyDataContentView* contentView;
 @property(nonatomic, readwrite, assign) MobilyDataViewDirection scrollDirection;
 @property(nonatomic, readwrite, assign) CGPoint scrollBeginPosition;
-@property(nonatomic, readwrite, assign) CGPoint scrollLastPosition;
 
 @property(nonatomic, readwrite, strong) NSMutableDictionary* registersViews;
 @property(nonatomic, readwrite, strong) MobilyEvents* registersEvents;
