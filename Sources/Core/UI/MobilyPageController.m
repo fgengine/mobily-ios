@@ -4,13 +4,13 @@
 
 /*--------------------------------------------------*/
 
-#define ANIMATION_DURATION                      0.2f
+#define ANIMATION_DURATION                          0.2f
 
-#define THRESHOLD_HORIZONTAL_OFFSET             100.0f
-#define THRESHOLD_VERTICAL_OFFSET               120.0f
+#define THRESHOLD_HORIZONTAL_OFFSET                 100.0f
+#define THRESHOLD_VERTICAL_OFFSET                   120.0f
 
-#define SCALE_MIN                               0.5f
-#define SCALE_MAX                               1.0f
+#define SCALE_MIN                                   0.5f
+#define SCALE_MAX                                   1.0f
 
 /*--------------------------------------------------*/
 
@@ -19,8 +19,9 @@
 @property(nonatomic, readwrite, assign, getter = isAnimating) BOOL animating;
 @property(nonatomic, readonly, assign, getter = isAppearedBeforeController) BOOL appearedBeforeController;
 @property(nonatomic, readonly, assign, getter = isAppearedAfterController) BOOL appearedAfterController;
-@property(nonatomic, readwrite, strong) UIViewController* beforeController;
-@property(nonatomic, readwrite, strong) UIViewController* afterController;
+@property(nonatomic, readwrite, strong) UIViewController< MobilyPageControllerDelegate >* beforeController;
+@property(nonatomic, readwrite, strong) UIViewController< MobilyPageControllerDelegate >* afterController;
+@property(nonatomic, readwrite, strong) UIView* rootView;
 @property(nonatomic, readwrite, assign) UIEdgeInsets beforeDecorInsets;
 @property(nonatomic, readwrite, assign) UIEdgeInsets afterDecorInsets;
 @property(nonatomic, readwrite, assign) CGSize beforeDecorSize;
@@ -28,6 +29,7 @@
 @property(nonatomic, readwrite, strong) UIView* beforeDecorView;
 @property(nonatomic, readwrite, strong) UIView* afterDecorView;
 @property(nonatomic, readwrite, strong) UIPanGestureRecognizer* panGesture;
+@property(nonatomic, readwrite, strong) NSMutableArray* friendlyGestures;
 @property(nonatomic, readwrite, assign) CGPoint panBeganPosition;
 
 - (void)loadBeforeAfterData;
@@ -41,7 +43,7 @@
 - (CGRect)afterDecorFrame;
 - (CGRect)afterDecorFrameFromFrame:(CGRect)currentFrame;
 
-- (void)panGesture:(UIPanGestureRecognizer*)panGesture;
+- (void)panGestureHandle:(UIPanGestureRecognizer*)panGesture;
 
 @end
 
@@ -52,33 +54,49 @@
 - (void)setup {
     [super setup];
     
-    [self setDraggingRate:0.5f];
-    [self setBounceRate:0.5f];
-    [self setEnableScroll:YES];
+    self.draggingRate = 0.5f;
+    self.bounceRate = 0.5f;
+    self.enableScroll = YES;
+    
+    self.friendlyGestures = [NSMutableArray array];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor clearColor];
+    self.view.clipsToBounds = YES;
+    
+    self.rootView = [[UIView alloc] initWithFrame:self.view.bounds];
+    _rootView.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:_rootView];
 
-    self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
+    self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureHandle:)];
     [_panGesture setDelegate:self];
-    [self.view addGestureRecognizer:_panGesture];
+    [_rootView addGestureRecognizer:_panGesture];
     
     if(_controller != nil) {
-        [self addChildViewController:_controller];
-        _controller.view.frame = self.view.bounds;
-        [self.view addSubview:_controller.view];
-        [_controller didMoveToParentViewController:self];
-        
+        _controller.pageController = self;
+        if(_controller.parentViewController != self) {
+            if(_controller.parentViewController != nil) {
+                [_controller willMoveToParentViewController:nil];
+                [_controller.view removeFromSuperview];
+                [_controller removeFromParentViewController];
+            }
+            [self addChildViewController:_controller];
+            _controller.view.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin);
+            _controller.view.frame = self.currentFrame;
+            [_rootView addSubview:_controller.view];
+            [_controller didMoveToParentViewController:self];
+        }
         [self loadBeforeAfterData];
     }
 }
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
-
+    
+    _rootView.frame = self.view.bounds;
     if(_controller != nil) {
         _controller.view.frame = self.currentFrame;
     }
@@ -98,20 +116,24 @@
 
 #pragma mark Property
 
-- (void)setController:(UIViewController*)controller {
+- (void)setController:(UIViewController< MobilyPageControllerDelegate >*)controller {
     if(_controller != controller) {
         if(self.isViewLoaded == YES) {
-            if(_controller != nil) {
-                [_controller willMoveToParentViewController:nil];
-                [_controller.view removeFromSuperview];
-                [_controller removeFromParentViewController];
-            }
             _controller = controller;
             if(_controller != nil) {
-                [self addChildViewController:_controller];
-                _controller.view.frame = self.view.bounds;
-                [self.view addSubview:_controller.view];
-                [_controller didMoveToParentViewController:self];
+                _controller.pageController = self;
+                if(_controller.parentViewController != self) {
+                    if(_controller.parentViewController != nil) {
+                        [_controller willMoveToParentViewController:nil];
+                        [_controller.view removeFromSuperview];
+                        [_controller removeFromParentViewController];
+                    }
+                    [self addChildViewController:_controller];
+                    _controller.view.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin);
+                    _controller.view.frame = self.currentFrame;
+                    [_rootView addSubview:_controller.view];
+                    [_controller didMoveToParentViewController:self];
+                }
             }
             [self loadBeforeAfterData];
         } else {
@@ -120,29 +142,33 @@
     }
 }
 
-- (void)setController:(UIViewController*)controller direction:(MobilyPageControllerDirection)direction animated:(BOOL)animated {
+- (void)setController:(UIViewController< MobilyPageControllerDelegate >*)controller direction:(MobilyPageControllerDirection)direction animated:(BOOL)animated {
     [self setController:controller direction:direction duration:ANIMATION_DURATION animated:animated];
 }
 
-- (void)setController:(UIViewController*)controller direction:(MobilyPageControllerDirection)direction duration:(NSTimeInterval)duration animated:(BOOL)animated {
+- (void)setController:(UIViewController< MobilyPageControllerDelegate >*)controller direction:(MobilyPageControllerDirection)direction duration:(NSTimeInterval)duration animated:(BOOL)animated {
     [self setController:controller direction:direction duration:duration animated:animated notification:NO];
 }
 
-- (void)setController:(UIViewController*)controller direction:(MobilyPageControllerDirection)direction duration:(NSTimeInterval)duration animated:(BOOL)animated notification:(BOOL)notification {
-    if((notification == YES) && ([_delegate respondsToSelector:@selector(pageController:willChangedController:)] == YES)) {
-        [_delegate pageController:self willChangedController:controller];
+- (void)setController:(UIViewController< MobilyPageControllerDelegate >*)controller direction:(MobilyPageControllerDirection)direction duration:(NSTimeInterval)duration animated:(BOOL)animated notification:(BOOL)notification {
+    UIViewController< MobilyPageControllerDelegate >* currentController = _controller;
+    if(notification == YES) {
+        if([currentController respondsToSelector:@selector(willDisappearInPageController:)] == YES) {
+            [currentController willDisappearInPageController:self];
+        }
+        if([controller respondsToSelector:@selector(willAppearInPageController:)] == YES) {
+            [controller willAppearInPageController:self];
+        }
     }
     if((self.isViewLoaded == YES) && (animated == YES)) {
         self.animating = YES;
-        self.view.userInteractionEnabled = NO;
+        _rootView.userInteractionEnabled = NO;
         switch(direction) {
             case MobilyPageControllerDirectionReverse:
                 self.beforeController = controller;
-                _beforeController.view.hidden = NO;
                 break;
             case MobilyPageControllerDirectionForward:
                 self.afterController = controller;
-                _afterController.view.hidden = NO;
                 break;
         }
         [UIView animateWithDuration:duration
@@ -174,53 +200,67 @@
                                      _afterController.view.frame = self.currentFrame;
                                      break;
                              }
-                             _beforeController.view.hidden = YES;
-                             _afterController.view.hidden = YES;
                              self.controller = controller;
-                             self.view.userInteractionEnabled = YES;
+                             _rootView.userInteractionEnabled = YES;
                              self.animating = NO;
-                             if((notification == YES) && ([_delegate respondsToSelector:@selector(pageController:didChangedController:)] == YES)) {
-                                 [_delegate pageController:self didChangedController:controller];
+                             if(notification == YES) {
+                                 if([controller respondsToSelector:@selector(didAppearInPageController:)] == YES) {
+                                     [controller didAppearInPageController:self];
+                                 }
+                                 if([currentController respondsToSelector:@selector(didDisappearInPageController:)] == YES) {
+                                     [currentController didDisappearInPageController:self];
+                                 }
                              }
                          }];
     } else {
         self.controller = controller;
-        if((notification == YES) && ([_delegate respondsToSelector:@selector(pageController:didChangedController:)] == YES)) {
-            [_delegate pageController:self didChangedController:controller];
+        if(notification == YES) {
+            if([controller respondsToSelector:@selector(didAppearInPageController:)] == YES) {
+                [controller didAppearInPageController:self];
+            }
+            if([currentController respondsToSelector:@selector(didDisappearInPageController:)] == YES) {
+                [currentController didDisappearInPageController:self];
+            }
         }
     }
 }
 
-- (void)setBeforeController:(UIViewController*)beforeController {
+- (void)setBeforeController:(UIViewController< MobilyPageControllerDelegate >*)beforeController {
     if(_beforeController != beforeController) {
-        if(_beforeController != nil) {
-            [_beforeController willMoveToParentViewController:nil];
-            [_beforeController.view removeFromSuperview];
-            [_beforeController removeFromParentViewController];
-        }
         _beforeController = beforeController;
         if(_beforeController != nil) {
-            [self addChildViewController:_beforeController];
-            _beforeController.view.frame = self.beforeFrame;
-            [self.view addSubview:_beforeController.view];
-            [_beforeController didMoveToParentViewController:self];
+            if(_beforeController.parentViewController != self) {
+                if(_beforeController.parentViewController != nil) {
+                    [_beforeController willMoveToParentViewController:nil];
+                    [_beforeController.view removeFromSuperview];
+                    [_beforeController removeFromParentViewController];
+                }
+                [self addChildViewController:_beforeController];
+                _beforeController.view.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin);
+                _beforeController.view.frame = self.beforeFrame;
+                [_rootView addSubview:_beforeController.view];
+                [_beforeController didMoveToParentViewController:self];
+            }
         }
     }
 }
 
-- (void)setAfterController:(UIViewController*)afterController {
+- (void)setAfterController:(UIViewController< MobilyPageControllerDelegate >*)afterController {
     if(_afterController != afterController) {
-        if(_afterController != nil) {
-            [_afterController willMoveToParentViewController:nil];
-            [_afterController.view removeFromSuperview];
-            [_afterController removeFromParentViewController];
-        }
         _afterController = afterController;
         if(_afterController != nil) {
-            [self addChildViewController:_afterController];
-            _afterController.view.frame = self.afterFrame;
-            [self.view addSubview:_afterController.view];
-            [_afterController didMoveToParentViewController:self];
+            if(_afterController.parentViewController != self) {
+                if(_afterController.parentViewController != nil) {
+                    [_afterController willMoveToParentViewController:nil];
+                    [_afterController.view removeFromSuperview];
+                    [_afterController removeFromParentViewController];
+                }
+                [self addChildViewController:_afterController];
+                _afterController.view.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin);
+                _afterController.view.frame = self.afterFrame;
+                [_rootView addSubview:_afterController.view];
+                [_afterController didMoveToParentViewController:self];
+            }
         }
     }
 }
@@ -233,8 +273,8 @@
         _beforeDecorView = beforeDecorView;
         if(_beforeDecorView != nil) {
             _beforeDecorView.frame = [self beforeDecorFrameFromFrame:self.currentFrame];
-            [self.view addSubview:_beforeDecorView];
-            [self.view sendSubviewToBack:_beforeDecorView];
+            [_rootView addSubview:_beforeDecorView];
+            [_rootView sendSubviewToBack:_beforeDecorView];
         }
     }
 }
@@ -247,28 +287,36 @@
         _afterDecorView = afterDecorView;
         if(_afterDecorView != nil) {
             _afterDecorView.frame = [self afterDecorFrameFromFrame:self.currentFrame];
-            [self.view addSubview:_afterDecorView];
-            [self.view sendSubviewToBack:_afterDecorView];
+            [_rootView addSubview:_afterDecorView];
+            [_rootView sendSubviewToBack:_afterDecorView];
         }
     }
 }
 
 - (void)loadBeforeAfterData {
-    self.beforeController = [_delegate pageController:self controllerBeforeController:_controller];
-    self.afterController = [_delegate pageController:self controllerAfterController:_controller];
-    if(([_delegate respondsToSelector:@selector(pageController:decorSizeBeforeController:)] == YES) && ([_delegate respondsToSelector:@selector(pageController:decorViewBeforeController:)] == YES)) {
-        if([_delegate respondsToSelector:@selector(pageController:decorInsetsBeforeController:)] == YES) {
-            self.beforeDecorInsets = [_delegate pageController:self decorInsetsBeforeController:_controller];
-        }
-        self.beforeDecorSize = [_delegate pageController:self decorSizeBeforeController:_controller];
-        self.beforeDecorView = [_delegate pageController:self decorViewBeforeController:_controller];
+    if([_controller respondsToSelector:@selector(beforeControllerInPageController:)] == YES) {
+        self.beforeController = [_controller beforeControllerInPageController:self];
+    } else {
+        self.beforeController = nil;
     }
-    if(([_delegate respondsToSelector:@selector(pageController:decorSizeAfterController:)] == YES) && ([_delegate respondsToSelector:@selector(pageController:decorViewAfterController:)] == YES)) {
-        if([_delegate respondsToSelector:@selector(pageController:decorInsetsAfterController:)] == YES) {
-            self.afterDecorInsets = [_delegate pageController:self decorInsetsAfterController:_controller];
+    if([_controller respondsToSelector:@selector(afterControllerInPageController:)] == YES) {
+        self.afterController = [_controller afterControllerInPageController:self];
+    } else {
+        self.afterController = nil;
+    }
+    if(([_controller respondsToSelector:@selector(beforeDecorSizeInPageController:)] == YES) && ([_controller respondsToSelector:@selector(beforeDecorViewInPageController:)] == YES)) {
+        if([_controller respondsToSelector:@selector(beforeDecorInsetsInPageController:)] == YES) {
+            self.beforeDecorInsets = [_controller beforeDecorInsetsInPageController:self];
         }
-        self.afterDecorSize = [_delegate pageController:self decorSizeAfterController:_controller];
-        self.afterDecorView = [_delegate pageController:self decorViewAfterController:_controller];
+        self.beforeDecorSize = [_controller beforeDecorSizeInPageController:self];
+        self.beforeDecorView = [_controller beforeDecorViewInPageController:self];
+    }
+    if(([_controller respondsToSelector:@selector(afterDecorSizeInPageController:)] == YES) && ([_controller respondsToSelector:@selector(afterDecorViewInPageController:)] == YES)) {
+        if([_controller respondsToSelector:@selector(afterDecorInsetsInPageController:)] == YES) {
+            self.afterDecorInsets = [_controller afterDecorInsetsInPageController:self];
+        }
+        self.afterDecorSize = [_controller afterDecorSizeInPageController:self];
+        self.afterDecorView = [_controller afterDecorViewInPageController:self];
     }
 }
 
@@ -283,7 +331,7 @@
 }
 
 - (CGRect)currentFrame {
-    return self.view.bounds;
+    return _rootView.bounds;
 }
 
 - (CGRect)afterFrame {
@@ -408,58 +456,90 @@
     return result;
 }
 
-- (void)panGesture:(UIPanGestureRecognizer*)panGesture {
-    CGPoint currentPosition = [panGesture locationInView:self.view];
+- (void)panGestureHandle:(UIPanGestureRecognizer*)panGesture {
+    CGPoint currentPosition = [panGesture locationInView:_rootView];
 	switch(panGesture.state) {
-		case UIGestureRecognizerStateBegan: {
+        case UIGestureRecognizerStateBegan: {
             _panBeganPosition = currentPosition;
-            if(_beforeController == nil) {
-                _beforeController.view.hidden = NO;
-            }
-            if(_afterController == nil) {
-                _afterController.view.hidden = NO;
-            }
-            [self setAnimating:YES];
 			break;
         }
 		case UIGestureRecognizerStateChanged: {
-            CGRect currentFrame = self.currentFrame;
-            CGPoint offset = CGPointZero;
-            switch(_orientation) {
-                case MobilyPageControllerOrientationVertical:
-                    offset.y = (currentPosition.y - _panBeganPosition.y) * _draggingRate;
-                    if(_beforeController == nil) {
-                        if((currentFrame.origin.y + offset.y) > 0.0f) {
-                            offset.y = (_bounceRate > 0.0f) ? offset.y * _bounceRate : 0.0f;
+            NSUInteger processedFriendlyGesture = 0;
+            if(_friendlyGestures.count > 0) {
+                for(UIGestureRecognizer* gesture in _friendlyGestures) {
+                    if([gesture.view isKindOfClass:UIScrollView.class] == YES) {
+                        UIScrollView* scrollView = (UIScrollView*)gesture.view;
+                        if(scrollView.scrollEnabled == YES) {
+                            UIEdgeInsets contentInsets = scrollView.contentInset;
+                            CGPoint contentOffset = scrollView.contentOffset;
+                            CGSize contentSize = scrollView.contentSize;
+                            CGRect frame = scrollView.frame;
+                            switch(_orientation) {
+                                case MobilyPageControllerOrientationVertical:
+                                    if((contentOffset.y + contentInsets.top < 0.0f) || (contentOffset.y + frame.size.height > contentSize.height)) {
+                                        scrollView.scrollEnabled = NO;
+                                    } else {
+                                        processedFriendlyGesture++;
+                                    }
+                                    break;
+                                case MobilyPageControllerOrientationHorizontal:
+                                    if((contentOffset.x + contentInsets.left < 0.0f) || (contentOffset.x + frame.size.width > contentSize.width)) {
+                                        scrollView.scrollEnabled = NO;
+                                    } else {
+                                        processedFriendlyGesture++;
+                                    }
+                                    break;
+                            }
                         }
+                    } else {
+                        processedFriendlyGesture++;
                     }
-                    if(_afterController == nil) {
-                        if((currentFrame.origin.y + offset.y) < 0.0f) {
-                            offset.y = (_bounceRate > 0.0f) ? offset.y * _bounceRate : 0.0f;
-                        }
-                    }
-                    break;
-                case MobilyPageControllerOrientationHorizontal:
-                    offset.x = (currentPosition.x - _panBeganPosition.x) * _draggingRate;
-                    if(_beforeController == nil) {
-                        if((currentFrame.origin.x + offset.x) > 0.0f) {
-                            offset.x = (_bounceRate > 0.0f) ? offset.x * _bounceRate : 0.0f;
-                        }
-                    }
-                    if(_afterController == nil) {
-                        if((currentFrame.origin.x + offset.x) < 0.0f) {
-                            offset.x = (_bounceRate > 0.0f) ? offset.x * _bounceRate : 0.0f;
-                        }
-                    }
-                    break;
+                }
+                if(processedFriendlyGesture > 0) {
+                    _panBeganPosition = currentPosition;
+                }
             }
-            currentFrame = CGRectOffset(currentFrame, floorf(offset.x), floorf(offset.y));
-            _controller.view.frame = currentFrame;
-            if(_beforeDecorView != nil) {
-                _beforeDecorView.frame = [self beforeDecorFrameFromFrame:currentFrame];
-            }
-            if(_afterDecorView != nil) {
-                _afterDecorView.frame = [self afterDecorFrameFromFrame:currentFrame];
+            if((processedFriendlyGesture == 0) && (_enableScroll == YES)) {
+                CGRect currentFrame = self.currentFrame;
+                CGPoint offset = CGPointZero;
+                switch(_orientation) {
+                    case MobilyPageControllerOrientationVertical:
+                        offset.y = (currentPosition.y - _panBeganPosition.y) * _draggingRate;
+                        if(_beforeController == nil) {
+                            if((currentFrame.origin.y + offset.y) > 0.0f) {
+                                offset.y = (_bounceRate > 0.0f) ? offset.y * _bounceRate : 0.0f;
+                            }
+                        }
+                        if(_afterController == nil) {
+                            if((currentFrame.origin.y + offset.y) < 0.0f) {
+                                offset.y = (_bounceRate > 0.0f) ? offset.y * _bounceRate : 0.0f;
+                            }
+                        }
+                        break;
+                    case MobilyPageControllerOrientationHorizontal:
+                        offset.x = (currentPosition.x - _panBeganPosition.x) * _draggingRate;
+                        if(_beforeController == nil) {
+                            if((currentFrame.origin.x + offset.x) > 0.0f) {
+                                offset.x = (_bounceRate > 0.0f) ? offset.x * _bounceRate : 0.0f;
+                            }
+                        }
+                        if(_afterController == nil) {
+                            if((currentFrame.origin.x + offset.x) < 0.0f) {
+                                offset.x = (_bounceRate > 0.0f) ? offset.x * _bounceRate : 0.0f;
+                            }
+                        }
+                        break;
+                }
+                currentFrame = CGRectOffset(currentFrame, floorf(offset.x), floorf(offset.y));
+                _controller.view.frame = currentFrame;
+                if(_beforeDecorView != nil) {
+                    _beforeDecorView.frame = [self beforeDecorFrameFromFrame:currentFrame];
+                }
+                if(_afterDecorView != nil) {
+                    _afterDecorView.frame = [self afterDecorFrameFromFrame:currentFrame];
+                }
+            } else {
+                _panBeganPosition = currentPosition;
             }
 			break;
 		}
@@ -507,7 +587,7 @@
                 }
             }
             if(needRestore == YES) {
-                self.view.userInteractionEnabled = NO;
+                _rootView.userInteractionEnabled = NO;
                 [UIView animateWithDuration:ANIMATION_DURATION
                                  animations:^{
                                      _controller.view.frame = self.currentFrame;
@@ -518,9 +598,16 @@
                                          _afterDecorView.frame = [self afterDecorFrameFromFrame:self.currentFrame];
                                      }
                                  } completion:^(BOOL finished) {
-                                     self.view.userInteractionEnabled = YES;
+                                     _rootView.userInteractionEnabled = YES;
                                  }];
             }
+            for(UIGestureRecognizer* gesture in _friendlyGestures) {
+                if([gesture.view isKindOfClass:UIScrollView.class] == YES) {
+                    UIScrollView* scrollView = (UIScrollView*)gesture.view;
+                    scrollView.scrollEnabled = YES;
+                }
+            }
+            [_friendlyGestures removeAllObjects];
 			break;
 		}
 		default:
@@ -534,7 +621,7 @@
     BOOL result = NO;
     if(gesture == _panGesture) {
         if(_enableScroll == YES) {
-            CGPoint translation = [_panGesture translationInView:self.view];
+            CGPoint translation = [_panGesture translationInView:_rootView];
             switch(_orientation) {
                 case MobilyPageControllerOrientationVertical:
                     if(fabs(translation.y) >= fabs(translation.x)) {
@@ -562,6 +649,48 @@
         }
     }
     return result;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gesture shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGesture {
+    if([otherGesture isKindOfClass:UIPanGestureRecognizer.class] == YES) {
+        if([otherGesture.view isKindOfClass:UIScrollView.class] == YES) {
+            if([_friendlyGestures containsObject:otherGesture] == NO) {
+                [_friendlyGestures addObject:otherGesture];
+            }
+            return YES;
+        }
+    }
+    return NO;
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+#import <objc/runtime.h>
+
+/*--------------------------------------------------*/
+
+static char const* const MobilySlideControllerKey = "MobilySlideControllerKey";
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation UIViewController (MobilyPageController)
+
+- (void)setPageController:(MobilyPageController*)pageController {
+    objc_setAssociatedObject(self, MobilySlideControllerKey, pageController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (MobilyPageController*)pageController {
+    MobilyPageController* pageController = objc_getAssociatedObject(self, MobilySlideControllerKey);
+    if(pageController == nil) {
+        pageController = self.parentViewController.pageController;
+    }
+    return pageController;
 }
 
 @end

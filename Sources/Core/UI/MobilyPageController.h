@@ -57,15 +57,14 @@ typedef NS_ENUM(NSInteger, MobilyPageControllerDirection) {
 
 @interface MobilyPageController : MobilyController
 
-@property(nonatomic, readwrite, weak) id< MobilyPageControllerDelegate > delegate;
 @property(nonatomic, readwrite, assign) MobilyPageControllerOrientation orientation;
-@property(nonatomic, readwrite, strong) UIViewController* controller;
+@property(nonatomic, readwrite, strong) UIViewController< MobilyPageControllerDelegate >* controller;
 @property(nonatomic, readwrite, assign) CGFloat draggingRate;
 @property(nonatomic, readwrite, assign) CGFloat bounceRate;
 @property(nonatomic, readwrite, assign) BOOL enableScroll;
 
-- (void)setController:(UIViewController*)controller direction:(MobilyPageControllerDirection)direction animated:(BOOL)animated;
-- (void)setController:(UIViewController*)controller direction:(MobilyPageControllerDirection)direction duration:(NSTimeInterval)duration animated:(BOOL)animated;
+- (void)setController:(UIViewController< MobilyPageControllerDelegate >*)controller direction:(MobilyPageControllerDirection)direction animated:(BOOL)animated;
+- (void)setController:(UIViewController< MobilyPageControllerDelegate >*)controller direction:(MobilyPageControllerDirection)direction duration:(NSTimeInterval)duration animated:(BOOL)animated;
 
 @end
 
@@ -74,24 +73,30 @@ typedef NS_ENUM(NSInteger, MobilyPageControllerDirection) {
 @protocol MobilyPageControllerDelegate < NSObject >
 
 @optional
-- (void)pageController:(MobilyPageController*)pageController willChangedController:(UIViewController*)controller;
-- (void)pageController:(MobilyPageController*)pageController didChangedController:(UIViewController*)controller;
-
-@required
-- (UIViewController*)pageController:(MobilyPageController*)pageController controllerBeforeController:(UIViewController*)controller;
-- (UIViewController*)pageController:(MobilyPageController*)pageController controllerAfterController:(UIViewController*)controller;
+- (void)willAppearInPageController:(MobilyPageController*)pageController;
+- (void)didAppearInPageController:(MobilyPageController*)pageController;
+- (void)willDisappearInPageController:(MobilyPageController*)pageController;
+- (void)didDisappearInPageController:(MobilyPageController*)pageController;
 
 @optional
-- (UIEdgeInsets)pageController:(MobilyPageController*)pageController decorInsetsBeforeController:(UIViewController*)controller;
-- (UIEdgeInsets)pageController:(MobilyPageController*)pageController decorInsetsAfterController:(UIViewController*)controller;
+- (UIViewController< MobilyPageControllerDelegate >*)beforeControllerInPageController:(MobilyPageController*)pageController;
+- (UIEdgeInsets)beforeDecorInsetsInPageController:(MobilyPageController*)pageController;
+- (CGSize)beforeDecorSizeInPageController:(MobilyPageController*)pageController;
+- (UIView*)beforeDecorViewInPageController:(MobilyPageController*)pageController;
 
 @optional
-- (CGSize)pageController:(MobilyPageController*)pageController decorSizeBeforeController:(UIViewController*)controller;
-- (CGSize)pageController:(MobilyPageController*)pageController decorSizeAfterController:(UIViewController*)controller;
+- (UIViewController< MobilyPageControllerDelegate >*)afterControllerInPageController:(MobilyPageController*)pageController;
+- (UIEdgeInsets)afterDecorInsetsInPageController:(MobilyPageController*)pageController;
+- (CGSize)afterDecorSizeInPageController:(MobilyPageController*)pageController;
+- (UIView*)afterDecorViewInPageController:(MobilyPageController*)pageController;
 
-@optional
-- (UIView*)pageController:(MobilyPageController*)pageController decorViewBeforeController:(UIViewController*)controller;
-- (UIView*)pageController:(MobilyPageController*)pageController decorViewAfterController:(UIViewController*)controller;
+@end
+
+/*--------------------------------------------------*/
+
+@interface UIViewController (MobilyPageController)
+
+@property(nonatomic, readwrite, strong) MobilyPageController* pageController;
 
 @end
 
