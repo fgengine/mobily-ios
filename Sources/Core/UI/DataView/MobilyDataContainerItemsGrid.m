@@ -473,7 +473,7 @@
             maxColumnHeight = MAX(maxColumnHeight, itemSize.height);
         }
     }
-    CGFloat footerColumnHeight = 0.0f;
+    // CGFloat footerColumnHeight = 0.0f;
     for(MobilyDataItem* footerColumn in _footerColumns) {
         CGSize itemSize = [footerColumn sizeForAvailableSize:_defaultColumnSize];
         if((itemSize.width > 0.0f) && (itemSize.height > 0.0f)) {
@@ -489,7 +489,7 @@
             maxRowWidth = MAX(maxRowWidth, itemSize.width);
         }
     }
-    CGFloat footerRowWidth = 0.0f;
+    // CGFloat footerRowWidth = 0.0f;
     for(MobilyDataItem* footerRow in _footerRows) {
         CGSize itemSize = [footerRow sizeForAvailableSize:_defaultRowSize];
         if((itemSize.width > 0.0f) && (itemSize.height > 0.0f)) {
