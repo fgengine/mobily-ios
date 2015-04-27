@@ -121,7 +121,16 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
             nib = [UINib nibWithClass:self.class bundle:self.nibBundle];
         }
         if(nib != nil) {
-            [nib instantiateWithOwner:self options:nil];
+            NSArray* objects = [nib instantiateWithOwner:self options:nil];
+            for(id object in objects) {
+                if([object isKindOfClass:UIViewController.class] == YES) {
+                    UIViewController* controller = object;
+                    if(controller.isViewLoaded == YES) {
+                        [self addChildViewController:controller];
+                        [controller didMoveToParentViewController:self];
+                    }
+                }
+            }
         } else {
             [super loadView];
         }
