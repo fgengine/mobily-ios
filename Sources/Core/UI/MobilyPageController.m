@@ -17,10 +17,9 @@
 @interface MobilyPageController () < UIGestureRecognizerDelegate >
 
 @property(nonatomic, readwrite, assign, getter = isAnimating) BOOL animating;
-@property(nonatomic, readonly, assign, getter = isAppearedBeforeController) BOOL appearedBeforeController;
-@property(nonatomic, readonly, assign, getter = isAppearedAfterController) BOOL appearedAfterController;
-@property(nonatomic, readwrite, strong) UIViewController< MobilyPageControllerDelegate >* beforeController;
-@property(nonatomic, readwrite, strong) UIViewController< MobilyPageControllerDelegate >* afterController;
+@property(nonatomic, readwrite, assign, getter = isAllowBeforeController) BOOL allowBeforeController;
+@property(nonatomic, readwrite, assign, getter = isAllowAfterController) BOOL allowAfterController;
+@property(nonatomic, readwrite, strong) UIViewController< MobilyPageControllerDelegate >* animateController;
 @property(nonatomic, readwrite, strong) UIView* rootView;
 @property(nonatomic, readwrite, assign) UIEdgeInsets beforeDecorInsets;
 @property(nonatomic, readwrite, assign) UIEdgeInsets afterDecorInsets;
@@ -54,9 +53,9 @@
 - (void)setup {
     [super setup];
     
+    self.userInteractionEnabled = YES;
     self.draggingRate = 0.5f;
     self.bounceRate = 0.5f;
-    self.enableScroll = YES;
     
     self.friendlyGestures = [NSMutableArray array];
 }
@@ -100,14 +99,8 @@
     if(_controller != nil) {
         _controller.view.frame = self.currentFrame;
     }
-    if(_beforeController != nil) {
-        _beforeController.view.frame = self.beforeFrame;
-    }
     if(_beforeDecorView != nil) {
         _beforeDecorView.frame = [self beforeDecorFrameFromFrame:self.currentFrame];
-    }
-    if(_afterController != nil) {
-        _afterController.view.frame = self.afterFrame;
     }
     if(_afterDecorView != nil) {
         _afterDecorView.frame = [self afterDecorFrameFromFrame:self.currentFrame];
@@ -163,12 +156,13 @@
     if((self.isViewLoaded == YES) && (animated == YES)) {
         self.animating = YES;
         _rootView.userInteractionEnabled = NO;
+        self.animateController = controller;
         switch(direction) {
             case MobilyPageControllerDirectionReverse:
-                self.beforeController = controller;
+                _animateController.view.frame = self.beforeFrame;
                 break;
             case MobilyPageControllerDirectionForward:
-                self.afterController = controller;
+                _animateController.view.frame = self.afterFrame;
                 break;
         }
         [UIView animateWithDuration:duration
@@ -176,16 +170,16 @@
                              switch(direction) {
                                  case MobilyPageControllerDirectionReverse:
                                      _controller.view.frame = self.afterFrame;
-                                     _beforeController.view.frame = self.currentFrame;
+                                     _animateController.view.frame = self.currentFrame;
                                      if(_beforeDecorView != nil) {
-                                         _beforeDecorView.frame = [self afterDecorFrameFromFrame:_beforeController.view.frame];
+                                         _beforeDecorView.frame = [self afterDecorFrameFromFrame:_animateController.view.frame];
                                      }
                                      break;
                                  case MobilyPageControllerDirectionForward:
                                      _controller.view.frame = self.beforeFrame;
-                                     _afterController.view.frame = self.currentFrame;
+                                     _animateController.view.frame = self.currentFrame;
                                      if(_afterDecorView != nil) {
-                                         _afterDecorView.frame = [self beforeDecorFrameFromFrame:_afterController.view.frame];
+                                         _afterDecorView.frame = [self beforeDecorFrameFromFrame:_animateController.view.frame];
                                      }
                                      break;
                              }
@@ -193,13 +187,14 @@
                              switch(direction) {
                                  case MobilyPageControllerDirectionReverse:
                                      _controller.view.frame = self.afterFrame;
-                                     _beforeController.view.frame = self.currentFrame;
+                                     _animateController.view.frame = self.currentFrame;
                                      break;
                                  case MobilyPageControllerDirectionForward:
                                      _controller.view.frame = self.beforeFrame;
-                                     _afterController.view.frame = self.currentFrame;
+                                     _animateController.view.frame = self.currentFrame;
                                      break;
                              }
+                             self.animateController = nil;
                              self.controller = controller;
                              _rootView.userInteractionEnabled = YES;
                              self.animating = NO;
@@ -225,41 +220,21 @@
     }
 }
 
-- (void)setBeforeController:(UIViewController< MobilyPageControllerDelegate >*)beforeController {
-    if(_beforeController != beforeController) {
-        _beforeController = beforeController;
-        if(_beforeController != nil) {
-            if(_beforeController.parentViewController != self) {
-                if(_beforeController.parentViewController != nil) {
-                    [_beforeController willMoveToParentViewController:nil];
-                    [_beforeController.view removeFromSuperview];
-                    [_beforeController removeFromParentViewController];
+- (void)setAnimateController:(UIViewController< MobilyPageControllerDelegate >*)animateController {
+    if(_animateController != animateController) {
+        _animateController = animateController;
+        if(_animateController != nil) {
+            if(_animateController.parentViewController != self) {
+                if(_animateController.parentViewController != nil) {
+                    [_animateController willMoveToParentViewController:nil];
+                    [_animateController.view removeFromSuperview];
+                    [_animateController removeFromParentViewController];
                 }
-                [self addChildViewController:_beforeController];
-                _beforeController.view.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin);
-                _beforeController.view.frame = self.beforeFrame;
-                [_rootView addSubview:_beforeController.view];
-                [_beforeController didMoveToParentViewController:self];
-            }
-        }
-    }
-}
-
-- (void)setAfterController:(UIViewController< MobilyPageControllerDelegate >*)afterController {
-    if(_afterController != afterController) {
-        _afterController = afterController;
-        if(_afterController != nil) {
-            if(_afterController.parentViewController != self) {
-                if(_afterController.parentViewController != nil) {
-                    [_afterController willMoveToParentViewController:nil];
-                    [_afterController.view removeFromSuperview];
-                    [_afterController removeFromParentViewController];
-                }
-                [self addChildViewController:_afterController];
-                _afterController.view.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin);
-                _afterController.view.frame = self.afterFrame;
-                [_rootView addSubview:_afterController.view];
-                [_afterController didMoveToParentViewController:self];
+                [self addChildViewController:_animateController];
+                _animateController.view.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin);
+                _animateController.view.frame = self.beforeFrame;
+                [_rootView addSubview:_animateController.view];
+                [_animateController didMoveToParentViewController:self];
             }
         }
     }
@@ -294,16 +269,8 @@
 }
 
 - (void)loadBeforeAfterData {
-    if([_controller respondsToSelector:@selector(beforeControllerInPageController:)] == YES) {
-        self.beforeController = [_controller beforeControllerInPageController:self];
-    } else {
-        self.beforeController = nil;
-    }
-    if([_controller respondsToSelector:@selector(afterControllerInPageController:)] == YES) {
-        self.afterController = [_controller afterControllerInPageController:self];
-    } else {
-        self.afterController = nil;
-    }
+    self.allowBeforeController = [_controller allowBeforeControllerInPageController:self];
+    self.allowAfterController = [_controller allowAfterControllerInPageController:self];
     if(([_controller respondsToSelector:@selector(beforeDecorSizeInPageController:)] == YES) && ([_controller respondsToSelector:@selector(beforeDecorViewInPageController:)] == YES)) {
         if([_controller respondsToSelector:@selector(beforeDecorInsetsInPageController:)] == YES) {
             self.beforeDecorInsets = [_controller beforeDecorInsetsInPageController:self];
@@ -463,54 +430,62 @@
             _panBeganPosition = currentPosition;
 			break;
         }
-		case UIGestureRecognizerStateChanged: {
-            NSUInteger processedFriendlyGesture = 0;
-            if(_friendlyGestures.count > 0) {
-                for(UIGestureRecognizer* gesture in _friendlyGestures) {
-                    if([gesture.view isKindOfClass:UIScrollView.class] == YES) {
-                        UIScrollView* scrollView = (UIScrollView*)gesture.view;
-                        if(scrollView.scrollEnabled == YES) {
-                            UIEdgeInsets contentInsets = scrollView.contentInset;
-                            CGPoint contentOffset = scrollView.contentOffset;
-                            CGSize contentSize = scrollView.contentSize;
-                            CGRect frame = scrollView.frame;
-                            switch(_orientation) {
-                                case MobilyPageControllerOrientationVertical:
-                                    if((contentOffset.y + contentInsets.top < 0.0f) || (contentOffset.y + frame.size.height > contentSize.height)) {
-                                        scrollView.scrollEnabled = NO;
-                                    } else {
-                                        processedFriendlyGesture++;
+        case UIGestureRecognizerStateChanged: {
+            CGPoint offset = CGPointZero;
+            if(_userInteractionEnabled == YES) {
+                switch(_orientation) {
+                    case MobilyPageControllerOrientationVertical:
+                        offset.y = currentPosition.y - _panBeganPosition.y;
+                        break;
+                    case MobilyPageControllerOrientationHorizontal:
+                        offset.x = currentPosition.x - _panBeganPosition.x;
+                        break;
+                }
+                if(_friendlyGestures.count > 0) {
+                    for(UIGestureRecognizer* gesture in _friendlyGestures) {
+                        if([gesture.view isKindOfClass:UIScrollView.class] == YES) {
+                            UIScrollView* scrollView = (UIScrollView*)gesture.view;
+                            if(scrollView.scrollEnabled == YES) {
+                                UIEdgeInsets contentInsets = scrollView.contentInset;
+                                CGPoint contentOffset = scrollView.contentOffset;
+                                CGSize contentSize = scrollView.contentSize;
+                                CGRect frame = scrollView.frame;
+                                switch(_orientation) {
+                                    case MobilyPageControllerOrientationVertical: {
+                                        if(((contentOffset.y + contentInsets.top) <= offset.y) && (offset.y > 0.0f)) {
+                                            scrollView.contentOffsetY = -contentInsets.top;
+                                        } else if(((contentOffset.y + frame.size.height) >= contentSize.height + offset.y) && (offset.y < 0.0f)) {
+                                            scrollView.contentOffsetY = (contentSize.height - frame.size.height) + contentInsets.bottom;
+                                        } else {
+                                            _panBeganPosition.y = currentPosition.y;
+                                        }
+                                        break;
                                     }
-                                    break;
-                                case MobilyPageControllerOrientationHorizontal:
-                                    if((contentOffset.x + contentInsets.left < 0.0f) || (contentOffset.x + frame.size.width > contentSize.width)) {
-                                        scrollView.scrollEnabled = NO;
-                                    } else {
-                                        processedFriendlyGesture++;
+                                    case MobilyPageControllerOrientationHorizontal: {
+                                        if(((contentOffset.x + contentInsets.left) <= offset.x) && (offset.x > 0.0f)) {
+                                            scrollView.contentOffsetX = -contentInsets.left;
+                                        } else if(((contentOffset.x + frame.size.width) >= contentSize.width + offset.x) && (offset.x < 0.0f)) {
+                                            scrollView.contentOffsetX = (contentSize.width - frame.size.width) + contentInsets.right;
+                                        } else {
+                                            _panBeganPosition.x = currentPosition.x;
+                                        }
+                                        break;
                                     }
-                                    break;
+                                }
                             }
                         }
-                    } else {
-                        processedFriendlyGesture++;
                     }
                 }
-                if(processedFriendlyGesture > 0) {
-                    _panBeganPosition = currentPosition;
-                }
-            }
-            if((processedFriendlyGesture == 0) && (_enableScroll == YES)) {
                 CGRect currentFrame = self.currentFrame;
-                CGPoint offset = CGPointZero;
                 switch(_orientation) {
                     case MobilyPageControllerOrientationVertical:
                         offset.y = (currentPosition.y - _panBeganPosition.y) * _draggingRate;
-                        if(_beforeController == nil) {
+                        if(_allowBeforeController == YES) {
                             if((currentFrame.origin.y + offset.y) > 0.0f) {
                                 offset.y = (_bounceRate > 0.0f) ? offset.y * _bounceRate : 0.0f;
                             }
                         }
-                        if(_afterController == nil) {
+                        if(_allowAfterController == YES) {
                             if((currentFrame.origin.y + offset.y) < 0.0f) {
                                 offset.y = (_bounceRate > 0.0f) ? offset.y * _bounceRate : 0.0f;
                             }
@@ -518,12 +493,12 @@
                         break;
                     case MobilyPageControllerOrientationHorizontal:
                         offset.x = (currentPosition.x - _panBeganPosition.x) * _draggingRate;
-                        if(_beforeController == nil) {
+                        if(_allowBeforeController == YES) {
                             if((currentFrame.origin.x + offset.x) > 0.0f) {
                                 offset.x = (_bounceRate > 0.0f) ? offset.x * _bounceRate : 0.0f;
                             }
                         }
-                        if(_afterController == nil) {
+                        if(_allowAfterController == YES) {
                             if((currentFrame.origin.x + offset.x) < 0.0f) {
                                 offset.x = (_bounceRate > 0.0f) ? offset.x * _bounceRate : 0.0f;
                             }
@@ -550,14 +525,30 @@
                 case MobilyPageControllerOrientationVertical: {
                     CGFloat delta = currentPosition.y - _panBeganPosition.y;
                     if(delta > THRESHOLD_VERTICAL_OFFSET) {
-                        if(_beforeController != nil) {
-                            [self setController:_beforeController direction:MobilyPageControllerDirectionReverse duration:ANIMATION_DURATION animated:YES notification:YES];
+                        if(_allowBeforeController == YES) {
+                            UIViewController< MobilyPageControllerDelegate >* controller = nil;
+                            if([_controller respondsToSelector:@selector(beforeControllerInPageController:)] == YES) {
+                                controller = [_controller beforeControllerInPageController:self];
+                            }
+                            if(controller != nil) {
+                                [self setController:controller direction:MobilyPageControllerDirectionReverse duration:ANIMATION_DURATION animated:YES notification:YES];
+                            } else {
+                                needRestore = YES;
+                            }
                         } else {
                             needRestore = YES;
                         }
                     } else if(delta < -THRESHOLD_VERTICAL_OFFSET) {
-                        if(_afterController != nil) {
-                            [self setController:_afterController direction:MobilyPageControllerDirectionForward duration:ANIMATION_DURATION animated:YES notification:YES];
+                        if(_allowBeforeController == YES) {
+                            UIViewController< MobilyPageControllerDelegate >* controller = nil;
+                            if([_controller respondsToSelector:@selector(afterControllerInPageController:)] == YES) {
+                                controller = [_controller afterControllerInPageController:self];
+                            }
+                            if(controller != nil) {
+                                [self setController:controller direction:MobilyPageControllerDirectionForward duration:ANIMATION_DURATION animated:YES notification:YES];
+                            } else {
+                                needRestore = YES;
+                            }
                         } else {
                             needRestore = YES;
                         }
@@ -568,15 +559,31 @@
                 }
                 case MobilyPageControllerOrientationHorizontal: {
                     CGFloat delta = currentPosition.x - _panBeganPosition.x;
-                    if(delta > THRESHOLD_HORIZONTAL_OFFSET) {
-                        if(_beforeController != nil) {
-                            [self setController:_beforeController direction:MobilyPageControllerDirectionReverse duration:ANIMATION_DURATION animated:YES notification:YES];
+                    if(delta > THRESHOLD_VERTICAL_OFFSET) {
+                        if(_allowBeforeController == YES) {
+                            UIViewController< MobilyPageControllerDelegate >* controller = nil;
+                            if([_controller respondsToSelector:@selector(beforeControllerInPageController:)] == YES) {
+                                controller = [_controller beforeControllerInPageController:self];
+                            }
+                            if(controller != nil) {
+                                [self setController:controller direction:MobilyPageControllerDirectionReverse duration:ANIMATION_DURATION animated:YES notification:YES];
+                            } else {
+                                needRestore = YES;
+                            }
                         } else {
                             needRestore = YES;
                         }
-                    } else if(delta < -THRESHOLD_HORIZONTAL_OFFSET) {
-                        if(_afterController != nil) {
-                            [self setController:_afterController direction:MobilyPageControllerDirectionForward duration:ANIMATION_DURATION animated:YES notification:YES];
+                    } else if(delta < -THRESHOLD_VERTICAL_OFFSET) {
+                        if(_allowBeforeController == YES) {
+                            UIViewController< MobilyPageControllerDelegate >* controller = nil;
+                            if([_controller respondsToSelector:@selector(afterControllerInPageController:)] == YES) {
+                                controller = [_controller afterControllerInPageController:self];
+                            }
+                            if(controller != nil) {
+                                [self setController:controller direction:MobilyPageControllerDirectionForward duration:ANIMATION_DURATION animated:YES notification:YES];
+                            } else {
+                                needRestore = YES;
+                            }
                         } else {
                             needRestore = YES;
                         }
@@ -601,12 +608,6 @@
                                      _rootView.userInteractionEnabled = YES;
                                  }];
             }
-            for(UIGestureRecognizer* gesture in _friendlyGestures) {
-                if([gesture.view isKindOfClass:UIScrollView.class] == YES) {
-                    UIScrollView* scrollView = (UIScrollView*)gesture.view;
-                    scrollView.scrollEnabled = YES;
-                }
-            }
             [_friendlyGestures removeAllObjects];
 			break;
 		}
@@ -620,28 +621,28 @@
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gesture {
     BOOL result = NO;
     if(gesture == _panGesture) {
-        if(_enableScroll == YES) {
+        if(_userInteractionEnabled == YES) {
             CGPoint translation = [_panGesture translationInView:_rootView];
             switch(_orientation) {
                 case MobilyPageControllerOrientationVertical:
                     if(fabs(translation.y) >= fabs(translation.x)) {
                         if(translation.y > 0.0f) {
-                            result = (_beforeController != nil) || (_bounceRate > 0.0f);
+                            result = (_allowBeforeController == YES) || (_bounceRate > 0.0f);
                         } else if(translation.y < 0.0f) {
-                            result = (_afterController != nil) || (_bounceRate > 0.0f);
+                            result = (_allowAfterController == YES) || (_bounceRate > 0.0f);
                         } else {
-                            result = (_afterController != nil) || (_beforeController != nil);
+                            result = (_allowAfterController == YES) || (_allowBeforeController == YES);
                         }
                     }
                     break;
                 case MobilyPageControllerOrientationHorizontal:
                     if(fabs(translation.x) >= fabs(translation.y)) {
                         if(translation.x > 0.0f) {
-                            result = (_beforeController != nil) || (_bounceRate > 0.0f);
+                            result = (_allowBeforeController == YES) || (_bounceRate > 0.0f);
                         } else if(translation.x < 0.0f) {
-                            result = (_afterController != nil) || (_bounceRate > 0.0f);
+                            result = (_allowAfterController == YES) || (_bounceRate > 0.0f);
                         } else {
-                            result = (_afterController != nil) || (_beforeController != nil);
+                            result = (_allowAfterController == YES) || (_allowBeforeController == YES);
                         }
                     }
                     break;
