@@ -105,14 +105,14 @@
 
 - (void)signinWithReadPermissions:(NSArray*)readPermissions success:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
     if((FBSession.activeSession.state == FBSessionStateOpen) || (FBSession.activeSession.state == FBSessionStateOpenTokenExtended)) {
-        [FBSession.activeSession closeAndClearTokenInformation];        
+        [FBSession.activeSession closeAndClearTokenInformation];
     }
     self.signinReadPermissions = readPermissions;
     self.signinSuccessBlock = success;
     self.signinFailureBlock = failure;
     [FBSession openActiveSessionWithReadPermissions:readPermissions allowLoginUI:_allowLoginUI completionHandler:^(FBSession* session, FBSessionState state, NSError* error) {
         [self sessionStateChanged:session state:state error:error];
-    }];    
+    }];
 }
 
 #pragma mark MobilySocialManager

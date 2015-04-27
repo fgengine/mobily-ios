@@ -59,9 +59,9 @@ typedef NS_ENUM(NSInteger, MobilyPageControllerDirection) {
 
 @property(nonatomic, readwrite, assign) MobilyPageControllerOrientation orientation;
 @property(nonatomic, readwrite, strong) UIViewController< MobilyPageControllerDelegate >* controller;
+@property(nonatomic, readwrite, assign) BOOL userInteractionEnabled;
 @property(nonatomic, readwrite, assign) CGFloat draggingRate;
 @property(nonatomic, readwrite, assign) CGFloat bounceRate;
-@property(nonatomic, readwrite, assign) BOOL enableScroll;
 
 - (void)setController:(UIViewController< MobilyPageControllerDelegate >*)controller direction:(MobilyPageControllerDirection)direction animated:(BOOL)animated;
 - (void)setController:(UIViewController< MobilyPageControllerDelegate >*)controller direction:(MobilyPageControllerDirection)direction duration:(NSTimeInterval)duration animated:(BOOL)animated;
@@ -71,6 +71,10 @@ typedef NS_ENUM(NSInteger, MobilyPageControllerDirection) {
 /*--------------------------------------------------*/
 
 @protocol MobilyPageControllerDelegate < NSObject >
+
+@required
+- (BOOL)allowBeforeControllerInPageController:(MobilyPageController*)pageController;
+- (BOOL)allowAfterControllerInPageController:(MobilyPageController*)pageController;
 
 @optional
 - (void)willAppearInPageController:(MobilyPageController*)pageController;
