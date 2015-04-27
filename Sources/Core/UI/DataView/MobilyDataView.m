@@ -1467,18 +1467,18 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         if(self.bounces == YES) {
             if(self.alwaysBounceHorizontal == YES) {
                 if(_bouncesLeft == NO) {
-                    self.contentOffsetX = MAX(0.0f, self.contentOffset.x);
+                    self.contentOffsetX = MAX(-self.contentInset.left, self.contentOffset.x);
                 }
                 if((_bouncesRight == NO) && (self.contentSize.width > FLT_EPSILON)) {
-                    self.contentOffsetX = MIN(self.contentSize.width - self.frameSize.width, self.contentOffset.x);
+                    self.contentOffsetX = MIN(self.contentSize.width - self.frameSize.width + self.contentInset.right, self.contentOffset.x);
                 }
             }
             if(self.alwaysBounceVertical == YES) {
                 if(_bouncesTop == NO) {
-                    self.contentOffsetY = MAX(0.0f, self.contentOffset.y);
+                    self.contentOffsetY = MAX(-self.contentInset.top, self.contentOffset.y);
                 }
                 if((_bouncesBottom == NO) && (self.contentSize.height > FLT_EPSILON)) {
-                    self.contentOffsetY = MIN(self.contentSize.height - self.frameSize.height, self.contentOffset.y);
+                    self.contentOffsetY = MIN(self.contentSize.height - self.frameSize.height + self.contentInset.bottom, self.contentOffset.y);
                 }
             }
         }

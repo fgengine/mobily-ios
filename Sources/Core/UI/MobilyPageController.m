@@ -6,15 +6,16 @@
 
 #define ANIMATION_DURATION                          0.2f
 
-#define THRESHOLD_HORIZONTAL_OFFSET                 100.0f
-#define THRESHOLD_VERTICAL_OFFSET                   120.0f
-
-#define SCALE_MIN                                   0.5f
-#define SCALE_MAX                                   1.0f
-
 /*--------------------------------------------------*/
 
-@interface MobilyPageController () < UIGestureRecognizerDelegate >
+@interface MobilyPageController () < UIGestureRecognizerDelegate > {
+    struct {
+        unsigned int applyFromProgress:1;
+    } _canBeforeDecor;
+    struct {
+        unsigned int applyFromProgress:1;
+    } _canAfterDecor;
+}
 
 @property(nonatomic, readwrite, assign, getter = isAnimating) BOOL animating;
 @property(nonatomic, readwrite, assign, getter = isAllowBeforeController) BOOL allowBeforeController;
@@ -25,8 +26,8 @@
 @property(nonatomic, readwrite, assign) UIEdgeInsets afterDecorInsets;
 @property(nonatomic, readwrite, assign) CGSize beforeDecorSize;
 @property(nonatomic, readwrite, assign) CGSize afterDecorSize;
-@property(nonatomic, readwrite, strong) UIView* beforeDecorView;
-@property(nonatomic, readwrite, strong) UIView* afterDecorView;
+@property(nonatomic, readwrite, strong) UIView< MobilyPageDecorDelegate >* beforeDecorView;
+@property(nonatomic, readwrite, strong) UIView< MobilyPageDecorDelegate >* afterDecorView;
 @property(nonatomic, readwrite, strong) UIPanGestureRecognizer* panGesture;
 @property(nonatomic, readwrite, strong) NSMutableArray* friendlyGestures;
 @property(nonatomic, readwrite, assign) CGPoint panBeganPosition;
@@ -39,8 +40,11 @@
 
 - (CGRect)beforeDecorFrame;
 - (CGRect)beforeDecorFrameFromFrame:(CGRect)currentFrame;
+- (CGFloat)beforeDecorProgressFromFrame:(CGRect)currentFrame;
+
 - (CGRect)afterDecorFrame;
 - (CGRect)afterDecorFrameFromFrame:(CGRect)currentFrame;
+- (CGFloat)afterDecorProgressFromFrame:(CGRect)currentFrame;
 
 - (void)panGestureHandle:(UIPanGestureRecognizer*)panGesture;
 
@@ -56,6 +60,8 @@
     self.userInteractionEnabled = YES;
     self.draggingRate = 0.5f;
     self.bounceRate = 0.5f;
+    self.thresholdHorizontal = 100.0f;
+    self.thresholdVertical = 120.0f;
     
     self.friendlyGestures = [NSMutableArray array];
 }
@@ -96,14 +102,22 @@
     [super viewWillLayoutSubviews];
     
     _rootView.frame = self.view.bounds;
+    
+    CGRect currentFrame = self.currentFrame;
     if(_controller != nil) {
-        _controller.view.frame = self.currentFrame;
+        _controller.view.frame = currentFrame;
     }
     if(_beforeDecorView != nil) {
-        _beforeDecorView.frame = [self beforeDecorFrameFromFrame:self.currentFrame];
+        _beforeDecorView.frame = [self beforeDecorFrameFromFrame:currentFrame];
+        if(_canBeforeDecor.applyFromProgress == YES) {
+            [_beforeDecorView pageController:self applyFromProgress:[self beforeDecorProgressFromFrame:currentFrame]];
+        }
     }
     if(_afterDecorView != nil) {
-        _afterDecorView.frame = [self afterDecorFrameFromFrame:self.currentFrame];
+        _afterDecorView.frame = [self afterDecorFrameFromFrame:currentFrame];
+        if(_canAfterDecor.applyFromProgress == YES) {
+            [_afterDecorView pageController:self applyFromProgress:[self afterDecorProgressFromFrame:currentFrame]];
+        }
     }
 }
 
@@ -167,19 +181,26 @@
         }
         [UIView animateWithDuration:duration
                          animations:^{
+                             CGRect currentFrame = self.currentFrame;
                              switch(direction) {
                                  case MobilyPageControllerDirectionReverse:
                                      _controller.view.frame = self.afterFrame;
-                                     _animateController.view.frame = self.currentFrame;
+                                     _animateController.view.frame = currentFrame;
                                      if(_beforeDecorView != nil) {
-                                         _beforeDecorView.frame = [self afterDecorFrameFromFrame:_animateController.view.frame];
+                                         _beforeDecorView.frame = [self beforeDecorFrameFromFrame:currentFrame];
+                                         if(_canBeforeDecor.applyFromProgress == YES) {
+                                             [_beforeDecorView pageController:self applyFromProgress:[self beforeDecorProgressFromFrame:currentFrame]];
+                                         }
                                      }
                                      break;
                                  case MobilyPageControllerDirectionForward:
                                      _controller.view.frame = self.beforeFrame;
                                      _animateController.view.frame = self.currentFrame;
                                      if(_afterDecorView != nil) {
-                                         _afterDecorView.frame = [self beforeDecorFrameFromFrame:_animateController.view.frame];
+                                         _afterDecorView.frame = [self afterDecorFrameFromFrame:currentFrame];
+                                         if(_canAfterDecor.applyFromProgress == YES) {
+                                             [_afterDecorView pageController:self applyFromProgress:[self afterDecorProgressFromFrame:currentFrame]];
+                                         }
                                      }
                                      break;
                              }
@@ -240,28 +261,38 @@
     }
 }
 
-- (void)setBeforeDecorView:(UIView*)beforeDecorView {
+- (void)setBeforeDecorView:(UIView< MobilyPageDecorDelegate >*)beforeDecorView {
     if(_beforeDecorView != beforeDecorView) {
         if(_beforeDecorView != nil) {
             [_beforeDecorView removeFromSuperview];
         }
         _beforeDecorView = beforeDecorView;
+        _canBeforeDecor.applyFromProgress = [_beforeDecorView respondsToSelector:@selector(pageController:applyFromProgress:)];
         if(_beforeDecorView != nil) {
-            _beforeDecorView.frame = [self beforeDecorFrameFromFrame:self.currentFrame];
+            CGRect currentFrame = self.currentFrame;
+            _beforeDecorView.frame = [self beforeDecorFrameFromFrame:currentFrame];
+            if(_canBeforeDecor.applyFromProgress == YES) {
+                [_beforeDecorView pageController:self applyFromProgress:[self beforeDecorProgressFromFrame:currentFrame]];
+            }
             [_rootView addSubview:_beforeDecorView];
             [_rootView sendSubviewToBack:_beforeDecorView];
         }
     }
 }
 
-- (void)setAfterDecorView:(UIView*)afterDecorView {
+- (void)setAfterDecorView:(UIView< MobilyPageDecorDelegate >*)afterDecorView {
     if(_afterDecorView != afterDecorView) {
         if(_afterDecorView != nil) {
             [_afterDecorView removeFromSuperview];
         }
         _afterDecorView = afterDecorView;
+        _canAfterDecor.applyFromProgress = [_afterDecorView respondsToSelector:@selector(pageController:applyFromProgress:)];
         if(_afterDecorView != nil) {
-            _afterDecorView.frame = [self afterDecorFrameFromFrame:self.currentFrame];
+            CGRect currentFrame = self.currentFrame;
+            _afterDecorView.frame = [self afterDecorFrameFromFrame:currentFrame];
+            if(_canAfterDecor.applyFromProgress == YES) {
+                [_afterDecorView pageController:self applyFromProgress:[self afterDecorProgressFromFrame:currentFrame]];
+            }
             [_rootView addSubview:_afterDecorView];
             [_rootView sendSubviewToBack:_afterDecorView];
         }
@@ -340,30 +371,42 @@
     switch(_orientation) {
         case MobilyPageControllerOrientationVertical: {
             CGFloat delta = CGRectGetMinY(currentFrame) - CGRectGetMaxY(beforeFrame);
-            CGFloat scale = MAX(SCALE_MIN, MIN(ABS(delta) / _beforeDecorSize.height, SCALE_MAX));
-            CGFloat beforeDecorWidth = _beforeDecorSize.width * scale;
-            CGFloat beforeDecorHeight = _beforeDecorSize.height * scale;
-            result.origin.x = CGRectGetMidX(beforeFrame) - (beforeDecorWidth * 0.5f);
-            result.origin.y = (CGRectGetMaxY(beforeFrame) + (delta * 0.5f)) - (beforeDecorHeight * 0.5f);
-            result.size.width = beforeDecorWidth;
-            result.size.height = beforeDecorHeight;
+            result.origin.x = CGRectGetMidX(beforeFrame) - (_beforeDecorSize.width * 0.5f);
+            result.origin.y = (CGRectGetMaxY(beforeFrame) + (delta * 0.5f)) - (_beforeDecorSize.height * 0.5f);
+            result.size.width = _beforeDecorSize.width;
+            result.size.height = _beforeDecorSize.height;
             break;
         }
         case MobilyPageControllerOrientationHorizontal: {
             CGFloat delta = CGRectGetMinX(currentFrame) - CGRectGetMaxX(beforeFrame);
-            CGFloat scale = MAX(SCALE_MIN, MIN(ABS(delta) / _beforeDecorSize.width, SCALE_MAX));
-            CGFloat beforeDecorWidth = _beforeDecorSize.width * scale;
-            CGFloat beforeDecorHeight = _beforeDecorSize.height * scale;
-            result.origin.x = (CGRectGetMaxX(beforeFrame) + (delta * 0.5f)) - (beforeDecorWidth * 0.5f);
-            result.origin.y = CGRectGetMidY(beforeFrame) - (beforeDecorHeight * 0.5f);
-            result.size.width = beforeDecorWidth;
-            result.size.height = beforeDecorHeight;
+            result.origin.x = (CGRectGetMaxX(beforeFrame) + (delta * 0.5f)) - (_beforeDecorSize.width * 0.5f);
+            result.origin.y = CGRectGetMidY(beforeFrame) - (_beforeDecorSize.height * 0.5f);
+            result.size.width = _beforeDecorSize.width;
+            result.size.height = _beforeDecorSize.height;
             break;
         }
     }
     result = UIEdgeInsetsInsetRect(result, _beforeDecorInsets);
     result.size.width = MAX(0.0f, result.size.width);
     result.size.height = MAX(0.0f, result.size.height);
+    return result;
+}
+
+- (CGFloat)beforeDecorProgressFromFrame:(CGRect)currentFrame {
+    CGFloat result = 0.0f;
+    CGRect beforeFrame = self.beforeFrame;
+    switch(_orientation) {
+        case MobilyPageControllerOrientationVertical: {
+            CGFloat delta = CGRectGetMinY(currentFrame) - CGRectGetMaxY(beforeFrame);
+            result = MAX(0.0f, ABS(delta) / _beforeDecorSize.height);
+            break;
+        }
+        case MobilyPageControllerOrientationHorizontal: {
+            CGFloat delta = CGRectGetMinX(currentFrame) - CGRectGetMaxX(beforeFrame);
+            result = MAX(0.0f, ABS(delta) / _beforeDecorSize.width);
+            break;
+        }
+    }
     return result;
 }
 
@@ -396,30 +439,42 @@
     switch(_orientation) {
         case MobilyPageControllerOrientationVertical: {
             CGFloat delta = CGRectGetMinY(afterFrame) - CGRectGetMaxY(currentFrame);
-            CGFloat scale = MAX(SCALE_MIN, MIN(ABS(delta) / _afterDecorSize.height, SCALE_MAX));
-            CGFloat afterDecorWidth = _afterDecorSize.width * scale;
-            CGFloat afterDecorHeight = _afterDecorSize.height * scale;
-            result.origin.x = CGRectGetMidX(afterFrame) - (afterDecorWidth * 0.5f);
-            result.origin.y = (CGRectGetMinY(afterFrame) - (delta * 0.5f)) - (afterDecorHeight * 0.5f);
-            result.size.width = afterDecorWidth;
-            result.size.height = afterDecorHeight;
+            result.origin.x = CGRectGetMidX(afterFrame) - (_afterDecorSize.width * 0.5f);
+            result.origin.y = (CGRectGetMinY(afterFrame) - (delta * 0.5f)) - (_afterDecorSize.height * 0.5f);
+            result.size.width = _afterDecorSize.width;
+            result.size.height = _afterDecorSize.height;
             break;
         }
         case MobilyPageControllerOrientationHorizontal: {
             CGFloat delta = CGRectGetMinX(afterFrame) - CGRectGetMaxX(currentFrame);
-            CGFloat scale = MAX(SCALE_MIN, MIN(ABS(delta) / _afterDecorSize.width, SCALE_MAX));
-            CGFloat afterDecorWidth = _afterDecorSize.width * scale;
-            CGFloat afterDecorHeight = _afterDecorSize.height * scale;
-            result.origin.x = CGRectGetMinX(afterFrame) - (delta * 0.5f) - (afterDecorWidth * 0.5f);
-            result.origin.y = CGRectGetMidY(afterFrame) - (afterDecorHeight * 0.5f);
-            result.size.width = afterDecorWidth;
-            result.size.height = afterDecorHeight;
+            result.origin.x = CGRectGetMinX(afterFrame) - (delta * 0.5f) - (_afterDecorSize.width * 0.5f);
+            result.origin.y = CGRectGetMidY(afterFrame) - (_afterDecorSize.height * 0.5f);
+            result.size.width = _afterDecorSize.width;
+            result.size.height = _afterDecorSize.height;
             break;
         }
     }
     result = UIEdgeInsetsInsetRect(result, _afterDecorInsets);
     result.size.width = MAX(0.0f, result.size.width);
     result.size.height = MAX(0.0f, result.size.height);
+    return result;
+}
+
+- (CGFloat)afterDecorProgressFromFrame:(CGRect)currentFrame {
+    CGFloat result = 0.0f;
+    CGRect afterFrame = self.afterFrame;
+    switch(_orientation) {
+        case MobilyPageControllerOrientationVertical: {
+            CGFloat delta = CGRectGetMinY(afterFrame) - CGRectGetMaxY(currentFrame);
+            result = MAX(0.0f, ABS(delta) / _afterDecorSize.height);
+            break;
+        }
+        case MobilyPageControllerOrientationHorizontal: {
+            CGFloat delta = CGRectGetMinX(afterFrame) - CGRectGetMaxX(currentFrame);
+            result = MAX(0.0f, ABS(delta) / _afterDecorSize.width);
+            break;
+        }
+    }
     return result;
 }
 
@@ -454,8 +509,10 @@
                                     case MobilyPageControllerOrientationVertical: {
                                         if(((contentOffset.y + contentInsets.top) <= offset.y) && (offset.y > 0.0f)) {
                                             scrollView.contentOffsetY = -contentInsets.top;
+                                            scrollView.scrollEnabled = NO;
                                         } else if(((contentOffset.y + frame.size.height) >= contentSize.height + offset.y) && (offset.y < 0.0f)) {
                                             scrollView.contentOffsetY = (contentSize.height - frame.size.height) + contentInsets.bottom;
+                                            scrollView.scrollEnabled = NO;
                                         } else {
                                             _panBeganPosition.y = currentPosition.y;
                                         }
@@ -464,8 +521,10 @@
                                     case MobilyPageControllerOrientationHorizontal: {
                                         if(((contentOffset.x + contentInsets.left) <= offset.x) && (offset.x > 0.0f)) {
                                             scrollView.contentOffsetX = -contentInsets.left;
+                                            scrollView.scrollEnabled = NO;
                                         } else if(((contentOffset.x + frame.size.width) >= contentSize.width + offset.x) && (offset.x < 0.0f)) {
                                             scrollView.contentOffsetX = (contentSize.width - frame.size.width) + contentInsets.right;
+                                            scrollView.scrollEnabled = NO;
                                         } else {
                                             _panBeganPosition.x = currentPosition.x;
                                         }
@@ -509,9 +568,15 @@
                 _controller.view.frame = currentFrame;
                 if(_beforeDecorView != nil) {
                     _beforeDecorView.frame = [self beforeDecorFrameFromFrame:currentFrame];
+                    if(_canBeforeDecor.applyFromProgress == YES) {
+                        [_beforeDecorView pageController:self applyFromProgress:[self beforeDecorProgressFromFrame:currentFrame]];
+                    }
                 }
                 if(_afterDecorView != nil) {
                     _afterDecorView.frame = [self afterDecorFrameFromFrame:currentFrame];
+                    if(_canAfterDecor.applyFromProgress == YES) {
+                        [_afterDecorView pageController:self applyFromProgress:[self afterDecorProgressFromFrame:currentFrame]];
+                    }
                 }
             } else {
                 _panBeganPosition = currentPosition;
@@ -523,8 +588,8 @@
             BOOL needRestore = NO;
             switch(_orientation) {
                 case MobilyPageControllerOrientationVertical: {
-                    CGFloat delta = currentPosition.y - _panBeganPosition.y;
-                    if(delta > THRESHOLD_VERTICAL_OFFSET) {
+                    CGFloat delta = ((currentPosition.y - _panBeganPosition.y) * _draggingRate) * _bounceRate;
+                    if(delta > _thresholdVertical) {
                         if(_allowBeforeController == YES) {
                             UIViewController< MobilyPageControllerDelegate >* controller = nil;
                             if([_controller respondsToSelector:@selector(beforeControllerInPageController:)] == YES) {
@@ -538,7 +603,7 @@
                         } else {
                             needRestore = YES;
                         }
-                    } else if(delta < -THRESHOLD_VERTICAL_OFFSET) {
+                    } else if(delta < -_thresholdVertical) {
                         if(_allowBeforeController == YES) {
                             UIViewController< MobilyPageControllerDelegate >* controller = nil;
                             if([_controller respondsToSelector:@selector(afterControllerInPageController:)] == YES) {
@@ -558,8 +623,8 @@
                     break;
                 }
                 case MobilyPageControllerOrientationHorizontal: {
-                    CGFloat delta = currentPosition.x - _panBeganPosition.x;
-                    if(delta > THRESHOLD_VERTICAL_OFFSET) {
+                    CGFloat delta = ((currentPosition.x - _panBeganPosition.x) * _draggingRate) * _bounceRate;
+                    if(delta > _thresholdHorizontal) {
                         if(_allowBeforeController == YES) {
                             UIViewController< MobilyPageControllerDelegate >* controller = nil;
                             if([_controller respondsToSelector:@selector(beforeControllerInPageController:)] == YES) {
@@ -573,7 +638,7 @@
                         } else {
                             needRestore = YES;
                         }
-                    } else if(delta < -THRESHOLD_VERTICAL_OFFSET) {
+                    } else if(delta < -_thresholdHorizontal) {
                         if(_allowBeforeController == YES) {
                             UIViewController< MobilyPageControllerDelegate >* controller = nil;
                             if([_controller respondsToSelector:@selector(afterControllerInPageController:)] == YES) {
@@ -597,16 +662,29 @@
                 _rootView.userInteractionEnabled = NO;
                 [UIView animateWithDuration:ANIMATION_DURATION
                                  animations:^{
-                                     _controller.view.frame = self.currentFrame;
+                                     CGRect currentFrame = self.currentFrame;
+                                     _controller.view.frame = currentFrame;
                                      if(_beforeDecorView != nil) {
-                                         _beforeDecorView.frame = [self beforeDecorFrameFromFrame:self.currentFrame];
+                                         _beforeDecorView.frame = [self beforeDecorFrameFromFrame:currentFrame];
+                                         if(_canBeforeDecor.applyFromProgress == YES) {
+                                             [_beforeDecorView pageController:self applyFromProgress:[self beforeDecorProgressFromFrame:currentFrame]];
+                                         }
                                      }
                                      if(_afterDecorView != nil) {
-                                         _afterDecorView.frame = [self afterDecorFrameFromFrame:self.currentFrame];
+                                         _afterDecorView.frame = [self afterDecorFrameFromFrame:currentFrame];
+                                         if(_canAfterDecor.applyFromProgress == YES) {
+                                             [_afterDecorView pageController:self applyFromProgress:[self afterDecorProgressFromFrame:currentFrame]];
+                                         }
                                      }
                                  } completion:^(BOOL finished) {
                                      _rootView.userInteractionEnabled = YES;
                                  }];
+            }
+            for(UIGestureRecognizer* gesture in _friendlyGestures) {
+                if([gesture.view isKindOfClass:UIScrollView.class] == YES) {
+                    UIScrollView* scrollView = (UIScrollView*)gesture.view;
+                    scrollView.scrollEnabled = YES;
+                }
             }
             [_friendlyGestures removeAllObjects];
 			break;

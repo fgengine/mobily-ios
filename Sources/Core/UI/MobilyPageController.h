@@ -38,6 +38,7 @@
 /*--------------------------------------------------*/
 
 @protocol MobilyPageControllerDelegate;
+@protocol MobilyPageDecorDelegate;
 
 /*--------------------------------------------------*/
 
@@ -57,11 +58,13 @@ typedef NS_ENUM(NSInteger, MobilyPageControllerDirection) {
 
 @interface MobilyPageController : MobilyController
 
-@property(nonatomic, readwrite, assign) MobilyPageControllerOrientation orientation;
+@property(nonatomic, readwrite, assign) IBInspectable MobilyPageControllerOrientation orientation;
 @property(nonatomic, readwrite, strong) UIViewController< MobilyPageControllerDelegate >* controller;
-@property(nonatomic, readwrite, assign) BOOL userInteractionEnabled;
-@property(nonatomic, readwrite, assign) CGFloat draggingRate;
-@property(nonatomic, readwrite, assign) CGFloat bounceRate;
+@property(nonatomic, readwrite, assign) IBInspectable BOOL userInteractionEnabled;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat draggingRate;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat bounceRate;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat thresholdHorizontal;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat thresholdVertical;
 
 - (void)setController:(UIViewController< MobilyPageControllerDelegate >*)controller direction:(MobilyPageControllerDirection)direction animated:(BOOL)animated;
 - (void)setController:(UIViewController< MobilyPageControllerDelegate >*)controller direction:(MobilyPageControllerDirection)direction duration:(NSTimeInterval)duration animated:(BOOL)animated;
@@ -86,13 +89,22 @@ typedef NS_ENUM(NSInteger, MobilyPageControllerDirection) {
 - (UIViewController< MobilyPageControllerDelegate >*)beforeControllerInPageController:(MobilyPageController*)pageController;
 - (UIEdgeInsets)beforeDecorInsetsInPageController:(MobilyPageController*)pageController;
 - (CGSize)beforeDecorSizeInPageController:(MobilyPageController*)pageController;
-- (UIView*)beforeDecorViewInPageController:(MobilyPageController*)pageController;
+- (UIView< MobilyPageDecorDelegate >*)beforeDecorViewInPageController:(MobilyPageController*)pageController;
 
 @optional
 - (UIViewController< MobilyPageControllerDelegate >*)afterControllerInPageController:(MobilyPageController*)pageController;
 - (UIEdgeInsets)afterDecorInsetsInPageController:(MobilyPageController*)pageController;
 - (CGSize)afterDecorSizeInPageController:(MobilyPageController*)pageController;
-- (UIView*)afterDecorViewInPageController:(MobilyPageController*)pageController;
+- (UIView< MobilyPageDecorDelegate >*)afterDecorViewInPageController:(MobilyPageController*)pageController;
+
+@end
+
+/*--------------------------------------------------*/
+
+@protocol MobilyPageDecorDelegate < NSObject >
+
+@optional
+- (void)pageController:(MobilyPageController*)pageController applyFromProgress:(CGFloat)progress;
 
 @end
 
