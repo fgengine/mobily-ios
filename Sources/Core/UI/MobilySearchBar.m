@@ -90,10 +90,11 @@ static CGFloat MobilySearchBarSeparatorHeight = 0.5f;
 - (void)setup {
     [super setup];
     
-    self.tintColor = MOBILY_COLOR_RGB(177, 174, 181);
+    self.blurEnabled = NO;
+    self.backgroundColor = MOBILY_COLOR_RGB(201, 201, 206);
     
-    _minimalHeight = 30.0f;
-    _margin = UIEdgeInsetsMake(6.0f, 6.0f, 6.0f, 6.0f);
+    _minimalHeight = 28.0f;
+    _margin = UIEdgeInsetsMake(8.0f, 8.0f, 8.0f, 8.0f);
     _spacing = 6.0f;
     _showCancelButton = YES;
     _contentConstraints = NSMutableArray.array;
@@ -206,12 +207,15 @@ static CGFloat MobilySearchBarSeparatorHeight = 0.5f;
     if(_searchField == nil) {
         MobilyTextField* textField = [[MobilyTextField alloc] initWithFrame:CGRectZero];
         textField.placeholder = NSLocalizedString(@"Search", @"MobilySearchBar search placeholder");
-        textField.borderStyle = UITextBorderStyleRoundedRect;
+        textField.borderStyle = UITextBorderStyleNone;
         textField.backgroundColor = [UIColor whiteColor];
         textField.textColor = [UIColor darkGrayColor];
         textField.tintColor = [UIColor blackColor];
         textField.cornerRadius = 4.0f;
         textField.hiddenToolbar = YES;
+        textField.font = [UIFont fontWithName:@"HelveticaNeue" size:13.0f];
+        textField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, 20)];
+        textField.leftViewMode = UITextFieldViewModeAlways;
         self.searchField = textField;
     }
     return _searchField;
@@ -244,6 +248,7 @@ static CGFloat MobilySearchBarSeparatorHeight = 0.5f;
         MobilyButton* button = [[MobilyButton alloc] initWithFrame:CGRectZero];
         button.normalTitle = NSLocalizedString(@"Cancel", @"MobilySearchBar cancel title");
         button.normalTitleColor = [UIColor darkGrayColor];
+        button.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:15.0f];
         self.cancelButton = button;
     }
     return _cancelButton;
