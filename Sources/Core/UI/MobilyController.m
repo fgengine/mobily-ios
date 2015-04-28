@@ -45,7 +45,7 @@
 
 @interface MobilyController () < UIViewControllerTransitioningDelegate >
 
-@property(nonatomic, readwrite, assign) NSUInteger appearedCount;
+@property(nonatomic, readwrite, assign, getter=isAppeared) BOOL appeared;
 @property(nonatomic, readwrite, assign, getter=isNeedUpdate) BOOL needUpdate;
 @property(nonatomic, readwrite, assign) BOOL updating;
 
@@ -156,10 +156,6 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     return MobilyContext.application;
 }
 
-- (BOOL)isAppeared {
-    return (_appearedCount > 0);
-}
-
 - (void)setNavigationBarHidden:(BOOL)navigationBarHidden {
     [self setNavigationBarHidden:navigationBarHidden animated:NO];
 }
@@ -234,12 +230,14 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     [super viewWillAppear:animated];
     [self.view layoutIfNeeded];
     
-    [_eventWillAppear fireSender:self object:nil];
-    self.appearedCount = _appearedCount + 1;
-    if(self.isNeedUpdate == YES) {
-        self.needUpdate = NO;
-        [self clear];
-        [self update];
+    if(_appeared == NO) {
+        [_eventWillAppear fireSender:self object:nil];
+        self.appeared = YES;
+        if(self.isNeedUpdate == YES) {
+            self.needUpdate = NO;
+            [self clear];
+            [self update];
+        }
     }
 }
 
@@ -256,8 +254,8 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-    if(_appearedCount > 0) {
-        self.appearedCount = _appearedCount - 1;
+    if(_appeared == YES) {
+        self.appeared = NO;
         [_eventDidDisappear fireSender:self object:nil];
     }
     [super viewDidDisappear:animated];

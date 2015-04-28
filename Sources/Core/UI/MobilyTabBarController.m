@@ -45,7 +45,7 @@
 
 @interface MobilyTabBarController () < UIViewControllerTransitioningDelegate, UITabBarControllerDelegate, MobilySlideControllerDelegate >
 
-@property(nonatomic, readwrite, assign) NSUInteger appearedCount;
+@property(nonatomic, readwrite, assign, getter=isAppeared) BOOL appeared;
 @property(nonatomic, readwrite, assign, getter=isNeedUpdate) BOOL needUpdate;
 @property(nonatomic, readwrite, assign) BOOL updating;
 
@@ -158,10 +158,6 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 #pragma clang diagnostic pop
 }
 
-- (BOOL)isAppeared {
-    return (_appearedCount > 0);
-}
-
 #pragma mark Public
 
 - (void)setNeedUpdate {
@@ -239,12 +235,14 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     if(_navigationBarHidden == YES) {
         [self.navigationController setNavigationBarHidden:YES animated:animated];
     }
-    [_eventWillAppear fireSender:self object:nil];
-    self.appearedCount = _appearedCount + 1;
-    if(self.isNeedUpdate == YES) {
-        self.needUpdate = NO;
-        [self clear];
-        [self update];
+    if(_appeared == NO) {
+        [_eventWillAppear fireSender:self object:nil];
+        self.appeared = YES;
+        if(self.isNeedUpdate == YES) {
+            self.needUpdate = NO;
+            [self clear];
+            [self update];
+        }
     }
 }
 
@@ -264,8 +262,8 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-    if(_appearedCount > 0) {
-        self.appearedCount = _appearedCount - 1;
+    if(_appeared == YES) {
+        self.appeared = NO;
         [_eventDidDisappear fireSender:self object:nil];
     }
     [super viewDidDisappear:animated];
