@@ -780,11 +780,6 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             if(CGRectContainsPoint(_centerView.frame, location) == YES) {
                 return YES;
             }
-        } else {
-            CGRect f = CGRectMake(0.0f, 0.0f, _centerView.frame.size.width, 20.0f);
-            if(CGRectContainsPoint(f, location) == YES) {
-                return YES;
-            }
         }
     } else if(gestureRecognizer == _panGesture) {
         if((_swipeDragging == NO) && (_swipeDecelerating == NO)) {
