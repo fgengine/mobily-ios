@@ -73,6 +73,7 @@
     self.view.clipsToBounds = YES;
     
     self.rootView = [[UIView alloc] initWithFrame:self.view.bounds];
+    _rootView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _rootView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_rootView];
 
@@ -102,21 +103,22 @@
     [super viewWillLayoutSubviews];
     
     _rootView.frame = self.view.bounds;
-    
-    CGRect currentFrame = self.currentFrame;
-    if(_controller != nil) {
-        _controller.view.frame = currentFrame;
-    }
-    if(_beforeDecorView != nil) {
-        _beforeDecorView.frame = [self beforeDecorFrameFromFrame:currentFrame];
-        if(_canBeforeDecor.applyFromProgress == YES) {
-            [_beforeDecorView pageController:self applyFromProgress:[self beforeDecorProgressFromFrame:currentFrame]];
+    if(_animating == NO) {
+        CGRect currentFrame = self.currentFrame;
+        if(_controller != nil) {
+            _controller.view.frame = currentFrame;
         }
-    }
-    if(_afterDecorView != nil) {
-        _afterDecorView.frame = [self afterDecorFrameFromFrame:currentFrame];
-        if(_canAfterDecor.applyFromProgress == YES) {
-            [_afterDecorView pageController:self applyFromProgress:[self afterDecorProgressFromFrame:currentFrame]];
+        if(_beforeDecorView != nil) {
+            _beforeDecorView.frame = [self beforeDecorFrameFromFrame:currentFrame];
+            if(_canBeforeDecor.applyFromProgress == YES) {
+                [_beforeDecorView pageController:self applyFromProgress:[self beforeDecorProgressFromFrame:currentFrame]];
+            }
+        }
+        if(_afterDecorView != nil) {
+            _afterDecorView.frame = [self afterDecorFrameFromFrame:currentFrame];
+            if(_canAfterDecor.applyFromProgress == YES) {
+                [_afterDecorView pageController:self applyFromProgress:[self afterDecorProgressFromFrame:currentFrame]];
+            }
         }
     }
 }
