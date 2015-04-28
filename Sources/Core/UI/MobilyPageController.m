@@ -126,6 +126,11 @@
 - (void)setController:(UIViewController< MobilyPageControllerDelegate >*)controller {
     if(_controller != controller) {
         if(self.isViewLoaded == YES) {
+            if(_controller != nil) {
+                [_controller willMoveToParentViewController:nil];
+                [_controller.view removeFromSuperview];
+                [_controller removeFromParentViewController];
+            }
             _controller = controller;
             if(_controller != nil) {
                 _controller.pageController = self;
