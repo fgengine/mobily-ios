@@ -2244,6 +2244,13 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
     }
 }
 
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView*)scrollView {
+    if([_delegate respondsToSelector:_cmd] == YES) {
+        return [_delegate scrollViewShouldScrollToTop:scrollView];
+    }
+    return YES;
+}
+
 @end
 
 /*--------------------------------------------------*/
