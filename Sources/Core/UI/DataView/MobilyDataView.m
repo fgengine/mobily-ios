@@ -1404,7 +1404,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                         break;
                     case MobilyDataViewSearchBarStyleOverlay: {
                         if(_showedSearchBar == YES) {
-                            self.searchBarOverlayLastPosition = _scrollBeginPosition.y + _searchBar.frameHeight;
+                            self.searchBarOverlayLastPosition = MAX(_searchBar.frameHeight, _scrollBeginPosition.y + _searchBar.frameHeight);
                         } else {
                             self.searchBarOverlayLastPosition = MAX(0.0f, _scrollBeginPosition.y - _searchBar.frameHeight);
                         }
