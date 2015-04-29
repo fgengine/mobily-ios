@@ -214,8 +214,11 @@ static CGFloat MobilySearchBarSeparatorHeight = 0.5f;
         textField.cornerRadius = 4.0f;
         textField.hiddenToolbar = YES;
         textField.font = [UIFont fontWithName:@"HelveticaNeue" size:13.0f];
-        textField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, 20)];
-        textField.leftViewMode = UITextFieldViewModeAlways;
+        UIImage* image = [UIImage imageNamed:@"icon_searchbar.png"];
+        if(image != nil) {
+            textField.leftView = [[UIImageView alloc] initWithImage:image];
+            textField.leftViewMode = UITextFieldViewModeAlways;
+        }
         self.searchField = textField;
     }
     return _searchField;
