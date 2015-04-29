@@ -310,11 +310,8 @@
 }
 
 - (id)fireEventForKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
-    id< MobilyEvent > event = nil;
     NSMutableDictionary* events = _groupsEvents[_defaultGroup];
-    if(events != nil) {
-        event = events[key];
-    }
+    id< MobilyEvent > event = (events != nil) ? events[key] : nil;
     if(event != nil) {
         return [event fireSender:sender object:object];
     }
@@ -322,18 +319,12 @@
 }
 
 - (id)fireEventInGroup:(id)group forKey:(id)key bySender:(id)sender byObject:(id)object orDefault:(id)orDefault {
-    id< MobilyEvent > event = nil;
     NSMutableDictionary* events = _groupsEvents[group];
-    if(events == nil) {
-        events = _groupsEvents[_defaultGroup];
-    }
-    if(events != nil) {
-        event = events[key];
-    }
+    id< MobilyEvent > event = (events != nil) ? events[key] : nil;
     if(event != nil) {
         return [event fireSender:sender object:object];
     }
-    return orDefault;
+    return [self fireEventForKey:key bySender:sender byObject:object orDefault:orDefault];
 }
 
 @end
