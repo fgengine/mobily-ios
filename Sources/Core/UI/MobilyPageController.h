@@ -60,6 +60,7 @@ typedef NS_ENUM(NSInteger, MobilyPageControllerDirection) {
 
 @property(nonatomic, readwrite, assign) IBInspectable MobilyPageControllerOrientation orientation;
 @property(nonatomic, readwrite, strong) UIViewController< MobilyPageControllerDelegate >* controller;
+@property(nonatomic, readonly, assign, getter = isAnimating) BOOL animating;
 @property(nonatomic, readwrite, assign) IBInspectable BOOL userInteractionEnabled;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat draggingRate;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat bounceRate;
