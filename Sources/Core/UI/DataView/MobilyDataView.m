@@ -1374,10 +1374,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 
 - (void)_updateInsets {
     UIEdgeInsets scrollInsets = UIEdgeInsetsMake(_searchBarInset + _refreshViewInsets.top, _refreshViewInsets.left, _refreshViewInsets.bottom, _refreshViewInsets.right);
-    UIEdgeInsets contentInset = UIEdgeInsetsZero;
-    if(_showedSearchBar == YES) {
-        contentInset.top += _searchBarInset;
-    }
+    UIEdgeInsets contentInset = UIEdgeInsetsMake(_searchBarInset, 0.0f, 0.0f, 0.0f);
     if((_topRefreshView.state == MobilyDataRefreshViewStateLoading) || (_bottomRefreshView.state == MobilyDataRefreshViewStateLoading)) {
         contentInset.top += _refreshViewInsets.top;
         contentInset.bottom += _refreshViewInsets.bottom;
@@ -1406,7 +1403,11 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                         self.canDraggingSearchBar = ((_searchBar.searching == NO) && (_searchBar.editing == NO));
                         break;
                     case MobilyDataViewSearchBarStyleOverlay: {
-                        self.searchBarOverlayLastPosition = _scrollBeginPosition.y;
+                        if(_showedSearchBar == YES) {
+                            self.searchBarOverlayLastPosition = _scrollBeginPosition.y + _searchBar.frameHeight;
+                        } else {
+                            self.searchBarOverlayLastPosition = MAX(0.0f, _scrollBeginPosition.y - _searchBar.frameHeight);
+                        }
                         self.canDraggingSearchBar = ((_searchBar.searching == NO) && (_searchBar.editing == NO));
                         break;
                     }
@@ -1521,12 +1522,14 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     }
                     case MobilyDataViewSearchBarStyleOverlay: {
                         CGFloat diff = self.contentOffset.y - _searchBarOverlayLastPosition;
-                        CGFloat progress = (_searchBarInset - diff) / searchBarHeight;
+                        CGFloat progress = ((_searchBarInset - diff) * 0.5f) / searchBarHeight;
+                        /*
                         if(diff >= searchBarHeight * 1.25f) {
                             self.searchBarOverlayLastPosition = self.contentOffset.y - searchBarHeight;
                         } else if(diff <= -searchBarHeight * 1.25f) {
                             self.searchBarOverlayLastPosition = self.contentOffset.y + searchBarHeight;
                         }
+                        */
                         searchBarInset = MAX(0.0f, MIN(searchBarHeight * progress, searchBarHeight));
                         if(_showedSearchBar == YES) {
                             _constraintSearchBarTop.constant = -(searchBarHeight - searchBarInset);
