@@ -2136,6 +2136,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 #pragma mark NSKeyValueCoding
 
 MOBILY_DEFINE_VALIDATE_STRING(Title)
+MOBILY_DEFINE_VALIDATE_BOOL(HidesBottomBarWhenPushed)
 
 #pragma mark Public
 
