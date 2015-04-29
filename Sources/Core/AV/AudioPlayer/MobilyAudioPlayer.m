@@ -266,6 +266,7 @@
         [self stop];
         self.prepared = NO;
         self.player = nil;
+        self.url = nil;
         if([_delegate respondsToSelector:@selector(audioPlayerDidCleaned:)] == YES) {
             [_delegate audioPlayerDidCleaned:self];
         } else if(_cleanedBlock != nil) {
