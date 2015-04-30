@@ -428,6 +428,7 @@
         _searchBarStyle = searchBarStyle;
         if(_searchBar != nil) {
             [self _updateSuperviewConstraints];
+            [self.superview layoutIfNeeded];
         }
         self.searchBarInset = (_showedSearchBar == YES) ? _searchBar.frameHeight : 0.0f;
     }
@@ -448,6 +449,7 @@
             if(self.superview != nil) {
                 [self.superview insertSubview:_searchBar aboveSubview:self];
                 [self _updateSuperviewConstraints];
+                [self.superview layoutIfNeeded];
             }
         }
         self.searchBarInset = (_showedSearchBar == YES) ? _searchBar.frameHeight : 0.0f;
