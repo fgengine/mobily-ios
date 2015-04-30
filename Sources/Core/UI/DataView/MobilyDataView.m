@@ -1395,20 +1395,23 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
     if(self.pagingEnabled == NO) {
         if(_searchBarDragging == NO) {
             if((_searchBar != nil) && (_searchBarIteractionEnabled == YES)) {
+                self.canDraggingSearchBar = NO;
                 switch(_searchBarStyle) {
                     case MobilyDataViewSearchBarStyleStatic:
-                        self.canDraggingSearchBar = NO;
                         break;
                     case MobilyDataViewSearchBarStyleInside:
                         self.canDraggingSearchBar = ((_searchBar.searching == NO) && (_searchBar.editing == NO));
                         break;
                     case MobilyDataViewSearchBarStyleOverlay: {
-                        if(_showedSearchBar == YES) {
-                            self.searchBarOverlayLastPosition = MAX(_searchBar.frameHeight, _scrollBeginPosition.y + _searchBar.frameHeight);
-                        } else {
-                            self.searchBarOverlayLastPosition = MAX(0.0f, _scrollBeginPosition.y - _searchBar.frameHeight);
+                        CGFloat searchBarHeight = _searchBar.frameHeight;
+                        if(self.contentSizeHeight > self.frameHeight + searchBarHeight) {
+                            if(_showedSearchBar == YES) {
+                                self.searchBarOverlayLastPosition = MAX(_searchBar.frameHeight, _scrollBeginPosition.y + _searchBar.frameHeight);
+                            } else {
+                                self.searchBarOverlayLastPosition = MAX(0.0f, _scrollBeginPosition.y - _searchBar.frameHeight);
+                            }
+                            self.canDraggingSearchBar = ((_searchBar.searching == NO) && (_searchBar.editing == NO));
                         }
-                        self.canDraggingSearchBar = ((_searchBar.searching == NO) && (_searchBar.editing == NO));
                         break;
                     }
                 }
@@ -1416,14 +1419,16 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             self.searchBarDragging = (_canDraggingSearchBar == YES);
         }
         if(_refreshDragging == NO) {
+            self.canDraggingTopRefresh = NO;
+            self.canDraggingBottomRefresh = NO;
+            self.canDraggingLeftRefresh = NO;
+            self.canDraggingRightRefresh = NO;
             if((_topRefreshView != nil) && (_topRefreshIteractionEnabled == YES)) {
                 switch(_topRefreshView.state) {
                     case MobilyDataRefreshViewStateLoading:
                     case MobilyDataRefreshViewStateDisable: self.canDraggingTopRefresh = NO; break;
                     default: self.canDraggingTopRefresh = YES; break;
                 }
-            } else {
-                self.canDraggingTopRefresh = NO;
             }
             if((_bottomRefreshView != nil) && (_bottomRefreshIteractionEnabled == YES)) {
                 switch(_bottomRefreshView.state) {
@@ -1431,8 +1436,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     case MobilyDataRefreshViewStateDisable: self.canDraggingBottomRefresh = NO; break;
                     default: self.canDraggingBottomRefresh = YES; break;
                 }
-            } else {
-                self.canDraggingBottomRefresh = NO;
             }
             if((_leftRefreshView != nil) && (_leftRefreshIteractionEnabled == YES)) {
                 switch(_leftRefreshView.state) {
@@ -1440,8 +1443,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     case MobilyDataRefreshViewStateDisable: self.canDraggingLeftRefresh = NO; break;
                     default: self.canDraggingLeftRefresh = YES; break;
                 }
-            } else {
-                self.canDraggingLeftRefresh = NO;
             }
             if((_rightRefreshView != nil) && (_rightRefreshIteractionEnabled == YES)) {
                 switch(_rightRefreshView.state) {
@@ -1449,8 +1450,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     case MobilyDataRefreshViewStateDisable: self.canDraggingRightRefresh = NO; break;
                     default: self.canDraggingRightRefresh = YES; break;
                 }
-            } else {
-                self.canDraggingRightRefresh = NO;
             }
             self.refreshDragging = ((_canDraggingTopRefresh == YES) || (_canDraggingBottomRefresh == YES) || (_canDraggingLeftRefresh == YES) || (_canDraggingRightRefresh == YES));
         }
