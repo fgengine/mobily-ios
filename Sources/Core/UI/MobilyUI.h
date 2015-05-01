@@ -135,6 +135,8 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 + (UIColor*)colorWithString:(NSString*)string;
 + (CGFloat)colorComponentFromString:(NSString*)string start:(NSUInteger)start length:(NSUInteger)length;
 
+- (UIColor*)multiplyBrightness:(CGFloat)brightness;
+
 -(MobilyColorHSB)hsb;
 
 @end
@@ -363,17 +365,17 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 @property(nonatomic, readwrite, strong) UIImage* highlightedImage;
 @property(nonatomic, readwrite, strong) UIImage* highlightedBackgroundImage;
 
-@property(nonatomic, readwrite, strong) NSString* disabledTitle;
-@property(nonatomic, readwrite, strong) UIColor* disabledTitleColor;
-@property(nonatomic, readwrite, strong) UIColor* disabledTitleShadowColor;
-@property(nonatomic, readwrite, strong) UIImage* disabledImage;
-@property(nonatomic, readwrite, strong) UIImage* disabledBackgroundImage;
-
 @property(nonatomic, readwrite, strong) NSString* selectedTitle;
 @property(nonatomic, readwrite, strong) UIColor* selectedTitleColor;
 @property(nonatomic, readwrite, strong) UIColor* selectedTitleShadowColor;
 @property(nonatomic, readwrite, strong) UIImage* selectedImage;
 @property(nonatomic, readwrite, strong) UIImage* selectedBackgroundImage;
+
+@property(nonatomic, readwrite, strong) NSString* disabledTitle;
+@property(nonatomic, readwrite, strong) UIColor* disabledTitleColor;
+@property(nonatomic, readwrite, strong) UIColor* disabledTitleShadowColor;
+@property(nonatomic, readwrite, strong) UIImage* disabledImage;
+@property(nonatomic, readwrite, strong) UIImage* disabledBackgroundImage;
 
 @end
 

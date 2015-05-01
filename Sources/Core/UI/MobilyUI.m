@@ -676,6 +676,12 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     return ((CGFloat)result / 255.0f);
 }
 
+- (UIColor*)multiplyBrightness:(CGFloat)brightness {
+    CGFloat h, s, b, a;
+    [self getHue:&h saturation:&s brightness:&b alpha:&a];
+    return [UIColor colorWithHue:h saturation:s brightness:b * brightness alpha:a];
+}
+
 - (MobilyColorHSB)hsb {
     MobilyColorHSB hsb;
     hsb.hue = 0.0f;
@@ -2045,46 +2051,6 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
     return [self backgroundImageForState:UIControlStateHighlighted];
 }
 
-- (void)setDisabledTitle:(NSString*)disabledTitle {
-    [self setTitle:disabledTitle forState:UIControlStateDisabled];
-}
-
-- (NSString*)disabledTitle {
-    return [self titleForState:UIControlStateDisabled];
-}
-
-- (void)setDisabledTitleColor:(UIColor*)disabledTitleColor {
-    [self setTitleColor:disabledTitleColor forState:UIControlStateDisabled];
-}
-
-- (UIColor*)disabledTitleColor {
-    return [self titleColorForState:UIControlStateDisabled];
-}
-
-- (void)setDisabledTitleShadowColor:(UIColor*)disabledTitleShadowColor {
-    [self setTitleShadowColor:disabledTitleShadowColor forState:UIControlStateDisabled];
-}
-
-- (UIColor*)disabledTitleShadowColor {
-    return [self titleShadowColorForState:UIControlStateDisabled];
-}
-
-- (void)setDisabledImage:(UIImage*)disabledImage {
-    [self setImage:disabledImage forState:UIControlStateDisabled];
-}
-
-- (UIImage*)disabledImage {
-    return [self imageForState:UIControlStateDisabled];
-}
-
-- (void)setDisabledBackgroundImage:(UIImage*)disabledBackgroundImage {
-    [self setBackgroundImage:disabledBackgroundImage forState:UIControlStateDisabled];
-}
-
-- (UIImage*)disabledBackgroundImage {
-    return [self backgroundImageForState:UIControlStateDisabled];
-}
-
 - (void)setSelectedTitle:(NSString*)selectedTitle {
     [self setTitle:selectedTitle forState:UIControlStateSelected];
 }
@@ -2123,6 +2089,46 @@ MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
 
 - (UIImage*)selectedBackgroundImage {
     return [self backgroundImageForState:UIControlStateSelected];
+}
+
+- (void)setDisabledTitle:(NSString*)disabledTitle {
+    [self setTitle:disabledTitle forState:UIControlStateDisabled];
+}
+
+- (NSString*)disabledTitle {
+    return [self titleForState:UIControlStateDisabled];
+}
+
+- (void)setDisabledTitleColor:(UIColor*)disabledTitleColor {
+    [self setTitleColor:disabledTitleColor forState:UIControlStateDisabled];
+}
+
+- (UIColor*)disabledTitleColor {
+    return [self titleColorForState:UIControlStateDisabled];
+}
+
+- (void)setDisabledTitleShadowColor:(UIColor*)disabledTitleShadowColor {
+    [self setTitleShadowColor:disabledTitleShadowColor forState:UIControlStateDisabled];
+}
+
+- (UIColor*)disabledTitleShadowColor {
+    return [self titleShadowColorForState:UIControlStateDisabled];
+}
+
+- (void)setDisabledImage:(UIImage*)disabledImage {
+    [self setImage:disabledImage forState:UIControlStateDisabled];
+}
+
+- (UIImage*)disabledImage {
+    return [self imageForState:UIControlStateDisabled];
+}
+
+- (void)setDisabledBackgroundImage:(UIImage*)disabledBackgroundImage {
+    [self setBackgroundImage:disabledBackgroundImage forState:UIControlStateDisabled];
+}
+
+- (UIImage*)disabledBackgroundImage {
+    return [self backgroundImageForState:UIControlStateDisabled];
 }
 
 @end

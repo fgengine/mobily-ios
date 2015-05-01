@@ -50,6 +50,30 @@ typedef NS_ENUM(NSInteger, MobilyButtonImageAlignment) {
 
 @property(nonatomic, readwrite, assign) IBInspectable MobilyButtonImageAlignment imageAlignment;
 
+@property(nonatomic, readwrite, strong) IBInspectable UIColor* normalBackgroundColor;
+@property(nonatomic, readwrite, strong) IBInspectable UIColor* selectedBackgroundColor;
+@property(nonatomic, readwrite, strong) IBInspectable UIColor* highlightedBackgroundColor;
+@property(nonatomic, readwrite, strong) IBInspectable UIColor* disabledBackgroundColor;
+@property(nonatomic, readonly, strong) UIColor* currentBackgroundColor;
+
+@property(nonatomic, readwrite, strong) IBInspectable UIColor* normalBorderColor;
+@property(nonatomic, readwrite, strong) IBInspectable UIColor* selectedBorderColor;
+@property(nonatomic, readwrite, strong) IBInspectable UIColor* highlightedBorderColor;
+@property(nonatomic, readwrite, strong) IBInspectable UIColor* disabledBorderColor;
+@property(nonatomic, readonly, strong) UIColor* currentBorderColor;
+
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat normalBorderWidth;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat selectedBorderWidth;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat highlightedBorderWidth;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat disabledBorderWidth;
+@property(nonatomic, readonly, assign) CGFloat currentBorderWidth;
+
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat normalCornerRadius;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat selectedCornerRadius;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat highlightedCornerRadius;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat disabledCornerRadius;
+@property(nonatomic, readonly, assign) CGFloat currentCornerRadius;
+
 - (void)setup NS_REQUIRES_SUPER;
 
 @end
