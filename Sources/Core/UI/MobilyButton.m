@@ -40,11 +40,7 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyButton () {
-    __weak UILabel* _titleLabel;
-    __weak UIImageView* _imageView;
-}
-
+@interface MobilyButton ()
 @end
 
 /*--------------------------------------------------*/
@@ -78,14 +74,6 @@
 }
 
 - (void)setup {
-    _titleLabel = self.titleLabel;
-    _imageView = self.imageView;
-}
-
-- (void)dealloc {
-    self.objectName = nil;
-    self.objectParent = nil;
-    self.objectChilds = nil;
 }
 
 #pragma mark MobilyBuilderObject
@@ -142,34 +130,38 @@
 
 - (CGSize)intrinsicContentSize {
     CGSize result = CGSizeZero;
-    CGSize titleSize = CGSizeZero;
-    CGSize imageSize = CGSizeZero;
-    NSString* title = self.currentTitle;
-    if(title != nil) {
-        titleSize = [title implicitSizeWithFont:_titleLabel.font lineBreakMode:_titleLabel.lineBreakMode];
-        titleSize.width += self.titleEdgeInsets.left + self.titleEdgeInsets.right;
-        titleSize.height += self.titleEdgeInsets.top + self.titleEdgeInsets.bottom;
+    if(self.window != nil) {
+        CGSize titleSize = CGSizeZero;
+        CGSize imageSize = CGSizeZero;
+        NSString* title = self.currentTitle;
+        if(title != nil) {
+            titleSize = [self.titleLabel implicitSize];
+            titleSize.width += self.titleEdgeInsets.left + self.titleEdgeInsets.right;
+            titleSize.height += self.titleEdgeInsets.top + self.titleEdgeInsets.bottom;
+        }
+        UIImage* image = self.currentImage;
+        if(image != nil) {
+            imageSize = image.size;
+            imageSize.width += self.imageEdgeInsets.left + self.imageEdgeInsets.right;
+            imageSize.height += self.imageEdgeInsets.top + self.imageEdgeInsets.bottom;
+        }
+        switch(_imageAlignment) {
+            case MobilyButtonImageAlignmentLeft:
+            case MobilyButtonImageAlignmentRight:
+                result.width += imageSize.width + titleSize.width;
+                result.height += MAX(imageSize.height, titleSize.height);
+                break;
+            case MobilyButtonImageAlignmentTop:
+            case MobilyButtonImageAlignmentBottom:
+                result.width += MAX(imageSize.width, titleSize.width);
+                result.height += imageSize.height + titleSize.height;
+                break;
+        }
+        result.width += self.contentEdgeInsets.left + self.contentEdgeInsets.right;
+        result.height += self.contentEdgeInsets.top + self.contentEdgeInsets.bottom;
+    } else {
+        result = [super intrinsicContentSize];
     }
-    UIImage* image = self.currentImage;
-    if(image != nil) {
-        imageSize = image.size;
-        imageSize.width += self.imageEdgeInsets.left + self.imageEdgeInsets.right;
-        imageSize.height += self.imageEdgeInsets.top + self.imageEdgeInsets.bottom;
-    }
-    switch(_imageAlignment) {
-        case MobilyButtonImageAlignmentLeft:
-        case MobilyButtonImageAlignmentRight:
-            result.width += imageSize.width + titleSize.width;
-            result.height += MAX(imageSize.height, titleSize.height);
-            break;
-        case MobilyButtonImageAlignmentTop:
-        case MobilyButtonImageAlignmentBottom:
-            result.width += MAX(imageSize.width, titleSize.width);
-            result.height += imageSize.height + titleSize.height;
-            break;
-    }
-    result.width += self.contentEdgeInsets.left + self.contentEdgeInsets.right;
-    result.height += self.contentEdgeInsets.top + self.contentEdgeInsets.bottom;
     return result;
 }
 
@@ -188,8 +180,10 @@
             case MobilyButtonImageAlignmentTop: CGRectDivide(contentRect, &imageRect, &titleRect, imageSize.height, CGRectMinYEdge); break;
             case MobilyButtonImageAlignmentBottom: CGRectDivide(contentRect, &imageRect, &titleRect, imageSize.height, CGRectMaxYEdge); break;
         }
-        titleRect = UIEdgeInsetsInsetRect(titleRect, [self titleEdgeInsets]);
+        titleRect = UIEdgeInsetsInsetRect(titleRect, self.titleEdgeInsets);
         result = titleRect;
+    } else {
+        result = [super titleRectForContentRect:contentRect];
     }
     return result;
 }
@@ -212,6 +206,8 @@
         imageRect = UIEdgeInsetsInsetRect(imageRect, self.imageEdgeInsets);
         imageRect = CGRectMakeCenterPoint(CGRectGetCenterPoint(imageRect), imageSize.width, imageSize.height);
         result = imageRect;
+    } else {
+        result = [super imageRectForContentRect:contentRect];
     }
     return result;
 }

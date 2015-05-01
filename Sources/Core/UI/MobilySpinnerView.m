@@ -47,10 +47,6 @@
 - (void)applicationDidEnterBackground;
 - (void)applicationWillEnterForeground;
 
-- (void)applyAnimation;
-- (void)pauseLayers;
-- (void)resumeLayers;
-
 @end
 
 /*--------------------------------------------------*/
@@ -86,11 +82,9 @@
     _hidesWhenStopped = YES;
     
     self.backgroundColor = UIColor.clearColor;
-    [self applyAnimation];
-    [self sizeToFit];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 - (void)dealloc {
@@ -102,19 +96,17 @@
 -(void)setSize:(CGFloat)size {
     if(_size != size) {
         _size = size;
-        [self applyAnimation];
         [self invalidateIntrinsicContentSize];
+        self.layer.sublayers = nil;
+        [self prepareAnimation];
     }
 }
 
 - (void)setColor:(UIColor*)color {
     if([_color isEqual:color] == NO) {
         _color = color;
-        
-        CGColorRef colorRef = _color.CGColor;
-        for(CALayer* layer in self.layer.sublayers) {
-            layer.backgroundColor = colorRef;
-        }
+        self.layer.sublayers = nil;
+        [self prepareAnimation];
     }
 }
 
@@ -134,7 +126,10 @@
     if(_animating == NO) {
         _animating = YES;
         self.hidden = NO;
-        [self resumeLayers];
+        if(_hidesWhenStopped == NO) {
+            self.layer.sublayers = nil;
+        }
+        [self prepareAnimation];
     }
 }
 
@@ -142,9 +137,9 @@
     if(_animating == YES) {
         _animating = NO;
         if(_hidesWhenStopped == YES) {
+            self.layer.sublayers = nil;
             self.hidden = YES;
         }
-        [self pauseLayers];
     }
 }
 
@@ -155,34 +150,14 @@
 
 - (void)applicationDidEnterBackground {
     if(_animating == YES) {
-        [self pauseLayers];
+        self.layer.sublayers = nil;
     }
 }
 
 - (void)applicationWillEnterForeground {
     if(_animating == YES) {
-        [self resumeLayers];
+        [self prepareAnimation];
     }
-}
-
-- (void)applyAnimation {
-    self.layer.sublayers = nil;
-    [self prepareAnimation];
-}
-
-- (void)pauseLayers {
-    CFTimeInterval pausedTime = [self.layer convertTime:CACurrentMediaTime() fromLayer:nil];
-    self.layer.timeOffset = pausedTime;
-    self.layer.speed = 0.0f;
-}
-
-- (void)resumeLayers {
-    CFTimeInterval pausedTime = [self.layer timeOffset];
-    self.layer.speed = 1.0f;
-    self.layer.timeOffset = 0.0f;
-    self.layer.beginTime = 0.0f;
-    CFTimeInterval timeSincePause = [self.layer convertTime:CACurrentMediaTime() fromLayer:nil] - pausedTime;
-    self.layer.beginTime = timeSincePause;
 }
 
 @end
