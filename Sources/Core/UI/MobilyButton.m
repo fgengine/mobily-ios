@@ -434,7 +434,10 @@
 #pragma mark Private
 
 - (void)_updateCurrentState {
-    self.backgroundColor = [self currentBackgroundColor];
+    UIColor* backgroundColor = [self currentBackgroundColor];
+    if(backgroundColor != nil) {
+        self.backgroundColor = backgroundColor;
+    }
     self.borderColor = [self currentBorderColor];
     self.borderWidth = [self currentBorderWidth];
     self.cornerRadius = [self currentCornerRadius];
