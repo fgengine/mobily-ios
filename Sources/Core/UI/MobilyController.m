@@ -156,6 +156,27 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     return MobilyContext.application;
 }
 
+- (void)setStatusBarHidden:(BOOL)statusBarHidden {
+    if(_statusBarHidden != statusBarHidden) {
+        _statusBarHidden = statusBarHidden;
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
+}
+
+- (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle {
+    if(_statusBarStyle != statusBarStyle) {
+        _statusBarStyle = statusBarStyle;
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
+}
+
+- (void)setStatusBarAnimation:(UIStatusBarAnimation)statusBarAnimation {
+    if(_statusBarAnimation != statusBarAnimation) {
+        _statusBarAnimation = statusBarAnimation;
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
+}
+
 - (void)setNavigationBarHidden:(BOOL)navigationBarHidden {
     [self setNavigationBarHidden:navigationBarHidden animated:NO];
 }
@@ -202,7 +223,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 #pragma mark UIViewController
 
 - (BOOL)prefersStatusBarHidden {
-    return NO;
+    return _statusBarHidden;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {

@@ -43,6 +43,7 @@
 @property(nonatomic, readonly, weak) id app;
 
 @property(nonatomic, readonly, assign, getter=isAppeared) BOOL appeared;
+@property(nonatomic, readwrite, assign, getter=isStatusBarHidden) BOOL statusBarHidden;
 @property(nonatomic, readwrite, assign) UIStatusBarStyle statusBarStyle;
 @property(nonatomic, readwrite, assign) UIStatusBarAnimation statusBarAnimation;
 @property(nonatomic, readwrite, assign, getter=isNavigationBarHidden) BOOL navigationBarHidden;
