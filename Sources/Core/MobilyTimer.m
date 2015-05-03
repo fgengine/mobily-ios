@@ -222,7 +222,7 @@
 
 - (NSTimeInterval)elapsed {
     if((_started == YES) && (_delaying == NO)) {
-        self.elapsed = NSDate.timeIntervalSinceReferenceDate - _started;
+        self.elapsed = NSDate.timeIntervalSinceReferenceDate - _startTime;
     }
     return _elapsed;
 }
