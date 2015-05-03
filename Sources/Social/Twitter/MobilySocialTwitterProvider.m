@@ -101,7 +101,9 @@
 #pragma mark Public
 
 - (void)signinSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
-    [Twitter.sharedInstance startWithConsumerKey:_consumerKey consumerSecret:_consumerSecret];
+    if(Twitter.sharedInstance.authConfig == nil) {
+        [Twitter.sharedInstance startWithConsumerKey:_consumerKey consumerSecret:_consumerSecret];
+    }
     [Twitter.sharedInstance logInWithCompletion:^(TWTRSession* session, NSError* error) {
         if(session != nil) {
             self.session = [[MobilySocialTwitterSession alloc] initWithSession:session];
