@@ -99,9 +99,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)dealloc {
-    self.objectName = nil;
-    self.objectParent = nil;
-    self.objectChilds = nil;
+    [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
 #pragma mark MobilyBuilderObject
