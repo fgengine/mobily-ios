@@ -99,7 +99,6 @@
         [view addSubview:self];
         
         _panelView = [[MobilyBlurView alloc] initWithFrame:CGRectZero];
-        // _panelView.backgroundColor = MobilyActivityViewPanelColor;
         _panelView.tintColor = MobilyActivityViewPanelColor;
         _panelView.cornerRadius = MobilyActivityViewPanelCornerRadius;
         _panelView.clipsToBounds = YES;
@@ -272,6 +271,7 @@
 - (void)showPrepare:(MobilyActivityViewBlock)prepare complete:(MobilyActivityViewBlock)complete {
     if(_showCount == NSNotFound) {
         _showCount = 1;
+        [_spinnerView startAnimating];
         [self layoutIfNeeded];
         [UIView animateWithDuration:MobilyActivityDuration
                               delay:0.1f
@@ -316,6 +316,7 @@
                              _panelView.alpha = 0.0f;
                              self.alpha = 0.0f;
                          } completion:^(BOOL finished __unused) {
+                             [_spinnerView stopAnimating];
                              if(complete != nil) {
                                  complete();
                              }
