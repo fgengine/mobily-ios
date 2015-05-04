@@ -53,6 +53,7 @@ typedef void(^MobilyTimerBlock)();
 @property(nonatomic, readwrite, assign) NSTimeInterval delay;
 @property(nonatomic, readwrite, assign) NSTimeInterval interval;
 @property(nonatomic, readwrite, assign) NSUInteger repeat;
+@property(nonatomic, readonly, assign) NSTimeInterval duration;
 @property(nonatomic, readonly, assign) NSTimeInterval elapsed;
 @property(nonatomic, readonly, assign) NSUInteger repeated;
 

@@ -220,6 +220,10 @@
     }
 }
 
+- (NSTimeInterval)duration {
+    return _interval * _repeat;
+}
+
 - (NSTimeInterval)elapsed {
     if((_started == YES) && (_delaying == NO)) {
         self.elapsed = NSDate.timeIntervalSinceReferenceDate - _startTime;
