@@ -77,6 +77,7 @@ typedef void(^MobilyAudioPlayerErrorBlock)(NSError* error);
 
 - (void)setup NS_REQUIRES_SUPER;
 
+- (BOOL)prepareWithData:(NSData*)data;
 - (BOOL)prepareWithName:(NSString*)name;
 - (BOOL)prepareWithPath:(NSString*)path name:(NSString*)name;
 - (BOOL)prepareWithUrl:(NSURL*)url;

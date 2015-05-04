@@ -193,6 +193,28 @@
 
 #pragma mark Public
 
+- (BOOL)prepareWithData:(NSData*)data {
+    if(_prepared == NO) {
+        NSError* error = nil;
+        self.player = [[AVAudioPlayer alloc] initWithData:data error:&error];
+        if(_player != nil) {
+            if([_player prepareToPlay] == YES) {
+                self.prepared = YES;
+                if([_delegate respondsToSelector:@selector(audioPlayerDidPrepared:)] == YES) {
+                    [_delegate audioPlayerDidPrepared:self];
+                } else if(_preparedBlock != nil) {
+                    _preparedBlock();
+                }
+            } else {
+                self.player = nil;
+            }
+        } else if(error != nil) {
+            NSLog(@"MobilyAudioPlayer::prepareWithData: Error=%@", error.localizedDescription);
+        }
+    }
+    return _prepared;
+}
+
 - (BOOL)prepareWithName:(NSString*)name {
     return [self prepareWithPath:NSBundle.mainBundle.resourcePath name:name];
 }
