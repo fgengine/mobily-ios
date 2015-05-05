@@ -270,6 +270,7 @@
         self.scrollBeginPosition = CGPointMake(_scrollBeginPosition.x + x, _scrollBeginPosition.y + y);
         self.searchBarOverlayLastPosition += y;
         [super setContentInset:contentInset];
+        [self setNeedsLayout];
     }
 }
 
