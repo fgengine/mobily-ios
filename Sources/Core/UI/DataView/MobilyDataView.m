@@ -1525,13 +1525,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     case MobilyDataViewSearchBarStyleOverlay: {
                         CGFloat diff = self.contentOffset.y - _searchBarOverlayLastPosition;
                         CGFloat progress = ((_searchBarInset - diff) * 0.5f) / searchBarHeight;
-                        /*
-                        if(diff >= searchBarHeight * 1.25f) {
-                            self.searchBarOverlayLastPosition = self.contentOffset.y - searchBarHeight;
-                        } else if(diff <= -searchBarHeight * 1.25f) {
-                            self.searchBarOverlayLastPosition = self.contentOffset.y + searchBarHeight;
-                        }
-                        */
                         searchBarInset = MAX(0.0f, MIN(searchBarHeight * progress, searchBarHeight));
                         if(_showedSearchBar == YES) {
                             _constraintSearchBarTop.constant = -(searchBarHeight - searchBarInset);

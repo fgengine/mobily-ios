@@ -183,23 +183,19 @@
     }
     if((hAlignPosition != 0) || (vAlignPosition != 0)) {
         CGRect visibleRect = CGRectMake(_alignInsets.left, _alignInsets.top, visibleSize.width - (_alignInsets.left + _alignInsets.right), visibleSize.height - (_alignInsets.top + _alignInsets.bottom));
-        if((_alignPosition & MobilyDataContainerAlignLeft) != 0) {
-            alignPoint.x = contentOffset.x + visibleRect.origin.x;
-        } else if((_alignPosition & MobilyDataContainerAlignCenteredHorizontally) != 0) {
-            alignPoint.x = contentOffset.x + (visibleRect.origin.x + (visibleRect.size.width * 0.5f));
-        } else if((_alignPosition & MobilyDataContainerAlignRight) != 0) {
+        if((hAlignPosition & MobilyDataContainerAlignRight) != 0) {
             alignPoint.x = contentOffset.x + (visibleRect.origin.x + visibleRect.size.width);
+        } else if((hAlignPosition & MobilyDataContainerAlignCenteredHorizontally) != 0) {
+            alignPoint.x = contentOffset.x + (visibleRect.origin.x + (visibleRect.size.width * 0.5f));
         } else {
-            alignPoint.x = contentOffset.x;
+            alignPoint.x = contentOffset.x + visibleRect.origin.x;
         }
-        if((_alignPosition & MobilyDataContainerAlignTop) != 0) {
-            alignPoint.y = contentOffset.y + visibleRect.origin.y;
-        } else if((_alignPosition & MobilyDataContainerAlignCenteredVertically) != 0) {
-            alignPoint.y = contentOffset.y + (visibleRect.origin.y + (visibleRect.size.height * 0.5f));
-        } else if((_alignPosition & MobilyDataContainerAlignBottom) != 0) {
+        if((vAlignPosition & MobilyDataContainerAlignBottom) != 0) {
             alignPoint.y = contentOffset.y + (visibleRect.origin.y + visibleRect.size.height);
+        } else if((vAlignPosition & MobilyDataContainerAlignCenteredVertically) != 0) {
+            alignPoint.y = contentOffset.y + (visibleRect.origin.y + (visibleRect.size.height * 0.5f));
         } else {
-            alignPoint.y = contentOffset.y;
+            alignPoint.y = contentOffset.y + visibleRect.origin.y;
         }
     }
     return alignPoint;
