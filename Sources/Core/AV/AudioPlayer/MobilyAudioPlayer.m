@@ -314,6 +314,7 @@
 - (void)stop {
     if((_prepared == YES) && (_playing == YES)) {
         self.playing = NO;
+        self.paused = NO;
         _player.currentTime = 0.0f;
         [_player stop];
         if([_delegate respondsToSelector:@selector(audioPlayerDidStoped:)] == YES) {

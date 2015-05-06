@@ -285,6 +285,7 @@
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder* __unused)recorder successfully:(BOOL __unused)successfully {
     self.waitFinished = NO;
     self.started = NO;
+    self.paused = NO;
     if([_delegate respondsToSelector:@selector(audioRecorderDidFinished:)] == YES) {
         [_delegate audioRecorderDidFinished:self];
     } else if(_finishedBlock != nil) {
