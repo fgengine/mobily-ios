@@ -170,13 +170,13 @@ extern NSString* MobilyDataContainerCurrentSectionChanged;
 
 - (instancetype)initWithOrientation:(MobilyDataContainerOrientation)orientation;
 
-- (void)prependIdentifier:(NSString*)identifier byData:(id)data;
+- (MobilyDataItem*)prependIdentifier:(NSString*)identifier byData:(id)data;
 - (void)prependItem:(MobilyDataItem*)item;
 - (void)prependItems:(NSArray*)items;
-- (void)appendIdentifier:(NSString*)identifier byData:(id)data;
+- (MobilyDataItem*)appendIdentifier:(NSString*)identifier byData:(id)data;
 - (void)appendItem:(MobilyDataItem*)item;
 - (void)appendItems:(NSArray*)items;
-- (void)insertIdentifier:(NSString*)identifier byData:(id)data atIndex:(NSUInteger)index;
+- (MobilyDataItem*)insertIdentifier:(NSString*)identifier byData:(id)data atIndex:(NSUInteger)index;
 - (void)insertItem:(MobilyDataItem*)item atIndex:(NSUInteger)index;
 - (void)insertItems:(NSArray*)items atIndex:(NSUInteger)index;
 - (void)replaceOriginItem:(MobilyDataItem*)originItem withItem:(MobilyDataItem*)item;

@@ -37,10 +37,12 @@
 
 #import <MobilyUI.h>
 #import <MobilyCG.h>
+#import <MobilyImageView.h>
 
 /*--------------------------------------------------*/
 
 #import <MobilySlideController.h>
+#import <MobilyPageController.h>
 
 /*--------------------------------------------------*/
 
@@ -2306,6 +2308,22 @@ MOBILY_DEFINE_VALIDATE_IMAGE(BackIndicatorTransitionMaskImage)
     return fixedSpaceItem;
 }
 
+- (MobilyImageView*)addLeftBarImageUrl:(NSURL*)imageUrl defaultImage:(UIImage*)defaultImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+    MobilyImageView* imageView = [[MobilyImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 36.0f, 36.0f)];
+    imageView.defaultImage = defaultImage;
+    imageView.imageUrl = imageUrl;
+    [self addLeftBarView:imageView target:target action:action animated:animated];
+    return imageView;
+}
+
+- (MobilyImageView*)addRightBarImageUrl:(NSURL*)imageUrl defaultImage:(UIImage*)defaultImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+    MobilyImageView* imageView = [[MobilyImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 36.0f, 36.0f)];
+    imageView.defaultImage = defaultImage;
+    imageView.imageUrl = imageUrl;
+    [self addRightBarView:imageView target:target action:action animated:animated];
+    return imageView;
+}
+
 - (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage target:(id)target action:(SEL)action animated:(BOOL)animated {
     return [self addLeftBarButtonNormalImage:normalImage highlightedImage:nil selectedImage:nil disabledImage:nil target:target action:action animated:animated];
 }
@@ -2486,13 +2504,29 @@ MOBILY_DEFINE_VALIDATE_IMAGE(BackIndicatorTransitionMaskImage)
 }
 
 - (UIBarButtonItem*)addLeftBarView:(UIView*)view animated:(BOOL)animated {
+    return [self addLeftBarView:view target:nil action:nil animated:animated];
+}
+
+- (UIBarButtonItem*)addRightBarView:(UIView*)view animated:(BOOL)animated {
+    return [self addRightBarView:view target:nil action:nil animated:animated];
+}
+
+- (UIBarButtonItem*)addLeftBarView:(UIView*)view target:(id)target action:(SEL)action animated:(BOOL)animated {
     UIBarButtonItem* barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:view];
+    if((target != nil) && (action != nil)) {
+        UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:target action:action];
+        [view addGestureRecognizer:tapGesture];
+    }
     [self addLeftBarButtonItem:barButtonItem animated:animated];
     return barButtonItem;
 }
 
-- (UIBarButtonItem*)addRightBarView:(UIView*)view animated:(BOOL)animated {
+- (UIBarButtonItem*)addRightBarView:(UIView*)view target:(id)target action:(SEL)action animated:(BOOL)animated {
     UIBarButtonItem* barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:view];
+    if((target != nil) && (action != nil)) {
+        UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:target action:action];
+        [view addGestureRecognizer:tapGesture];
+    }
     [self addRightBarButtonItem:barButtonItem animated:animated];
     return barButtonItem;
 }

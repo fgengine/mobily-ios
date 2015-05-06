@@ -148,8 +148,10 @@
 
 #pragma mark Public
 
-- (void)prependIdentifier:(NSString*)identifier byData:(id)data {
-    [self prependItem:[MobilyDataItem itemWithIdentifier:identifier order:0 data:data]];
+- (MobilyDataItem*)prependIdentifier:(NSString*)identifier byData:(id)data {
+    MobilyDataItem* item = [MobilyDataItem itemWithIdentifier:identifier order:0 data:data];
+    [self prependItem:item];
+    return item;
 }
 
 - (void)prependItem:(MobilyDataItem*)item {
@@ -170,8 +172,10 @@
     }
 }
 
-- (void)appendIdentifier:(NSString*)identifier byData:(id)data {
-    [self appendItem:[MobilyDataItem itemWithIdentifier:identifier order:0 data:data]];
+- (MobilyDataItem*)appendIdentifier:(NSString*)identifier byData:(id)data {
+    MobilyDataItem* item = [MobilyDataItem itemWithIdentifier:identifier order:0 data:data];
+    [self appendItem:item];
+    return item;
 }
 
 - (void)appendItem:(MobilyDataItem*)item {
@@ -192,8 +196,10 @@
     }
 }
 
-- (void)insertIdentifier:(NSString*)identifier byData:(id)data atIndex:(NSUInteger)index {
-    [self insertItem:[MobilyDataItem itemWithIdentifier:identifier order:0 data:data] atIndex:index];
+- (MobilyDataItem*)insertIdentifier:(NSString*)identifier byData:(id)data atIndex:(NSUInteger)index {
+    MobilyDataItem* item = [MobilyDataItem itemWithIdentifier:identifier order:0 data:data];
+    [self insertItem:item atIndex:index];
+    return item;
 }
 
 - (void)insertItem:(MobilyDataItem*)item atIndex:(NSUInteger)index {

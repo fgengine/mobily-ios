@@ -411,10 +411,17 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 
 /*--------------------------------------------------*/
 
+@class MobilyImageView;
+
+/*--------------------------------------------------*/
+
 @interface UINavigationItem (MobilyUI)
 
 - (UIBarButtonItem*)addLeftBarFixedSpace:(CGFloat)fixedSpaceWidth animated:(BOOL)animated;
 - (UIBarButtonItem*)addRightBarFixedSpace:(CGFloat)fixedSpaceWidth animated:(BOOL)animated;
+
+- (MobilyImageView*)addLeftBarImageUrl:(NSURL*)imageUrl defaultImage:(UIImage*)defaultImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (MobilyImageView*)addRightBarImageUrl:(NSURL*)imageUrl defaultImage:(UIImage*)defaultImage target:(id)target action:(SEL)action animated:(BOOL)animated;
 
 - (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage target:(id)target action:(SEL)action animated:(BOOL)animated;
 - (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage target:(id)target action:(SEL)action animated:(BOOL)animated;
@@ -470,6 +477,8 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 
 - (UIBarButtonItem*)addLeftBarView:(UIView*)view animated:(BOOL)animated;
 - (UIBarButtonItem*)addRightBarView:(UIView*)view animated:(BOOL)animated;
+- (UIBarButtonItem*)addLeftBarView:(UIView*)view target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIBarButtonItem*)addRightBarView:(UIView*)view target:(id)target action:(SEL)action animated:(BOOL)animated;
 - (void)addLeftBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated;
 - (void)addRightBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated;
 - (void)removeLeftBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated;
