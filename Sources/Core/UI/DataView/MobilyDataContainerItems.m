@@ -251,6 +251,8 @@
                     }
                 }
             }
+            contentOffset.x = MAX(0.0f, MIN(contentOffset.x, contentSize.width - visibleSize.width));
+            contentOffset.y = MAX(0.0f, MIN(contentOffset.y, contentSize.height - visibleSize.height));
         }
     }
     return contentOffset;
