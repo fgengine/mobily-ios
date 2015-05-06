@@ -90,7 +90,7 @@
                 [_controller removeFromParentViewController];
             }
             [self addChildViewController:_controller];
-            _controller.view.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin);
+            _controller.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
             _controller.view.frame = self.currentFrame;
             [_rootView addSubview:_controller.view];
             [_controller didMoveToParentViewController:self];
@@ -104,23 +104,35 @@
     
     _rootView.frame = self.view.bounds;
     if(_animating == NO) {
-        CGRect currentFrame = self.currentFrame;
+        _rootView.frame = self.view.bounds;
         if(_controller != nil) {
-            _controller.view.frame = currentFrame;
+            _controller.view.frame = self.currentFrame;
         }
         if(_beforeDecorView != nil) {
-            _beforeDecorView.frame = [self beforeDecorFrameFromFrame:currentFrame];
+            _beforeDecorView.frame = [self beforeDecorFrameFromFrame:self.currentFrame];
             if(_canBeforeDecor.applyFromProgress == YES) {
-                [_beforeDecorView pageController:self applyFromProgress:[self beforeDecorProgressFromFrame:currentFrame]];
+                [_beforeDecorView pageController:self applyFromProgress:[self beforeDecorProgressFromFrame:self.currentFrame]];
             }
         }
         if(_afterDecorView != nil) {
-            _afterDecorView.frame = [self afterDecorFrameFromFrame:currentFrame];
+            _afterDecorView.frame = [self afterDecorFrameFromFrame:self.currentFrame];
             if(_canAfterDecor.applyFromProgress == YES) {
-                [_afterDecorView pageController:self applyFromProgress:[self afterDecorProgressFromFrame:currentFrame]];
+                [_afterDecorView pageController:self applyFromProgress:[self afterDecorProgressFromFrame:self.currentFrame]];
             }
         }
     }
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    
+    [self.view setNeedsLayout];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    
+    [self.view setNeedsLayout];
 }
 
 #pragma mark Property

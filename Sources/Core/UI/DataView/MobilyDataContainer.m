@@ -159,44 +159,24 @@
 
 - (CGPoint)_alignPointWithContentOffset:(CGPoint)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize {
     CGPoint alignPoint = CGPointZero;
-    MobilyDataContainerAlign hAlignPosition = _alignPosition & (MobilyDataContainerAlignLeft | MobilyDataContainerAlignCenteredHorizontally | MobilyDataContainerAlignRight);
-    MobilyDataContainerAlign vAlignPosition = _alignPosition & (MobilyDataContainerAlignTop | MobilyDataContainerAlignCenteredVertically | MobilyDataContainerAlignBottom);
-    if(hAlignPosition != 0) {
-        CGFloat sdx = contentOffset.x;
-        CGFloat edx = contentSize.width - (contentOffset.x + visibleSize.width);
-        if(ABS(sdx) <= (_alignThreshold.vertical * 0.5f)) {
-            contentOffset.x = 0.0f;
-        } else if(ABS(edx) <= (_alignThreshold.horizontal * 0.5f)) {
-            contentOffset.x = contentSize.width - visibleSize.width;
-            hAlignPosition = 0;
-        }
+    CGRect visibleRect = CGRectMake(_alignInsets.left, _alignInsets.top, visibleSize.width - (_alignInsets.left + _alignInsets.right), visibleSize.height - (_alignInsets.top + _alignInsets.bottom));
+    if((_alignPosition & MobilyDataContainerAlignLeft) != 0) {
+        alignPoint.x = contentOffset.x + visibleRect.origin.x;
+    } else if((_alignPosition & MobilyDataContainerAlignCenteredHorizontally) != 0) {
+        alignPoint.x = contentOffset.x + (visibleRect.origin.x + (visibleRect.size.width * 0.5f));
+    } else if((_alignPosition & MobilyDataContainerAlignRight) != 0) {
+        alignPoint.x = contentOffset.x + (visibleRect.origin.x + visibleRect.size.width);
+    } else {
+        alignPoint.x = contentOffset.x;
     }
-    if(vAlignPosition != 0) {
-        CGFloat sdy = contentOffset.y;
-        CGFloat edy = contentSize.height - (contentOffset.y + visibleSize.height);
-        if(ABS(sdy) <= (_alignThreshold.vertical * 0.5f)) {
-            contentOffset.y = 0.0f;
-        } else if(ABS(edy) <= (_alignThreshold.vertical * 0.5f)) {
-            contentOffset.y = contentSize.height - visibleSize.height;
-            vAlignPosition = 0;
-        }
-    }
-    if((hAlignPosition != 0) || (vAlignPosition != 0)) {
-        CGRect visibleRect = CGRectMake(_alignInsets.left, _alignInsets.top, visibleSize.width - (_alignInsets.left + _alignInsets.right), visibleSize.height - (_alignInsets.top + _alignInsets.bottom));
-        if((hAlignPosition & MobilyDataContainerAlignRight) != 0) {
-            alignPoint.x = contentOffset.x + (visibleRect.origin.x + visibleRect.size.width);
-        } else if((hAlignPosition & MobilyDataContainerAlignCenteredHorizontally) != 0) {
-            alignPoint.x = contentOffset.x + (visibleRect.origin.x + (visibleRect.size.width * 0.5f));
-        } else {
-            alignPoint.x = contentOffset.x + visibleRect.origin.x;
-        }
-        if((vAlignPosition & MobilyDataContainerAlignBottom) != 0) {
-            alignPoint.y = contentOffset.y + (visibleRect.origin.y + visibleRect.size.height);
-        } else if((vAlignPosition & MobilyDataContainerAlignCenteredVertically) != 0) {
-            alignPoint.y = contentOffset.y + (visibleRect.origin.y + (visibleRect.size.height * 0.5f));
-        } else {
-            alignPoint.y = contentOffset.y + visibleRect.origin.y;
-        }
+    if((_alignPosition & MobilyDataContainerAlignTop) != 0) {
+        alignPoint.y = contentOffset.y + visibleRect.origin.y;
+    } else if((_alignPosition & MobilyDataContainerAlignCenteredVertically) != 0) {
+        alignPoint.y = contentOffset.y + (visibleRect.origin.y + (visibleRect.size.height * 0.5f));
+    } else if((_alignPosition & MobilyDataContainerAlignBottom) != 0) {
+        alignPoint.y = contentOffset.y + (visibleRect.origin.y + visibleRect.size.height);
+    } else {
+        alignPoint.y = contentOffset.y;
     }
     return alignPoint;
 }
