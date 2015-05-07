@@ -45,7 +45,7 @@
 
 @protocol MobilyFieldValidator < NSObject >
 
-@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* message;
+@property(nonatomic, readwrite, strong) IBInspectable NSString* message;
 @property(nonatomic, readwrite, weak) id< MobilyValidatedObject > control;
 
 @required
@@ -92,7 +92,7 @@
 
 @interface MobilyFieldRegExpValidator : NSObject < MobilyFieldValidator >
 
-@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* regExp;
+@property(nonatomic, readwrite, strong) IBInspectable NSString* regExp;
 
 - (instancetype)initWithRegExp:(NSString*)regExp andMessage:(NSString*)message;
 
@@ -102,7 +102,7 @@
 
 @interface MobilyFieldMinLengthValidator : NSObject < MobilyFieldValidator >
 
-@property(nonatomic, readwrite, assign) IB_DESIGNABLE NSInteger minLength;
+@property(nonatomic, readwrite, assign) IBInspectable NSInteger minLength;
 
 - (instancetype)initWithMessage:(NSString*)message minLength:(NSInteger)minLength;
 
@@ -112,7 +112,7 @@
 
 @interface MobilyFieldMaxLengthValidator : NSObject < MobilyFieldValidator >
 
-@property(nonatomic, readwrite, assign) IB_DESIGNABLE NSInteger maxLength;
+@property(nonatomic, readwrite, assign) IBInspectable NSInteger maxLength;
 
 - (instancetype)initWithMessage:(NSString*)message maxLength:(NSInteger)maxLength;
 
