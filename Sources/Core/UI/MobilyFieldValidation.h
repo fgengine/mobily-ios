@@ -34,6 +34,7 @@
 /*--------------------------------------------------*/
 
 #import <MobilyNS.h>
+#import <MobilyEvent.h>
 
 /*--------------------------------------------------*/
 
@@ -42,7 +43,10 @@
 
 /*--------------------------------------------------*/
 
-@protocol MobilyFieldValidator <NSObject>
+@protocol MobilyFieldValidator < NSObject >
+
+@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* message;
+@property(nonatomic, readwrite, weak) id< MobilyValidatedObject > control;
 
 @required
 - (BOOL)validate:(NSString*)value;
@@ -54,18 +58,16 @@
 
 @interface MobilyFieldForm : NSObject
 
-@property(nonatomic, readonly, assign, getter=isValid) BOOL valid;
 @property(nonatomic, readwrite, strong) IBOutletCollection(NSObject) NSArray* controls;
+@property(nonatomic, readwrite, strong) id< MobilyEvent > eventChangeState;
+@property(nonatomic, readonly, assign, getter=isValid) BOOL valid;
 
-- (void)addControl:(id<MobilyValidatedObject>)control;
-- (void)removeControl:(id<MobilyValidatedObject>)control;
+- (void)addControl:(id< MobilyValidatedObject >)control;
+- (void)removeControl:(id< MobilyValidatedObject >)control;
 - (void)removeAllControls;
 
-- (NSArray*)getInvalidControls;
+- (NSArray*)invalidControls;
 - (NSString*)output;
-
-- (void)validatedSuccess:(id<MobilyValidatedObject>)control andValue:(NSString*)value;
-- (void)validatedFail:(id<MobilyValidatedObject>)control andValue:(NSString*)value;
 
 @end
 
@@ -73,9 +75,8 @@
 
 @interface MobilyFieldEmptyValidator : NSObject < MobilyFieldValidator >
 
-@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* msg;
 
-- (instancetype)initWithMessage:(NSString*)msg;
+- (instancetype)initWithMessage:(NSString*)message;
 
 @end
 
@@ -83,9 +84,7 @@
 
 @interface MobilyFieldEmailValidator : NSObject < MobilyFieldValidator >
 
-@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* msg;
-
-- (instancetype)initWithMessage:(NSString*)msg;
+- (instancetype)initWithMessage:(NSString*)message;
 
 @end
 
@@ -93,10 +92,9 @@
 
 @interface MobilyFieldRegExpValidator : NSObject < MobilyFieldValidator >
 
-@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* msg;
 @property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* regExp;
 
-- (instancetype)initWithRegExp:(NSString*)regExp andMessage:(NSString*)msg;
+- (instancetype)initWithRegExp:(NSString*)regExp andMessage:(NSString*)message;
 
 @end
 
@@ -104,10 +102,9 @@
 
 @interface MobilyFieldMinLengthValidator : NSObject < MobilyFieldValidator >
 
-@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* msg;
 @property(nonatomic, readwrite, assign) IB_DESIGNABLE NSInteger minLength;
 
-- (instancetype)initWithMessage:(NSString*)msg;
+- (instancetype)initWithMessage:(NSString*)message minLength:(NSInteger)minLength;
 
 @end
 
@@ -115,10 +112,9 @@
 
 @interface MobilyFieldMaxLengthValidator : NSObject < MobilyFieldValidator >
 
-@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* msg;
 @property(nonatomic, readwrite, assign) IB_DESIGNABLE NSInteger maxLength;
 
-- (instancetype)initWithMessage:(NSString*)msg;
+- (instancetype)initWithMessage:(NSString*)message maxLength:(NSInteger)maxLength;
 
 @end
 
@@ -126,9 +122,7 @@
 
 @interface MobilyFieldDigitValidator : NSObject < MobilyFieldValidator >
 
-@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* msg;
-
-- (instancetype)initWithMessage:(NSString*)msg;
+- (instancetype)initWithMessage:(NSString*)message;
 
 @end
 
@@ -136,10 +130,9 @@
 
 @interface MobilyFieldANDValidator : NSObject < MobilyFieldValidator >
 
-@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* msg;
 @property(nonatomic, readwrite, strong) IBOutletCollection(NSObject) NSArray* validators;
 
-- (instancetype)initWithValidators:(NSArray*)validators andMessage:(NSString*)msg;
+- (instancetype)initWithValidators:(NSArray*)validators andMessage:(NSString*)message;
 
 @end
 
@@ -147,10 +140,9 @@
 
 @interface MobilyFieldORValidator : NSObject < MobilyFieldValidator >
 
-@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* msg;
 @property(nonatomic, readwrite, strong) IBOutletCollection(NSObject) NSArray* validators;
 
-- (instancetype)initWithValidators:(NSArray*)validators andMessage:(NSString*)msg;
+- (instancetype)initWithValidators:(NSArray*)validators andMessage:(NSString*)message;
 
 @end
 

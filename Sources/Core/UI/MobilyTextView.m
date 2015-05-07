@@ -36,7 +36,7 @@
 /*--------------------------------------------------*/
 
 #import <MobilyTextView.h>
-#import <MobilyFieldValidation.h>
+#import <MobilyFieldValidation+Private.h>
 
 /*--------------------------------------------------*/
 
@@ -151,6 +151,9 @@
 
 - (void)setText:(NSString*)string {
     [super setText:string];
+    if(self.isEditing == NO) {
+        [self validate];
+    }
     [self setNeedsDisplay];
 }
 
@@ -196,6 +199,26 @@
     if([_attributedPlaceholder isEqualToAttributedString:attributedPlaceholder] == NO) {
         _attributedPlaceholder = attributedPlaceholder;
         [self setNeedsDisplay];
+    }
+}
+
+- (void)setForm:(MobilyFieldForm*)form {
+    if([_form isEqual:form] == NO) {
+        _form = form;
+        [self validate];
+    }
+}
+
+- (void)setValidator:(id< MobilyFieldValidator >)validator {
+    if([_validator isEqual:validator] == NO) {
+        if(_validator != nil) {
+            _validator.control = nil;
+        }
+        _validator = validator;
+        if(_validator != nil) {
+            _validator.control = self;
+        }
+        [self validate];
     }
 }
 
@@ -291,16 +314,6 @@
     _nextInputResponder = nil;
 }
 
-- (void)validate {
-    if(_validator != nil) {
-        if([_validator validate:self.text] == YES) {
-            [_form validatedSuccess:self andValue:self.text];
-        } else {
-            [_form validatedFail:self andValue:self.text];
-        }
-    }
-}
-
 - (CGRect)placeholderRectForBounds:(CGRect)bounds {
     CGRect rect = UIEdgeInsetsInsetRect(bounds, self.contentInset);
     if([self respondsToSelector:@selector(textContainer)] == YES) {
@@ -315,6 +328,25 @@
         rect.origin.y += 8.0f;
     }
     return rect;
+}
+
+#pragma mark MobilyValidatedObject
+
+- (void)validate {
+    if((_form != nil) && (_validator != nil)) {
+        if([_validator validate:self.text] == YES) {
+            [_form _validatedSuccess:self andValue:self.text];
+        } else {
+            [_form _validatedFail:self andValue:self.text];
+        }
+    }
+}
+
+- (NSArray*)messages {
+    if((_form != nil) && (_validator != nil)) {
+        return [_validator messages:self.text];
+    }
+    return @[];
 }
 
 #pragma mark Private

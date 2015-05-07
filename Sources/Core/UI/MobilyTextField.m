@@ -36,7 +36,7 @@
 /*--------------------------------------------------*/
 
 #import <MobilyTextField.h>
-#import <MobilyFieldValidation.h>
+#import <MobilyFieldValidation+Private.h>
 
 /*--------------------------------------------------*/
 
@@ -158,6 +158,33 @@ const NSString* kPhoneEmptySymbol = @"_";
 
 #pragma mark Property
 
+- (void)setText:(NSString*)string {
+    [super setText:string];
+    if(self.isEditing == NO) {
+        [self validate];
+    }
+}
+
+- (void)setForm:(MobilyFieldForm*)form {
+    if([_form isEqual:form] == NO) {
+        _form = form;
+        [self validate];
+    }
+}
+
+- (void)setValidator:(id< MobilyFieldValidator >)validator {
+    if([_validator isEqual:validator] == NO) {
+        if(_validator != nil) {
+            _validator.control = nil;
+        }
+        _validator = validator;
+        if(_validator != nil) {
+            _validator.control = self;
+        }
+        [self validate];
+    }
+}
+
 - (void)setHiddenToolbar:(BOOL)hiddenToolbar {
     [self setHiddenToolbar:hiddenToolbar animated:NO];
 }
@@ -266,14 +293,23 @@ const NSString* kPhoneEmptySymbol = @"_";
     _nextInputResponder = nil;
 }
 
+#pragma mark MobilyValidatedObject
+
 - (void)validate {
-    if(_validator != nil) {
+    if((_form != nil) && (_validator != nil)) {
         if([_validator validate:self.text] == YES) {
-            [_form validatedSuccess:self andValue:self.text];
+            [_form _validatedSuccess:self andValue:self.text];
         } else {
-            [_form validatedFail:self andValue:self.text];
+            [_form _validatedFail:self andValue:self.text];
         }
     }
+}
+
+- (NSArray*)messages {
+    if((_form != nil) && (_validator != nil)) {
+        return [_validator messages:self.text];
+    }
+    return @[];
 }
 
 #pragma mark Private

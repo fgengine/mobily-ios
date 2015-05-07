@@ -7,7 +7,7 @@
 /* Permission is hereby granted, free of charge,    */
 /* to any person obtaining a copy of this software  */
 /* and associated documentation files               */
-/* (the "Software"), to deal in the Software        */
+/* (the "Software"), to demal in the Software        */
 /* without restriction, including without           */
 /* limitation the rights to use, copy, modify,      */
 /* merge, publish, distribute, sublicense,          */
@@ -35,34 +35,22 @@
 #define MOBILY_SOURCE
 /*--------------------------------------------------*/
 
-#import <MobilyFieldValidation.h>
-#import <MobilyValidatedObject.h>
-#import <MobilyNS.h>
+#import <MobilyFieldValidation+Private.h>
 
-/*--------------------------------------------------*/
-
-@interface MobilyFieldForm ()
-
-@property(nonatomic, readwrite, assign) BOOL valid;
-
-@property(nonatomic, readwrite, strong) NSMutableSet* validatedControls;
-
-@end
-
-/*--------------------------------------------------*/
-#pragma mark -
 /*--------------------------------------------------*/
 
 @implementation MobilyFieldForm
 
+#pragma mark Property
+
 - (void)setControls:(NSArray*)controls {
-    if([_controls isEqualToArray:controls] == NO) {
-        NSMutableArray* checkedControls = [NSMutableArray array];
-        for(id control in controls) {
-            if([control conformsToProtocol:@protocol(MobilyValidatedObject)]) {
-                [checkedControls addObject:control];
-            }
+    NSMutableArray* checkedControls = [NSMutableArray array];
+    for(id control in controls) {
+        if([control conformsToProtocol:@protocol(MobilyValidatedObject)]) {
+            [checkedControls addObject:control];
         }
+    }
+    if([_controls isEqualToArray:checkedControls] == NO) {
         for(id< MobilyValidatedObject > control in _controls) {
             control.form = nil;
         }
@@ -74,22 +62,27 @@
     }
 }
 
-- (void)addControl:(id<MobilyValidatedObject>)control {
-    if([_controls indexOfObjectIdenticalTo:control] == NSNotFound) {
-        control.form = self;
-        NSMutableArray* updatedControls = [NSMutableArray arrayWithArray:_controls];
-        [updatedControls addObject:control];
-        _controls = updatedControls;
+- (void)setValid:(BOOL)valid {
+    if(_valid != valid) {
+        _valid = valid;
+        [_eventChangeState fireSender:self object:@(_valid)];
     }
 }
 
-- (void)removeControl:(id<MobilyValidatedObject>)control {
-    NSUInteger index = [_controls indexOfObjectIdenticalTo:control];
-    if(index != NSNotFound) {
+#pragma mark Public
+
+- (void)addControl:(id< MobilyValidatedObject >)control {
+    if(([_controls containsObject:control] == NO) && (control.form == nil)) {
+        _controls = [NSArray arrayWithArray:_controls andAddingObject:control];
+        [_validatedControls addObject:control];
+        control.form = self;
+    }
+}
+
+- (void)removeControl:(id< MobilyValidatedObject >)control {
+    if(([_controls containsObject:control] == YES) && (control.form == self)) {
+        _controls = [NSArray arrayWithArray:_controls andRemovingObject:control];
         control.form = nil;
-        NSMutableArray* updatedControls = [NSMutableArray arrayWithArray:_controls];
-        [updatedControls removeObjectAtIndex:index];
-        _controls = updatedControls;
     }
 }
 
@@ -97,19 +90,19 @@
     for(id< MobilyValidatedObject > control in _controls) {
         control.form = nil;
     }
-    _controls = [NSArray array];
+    _controls = @[];
 }
 
-- (NSArray*)getInvalidControls {
+- (NSArray*)invalidControls {
     return [_controls relativeComplement:[_validatedControls allObjects]];
 }
 
 - (NSString*)output {
     __block NSString* output = @"";
     NSArray* results = @[];
-    NSArray* invalidControls = [self getInvalidControls];
-    for(id<MobilyValidatedObject> control in invalidControls) {
-        results = [results unionWithArray:[control.validator messages:control.text]];
+    NSArray* invalidControls = [self invalidControls];
+    for(id< MobilyValidatedObject > control in invalidControls) {
+        results = [results unionWithArray:[control messages]];
     }
     [results eachWithIndex:^(NSString* r, NSUInteger index) {
         output = [output stringByAppendingString:r];
@@ -120,22 +113,16 @@
     return output;
 }
 
-- (void)validatedSuccess:(id<MobilyValidatedObject>)control andValue:(NSString* __unused)value {
+#pragma mark Private
+
+- (void)_validatedSuccess:(id< MobilyValidatedObject >)control andValue:(NSString* __unused)value {
     [_validatedControls addObject:control];
+    self.valid = (_controls.count == _validatedControls.count);
 }
 
-- (void)validatedFail:(id<MobilyValidatedObject>)control andValue:(NSString* __unused)value {
+- (void)_validatedFail:(id< MobilyValidatedObject >)control andValue:(NSString* __unused)value {
     [_validatedControls removeObject:control];
-}
-
-- (BOOL)isValid {
-    NSInteger countControlsWithValidator = 0;
-    for(id<MobilyValidatedObject> control in _controls) {
-        if(control.validator != nil) {
-            countControlsWithValidator++;
-        }
-    }
-    return (countControlsWithValidator == _validatedControls.count);
+    self.valid = (_controls.count == _validatedControls.count);
 }
 
 @end
@@ -146,9 +133,12 @@
 
 @implementation MobilyFieldEmptyValidator
 
-- (instancetype)initWithMessage:(NSString*)msg {
+@synthesize message = _message;
+@synthesize control = _control;
+
+- (instancetype)initWithMessage:(NSString*)message {
     if(self = [super init]) {
-        _msg = msg;
+        _message = message;
     }
     return self;
 }
@@ -164,7 +154,7 @@
 
 - (NSArray*)messages:(NSString*)value {
     if([self validate:value] == NO) {
-        return @[(_msg == nil) ? @"Заполните все поля" : _msg];
+        return @[(_message == nil) ? @"Заполните все поля" : _message];
     }
     return @[];
 }
@@ -177,9 +167,12 @@
 
 @implementation MobilyFieldEmailValidator
 
-- (instancetype)initWithMessage:(NSString*)msg {
+@synthesize message = _message;
+@synthesize control = _control;
+
+- (instancetype)initWithMessage:(NSString*)message {
     if(self = [super init]) {
-        _msg = msg;
+        _message = message;
     }
     return self;
 }
@@ -190,7 +183,7 @@
 
 - (NSArray*)messages:(NSString*)value {
     if([self validate:value] == NO) {
-        return @[(_msg == nil) ? @"Заполните все поля" : _msg];
+        return @[(_message == nil) ? @"Заполните все поля" : _message];
     }
     return @[];
 }
@@ -203,12 +196,22 @@
 
 @implementation MobilyFieldRegExpValidator
 
-- (instancetype)initWithRegExp:(NSString*)regExp andMessage:(NSString*)msg {
+@synthesize message = _message;
+@synthesize control = _control;
+
+- (instancetype)initWithRegExp:(NSString*)regExp andMessage:(NSString*)message {
     if(self = [super init]) {
         _regExp = regExp;
-        _msg = msg;
+        _message = message;
     }
     return self;
+}
+
+- (void)setRegExp:(NSString*)regExp {
+    if([_regExp isEqualToString:regExp] == NO) {
+        _regExp = regExp;
+        [_control validate];
+    }
 }
 
 - (BOOL)validate:(NSString*)value {
@@ -221,8 +224,8 @@
 
 - (NSArray*)messages:(NSString*)value {
     if([self validate:value] == NO) {
-        if(_msg != nil) {
-            return @[_msg];
+        if(_message != nil) {
+            return @[_message];
         }
     }
     
@@ -237,11 +240,22 @@
 
 @implementation MobilyFieldMinLengthValidator
 
-- (instancetype)initWithMessage:(NSString*)msg {
+@synthesize message = _message;
+@synthesize control = _control;
+
+- (instancetype)initWithMessage:(NSString*)message minLength:(NSInteger)minLength {
     if(self = [super init]) {
-        _msg = msg;
+        _message = message;
+        _minLength = minLength;
     }
     return self;
+}
+
+- (void)setMinLength:(NSInteger)minLength {
+    if(_minLength != minLength) {
+        _minLength = minLength;
+        [_control validate];
+    }
 }
 
 - (BOOL)validate:(NSString*)value {
@@ -261,11 +275,22 @@
 
 @implementation MobilyFieldMaxLengthValidator
 
-- (instancetype)initWithMessage:(NSString*)msg {
+@synthesize message = _message;
+@synthesize control = _control;
+
+- (instancetype)initWithMessage:(NSString*)message maxLength:(NSInteger)maxLength {
     if(self = [super init]) {
-        _msg = msg;
+        _message = message;
+        _maxLength = maxLength;
     }
     return self;
+}
+
+- (void)setMaxLength:(NSInteger)maxLength {
+    if(_maxLength != maxLength) {
+        _maxLength = maxLength;
+        [_control validate];
+    }
 }
 
 - (BOOL)validate:(NSString*)value {
@@ -287,9 +312,12 @@
 
 @implementation MobilyFieldDigitValidator
 
-- (instancetype)initWithMessage:(NSString*)msg {
+@synthesize message = _message;
+@synthesize control = _control;
+
+- (instancetype)initWithMessage:(NSString*)message {
     if(self = [super init]) {
-        _msg = msg;
+        _message = message;
     }
     return self;
 }
@@ -314,10 +342,13 @@
 
 @implementation MobilyFieldANDValidator
 
-- (instancetype)initWithValidators:(NSArray*)validators andMessage:(NSString*)msg {
+@synthesize message = _message;
+@synthesize control = _control;
+
+- (instancetype)initWithValidators:(NSArray*)validators andMessage:(NSString*)message {
     if(self = [super init]) {
         _validators = validators;
-        _msg = msg;
+        _message = message;
     }
     return self;
 }
@@ -349,10 +380,13 @@
 
 @implementation MobilyFieldORValidator
 
-- (instancetype)initWithValidators:(NSArray*)validators andMessage:(NSString*)msg {
+@synthesize message = _message;
+@synthesize control = _control;
+
+- (instancetype)initWithValidators:(NSArray*)validators andMessage:(NSString*)message {
     if(self = [super init]) {
         _validators = validators;
-        _msg = msg;
+        _message = message;
     }
     return self;
 }

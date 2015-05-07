@@ -33,19 +33,19 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-@protocol MobilyFieldValidator;
-@class MobilyFieldForm;
+#import <MobilyFieldValidation.h>
+#import <MobilyValidatedObject.h>
+#import <MobilyNS.h>
 
 /*--------------------------------------------------*/
 
-@protocol MobilyValidatedObject <NSObject>
+@interface MobilyFieldForm ()
 
-@property(nonatomic, readwrite, strong) id<MobilyFieldValidator> validator;
-@property(nonatomic, readwrite, weak) MobilyFieldForm* form;
+@property(nonatomic, readwrite, strong) NSMutableSet* validatedControls;
+@property(nonatomic, readwrite, assign) BOOL valid;
 
-@required
-- (void)validate;
-- (NSArray*)messages;
+- (void)_validatedSuccess:(id<MobilyValidatedObject>)control andValue:(NSString*)value;
+- (void)_validatedFail:(id<MobilyValidatedObject>)control andValue:(NSString*)value;
 
 @end
 

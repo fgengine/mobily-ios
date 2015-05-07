@@ -127,6 +127,7 @@
 /* Begin PBXFileReference section */
 		403AF5961AE78C34000B28F8 /* MobilyLoadedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyLoadedView.h; sourceTree = "<group>"; };
 		403AF5971AE78C34000B28F8 /* MobilyLoadedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyLoadedView.m; sourceTree = "<group>"; };
+		4071193F1AFB9B4700F696AD /* MobilyFieldValidation+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MobilyFieldValidation+Private.h"; sourceTree = "<group>"; };
 		40B75E2C1ADF82CA00F0CB09 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		40B75E2D1ADF82CA00F0CB09 /* FBAudienceNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBAudienceNetwork.framework; sourceTree = "<group>"; };
 		40B75E2E1ADF82CA00F0CB09 /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = "<group>"; };
@@ -523,6 +524,7 @@
 				40B75F761ADFA00A00F0CB09 /* MobilyDialogController.h */,
 				40B75F771ADFA00A00F0CB09 /* MobilyDialogController.m */,
 				40B75F781ADFA00A00F0CB09 /* MobilyFieldValidation.h */,
+				4071193F1AFB9B4700F696AD /* MobilyFieldValidation+Private.h */,
 				40B75F791ADFA00A00F0CB09 /* MobilyFieldValidation.m */,
 				40B75F7A1ADFA00A00F0CB09 /* MobilyImageView.h */,
 				40B75F7B1ADFA00A00F0CB09 /* MobilyImageView.m */,
