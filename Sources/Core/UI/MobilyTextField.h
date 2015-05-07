@@ -40,6 +40,8 @@
 
 @interface MobilyTextField : UITextField< MobilyBuilderObject, MobilyValidatedObject >
 
+@property(nonatomic, readwrite, strong) IBOutlet id<MobilyFieldValidator> validator;
+
 @property(nonatomic, readwrite, assign) IBInspectable BOOL hiddenToolbar;
 @property(nonatomic, readwrite, assign) IBInspectable BOOL hiddenToolbarArrows;
 @property(nonatomic, readwrite, strong) UIToolbar* toolbar;

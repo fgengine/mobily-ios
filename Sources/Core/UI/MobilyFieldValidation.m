@@ -146,11 +146,9 @@
 
 @implementation MobilyFieldEmptyValidator
 
-@synthesize msg = _msg;
-
 - (instancetype)initWithMessage:(NSString*)msg {
     if(self = [super init]) {
-        self.msg = msg;
+        _msg = msg;
     }
     return self;
 }
@@ -177,14 +175,38 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@implementation MobilyFieldRegExpValidator
+@implementation MobilyFieldEmailValidator
 
-@synthesize msg = _msg;
+- (instancetype)initWithMessage:(NSString*)msg {
+    if(self = [super init]) {
+        _msg = msg;
+    }
+    return self;
+}
+
+- (BOOL)validate:(NSString*)value {
+    return [value isEmail];
+}
+
+- (NSArray*)messages:(NSString*)value {
+    if([self validate:value] == NO) {
+        return @[(_msg == nil) ? @"Заполните все поля" : _msg];
+    }
+    return @[];
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation MobilyFieldRegExpValidator
 
 - (instancetype)initWithRegExp:(NSString*)regExp andMessage:(NSString*)msg {
     if(self = [super init]) {
-        self.regExp = regExp;
-        self.msg = msg;
+        _regExp = regExp;
+        _msg = msg;
     }
     return self;
 }
@@ -215,7 +237,12 @@
 
 @implementation MobilyFieldMinLengthValidator
 
-@synthesize msg = _msg;
+- (instancetype)initWithMessage:(NSString*)msg {
+    if(self = [super init]) {
+        _msg = msg;
+    }
+    return self;
+}
 
 - (BOOL)validate:(NSString*)value {
     if([value length] >= _minLength) {
@@ -234,7 +261,12 @@
 
 @implementation MobilyFieldMaxLengthValidator
 
-@synthesize msg = _msg;
+- (instancetype)initWithMessage:(NSString*)msg {
+    if(self = [super init]) {
+        _msg = msg;
+    }
+    return self;
+}
 
 - (BOOL)validate:(NSString*)value {
     if([value length] <= _maxLength) {
@@ -255,7 +287,12 @@
 
 @implementation MobilyFieldDigitValidator
 
-@synthesize msg = _msg;
+- (instancetype)initWithMessage:(NSString*)msg {
+    if(self = [super init]) {
+        _msg = msg;
+    }
+    return self;
+}
 
 - (BOOL)validate:(NSString*)value {
     NSPredicate* test = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", @"[0-9]+"];
@@ -277,12 +314,10 @@
 
 @implementation MobilyFieldANDValidator
 
-@synthesize msg = _msg;
-
 - (instancetype)initWithValidators:(NSArray*)validators andMessage:(NSString*)msg {
     if(self = [super init]) {
-        self.validators = validators;
-        self.msg = msg;
+        _validators = validators;
+        _msg = msg;
     }
     return self;
 }
@@ -314,7 +349,13 @@
 
 @implementation MobilyFieldORValidator
 
-@synthesize msg = _msg;
+- (instancetype)initWithValidators:(NSArray*)validators andMessage:(NSString*)msg {
+    if(self = [super init]) {
+        _validators = validators;
+        _msg = msg;
+    }
+    return self;
+}
 
 - (BOOL)validate:(NSString*)value {
     BOOL result = NO;

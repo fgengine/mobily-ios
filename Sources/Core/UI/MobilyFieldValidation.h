@@ -44,8 +44,6 @@
 
 @protocol MobilyFieldValidator <NSObject>
 
-@property(nonatomic, readwrite, strong) NSString* msg;
-
 @required
 - (BOOL)validate:(NSString*)value;
 - (NSArray*)messages:(NSString*)value;
@@ -75,6 +73,18 @@
 
 @interface MobilyFieldEmptyValidator : NSObject < MobilyFieldValidator >
 
+@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* msg;
+
+- (instancetype)initWithMessage:(NSString*)msg;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface MobilyFieldEmailValidator : NSObject < MobilyFieldValidator >
+
+@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* msg;
+
 - (instancetype)initWithMessage:(NSString*)msg;
 
 @end
@@ -83,7 +93,8 @@
 
 @interface MobilyFieldRegExpValidator : NSObject < MobilyFieldValidator >
 
-@property(nonatomic, readwrite, strong) NSString* regExp;
+@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* msg;
+@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* regExp;
 
 - (instancetype)initWithRegExp:(NSString*)regExp andMessage:(NSString*)msg;
 
@@ -93,7 +104,10 @@
 
 @interface MobilyFieldMinLengthValidator : NSObject < MobilyFieldValidator >
 
-@property(nonatomic, readwrite, assign) NSInteger minLength;
+@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* msg;
+@property(nonatomic, readwrite, assign) IB_DESIGNABLE NSInteger minLength;
+
+- (instancetype)initWithMessage:(NSString*)msg;
 
 @end
 
@@ -101,7 +115,10 @@
 
 @interface MobilyFieldMaxLengthValidator : NSObject < MobilyFieldValidator >
 
-@property(nonatomic, readwrite, assign) NSInteger maxLength;
+@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* msg;
+@property(nonatomic, readwrite, assign) IB_DESIGNABLE NSInteger maxLength;
+
+- (instancetype)initWithMessage:(NSString*)msg;
 
 @end
 
@@ -109,13 +126,18 @@
 
 @interface MobilyFieldDigitValidator : NSObject < MobilyFieldValidator >
 
+@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* msg;
+
+- (instancetype)initWithMessage:(NSString*)msg;
+
 @end
 
 /*--------------------------------------------------*/
 
 @interface MobilyFieldANDValidator : NSObject < MobilyFieldValidator >
 
-@property(nonatomic, readwrite, strong) NSArray* validators;
+@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* msg;
+@property(nonatomic, readwrite, strong) IBOutletCollection(NSObject) NSArray* validators;
 
 - (instancetype)initWithValidators:(NSArray*)validators andMessage:(NSString*)msg;
 
@@ -125,7 +147,10 @@
 
 @interface MobilyFieldORValidator : NSObject < MobilyFieldValidator >
 
-@property(nonatomic, readwrite, strong) NSArray* validators;
+@property(nonatomic, readwrite, strong) IB_DESIGNABLE NSString* msg;
+@property(nonatomic, readwrite, strong) IBOutletCollection(NSObject) NSArray* validators;
+
+- (instancetype)initWithValidators:(NSArray*)validators andMessage:(NSString*)msg;
 
 @end
 
