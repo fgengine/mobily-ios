@@ -188,6 +188,33 @@
     return object;
 }
 
+- (void)findObject:(id)object inColumn:(NSUInteger*)column inRow:(NSUInteger*)row {
+    [self findObjectUsingBlock:^BOOL(id exist) { return [exist isEqual:object]; } inColumn:column inRow:row];
+}
+
+- (void)findObjectUsingBlock:(BOOL(^)(id object))block inColumn:(NSUInteger*)column inRow:(NSUInteger*)row {
+    for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
+        NSMutableArray* columnObjects = _objects[ic];
+        for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
+            if(block(columnObjects[ir]) == YES) {
+                if(column != NULL) {
+                    *column = ic;
+                }
+                if(row != NULL) {
+                    *row = ir;
+                }
+                return;
+            }
+        }
+    }
+    if(column != NULL) {
+        *column = NSNotFound;
+    }
+    if(row != NULL) {
+        *row = NSNotFound;
+    }
+}
+
 - (NSArray*)objects {
     NSMutableArray* result = [NSMutableArray array];
     for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {

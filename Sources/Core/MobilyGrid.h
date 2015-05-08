@@ -58,6 +58,8 @@
 - (BOOL)isEmptyRow:(NSInteger)row;
 
 - (id)objectAtColumn:(NSUInteger)column atRow:(NSUInteger)row;
+- (void)findObject:(id)object inColumn:(NSUInteger*)column inRow:(NSUInteger*)row;
+- (void)findObjectUsingBlock:(BOOL(^)(id object))block inColumn:(NSUInteger*)column inRow:(NSUInteger*)row;
 - (NSArray*)objects;
 
 - (void)enumerateColumnsRowsUsingBlock:(void(^)(id object, NSUInteger column, NSUInteger row, BOOL* stopColumn, BOOL* stopRow))block;
