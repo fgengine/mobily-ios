@@ -273,7 +273,7 @@
 - (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block byColumn:(NSInteger)column {
     NSMutableArray* columnObjects = _objects[column];
     for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
-        block(columnObjects[column][ir], column, ir);
+        block(columnObjects[ir], column, ir);
     }
 }
 
