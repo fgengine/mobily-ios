@@ -919,7 +919,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 [item setEditing:YES animated:animated];
             } else {
                 if(_editingItems.count > 0) {
-                    [_editingItems each:^(MobilyDataItem* item) {
+                    [[_editingItems copy] each:^(MobilyDataItem* item) {
                         if([self shouldEndedEditItem:item] == YES) {
                             [_editingItems removeObject:item];
                             [item setEditing:NO animated:animated];
@@ -944,7 +944,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 
 - (void)endedEditAllItemsAnimated:(BOOL)animated {
     if(_editingItems.count > 0) {
-        [_editingItems each:^(MobilyDataItem* item) {
+        [[_editingItems copy] each:^(MobilyDataItem* item) {
             if([self shouldEndedEditItem:item] == YES) {
                 [_editingItems removeObject:item];
                 [item setEditing:NO animated:animated];
@@ -1137,7 +1137,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             }
         } else {
             if(_selectedItems.count > 0) {
-                [_selectedItems each:^(MobilyDataItem* item) {
+                [[_selectedItems copy] each:^(MobilyDataItem* item) {
                     if([self shouldDeselectItem:item] == YES) {
                         [_selectedItems removeObject:item];
                         [item setSelected:NO animated:animated];
@@ -1165,7 +1165,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 
 - (void)_deselectAllItemsUser:(BOOL)user animated:(BOOL)animated {
     if(_selectedItems.count > 0) {
-        [_selectedItems each:^(MobilyDataItem* item) {
+        [[_selectedItems copy] each:^(MobilyDataItem* item) {
             if([self shouldDeselectItem:item] == YES) {
                 [_selectedItems removeObject:item];
                 [item setSelected:NO animated:animated];

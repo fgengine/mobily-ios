@@ -292,6 +292,12 @@ extern NSString* MobilyDataContainerCurrentSectionChanged;
 
 /*--------------------------------------------------*/
 
+typedef id (^MobilyDataContainerCalendarMonthCreateBlock)(NSDate* beginDate, NSDate* endDate);
+typedef id (^MobilyDataContainerCalendarWeekdayCreateBlock)(NSDate* date, NSUInteger index);
+typedef id (^MobilyDataContainerCalendarDayCreateBlock)(NSDate* date);
+
+/*--------------------------------------------------*/
+
 @interface MobilyDataContainerCalendar : MobilyDataContainerItems
 
 @property(nonatomic, readonly, strong) NSCalendar* calendar;
@@ -328,6 +334,8 @@ extern NSString* MobilyDataContainerCurrentSectionChanged;
 - (MobilyDataItemCalendarDay*)dayItemForDate:(NSDate*)date;
 
 - (void)prepareBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate;
+- (void)prepareBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate dayBlock:(MobilyDataContainerCalendarDayCreateBlock)dayBlock;
+- (void)prepareBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate monthBlock:(MobilyDataContainerCalendarMonthCreateBlock)monthBlock weekdayBlock:(MobilyDataContainerCalendarWeekdayCreateBlock)weekdayBlock dayBlock:(MobilyDataContainerCalendarDayCreateBlock)dayBlock;
 - (void)replaceDate:(NSDate*)date data:(id)data;
 - (void)cleanup;
 

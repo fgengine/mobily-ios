@@ -290,6 +290,24 @@
 }
 
 - (void)prepareBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate {
+    [self prepareBeginDate:beginDate endDate:endDate monthBlock:^id(NSDate* beginDate, NSDate* endDate) {
+        return [NSNull null];
+    } weekdayBlock:^id(NSDate* date, NSUInteger index) {
+        return [NSNull null];
+    } dayBlock:^id(NSDate* date) {
+        return [NSNull null];
+    }];
+}
+
+- (void)prepareBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate dayBlock:(MobilyDataContainerCalendarDayCreateBlock)dayBlock {
+    [self prepareBeginDate:beginDate endDate:endDate monthBlock:^id(NSDate* beginDate, NSDate* endDate) {
+        return [NSNull null];
+    } weekdayBlock:^id(NSDate* date, NSUInteger index) {
+        return [NSNull null];
+    } dayBlock:dayBlock];
+}
+
+- (void)prepareBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate monthBlock:(MobilyDataContainerCalendarMonthCreateBlock)monthBlock weekdayBlock:(MobilyDataContainerCalendarWeekdayCreateBlock)weekdayBlock dayBlock:(MobilyDataContainerCalendarDayCreateBlock)dayBlock {
     if(([_beginDate isEqualToDate:beginDate] == NO) || ([_endDate isEqualToDate:endDate] == NO)) {
         [self cleanup];
         _beginDate = beginDate;
@@ -297,7 +315,7 @@
         _endDate = endDate;
         _displayEndDate = [_endDate endOfWeek];
         if(_canShowMonth == YES) {
-            _monthItem = [MobilyDataItemCalendarMonth itemWithCalendar:_calendar beginDate:_beginDate endDate:_endDate displayBeginDate:_displayBeginDate displayEndDate:_displayEndDate data:[NSNull null]];
+            _monthItem = [MobilyDataItemCalendarMonth itemWithCalendar:_calendar beginDate:_beginDate endDate:_endDate displayBeginDate:_displayBeginDate displayEndDate:_displayEndDate data:monthBlock(_beginDate, _endDate)];
             _monthItem.allowsSelection = _canSelectMonth;
             [self _appendEntry:_monthItem];
         }
@@ -306,9 +324,9 @@
             for(NSUInteger weekdayIndex = 0; weekdayIndex < 7; weekdayIndex++) {
                 MobilyDataItemCalendarWeekday* weekdayItem;
                 if(_canShowMonth == YES) {
-                    weekdayItem = [MobilyDataItemCalendarWeekday itemWithMonthItem:_monthItem date:weekdayDate data:[NSNull null]];
+                    weekdayItem = [MobilyDataItemCalendarWeekday itemWithMonthItem:_monthItem date:weekdayDate data:weekdayBlock(weekdayDate, weekdayIndex)];
                 } else {
-                    weekdayItem = [MobilyDataItemCalendarWeekday itemWithCalendar:_calendar date:weekdayDate data:[NSNull null]];
+                    weekdayItem = [MobilyDataItemCalendarWeekday itemWithCalendar:_calendar date:weekdayDate data:weekdayBlock(weekdayDate, weekdayIndex)];
                 }
                 weekdayItem.allowsSelection = _canSelectWeekdays;
                 [_weekdayItems addObject:weekdayItem];
@@ -326,9 +344,9 @@
                     for(NSUInteger weekdayIndex = 0; weekdayIndex < 7; weekdayIndex++) {
                         MobilyDataItemCalendarDay* dayItem;
                         if(_canShowWeekdays == YES) {
-                            dayItem = [MobilyDataItemCalendarDay itemWithWeekdayItem:_weekdayItems[weekdayIndex] date:beginDayDate data:[NSNull null]];
+                            dayItem = [MobilyDataItemCalendarDay itemWithWeekdayItem:_weekdayItems[weekdayIndex] date:beginDayDate data:dayBlock(beginDayDate)];
                         } else {
-                            dayItem = [MobilyDataItemCalendarDay itemWithCalendar:_calendar date:beginDayDate data:[NSNull null]];
+                            dayItem = [MobilyDataItemCalendarDay itemWithCalendar:_calendar date:beginDayDate data:dayBlock(beginDayDate)];
                         }
                         if([dayItem.date isEarlier:_beginDate] == YES) {
                             dayItem.allowsSelection = _canSelectPreviousDays;
