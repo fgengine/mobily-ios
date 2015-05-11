@@ -224,8 +224,11 @@
 - (void)setHidden:(BOOL)hidden {
     if(_hidden != hidden) {
         _hidden = hidden;
-        [self disappear];
-        [_view setNeedValidateLayout];
+        if(_hidden == NO) {
+            [_view _didInsertItems:@[ self ]];
+        } else {
+            [_view _didDeleteItems:@[ self ]];
+        }
     }
 }
 

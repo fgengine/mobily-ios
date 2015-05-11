@@ -966,7 +966,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         if(duration > FLT_EPSILON) {
             [UIView animateWithDuration:duration
                                   delay:0.0f
-                                options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
+                                options:UIViewAnimationOptionCurveEaseInOut
                              animations:^{
                                  [self _batchUpdate:update animated:YES];
                              }
@@ -1948,7 +1948,10 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             for(MobilyDataItem* item in _reloadedBeforeItems) {
                 MobilyDataCell* cell = item.cell;
                 if(cell != nil) {
-                    cell.zPosition = -1.0f;
+                    [UIView performWithoutAnimation:^{
+                        cell.zPosition = -1.0f;
+                        cell.alpha = 1.0f;
+                    }];
                     cell.alpha = 0.0f;
                 }
             }
@@ -1962,14 +1965,13 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 MobilyDataCell* cell = item.cell;
                 if(cell != nil) {
                     [UIView performWithoutAnimation:^{
+                        cell.zPosition = -1.0f;
                         cell.alpha = 0.0f;
                     }];
-                    cell.zPosition = 0.0f;
                     cell.alpha = 1.0f;
                 }
             }
         }
-        [_reloadedAfterItems removeAllObjects];
     }
     if(_insertedItems.count > 0) {
         if([self containsEventForKey:MobilyDataViewAnimateInsert] == YES) {
@@ -1979,14 +1981,13 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 MobilyDataCell* cell = item.cell;
                 if(cell != nil) {
                     [UIView performWithoutAnimation:^{
+                        cell.zPosition = -1.0f;
                         cell.alpha = 0.0f;
                     }];
-                    cell.zPosition = 0.0f;
                     cell.alpha = 1.0f;
                 }
             }
         }
-        [_insertedItems removeAllObjects];
     }
     if(_deletedItems.count > 0) {
         if([self containsEventForKey:MobilyDataViewAnimateDelete] == YES) {
@@ -1995,7 +1996,10 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             for(MobilyDataItem* item in _deletedItems) {
                 MobilyDataCell* cell = item.cell;
                 if(cell != nil) {
-                    cell.zPosition = -1.0f;
+                    [UIView performWithoutAnimation:^{
+                        cell.zPosition = -1.0f;
+                        cell.alpha = 1.0f;
+                    }];
                     cell.alpha = 0.0f;
                 }
             }
@@ -2021,6 +2025,26 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             }
         }
         [_reloadedBeforeItems removeAllObjects];
+    }
+    if(_reloadedAfterItems.count > 0) {
+        for(MobilyDataItem* item in _reloadedBeforeItems) {
+            MobilyDataCell* cell = item.cell;
+            if(cell != nil) {
+                cell.zPosition = 0.0f;
+                cell.alpha = 1.0f;
+            }
+        }
+        [_reloadedAfterItems removeAllObjects];
+    }
+    if(_insertedItems.count > 0) {
+        for(MobilyDataItem* item in _insertedItems) {
+            MobilyDataCell* cell = item.cell;
+            if(cell != nil) {
+                cell.zPosition = 0.0f;
+                cell.alpha = 1.0f;
+            }
+        }
+        [_insertedItems removeAllObjects];
     }
     if(_deletedItems.count > 0) {
         if([self containsEventForKey:MobilyDataViewAnimateRestore] == YES) {
