@@ -44,6 +44,7 @@
 #pragma mark Synthesize
 
 @synthesize certificateFilename = _certificateFilename;
+@synthesize allowInvalidCertificates = _allowInvalidCertificates;
 @synthesize error = _error;
 @synthesize delegate = _delegate;
 @synthesize startCallback = _startCallback;
@@ -393,8 +394,10 @@
         if(localCertificate != NULL) {
             CFRelease(localCertificate);
         }
-    } else {
+    } else if(_allowInvalidCertificates == NO) {
         [sender useCredential:[NSURLCredential credentialForTrust:serverTrust] forAuthenticationChallenge:challenge];
+    } else {
+        [sender continueWithoutCredentialForAuthenticationChallenge:challenge];
     }
 }
 

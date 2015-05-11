@@ -49,6 +49,7 @@
     NSDictionary* _bodyParams;
     NSArray* _attachments;
     NSUInteger _numberOfRetries;
+    BOOL _allowInvalidCertificates;
 }
 
 @end
@@ -68,6 +69,7 @@
 @synthesize bodyParams = _bodyParams;
 @synthesize attachments = _attachments;
 @synthesize numberOfRetries = _numberOfRetries;
+@synthesize allowInvalidCertificates = _allowInvalidCertificates;
 
 #pragma mark MobilyModel
 
@@ -78,7 +80,8 @@
         @"urlParams",
         @"headers",
         @"bodyParams",
-        @"attachments"
+        @"attachments",
+        @"allowInvalidCertificates"
     ];
 }
 
@@ -90,7 +93,8 @@
         @"headers",
         @"bodyParams",
         @"attachments",
-        @"numberOfRetries"
+        @"numberOfRetries",
+        @"allowInvalidCertificates"
     ];
 }
 
@@ -182,7 +186,6 @@
         _bodyParams = bodyParams;
         _attachments = attachments;
         _numberOfRetries = numberOfRetries;
-        [self setup];
     }
     return self;
 }
@@ -223,6 +226,7 @@
         }
         [result addObject:[NSString stringWithFormat:@"Attachments [%@];", [temp componentsJoinedByString:@", "]]];
     }
+    [result addObject:[NSString stringWithFormat:@"AllowInvalidCertificates %@;", @(_allowInvalidCertificates)]];
     return [result componentsJoinedByString:@", "];
 }
 
@@ -252,6 +256,10 @@
     } else {
         [httpQuery setRequestBodyParams:_bodyParams];
     }
+    if(_headers.count > 0) {
+        httpQuery.requestHeaders = _headers;
+    }
+    httpQuery.allowInvalidCertificates = _allowInvalidCertificates;
     return httpQuery;
 }
 

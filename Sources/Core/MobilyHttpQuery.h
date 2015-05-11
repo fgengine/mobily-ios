@@ -50,6 +50,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyHttpQuery : NSObject < MobilyObject >
 
 @property(nonatomic, readwrite, strong) NSString* certificateFilename;
+@property(nonatomic, readwrite, assign) BOOL allowInvalidCertificates;
 
 @property(nonatomic, readwrite, strong) NSURL* requestUrl;
 @property(nonatomic, readwrite, strong) NSString* requestMethod;

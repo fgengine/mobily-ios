@@ -40,6 +40,7 @@
 @interface MobilyHttpQuery () < NSURLConnectionDelegate, NSURLConnectionDataDelegate > {
 @protected
     NSString* _certificateFilename;
+    BOOL _allowInvalidCertificates;
     NSError* _error;
     __weak id< MobilyHttpQueryDelegate > _delegate;
     MobilyHttpQueryBlock _startCallback;
