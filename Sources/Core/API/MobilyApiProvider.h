@@ -55,8 +55,10 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 
 @property(nonatomic, readonly, strong) NSString* name;
 @property(nonatomic, readonly, strong) NSURL* url;
+@property(nonatomic, readonly, strong) NSDictionary* headers;
 
 - (instancetype)initWithName:(NSString*)name url:(NSURL*)url;
+- (instancetype)initWithName:(NSString*)name url:(NSURL*)url headers:(NSDictionary*)headers;
 
 - (void)setup NS_REQUIRES_SUPER;
 

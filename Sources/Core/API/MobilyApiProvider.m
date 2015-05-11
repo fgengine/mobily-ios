@@ -50,6 +50,7 @@
     MobilyCache* _cache;
     NSString* _name;
     NSURL* _url;
+    NSDictionary* _headers;
 }
 
 @end
@@ -87,6 +88,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @synthesize cache = _cache;
 @synthesize name = _name;
 @synthesize url = _url;
+@synthesize headers = _headers;
 
 #pragma mark Init / Free
 
@@ -95,6 +97,17 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
     if(self != nil) {
         _name = name;
         _url = url;
+        [self setup];
+    }
+    return self;
+}
+
+- (instancetype)initWithName:(NSString*)name url:(NSURL*)url headers:(NSDictionary*)headers {
+    self = [super init];
+    if(self != nil) {
+        _name = name;
+        _url = url;
+        _headers = headers;
         [self setup];
     }
     return self;
@@ -207,7 +220,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 #pragma mark MobilyTaskHttpQuery
 
 - (BOOL)willStart {
-    _httpQuery = [_request httpQueryByBaseUrl:_provider.url];
+    _httpQuery = [_request httpQueryByBaseUrl:_provider.url baseHeaders:_provider.headers];
     return [super willStart];
 }
 
