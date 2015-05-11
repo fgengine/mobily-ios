@@ -53,6 +53,11 @@
 @end
 
 /*--------------------------------------------------*/
+
+const CGFloat MobilyAudioRecorder_PowerMin = -160;
+const CGFloat MobilyAudioRecorder_PowerMax = +160;
+
+/*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
@@ -125,6 +130,10 @@
     return _duration;
 }
 
+- (void)setMeteringEnabled:(BOOL)meteringEnabled {
+    _recorder.meteringEnabled = meteringEnabled;
+}
+
 - (BOOL)isMeteringEnabled {
     return _recorder.isMeteringEnabled;
 }
@@ -133,7 +142,12 @@
     CGFloat result = 0.0f;
     if(_prepared == YES) {
         for(NSUInteger channel = 0; channel < _numberOfChannels; channel++) {
-            result += [_recorder peakPowerForChannel:channel];
+            CGFloat power = [_recorder peakPowerForChannel:channel];
+            if(power < FLT_EPSILON) {
+                result += -(power / MobilyAudioRecorder_PowerMin);
+            } else if(power > FLT_EPSILON) {
+                result += power / MobilyAudioRecorder_PowerMax;
+            }
         }
         result /= _numberOfChannels;
     }
@@ -144,7 +158,12 @@
     CGFloat result = 0.0f;
     if(_prepared == YES) {
         for(NSUInteger channel = 0; channel < _numberOfChannels; channel++) {
-            result += [_recorder averagePowerForChannel:channel];
+            CGFloat power = [_recorder averagePowerForChannel:channel];
+            if(power < FLT_EPSILON) {
+                result += -(power / MobilyAudioRecorder_PowerMin);
+            } else if(power > FLT_EPSILON) {
+                result += power / MobilyAudioRecorder_PowerMax;
+            }
         }
         result /= _numberOfChannels;
     }

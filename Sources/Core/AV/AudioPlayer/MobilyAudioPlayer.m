@@ -52,6 +52,11 @@
 @end
 
 /*--------------------------------------------------*/
+
+const CGFloat MobilyAudioPlayer_PowerMin = -160;
+const CGFloat MobilyAudioPlayer_PowerMax = +160;
+
+/*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
@@ -172,10 +177,16 @@
 - (CGFloat)peakPower {
     CGFloat result = 0.0f;
     if(_prepared == YES) {
-        for(NSUInteger channel = 0; channel < _player.numberOfChannels; channel++) {
-            result += [_player peakPowerForChannel:channel];
+        NSUInteger numberOfChannels = _player.numberOfChannels;
+        for(NSUInteger channel = 0; channel < numberOfChannels; channel++) {
+            CGFloat power = [_player peakPowerForChannel:channel];
+            if(power < FLT_EPSILON) {
+                result += -(power / MobilyAudioPlayer_PowerMin);
+            } else if(power > FLT_EPSILON) {
+                result += power / MobilyAudioPlayer_PowerMax;
+            }
         }
-        result /= _player.numberOfChannels;
+        result /= numberOfChannels;
     }
     return result;
 }
@@ -183,10 +194,16 @@
 - (CGFloat)averagePower {
     CGFloat result = 0.0f;
     if(_prepared == YES) {
-        for(NSUInteger channel = 0; channel < _player.numberOfChannels; channel++) {
-            result += [_player averagePowerForChannel:channel];
+        NSUInteger numberOfChannels = _player.numberOfChannels;
+        for(NSUInteger channel = 0; channel < numberOfChannels; channel++) {
+            CGFloat power = [_player averagePowerForChannel:channel];
+            if(power < FLT_EPSILON) {
+                result += -(power / MobilyAudioPlayer_PowerMin);
+            } else if(power > FLT_EPSILON) {
+                result += power / MobilyAudioPlayer_PowerMax;
+            }
         }
-        result /= _player.numberOfChannels;
+        result /= numberOfChannels;
     }
     return result;
 }
