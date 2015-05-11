@@ -232,7 +232,7 @@
 
 #pragma mark Public
 
-- (MobilyHttpQuery*)httpQueryByBaseUrl:(NSURL*)baseUrl {
+- (MobilyHttpQuery*)httpQueryByBaseUrl:(NSURL*)baseUrl baseHeaders:(NSDictionary*)baseHeaders {
     MobilyHttpQuery* httpQuery = [MobilyHttpQuery new];
     if(_method.length > 0) {
         httpQuery.requestMethod = _method;
@@ -256,10 +256,14 @@
     } else {
         [httpQuery setRequestBodyParams:_bodyParams];
     }
+    if(baseHeaders.count > 0) {
+        [httpQuery addRequestHeaders:baseHeaders];
+    }
     if(_headers.count > 0) {
-        httpQuery.requestHeaders = _headers;
+        [httpQuery addRequestHeaders:_headers];
     }
     httpQuery.allowInvalidCertificates = _allowInvalidCertificates;
+    httpQuery.requestTimeout = 15.0f;
     return httpQuery;
 }
 

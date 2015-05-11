@@ -76,7 +76,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 - (instancetype)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams headers:(NSDictionary*)headers bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries;
 - (instancetype)initWithMethod:(NSString*)method relativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams headers:(NSDictionary*)headers bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries;
 
-- (MobilyHttpQuery*)httpQueryByBaseUrl:(NSURL*)baseUrl;
+- (MobilyHttpQuery*)httpQueryByBaseUrl:(NSURL*)baseUrl baseHeaders:(NSDictionary*)baseHeaders;
 - (MobilyApiResponse*)responseByHttpQuery:(MobilyHttpQuery*)httpQuery;
 
 @end
