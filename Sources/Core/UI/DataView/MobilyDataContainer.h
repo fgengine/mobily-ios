@@ -296,6 +296,8 @@ typedef id (^MobilyDataContainerCalendarMonthCreateBlock)(NSDate* beginDate, NSD
 typedef id (^MobilyDataContainerCalendarWeekdayCreateBlock)(NSDate* date, NSUInteger index);
 typedef id (^MobilyDataContainerCalendarDayCreateBlock)(NSDate* date);
 
+typedef void (^MobilyDataContainerCalendarEachDayItemsBlock)(MobilyDataItemCalendarDay* dayItem);
+
 /*--------------------------------------------------*/
 
 @interface MobilyDataContainerCalendar : MobilyDataContainerItems
@@ -338,6 +340,10 @@ typedef id (^MobilyDataContainerCalendarDayCreateBlock)(NSDate* date);
 - (void)prepareBeginDate:(NSDate*)beginDate endDate:(NSDate*)endDate monthBlock:(MobilyDataContainerCalendarMonthCreateBlock)monthBlock weekdayBlock:(MobilyDataContainerCalendarWeekdayCreateBlock)weekdayBlock dayBlock:(MobilyDataContainerCalendarDayCreateBlock)dayBlock;
 - (void)replaceDate:(NSDate*)date data:(id)data;
 - (void)cleanup;
+
+- (void)eachDayItemsWithWeekdayItem:(MobilyDataItemCalendarWeekday*)weekdayItem block:(MobilyDataContainerCalendarEachDayItemsBlock)block;
+- (void)eachWeekdayByDayItem:(MobilyDataItemCalendarDay*)dayItem block:(MobilyDataContainerCalendarEachDayItemsBlock)block;
+- (void)eachWeekByDayItem:(MobilyDataItemCalendarDay*)dayItem block:(MobilyDataContainerCalendarEachDayItemsBlock)block;
 
 @end
 

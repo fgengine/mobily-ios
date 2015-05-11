@@ -405,6 +405,39 @@
     _endDate = nil;
 }
 
+- (void)eachDayItemsWithWeekdayItem:(MobilyDataItemCalendarWeekday*)weekdayItem block:(MobilyDataContainerCalendarEachDayItemsBlock)block {
+    NSUInteger weekdayIndex = [_weekdayItems indexOfObject:weekdayItem];
+    if(weekdayIndex != NSNotFound) {
+        [_dayItems each:^(MobilyDataItemCalendarDay* dayItem, NSUInteger column __unused, NSUInteger row __unused) {
+            block(dayItem);
+        } byColumn:weekdayIndex];
+    }
+}
+
+- (void)eachWeekdayByDayItem:(MobilyDataItemCalendarDay*)dayItem block:(MobilyDataContainerCalendarEachDayItemsBlock)block {
+    NSUInteger dayIndex = NSNotFound;
+    [_dayItems findObjectUsingBlock:^BOOL(MobilyDataItemCalendarDay* item) {
+        return dayItem == item;
+    } inColumn:&dayIndex inRow:NULL];
+    if(dayIndex != NSNotFound) {
+        [_dayItems each:^(MobilyDataItemCalendarDay* item, NSUInteger column, NSUInteger row) {
+            block(item);
+        } byColumn:dayIndex];
+    }
+}
+
+- (void)eachWeekByDayItem:(MobilyDataItemCalendarDay*)dayItem block:(MobilyDataContainerCalendarEachDayItemsBlock)block {
+    NSUInteger weekIndex = NSNotFound;
+    [_dayItems findObjectUsingBlock:^BOOL(MobilyDataItemCalendarDay* item) {
+        return dayItem == item;
+    } inColumn:NULL inRow:&weekIndex];
+    if(weekIndex != NSNotFound) {
+        [_dayItems each:^(MobilyDataItemCalendarDay* item, NSUInteger column, NSUInteger row) {
+            block(item);
+        } byRow:weekIndex];
+    }
+}
+
 #pragma mark Private override
 
 - (CGRect)_validateEntriesForAvailableFrame:(CGRect)frame {

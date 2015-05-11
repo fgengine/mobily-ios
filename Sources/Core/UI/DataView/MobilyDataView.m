@@ -1133,21 +1133,18 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             [_selectedItems addObject:item];
             [item setSelected:YES animated:animated];
             if(user == YES) {
-                [self fireEventForKey:MobilyDataViewSelectItem byObject:item];
+                [self fireEventForIdentifier:item.identifier forKey:MobilyDataViewSelectItem byObject:item];
             }
         } else {
             if(_selectedItems.count > 0) {
                 [[_selectedItems copy] each:^(MobilyDataItem* item) {
-                    if([self shouldDeselectItem:item] == YES) {
-                        [_selectedItems removeObject:item];
-                        [item setSelected:NO animated:animated];
-                    }
+                    [self _deselectItem:item user:user animated:animated];
                 }];
             }
             [_selectedItems addObject:item];
             [item setSelected:YES animated:animated];
             if(user == YES) {
-                [self fireEventForKey:MobilyDataViewSelectItem byObject:item];
+                [self fireEventForIdentifier:item.identifier forKey:MobilyDataViewSelectItem byObject:item];
             }
         }
     }
@@ -1158,7 +1155,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         [_selectedItems removeObject:item];
         [item setSelected:NO animated:animated];
         if(user == YES) {
-            [self fireEventForKey:MobilyDataViewDeselectItem byObject:item];
+            [self fireEventForIdentifier:item.identifier forKey:MobilyDataViewDeselectItem byObject:item];
         }
     }
 }
@@ -1170,7 +1167,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 [_selectedItems removeObject:item];
                 [item setSelected:NO animated:animated];
                 if(user == YES) {
-                    [self fireEventForKey:MobilyDataViewDeselectItem byObject:item];
+                    [self fireEventForIdentifier:item.identifier forKey:MobilyDataViewDeselectItem byObject:item];
                 }
             }
         }];
