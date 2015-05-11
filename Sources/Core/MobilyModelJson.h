@@ -150,25 +150,44 @@ typedef id (^MobilyModelJsonUndefinedBehaviour)(id modelJson, id value);
 
 @property(nonatomic, readonly, strong) NSDate* defaultValue;
 @property(nonatomic, readonly, strong) NSArray* formats;
+@property(nonatomic, readonly, strong) NSTimeZone* timeZone;
 
 - (instancetype)initWithPath:(NSString*)path defaultValue:(NSDate*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path timeZone:(NSTimeZone*)timeZone defaultValue:(NSDate*)defaultValue;
 - (instancetype)initWithPath:(NSString*)path defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithPath:(NSString*)path timeZone:(NSTimeZone*)timeZone defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithFormat:(NSString*)format;
+- (instancetype)initWithFormat:(NSString*)format timeZone:(NSTimeZone*)timeZone;
 - (instancetype)initWithFormat:(NSString*)format undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithFormat:(NSString*)format timeZone:(NSTimeZone*)timeZone undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithFormat:(NSString*)format defaultValue:(NSDate*)defaultValue;
+- (instancetype)initWithFormat:(NSString*)format timeZone:(NSTimeZone*)timeZone defaultValue:(NSDate*)defaultValue;
 - (instancetype)initWithFormat:(NSString*)format defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithFormat:(NSString*)format timeZone:(NSTimeZone*)timeZone defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithPath:(NSString*)path format:(NSString*)format;
+- (instancetype)initWithPath:(NSString*)path format:(NSString*)format timeZone:(NSTimeZone*)timeZone;
 - (instancetype)initWithPath:(NSString*)path format:(NSString*)format undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithPath:(NSString*)path format:(NSString*)format timeZone:(NSTimeZone*)timeZone undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithPath:(NSString*)path format:(NSString*)format defaultValue:(NSDate*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path format:(NSString*)format timeZone:(NSTimeZone*)timeZone defaultValue:(NSDate*)defaultValue;
 - (instancetype)initWithPath:(NSString*)path format:(NSString*)format defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithPath:(NSString*)path format:(NSString*)format timeZone:(NSTimeZone*)timeZone defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithFormats:(NSArray*)formats;
+- (instancetype)initWithFormats:(NSArray*)formats timeZone:(NSTimeZone*)timeZone;
 - (instancetype)initWithFormats:(NSArray*)formats undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithFormats:(NSArray*)formats timeZone:(NSTimeZone*)timeZone undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithFormats:(NSArray*)formats defaultValue:(NSDate*)defaultValue;
+- (instancetype)initWithFormats:(NSArray*)formats timeZone:(NSTimeZone*)timeZone defaultValue:(NSDate*)defaultValue;
 - (instancetype)initWithFormats:(NSArray*)formats defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithFormats:(NSArray*)formats timeZone:(NSTimeZone*)timeZone defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats;
+- (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats timeZone:(NSTimeZone*)timeZone;
 - (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats timeZone:(NSTimeZone*)timeZone undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats defaultValue:(NSDate*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats timeZone:(NSTimeZone*)timeZone defaultValue:(NSDate*)defaultValue;
 - (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithPath:(NSString*)path formats:(NSArray*)formats timeZone:(NSTimeZone*)timeZone defaultValue:(NSDate*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 
 @end
 
