@@ -110,6 +110,7 @@
 @interface MobilyDataContainerItems () {
 @protected
     NSMutableArray* _entries;
+    BOOL _reverse;
 }
 
 - (void)_prependEntry:(MobilyDataItem*)entry;

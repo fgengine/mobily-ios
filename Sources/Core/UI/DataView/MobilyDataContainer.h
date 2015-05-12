@@ -151,6 +151,7 @@ extern NSString* MobilyDataContainerCurrentSectionChanged;
 @interface MobilyDataContainerItems : MobilyDataContainer
 
 @property(nonatomic, readonly, strong) NSArray* entries;
+@property(nonatomic, readwrite, assign) BOOL reverse;
 
 @end
 

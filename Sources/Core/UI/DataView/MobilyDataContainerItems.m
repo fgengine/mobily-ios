@@ -44,6 +44,7 @@
 #pragma mark Synthesize
 
 @synthesize entries = _entries;
+@synthesize reverse = _reverse;
 
 #pragma mark Init / Free
 
@@ -61,6 +62,15 @@
 - (void)_didChangeView {
     for(MobilyDataItem* entry in _entries) {
         entry.view = _view;
+    }
+}
+
+#pragma mark Property
+
+- (void)setReverse:(BOOL)reverse {
+    if(_reverse != reverse) {
+        _reverse = reverse;
+        [_view setNeedValidateLayout];
     }
 }
 

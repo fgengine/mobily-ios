@@ -267,32 +267,84 @@
 #pragma mark Private override
 
 - (CGRect)_validateEntriesForAvailableFrame:(CGRect)frame {
-    CGPoint offset = CGPointMake(frame.origin.x + _margin.left, frame.origin.y + _margin.top);
+    __block CGPoint offset = CGPointMake(frame.origin.x + _margin.left, frame.origin.y + _margin.top);
     CGSize restriction = CGSizeMake(frame.size.width - (_margin.left + _margin.right), frame.size.height - (_margin.top + _margin.bottom));
     CGSize cumulative = CGSizeZero;
     switch(_orientation) {
         case MobilyDataContainerOrientationVertical: {
+            CGFloat availableHeight = (_defaultSize.height > 0) ? _defaultSize.height : FLT_MAX;
             cumulative.width = restriction.width;
-            for(MobilyDataItem* entry in _entries) {
-                CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake(restriction.width, (_defaultSize.height > 0) ? _defaultSize.height : FLT_MAX)];
-                if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f) && (entry.hidden == NO)) {
-                    entry.updateFrame = CGRectMake(offset.x, offset.y + cumulative.height, restriction.width, entrySize.height);
-                    cumulative.height += entrySize.height + _spacing.vertical;
+            if(_reverse == NO) {
+                for(MobilyDataItem* entry in _entries) {
+                    CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake(restriction.width, availableHeight)];
+                    if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f) && (entry.hidden == NO)) {
+                        entry.updateFrame = CGRectMake(offset.x, offset.y, restriction.width, entrySize.height);
+                        cumulative.height += entrySize.height + _spacing.vertical;
+                        offset.y += entrySize.height + _spacing.vertical;
+                    }
                 }
+                if(cumulative.height > FLT_EPSILON) {
+                    cumulative.height -= _spacing.vertical;
+                }
+            } else {
+                for(MobilyDataItem* entry in _entries) {
+                    CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake(restriction.width, availableHeight)];
+                    if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f) && (entry.hidden == NO)) {
+                        cumulative.height += entrySize.height + _spacing.vertical;
+                    }
+                }
+                if(frame.size.height > cumulative.height) {
+                    cumulative.height = frame.size.height;
+                } else if(cumulative.height > FLT_EPSILON) {
+                    cumulative.height -= _spacing.vertical;
+                }
+                offset.y += cumulative.height;
+                [_entries each:^(MobilyDataItem* entry) {
+                    CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake(restriction.width, availableHeight)];
+                    if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f) && (entry.hidden == NO)) {
+                        entry.updateFrame = CGRectMake(offset.x, offset.y - entrySize.height, restriction.width, entrySize.height);
+                        offset.y -= entrySize.height + _spacing.vertical;
+                    }
+                } options:NSEnumerationReverse];
             }
-            cumulative.height -= _spacing.vertical;
             break;
         }
         case MobilyDataContainerOrientationHorizontal: {
+            CGFloat availableWidth = (_defaultSize.width > 0) ? _defaultSize.width : FLT_MAX;
             cumulative.height = restriction.height;
-            for(MobilyDataItem* entry in _entries) {
-                CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake((_defaultSize.width > 0) ? _defaultSize.width : FLT_MAX, restriction.height)];
-                if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f) && (entry.hidden == NO)) {
-                    entry.updateFrame = CGRectMake(offset.x + cumulative.width, offset.y, entrySize.width, restriction.height);
-                    cumulative.width += entrySize.width + _spacing.horizontal;
+            if(_reverse == NO) {
+                for(MobilyDataItem* entry in _entries) {
+                    CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake(availableWidth, restriction.height)];
+                    if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f) && (entry.hidden == NO)) {
+                        entry.updateFrame = CGRectMake(offset.x, offset.y, entrySize.width, restriction.height);
+                        cumulative.width += entrySize.width + _spacing.horizontal;
+                        offset.x += entrySize.width + _spacing.horizontal;
+                    }
                 }
+                if(cumulative.width > FLT_EPSILON) {
+                    cumulative.width -= _spacing.horizontal;
+                }
+            } else {
+                for(MobilyDataItem* entry in _entries) {
+                    CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake(availableWidth, restriction.height)];
+                    if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f) && (entry.hidden == NO)) {
+                        cumulative.width += entrySize.width + _spacing.horizontal;
+                    }
+                }
+                if(frame.size.width > cumulative.width) {
+                    cumulative.width = frame.size.width;
+                } else if(cumulative.width > FLT_EPSILON) {
+                    cumulative.width -= _spacing.horizontal;
+                }
+                offset.y += cumulative.width;
+                [_entries each:^(MobilyDataItem* entry) {
+                    CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake(availableWidth, restriction.height)];
+                    if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f) && (entry.hidden == NO)) {
+                        entry.updateFrame = CGRectMake(offset.x - entrySize.width, offset.y, entrySize.width, restriction.height);
+                        offset.x -= entrySize.width + _spacing.horizontal;
+                    }
+                } options:NSEnumerationReverse];
             }
-            cumulative.width -= _spacing.horizontal;
             break;
         }
     }

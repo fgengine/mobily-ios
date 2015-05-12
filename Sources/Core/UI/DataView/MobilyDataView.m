@@ -1255,7 +1255,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 }
 
 - (void)_layoutForVisible {
-    CGRect bounds = self.visibleBounds;
+    CGRect bounds = self.bounds;
     [_container _willLayoutForBounds:bounds];
     [_visibleItems enumerateObjectsUsingBlock:^(MobilyDataItem* item, NSUInteger itemIndex __unused, BOOL* itemStop __unused) {
         [item invalidateLayoutForBounds:bounds];
