@@ -42,6 +42,8 @@
 @implementation MobilySpinnerViewArcAlt
 
 - (void)prepareAnimation {
+    [super prepareAnimation];
+    
     NSTimeInterval beginTime = CACurrentMediaTime();
     CGRect frame  = CGRectInset(CGRectMake(0.0f, 0.0f, self.size, self.size), 2.0f, 2.0f);
     CGFloat radius = CGRectGetWidth(frame) / 2.0f;

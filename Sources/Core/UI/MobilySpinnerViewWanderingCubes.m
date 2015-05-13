@@ -42,6 +42,8 @@
 @implementation MobilySpinnerViewWanderingCubes
 
 - (void)prepareAnimation {
+    [super prepareAnimation];
+    
     NSTimeInterval beginTime = CACurrentMediaTime();
     CGFloat cubeSize = floor(self.size / 3.0f);
     CGFloat widthMinusCubeSize = self.size - cubeSize;

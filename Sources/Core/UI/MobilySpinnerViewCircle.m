@@ -42,6 +42,8 @@
 @implementation MobilySpinnerViewCircle
 
 - (void)prepareAnimation {
+    [super prepareAnimation];
+    
     NSTimeInterval beginTime = CACurrentMediaTime();
     CGFloat circleSize = self.size * 0.25f;
     CGFloat circleSize2 = circleSize * 0.5f;

@@ -42,6 +42,8 @@
 @implementation MobilySpinnerViewPulse
 
 - (void)prepareAnimation {
+    [super prepareAnimation];
+    
     NSTimeInterval beginTime = CACurrentMediaTime();
     
     CALayer* circle = [CALayer layer];

@@ -42,6 +42,8 @@
 @implementation MobilySpinnerView9CubeGrid
 
 - (void)prepareAnimation {
+    [super prepareAnimation];
+    
     NSTimeInterval beginTime = CACurrentMediaTime();
     CGFloat squareSize = self.size / 3;
     for(NSInteger sum = 0; sum < 5; sum++) {

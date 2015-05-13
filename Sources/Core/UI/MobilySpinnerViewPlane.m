@@ -42,6 +42,8 @@
 @implementation MobilySpinnerViewPlane
 
 - (void)prepareAnimation {
+    [super prepareAnimation];
+    
     CALayer* plane = [CALayer layer];
     plane.frame = CGRectInset(CGRectMake(0.0f, 0.0f, self.size, self.size), 2.0f, 2.0f);
     plane.backgroundColor = self.color.CGColor;

@@ -42,6 +42,8 @@
 @implementation MobilySpinnerViewThreeBounce
 
 - (void)prepareAnimation {
+    [super prepareAnimation];
+    
     NSTimeInterval beginTime = CACurrentMediaTime();
     CGFloat offset = self.size / 8.0f;
     CGFloat circleSize = offset * 2.0f;

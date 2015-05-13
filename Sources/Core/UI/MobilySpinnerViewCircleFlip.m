@@ -42,6 +42,8 @@
 @implementation MobilySpinnerViewCircleFlip
 
 - (void)prepareAnimation {
+    [super prepareAnimation];
+    
     CALayer* circle = [CALayer layer];
     circle.frame = CGRectInset(CGRectMake(0.0f, 0.0f, self.size, self.size), 2.0f, 2.0f);
     circle.backgroundColor = self.color.CGColor;

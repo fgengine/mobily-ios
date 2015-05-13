@@ -42,6 +42,8 @@
 @implementation MobilySpinnerViewWordPress
 
 - (void)prepareAnimation {
+    [super prepareAnimation];
+    
     NSTimeInterval beginTime = CACurrentMediaTime();
     
     CALayer* spinner = [CALayer layer];

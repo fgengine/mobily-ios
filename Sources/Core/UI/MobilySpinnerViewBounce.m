@@ -42,6 +42,8 @@
 @implementation MobilySpinnerViewBounce
 
 - (void)prepareAnimation {
+    [super prepareAnimation];
+    
     NSTimeInterval beginTime = CACurrentMediaTime();
     for(NSInteger i = 0; i < 2; i++) {
         CALayer* circle = [CALayer layer];
