@@ -91,8 +91,8 @@
     static NSDateFormatter* formatter = nil;
     if(formatter == nil) {
         formatter = [NSDateFormatter new];
-        formatter.dateFormat = NSLocalizedString(@"h:mm a", @"Date format: 1:05 pm");
-        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")];
+        formatter.dateFormat = NSLocalizedStringFromTable(@"h:mm a", @"MobilyNS", @"Date format: 1:05 pm");
+        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedStringFromTable(@"en_EN", @"MobilyNS", @"Current locale")];
         formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
     }
     return [formatter stringFromDate:self];
@@ -102,8 +102,8 @@
     static NSDateFormatter* formatter = nil;
     if(formatter == nil) {
         formatter = [NSDateFormatter new];
-        formatter.dateFormat = NSLocalizedString(@"EEEE, LLLL d, YYYY", @"Date format: Monday, July 27, 2009");
-        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")];
+        formatter.dateFormat = NSLocalizedStringFromTable(@"EEEE, LLLL d, YYYY", @"MobilyNS", @"Date format: Monday, July 27, 2009");
+        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedStringFromTable(@"en_EN", @"MobilyNS", @"Current locale")];
         formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
     }
     return [formatter stringFromDate:self];
@@ -117,8 +117,8 @@
         static NSDateFormatter* formatter = nil;
         if(formatter == nil) {
             formatter = [NSDateFormatter new];
-            formatter.dateFormat = NSLocalizedString(@"EEEE", @"Date format: Monday");
-            formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")];
+            formatter.dateFormat = NSLocalizedStringFromTable(@"EEEE", @"MobilyNS", @"Date format: Monday");
+            formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedStringFromTable(@"en_EN", @"MobilyNS", @"Current locale")];
             formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         }
         return [formatter stringFromDate:self];
@@ -126,8 +126,8 @@
         static NSDateFormatter* formatter = nil;
         if(formatter == nil) {
             formatter = [NSDateFormatter new];
-            formatter.dateFormat = NSLocalizedString(@"M/d/yy", @"Date format: 7/27/09");
-            formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")];
+            formatter.dateFormat = NSLocalizedStringFromTable(@"M/d/yy", @"MobilyNS", @"Date format: 7/27/09");
+            formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedStringFromTable(@"en_EN", @"MobilyNS", @"Current locale")];
             formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         }
         return [formatter stringFromDate:self];
@@ -142,8 +142,8 @@
         static NSDateFormatter* formatter = nil;
         if(formatter == nil) {
             formatter = [NSDateFormatter new];
-            formatter.dateFormat = NSLocalizedString(@"EEE h:mm a", @"Date format: Mon 1:05 pm");
-            formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")];
+            formatter.dateFormat = NSLocalizedStringFromTable(@"EEE h:mm a", @"MobilyNS", @"Date format: Mon 1:05 pm");
+            formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedStringFromTable(@"en_EN", @"MobilyNS", @"Current locale")];
             formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         }
         return [formatter stringFromDate:self];
@@ -151,8 +151,8 @@
         static NSDateFormatter* formatter = nil;
         if(formatter == nil) {
             formatter = [NSDateFormatter new];
-            formatter.dateFormat = NSLocalizedString(@"MMM d h:mm a", @"Date format: Jul 27 1:05 pm");
-            formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedString(@"en_EN", @"Current locale")];
+            formatter.dateFormat = NSLocalizedStringFromTable(@"MMM d h:mm a", @"MobilyNS", @"Date format: Jul 27 1:05 pm");
+            formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:NSLocalizedStringFromTable(@"en_EN", @"MobilyNS", @"Current locale")];
             formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         }
         return [formatter stringFromDate:self];
@@ -162,20 +162,20 @@
 - (NSString*)formatRelativeTime {
     NSTimeInterval elapsed = ABS(self.timeIntervalSinceNow);
     if(elapsed <= 1.0f) {
-        return NSLocalizedString(@"just a moment ago", @"");
+        return NSLocalizedStringFromTable(@"just a moment ago", @"MobilyNS", @"");
     } else if(elapsed < MOBILY_MINUTE) {
         int seconds = (int)(elapsed);
-        return [NSString stringWithFormat:NSLocalizedString(@"%d seconds ago", @""), seconds];
+        return [NSString stringWithFormat:NSLocalizedStringFromTable(@"%d seconds ago", @"MobilyNS", @""), seconds];
     } else if(elapsed < 2.0f * MOBILY_MINUTE) {
-        return NSLocalizedString(@"about a minute ago", @"");
+        return NSLocalizedStringFromTable(@"about a minute ago", @"MobilyNS", @"");
     } else if(elapsed < MOBILY_HOUR) {
         int mins = (int)(elapsed / MOBILY_MINUTE);
-        return [NSString stringWithFormat:NSLocalizedString(@"%d minutes ago", @""), mins];
+        return [NSString stringWithFormat:NSLocalizedStringFromTable(@"%d minutes ago", @"MobilyNS", @""), mins];
     } else if(elapsed < MOBILY_HOUR * 1.5f) {
-        return NSLocalizedString(@"about an hour ago", @"");
+        return NSLocalizedStringFromTable(@"about an hour ago", @"MobilyNS", @"");
     } else if(elapsed < MOBILY_DAY) {
         int hours = (int)((elapsed + MOBILY_HOUR * 0.5f) / MOBILY_HOUR);
-        return [NSString stringWithFormat:NSLocalizedString(@"%d hours ago", @""), hours];
+        return [NSString stringWithFormat:NSLocalizedStringFromTable(@"%d hours ago", @"MobilyNS", @""), hours];
     } else {
         return [self formatDateTime];
     }
@@ -184,16 +184,16 @@
 - (NSString*)formatShortRelativeTime {
     NSTimeInterval elapsed = ABS(self.timeIntervalSinceNow);
     if(elapsed < MOBILY_MINUTE) {
-        return NSLocalizedString(@"<1m", @"Date format: less than one minute ago");
+        return NSLocalizedStringFromTable(@"<1m", @"MobilyNS", @"Date format: less than one minute ago");
     } else if(elapsed < MOBILY_HOUR) {
         int mins = (int)(elapsed / MOBILY_MINUTE);
-        return [NSString stringWithFormat:NSLocalizedString(@"%dm", @"Date format: 50m"), mins];
+        return [NSString stringWithFormat:NSLocalizedStringFromTable(@"%dm", @"MobilyNS", @"Date format: 50m"), mins];
     } else if(elapsed < MOBILY_DAY) {
         int hours = (int)((elapsed + MOBILY_HOUR / 2) / MOBILY_HOUR);
-        return [NSString stringWithFormat:NSLocalizedString(@"%dh", @"Date format: 3h"), hours];
+        return [NSString stringWithFormat:NSLocalizedStringFromTable(@"%dh", @"MobilyNS", @"Date format: 3h"), hours];
     } else if(elapsed < MOBILY_WEEK) {
         int day = (int)((elapsed + MOBILY_DAY / 2) / MOBILY_DAY);
-        return [NSString stringWithFormat:NSLocalizedString(@"%dd", @"Date format: 3d"), day];
+        return [NSString stringWithFormat:NSLocalizedStringFromTable(@"%dd", @"MobilyNS", @"Date format: 3d"), day];
     } else {
         return [self formatShortTime];
     }

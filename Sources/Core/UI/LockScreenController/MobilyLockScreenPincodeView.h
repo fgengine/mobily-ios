@@ -33,61 +33,35 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import <MobilyNS.h>
-#import <MobilyCG.h>
-#import <MobilyMap.h>
-#import <MobilyGrid.h>
-#import <MobilyEvent.h>
-#import <MobilyTimer.h>
-#import <MobilyTimeout.h>
-#import <MobilyModel.h>
-#import <MobilyModelJson.h>
-#import <MobilyCache.h>
-#import <MobilyTaskManager.h>
-#import <MobilyHttpQuery.h>
-#import <MobilyDownloader.h>
-#import <MobilyRegExpParser.h>
-#import <MobilyKVO.h>
-#import <MobilyApiManager.h>
-#import <MobilyApiProvider.h>
-#import <MobilyApiRequest.h>
-#import <MobilyApiResponse.h>
-#import <MobilyUI.h>
-#import <MobilyContext.h>
-#import <MobilyApplication.h>
-#import <MobilyWindow.h>
-#import <MobilyController.h>
-#import <MobilyNavigationController.h>
-#import <MobilyTabBarController.h>
-#import <MobilySlideController.h>
-#import <MobilyPageController.h>
-#import <MobilyDialogController.h>
-#import <MobilyLockScreenController.h>
-#import <MobilyViewController.h>
 #import <MobilyView.h>
-#import <MobilyLoadedView.h>
-#import <MobilyButton.h>
-#import <MobilyTextView.h>
-#import <MobilyTextField.h>
-#import <MobilyDateField.h>
-#import <MobilyListField.h>
-#import <MobilyImageView.h>
-#import <MobilyBlurView.h>
-#import <MobilyPageControl.h>
-#import <MobilyScrollView.h>
-#import <MobilyTableView.h>
-#import <MobilyFieldValidation.h>
-#import <MobilyDataView.h>
-#import <MobilyDataRefreshView.h>
-#import <MobilyDataContainer.h>
-#import <MobilyDataItem.h>
-#import <MobilyDataCell.h>
-#import <MobilySpinnerView.h>
-#import <MobilyPopoverController.h>
-#import <MobilyAV.h>
-#import <MobilyAudioRecorder.h>
-#import <MobilyAudioPlayer.h>
-#import <MobilyGeoLocationManager.h>
-#import <MobilySharedManager.h>
+
+/*--------------------------------------------------*/
+
+@protocol MobilyLockScreenPincodeViewDelegate;
+
+/*--------------------------------------------------*/
+
+@interface MobilyLockScreenPincodeView : MobilyView
+
+@property(nonatomic, readwrite, weak) IBOutlet id< MobilyLockScreenPincodeViewDelegate > delegate;
+@property(nonatomic, readwrite, strong) IBInspectable UIColor* pincodeColor;
+@property(nonatomic, readwrite, assign) IBInspectable NSUInteger pincodeLength;
+@property(nonatomic, readwrite, assign) IBInspectable BOOL enabled;
+
+- (void)initPincode;
+- (void)appendingPincode:(NSString*)pincode;
+- (void)removeLastPincode;
+- (void)wasCompleted;
+
+@end
+
+/*--------------------------------------------------*/
+
+@protocol MobilyLockScreenPincodeViewDelegate < NSObject >
+
+@required
+- (void)lockScreenPincodeView:(MobilyLockScreenPincodeView*)lockScreenPincodeView pincode:(NSString*)pincode;
+
+@end
 
 /*--------------------------------------------------*/

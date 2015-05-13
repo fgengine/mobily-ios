@@ -206,7 +206,7 @@ static CGFloat MobilySearchBarSeparatorHeight = 0.5f;
 - (MobilyTextField*)searchField {
     if(_searchField == nil) {
         MobilyTextField* textField = [[MobilyTextField alloc] initWithFrame:CGRectZero];
-        textField.placeholder = NSLocalizedString(@"Search", @"MobilySearchBar search placeholder");
+        textField.placeholder = NSLocalizedStringFromTable(@"Search", @"MobilySearchBar", @"SearchBar placeholder");
         textField.borderStyle = UITextBorderStyleNone;
         textField.backgroundColor = [UIColor whiteColor];
         textField.textColor = [UIColor darkGrayColor];
@@ -249,7 +249,7 @@ static CGFloat MobilySearchBarSeparatorHeight = 0.5f;
 - (MobilyButton*)cancelButton {
     if(_cancelButton == nil) {
         MobilyButton* button = [[MobilyButton alloc] initWithFrame:CGRectZero];
-        button.normalTitle = NSLocalizedString(@"Cancel", @"MobilySearchBar cancel title");
+        button.normalTitle = NSLocalizedStringFromTable(@"Cancel", @"MobilySearchBar", @"Cancel title");
         button.normalTitleColor = [UIColor darkGrayColor];
         button.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:15.0f];
         self.cancelButton = button;
