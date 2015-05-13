@@ -79,7 +79,7 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 
 + (NSDate*)dateByYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day;
 + (NSDate*)dateByHour:(NSInteger)hour minute:(NSInteger)minute second:(NSInteger)seccond;
-+ (NSDate*)dateByYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day hour:(NSInteger)hour minute:(NSInteger)minute second:(NSInteger)seccond;;
++ (NSDate*)dateByYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day hour:(NSInteger)hour minute:(NSInteger)minute second:(NSInteger)seccond;
 
 - (NSString*)formatTime;
 - (NSString*)formatDate;
