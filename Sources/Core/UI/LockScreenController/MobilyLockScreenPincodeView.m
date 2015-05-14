@@ -47,6 +47,7 @@
 
 - (void)initPincode {
     _pincode = @"";
+    [self setNeedsDisplay];
 }
 
 - (void)appendingPincode:(NSString*)pincode {
