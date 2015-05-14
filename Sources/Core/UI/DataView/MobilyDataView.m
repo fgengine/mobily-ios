@@ -2027,7 +2027,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         [_reloadedBeforeItems removeAllObjects];
     }
     if(_reloadedAfterItems.count > 0) {
-        for(MobilyDataItem* item in _reloadedBeforeItems) {
+        for(MobilyDataItem* item in _reloadedAfterItems) {
             MobilyDataCell* cell = item.cell;
             if(cell != nil) {
                 cell.zPosition = 0.0f;
