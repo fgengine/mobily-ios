@@ -42,6 +42,8 @@
 @implementation MobilySpinnerViewChasingDots
 
 - (void)prepareAnimation {
+    [super prepareAnimation];
+    
     NSTimeInterval beginTime = CACurrentMediaTime();
 
     CALayer* spinner = [CALayer layer];

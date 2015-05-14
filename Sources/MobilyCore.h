@@ -62,6 +62,7 @@
 #import <MobilySlideController.h>
 #import <MobilyPageController.h>
 #import <MobilyDialogController.h>
+#import <MobilyLockScreenController.h>
 #import <MobilyViewController.h>
 #import <MobilyView.h>
 #import <MobilyLoadedView.h>

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		403AF5981AE78C34000B28F8 /* MobilyLoadedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 403AF5971AE78C34000B28F8 /* MobilyLoadedView.m */; };
+		40758F1A1B03646700E80F7F /* MobilyLockScreenController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40758F161B03646700E80F7F /* MobilyLockScreenController.m */; };
+		40758F1B1B03646700E80F7F /* MobilyLockScreenPincodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40758F181B03646700E80F7F /* MobilyLockScreenPincodeView.m */; };
 		40B75FB11ADFA00A00F0CB09 /* MobilyApiManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B75F111ADFA00900F0CB09 /* MobilyApiManager.m */; };
 		40B75FB21ADFA00A00F0CB09 /* MobilyApiProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B75F131ADFA00900F0CB09 /* MobilyApiProvider.m */; };
 		40B75FB31ADFA00A00F0CB09 /* MobilyApiRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B75F151ADFA00900F0CB09 /* MobilyApiRequest.m */; };
@@ -128,6 +130,10 @@
 		403AF5961AE78C34000B28F8 /* MobilyLoadedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyLoadedView.h; sourceTree = "<group>"; };
 		403AF5971AE78C34000B28F8 /* MobilyLoadedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyLoadedView.m; sourceTree = "<group>"; };
 		4071193F1AFB9B4700F696AD /* MobilyFieldValidation+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MobilyFieldValidation+Private.h"; sourceTree = "<group>"; };
+		40758F151B03646700E80F7F /* MobilyLockScreenController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyLockScreenController.h; sourceTree = "<group>"; };
+		40758F161B03646700E80F7F /* MobilyLockScreenController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyLockScreenController.m; sourceTree = "<group>"; };
+		40758F171B03646700E80F7F /* MobilyLockScreenPincodeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyLockScreenPincodeView.h; sourceTree = "<group>"; };
+		40758F181B03646700E80F7F /* MobilyLockScreenPincodeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyLockScreenPincodeView.m; sourceTree = "<group>"; };
 		40B75E2C1ADF82CA00F0CB09 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		40B75E2D1ADF82CA00F0CB09 /* FBAudienceNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBAudienceNetwork.framework; sourceTree = "<group>"; };
 		40B75E2E1ADF82CA00F0CB09 /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = "<group>"; };
@@ -348,6 +354,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		40758F121B03646700E80F7F /* LockScreenController */ = {
+			isa = PBXGroup;
+			children = (
+				40758F171B03646700E80F7F /* MobilyLockScreenPincodeView.h */,
+				40758F181B03646700E80F7F /* MobilyLockScreenPincodeView.m */,
+				40758F151B03646700E80F7F /* MobilyLockScreenController.h */,
+				40758F161B03646700E80F7F /* MobilyLockScreenController.m */,
+			);
+			name = LockScreenController;
+			path = Sources/Core/UI/LockScreenController;
+			sourceTree = SOURCE_ROOT;
+		};
 		40B75B291ADEE82900F0CB09 = {
 			isa = PBXGroup;
 			children = (
@@ -504,6 +522,7 @@
 			isa = PBXGroup;
 			children = (
 				40B75F4B1ADFA00900F0CB09 /* DataView */,
+				40758F121B03646700E80F7F /* LockScreenController */,
 				40B75F651ADFA00A00F0CB09 /* MobilyActivityView.h */,
 				40B75F661ADFA00A00F0CB09 /* MobilyActivityView.m */,
 				40B75F671ADFA00A00F0CB09 /* MobilyApplication.h */,
@@ -768,6 +787,7 @@
 				40B75FFF1ADFA00A00F0CB09 /* MobilyTransitionControllerCrossFade.m in Sources */,
 				40B75FDC1ADFA00A00F0CB09 /* MobilyButton.m in Sources */,
 				40B75FB11ADFA00A00F0CB09 /* MobilyApiManager.m in Sources */,
+				40758F1A1B03646700E80F7F /* MobilyLockScreenController.m in Sources */,
 				40B75FE31ADFA00A00F0CB09 /* MobilyListField.m in Sources */,
 				40B75FF91ADFA00A00F0CB09 /* MobilyTabBarController.m in Sources */,
 				40B75FFB1ADFA00A00F0CB09 /* MobilyTextField.m in Sources */,
@@ -800,6 +820,7 @@
 				40B75FD51ADFA00A00F0CB09 /* MobilyDataRefreshView.m in Sources */,
 				40B75FD21ADFA00A00F0CB09 /* MobilyDataContainerSections.m in Sources */,
 				40B760041ADFA00A00F0CB09 /* MobilyWindow.m in Sources */,
+				40758F1B1B03646700E80F7F /* MobilyLockScreenPincodeView.m in Sources */,
 				40B75FC81ADFA00A00F0CB09 /* MobilyTimer.m in Sources */,
 				40B75FE91ADFA00A00F0CB09 /* MobilySpinnerView.m in Sources */,
 				40B75FB21ADFA00A00F0CB09 /* MobilyApiProvider.m in Sources */,

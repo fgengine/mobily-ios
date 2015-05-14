@@ -97,7 +97,6 @@
     if(_size != size) {
         _size = size;
         [self invalidateIntrinsicContentSize];
-        self.layer.sublayers = nil;
         [self prepareAnimation];
     }
 }
@@ -105,7 +104,6 @@
 - (void)setColor:(UIColor*)color {
     if([_color isEqual:color] == NO) {
         _color = color;
-        self.layer.sublayers = nil;
         [self prepareAnimation];
     }
 }
@@ -126,9 +124,6 @@
     if(_animating == NO) {
         _animating = YES;
         self.hidden = NO;
-        if(_hidesWhenStopped == NO) {
-            self.layer.sublayers = nil;
-        }
         [self prepareAnimation];
     }
 }
@@ -144,6 +139,7 @@
 }
 
 - (void)prepareAnimation {
+    self.layer.sublayers = nil;
 }
 
 #pragma mark Private

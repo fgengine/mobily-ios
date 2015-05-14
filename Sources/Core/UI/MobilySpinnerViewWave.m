@@ -42,6 +42,8 @@
 @implementation MobilySpinnerViewWave
 
 - (void)prepareAnimation {
+    [super prepareAnimation];
+    
     NSTimeInterval beginTime = CACurrentMediaTime() + 1.2f;
     CGFloat barWidth = self.size / 5.0f;
     for(NSInteger i = 0; i < 5; i++) {

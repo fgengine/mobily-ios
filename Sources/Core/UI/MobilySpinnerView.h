@@ -49,7 +49,7 @@
 - (void)startAnimating;
 - (void)stopAnimating;
 
-- (void)prepareAnimation;
+- (void)prepareAnimation NS_REQUIRES_SUPER;
 
 @end
 
@@ -116,6 +116,13 @@
 /*--------------------------------------------------*/
 
 @interface MobilySpinnerViewFadingCircleAlt : MobilySpinnerView
+
+@property(nonatomic, readwrite, assign) IBInspectable NSUInteger numberOfCircle;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat factorCircle;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat factorRadius;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat minScale;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat minOpacity;
+
 @end
 
 /*--------------------------------------------------*/
