@@ -62,6 +62,13 @@ typedef void (^MobilyLockScreenControllerBlock)();
 @property(nonatomic, readwrite, strong) NSString* pincode;
 @property(nonatomic, readwrite, assign) BOOL allowTouchID;
 
+@property(nonatomic, readwrite, strong) IBInspectable NSString* titleText;
+@property(nonatomic, readwrite, strong) IBInspectable NSString* subtitleText;
+@property(nonatomic, readwrite, strong) IBInspectable NSString* confirmTitleText;
+@property(nonatomic, readwrite, strong) IBInspectable NSString* confirmSubtitleText;
+@property(nonatomic, readwrite, strong) IBInspectable NSString* invalidTitleText;
+@property(nonatomic, readwrite, strong) IBInspectable NSString* invalidSubtitleText;
+
 @property(nonatomic, readonly, weak) IBOutlet UILabel* titleLabel;
 @property(nonatomic, readonly, weak) IBOutlet UILabel* subtitleLabel;
 @property(nonatomic, readonly, weak) IBOutlet UIButton* cancelButton;

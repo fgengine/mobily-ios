@@ -54,6 +54,12 @@ static const NSTimeInterval MobilyLockScreenController_ShakeAnimationDuration = 
     [super setup];
     
     _allowTouchID = YES;
+    _titleText = NSLocalizedStringFromTable(@"Pincode", @"MobilyLockScreenController", nil);
+    _subtitleText = NSLocalizedStringFromTable(@"Please enter your pincode", @"MobilyLockScreenController", nil);
+    _confirmTitleText = NSLocalizedStringFromTable(@"Confirm pincode", @"MobilyLockScreenController", nil);
+    _confirmSubtitleText = NSLocalizedStringFromTable(@"Please enter previous pincode", @"MobilyLockScreenController", nil);
+    _invalidTitleText = NSLocalizedStringFromTable(@"Failure", @"MobilyLockScreenController", nil);
+    _invalidSubtitleText = NSLocalizedStringFromTable(@"Invalid pincode", @"MobilyLockScreenController", nil);
 }
 
 #pragma mark Load / Unload
@@ -72,8 +78,8 @@ static const NSTimeInterval MobilyLockScreenController_ShakeAnimationDuration = 
             _cancelButton.hidden = NO;
             break;
     }
-    [self _updateTitle:NSLocalizedStringFromTable(@"Pincode Title", @"MobilyLockScreenController", nil)
-              subtitle:NSLocalizedStringFromTable(@"Pincode Subtitle", @"MobilyLockScreenController", nil)];
+    _titleLabel.text = _titleText;
+    _subtitleLabel.text = _subtitleText;
 }
 
 #pragma mark Appear / Disappear
@@ -109,11 +115,6 @@ static const NSTimeInterval MobilyLockScreenController_ShakeAnimationDuration = 
     return [_pincode isEqualToString:pincode];
 }
 
-- (void)_updateTitle:(NSString*)title subtitle:(NSString*)subtitle {
-    [_titleLabel setText:title];
-    [_subtitleLabel setText:subtitle];
-}
-
 - (void)_policyDeviceOwnerAuthentication {
     NSError* error   = nil;
     LAContext* context = [[LAContext alloc] init];
@@ -144,7 +145,7 @@ static const NSTimeInterval MobilyLockScreenController_ShakeAnimationDuration = 
 }
 
 - (void)_unlockScreenSuccessful:(NSString*)pincode {
-    [self dismissViewControllerAnimated:NO completion:^{
+    MobilySimpleBlock completion = ^{
         switch(_lockScreenMode) {
             case MobilyLockScreenModeUnlock:
             case MobilyLockScreenModeAuth:
@@ -162,7 +163,12 @@ static const NSTimeInterval MobilyLockScreenController_ShakeAnimationDuration = 
                 break;
             }
         }
-    }];
+    };
+    if(self.presentingViewController != nil) {
+        [self dismissViewControllerAnimated:NO completion:completion];
+    } else {
+        completion();
+    }
 }
 
 - (void)_unlockScreenFailure {
@@ -174,26 +180,22 @@ static const NSTimeInterval MobilyLockScreenController_ShakeAnimationDuration = 
 
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     
+    _titleLabel.text = _invalidTitleText;
+    _subtitleLabel.text = _invalidSubtitleText;
     [_pincodeView.layer addAnimation:[self _makeShakeAnimation] forKey:@"shake"];
-    [_subtitleLabel setText:NSLocalizedStringFromTable(@"Pincode Not Match Title", @"MobilyLockScreenController", nil)];
     [_pincodeView setEnabled:NO];
     
     [MobilyTimeout executeBlock:^{
         [_pincodeView setEnabled:YES];
         [_pincodeView initPincode];
         switch(_lockScreenMode) {
-            case MobilyLockScreenModeUnlock:
-            case MobilyLockScreenModeAuth:
-            case MobilyLockScreenModeNew: {
-                [self _updateTitle:NSLocalizedStringFromTable(@"Pincode Title", @"MobilyLockScreenController", nil)
-                          subtitle:NSLocalizedStringFromTable(@"Pincode Subtitle", @"MobilyLockScreenController", nil)];
-                break;
-            }
-            case MobilyLockScreenModeChange:
-                [self _updateTitle:NSLocalizedStringFromTable(@"New Pincode Title", @"MobilyLockScreenController", nil)
-                          subtitle:NSLocalizedStringFromTable(@"New Pincode Subtitle", @"MobilyLockScreenController", nil)];
+            case MobilyLockScreenModeVerification:
+                _titleLabel.text = _confirmTitleText;
+                _subtitleLabel.text = _confirmSubtitleText;
                 break;
             default:
+                _titleLabel.text = _titleText;
+                _subtitleLabel.text = _subtitleText;
                 break;
         }
     } afterDelay:MobilyLockScreenController_ShakeAnimationDuration];
@@ -278,11 +280,11 @@ static const NSTimeInterval MobilyLockScreenController_ShakeAnimationDuration = 
             break;
         case MobilyLockScreenModeNew:
         case MobilyLockScreenModeChange:
-            _confirmPincode = pincode;
             _prevLockScreenMode = _lockScreenMode;
+            _confirmPincode = pincode;
+            _titleLabel.text = _confirmTitleText;
+            _subtitleLabel.text = _confirmSubtitleText;
             self.lockScreenMode = MobilyLockScreenModeVerification;
-            [self _updateTitle:NSLocalizedStringFromTable(@"Pincode Title Confirm", @"MobilyLockScreenController", nil)
-                      subtitle:NSLocalizedStringFromTable(@"Pincode Subtitle Confirm", @"MobilyLockScreenController", nil)];
             [self _swipeSubtitleAndPincodeView];
             break;
     }
