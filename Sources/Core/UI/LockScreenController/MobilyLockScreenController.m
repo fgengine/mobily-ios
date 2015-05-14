@@ -87,7 +87,7 @@ static const NSTimeInterval MobilyLockScreenController_ShakeAnimationDuration = 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    if((_lockScreenMode == MobilyLockScreenModeUnlock) && (_allowTouchID == YES)) {
+    if(((_lockScreenMode == MobilyLockScreenModeUnlock) || (_lockScreenMode == MobilyLockScreenModeAuth)) && (_allowTouchID == YES)) {
         [self _policyDeviceOwnerAuthentication];
     }
 }
@@ -136,11 +136,13 @@ static const NSTimeInterval MobilyLockScreenController_ShakeAnimationDuration = 
 - (void)_unlockDelayDismissViewController:(NSTimeInterval)delay {
     [_pincodeView wasCompleted];
     [MobilyTimeout executeBlock:^{
-        [self dismissViewControllerAnimated:NO completion:^{
+        if(self.presentingViewController != nil) {
+            [self dismissViewControllerAnimated:NO completion:_didSuccessfulBlock];
+        } else {
             if(_didSuccessfulBlock != nil) {
                 _didSuccessfulBlock();
             }
-        }];
+        }
     } afterDelay:delay];
 }
 
