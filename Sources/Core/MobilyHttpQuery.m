@@ -102,16 +102,18 @@
 }
 
 - (void)setRequestBodyParams:(NSDictionary*)params {
-    NSMutableData* body = NSMutableData.data;
+    NSMutableString* bodyString = NSMutableString.string;
     NSDictionary* formData = [self _formDataFromDictionary:params];
     [formData enumerateKeysAndObjectsUsingBlock:^(NSString* key, id< NSObject > value, BOOL* stop __unused) {
-        if(body.length > 0) {
-            [body appendData:[@"&" dataUsingEncoding:NSUTF8StringEncoding]];
+        if(bodyString.length > 0) {
+            [bodyString appendString:@"&"];
         }
-        [body appendData:[[NSString stringWithFormat:@"%@=%@", key, value.description] dataUsingEncoding:NSUTF8StringEncoding]];
+        [bodyString appendFormat:@"%@=%@", [key stringByEncodingURLFormat], [value.description stringByEncodingURLFormat]];
     }];
     
+    NSData* body = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
     [_request addValue:[NSString stringWithFormat:@"%lu", (unsigned long)body.length] forHTTPHeaderField:@"Content-Length"];
+    [_request addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     _request.HTTPBody = body;
 }
 
