@@ -411,7 +411,7 @@
 - (id)convertValue:(id)value {
     if([value isKindOfClass:NSString.class] == YES) {
         NSString* lowercaseString = [value lowercaseString];
-        if(([lowercaseString isEqualToString:@"true"] == YES) || ([lowercaseString isEqualToString:@"yes"] == YES) || ([lowercaseString isEqualToString:@"on"] == YES)) {
+        if(([lowercaseString isEqualToString:@"true"] == YES) || ([lowercaseString isEqualToString:@"yes"] == YES) || ([lowercaseString isEqualToString:@"on"] == YES) || ([lowercaseString isEqualToString:@"1"] == YES)) {
             return @YES;
         }
         return @NO;

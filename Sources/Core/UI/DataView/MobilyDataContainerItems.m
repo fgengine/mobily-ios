@@ -105,7 +105,7 @@
 
 #pragma mark Public override
 
-- (NSArray*)allEntries {
+- (NSArray*)allItems {
     return [_entries copy];
 }
 
