@@ -108,7 +108,7 @@
         if(bodyString.length > 0) {
             [bodyString appendString:@"&"];
         }
-        [bodyString appendFormat:@"%@=%@", [key stringByEncodingURLFormat], [value.description stringByEncodingURLFormat]];
+        [bodyString appendFormat:@"%@=%@", key.stringByEncodingURLFormat, value.description.stringByEncodingURLFormat];
     }];
     
     NSData* body = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
@@ -120,21 +120,18 @@
 - (void)setRequestBodyParams:(NSDictionary*)params boundary:(NSString*)boundary attachments:(NSArray*)attachments {
     NSMutableData* body = NSMutableData.data;
     NSDictionary* formData = [self _formDataFromDictionary:params];
+    NSString* boundaryEncoded = boundary.stringByEncodingURLFormat;
     [formData enumerateKeysAndObjectsUsingBlock:^(NSString* key, id< NSObject > value, BOOL* stop __unused) {
-        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"%@\r\n", value.description] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@\r\n", boundaryEncoded, key.stringByEncodingURLFormat, value.description.stringByEncodingURLFormat] dataUsingEncoding:NSUTF8StringEncoding]];
     }];
     for(MobilyHttpAttachment* attachment in attachments) {
-        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", attachment.name, attachment.filename] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", attachment.mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\nContent-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\nContent-Type: %@\r\n\r\n", boundaryEncoded, attachment.name.stringByEncodingURLFormat, attachment.filename.stringByEncodingURLFormat, attachment.mimeType.stringByEncodingURLFormat] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:attachment.data];
         [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     }
-    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundaryEncoded] dataUsingEncoding:NSUTF8StringEncoding]];
     
-    [_request addValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary] forHTTPHeaderField:@"Content-Type"];
+    [_request addValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundaryEncoded] forHTTPHeaderField:@"Content-Type"];
     [_request addValue:[NSString stringWithFormat:@"%lu", (unsigned long)body.length] forHTTPHeaderField:@"Content-Length"];
     _request.HTTPBody = body;
 }
