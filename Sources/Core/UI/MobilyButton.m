@@ -354,7 +354,7 @@
         CGSize imageSize = CGSizeZero;
         NSString* title = self.currentTitle;
         if(title != nil) {
-            titleSize = [self.titleLabel implicitSize];
+            titleSize = [self.currentTitle implicitSizeWithFont:self.titleLabel.font lineBreakMode:self.titleLabel.lineBreakMode];
             titleSize.width += self.titleEdgeInsets.left + self.titleEdgeInsets.right;
             titleSize.height += self.titleEdgeInsets.top + self.titleEdgeInsets.bottom;
         }
