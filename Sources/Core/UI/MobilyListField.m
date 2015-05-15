@@ -58,25 +58,32 @@
 - (void)didBeginEditing {
     [super didBeginEditing];
     
-    if(_pickerView == nil) {
-        self.pickerView = [UIPickerView new];
+    if(_items.count > 0) {
+        if(_pickerView == nil) {
+            self.pickerView = [UIPickerView new];
+            if(_pickerView != nil) {
+                _pickerView.delegate = self;
+            }
+            self.inputView = _pickerView;
+        }
         if(_pickerView != nil) {
-            _pickerView.delegate = self;
+            [_pickerView reloadAllComponents];
+            if(_selectedItem != nil) {
+                [_pickerView selectRow:[_items indexOfObject:_selectedItem] inComponent:0 animated:NO];
+            }
         }
-        self.inputView = _pickerView;
-    }
-    if(_pickerView != nil) {
-        [_pickerView reloadAllComponents];
-        if(_selectedItem != nil) {
-            [_pickerView selectRow:[_items indexOfObject:_selectedItem] inComponent:0 animated:NO];
-        }
+    } else {
+        [self endEditing:YES];
     }
 }
 
 - (void)didEndEditing {
     [super didEndEditing];
     
-    [self setSelectedItem:_items[[_pickerView selectedRowInComponent:0]] animated:YES emitted:YES];
+    NSUInteger selectedItem = [_pickerView selectedRowInComponent:0];
+    if(selectedItem < _items.count) {
+        [self setSelectedItem:_items[selectedItem] animated:YES emitted:YES];
+    }
 }
 
 #pragma mark Property
