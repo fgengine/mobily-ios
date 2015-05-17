@@ -84,8 +84,6 @@
 }
 
 - (void)dealloc {
-    self.consumerKey = nil;
-    self.consumerSecret = nil;
 }
 
 #pragma mark Property

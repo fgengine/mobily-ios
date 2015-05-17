@@ -80,12 +80,10 @@
     return [self initWithName:@"Facebook"];
 }
 
-- (instancetype)initWithName:(NSString*)name {
-    self = [super initWithName:name];
-    if(self != nil) {
-        self.allowLoginUI = YES;
-    }
-    return self;
+- (void)setup {
+    [super setup];
+    
+    _allowLoginUI = YES;
 }
 
 - (void)dealloc {
@@ -110,7 +108,8 @@
     self.signinReadPermissions = readPermissions;
     self.signinSuccessBlock = success;
     self.signinFailureBlock = failure;
-    [FBSession openActiveSessionWithReadPermissions:readPermissions allowLoginUI:_allowLoginUI completionHandler:^(FBSession* session, FBSessionState state, NSError* error) {
+    FBSession.activeSession = [[FBSession alloc] initWithPermissions:_signinReadPermissions];
+    [FBSession.activeSession openWithBehavior:FBSessionLoginBehaviorForcingWebView completionHandler:^(FBSession* session, FBSessionState state, NSError* error) {
         [self sessionStateChanged:session state:state error:error];
     }];
 }
@@ -156,9 +155,8 @@
         self.signinReadPermissions = nil;
         self.signinSuccessBlock = nil;
         self.signinFailureBlock = nil;
-    } else if((state == FBSessionStateClosed) || (state == FBSessionStateClosedLoginFailed)) {
+    } else if((error != nil) || (state == FBSessionStateClosed) || (state == FBSessionStateClosedLoginFailed)) {
         self.session = nil;
-    } else if(error != nil) {
         if(_signinFailureBlock != nil) {
             _signinFailureBlock(error);
         }
