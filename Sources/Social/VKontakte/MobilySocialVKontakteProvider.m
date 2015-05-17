@@ -114,18 +114,10 @@
     self.successBlock = success;
     self.failureBlock = failure;
     
-    if([VKSdk wakeUpSession] == NO) {
-        [VKSdk authorize:permissions revokeAccess:YES forceOAuth:YES inApp:YES];
-    } else if(self.session != nil) {
-        self.session = [[MobilySocialVKontakteSession alloc] initWithAccessToken:[VKSdk getAccessToken]];
-        if(_successBlock != nil) {
-            _successBlock();
-        }
-    } else {
-        if(_successBlock != nil) {
-            _successBlock();
-        }
+    if([VKSdk wakeUpSession] == YES) {
+        [VKSdk forceLogout];
     }
+    [VKSdk authorize:permissions revokeAccess:YES forceOAuth:YES inApp:YES];
 }
 
 #pragma mark MobilySocialManager

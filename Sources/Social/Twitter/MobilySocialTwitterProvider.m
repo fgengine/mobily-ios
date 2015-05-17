@@ -102,6 +102,9 @@
     if(Twitter.sharedInstance.authConfig == nil) {
         [Twitter.sharedInstance startWithConsumerKey:_consumerKey consumerSecret:_consumerSecret];
     }
+    if(Twitter.sharedInstance.session != nil) {
+        [Twitter.sharedInstance logOut];
+    }
     [Twitter.sharedInstance logInWithCompletion:^(TWTRSession* session, NSError* error) {
         if(session != nil) {
             self.session = [[MobilySocialTwitterSession alloc] initWithSession:session];
