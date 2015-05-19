@@ -765,6 +765,61 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     return result;
 }
 
+- (UIImage*)grayscale {
+    UIImage* result = nil;
+    CGSize size = self.size;
+    CGRect rect = CGRectMake(0.0f, 0.0f, size.width, size.height);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    if(colorSpace != NULL) {
+        CGContextRef context = CGBitmapContextCreate(nil, size.width, size.height, 8, 0, colorSpace, (CGBitmapInfo)kCGImageAlphaNone);
+        if(context != NULL) {
+            CGContextDrawImage(context, rect, [self CGImage]);
+            CGImageRef grayscale = CGBitmapContextCreateImage(context);
+            if(context != NULL) {
+                result = [UIImage imageWithCGImage:grayscale];
+                CGImageRelease(grayscale);
+            }
+            CGContextRelease(context);
+        }
+        CGColorSpaceRelease(colorSpace);
+    }
+    return result;
+}
+
+- (UIImage*)blackAndWhite {
+    UIImage* result = nil;
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    if(colorSpace != NULL) {
+        CGContextRef context = CGBitmapContextCreate(nil, self.size.width, self.size.height, 8, self.size.width, colorSpace, (CGBitmapInfo)kCGImageAlphaNone);
+        if(colorSpace != NULL) {
+            CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
+            CGContextSetShouldAntialias(context, NO);
+            CGContextDrawImage(context, CGRectMake(0, 0, self.size.width, self.size.height), self.CGImage);
+            CGImageRef bwImage = CGBitmapContextCreateImage(context);
+            if(bwImage != NULL) {
+                result = [UIImage imageWithCGImage:bwImage];
+                CGImageRelease(bwImage);
+            }
+            CGContextRelease(context);
+        }
+        CGColorSpaceRelease(colorSpace);
+    }
+    return result;
+}
+
+- (UIImage*)invertColors {
+    UIImage* result = nil;
+    UIGraphicsBeginImageContext(self.size);
+    CGContextSetBlendMode(UIGraphicsGetCurrentContext(), kCGBlendModeCopy);
+    [self drawInRect:CGRectMake(0, 0, self.size.width, self.size.height)];
+    CGContextSetBlendMode(UIGraphicsGetCurrentContext(), kCGBlendModeDifference);
+    CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), UIColor.whiteColor.CGColor);
+    CGContextFillRect(UIGraphicsGetCurrentContext(), CGRectMake(0, 0, self.size.width, self.size.height));
+    result = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return result;
+}
+
 - (UIImage*)blurredImageWithRadius:(CGFloat)radius iterations:(NSUInteger)iterations tintColor:(UIColor*)tintColor {
     UIImage* image = nil;
     CGSize size = self.size;

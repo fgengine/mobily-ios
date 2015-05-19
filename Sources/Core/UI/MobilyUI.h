@@ -158,6 +158,10 @@ typedef NS_OPTIONS(NSUInteger, MobilyImageAlignment) {
 
 - (UIImage*)scaleToSize:(CGSize)size;
 
+- (UIImage*)grayscale;
+- (UIImage*)blackAndWhite;
+- (UIImage*)invertColors;
+
 - (UIImage*)blurredImageWithRadius:(CGFloat)radius iterations:(NSUInteger)iterations tintColor:(UIColor*)tintColor;
 
 - (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment;
