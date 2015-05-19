@@ -116,20 +116,22 @@ static const NSTimeInterval MobilyLockScreenController_ShakeAnimationDuration = 
 }
 
 - (void)_policyDeviceOwnerAuthentication {
-    NSError* error   = nil;
-    LAContext* context = [[LAContext alloc] init];
-    if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]) {
-        [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
-                localizedReason:NSLocalizedStringFromTable(@"Pincode TouchID", @"MobilyLockScreenController", nil)
-                          reply:^(BOOL success, NSError* authenticationError) {
-                              if(success == YES) {
-                                  [self _unlockDelayDismissViewController:MobilyLockScreenController_DismissWaitingDuration];
-                              } else {
-                                  NSLog(@"MobilyLockScreenController::LAContext::Authentication Error : %@", authenticationError);
-                              }
-                          }];
-    } else {
-        NSLog(@"MobilyLockScreenController::LAContext::Policy Error : %@", [error localizedDescription]);
+    if(UIDevice.systemVersion >= 8.0f) {
+        NSError* error = nil;
+        LAContext* context = [[LAContext alloc] init];
+        if([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error] == YES) {
+            [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
+                    localizedReason:NSLocalizedStringFromTable(@"Pincode TouchID", @"MobilyLockScreenController", nil)
+                              reply:^(BOOL success, NSError* authenticationError) {
+                                  if(success == YES) {
+                                      [self _unlockDelayDismissViewController:MobilyLockScreenController_DismissWaitingDuration];
+                                  } else {
+                                      NSLog(@"MobilyLockScreenController::LAContext::Authentication Error : %@", authenticationError);
+                                  }
+                              }];
+        } else {
+            NSLog(@"MobilyLockScreenController::LAContext::Policy Error : %@", [error localizedDescription]);
+        }
     }
 }
 
