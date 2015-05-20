@@ -33,62 +33,42 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import <MobilyNS.h>
-#import <MobilyCG.h>
-#import <MobilyMap.h>
-#import <MobilyGrid.h>
-#import <MobilyEvent.h>
-#import <MobilyTimer.h>
-#import <MobilyTimeout.h>
-#import <MobilyModel.h>
-#import <MobilyModelJson.h>
-#import <MobilyCache.h>
-#import <MobilyTaskManager.h>
-#import <MobilyHttpQuery.h>
-#import <MobilyDownloader.h>
-#import <MobilyRegExpParser.h>
-#import <MobilyKVO.h>
-#import <MobilyApiManager.h>
-#import <MobilyApiProvider.h>
-#import <MobilyApiRequest.h>
-#import <MobilyApiResponse.h>
 #import <MobilyUI.h>
-#import <MobilyContext.h>
-#import <MobilyStyle.h>
-#import <MobilyApplication.h>
-#import <MobilyWindow.h>
-#import <MobilyController.h>
-#import <MobilyNavigationController.h>
-#import <MobilyTabBarController.h>
-#import <MobilySlideController.h>
-#import <MobilyPageController.h>
-#import <MobilyDialogController.h>
-#import <MobilyLockScreenController.h>
-#import <MobilyViewController.h>
-#import <MobilyView.h>
-#import <MobilyLoadedView.h>
-#import <MobilyButton.h>
-#import <MobilyTextView.h>
-#import <MobilyTextField.h>
-#import <MobilyDateField.h>
-#import <MobilyListField.h>
-#import <MobilyImageView.h>
-#import <MobilyBlurView.h>
-#import <MobilyPageControl.h>
-#import <MobilyScrollView.h>
-#import <MobilyTableView.h>
-#import <MobilyFieldValidation.h>
-#import <MobilyDataView.h>
-#import <MobilyDataRefreshView.h>
-#import <MobilyDataContainer.h>
-#import <MobilyDataItem.h>
-#import <MobilyDataCell.h>
-#import <MobilySpinnerView.h>
-#import <MobilyPopoverController.h>
-#import <MobilyAV.h>
-#import <MobilyAudioRecorder.h>
-#import <MobilyAudioPlayer.h>
-#import <MobilyGeoLocationManager.h>
-#import <MobilySharedManager.h>
+
+/*--------------------------------------------------*/
+
+typedef void(^MobilyStyleBlock)(id target);
+
+/*--------------------------------------------------*/
+
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
+@interface MobilyStyle : NSObject< MobilyObject >
+
+@property(nonatomic, readonly, strong) NSString* name;
+@property(nonatomic, readonly, strong) MobilyStyle* parent;
+
++ (instancetype)styleWithName:(NSString*)name;
++ (instancetype)styleWithName:(NSString*)name block:(MobilyStyleBlock)block;
++ (instancetype)styleWithName:(NSString*)name parent:(MobilyStyle*)parent block:(MobilyStyleBlock)block;
+
+- (instancetype)initWithName:(NSString*)name block:(MobilyStyleBlock)block;
+- (instancetype)initWithName:(NSString*)name parent:(MobilyStyle*)parent block:(MobilyStyleBlock)block;
+
+- (void)setup NS_REQUIRES_SUPER;
+
++ (void)unregisterStyleWithName:(NSString*)name;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface UIResponder (MobilyStyle)
+
+@property(nonatomic, readonly, strong) MobilyStyle* mobilyStyle;
+
+- (void)applyMobilyStyleWithName:(NSString*)styleName;
+- (void)applyMobilyStyle:(MobilyStyle*)style;
+
+@end
 
 /*--------------------------------------------------*/
