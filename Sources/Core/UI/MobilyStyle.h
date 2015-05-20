@@ -64,10 +64,8 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 
 @interface UIResponder (MobilyStyle)
 
-@property(nonatomic, readonly, strong) MobilyStyle* mobilyStyle;
-
-- (void)applyMobilyStyleWithName:(NSString*)styleName;
-- (void)applyMobilyStyle:(MobilyStyle*)style;
+@property(nonatomic, readwrite, strong) IBInspectable MobilyStyle* mobilyStyle;
+@property(nonatomic, readwrite, strong) IBInspectable NSString* mobilyStyleName;
 
 @end
 

@@ -131,7 +131,7 @@
 
 /*--------------------------------------------------*/
 
-static char const* const MobilyStyleKey = "mobilyStyle";
+static char const* const MobilyStyleKey = "mobilyStyleKey";
 
 /*--------------------------------------------------*/
 #pragma mark -
@@ -153,12 +153,12 @@ static char const* const MobilyStyleKey = "mobilyStyle";
     return objc_getAssociatedObject(self, MobilyStyleKey);
 }
 
-- (void)applyMobilyStyleWithName:(NSString*)styleName {
-    self.mobilyStyle = [MobilyStyle styleWithName:styleName];
+- (void)setMobilyStyleName:(NSString*)mobilyStyleName {
+    self.mobilyStyle = [MobilyStyle styleWithName:mobilyStyleName];
 }
 
-- (void)applyMobilyStyle:(MobilyStyle*)style {
-    self.mobilyStyle = style;
+- (NSString*)mobilyStyleName {
+    return self.mobilyStyle.name;
 }
 
 @end
