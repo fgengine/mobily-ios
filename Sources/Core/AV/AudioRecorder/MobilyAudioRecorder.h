@@ -48,6 +48,7 @@ typedef void(^MobilyAudioRecorderErrorBlock)(NSError* error);
 
 @interface MobilyAudioRecorder : NSObject < MobilyObject >
 
+@property(nonatomic, readonly, strong) NSError* error;
 @property(nonatomic, readwrite, assign) AudioFormatID format;
 @property(nonatomic, readwrite, assign) AVAudioQuality quality;
 @property(nonatomic, readwrite, assign) NSUInteger bitRate;

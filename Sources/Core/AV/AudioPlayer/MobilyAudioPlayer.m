@@ -42,6 +42,7 @@
 
 @interface MobilyAudioPlayer () < AVAudioPlayerDelegate >
 
+@property(nonatomic, readwrite, strong) NSError* error;
 @property(nonatomic, readwrite, strong) NSURL* url;
 @property(nonatomic, readwrite, assign, getter=isPrepared) BOOL prepared;
 @property(nonatomic, readwrite, assign, getter=isPlaying) BOOL playing;
@@ -81,19 +82,6 @@ const CGFloat MobilyAudioPlayer_PowerMax = +160;
 }
 
 - (void)setup {
-}
-
-- (void)dealloc {
-    self.url = nil;
-    self.player = nil;
-    self.preparedBlock = nil;
-    self.cleanedBlock = nil;
-    self.playingBlock = nil;
-    self.stopedBlock = nil;
-    self.finishedBlock = nil;
-    self.resumedBlock = nil;
-    self.pausedBlock = nil;
-    self.decodeErrorBlock = nil;
 }
 
 #pragma mark Property
@@ -215,6 +203,7 @@ const CGFloat MobilyAudioPlayer_PowerMax = +160;
         NSError* error = nil;
         self.player = [[AVAudioPlayer alloc] initWithData:data error:&error];
         if(_player != nil) {
+            self.error = nil;
             if([_player prepareToPlay] == YES) {
                 self.prepared = YES;
                 if([_delegate respondsToSelector:@selector(audioPlayerDidPrepared:)] == YES) {
@@ -226,6 +215,7 @@ const CGFloat MobilyAudioPlayer_PowerMax = +160;
                 self.player = nil;
             }
         } else if(error != nil) {
+            self.error = error;
             NSLog(@"MobilyAudioPlayer::prepareWithData: Error=%@", error.localizedDescription);
         }
     }
@@ -245,6 +235,7 @@ const CGFloat MobilyAudioPlayer_PowerMax = +160;
         NSError* error = nil;
         self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
         if(_player != nil) {
+            self.error = nil;
             if([_player prepareToPlay] == YES) {
                 self.url = url;
                 self.prepared = YES;
@@ -257,6 +248,7 @@ const CGFloat MobilyAudioPlayer_PowerMax = +160;
                 self.player = nil;
             }
         } else if(error != nil) {
+            self.error = error;
             NSLog(@"MobilyAudioPlayer::prepareWithUrl:%@ Error=%@", url, error.localizedDescription);
         }
     }
@@ -272,6 +264,7 @@ const CGFloat MobilyAudioPlayer_PowerMax = +160;
             NSError* error = nil;
             self.player = [[AVAudioPlayer alloc] initWithData:data error:&error];
             if(_player != nil) {
+                self.error = nil;
                 if([_player prepareToPlay] == YES) {
                     self.url = url;
                     self.prepared = YES;
@@ -287,6 +280,7 @@ const CGFloat MobilyAudioPlayer_PowerMax = +160;
                     self.player = nil;
                 }
             } else if(error != nil) {
+                self.error = error;
                 NSLog(@"MobilyAudioPlayer::prepareWithUrl:%@ Error=%@", url, error.localizedDescription);
             }
             if((_prepared == NO) && (failure != nil)) {

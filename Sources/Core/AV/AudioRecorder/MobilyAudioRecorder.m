@@ -41,6 +41,7 @@
 
 @interface MobilyAudioRecorder () < AVAudioRecorderDelegate >
 
+@property(nonatomic, readwrite, strong) NSError* error;
 @property(nonatomic, readwrite, assign) NSTimeInterval duration;
 
 @property(nonatomic, readwrite, assign, getter=isPrepared) BOOL prepared;
@@ -87,18 +88,6 @@ const CGFloat MobilyAudioRecorder_PowerMax = +160;
     self.bitRate = 16;
     self.numberOfChannels = 1;
     self.sampleRate = 44100.0f;
-}
-
-- (void)dealloc {
-    self.recorder = nil;
-    self.preparedBlock = nil;
-    self.cleanedBlock = nil;
-    self.startedBlock = nil;
-    self.stopedBlock = nil;
-    self.finishedBlock = nil;
-    self.resumedBlock = nil;
-    self.pausedBlock = nil;
-    self.encodeErrorBlock = nil;
 }
 
 #pragma mark Property
@@ -185,6 +174,7 @@ const CGFloat MobilyAudioRecorder_PowerMax = +160;
         NSError* error = nil;
         self.recorder = [[AVAudioRecorder alloc] initWithURL:url settings:[self recorderSettings] error:&error];
         if(_recorder != nil) {
+            self.error = nil;
             if([_recorder prepareToRecord] == YES) {
                 self.prepared = YES;
                 if([_delegate respondsToSelector:@selector(audioRecorderDidPrepared:)] == YES) {
@@ -194,6 +184,7 @@ const CGFloat MobilyAudioRecorder_PowerMax = +160;
                 }
             }
         } else if(error != nil) {
+            self.error = error;
             NSLog(@"MobilyAudioRecorder::prepareWithUrl:%@ Error=%@", url, error.localizedDescription);
         }
     }

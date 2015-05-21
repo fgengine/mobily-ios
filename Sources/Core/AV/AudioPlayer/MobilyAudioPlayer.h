@@ -48,6 +48,7 @@ typedef void(^MobilyAudioPlayerErrorBlock)(NSError* error);
 
 @interface MobilyAudioPlayer : NSObject < MobilyObject >
 
+@property(nonatomic, readonly, strong) NSError* error;
 @property(nonatomic, readonly, strong) NSURL* url;
 @property(nonatomic, readonly, assign) NSUInteger numberOfChannels;
 @property(nonatomic, readwrite, assign) NSTimeInterval currentTime;
