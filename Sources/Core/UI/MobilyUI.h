@@ -157,6 +157,7 @@ typedef NS_OPTIONS(NSUInteger, MobilyImageAlignment) {
 + (UIImage*)imageWithColor:(UIColor*)color;
 
 - (UIImage*)scaleToSize:(CGSize)size;
+- (UIImage *)unrotate;
 
 - (UIImage*)grayscale;
 - (UIImage*)blackAndWhite;

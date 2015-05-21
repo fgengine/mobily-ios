@@ -741,7 +741,6 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 - (UIImage*)scaleToSize:(CGSize)size {
     UIImage* result = nil;
-    
     CGColorSpaceRef colourSpace = CGColorSpaceCreateDeviceRGB();
     if(colourSpace != NULL) {
         CGRect drawRect = CGRectAspectFitFromBoundsAndSize(CGRectMake(0.0f, 0.0f, size.width, size.height), self.size);
@@ -761,6 +760,90 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
             CGContextRelease(context);
         }
         CGColorSpaceRelease(colourSpace);
+    }
+    return result;
+}
+
+- (UIImage*)unrotate {
+    UIImage* result = nil;
+    CGImageRef imageRef = self.CGImage;
+    if(imageRef != NULL) {
+        CGSize originalSize = CGSizeMake(CGImageGetWidth(imageRef), CGImageGetHeight(imageRef));
+        CGSize finalSize = CGSizeZero;
+        CGAffineTransform transform = CGAffineTransformIdentity;
+        switch(self.imageOrientation) {
+            case UIImageOrientationUp: {
+                transform = CGAffineTransformIdentity;
+                finalSize = originalSize;
+                break;
+            }
+            case UIImageOrientationUpMirrored: {
+                transform = CGAffineTransformMakeTranslation(originalSize.width, 0.0);
+                transform = CGAffineTransformScale(transform, -1.0, 1.0);
+                finalSize = originalSize;
+                break;
+            }
+            case UIImageOrientationDown: {
+                transform = CGAffineTransformMakeTranslation(originalSize.width, originalSize.height);
+                transform = CGAffineTransformRotate(transform, M_PI);
+                finalSize = originalSize;
+                break;
+            }
+            case UIImageOrientationDownMirrored: {
+                transform = CGAffineTransformMakeTranslation(0.0, originalSize.height);
+                transform = CGAffineTransformScale(transform, 1.0, -1.0);
+                finalSize = originalSize;
+                break;
+            }
+            case UIImageOrientationLeftMirrored: {
+                transform = CGAffineTransformMakeTranslation(originalSize.height, originalSize.width);
+                transform = CGAffineTransformScale(transform, -1.0, 1.0);
+                transform = CGAffineTransformRotate(transform, 3.0 * M_PI / 2.0);
+                finalSize = CGSizeMake(originalSize.height, originalSize.width);
+                break;
+            }
+            case UIImageOrientationLeft: {
+                transform = CGAffineTransformMakeTranslation(0.0, originalSize.width);
+                transform = CGAffineTransformRotate(transform, 3.0 * M_PI / 2.0);
+                finalSize = CGSizeMake(originalSize.height, originalSize.width);
+                break;
+            }
+            case UIImageOrientationRightMirrored: {
+                transform = CGAffineTransformMakeScale(-1.0, 1.0);
+                transform = CGAffineTransformRotate(transform, M_PI / 2.0);
+                finalSize = CGSizeMake(originalSize.height, originalSize.width);
+                break;
+            }
+            case UIImageOrientationRight: {
+                transform = CGAffineTransformMakeTranslation(originalSize.height, 0.0);
+                transform = CGAffineTransformRotate(transform, M_PI / 2.0);
+                finalSize = CGSizeMake(originalSize.height, originalSize.width);
+                break;
+            }
+            default:
+                break;
+        }
+        if((finalSize.width > FLT_EPSILON) && (finalSize.height > FLT_EPSILON)) {
+            UIGraphicsBeginImageContext(finalSize);
+            CGContextRef context = UIGraphicsGetCurrentContext();
+            if(context != NULL) {
+                switch(self.imageOrientation) {
+                    case UIImageOrientationRight:
+                    case UIImageOrientationLeft:
+                        CGContextScaleCTM(context, -1.0f, 1.0f);
+                        CGContextTranslateCTM(context, -originalSize.height, 0.0f);
+                        break;
+                    default:
+                        CGContextScaleCTM(context, 1.0f, -1.0f);
+                        CGContextTranslateCTM(context, 0.0f, -originalSize.height);
+                        break;
+                }
+                CGContextConcatCTM(context, transform);
+                CGContextDrawImage(UIGraphicsGetCurrentContext(), CGRectMake(0.0f, 0.0f, originalSize.width, originalSize.height), imageRef);
+                result = UIGraphicsGetImageFromCurrentImageContext();
+            }
+            UIGraphicsEndImageContext();
+        }
     }
     return result;
 }
