@@ -32,63 +32,46 @@
 /* OTHER DEALINGS IN THE SOFTWARE.                  */
 /*                                                  */
 /*--------------------------------------------------*/
+#define MOBILY_SOURCE
+/*--------------------------------------------------*/
 
-#import <MobilyNS.h>
-#import <MobilyCG.h>
-#import <MobilyMap.h>
-#import <MobilyGrid.h>
-#import <MobilyEvent.h>
-#import <MobilyTimer.h>
-#import <MobilyTimeout.h>
-#import <MobilyModel.h>
-#import <MobilyModelJson.h>
-#import <MobilyCache.h>
-#import <MobilyTaskManager.h>
-#import <MobilyHttpQuery.h>
-#import <MobilyDownloader.h>
-#import <MobilyRegExpParser.h>
-#import <MobilyKVO.h>
-#import <MobilyApiManager.h>
-#import <MobilyApiProvider.h>
-#import <MobilyApiRequest.h>
-#import <MobilyApiResponse.h>
-#import <MobilyUI.h>
-#import <MobilyContext.h>
-#import <MobilyStyle.h>
-#import <MobilyApplication.h>
-#import <MobilyWindow.h>
-#import <MobilyController.h>
-#import <MobilyNavigationController.h>
-#import <MobilyTabBarController.h>
-#import <MobilySlideController.h>
-#import <MobilyPageController.h>
-#import <MobilyDialogController.h>
-#import <MobilyLockScreenController.h>
-#import <MobilyViewController.h>
-#import <MobilyView.h>
-#import <MobilyLoadedView.h>
-#import <MobilyButton.h>
-#import <MobilyTextView.h>
-#import <MobilyTextField.h>
-#import <MobilyDateField.h>
-#import <MobilyListField.h>
-#import <MobilyImageView.h>
-#import <MobilyBlurView.h>
-#import <MobilyPageControl.h>
-#import <MobilyScrollView.h>
-#import <MobilyTableView.h>
-#import <MobilyFieldValidation.h>
-#import <MobilyDataView.h>
-#import <MobilyDataRefreshView.h>
-#import <MobilyDataContainer.h>
-#import <MobilyDataItem.h>
-#import <MobilyDataCell.h>
-#import <MobilySpinnerView.h>
-#import <MobilyPopoverController.h>
-#import <MobilyAV.h>
-#import <MobilyAudioRecorder.h>
-#import <MobilyAudioPlayer.h>
-#import <MobilyGeoLocationManager.h>
-#import <MobilySharedManager.h>
+#import <MobilyCore/MobilySpinnerView.h>
 
 /*--------------------------------------------------*/
+
+@implementation MobilySpinnerViewPlane
+
+- (void)prepareAnimation {
+    [super prepareAnimation];
+    
+    CALayer* plane = [CALayer layer];
+    plane.frame = CGRectInset(CGRectMake(0.0f, 0.0f, self.size, self.size), 2.0f, 2.0f);
+    plane.backgroundColor = self.color.CGColor;
+    plane.anchorPoint = CGPointMake(0.5f, 0.5f);
+    plane.anchorPointZ = 0.5f;
+    plane.shouldRasterize = YES;
+    plane.rasterizationScale = [[UIScreen mainScreen] scale];
+    [self.layer addSublayer:plane];
+
+    CAKeyframeAnimation* planeAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+    planeAnimation.removedOnCompletion = NO;
+    planeAnimation.repeatCount = HUGE_VALF;
+    planeAnimation.duration = 1.2;
+    planeAnimation.keyTimes = @[@(0.0), @(0.5), @(1.0)];
+    planeAnimation.timingFunctions = @[
+        [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+        [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+        [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]
+    ];
+    planeAnimation.values = @[
+        [NSValue valueWithCATransform3D:MobilyTransform3DRotationWithPerspective(1.0f / 120.0f, 0.0f, 0.0f, 0.0f, 0.0f)],
+        [NSValue valueWithCATransform3D:MobilyTransform3DRotationWithPerspective(1.0f / 120.0f, M_PI, 0.0f, 1.0f, 0.0f)],
+        [NSValue valueWithCATransform3D:MobilyTransform3DRotationWithPerspective(1.0f / 120.0f, M_PI, 0.0f, 0.0f, 1.0f)]
+    ];
+    [plane addAnimation:planeAnimation forKey:@"plane"];
+}
+
+@end
+
+/*--------------------------------------------------*/
+

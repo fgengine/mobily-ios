@@ -33,10 +33,28 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import <MobilySocialManager.h>
-#import <MobilySocialProvider.h>
-#import <MobilySocialFacebookProvider.h>
-#import <MobilySocialVKontakteProvider.h>
-#import <MobilySocialTwitterProvider.h>
+#import <MobilyCore/MobilyTextField.h>
+
+/*--------------------------------------------------*/
+
+#ifdef MOBILY_FRAMEWORK
+IB_DESIGNABLE
+#endif
+@interface MobilyDateField : MobilyTextField< MobilyBuilderObject >
+
+@property(nonatomic, readwrite, assign) IBInspectable UIDatePickerMode datePickerMode;
+@property(nonatomic, readwrite, strong) IBInspectable NSDateFormatter* dateFormatter;
+@property(nonatomic, readwrite, strong) IBInspectable NSLocale* locale;
+@property(nonatomic, readwrite, copy) IBInspectable NSCalendar* calendar;
+@property(nonatomic, readwrite, strong) IBInspectable NSTimeZone* timeZone;
+@property(nonatomic, readwrite, strong) IBInspectable NSDate* minimumDate;
+@property(nonatomic, readwrite, strong) IBInspectable NSDate* maximumDate;
+@property(nonatomic, readwrite, strong) IBInspectable NSDate* date;
+
+- (void)setup NS_REQUIRES_SUPER;
+
+- (void)setDate:(NSDate*)date animated:(BOOL)animated;
+
+@end
 
 /*--------------------------------------------------*/
