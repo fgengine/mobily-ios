@@ -349,22 +349,16 @@
 
 - (CGSize)intrinsicContentSize {
     CGSize result = CGSizeZero;
-    if(self.window != nil) {
-        CGSize titleSize = CGSizeZero;
-        CGSize imageSize = CGSizeZero;
-        NSString* title = self.currentTitle;
-        if(title.length > 0) {
-            self.titleLabel.text = title;
-            titleSize = [self.titleLabel intrinsicContentSize];
-            titleSize.width += self.titleEdgeInsets.left + self.titleEdgeInsets.right;
-            titleSize.height += self.titleEdgeInsets.top + self.titleEdgeInsets.bottom;
-        }
-        UIImage* image = self.currentImage;
-        if(image != nil) {
-            imageSize = image.size;
-            imageSize.width += self.imageEdgeInsets.left + self.imageEdgeInsets.right;
-            imageSize.height += self.imageEdgeInsets.top + self.imageEdgeInsets.bottom;
-        }
+    NSString* title = self.currentTitle;
+    UIImage* image = self.currentImage;
+    if((self.window != nil) && (title.length > 0) && (image != nil)) {
+        self.titleLabel.text = title;
+        CGSize titleSize = [self.titleLabel intrinsicContentSize];
+        titleSize.width += self.titleEdgeInsets.left + self.titleEdgeInsets.right;
+        titleSize.height += self.titleEdgeInsets.top + self.titleEdgeInsets.bottom;
+        CGSize imageSize = image.size;
+        imageSize.width += self.imageEdgeInsets.left + self.imageEdgeInsets.right;
+        imageSize.height += self.imageEdgeInsets.top + self.imageEdgeInsets.bottom;
         switch(_imageAlignment) {
             case MobilyButtonImageAlignmentLeft:
             case MobilyButtonImageAlignmentRight:
@@ -387,8 +381,9 @@
 
 - (CGRect)titleRectForContentRect:(CGRect)contentRect {
     CGRect result = contentRect;
+    NSString* title = self.currentTitle;
     UIImage* image = self.currentImage;
-    if(image != nil) {
+    if((title.length > 0) && (image != nil)) {
         CGSize imageSize = image.size;
         imageSize.width += self.imageEdgeInsets.left + self.imageEdgeInsets.right;
         imageSize.height += self.imageEdgeInsets.top + self.imageEdgeInsets.bottom;
@@ -410,8 +405,9 @@
 
 - (CGRect)imageRectForContentRect:(CGRect)contentRect {
     CGRect result = CGRectZero;
+    NSString* title = self.currentTitle;
     UIImage* image = self.currentImage;
-    if(image != nil) {
+    if((title.length > 0) && (image != nil)) {
         CGSize imageSize = image.size;
         imageSize.width += self.imageEdgeInsets.left + self.imageEdgeInsets.right;
         imageSize.height += self.imageEdgeInsets.top + self.imageEdgeInsets.bottom;
