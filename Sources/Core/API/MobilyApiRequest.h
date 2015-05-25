@@ -51,6 +51,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @property(nonatomic, readwrite, strong) NSDictionary* urlParams;
 @property(nonatomic, readwrite, strong) NSDictionary* headers;
 @property(nonatomic, readwrite, strong) NSDictionary* bodyParams;
+@property(nonatomic, readwrite, strong) NSData* body;
 @property(nonatomic, readwrite, strong) NSArray* attachments;
 @property(nonatomic, readwrite, assign) NSUInteger numberOfRetries;
 @property(nonatomic, readwrite, assign) BOOL allowInvalidCertificates;
@@ -75,6 +76,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 - (instancetype)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams headers:(NSDictionary*)headers bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments;
 - (instancetype)initWithPostRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams headers:(NSDictionary*)headers bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries;
 - (instancetype)initWithMethod:(NSString*)method relativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams headers:(NSDictionary*)headers bodyParams:(NSDictionary*)bodyParams attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries;
+- (instancetype)initWithMethod:(NSString*)method relativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams headers:(NSDictionary*)headers body:(NSData*)body attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries;
 
 - (MobilyHttpQuery*)httpQueryByBaseUrl:(NSURL*)baseUrl baseHeaders:(NSDictionary*)baseHeaders;
 - (MobilyApiResponse*)responseByHttpQuery:(MobilyHttpQuery*)httpQuery;

@@ -47,6 +47,7 @@
     NSDictionary* _urlParams;
     NSDictionary* _headers;
     NSDictionary* _bodyParams;
+    NSData* _body;
     NSArray* _attachments;
     NSUInteger _numberOfRetries;
     BOOL _allowInvalidCertificates;
@@ -67,6 +68,7 @@
 @synthesize urlParams = _urlParams;
 @synthesize headers = _headers;
 @synthesize bodyParams = _bodyParams;
+@synthesize body = _body;
 @synthesize attachments = _attachments;
 @synthesize numberOfRetries = _numberOfRetries;
 @synthesize allowInvalidCertificates = _allowInvalidCertificates;
@@ -80,6 +82,7 @@
         @"urlParams",
         @"headers",
         @"bodyParams",
+        @"body",
         @"attachments",
         @"allowInvalidCertificates"
     ];
@@ -92,6 +95,7 @@
         @"urlParams",
         @"headers",
         @"bodyParams",
+        @"body",
         @"attachments",
         @"numberOfRetries",
         @"allowInvalidCertificates"
@@ -190,6 +194,20 @@
     return self;
 }
 
+- (instancetype)initWithMethod:(NSString*)method relativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams headers:(NSDictionary*)headers body:(NSData*)body attachments:(NSArray*)attachments numberOfRetries:(NSUInteger)numberOfRetries {
+    self = [super init];
+    if(self != nil) {
+        _method = method;
+        _relativeUrl = relativeUrl;
+        _urlParams = urlParams;
+        _headers = headers;
+        _body = body;
+        _attachments = attachments;
+        _numberOfRetries = numberOfRetries;
+    }
+    return self;
+}
+
 #pragma mark Debug
 
 - (NSString*)description {
@@ -253,8 +271,10 @@
     }
     if(_attachments.count > 0) {
         [httpQuery setRequestBodyParams:_bodyParams boundary:@"MobilyBoundary" attachments:_attachments];
-    } else {
+    } else if(_bodyParams.count > 0) {
         [httpQuery setRequestBodyParams:_bodyParams];
+    } else if(_body.length > 0) {
+        [httpQuery setRequestBody:_body];
     }
     if(baseHeaders.count > 0) {
         [httpQuery addRequestHeaders:baseHeaders];
