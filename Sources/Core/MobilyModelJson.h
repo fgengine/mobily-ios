@@ -211,6 +211,17 @@ typedef id (^MobilyModelJsonUndefinedBehaviour)(id modelJson, id value);
 
 /*--------------------------------------------------*/
 
+@interface MobilyModelJsonLocation : MobilyModelJson
+
+@property(nonatomic, readonly, strong) CLLocation* defaultValue;
+
+- (instancetype)initWithPath:(NSString*)path defaultValue:(CLLocation*)defaultValue;
+- (instancetype)initWithPath:(NSString*)path defaultValue:(CLLocation*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+
+@end
+
+/*--------------------------------------------------*/
+
 @interface MobilyModelJsonCustomClass : MobilyModelJson
 
 @property(nonatomic, readonly, assign) Class customClass;

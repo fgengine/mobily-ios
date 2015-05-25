@@ -854,6 +854,131 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
+@interface MobilyModelJsonLocation ()
+
+@property(nonatomic, readwrite, strong) CLLocation* defaultValue;
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation MobilyModelJsonLocation
+
+#pragma mark Init / Free
+
+- (instancetype)initWithPath:(NSString*)path defaultValue:(CLLocation*)defaultValue {
+    return [self initWithPath:path defaultValue:defaultValue undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path defaultValue:(CLLocation*)defaultValue undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    self = [super initWithPath:path undefinedBehaviour:undefinedBehaviour];
+    if(self != nil) {
+        self.defaultValue = defaultValue;
+    }
+    return self;
+}
+
+#pragma mark MobilyModelJson
+
+- (id)convertValue:(id)value {
+    static NSNumberFormatter* numberFormat = nil;
+    if(numberFormat == nil) {
+        numberFormat = [NSNumberFormatter new];
+        numberFormat.locale = NSLocale.currentLocale;
+        numberFormat.formatterBehavior = NSNumberFormatterBehavior10_4;
+        numberFormat.numberStyle = NSNumberFormatterNoStyle;
+    }
+    if([value isKindOfClass:NSString.class] == YES) {
+        NSArray* parts = [value componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"-/_,"]];
+        if(parts.count == 2) {
+            NSNumber* latitude = [numberFormat numberFromString:parts[0]];
+            if(latitude == nil) {
+                if([[numberFormat decimalSeparator] isEqualToString:@"."] == YES) {
+                    numberFormat.decimalSeparator = @",";
+                }
+                latitude = [numberFormat numberFromString:parts[0]];
+            }
+            NSNumber* longitude = [numberFormat numberFromString:parts[1]];
+            if(longitude == nil) {
+                if([[numberFormat decimalSeparator] isEqualToString:@"."] == YES) {
+                    numberFormat.decimalSeparator = @",";
+                }
+                longitude = [numberFormat numberFromString:parts[1]];
+            }
+            return [[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]];
+        }
+    } else if([value isKindOfClass:NSArray.class] == YES) {
+        if([value count] == 2) {
+            id latitude = value[0];
+            if([latitude isKindOfClass:NSString.class] == YES) {
+                latitude = [numberFormat numberFromString:latitude];
+                if(latitude == nil) {
+                    if([[numberFormat decimalSeparator] isEqualToString:@"."] == YES) {
+                        numberFormat.decimalSeparator = @",";
+                    }
+                    latitude = [numberFormat numberFromString:latitude];
+                }
+            } else if([latitude isKindOfClass:NSNumber.class] == NO) {
+                latitude = nil;
+            }
+            id longitude = value[1];
+            if([longitude isKindOfClass:NSString.class] == YES) {
+                longitude = [numberFormat numberFromString:longitude];
+                if(longitude == nil) {
+                    if([[numberFormat decimalSeparator] isEqualToString:@"."] == YES) {
+                        numberFormat.decimalSeparator = @",";
+                    }
+                    longitude = [numberFormat numberFromString:longitude];
+                }
+            } else if([longitude isKindOfClass:NSNumber.class] == NO) {
+                longitude = nil;
+            }
+            return [[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]];
+        }
+    } else if([value isKindOfClass:NSDictionary.class] == YES) {
+        id latitude = value[@"latitude"];
+        if(latitude == nil) {
+            latitude = value[@"lat"];
+        }
+        if([latitude isKindOfClass:NSString.class] == YES) {
+            latitude = [numberFormat numberFromString:latitude];
+            if(latitude == nil) {
+                if([[numberFormat decimalSeparator] isEqualToString:@"."] == YES) {
+                    numberFormat.decimalSeparator = @",";
+                }
+                latitude = [numberFormat numberFromString:latitude];
+            }
+        } else if([latitude isKindOfClass:NSNumber.class] == NO) {
+            latitude = nil;
+        }
+        id longitude = value[@"longitude"];
+        if(longitude == nil) {
+            longitude = value[@"lon"];
+        }
+        if([longitude isKindOfClass:NSString.class] == YES) {
+            longitude = [numberFormat numberFromString:longitude];
+            if(longitude == nil) {
+                if([[numberFormat decimalSeparator] isEqualToString:@"."] == YES) {
+                    numberFormat.decimalSeparator = @",";
+                }
+                longitude = [numberFormat numberFromString:longitude];
+            }
+        } else if([longitude isKindOfClass:NSNumber.class] == NO) {
+            longitude = nil;
+        }
+        return [[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]];
+    }
+    return _defaultValue;
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
 @interface MobilyModelJsonCustomClass ()
 
 @property(nonatomic, readwrite, assign) Class customClass;
