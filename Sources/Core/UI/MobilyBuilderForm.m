@@ -115,13 +115,14 @@
 
 #pragma mark Private
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 + (BOOL)object:(id)object outletName:(NSString*)outletName outletObject:(id< MobilyBuilderObject >)outletObject {
     BOOL isLinked = NO;
-    @try {
-        [object setValue:outletObject forKey:outletName];
+    SEL setter = NSSelectorFromString([NSString stringWithFormat:@"set%@:", [outletName stringByUppercaseFirstCharacterString]]);
+    if([object respondsToSelector:setter] == YES) {
+        [object performSelector:setter withObject:outletObject];
         isLinked = YES;
-    }
-    @catch(NSException* exception) {
     }
     id objectParent = [object objectParent];
     if(objectParent != nil) {
@@ -129,6 +130,7 @@
     }
     return isLinked;
 }
+#pragma clang diagnostic pop
 
 @end
 
