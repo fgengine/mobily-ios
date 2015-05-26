@@ -133,12 +133,12 @@
         self.repeated = 0;
         if(_delay > 0.0f) {
             self.delaying = YES;
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:_delay target:self selector:@selector(delayStartHandler) userInfo:nil repeats:NO];
+            self.timer = [NSTimer timerWithTimeInterval:_delay target:self selector:@selector(delayStartHandler) userInfo:nil repeats:NO];
         }
         if(_timer == nil) {
             self.startTime = NSDate.timeIntervalSinceReferenceDate;
             self.delaying = NO;
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:_interval target:self selector:@selector(timerHandler) userInfo:nil repeats:(_repeat != 0)];
+            self.timer = [NSTimer timerWithTimeInterval:_interval target:self selector:@selector(timerHandler) userInfo:nil repeats:(_repeat != 0)];
             if([_delegate respondsToSelector:@selector(timerDidStarted:)] == YES) {
                 [_delegate timerDidStarted:self];
             } else if(_startedBlock != nil) {
@@ -177,11 +177,11 @@
     if((_started == YES) && (_paused == YES)) {
         self.paused = NO;
         if(_delaying == YES) {
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:NSDate.timeIntervalSinceReferenceDate - _delay target:self selector:@selector(delayStartHandler) userInfo:nil repeats:NO];
+            self.timer = [NSTimer timerWithTimeInterval:NSDate.timeIntervalSinceReferenceDate - _delay target:self selector:@selector(delayStartHandler) userInfo:nil repeats:NO];
         }
         if(_timer == nil) {
             self.startTime = NSDate.timeIntervalSinceReferenceDate - (_pauseTime - _startTime);
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:_interval target:self selector:@selector(timerHandler) userInfo:nil repeats:(_repeat != 0)];
+            self.timer = [NSTimer timerWithTimeInterval:_interval target:self selector:@selector(timerHandler) userInfo:nil repeats:(_repeat != 0)];
             if([_delegate respondsToSelector:@selector(timerDidResumed:)] == YES) {
                 [_delegate timerDidResumed:self];
             } else if(_resumedBlock != nil) {
@@ -217,6 +217,9 @@
             [_timer invalidate];
         }
         _timer = timer;
+        if(_timer != nil) {
+            [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
+        }
     }
 }
 
