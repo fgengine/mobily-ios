@@ -117,7 +117,7 @@
     if([VKSdk wakeUpSession] == YES) {
         [VKSdk forceLogout];
     }
-    [VKSdk authorize:permissions revokeAccess:YES forceOAuth:YES inApp:YES];
+    [VKSdk authorize:permissions revokeAccess:NO forceOAuth:NO inApp:_inAppAuth];
 }
 
 #pragma mark MobilySocialManager

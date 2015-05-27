@@ -109,7 +109,7 @@
     self.signinSuccessBlock = success;
     self.signinFailureBlock = failure;
     FBSession.activeSession = [[FBSession alloc] initWithPermissions:_signinReadPermissions];
-    [FBSession.activeSession openWithBehavior:FBSessionLoginBehaviorForcingWebView completionHandler:^(FBSession* session, FBSessionState state, NSError* error) {
+    [FBSession.activeSession openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent completionHandler:^(FBSession* session, FBSessionState state, NSError* error) {
         [self sessionStateChanged:session state:state error:error];
     }];
 }

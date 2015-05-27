@@ -44,6 +44,7 @@
 @interface MobilySocialVKontakteProvider : MobilySocialProvider
 
 @property(nonatomic, readwrite, strong) NSString* applicationId;
+@property(nonatomic, readwrite, assign) BOOL inAppAuth;
 
 @property(nonatomic, readwrite, strong) MobilySocialVKontakteSession* session;
 
