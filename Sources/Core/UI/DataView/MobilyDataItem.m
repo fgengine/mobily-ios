@@ -352,6 +352,12 @@
     return _size;
 }
 
+- (void)setNeedUpdateCell {
+    MobilyDataCell* cell = _cell;
+    self.cell = nil;
+    self.cell = cell;
+}
+
 - (void)appear {
     [_view _appearItem:self];
 }

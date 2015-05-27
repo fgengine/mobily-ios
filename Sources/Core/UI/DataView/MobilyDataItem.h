@@ -93,6 +93,8 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 - (void)setNeedUpdateSize;
 - (CGSize)sizeForAvailableSize:(CGSize)size;
 
+- (void)setNeedUpdateCell;
+
 - (void)appear;
 - (void)disappear;
 - (void)validateLayoutForBounds:(CGRect)bounds;
