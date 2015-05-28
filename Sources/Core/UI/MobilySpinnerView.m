@@ -79,9 +79,11 @@
 - (void)setup {
     _size = MobilySpinnerViewSize;
     _color = MobilySpinnerViewColor;
-    _hidesWhenStopped = YES;
+    _hidesWhenStopped = NO;
     
     self.backgroundColor = UIColor.clearColor;
+    self.layer.timeOffset = [self.layer convertTime:CACurrentMediaTime() fromLayer:nil];
+    self.layer.speed = 0.0f;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -124,7 +126,14 @@
     if(_animating == NO) {
         _animating = YES;
         self.hidden = NO;
-        [self prepareAnimation];
+        if(self.layer.sublayers.count < 1) {
+            [self prepareAnimation];
+        }
+        CFTimeInterval currentTime = CACurrentMediaTime();
+        CFTimeInterval pausedTime = self.layer.timeOffset;
+        self.layer.beginTime = [self.layer convertTime:currentTime fromLayer:nil] - pausedTime;;
+        self.layer.timeOffset = 0.0f;
+        self.layer.speed = 1.0;
     }
 }
 
@@ -135,6 +144,8 @@
             self.layer.sublayers = nil;
             self.hidden = YES;
         }
+        self.layer.timeOffset = [self.layer convertTime:CACurrentMediaTime() fromLayer:nil];
+        self.layer.speed = 0.0f;
     }
 }
 
