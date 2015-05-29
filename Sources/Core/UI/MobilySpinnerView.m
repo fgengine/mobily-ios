@@ -99,14 +99,18 @@
     if(_size != size) {
         _size = size;
         [self invalidateIntrinsicContentSize];
-        [self prepareAnimation];
+        if(_animating == YES) {
+            [self prepareAnimation];
+        }
     }
 }
 
 - (void)setColor:(UIColor*)color {
     if([_color isEqual:color] == NO) {
         _color = color;
-        [self prepareAnimation];
+        if(_animating == YES) {
+            [self prepareAnimation];
+        }
     }
 }
 
