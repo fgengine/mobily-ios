@@ -172,15 +172,14 @@
         case MobilyDataRefreshViewTypeLeft: refreshViewInsets.left = _size; refreshViewInsets.right = -_size; break;
         case MobilyDataRefreshViewTypeRight: refreshViewInsets.left = -_size; refreshViewInsets.right = _size; break;
     }
-    CGFloat fromConstraint = _constraintSize.constant;
-    CGFloat toConstraint = _size;
+    _constraintOffset.constant = 0.0f;
+    _constraintSize.constant = _size;
     if(animated == YES) {
-        [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / ABS(velocity)
+        [UIView animateWithDuration:ABS(_size - _constraintSize.constant) / ABS(velocity)
                               delay:0.01f
                             options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                          animations:^{
                              _view.refreshViewInsets = refreshViewInsets;
-                             _constraintSize.constant = toConstraint;
                              [self.superview layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
@@ -190,7 +189,6 @@
                          }];
     } else {
         _view.refreshViewInsets = refreshViewInsets;
-        _constraintSize.constant = toConstraint;
         if(complete != nil) {
             complete(YES);
         }
@@ -205,15 +203,24 @@
         case MobilyDataRefreshViewTypeLeft: refreshViewInsets.left = 0.0f; refreshViewInsets.right = 0.0f; break;
         case MobilyDataRefreshViewTypeRight: refreshViewInsets.left = 0.0f; refreshViewInsets.right = 0.0f; break;
     }
-    CGFloat fromConstraint = _constraintSize.constant;
-    CGFloat toConstraint = 0.0f;
+    switch(_type) {
+        case MobilyDataRefreshViewTypeTop:
+        case MobilyDataRefreshViewTypeLeft:
+            _constraintOffset.constant = -_size;
+            _constraintSize.constant = _size;
+            break;
+        case MobilyDataRefreshViewTypeBottom:
+        case MobilyDataRefreshViewTypeRight:
+            _constraintOffset.constant = _size;
+            _constraintSize.constant = _size;
+            break;
+    }
     if(animated == YES) {
-        [UIView animateWithDuration:ABS(toConstraint - fromConstraint) / ABS(velocity)
+        [UIView animateWithDuration:_size / ABS(velocity)
                               delay:0.01f
                             options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                          animations:^{
                              _view.refreshViewInsets = refreshViewInsets;
-                             _constraintSize.constant = toConstraint;
                              [self.superview layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
@@ -225,7 +232,6 @@
     } else {
         self.state = MobilyDataRefreshViewStateIdle;
         _view.refreshViewInsets = refreshViewInsets;
-        _constraintSize.constant = toConstraint;
         if(complete != nil) {
             complete(YES);
         }

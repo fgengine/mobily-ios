@@ -1294,9 +1294,9 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
     if(_topRefreshView != nil) {
         if(_constraintTopRefreshTop == nil) {
             if(_searchBar != nil) {
-                self.constraintTopRefreshTop = [NSLayoutConstraint constraintWithItem:_topRefreshView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_searchBar attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+                self.constraintTopRefreshTop = [NSLayoutConstraint constraintWithItem:_topRefreshView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_searchBar attribute:NSLayoutAttributeBottom multiplier:1.0f constant:-_topRefreshView.size];
             } else {
-                self.constraintTopRefreshTop = [NSLayoutConstraint constraintWithItem:_topRefreshView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+                self.constraintTopRefreshTop = [NSLayoutConstraint constraintWithItem:_topRefreshView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:-_topRefreshView.size];
             }
         }
         if(_constraintTopRefreshLeft == nil) {
@@ -1306,7 +1306,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             self.constraintTopRefreshRight = [NSLayoutConstraint constraintWithItem:_topRefreshView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
         }
         if(_constraintTopRefreshSize == nil) {
-            self.constraintTopRefreshSize = [NSLayoutConstraint constraintWithItem:_topRefreshView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:_refreshViewInsets.top];
+            self.constraintTopRefreshSize = [NSLayoutConstraint constraintWithItem:_topRefreshView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:_topRefreshView.size];
         }
     } else {
         self.constraintTopRefreshTop = nil;
@@ -1316,7 +1316,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
     }
     if(_bottomRefreshView != nil) {
         if(_constraintBottomRefreshBottom == nil) {
-            self.constraintBottomRefreshBottom = [NSLayoutConstraint constraintWithItem:_bottomRefreshView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+            self.constraintBottomRefreshBottom = [NSLayoutConstraint constraintWithItem:_bottomRefreshView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:_bottomRefreshView.size];
         }
         if(_constraintBottomRefreshLeft == nil) {
             self.constraintBottomRefreshLeft = [NSLayoutConstraint constraintWithItem:_bottomRefreshView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
@@ -1325,7 +1325,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             self.constraintBottomRefreshRight = [NSLayoutConstraint constraintWithItem:_bottomRefreshView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
         }
         if(_constraintBottomRefreshSize == nil) {
-            self.constraintBottomRefreshSize = [NSLayoutConstraint constraintWithItem:_bottomRefreshView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:_refreshViewInsets.bottom];
+            self.constraintBottomRefreshSize = [NSLayoutConstraint constraintWithItem:_bottomRefreshView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:_bottomRefreshView.size];
         }
     } else {
         self.constraintBottomRefreshBottom = nil;
@@ -1341,10 +1341,10 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             self.constraintLeftRefreshBottom = [NSLayoutConstraint constraintWithItem:_leftRefreshView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
         }
         if(_constraintLeftRefreshLeft == nil) {
-            self.constraintLeftRefreshLeft = [NSLayoutConstraint constraintWithItem:_leftRefreshView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
+            self.constraintLeftRefreshLeft = [NSLayoutConstraint constraintWithItem:_leftRefreshView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0f constant:-_leftRefreshView.size];
         }
         if(_constraintLeftRefreshSize == nil) {
-            self.constraintLeftRefreshSize = [NSLayoutConstraint constraintWithItem:_leftRefreshView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:_refreshViewInsets.left];
+            self.constraintLeftRefreshSize = [NSLayoutConstraint constraintWithItem:_leftRefreshView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:_leftRefreshView.size];
         }
     } else {
         self.constraintLeftRefreshTop = nil;
@@ -1360,10 +1360,10 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             self.constraintRightRefreshBottom = [NSLayoutConstraint constraintWithItem:_rightRefreshView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
         }
         if(_constraintRightRefreshRight == nil) {
-            self.constraintRightRefreshRight = [NSLayoutConstraint constraintWithItem:_rightRefreshView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
+            self.constraintRightRefreshRight = [NSLayoutConstraint constraintWithItem:_rightRefreshView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0f constant:_rightRefreshView.size];
         }
         if(_constraintRightRefreshSize == nil) {
-            self.constraintRightRefreshSize = [NSLayoutConstraint constraintWithItem:_rightRefreshView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:_refreshViewInsets.right];
+            self.constraintRightRefreshSize = [NSLayoutConstraint constraintWithItem:_rightRefreshView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:_rightRefreshView.size];
         }
     } else {
         self.constraintRightRefreshTop = nil;
@@ -1394,11 +1394,11 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         self.scrollDirection = MobilyDataViewDirectionUnknown;
     }
     if(self.pagingEnabled == NO) {
-        if(_searchBarDragging == NO) {
+        if((_searchBarDragging == NO) && (_canDraggingSearchBar == NO)) {
             if((_searchBar != nil) && (_searchBarIteractionEnabled == YES)) {
-                self.canDraggingSearchBar = NO;
                 switch(_searchBarStyle) {
                     case MobilyDataViewSearchBarStyleStatic:
+                        self.canDraggingSearchBar = NO;
                         break;
                     case MobilyDataViewSearchBarStyleInside:
                         self.canDraggingSearchBar = ((_searchBar.searching == NO) && (_searchBar.editing == NO));
@@ -1419,37 +1419,29 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             }
             self.searchBarDragging = (_canDraggingSearchBar == YES);
         }
-        if(_refreshDragging == NO) {
-            self.canDraggingTopRefresh = NO;
-            self.canDraggingBottomRefresh = NO;
-            self.canDraggingLeftRefresh = NO;
-            self.canDraggingRightRefresh = NO;
+        if((_refreshDragging == NO) && (_canDraggingTopRefresh == NO) && (_canDraggingBottomRefresh == NO) && (_canDraggingLeftRefresh == NO) && (_canDraggingRightRefresh == NO)) {
             if((_topRefreshView != nil) && (_topRefreshIteractionEnabled == YES)) {
                 switch(_topRefreshView.state) {
-                    case MobilyDataRefreshViewStateLoading:
-                    case MobilyDataRefreshViewStateDisable: self.canDraggingTopRefresh = NO; break;
-                    default: self.canDraggingTopRefresh = YES; break;
+                    case MobilyDataRefreshViewStateIdle: self.canDraggingTopRefresh = YES; break;
+                    default: self.canDraggingTopRefresh = NO; break;
                 }
             }
             if((_bottomRefreshView != nil) && (_bottomRefreshIteractionEnabled == YES)) {
                 switch(_bottomRefreshView.state) {
-                    case MobilyDataRefreshViewStateLoading:
-                    case MobilyDataRefreshViewStateDisable: self.canDraggingBottomRefresh = NO; break;
-                    default: self.canDraggingBottomRefresh = YES; break;
+                    case MobilyDataRefreshViewStateIdle: self.canDraggingBottomRefresh = YES; break;
+                    default: self.canDraggingBottomRefresh = NO; break;
                 }
             }
             if((_leftRefreshView != nil) && (_leftRefreshIteractionEnabled == YES)) {
                 switch(_leftRefreshView.state) {
-                    case MobilyDataRefreshViewStateLoading:
-                    case MobilyDataRefreshViewStateDisable: self.canDraggingLeftRefresh = NO; break;
-                    default: self.canDraggingLeftRefresh = YES; break;
+                    case MobilyDataRefreshViewStateIdle: self.canDraggingLeftRefresh = YES; break;
+                    default: self.canDraggingLeftRefresh = NO; break;
                 }
             }
             if((_rightRefreshView != nil) && (_rightRefreshIteractionEnabled == YES)) {
                 switch(_rightRefreshView.state) {
-                    case MobilyDataRefreshViewStateLoading:
-                    case MobilyDataRefreshViewStateDisable: self.canDraggingRightRefresh = NO; break;
-                    default: self.canDraggingRightRefresh = YES; break;
+                    case MobilyDataRefreshViewStateIdle: self.canDraggingRightRefresh = YES; break;
+                    default: self.canDraggingRightRefresh = NO; break;
                 }
             }
             self.refreshDragging = ((_canDraggingTopRefresh == YES) || (_canDraggingBottomRefresh == YES) || (_canDraggingLeftRefresh == YES) || (_canDraggingRightRefresh == YES));
@@ -1638,10 +1630,22 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 }
                 refreshViewInsets.right = progress;
             }
-            _constraintTopRefreshSize.constant = refreshViewInsets.top;
-            _constraintBottomRefreshSize.constant = refreshViewInsets.bottom;
-            _constraintLeftRefreshSize.constant = refreshViewInsets.left;
-            _constraintRightRefreshSize.constant = refreshViewInsets.right;
+            if(_topRefreshView != nil) {
+                _topRefreshView.constraintOffset.constant = (refreshViewInsets.top < _topRefreshView.size) ? -(_topRefreshView.size - refreshViewInsets.top) : 0.0f;
+                _topRefreshView.constraintSize.constant = MAX(refreshViewInsets.top, _topRefreshView.size);
+            }
+            if(_bottomRefreshView != nil) {
+                _bottomRefreshView.constraintOffset.constant = (refreshViewInsets.bottom < _bottomRefreshView.size) ? (_bottomRefreshView.size - refreshViewInsets.bottom) : 0.0f;
+                _bottomRefreshView.constraintSize.constant = MAX(refreshViewInsets.bottom, _bottomRefreshView.size);
+            }
+            if(_leftRefreshView != nil) {
+                _leftRefreshView.constraintOffset.constant = (refreshViewInsets.left < _leftRefreshView.size) ? -(_leftRefreshView.size - refreshViewInsets.left) : 0.0f;
+                _leftRefreshView.constraintSize.constant = MAX(refreshViewInsets.left, _leftRefreshView.size);
+            }
+            if(_rightRefreshView != nil) {
+                _rightRefreshView.constraintOffset.constant = (refreshViewInsets.right < _rightRefreshView.size) ? (_rightRefreshView.size - refreshViewInsets.right) : 0.0f;
+                _rightRefreshView.constraintSize.constant = MAX(refreshViewInsets.right, _rightRefreshView.size);
+            }
             self.refreshViewInsets = refreshViewInsets;
         }
     }
@@ -1688,32 +1692,31 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             }
         }
         if(_refreshDragging == YES) {
+            self.refreshDragging = NO;
             if(_canDraggingTopRefresh == YES) {
                 switch(_topRefreshView.state) {
                     case MobilyDataRefreshViewStateRelease: {
                         if([self containsEventForKey:MobilyDataViewTopRefreshTriggered] == YES) {
                             [self _showTopRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished __unused) {
                                 [self fireEventForKey:MobilyDataViewTopRefreshTriggered byObject:_topRefreshView];
-                                self.refreshDragging = NO;
+                                self.canDraggingTopRefresh = NO;
                             }];
                         } else {
                             [self _hideTopRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
-                                self.refreshDragging = NO;
+                                self.canDraggingTopRefresh = NO;
                             }];
                         }
                         break;
                     }
                     case MobilyDataRefreshViewStatePull: {
                         [self _hideTopRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
-                            self.refreshDragging = NO;
+                            self.canDraggingTopRefresh = NO;
                         }];
                         break;
                     }
-                    case MobilyDataRefreshViewStateIdle:
-                    case MobilyDataRefreshViewStateLoading:
-                    case MobilyDataRefreshViewStateDisable: {
+                    default:
+                        self.canDraggingTopRefresh = NO;
                         break;
-                    }
                 }
             }
             if(_canDraggingBottomRefresh == YES) {
@@ -1722,26 +1725,24 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                         if([self containsEventForKey:MobilyDataViewBottomRefreshTriggered] == YES) {
                             [self _showBottomRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished __unused) {
                                 [self fireEventForKey:MobilyDataViewBottomRefreshTriggered byObject:_bottomRefreshView];
-                                self.refreshDragging = NO;
+                                self.canDraggingBottomRefresh = NO;
                             }];
                         } else {
                             [self _hideBottomRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
-                                self.refreshDragging = NO;
+                                self.canDraggingBottomRefresh = NO;
                             }];
                         }
                         break;
                     }
                     case MobilyDataRefreshViewStatePull: {
                         [self _hideBottomRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
-                            self.refreshDragging = NO;
+                            self.canDraggingBottomRefresh = NO;
                         }];
                         break;
                     }
-                    case MobilyDataRefreshViewStateIdle:
-                    case MobilyDataRefreshViewStateLoading:
-                    case MobilyDataRefreshViewStateDisable: {
+                    default:
+                        self.canDraggingBottomRefresh = NO;
                         break;
-                    }
                 }
             }
             if(_canDraggingLeftRefresh == YES) {
@@ -1751,27 +1752,24 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                         if([self containsEventForKey:MobilyDataViewLeftRefreshTriggered] == YES) {
                             [self _showLeftRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished __unused) {
                                 [self fireEventForKey:MobilyDataViewLeftRefreshTriggered byObject:_leftRefreshView];
-                                self.refreshDragging = NO;
+                                self.canDraggingLeftRefresh = NO;
                             }];
                         } else {
                             [self _hideLeftRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished) {
-                                self.refreshDragging = NO;
+                                self.canDraggingLeftRefresh = NO;
                             }];
                         }
                         break;
                     }
                     case MobilyDataRefreshViewStatePull: {
-                        contentOffset->x = -_leftRefreshView.size;
                         [self _hideLeftRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished) {
-                            self.refreshDragging = NO;
+                            self.canDraggingLeftRefresh = NO;
                         }];
                         break;
                     }
-                    case MobilyDataRefreshViewStateIdle:
-                    case MobilyDataRefreshViewStateLoading:
-                    case MobilyDataRefreshViewStateDisable: {
+                    default:
+                        self.canDraggingLeftRefresh = NO;
                         break;
-                    }
                 }
             }
             if(_canDraggingRightRefresh == YES) {
@@ -1780,26 +1778,24 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                         if([self containsEventForKey:MobilyDataViewRightRefreshTriggered] == YES) {
                             [self _showRightRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished __unused) {
                                 [self fireEventForKey:MobilyDataViewRightRefreshTriggered byObject:_rightRefreshView];
-                                self.refreshDragging = NO;
+                                self.canDraggingRightRefresh = NO;
                             }];
                         } else {
                             [self _hideRightRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished) {
-                                self.refreshDragging = NO;
+                                self.canDraggingRightRefresh = NO;
                             }];
                         }
                         break;
                     }
                     case MobilyDataRefreshViewStatePull: {
                         [self _hideRightRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished) {
-                            self.refreshDragging = NO;
+                            self.canDraggingRightRefresh = NO;
                         }];
                         break;
                     }
-                    case MobilyDataRefreshViewStateIdle:
-                    case MobilyDataRefreshViewStateLoading:
-                    case MobilyDataRefreshViewStateDisable: {
+                    default:
+                        self.canDraggingRightRefresh = NO;
                         break;
-                    }
                 }
             }
         }
