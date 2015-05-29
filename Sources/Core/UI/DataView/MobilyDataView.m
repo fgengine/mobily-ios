@@ -1657,20 +1657,22 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 - (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize {
     if(self.pagingEnabled == NO) {
         if(_searchBarDragging == YES) {
+            self.searchBarDragging = NO;
             if(_canDraggingSearchBar == YES) {
                 CGFloat searchBarHeight = _searchBar.frameHeight;
                 switch(_searchBarStyle) {
                     case MobilyDataViewSearchBarStyleStatic:
+                        self.canDraggingSearchBar = NO;
                         break;
                     case MobilyDataViewSearchBarStyleInside: {
                         if(_searchBarInset >= (searchBarHeight * 0.33f)) {
                             contentOffset->y = MAX(-_searchBarInset, contentOffset->y - _searchBarInset);
                             [self _showSearchBarAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
-                                self.searchBarDragging = NO;
+                                self.canDraggingSearchBar = NO;
                             }];
                         } else {
                             [self _hideSearchBarAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
-                                self.searchBarDragging = NO;
+                                self.canDraggingSearchBar = NO;
                             }];
                         }
                         break;
@@ -1679,11 +1681,11 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                         if(_searchBarInset >= (searchBarHeight * 0.33f)) {
                             contentOffset->y = MAX(-_searchBarInset, contentOffset->y - _searchBarInset);
                             [self _showSearchBarAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
-                                self.searchBarDragging = NO;
+                                self.canDraggingSearchBar = NO;
                             }];
                         } else {
                             [self _hideSearchBarAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
-                                self.searchBarDragging = NO;
+                                self.canDraggingSearchBar = NO;
                             }];
                         }
                         break;
