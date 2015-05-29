@@ -82,6 +82,7 @@
     _hidesWhenStopped = NO;
     
     self.backgroundColor = UIColor.clearColor;
+    self.hidden = NO;
     self.layer.timeOffset = [self.layer convertTime:CACurrentMediaTime() fromLayer:nil];
     self.layer.speed = 0.0f;
     
@@ -121,6 +122,7 @@
                 self.hidden = YES;
             }
         } else {
+            self.hidden = NO;
             [self prepareAnimation];
         }
     }
