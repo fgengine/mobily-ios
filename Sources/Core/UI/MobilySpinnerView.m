@@ -85,6 +85,8 @@
     self.layer.timeOffset = [self.layer convertTime:CACurrentMediaTime() fromLayer:nil];
     self.layer.speed = 0.0f;
     
+    [self prepareAnimation];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
@@ -99,16 +101,26 @@
     if(_size != size) {
         _size = size;
         [self invalidateIntrinsicContentSize];
-        if(_animating == YES) {
-            [self prepareAnimation];
-        }
+        [self prepareAnimation];
     }
 }
 
 - (void)setColor:(UIColor*)color {
     if([_color isEqual:color] == NO) {
         _color = color;
-        if(_animating == YES) {
+        [self prepareAnimation];
+    }
+}
+
+- (void)setHidesWhenStopped:(BOOL)hidesWhenStopped {
+    if(_hidesWhenStopped != hidesWhenStopped) {
+        _hidesWhenStopped = hidesWhenStopped;
+        if(_hidesWhenStopped == YES) {
+            if(_animating == NO) {
+                self.layer.sublayers = nil;
+                self.hidden = YES;
+            }
+        } else {
             [self prepareAnimation];
         }
     }
