@@ -99,6 +99,7 @@
 #pragma mark Public
 
 - (void)signinSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
+    self.active = YES;
     if(Twitter.sharedInstance.authConfig == nil) {
         [Twitter.sharedInstance startWithConsumerKey:_consumerKey consumerSecret:_consumerSecret];
     }
@@ -106,6 +107,7 @@
         [Twitter.sharedInstance logOut];
     }
     [Twitter.sharedInstance logInWithCompletion:^(TWTRSession* session, NSError* error) {
+        self.active = NO;
         if(session != nil) {
             self.session = [[MobilySocialTwitterSession alloc] initWithSession:session];
             if(self.session.isValid == YES) {
@@ -127,7 +129,9 @@
 
 - (void)requestEmailSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
     if(self.session.isValid == YES) {
+        self.active = YES;
         TWTRShareEmailViewController* shareEmailViewController = [[TWTRShareEmailViewController alloc] initWithCompletion:^(NSString* email, NSError* error) {
+            self.active = NO;
             if(error == nil) {
                 self.session.email = email;
                 [self.session save];
@@ -156,8 +160,10 @@
 
 - (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
     if(self.session.isValid == YES) {
+        self.active = YES;
         [Twitter.sharedInstance logOut];
         self.session = nil;
+        self.active = NO;
         if(success != nil) {
             success();
         }

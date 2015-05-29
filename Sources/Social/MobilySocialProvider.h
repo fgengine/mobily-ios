@@ -48,6 +48,7 @@ typedef void (^MobilySocialProviderFailureBlock)(NSError* error);
 @property(nonatomic, readwrite, weak) MobilySocialManager* manager;
 @property(nonatomic, readonly, strong) NSString* name;
 @property(nonatomic, readonly, strong) NSString* userDefaultsKey;
+@property(nonatomic, readwrite, assign, getter=isActive) BOOL active;
 
 @property(nonatomic, readwrite, strong) id session;
 

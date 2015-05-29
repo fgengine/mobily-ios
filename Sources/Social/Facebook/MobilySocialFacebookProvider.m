@@ -102,6 +102,7 @@
 #pragma mark Public
 
 - (void)signinWithReadPermissions:(NSArray*)readPermissions success:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
+    self.active = YES;
     if((FBSession.activeSession.state == FBSessionStateOpen) || (FBSession.activeSession.state == FBSessionStateOpenTokenExtended)) {
         [FBSession.activeSession closeAndClearTokenInformation];
     }
@@ -111,6 +112,7 @@
     FBSession.activeSession = [[FBSession alloc] initWithPermissions:_signinReadPermissions];
     [FBSession.activeSession openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent completionHandler:^(FBSession* session, FBSessionState state, NSError* error) {
         [self sessionStateChanged:session state:state error:error];
+        self.active = NO;
     }];
 }
 
@@ -122,7 +124,10 @@
 
 - (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
     if(self.session.isValid == YES) {
+        self.active = YES;
         [FBSession.activeSession closeAndClearTokenInformation];
+        self.session = nil;
+        self.active = NO;
         if(success != nil) {
             success();
         }
@@ -134,14 +139,19 @@
 }
 
 - (void)didBecomeActive {
-    [FBSession.activeSession handleDidBecomeActive];
+    if(self.isActive == YES) {
+        [FBSession.activeSession handleDidBecomeActive];
+    }
 }
 
 - (BOOL)openURL:(NSURL*)url sourceApplication:(NSString* __unused)sourceApplication annotation:(id __unused)annotation {
-    [FBSession.activeSession setStateChangeHandler:^(FBSession *session, FBSessionState state, NSError *error) {
-         [self sessionStateChanged:session state:state error:error];
-     }];
-    return [FBSession.activeSession handleOpenURL:url];
+    if(self.isActive == YES) {
+        [FBSession.activeSession setStateChangeHandler:^(FBSession *session, FBSessionState state, NSError *error) {
+            [self sessionStateChanged:session state:state error:error];
+        }];
+        return [FBSession.activeSession handleOpenURL:url];
+    }
+    return NO;
 }
 
 #pragma mark Private
