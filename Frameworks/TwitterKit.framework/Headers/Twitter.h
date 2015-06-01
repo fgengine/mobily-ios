@@ -1,10 +1,10 @@
 //
 //  Twitter.h
 //
-//  Copyright (c) 2014 Twitter. All rights reserved.
+//  Copyright (c) 2015 Twitter. All rights reserved.
 //
 
-#import "TwitterKit.h"
+#import <UIKit/UIKit.h>
 #import "TWTRAPIClient.h"
 #import "TWTRSession.h"
 

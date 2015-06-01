@@ -1,40 +1,45 @@
 //
 //  TwitterKit.h
 //
-//  Copyright (c) 2014 Twitter. All rights reserved.
+//  Copyright (c) 2015 Twitter. All rights reserved.
 //
 
 #if __has_feature(modules)
 @import Accounts;
-@import CoreData;
 @import Foundation;
 @import Social;
 @import UIKit;
 #else
 #import <Accounts/Accounts.h>
-#import <CoreData/CoreData.h>
 #import <Foundation/Foundation.h>
 #import <Social/Social.h>
 #import <UIKit/UIKit.h>
 #endif
 
-#import "Digits.h"
-#import "Twitter.h"
+#import <TwitterCore/TwitterCore.h>
+
 #import "TWTRAPIClient.h"
-#import "TWTRAPIErrorCode.h"
+#import "TWTRCollectionTimelineDataSource.h"
 #import "TWTRComposer.h"
-#import "TWTRConstants.h"
-#import "TWTROAuthSigning.h"
-#import "TWTRSession.h"
-#import "TWTRShareEmailViewController.h"
 #import "TWTRLogInButton.h"
+#import "TWTROAuthSigning.h"
+#import "TWTRSearchTimelineDataSource.h"
+#import "TWTRShareEmailViewController.h"
+#import "TWTRSession.h"
+#import "TWTRTimelineDataSource.h"
+#import "TWTRTimelineType.h"
+#import "TWTRTimelineViewController.h"
 #import "TWTRTweet.h"
-#import "TWTRTweetTableViewCell.h"
 #import "TWTRTweetTableViewCell.h"
 #import "TWTRTweetView.h"
 #import "TWTRTweetViewDelegate.h"
 #import "TWTRUser.h"
-#import "TWTROAuthSigning.h"
+#import "TWTRUserTimelineDataSource.h"
+#import "Twitter.h"
+
+#if __has_include(<DigitsKit/DigitsKit.h>)
+#import <DigitsKit/DigitsKit.h>
+#endif
 
 /**
  *  `TwitterKit` can be used as an element in the array passed to the `+[Fabric with:]`.

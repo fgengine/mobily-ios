@@ -110,7 +110,6 @@
 #pragma mark Public
 
 - (void)signinWithPermissions:(NSArray*)permissions success:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
-    self.active = YES;
     self.permissions = permissions;
     self.successBlock = success;
     self.failureBlock = failure;
@@ -129,10 +128,8 @@
 
 - (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
     if(self.session.isValid == YES) {
-        self.active = YES;
         [VKSdk forceLogout];
         self.session = nil;
-        self.active = NO;
         if(success != nil) {
             success();
         }
@@ -144,10 +141,7 @@
 }
 
 - (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id __unused)annotation {
-    if(self.isActive == YES) {
-        return [VKSdk processOpenURL:url fromApplication:sourceApplication];
-    }
-    return NO;
+    return [VKSdk processOpenURL:url fromApplication:sourceApplication];
 }
 
 #pragma mark VKSdkDelegate
@@ -157,14 +151,12 @@
 }
 
 - (void)vkSdkTokenHasExpired:(VKAccessToken* __unused)expiredToken {
-    self.active = NO;
     if(_failureBlock != nil) {
         _failureBlock(nil);
     }
 }
 
 - (void)vkSdkUserDeniedAccess:(VKError*)authorizationError {
-    self.active = NO;
     if(_failureBlock != nil) {
         _failureBlock(authorizationError.httpError);
     }
@@ -175,7 +167,6 @@
 }
 
 - (void)vkSdkReceivedNewToken:(VKAccessToken*)accessToken {
-    self.active = NO;
     if(accessToken != nil) {
         self.session = [[MobilySocialVKontakteSession alloc] initWithAccessToken:accessToken];
         if(_successBlock != nil) {

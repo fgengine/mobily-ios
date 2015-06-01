@@ -111,6 +111,15 @@
     }
 }
 
+- (BOOL)didLaunchingWithOptions:(NSDictionary*)launchOptions {
+    for(MobilySocialProvider* provider in _mutableProviders) {
+        if([provider didLaunchingWithOptions:launchOptions] == NO) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
 - (void)didBecomeActive {
     for(MobilySocialProvider* provider in _mutableProviders) {
         [provider didBecomeActive];

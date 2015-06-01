@@ -52,6 +52,8 @@
 - (void)registerProvider:(MobilySocialProvider*)provider;
 - (void)unregisterProvider:(MobilySocialProvider*)provider;
 
+- (BOOL)didLaunchingWithOptions:(NSDictionary*)launchOptions;
+
 - (void)didBecomeActive;
 - (void)willResignActive;
 
