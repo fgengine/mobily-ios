@@ -73,6 +73,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
     MobilyDataViewDirection _scrollDirection;
     CGPoint _scrollBeginPosition;
     MobilyDataContainer* _container;
+    UIEdgeInsets _containerInsets;
     NSMutableArray* _visibleItems;
     NSMutableArray* _selectedItems;
     NSMutableArray* _highlightedItems;
@@ -150,26 +151,25 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
 @property(nonatomic, readwrite, assign, getter=isUpdating) BOOL updating;
 @property(nonatomic, readwrite, assign) BOOL invalidLayout;
 
+@property(nonatomic, readwrite, assign) CGFloat searchBarInset;
 @property(nonatomic, readwrite, assign) CGFloat searchBarOverlayLastPosition;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintSearchBarTop;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintSearchBarLeft;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintSearchBarRight;
 
+@property(nonatomic, readwrite, assign) UIEdgeInsets refreshViewInsets;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintTopRefreshTop;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintTopRefreshLeft;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintTopRefreshRight;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintTopRefreshSize;
-
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintBottomRefreshBottom;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintBottomRefreshLeft;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintBottomRefreshRight;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintBottomRefreshSize;
-
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintLeftRefreshTop;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintLeftRefreshBottom;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintLeftRefreshLeft;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintLeftRefreshSize;
-
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintRightRefreshTop;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintRightRefreshBottom;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintRightRefreshRight;

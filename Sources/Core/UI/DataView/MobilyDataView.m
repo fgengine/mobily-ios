@@ -63,6 +63,7 @@
 @synthesize scrollDirection = _scrollDirection;
 @synthesize scrollBeginPosition = _scrollBeginPosition;
 @synthesize container = _container;
+@synthesize containerInsets = _containerInsets;
 @synthesize visibleItems = _visibleItems;
 @synthesize selectedItems = _selectedItems;
 @synthesize highlightedItems = _highlightedItems;
@@ -83,8 +84,9 @@
 @synthesize showedSearchBar = _showedSearchBar;
 @synthesize searchBar = _searchBar;
 @synthesize searchBarStyle =  _searchBarStyle;
-@synthesize searchBarOverlayLastPosition =  _searchBarOverlayLastPosition;
 @synthesize searchBarInset =  _searchBarInset;
+@synthesize searchBarOverlayLastPosition =  _searchBarOverlayLastPosition;
+@synthesize refreshViewInsets =  _refreshViewInsets;
 @synthesize constraintSearchBarTop = _constraintSearchBarTop;
 @synthesize constraintSearchBarLeft = _constraintSearchBarLeft;
 @synthesize constraintSearchBarRight = _constraintSearchBarRight;
@@ -112,7 +114,6 @@
 @synthesize constraintRightRefreshBottom = _constraintRightRefreshBottom;
 @synthesize constraintRightRefreshRight = _constraintRightRefreshRight;
 @synthesize constraintRightRefreshSize = _constraintRightRefreshSize;
-@synthesize refreshViewInsets =  _refreshViewInsets;
 @synthesize searchBarDragging = _searchBarDragging;
 @synthesize canDraggingSearchBar = _canDraggingSearchBar;
 @synthesize refreshDragging = _refreshDragging;
@@ -343,6 +344,13 @@
                 [self _layoutForVisible];
             }];
         }
+    }
+}
+
+- (void)setContainerInsets:(UIEdgeInsets)containerInsets {
+    if(UIEdgeInsetsEqualToEdgeInsets(_containerInsets, containerInsets) == NO) {
+        _containerInsets = containerInsets;
+        [self _updateInsets];
     }
 }
 
@@ -1374,8 +1382,8 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 }
 
 - (void)_updateInsets {
-    UIEdgeInsets scrollInsets = UIEdgeInsetsMake(_searchBarInset + _refreshViewInsets.top, _refreshViewInsets.left, _refreshViewInsets.bottom, _refreshViewInsets.right);
-    UIEdgeInsets contentInset = UIEdgeInsetsMake(_searchBarInset, 0.0f, 0.0f, 0.0f);
+    UIEdgeInsets scrollInsets = UIEdgeInsetsMake(_containerInsets.top + _searchBarInset + _refreshViewInsets.top, _containerInsets.left + _refreshViewInsets.left, _containerInsets.bottom + _refreshViewInsets.bottom, _containerInsets.right + _refreshViewInsets.right);
+    UIEdgeInsets contentInset = UIEdgeInsetsMake(_containerInsets.top + _searchBarInset, _containerInsets.left, _containerInsets.bottom, _containerInsets.right);
     if((_topRefreshView.state == MobilyDataRefreshViewStateLoading) || (_bottomRefreshView.state == MobilyDataRefreshViewStateLoading)) {
         contentInset.top += _refreshViewInsets.top;
         contentInset.bottom += _refreshViewInsets.bottom;
@@ -1454,6 +1462,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 
 - (void)_didScrollDragging:(BOOL)dragging decelerating:(BOOL)decelerating {
     if((self.pagingEnabled == NO) && ((dragging == YES) || (decelerating == YES))) {
+        UIEdgeInsets containerInsets = _containerInsets;
         CGFloat searchBarHeight = _searchBar.frameHeight;
         CGFloat searchBarInset = _searchBarInset;
         UIEdgeInsets refreshViewInsets = _refreshViewInsets;
@@ -1529,7 +1538,8 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         }
         if((_refreshDragging == YES) && (dragging == YES)) {
             if((_canDraggingTopRefresh == YES) && (self.contentSize.height > 0.0f)) {
-                CGFloat progress = (self.contentOffset.y < -searchBarInset) ? -(self.contentOffset.y + searchBarInset) : 0.0f;
+                CGFloat inset = containerInsets.top + searchBarInset;
+                CGFloat progress = (self.contentOffset.y < -inset) ? -(self.contentOffset.y + inset) : 0.0f;
                 switch(_topRefreshView.state) {
                     case MobilyDataRefreshViewStateIdle:
                         if(progress > 0.0f) {
@@ -1580,7 +1590,8 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 refreshViewInsets.bottom = progress;
             }
             if((_canDraggingLeftRefresh == YES) && (self.contentSize.width >= 0.0f)) {
-                CGFloat progress = (self.contentOffset.x < 0.0f) ? -self.contentOffset.x : 0.0f;
+                CGFloat inset = containerInsets.left;
+                CGFloat progress = (self.contentOffset.x < -inset) ? -(self.contentOffset.x + inset) : 0.0f;
                 switch(_leftRefreshView.state) {
                     case MobilyDataRefreshViewStateIdle:
                         if(progress > 0.0f) {
