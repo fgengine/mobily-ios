@@ -209,9 +209,6 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     }
 }
 
-- (void)setNeedClear {
-}
-
 - (void)update {
 }
 
