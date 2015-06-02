@@ -176,9 +176,10 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 }
 
 - (void)resignKeyWindow {
-    [super resignKeyWindow];
+    [NSNotificationCenter.defaultCenter removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [NSNotificationCenter.defaultCenter removeObserver:self name:UIKeyboardDidHideNotification object:nil];
     
-    [NSNotificationCenter.defaultCenter removeObserver:self];
+    [super resignKeyWindow];
 }
 
 - (void)didAddSubview:(UIView*)subview {

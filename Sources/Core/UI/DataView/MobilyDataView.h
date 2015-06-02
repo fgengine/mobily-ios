@@ -80,6 +80,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @property(nonatomic, readwrite, assign) IBInspectable BOOL bouncesBottom;
 
 @property(nonatomic, readwrite, strong) MobilyDataContainer* container;
+@property(nonatomic, readwrite, assign) UIEdgeInsets containerInsets;
 @property(nonatomic, readonly, strong) NSArray* visibleItems;
 @property(nonatomic, readonly, strong) NSArray* visibleCells;
 @property(nonatomic, readonly, strong) NSArray* selectedItems;
@@ -97,7 +98,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @property(nonatomic, readwrite, assign, getter=isShowedSearchBar) IBInspectable BOOL showedSearchBar;
 @property(nonatomic, readwrite, assign) IBInspectable MobilyDataViewSearchBarStyle searchBarStyle;
 @property(nonatomic, readwrite, weak) IBOutlet MobilySearchBar* searchBar;
-@property(nonatomic, readwrite, assign) CGFloat searchBarInset;
+@property(nonatomic, readonly, assign) CGFloat searchBarInset;
 
 @property(nonatomic, readwrite, assign) IBInspectable BOOL topRefreshIteractionEnabled;
 @property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* topRefreshView;
@@ -107,7 +108,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* leftRefreshView;
 @property(nonatomic, readwrite, assign) IBInspectable BOOL rightRefreshIteractionEnabled;
 @property(nonatomic, readwrite, weak) IBOutlet MobilyDataRefreshView* rightRefreshView;
-@property(nonatomic, readwrite, assign) UIEdgeInsets refreshViewInsets;
+@property(nonatomic, readonly, assign) UIEdgeInsets refreshViewInsets;
 
 - (void)setup NS_REQUIRES_SUPER;
 

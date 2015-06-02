@@ -40,17 +40,17 @@
 
 /*--------------------------------------------------*/
 
-#import <FacebookSDK/FacebookSDK.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
 
 /*--------------------------------------------------*/
 
 @interface MobilySocialFacebookProvider ()
 
+@property(nonatomic, readonly, strong) FBSDKLoginManager* manager;
 @property(nonatomic, readwrite, strong) NSArray* signinReadPermissions;
 @property(nonatomic, readwrite, copy) MobilySocialProviderSuccessBlock signinSuccessBlock;
 @property(nonatomic, readwrite, copy) MobilySocialProviderFailureBlock signinFailureBlock;
-
-- (void)sessionStateChanged:(FBSession*)session state:(FBSessionState) state error:(NSError*)error;
 
 @end
 
@@ -64,7 +64,7 @@
 @property(nonatomic, readwrite, strong) NSString* accessToken;
 @property(nonatomic, readwrite, strong) NSDate* expirationDate;
 
-- (instancetype)initWithReadPermissions:(NSArray*)readPermissions facebookSession:(FBSession*)facebookSession;
+- (instancetype)initWithReadPermissions:(NSArray*)readPermissions facebookSession:(FBSDKAccessToken*)facebookSession;
 
 @end
 
@@ -99,20 +99,41 @@
     return super.session;
 }
 
+- (FBSDKLoginManager*)manager {
+    static FBSDKLoginManager* manager = nil;
+    if(manager == nil) {
+        manager = [[FBSDKLoginManager alloc] init];
+        manager.loginBehavior = FBSDKLoginBehaviorSystemAccount;
+    }
+    return manager;
+}
+
 #pragma mark Public
 
 - (void)signinWithReadPermissions:(NSArray*)readPermissions success:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
-    self.active = YES;
-    if((FBSession.activeSession.state == FBSessionStateOpen) || (FBSession.activeSession.state == FBSessionStateOpenTokenExtended)) {
-        [FBSession.activeSession closeAndClearTokenInformation];
+    if(FBSDKAccessToken.currentAccessToken != nil) {
+        [self.manager logOut];
     }
     self.signinReadPermissions = readPermissions;
     self.signinSuccessBlock = success;
     self.signinFailureBlock = failure;
-    FBSession.activeSession = [[FBSession alloc] initWithPermissions:_signinReadPermissions];
-    [FBSession.activeSession openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent completionHandler:^(FBSession* session, FBSessionState state, NSError* error) {
-        [self sessionStateChanged:session state:state error:error];
-        self.active = NO;
+    [self.manager logInWithReadPermissions:_signinReadPermissions handler:^(FBSDKLoginManagerLoginResult* result, NSError* error) {
+        if((error != nil) || (result.isCancelled == YES)) {
+            self.session = nil;
+            if(_signinFailureBlock != nil) {
+                _signinFailureBlock(error);
+            }
+            self.signinSuccessBlock = nil;
+            self.signinFailureBlock = nil;
+        } else {
+            self.session = [[MobilySocialFacebookSession alloc] initWithReadPermissions:_signinReadPermissions facebookSession:result.token];
+            if(_signinSuccessBlock != nil) {
+                _signinSuccessBlock();
+            }
+            self.signinReadPermissions = nil;
+            self.signinSuccessBlock = nil;
+            self.signinFailureBlock = nil;
+        }
     }];
 }
 
@@ -124,10 +145,10 @@
 
 - (void)signoutSuccess:(MobilySocialProviderSuccessBlock)success failure:(MobilySocialProviderFailureBlock)failure {
     if(self.session.isValid == YES) {
-        self.active = YES;
-        [FBSession.activeSession closeAndClearTokenInformation];
+        if(FBSDKAccessToken.currentAccessToken != nil) {
+            [self.manager logOut];
+        }
         self.session = nil;
-        self.active = NO;
         if(success != nil) {
             success();
         }
@@ -138,41 +159,17 @@
     }
 }
 
+- (BOOL)didLaunchingWithOptions:(NSDictionary*)launchOptions {
+    [FBSDKApplicationDelegate.sharedInstance application:UIApplication.sharedApplication didFinishLaunchingWithOptions:launchOptions];
+    return YES;
+}
+
 - (void)didBecomeActive {
-    if(self.isActive == YES) {
-        [FBSession.activeSession handleDidBecomeActive];
-    }
+    [FBSDKAppEvents activateApp];
 }
 
-- (BOOL)openURL:(NSURL*)url sourceApplication:(NSString* __unused)sourceApplication annotation:(id __unused)annotation {
-    if(self.isActive == YES) {
-        [FBSession.activeSession setStateChangeHandler:^(FBSession *session, FBSessionState state, NSError *error) {
-            [self sessionStateChanged:session state:state error:error];
-        }];
-        return [FBSession.activeSession handleOpenURL:url];
-    }
-    return NO;
-}
-
-#pragma mark Private
-
-- (void)sessionStateChanged:(FBSession*)session state:(FBSessionState) state error:(NSError*)error {
-    if((error == nil) && (state == FBSessionStateOpen)) {
-        self.session = [[MobilySocialFacebookSession alloc] initWithReadPermissions:_signinReadPermissions facebookSession:session];
-        if(_signinSuccessBlock != nil) {
-            _signinSuccessBlock();
-        }
-        self.signinReadPermissions = nil;
-        self.signinSuccessBlock = nil;
-        self.signinFailureBlock = nil;
-    } else if((error != nil) || (state == FBSessionStateClosed) || (state == FBSessionStateClosedLoginFailed)) {
-        self.session = nil;
-        if(_signinFailureBlock != nil) {
-            _signinFailureBlock(error);
-        }
-        self.signinSuccessBlock = nil;
-        self.signinFailureBlock = nil;
-    }
+- (BOOL)openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation {
+    return [FBSDKApplicationDelegate.sharedInstance application:UIApplication.sharedApplication openURL:url sourceApplication:sourceApplication annotation:annotation];
 }
 
 @end
@@ -191,12 +188,12 @@
 
 #pragma mark Init / Free
 
-- (instancetype)initWithReadPermissions:(NSArray*)readPermissions facebookSession:(FBSession*)facebookSession {
+- (instancetype)initWithReadPermissions:(NSArray*)readPermissions facebookSession:(FBSDKAccessToken*)facebookSession {
     self = [super init];
     if(self != nil) {
         _readPermissions = readPermissions;
-        _accessToken = facebookSession.accessTokenData.accessToken;
-        _expirationDate = facebookSession.accessTokenData.expirationDate;
+        _accessToken = facebookSession.tokenString;
+        _expirationDate = facebookSession.expirationDate;
     }
     return self;
 }

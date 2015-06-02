@@ -121,6 +121,10 @@
 - (void)signoutSuccess:(MobilySocialProviderSuccessBlock __unused)success failure:(MobilySocialProviderFailureBlock __unused)failure {
 }
 
+- (BOOL)didLaunchingWithOptions:(NSDictionary*)launchOptions {
+    return YES;
+}
+
 - (void)didBecomeActive {
 }
 
