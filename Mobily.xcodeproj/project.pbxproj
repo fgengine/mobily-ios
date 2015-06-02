@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4005C0881B1E13E4009A2185 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4005C07F1B1E13E3009A2185 /* FBSDKCoreKit.framework */; };
+		4005C0891B1E13E4009A2185 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4005C0801B1E13E3009A2185 /* FBSDKLoginKit.framework */; };
+		4005C08C1B1E13E4009A2185 /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4005C0831B1E13E4009A2185 /* TwitterCore.framework */; };
+		4005C08D1B1E13E4009A2185 /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4005C0841B1E13E4009A2185 /* TwitterKit.framework */; };
+		4005C08E1B1E13E4009A2185 /* VKSdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4005C0851B1E13E4009A2185 /* VKSdk.framework */; };
 		403AF5981AE78C34000B28F8 /* MobilyLoadedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 403AF5971AE78C34000B28F8 /* MobilyLoadedView.m */; };
 		40758F1A1B03646700E80F7F /* MobilyLockScreenController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40758F161B03646700E80F7F /* MobilyLockScreenController.m */; };
 		40758F1B1B03646700E80F7F /* MobilyLockScreenPincodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40758F181B03646700E80F7F /* MobilyLockScreenPincodeView.m */; };
@@ -100,10 +105,6 @@
 		40B760161ADFA01500F0CB09 /* MobilySocialProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B7600C1ADFA01500F0CB09 /* MobilySocialProvider.m */; };
 		40B760171ADFA01500F0CB09 /* MobilySocialTwitterProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B7600F1ADFA01500F0CB09 /* MobilySocialTwitterProvider.m */; };
 		40B760181ADFA01500F0CB09 /* MobilySocialVKontakteProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B760121ADFA01500F0CB09 /* MobilySocialVKontakteProvider.m */; };
-		40B7601C1ADFA06300F0CB09 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B75E2C1ADF82CA00F0CB09 /* FacebookSDK.framework */; };
-		40B7601D1ADFA06300F0CB09 /* FBAudienceNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B75E2D1ADF82CA00F0CB09 /* FBAudienceNetwork.framework */; };
-		40B7601E1ADFA06300F0CB09 /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B75E2E1ADF82CA00F0CB09 /* TwitterKit.framework */; };
-		40B760201ADFA06300F0CB09 /* VKSdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B75E301ADF82CA00F0CB09 /* VKSdk.framework */; };
 		40B760391ADFA32000F0CB09 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B760341ADFA31F00F0CB09 /* AVFoundation.framework */; };
 		40B7603A1ADFA32000F0CB09 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B760351ADFA31F00F0CB09 /* CoreFoundation.framework */; };
 		40B7603B1ADFA32000F0CB09 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B760361ADFA31F00F0CB09 /* CoreGraphics.framework */; };
@@ -128,6 +129,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4005C07D1B1E13E3009A2185 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
+		4005C07E1B1E13E3009A2185 /* FBAudienceNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBAudienceNetwork.framework; sourceTree = "<group>"; };
+		4005C07F1B1E13E3009A2185 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		4005C0801B1E13E3009A2185 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		4005C0811B1E13E3009A2185 /* FBSDKMessengerShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKMessengerShareKit.framework; sourceTree = "<group>"; };
+		4005C0821B1E13E3009A2185 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
+		4005C0831B1E13E4009A2185 /* TwitterCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterCore.framework; sourceTree = "<group>"; };
+		4005C0841B1E13E4009A2185 /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = "<group>"; };
+		4005C0851B1E13E4009A2185 /* VKSdk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = VKSdk.framework; sourceTree = "<group>"; };
 		403AF5961AE78C34000B28F8 /* MobilyLoadedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyLoadedView.h; sourceTree = "<group>"; };
 		403AF5971AE78C34000B28F8 /* MobilyLoadedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyLoadedView.m; sourceTree = "<group>"; };
 		4071193F1AFB9B4700F696AD /* MobilyFieldValidation+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MobilyFieldValidation+Private.h"; sourceTree = "<group>"; };
@@ -137,10 +147,6 @@
 		40758F181B03646700E80F7F /* MobilyLockScreenPincodeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyLockScreenPincodeView.m; sourceTree = "<group>"; };
 		40791F701B0CA82900E10EFF /* MobilyStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyStyle.h; sourceTree = "<group>"; };
 		40791F711B0CA82900E10EFF /* MobilyStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyStyle.m; sourceTree = "<group>"; };
-		40B75E2C1ADF82CA00F0CB09 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
-		40B75E2D1ADF82CA00F0CB09 /* FBAudienceNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBAudienceNetwork.framework; sourceTree = "<group>"; };
-		40B75E2E1ADF82CA00F0CB09 /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = "<group>"; };
-		40B75E301ADF82CA00F0CB09 /* VKSdk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = VKSdk.framework; sourceTree = "<group>"; };
 		40B75EBD1ADF9EE500F0CB09 /* libMobilyCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMobilyCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		40B75EF61ADF9F1C00F0CB09 /* libMobilySocial.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMobilySocial.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		40B75F101ADFA00900F0CB09 /* MobilyApiManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = MobilyApiManager.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -345,12 +351,13 @@
 			files = (
 				40B760421ADFA35600F0CB09 /* Accounts.framework in Frameworks */,
 				40B760431ADFA35600F0CB09 /* CoreData.framework in Frameworks */,
+				4005C08C1B1E13E4009A2185 /* TwitterCore.framework in Frameworks */,
+				4005C0881B1E13E4009A2185 /* FBSDKCoreKit.framework in Frameworks */,
+				4005C08E1B1E13E4009A2185 /* VKSdk.framework in Frameworks */,
 				40B760441ADFA35600F0CB09 /* Social.framework in Frameworks */,
+				4005C0891B1E13E4009A2185 /* FBSDKLoginKit.framework in Frameworks */,
 				40B760451ADFA35600F0CB09 /* Twitter.framework in Frameworks */,
-				40B7601C1ADFA06300F0CB09 /* FacebookSDK.framework in Frameworks */,
-				40B7601D1ADFA06300F0CB09 /* FBAudienceNetwork.framework in Frameworks */,
-				40B7601E1ADFA06300F0CB09 /* TwitterKit.framework in Frameworks */,
-				40B760201ADFA06300F0CB09 /* VKSdk.framework in Frameworks */,
+				4005C08D1B1E13E4009A2185 /* TwitterKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,10 +407,15 @@
 				40B760361ADFA31F00F0CB09 /* CoreGraphics.framework */,
 				40B760371ADFA31F00F0CB09 /* CoreText.framework */,
 				40B760381ADFA31F00F0CB09 /* Foundation.framework */,
-				40B75E2C1ADF82CA00F0CB09 /* FacebookSDK.framework */,
-				40B75E2D1ADF82CA00F0CB09 /* FBAudienceNetwork.framework */,
-				40B75E2E1ADF82CA00F0CB09 /* TwitterKit.framework */,
-				40B75E301ADF82CA00F0CB09 /* VKSdk.framework */,
+				4005C07D1B1E13E3009A2185 /* Bolts.framework */,
+				4005C07E1B1E13E3009A2185 /* FBAudienceNetwork.framework */,
+				4005C07F1B1E13E3009A2185 /* FBSDKCoreKit.framework */,
+				4005C0801B1E13E3009A2185 /* FBSDKLoginKit.framework */,
+				4005C0811B1E13E3009A2185 /* FBSDKMessengerShareKit.framework */,
+				4005C0821B1E13E3009A2185 /* FBSDKShareKit.framework */,
+				4005C0831B1E13E4009A2185 /* TwitterCore.framework */,
+				4005C0841B1E13E4009A2185 /* TwitterKit.framework */,
+				4005C0851B1E13E4009A2185 /* VKSdk.framework */,
 			);
 			path = Frameworks;
 			sourceTree = SOURCE_ROOT;
