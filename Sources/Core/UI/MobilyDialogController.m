@@ -23,7 +23,6 @@
 - (void)_adjustFramesForBounds:(CGRect)mainBounds contentSize:(CGSize)contentSize;
 - (void)_adjustHiddenRectsForBounds:(CGRect)mainBounds;
 - (CGRect)_mainBoundsForOrientation:(UIInterfaceOrientation)orientation;
-- (void)_notificationDidBecomeActive:(NSNotification*)notification;
 
 @end
 
@@ -79,12 +78,6 @@
     _contentShadowOpacity = 0.8f;
     _contentShadowOffset = CGSizeZero;
     _contentShadowRadius = 4.0f;
-    
-    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(_notificationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
-}
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark Property
@@ -220,7 +213,6 @@
     
     _presentingWindow = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
     _presentingWindow.windowLevel = _previousWindow.windowLevel + 0.01f;
-    _presentingWindow.autoresizingMask = UIViewAutoresizingNone;
     _presentingWindow.rootViewController = self;
     [_presentingWindow makeKeyAndVisible];
 
@@ -257,6 +249,7 @@
 - (void)dismissWithCompletion:(MobilySimpleBlock)completion {
     _tapGesture.enabled = NO;
     _containerView.userInteractionEnabled = NO;
+    [_previousWindow makeKeyAndVisible];
     
     [UIView animateWithDuration:self.animationDuration
                      animations:^{
@@ -270,9 +263,7 @@
                          [_contentViewController.view removeFromSuperview];
                          [_contentViewController removeFromParentViewController];
                          _presentingWindow.hidden = YES;
-                         [_previousWindow makeKeyAndVisible];
-                         if(completion)
-                         {
+                         if(completion != nil) {
                              completion();
                          }
                      }];
@@ -406,10 +397,6 @@
         mainBounds.size.width = h;
     }
     return mainBounds;
-}
-
-- (void)_notificationDidBecomeActive:(NSNotification*)notification {
-    [_presentingWindow makeKeyAndVisible];
 }
 
 #pragma mark Actions
