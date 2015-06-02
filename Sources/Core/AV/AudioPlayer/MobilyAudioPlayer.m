@@ -53,11 +53,6 @@
 @end
 
 /*--------------------------------------------------*/
-
-const CGFloat MobilyAudioPlayer_PowerMin = -160;
-const CGFloat MobilyAudioPlayer_PowerMax = +160;
-
-/*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
@@ -167,12 +162,7 @@ const CGFloat MobilyAudioPlayer_PowerMax = +160;
     if(_prepared == YES) {
         NSUInteger numberOfChannels = _player.numberOfChannels;
         for(NSUInteger channel = 0; channel < numberOfChannels; channel++) {
-            CGFloat power = [_player peakPowerForChannel:channel];
-            if(power < FLT_EPSILON) {
-                result += -(power / MobilyAudioPlayer_PowerMin);
-            } else if(power > FLT_EPSILON) {
-                result += power / MobilyAudioPlayer_PowerMax;
-            }
+            result += [_player peakPowerForChannel:channel];
         }
         result /= numberOfChannels;
     }
@@ -184,12 +174,7 @@ const CGFloat MobilyAudioPlayer_PowerMax = +160;
     if(_prepared == YES) {
         NSUInteger numberOfChannels = _player.numberOfChannels;
         for(NSUInteger channel = 0; channel < numberOfChannels; channel++) {
-            CGFloat power = [_player averagePowerForChannel:channel];
-            if(power < FLT_EPSILON) {
-                result += -(power / MobilyAudioPlayer_PowerMin);
-            } else if(power > FLT_EPSILON) {
-                result += power / MobilyAudioPlayer_PowerMax;
-            }
+            result += [_player averagePowerForChannel:channel];
         }
         result /= numberOfChannels;
     }
