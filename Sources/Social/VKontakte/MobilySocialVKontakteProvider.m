@@ -84,6 +84,12 @@
     return self;
 }
 
+- (void)setup {
+    [super setup];
+    
+    self.inAppAuth = YES;
+}
+
 - (void)dealloc {
     self.applicationId = nil;
 }
