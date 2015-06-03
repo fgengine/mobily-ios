@@ -293,6 +293,15 @@ const NSString* kPhoneEmptySymbol = @"_";
     _nextInputResponder = nil;
 }
 
+- (BOOL)isEmptyText {
+    NSCharacterSet* whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    NSString* trimmed = [[self text] stringByTrimmingCharactersInSet:whitespace];
+    if([trimmed length] == 0) {
+        return YES;
+    }
+    return NO;
+}
+
 #pragma mark MobilyValidatedObject
 
 - (void)validate {
