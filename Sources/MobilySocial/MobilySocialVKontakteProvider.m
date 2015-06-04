@@ -84,16 +84,6 @@
     return self;
 }
 
-- (void)setup {
-    [super setup];
-    
-    self.inAppAuth = YES;
-}
-
-- (void)dealloc {
-    self.applicationId = nil;
-}
-
 #pragma mark Property
 
 - (void)setApplicationId:(NSString*)applicationId {
@@ -123,7 +113,11 @@
     if([VKSdk wakeUpSession] == YES) {
         [VKSdk forceLogout];
     }
-    [VKSdk authorize:permissions revokeAccess:NO forceOAuth:NO inApp:_inAppAuth];
+    if([VKSdk vkAppMayExists] == NO) {
+        [VKSdk authorize:permissions revokeAccess:NO forceOAuth:YES inApp:YES];
+    } else {
+        [VKSdk authorize:permissions revokeAccess:NO forceOAuth:YES];
+    }
 }
 
 #pragma mark MobilySocialManager
@@ -190,7 +184,7 @@
 }
 
 - (BOOL)vkSdkIsBasicAuthorization {
-    return NO;
+    return YES;
 }
 
 @end
