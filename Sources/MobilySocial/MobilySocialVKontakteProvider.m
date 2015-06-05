@@ -113,10 +113,11 @@
     if([VKSdk wakeUpSession] == YES) {
         [VKSdk forceLogout];
     }
+    
     if([VKSdk vkAppMayExists] == NO) {
-        [VKSdk authorize:permissions revokeAccess:NO forceOAuth:YES inApp:YES];
+        [VKSdk authorize:permissions revokeAccess:YES forceOAuth:NO inApp:YES];
     } else {
-        [VKSdk authorize:permissions revokeAccess:NO forceOAuth:YES];
+        [VKSdk authorize:permissions revokeAccess:YES forceOAuth:NO];
     }
 }
 
