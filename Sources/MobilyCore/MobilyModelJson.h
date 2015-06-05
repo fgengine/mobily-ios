@@ -225,11 +225,16 @@ typedef id (^MobilyModelJsonUndefinedBehaviour)(id modelJson, id value);
 @interface MobilyModelJsonCustomClass : MobilyModelJson
 
 @property(nonatomic, readonly, assign) Class customClass;
+@property(nonatomic, readonly, assign) BOOL hasAnySource;
 
 - (instancetype)initWithCustomClass:(Class)customClass;
+- (instancetype)initWithCustomClass:(Class)customClass hasAnySource:(BOOL)hasAnySource;
 - (instancetype)initWithCustomClass:(Class)customClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithCustomClass:(Class)customClass hasAnySource:(BOOL)hasAnySource undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 - (instancetype)initWithPath:(NSString*)path customClass:(Class)customClass;
+- (instancetype)initWithPath:(NSString*)path customClass:(Class)customClass hasAnySource:(BOOL)hasAnySource;
 - (instancetype)initWithPath:(NSString*)path customClass:(Class)customClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
+- (instancetype)initWithPath:(NSString*)path customClass:(Class)customClass hasAnySource:(BOOL)hasAnySource undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour;
 
 @end
 

@@ -982,6 +982,7 @@
 @interface MobilyModelJsonCustomClass ()
 
 @property(nonatomic, readwrite, assign) Class customClass;
+@property(nonatomic, readwrite, assign) BOOL hasAnySource;
 
 @end
 
@@ -994,21 +995,38 @@
 #pragma mark Init / Free
 
 - (instancetype)initWithCustomClass:(Class)customClass {
-    return [self initWithPath:nil customClass:customClass undefinedBehaviour:nil];
+    return [self initWithPath:nil customClass:customClass hasAnySource:NO undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithCustomClass:(Class)customClass hasAnySource:(BOOL)hasAnySource {
+    return [self initWithPath:nil customClass:customClass hasAnySource:hasAnySource undefinedBehaviour:nil];
 }
 
 - (instancetype)initWithCustomClass:(Class)customClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
-    return [self initWithPath:nil customClass:customClass undefinedBehaviour:undefinedBehaviour];
+    return [self initWithPath:nil customClass:customClass hasAnySource:NO undefinedBehaviour:undefinedBehaviour];
+}
+
+- (instancetype)initWithCustomClass:(Class)customClass hasAnySource:(BOOL)hasAnySource undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:nil customClass:customClass hasAnySource:hasAnySource undefinedBehaviour:undefinedBehaviour];
 }
 
 - (instancetype)initWithPath:(NSString*)path customClass:(Class)customClass {
-    return [self initWithPath:path customClass:customClass undefinedBehaviour:nil];
+    return [self initWithPath:path customClass:customClass hasAnySource:NO undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path customClass:(Class)customClass hasAnySource:(BOOL)hasAnySource {
+    return [self initWithPath:path customClass:customClass hasAnySource:hasAnySource undefinedBehaviour:nil];
 }
 
 - (instancetype)initWithPath:(NSString*)path customClass:(Class)customClass undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
+    return [self initWithPath:path customClass:customClass hasAnySource:NO undefinedBehaviour:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)path customClass:(Class)customClass hasAnySource:(BOOL)hasAnySource undefinedBehaviour:(MobilyModelJsonUndefinedBehaviour)undefinedBehaviour {
     self = [super initWithPath:path undefinedBehaviour:undefinedBehaviour];
     if(self != nil) {
         self.customClass = customClass;
+        self.hasAnySource = hasAnySource;
     }
     return self;
 }
@@ -1016,7 +1034,13 @@
 #pragma mark MobilyModelJson
 
 - (id)convertValue:(id)value {
-    return [[_customClass alloc] initWithJson:value];
+    if(_hasAnySource == YES) {
+        return [[_customClass alloc] initWithJson:value];
+    }
+    if([value isKindOfClass:NSDictionary.class] == YES) {
+        return [[_customClass alloc] initWithJson:value];
+    }
+    return nil;
 }
 
 @end
