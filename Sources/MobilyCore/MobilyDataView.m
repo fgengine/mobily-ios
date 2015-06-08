@@ -275,10 +275,6 @@
     }
 }
 
-- (void)setContentOffset:(CGPoint)contentOffset {
-    [super setContentOffset:contentOffset];
-}
-
 - (void)setContentSize:(CGSize)contentSize {
     [super setContentSize:contentSize];
     self.contentView.frameSize = contentSize;
@@ -1761,7 +1757,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             if(_canDraggingLeftRefresh == YES) {
                 switch(_leftRefreshView.state) {
                     case MobilyDataRefreshViewStateRelease: {
-                        contentOffset->x = -_leftRefreshView.size;
                         if([self containsEventForKey:MobilyDataViewLeftRefreshTriggered] == YES) {
                             [self _showLeftRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished __unused) {
                                 [self fireEventForKey:MobilyDataViewLeftRefreshTriggered byObject:_leftRefreshView];
