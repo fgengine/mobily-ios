@@ -1543,7 +1543,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 if(contentOffset.y < -inset) {
                     progress = -(contentOffset.y + inset);
                 }
-                progress = MIN(progress, _topRefreshView.threshold);
                 if((_refreshDragging == YES) && (_canDraggingTopRefresh == YES) && (dragging == YES)) {
                     switch(_topRefreshView.state) {
                         case MobilyDataRefreshViewStateIdle:
@@ -1553,7 +1552,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                             break;
                         case MobilyDataRefreshViewStatePull:
                         case MobilyDataRefreshViewStateRelease:
-                            if(progress < 0.0f) {
+                            if(progress <= 0.0f) {
                                 _topRefreshView.state = MobilyDataRefreshViewStateIdle;
                             } else if(progress >= _topRefreshView.threshold) {
                                 if(_topRefreshView.state != MobilyDataRefreshViewStateRelease) {
@@ -1570,7 +1569,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 }
             }
             _topRefreshView.constraintOffset.constant = (progress < _topRefreshView.size) ? -(_topRefreshView.size - progress) : 0.0f;
-            _topRefreshView.constraintSize.constant = MAX(progress, _topRefreshView.size);
+            _topRefreshView.constraintSize.constant = (progress < _topRefreshView.size) ? _topRefreshView.size : progress;
         }
         if(_bottomRefreshView != nil) {
             CGFloat progress = 0.0f;
@@ -1588,7 +1587,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                             break;
                         case MobilyDataRefreshViewStatePull:
                         case MobilyDataRefreshViewStateRelease:
-                            if(progress < 0.0f) {
+                            if(progress <= 0.0f) {
                                 _bottomRefreshView.state = MobilyDataRefreshViewStateIdle;
                             } else if(progress >= _bottomRefreshView.threshold) {
                                 if(_bottomRefreshView.state != MobilyDataRefreshViewStateRelease) {
@@ -1605,7 +1604,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 }
             }
             _bottomRefreshView.constraintOffset.constant = (progress < _bottomRefreshView.size) ? (_bottomRefreshView.size - progress) : 0.0f;
-            _bottomRefreshView.constraintSize.constant = MAX(progress, _bottomRefreshView.size);
+            _bottomRefreshView.constraintSize.constant = (progress < _bottomRefreshView.size) ? _bottomRefreshView.size : progress;
         }
         if(_leftRefreshView != nil) {
             CGFloat progress = 0.0f;
@@ -1623,7 +1622,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                             break;
                         case MobilyDataRefreshViewStatePull:
                         case MobilyDataRefreshViewStateRelease:
-                            if(progress < 0.0f) {
+                            if(progress <= 0.0f) {
                                 _leftRefreshView.state = MobilyDataRefreshViewStateIdle;
                             } else if(progress >= _leftRefreshView.threshold) {
                                 if(_leftRefreshView.state != MobilyDataRefreshViewStateRelease) {
@@ -1640,7 +1639,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 }
             }
             _leftRefreshView.constraintOffset.constant = (progress < _leftRefreshView.size) ? -(_leftRefreshView.size - progress) : 0.0f;
-            _leftRefreshView.constraintSize.constant = MAX(progress, _leftRefreshView.size);
+            _leftRefreshView.constraintSize.constant = (progress < _leftRefreshView.size) ? _leftRefreshView.size : progress;
         }
         if(_rightRefreshView != nil) {
             CGFloat progress = 0.0f;
@@ -1658,7 +1657,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                             break;
                         case MobilyDataRefreshViewStatePull:
                         case MobilyDataRefreshViewStateRelease:
-                            if(progress < 0.0f) {
+                            if(progress <= 0.0f) {
                                 _rightRefreshView.state = MobilyDataRefreshViewStateIdle;
                             } else if(progress >= _rightRefreshView.threshold) {
                                 if(_rightRefreshView.state != MobilyDataRefreshViewStateRelease) {
@@ -1675,7 +1674,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 }
             }
             _rightRefreshView.constraintOffset.constant = (progress < _rightRefreshView.size) ? (_rightRefreshView.size - progress) : 0.0f;
-            _rightRefreshView.constraintSize.constant = MAX(progress, _rightRefreshView.size);
+            _rightRefreshView.constraintSize.constant = (progress < _rightRefreshView.size) ? _rightRefreshView.size : progress;
         }
         self.refreshViewInsets = refreshViewInsets;
         self.contentOffset = contentOffset;

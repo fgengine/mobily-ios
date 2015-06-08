@@ -141,7 +141,9 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (void)setView:(UIView*)view {
     super.view = view;
-    
+    if(view != nil) {
+        view.clipsToBounds = YES;
+    }
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     if((UIDevice.systemVersion >= 6.0f) && (view == nil)) {
@@ -231,7 +233,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     [_eventDidLoad fireSender:self object:nil];
 }
 
