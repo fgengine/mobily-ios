@@ -166,6 +166,7 @@
     self.state = MobilyDataRefreshViewStateLoading;
     
     UIEdgeInsets refreshViewInsets = _view.refreshViewInsets;
+    CGPoint contentOffset = _view.contentOffset;
     switch(_type) {
         case MobilyDataRefreshViewTypeTop: refreshViewInsets.top = _size; refreshViewInsets.bottom = -_size; break;
         case MobilyDataRefreshViewTypeBottom: refreshViewInsets.top = -_size; refreshViewInsets.bottom = _size; break;
@@ -180,6 +181,7 @@
                             options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                          animations:^{
                              _view.refreshViewInsets = refreshViewInsets;
+                             _view.contentOffset = contentOffset;
                              [self.superview layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
@@ -189,6 +191,7 @@
                          }];
     } else {
         _view.refreshViewInsets = refreshViewInsets;
+        _view.contentOffset = contentOffset;
         if(complete != nil) {
             complete(YES);
         }
@@ -197,6 +200,7 @@
 
 - (void)_hideAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataRefreshViewCompleteBlock)complete {
     UIEdgeInsets refreshViewInsets = _view.refreshViewInsets;
+    CGPoint contentOffset = _view.contentOffset;
     switch(_type) {
         case MobilyDataRefreshViewTypeTop: refreshViewInsets.top = 0.0f; refreshViewInsets.bottom = 0.0f; break;
         case MobilyDataRefreshViewTypeBottom: refreshViewInsets.top = 0.0f; refreshViewInsets.bottom = 0.0f; break;
@@ -221,6 +225,7 @@
                             options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                          animations:^{
                              _view.refreshViewInsets = refreshViewInsets;
+                             _view.contentOffset = contentOffset;
                              [self.superview layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
@@ -232,6 +237,7 @@
     } else {
         self.state = MobilyDataRefreshViewStateIdle;
         _view.refreshViewInsets = refreshViewInsets;
+        _view.contentOffset = contentOffset;
         if(complete != nil) {
             complete(YES);
         }
