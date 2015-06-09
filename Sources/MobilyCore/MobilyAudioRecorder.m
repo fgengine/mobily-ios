@@ -80,9 +80,9 @@
 - (void)setup {
     self.format = kAudioFormatAppleIMA4;
     self.quality = AVAudioQualityMin;
-    self.bitRate = 16;
-    self.numberOfChannels = 1;
     self.sampleRate = 44100.0f;
+    self.numberOfChannels = 1;
+    self.bitRate = 12800.0f;
 }
 
 #pragma mark Property
@@ -271,7 +271,7 @@
         AVEncoderAudioQualityKey : @(_quality),
         AVEncoderBitRateKey : @(_bitRate),
         AVNumberOfChannelsKey : @(_numberOfChannels),
-        AVSampleRateKey : @(_sampleRate)
+        AVSampleRateKey : @(_sampleRate),
     };
 }
 
