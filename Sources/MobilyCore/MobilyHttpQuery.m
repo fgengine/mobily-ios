@@ -420,6 +420,7 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection* __unused)connection {
+    _error = nil;
     _connection = nil;
     if([_delegate respondsToSelector:@selector(didFinishHttpQuery:)] == YES) {
         [_delegate didFinishHttpQuery:self];
