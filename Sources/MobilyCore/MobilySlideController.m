@@ -381,37 +381,76 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 
 - (void)showLeftControllerAnimated:(BOOL)animated complete:(MobilySlideControllerBlock)complete {
     if(_showedLeftController == NO) {
-        if(self.isViewLoaded == NO) {
-            animated = NO;
+        BOOL allow = YES;
+        id< MobilySlideControllerDelegate > centerController = ([_centerController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_centerController : nil;
+        id< MobilySlideControllerDelegate > leftController = ([_leftController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_leftController : nil;
+        if([centerController respondsToSelector:@selector(canShowLeftControllerInSlideController:)] == YES) {
+            if([centerController canShowLeftControllerInSlideController:self] == YES) {
+                if([leftController respondsToSelector:@selector(canShowControllerInSlideController:)] == YES) {
+                    allow = [leftController canShowControllerInSlideController:self];
+                }
+            } else {
+                allow = NO;
+            }
         }
-        _swipeProgress = -1.0f;
-        CGRect leftFrame = [self leftViewFrameByPercent:_swipeProgress];
-        CGRect centerFrame = [self centerViewFrameByPercent:_swipeProgress];
-        CGFloat diffX = ABS(leftFrame.origin.x - centerFrame.origin.x);
-        CGFloat diffY = ABS(leftFrame.origin.y - centerFrame.origin.y);
-        CGFloat diffW = ABS(leftFrame.size.width - centerFrame.size.width);
-        CGFloat diffH = ABS(leftFrame.size.height - centerFrame.size.height);
-        CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
-        if(animated == YES) {
-            [UIView animateWithDuration:speed / _swipeVelocity animations:^{
-                _leftView.frame = leftFrame;
-                _centerView.frame = centerFrame;
-            } completion:^(BOOL finished __unused) {
+        if(allow == YES) {
+            if(self.isViewLoaded == NO) {
+                animated = NO;
+            }
+            _swipeProgress = -1.0f;
+            CGRect leftFrame = [self leftViewFrameByPercent:_swipeProgress];
+            CGRect centerFrame = [self centerViewFrameByPercent:_swipeProgress];
+            CGFloat diffX = ABS(leftFrame.origin.x - centerFrame.origin.x);
+            CGFloat diffY = ABS(leftFrame.origin.y - centerFrame.origin.y);
+            CGFloat diffW = ABS(leftFrame.size.width - centerFrame.size.width);
+            CGFloat diffH = ABS(leftFrame.size.height - centerFrame.size.height);
+            CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
+            if(animated == YES) {
+                NSTimeInterval duration = speed / _swipeVelocity;
+                if([centerController respondsToSelector:@selector(willShowLeftControllerInSlideController:duration:)] == YES) {
+                    [centerController willShowLeftControllerInSlideController:self duration:duration];
+                }
+                if([leftController respondsToSelector:@selector(willShowControllerInSlideController:duration:)] == YES) {
+                    [leftController willShowControllerInSlideController:self duration:duration];
+                }
+                [UIView animateWithDuration:duration animations:^{
+                    _leftView.frame = leftFrame;
+                    _centerView.frame = centerFrame;
+                } completion:^(BOOL finished __unused) {
+                    _leftView.userInteractionEnabled = YES;
+                    _centerView.userInteractionEnabled = NO;
+                    _showedLeftController = YES;
+                    if([centerController respondsToSelector:@selector(didShowLeftControllerInSlideController:)] == YES) {
+                        [centerController didShowLeftControllerInSlideController:self];
+                    }
+                    if([leftController respondsToSelector:@selector(didShowControllerInSlideController:)] == YES) {
+                        [leftController didShowControllerInSlideController:self];
+                    }
+                    if(complete != nil) {
+                        complete();
+                    }
+                }];
+            } else {
+                if([centerController respondsToSelector:@selector(willShowLeftControllerInSlideController:duration:)] == YES) {
+                    [centerController willShowLeftControllerInSlideController:self duration:0.0f];
+                }
+                if([leftController respondsToSelector:@selector(willShowControllerInSlideController:duration:)] == YES) {
+                    [leftController willShowControllerInSlideController:self duration:0.0f];
+                }
                 _leftView.userInteractionEnabled = YES;
+                _leftView.frame = leftFrame;
                 _centerView.userInteractionEnabled = NO;
+                _centerView.frame = centerFrame;
                 _showedLeftController = YES;
+                if([centerController respondsToSelector:@selector(didShowLeftControllerInSlideController:)] == YES) {
+                    [centerController didShowLeftControllerInSlideController:self];
+                }
+                if([leftController respondsToSelector:@selector(didShowControllerInSlideController:)] == YES) {
+                    [leftController didShowControllerInSlideController:self];
+                }
                 if(complete != nil) {
                     complete();
                 }
-            }];
-        } else {
-            _leftView.userInteractionEnabled = YES;
-            _leftView.frame = leftFrame;
-            _centerView.userInteractionEnabled = NO;
-            _centerView.frame = centerFrame;
-            _showedLeftController = YES;
-            if(complete != nil) {
-                complete();
             }
         }
     }
@@ -419,6 +458,8 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 
 - (void)hideLeftControllerAnimated:(BOOL)animated complete:(MobilySlideControllerBlock)complete {
     if(_showedLeftController == YES) {
+        id< MobilySlideControllerDelegate > centerController = ([_centerController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_centerController : nil;
+        id< MobilySlideControllerDelegate > leftController = ([_leftController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_leftController : nil;
         if(self.isViewLoaded == NO) {
             animated = NO;
         }
@@ -431,23 +472,48 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         CGFloat diffH = ABS(leftFrame.size.height - centerFrame.size.height);
         CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
         if(animated == YES) {
-            [UIView animateWithDuration:speed / _swipeVelocity animations:^{
+            NSTimeInterval duration = speed / _swipeVelocity;
+            if([centerController respondsToSelector:@selector(willHideLeftControllerInSlideController:duration:)] == YES) {
+                [centerController willHideLeftControllerInSlideController:self duration:duration];
+            }
+            if([leftController respondsToSelector:@selector(willHideControllerInSlideController:duration:)] == YES) {
+                [leftController willHideControllerInSlideController:self duration:duration];
+            }
+            [UIView animateWithDuration:duration animations:^{
                 _leftView.frame = leftFrame;
                 _centerView.frame = centerFrame;
             } completion:^(BOOL finished __unused) {
                 _leftView.userInteractionEnabled = NO;
                 _centerView.userInteractionEnabled = YES;
                 _showedLeftController = NO;
+                if([centerController respondsToSelector:@selector(didHideLeftControllerInSlideController:)] == YES) {
+                    [centerController didHideLeftControllerInSlideController:self];
+                }
+                if([leftController respondsToSelector:@selector(didHideControllerInSlideController:)] == YES) {
+                    [leftController didHideControllerInSlideController:self];
+                }
                 if(complete != nil) {
                     complete();
                 }
             }];
         } else {
+            if([centerController respondsToSelector:@selector(willHideLeftControllerInSlideController:duration:)] == YES) {
+                [centerController willHideLeftControllerInSlideController:self duration:0.0f];
+            }
+            if([leftController respondsToSelector:@selector(willHideControllerInSlideController:duration:)] == YES) {
+                [leftController willHideControllerInSlideController:self duration:0.0f];
+            }
             _leftView.userInteractionEnabled = NO;
             _leftView.frame = leftFrame;
             _centerView.userInteractionEnabled = YES;
             _centerView.frame = centerFrame;
             _showedLeftController = NO;
+            if([centerController respondsToSelector:@selector(didHideLeftControllerInSlideController:)] == YES) {
+                [centerController didHideLeftControllerInSlideController:self];
+            }
+            if([leftController respondsToSelector:@selector(didHideControllerInSlideController:)] == YES) {
+                [leftController didHideControllerInSlideController:self];
+            }
             if(complete != nil) {
                 complete();
             }
@@ -457,37 +523,76 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 
 - (void)showRightControllerAnimated:(BOOL)animated complete:(MobilySlideControllerBlock)complete {
     if(_showedRightController == NO) {
-        if(self.isViewLoaded == NO) {
-            animated = NO;
+        BOOL allow = YES;
+        id< MobilySlideControllerDelegate > centerController = ([_centerController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_centerController : nil;
+        id< MobilySlideControllerDelegate > rightController = ([_rightController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_rightController : nil;
+        if([centerController respondsToSelector:@selector(canShowRightControllerInSlideController:)] == YES) {
+            if([centerController canShowRightControllerInSlideController:self] == YES) {
+                if([rightController respondsToSelector:@selector(canShowControllerInSlideController:)] == YES) {
+                    allow = [rightController canShowControllerInSlideController:self];
+                }
+            } else {
+                allow = NO;
+            }
         }
-        _swipeProgress = 1.0f;
-        CGRect centerFrame = [self centerViewFrameByPercent:_swipeProgress];
-        CGRect rightFrame = [self rightViewFrameByPercent:_swipeProgress];
-        CGFloat diffX = ABS(centerFrame.origin.x - rightFrame.origin.x);
-        CGFloat diffY = ABS(centerFrame.origin.y - rightFrame.origin.y);
-        CGFloat diffW = ABS(centerFrame.size.width - rightFrame.size.width);
-        CGFloat diffH = ABS(centerFrame.size.height - rightFrame.size.height);
-        CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
-        if(animated == YES) {
-            [UIView animateWithDuration:speed / _swipeVelocity animations:^{
-                _centerView.frame = centerFrame;
-                _rightView.frame = rightFrame;
-            } completion:^(BOOL finished __unused) {
-                _centerView.userInteractionEnabled = NO;
+        if(allow == YES) {
+            if(self.isViewLoaded == NO) {
+                animated = NO;
+            }
+            _swipeProgress = 1.0f;
+            CGRect rightFrame = [self rightViewFrameByPercent:_swipeProgress];
+            CGRect centerFrame = [self centerViewFrameByPercent:_swipeProgress];
+            CGFloat diffX = ABS(rightFrame.origin.x - centerFrame.origin.x);
+            CGFloat diffY = ABS(rightFrame.origin.y - centerFrame.origin.y);
+            CGFloat diffW = ABS(rightFrame.size.width - centerFrame.size.width);
+            CGFloat diffH = ABS(rightFrame.size.height - centerFrame.size.height);
+            CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
+            if(animated == YES) {
+                NSTimeInterval duration = speed / _swipeVelocity;
+                if([centerController respondsToSelector:@selector(willShowRightControllerInSlideController:duration:)] == YES) {
+                    [centerController willShowRightControllerInSlideController:self duration:duration];
+                }
+                if([rightController respondsToSelector:@selector(willShowControllerInSlideController:duration:)] == YES) {
+                    [rightController willShowControllerInSlideController:self duration:duration];
+                }
+                [UIView animateWithDuration:duration animations:^{
+                    _rightView.frame = rightFrame;
+                    _centerView.frame = centerFrame;
+                } completion:^(BOOL finished __unused) {
+                    _rightView.userInteractionEnabled = YES;
+                    _centerView.userInteractionEnabled = NO;
+                    _showedRightController = YES;
+                    if([centerController respondsToSelector:@selector(didShowRightControllerInSlideController:)] == YES) {
+                        [centerController didShowRightControllerInSlideController:self];
+                    }
+                    if([rightController respondsToSelector:@selector(didShowControllerInSlideController:)] == YES) {
+                        [rightController didShowControllerInSlideController:self];
+                    }
+                    if(complete != nil) {
+                        complete();
+                    }
+                }];
+            } else {
+                if([centerController respondsToSelector:@selector(willShowRightControllerInSlideController:duration:)] == YES) {
+                    [centerController willShowRightControllerInSlideController:self duration:0.0f];
+                }
+                if([rightController respondsToSelector:@selector(willShowControllerInSlideController:duration:)] == YES) {
+                    [rightController willShowControllerInSlideController:self duration:0.0f];
+                }
                 _rightView.userInteractionEnabled = YES;
+                _rightView.frame = rightFrame;
+                _centerView.userInteractionEnabled = NO;
+                _centerView.frame = centerFrame;
                 _showedRightController = YES;
+                if([centerController respondsToSelector:@selector(didShowRightControllerInSlideController:)] == YES) {
+                    [centerController didShowRightControllerInSlideController:self];
+                }
+                if([rightController respondsToSelector:@selector(didShowControllerInSlideController:)] == YES) {
+                    [rightController didShowControllerInSlideController:self];
+                }
                 if(complete != nil) {
                     complete();
                 }
-            }];
-        } else {
-            _centerView.userInteractionEnabled = NO;
-            _centerView.frame = centerFrame;
-            _rightView.userInteractionEnabled = YES;
-            _rightView.frame = rightFrame;
-            _showedRightController = YES;
-            if(complete != nil) {
-                complete();
             }
         }
     }
@@ -495,35 +600,62 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 
 - (void)hideRightControllerAnimated:(BOOL)animated complete:(MobilySlideControllerBlock)complete {
     if(_showedRightController == YES) {
+        id< MobilySlideControllerDelegate > centerController = ([_centerController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_centerController : nil;
+        id< MobilySlideControllerDelegate > rightController = ([_rightController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_rightController : nil;
         if(self.isViewLoaded == NO) {
             animated = NO;
         }
         _swipeProgress = 0.0f;
-        CGRect centerFrame = [self centerViewFrameByPercent:_swipeProgress];
         CGRect rightFrame = [self rightViewFrameByPercent:_swipeProgress];
-        CGFloat diffX = ABS(centerFrame.origin.x - rightFrame.origin.x);
-        CGFloat diffY = ABS(centerFrame.origin.y - rightFrame.origin.y);
-        CGFloat diffW = ABS(centerFrame.size.width - rightFrame.size.width);
-        CGFloat diffH = ABS(centerFrame.size.height - rightFrame.size.height);
+        CGRect centerFrame = [self centerViewFrameByPercent:_swipeProgress];
+        CGFloat diffX = ABS(rightFrame.origin.x - centerFrame.origin.x);
+        CGFloat diffY = ABS(rightFrame.origin.y - centerFrame.origin.y);
+        CGFloat diffW = ABS(rightFrame.size.width - centerFrame.size.width);
+        CGFloat diffH = ABS(rightFrame.size.height - centerFrame.size.height);
         CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
         if(animated == YES) {
-            [UIView animateWithDuration:speed / _swipeVelocity animations:^{
-                _centerView.frame = centerFrame;
+            NSTimeInterval duration = speed / _swipeVelocity;
+            if([centerController respondsToSelector:@selector(willHideRightControllerInSlideController:duration:)] == YES) {
+                [centerController willHideRightControllerInSlideController:self duration:duration];
+            }
+            if([rightController respondsToSelector:@selector(willHideRightControllerInSlideController:duration:)] == YES) {
+                [rightController willHideControllerInSlideController:self duration:duration];
+            }
+            [UIView animateWithDuration:duration animations:^{
                 _rightView.frame = rightFrame;
+                _centerView.frame = centerFrame;
             } completion:^(BOOL finished __unused) {
-                _centerView.userInteractionEnabled = YES;
                 _rightView.userInteractionEnabled = NO;
+                _centerView.userInteractionEnabled = YES;
                 _showedRightController = NO;
+                if([centerController respondsToSelector:@selector(didHideRightControllerInSlideController:)] == YES) {
+                    [centerController didHideRightControllerInSlideController:self];
+                }
+                if([rightController respondsToSelector:@selector(didHideRightControllerInSlideController:)] == YES) {
+                    [rightController didHideControllerInSlideController:self];
+                }
                 if(complete != nil) {
                     complete();
                 }
             }];
         } else {
-            _centerView.userInteractionEnabled = YES;
-            _centerView.frame = centerFrame;
+            if([centerController respondsToSelector:@selector(willHideRightControllerInSlideController:duration:)] == YES) {
+                [centerController willHideRightControllerInSlideController:self duration:0.0f];
+            }
+            if([rightController respondsToSelector:@selector(willHideRightControllerInSlideController:duration:)] == YES) {
+                [rightController willHideControllerInSlideController:self duration:0.0f];
+            }
             _rightView.userInteractionEnabled = NO;
             _rightView.frame = rightFrame;
+            _centerView.userInteractionEnabled = YES;
+            _centerView.frame = centerFrame;
             _showedRightController = NO;
+            if([centerController respondsToSelector:@selector(didHideRightControllerInSlideController:)] == YES) {
+                [centerController didHideRightControllerInSlideController:self];
+            }
+            if([rightController respondsToSelector:@selector(didHideRightControllerInSlideController:)] == YES) {
+                [rightController didHideControllerInSlideController:self];
+            }
             if(complete != nil) {
                 complete();
             }
