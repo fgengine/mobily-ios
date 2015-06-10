@@ -40,6 +40,7 @@
 @interface MobilyView : UIView< MobilyBuilderObject >
 
 @property(nonatomic, readwrite, assign) IBInspectable BOOL roundCorners;
+@property(nonatomic, readwrite, assign) IBInspectable BOOL automaticShadowPath;
 
 - (void)setup NS_REQUIRES_SUPER;
 

@@ -132,16 +132,14 @@
 
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-    if(_roundCorners == YES) {
-        self.cornerRadius = ceilf(MAX(frame.size.width - 1.0f, frame.size.height - 1.0f) * 0.5f);
-    }
+    [self _updateCorners];
+    [self _updateShadow];
 }
 
 - (void)setBounds:(CGRect)bounds {
     [super setBounds:bounds];
-    if(_roundCorners == YES) {
-        self.cornerRadius = ceilf(MAX(bounds.size.width - 1.0f, bounds.size.height - 1.0f) * 0.5f);
-    }
+    [self _updateCorners];
+    [self _updateShadow];
 }
 
 #pragma mark Property
@@ -149,12 +147,16 @@
 - (void)setRoundCorners:(BOOL)roundCorners {
     if(_roundCorners != roundCorners) {
         _roundCorners = roundCorners;
-        if(_roundCorners == YES) {
-            CGRect bounds = self.bounds;
-            self.cornerRadius = ceilf(MAX(bounds.size.width - 1.0f, bounds.size.height - 1.0f) * 0.5f);
-        } else {
-            self.cornerRadius = 0.0f;
-        }
+        [self _updateCorners];
+        [self _updateShadow];
+    }
+}
+
+- (void)setAutomaticShadowPath:(BOOL)automaticShadowPath {
+    if(_automaticShadowPath != automaticShadowPath) {
+        _automaticShadowPath = automaticShadowPath;
+        self.clipsToBounds = (_automaticShadowPath == NO);
+        [self _updateShadow];
     }
 }
 
@@ -190,6 +192,21 @@
         if(complete != nil) {
             complete();
         }
+    }
+}
+
+#pragma mark Private
+
+- (void)_updateCorners {
+    if(_roundCorners == YES) {
+        CGRect bounds = self.bounds;
+        self.layer.cornerRadius = ceilf(MAX(bounds.size.width - 1.0f, bounds.size.height - 1.0f) * 0.5f);
+    }
+}
+
+- (void)_updateShadow {
+    if(_automaticShadowPath == YES) {
+        self.layer.shadowPath = CGPathCreateWithRoundedRect(self.bounds, self.layer.cornerRadius, self.layer.cornerRadius, NULL);
     }
 }
 
