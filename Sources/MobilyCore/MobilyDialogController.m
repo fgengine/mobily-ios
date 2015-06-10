@@ -296,6 +296,9 @@
                          [_contentViewController.view removeFromSuperview];
                          [_contentViewController removeFromParentViewController];
                          _presentingWindow.hidden = YES;
+                         if(_dismiss != nil) {
+                             _dismiss(self);
+                         }
                          if(completion != nil) {
                              completion();
                          }

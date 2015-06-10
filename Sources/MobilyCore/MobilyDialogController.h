@@ -58,7 +58,7 @@ typedef NS_ENUM(NSUInteger, MobilyDialogControllerHorizontalJustification) {
 
 /*--------------------------------------------------*/
 
-typedef void(^MobilyDialogControllerTouchedOutsideContent)(MobilyDialogController* dialogController);
+typedef void(^MobilyDialogControllerBlock)(MobilyDialogController* dialogController);
 
 /*--------------------------------------------------*/
 
@@ -87,7 +87,8 @@ typedef void(^MobilyDialogControllerTouchedOutsideContent)(MobilyDialogControlle
 
 @property(nonatomic, readwrite, assign) MobilyDialogControllerPresentationStyle presentationStyle;
 @property(nonatomic, readwrite, assign) MobilyDialogControllerHorizontalJustification horizontalJustification;
-@property(nonatomic, readwrite, copy) MobilyDialogControllerTouchedOutsideContent touchedOutsideContent;
+@property(nonatomic, readwrite, copy) MobilyDialogControllerBlock touchedOutsideContent;
+@property(nonatomic, readwrite, copy) MobilyDialogControllerBlock dismiss;
 
 - (instancetype)initWithViewController:(UIViewController*)viewController presentationStyle:(MobilyDialogControllerPresentationStyle)style;
 
