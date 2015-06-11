@@ -206,7 +206,10 @@
 
 - (void)_updateShadow {
     if(_automaticShadowPath == YES) {
-        self.layer.shadowPath = CGPathCreateWithRoundedRect(self.bounds, self.layer.cornerRadius, self.layer.cornerRadius, NULL);
+        CGRect bounds = self.bounds;
+        if((bounds.size.width > 0.0f) && (bounds.size.height > 0.0f)) {
+            self.layer.shadowPath = CGPathCreateWithRoundedRect(bounds, self.layer.cornerRadius, self.layer.cornerRadius, NULL);
+        }
     }
 }
 
