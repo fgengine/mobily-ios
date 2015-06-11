@@ -55,6 +55,8 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @property(nonatomic, readwrite, strong) NSArray* attachments;
 @property(nonatomic, readwrite, assign) NSUInteger numberOfRetries;
 @property(nonatomic, readwrite, assign) BOOL allowInvalidCertificates;
+@property(nonatomic, readwrite, assign) BOOL encodePostParamKey;
+@property(nonatomic, readwrite, assign) BOOL encodePostParamValue;
 
 - (instancetype)initWithGetRelativeUrl:(NSString*)relativeUrl;
 - (instancetype)initWithGetRelativeUrl:(NSString*)relativeUrl urlParams:(NSDictionary*)urlParams;

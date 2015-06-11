@@ -51,6 +51,8 @@
     NSArray* _attachments;
     NSUInteger _numberOfRetries;
     BOOL _allowInvalidCertificates;
+    BOOL _encodePostParamKey;
+    BOOL _encodePostParamValue;
 }
 
 @end
@@ -72,6 +74,8 @@
 @synthesize attachments = _attachments;
 @synthesize numberOfRetries = _numberOfRetries;
 @synthesize allowInvalidCertificates = _allowInvalidCertificates;
+@synthesize encodePostParamKey = _encodePostParamKey;
+@synthesize encodePostParamValue = _encodePostParamValue;
 
 #pragma mark MobilyModel
 
@@ -190,6 +194,8 @@
         _bodyParams = bodyParams;
         _attachments = attachments;
         _numberOfRetries = numberOfRetries;
+        _encodePostParamKey = YES;
+        _encodePostParamValue = YES;
     }
     return self;
 }
@@ -204,6 +210,8 @@
         _body = body;
         _attachments = attachments;
         _numberOfRetries = numberOfRetries;
+        _encodePostParamKey = YES;
+        _encodePostParamValue = YES;
     }
     return self;
 }
@@ -270,9 +278,9 @@
         httpQuery.requestUrlParams = _urlParams;
     }
     if(_attachments.count > 0) {
-        [httpQuery setRequestBodyParams:_bodyParams boundary:@"MobilyBoundary" attachments:_attachments];
+        [httpQuery setRequestBodyParams:_bodyParams encodeParamKey:_encodePostParamKey encodeParamValue:_encodePostParamValue boundary:@"MobilyBoundary" attachments:_attachments];
     } else if(_bodyParams.count > 0) {
-        [httpQuery setRequestBodyParams:_bodyParams];
+        [httpQuery setRequestBodyParams:_bodyParams encodeParamKey:_encodePostParamKey encodeParamValue:_encodePostParamValue];
     } else if(_body.length > 0) {
         [httpQuery setRequestBody:_body];
     }

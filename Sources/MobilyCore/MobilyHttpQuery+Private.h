@@ -68,8 +68,11 @@
 
 @interface MobilyHttpAttachment () {
     NSString* _name;
+    BOOL _encodeName;
     NSString* _filename;
+    BOOL _encodeFilename;
     NSString* _mimeType;
+    BOOL _encodeMimeType;
     NSData* _data;
 }
 

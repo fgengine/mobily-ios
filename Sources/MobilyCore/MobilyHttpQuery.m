@@ -101,14 +101,16 @@
     [self setRequestUrl:_request.URL params:params];
 }
 
-- (void)setRequestBodyParams:(NSDictionary*)params {
+- (void)setRequestBodyParams:(NSDictionary*)params encodeParamKey:(BOOL)encodeParamKey encodeParamValue:(BOOL)encodeParamValue {
     NSMutableString* bodyString = NSMutableString.string;
     NSDictionary* formData = [self _formDataFromDictionary:params];
     [formData enumerateKeysAndObjectsUsingBlock:^(NSString* key, id< NSObject > value, BOOL* stop __unused) {
         if(bodyString.length > 0) {
             [bodyString appendString:@"&"];
         }
-        [bodyString appendFormat:@"%@=%@", key.stringByEncodingURLFormat, value.description.stringByEncodingURLFormat];
+        NSString* tempKey = (encodeParamKey == YES) ? key.stringByEncodingURLFormat : key;
+        NSString* tempValue = (encodeParamValue == YES) ? value.description.stringByEncodingURLFormat : value.description;
+        [bodyString appendFormat:@"%@=%@", tempKey, tempValue];
     }];
     
     NSData* body = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
@@ -117,15 +119,20 @@
     _request.HTTPBody = body;
 }
 
-- (void)setRequestBodyParams:(NSDictionary*)params boundary:(NSString*)boundary attachments:(NSArray*)attachments {
+- (void)setRequestBodyParams:(NSDictionary*)params encodeParamKey:(BOOL)encodeParamKey encodeParamValue:(BOOL)encodeParamValue boundary:(NSString*)boundary attachments:(NSArray*)attachments {
     NSMutableData* body = NSMutableData.data;
     NSDictionary* formData = [self _formDataFromDictionary:params];
     NSString* boundaryEncoded = boundary.stringByEncodingURLFormat;
     [formData enumerateKeysAndObjectsUsingBlock:^(NSString* key, id< NSObject > value, BOOL* stop __unused) {
-        [body appendData:[[NSString stringWithFormat:@"--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@\r\n", boundaryEncoded, key.stringByEncodingURLFormat, value.description.stringByEncodingURLFormat] dataUsingEncoding:NSUTF8StringEncoding]];
+        NSString* tempKey = (encodeParamKey == YES) ? key.stringByEncodingURLFormat : key;
+        NSString* tempValue = (encodeParamValue == YES) ? value.description.stringByEncodingURLFormat : value.description;
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@\r\n", boundaryEncoded, tempKey, tempValue] dataUsingEncoding:NSUTF8StringEncoding]];
     }];
     for(MobilyHttpAttachment* attachment in attachments) {
-        [body appendData:[[NSString stringWithFormat:@"--%@\r\nContent-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\nContent-Type: %@\r\n\r\n", boundaryEncoded, attachment.name.stringByEncodingURLFormat, attachment.filename.stringByEncodingURLFormat, attachment.mimeType.stringByEncodingURLFormat] dataUsingEncoding:NSUTF8StringEncoding]];
+        NSString* tempName = (attachment.encodeName == YES) ? attachment.name.stringByEncodingURLFormat : attachment.name;
+        NSString* tempFilename = (attachment.encodeFilename == YES) ? attachment.filename.stringByEncodingURLFormat : attachment.filename;
+        NSString* tempMimeType = (attachment.encodeMimeType == YES) ? attachment.mimeType.stringByEncodingURLFormat : attachment.mimeType;
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\nContent-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\nContent-Type: %@\r\n\r\n", boundaryEncoded, tempName, tempFilename, tempMimeType] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:attachment.data];
         [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     }
@@ -439,8 +446,11 @@
 #pragma mark Synthesize
 
 @synthesize name = _name;
+@synthesize encodeName = _encodeName;
 @synthesize filename = _filename;
+@synthesize encodeFilename = _encodeFilename;
 @synthesize mimeType = _mimeType;
+@synthesize encodeMimeType = _encodeMimeType;
 @synthesize data = _data;
 
 #pragma mark Init / Free
@@ -449,8 +459,11 @@
     self = [super init];
     if(self != nil) {
         _name = name;
+        _encodeName = YES;
         _filename = filename;
+        _encodeFilename = YES;
         _mimeType = mimeType;
+        _encodeMimeType = YES;
         _data = data;
         [self setup];
     }
