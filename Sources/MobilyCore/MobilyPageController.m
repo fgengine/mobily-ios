@@ -813,7 +813,7 @@ static char const* const MobilySlideControllerKey = "MobilySlideControllerKey";
 @implementation UIViewController (MobilyPageController)
 
 - (void)setPageController:(MobilyPageController*)pageController {
-    objc_setAssociatedObject(self, MobilySlideControllerKey, pageController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, MobilySlideControllerKey, pageController, OBJC_ASSOCIATION_ASSIGN);
 }
 
 - (MobilyPageController*)pageController {

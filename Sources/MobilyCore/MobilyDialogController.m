@@ -470,7 +470,7 @@ static char const* const MobilyDialogControllerKey = "MobilyDialogControllerKey"
 @implementation UIViewController (MobilyDialogController)
 
 - (void)setDialogController:(MobilyDialogController*)dialogController {
-    objc_setAssociatedObject(self, MobilyDialogControllerKey, dialogController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, MobilyDialogControllerKey, dialogController, OBJC_ASSOCIATION_ASSIGN);
 }
 
 - (MobilyDialogController*)dialogController {

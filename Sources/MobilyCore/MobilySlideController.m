@@ -986,7 +986,7 @@ static char const* const slideControllerKey = "slideControllerKey";
 @implementation UIViewController (MobilySlideController)
 
 - (void)setSlideController:(MobilySlideController*)slideController {
-    objc_setAssociatedObject(self, slideControllerKey, slideController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, slideControllerKey, slideController, OBJC_ASSOCIATION_ASSIGN);
 }
 
 - (MobilySlideController*)slideController {

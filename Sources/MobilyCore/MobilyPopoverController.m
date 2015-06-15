@@ -116,7 +116,7 @@ static char const* const MobilyPopoverControllerKey = "popoverControllerKey";
 @implementation UIViewController (MobilyPopoverController)
 
 - (void)setPopoverController:(MobilyPopoverController*)popoverController {
-    objc_setAssociatedObject(self, MobilyPopoverControllerKey, popoverController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, MobilyPopoverControllerKey, popoverController, OBJC_ASSOCIATION_ASSIGN);
 }
 
 - (MobilyPopoverController*)popoverController {
