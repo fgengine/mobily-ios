@@ -965,6 +965,10 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
     [self batchDuration:0.0f update:update complete:complete];
 }
 
+- (void)batchDuration:(NSTimeInterval)duration update:(MobilyDataViewUpdateBlock)update {
+    [self batchDuration:duration update:update complete:nil];
+}
+
 - (void)batchDuration:(NSTimeInterval)duration update:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete {
     if(_updating == NO) {
         if(duration > FLT_EPSILON) {

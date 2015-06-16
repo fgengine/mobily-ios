@@ -174,6 +174,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 
 - (void)batchUpdate:(MobilyDataViewUpdateBlock)update;
 - (void)batchUpdate:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete;
+- (void)batchDuration:(NSTimeInterval)duration update:(MobilyDataViewUpdateBlock)update;
 - (void)batchDuration:(NSTimeInterval)duration update:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete;
 
 - (void)setNeedValidateLayout;
