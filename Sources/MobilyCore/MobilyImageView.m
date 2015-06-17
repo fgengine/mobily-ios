@@ -208,7 +208,7 @@
     if(_automaticShadowPath == YES) {
         CGRect bounds = self.bounds;
         if((bounds.size.width > 0.0f) && (bounds.size.height > 0.0f)) {
-            self.layer.shadowPath = CGPathCreateWithRoundedRect(bounds, self.layer.cornerRadius, self.layer.cornerRadius, NULL);
+            self.layer.shadowPath = [[UIBezierPath bezierPathWithRoundedRect:bounds cornerRadius:self.layer.cornerRadius] CGPath];
         }
     }
 }
