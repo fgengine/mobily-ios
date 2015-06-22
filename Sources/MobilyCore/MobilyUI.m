@@ -43,6 +43,7 @@
 
 #import <MobilyCore/MobilySlideController.h>
 #import <MobilyCore/MobilyPageController.h>
+#import <MobilyCore/MobilyDataView.h>
 
 /*--------------------------------------------------*/
 
@@ -1728,6 +1729,7 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 
 @interface UIScrollView (MobilyUI_Keyboard)
 
+@property(nonatomic, readwrite, assign) BOOL keyboardShowed;
 @property(nonatomic, readwrite, weak) UIResponder* keyboardResponder;
 @property(nonatomic, readwrite, assign) UIEdgeInsets keyboardContentInset;
 @property(nonatomic, readwrite, assign) UIEdgeInsets keyboardIndicatorInset;
@@ -1764,11 +1766,37 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 
 #pragma mark Property
 
-- (void)setKeyboardResponder:(UIResponder*)keyboardResponder {
-    if(self.keyboardResponder == nil) {
-        self.keyboardContentInset = self.contentInset;
-        self.keyboardIndicatorInset = self.scrollIndicatorInsets;
+- (void)setKeyboardShowed:(BOOL)keyboardShowed {
+    if(self.keyboardShowed != keyboardShowed) {
+        if(keyboardShowed == NO) {
+            if([self isKindOfClass:MobilyDataView.class] == YES) {
+                MobilyDataView* dataView = (MobilyDataView*)self;
+                dataView.containerInsets = self.keyboardContentInset;
+            } else {
+                self.contentInset = self.keyboardContentInset;
+                self.scrollIndicatorInsets = self.keyboardIndicatorInset;
+            }
+            self.keyboardResponder = nil;
+        }
+        objc_setAssociatedObject(self, @selector(keyboardShowed), @(keyboardShowed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        if(keyboardShowed == YES) {
+            if([self isKindOfClass:MobilyDataView.class] == YES) {
+                MobilyDataView* dataView = (MobilyDataView*)self;
+                self.keyboardContentInset = dataView.containerInsets;
+            } else {
+                self.keyboardContentInset = self.contentInset;
+                self.keyboardIndicatorInset = self.scrollIndicatorInsets;
+            }
+            self.keyboardResponder = [UIResponder currentFirstResponderInView:self];
+        }
     }
+}
+
+- (BOOL)keyboardShowed {
+    return [objc_getAssociatedObject(self, @selector(keyboardShowed)) boolValue];
+}
+
+- (void)setKeyboardResponder:(UIResponder*)keyboardResponder {
     objc_setAssociatedObject(self, @selector(keyboardResponder), keyboardResponder, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
@@ -1931,19 +1959,26 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 #pragma mark UIKeyboarNotification
 
 - (void)adjustmentNotificationKeyboardShow:(NSNotification*)notification {
-    self.keyboardResponder = [UIResponder currentFirstResponderInView:self];
-    if([[self keyboardResponder] isKindOfClass:UIView.class] == YES) {
-        CGRect scrollRect = [self convertRect:self.bounds toView:nil];
-        CGRect keyboardRect = [[notification userInfo][UIKeyboardFrameEndUserInfoKey] CGRectValue];
-        CGRect intersectionRect = CGRectIntersection(scrollRect, keyboardRect);
-        if(CGRectIsNull(intersectionRect) == NO) {
-            if(intersectionRect.size.height > FLT_EPSILON) {
+    self.keyboardShowed = YES;
+    CGRect scrollRect = [self convertRect:self.bounds toView:nil];
+    CGRect keyboardRect = [[notification userInfo][UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGRect intersectionRect = CGRectIntersection(scrollRect, keyboardRect);
+    if(CGRectIsNull(intersectionRect) == NO) {
+        if(intersectionRect.size.height > FLT_EPSILON) {
+            if([self isKindOfClass:MobilyDataView.class] == YES) {
+                MobilyDataView* dataView = (MobilyDataView*)self;
+                UIEdgeInsets containerInsets = dataView.containerInsets;
+                containerInsets.bottom = intersectionRect.size.height;
+                dataView.containerInsets = containerInsets;
+            } else {
                 UIEdgeInsets contentInsets = self.contentInset;
                 UIEdgeInsets indicatorInsets = self.scrollIndicatorInsets;
                 contentInsets.bottom = indicatorInsets.bottom = intersectionRect.size.height;
                 self.contentInset = contentInsets;
                 self.scrollIndicatorInsets = indicatorInsets;
             }
+        }
+        if([self.keyboardResponder isKindOfClass:UIView.class] == YES) {
             CGRect visibleRect = UIEdgeInsetsInsetRect(self.visibleBounds, self.keyboardInset);
             CGRect responderRect = [(UIView*)self.keyboardResponder convertRect:((UIView*)self.keyboardResponder).bounds toView:self];
             if(CGRectContainsRect(visibleRect, responderRect) == NO) {
@@ -1975,11 +2010,7 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 }
 
 - (void)adjustmentNotificationKeyboardHide:(NSNotification* __unused)notification {
-    if(self.keyboardResponder != nil) {
-        self.contentInset = self.keyboardContentInset;
-        self.scrollIndicatorInsets = self.keyboardIndicatorInset;
-        self.keyboardResponder = nil;
-    }
+    self.keyboardShowed = NO;
 }
 
 @end
