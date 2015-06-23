@@ -277,7 +277,7 @@
             } else {
                 CLLocationAccuracy desiredAccuracy = MAX(location.horizontalAccuracy, location.verticalAccuracy);
                 NSTimeInterval timeSinceUpdate = fabs(location.timestamp.timeIntervalSinceNow);
-                if((desiredAccuracy <= request.desiredAccuracy) && (timeSinceUpdate <= request.staleThreshold)) {
+                if((desiredAccuracy <= request.desiredAccuracy) || (timeSinceUpdate <= request.staleThreshold)) {
                     [completingRequests addObject:request];
                 }
             }
