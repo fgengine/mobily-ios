@@ -41,6 +41,22 @@
 
 @implementation MobilyTransitionControllerSlide
 
+#pragma mark Init / Free
+
+- (instancetype)initWithRatio:(CGFloat)ratio {
+    self = [super init];
+    if(self != nil) {
+        _ratio = MAX(0.0f, MIN(ratio, 1.0f));
+    }
+    return self;
+}
+
+- (void)setup {
+    [super setup];
+    
+    _ratio = 1.0f;
+}
+
 #pragma mark Private override
 
 - (void)_prepareTransitionContext {
@@ -62,9 +78,9 @@
             }
             if(CGRectIsEmpty(_initialFrameToViewController) == YES) {
                 if(CGRectIsEmpty(_finalFrameToViewController) == NO) {
-                    _initialFrameToViewController = CGRectMake(_finalFrameToViewController.origin.x + _finalFrameToViewController.size.width, _finalFrameToViewController.origin.y, _finalFrameToViewController.size.width, _finalFrameToViewController.size.height);
+                    _initialFrameToViewController = CGRectMake(_finalFrameToViewController.origin.x + (_finalFrameToViewController.size.width * _ratio), _finalFrameToViewController.origin.y, _finalFrameToViewController.size.width, _finalFrameToViewController.size.height);
                 } else {
-                    _initialFrameToViewController = CGRectMake(containerFrame.origin.x + containerFrame.size.width, containerFrame.origin.y, containerFrame.size.width, containerFrame.size.height);
+                    _initialFrameToViewController = CGRectMake(containerFrame.origin.x + (containerFrame.size.width * _ratio), containerFrame.origin.y, containerFrame.size.width, containerFrame.size.height);
                 }
             }
             if(CGRectIsEmpty(_finalFrameToViewController) == YES) {
@@ -86,9 +102,9 @@
             }
             if(CGRectIsEmpty(_initialFrameToViewController) == YES) {
                 if(CGRectIsEmpty(_finalFrameToViewController) == NO) {
-                    _initialFrameToViewController = CGRectMake(_finalFrameToViewController.origin.x - _finalFrameToViewController.size.width, _finalFrameToViewController.origin.y, _finalFrameToViewController.size.width, _finalFrameToViewController.size.height);
+                    _initialFrameToViewController = CGRectMake(_finalFrameToViewController.origin.x - (_finalFrameToViewController.size.width * _ratio), _finalFrameToViewController.origin.y, _finalFrameToViewController.size.width, _finalFrameToViewController.size.height);
                 } else {
-                    _initialFrameToViewController = CGRectMake(containerFrame.origin.x - containerFrame.size.width, containerFrame.origin.y, containerFrame.size.width, containerFrame.size.height);
+                    _initialFrameToViewController = CGRectMake(containerFrame.origin.x - (containerFrame.size.width * _ratio), containerFrame.origin.y, containerFrame.size.width, containerFrame.size.height);
                 }
             }
             if(CGRectIsEmpty(_finalFrameToViewController) == YES) {
@@ -139,11 +155,11 @@
     [_containerView sendSubviewToBack:_toView];
 }
 
-- (void)_updateInteractive:(CGFloat)complete {
-    [super _updateInteractive:complete];
+- (void)_updateInteractive:(CGFloat)percentComplete {
+    [super _updateInteractive:percentComplete];
     
-    _fromView.frame = CGRectLerp(_initialFrameFromViewController, _finalFrameFromViewController, complete);
-    _toView.frame = CGRectLerp(_initialFrameToViewController, _finalFrameToViewController, complete);
+    _fromView.frame = CGRectLerp(_initialFrameFromViewController, _finalFrameFromViewController, percentComplete);
+    _toView.frame = CGRectLerp(_initialFrameToViewController, _finalFrameToViewController, percentComplete);
 }
 
 - (void)_finishInteractive {

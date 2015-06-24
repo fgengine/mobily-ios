@@ -58,7 +58,7 @@ typedef NS_ENUM(NSUInteger, MobilyTransitionOperation) {
 
 /*--------------------------------------------------*/
 
-@interface MobilyTransitionController : NSObject < UIViewControllerAnimatedTransitioning, UIViewControllerInteractiveTransitioning >
+@interface MobilyTransitionController : NSObject < MobilyObject, UIViewControllerAnimatedTransitioning, UIViewControllerInteractiveTransitioning >
 
 @property(nonatomic, readwrite, weak) id< UIViewControllerContextTransitioning > transitionContext;
 @property(nonatomic, readwrite, assign) MobilyTransitionOperation operation;
@@ -67,6 +67,8 @@ typedef NS_ENUM(NSUInteger, MobilyTransitionOperation) {
 @property(nonatomic, readwrite, assign) CGFloat completionSpeed;
 @property(nonatomic, readwrite, assign) UIViewAnimationCurve completionCurve;
 @property(nonatomic, readonly, assign, getter=isInteractive) BOOL interactive;
+
+- (void)setup NS_REQUIRES_SUPER;
 
 - (BOOL)isAnimated;
 - (BOOL)isCancelled;
@@ -94,6 +96,10 @@ typedef NS_ENUM(NSUInteger, MobilyTransitionOperation) {
 /*--------------------------------------------------*/
 
 @interface MobilyTransitionControllerSlide : MobilyTransitionController
+
+@property(nonatomic, readwrite, assign) CGFloat ratio;
+
+- (instancetype)initWithRatio:(CGFloat)ratio;
 
 @end
 

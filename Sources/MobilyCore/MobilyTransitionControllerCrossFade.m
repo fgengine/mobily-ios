@@ -72,11 +72,11 @@
     [_containerView sendSubviewToBack:_toView];
 }
 
-- (void)_updateInteractive:(CGFloat)complete {
-    [super _updateInteractive:complete];
+- (void)_updateInteractive:(CGFloat)percentComplete {
+    [super _updateInteractive:percentComplete];
     
-    _fromView.alpha = 1.0f - complete;
-    _toView.alpha = complete;
+    _fromView.alpha = 1.0f - percentComplete;
+    _toView.alpha = percentComplete;
 }
 
 - (void)_finishInteractive {

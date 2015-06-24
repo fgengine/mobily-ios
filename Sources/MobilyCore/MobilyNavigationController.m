@@ -123,7 +123,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
     
     self.interactiveGesture = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(interactiveGestureHandle:)];
-    self.transitionInteractive = [MobilyTransitionControllerSlide new];
+    self.transitionInteractive = [[MobilyTransitionControllerSlide alloc] initWithRatio:0.2f];
     self.needUpdate = YES;
 }
 
@@ -391,7 +391,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
             break;
         }
         case UIGestureRecognizerStateChanged: {
-            [_transitionInteractive updateInteractive:progress];
+            [_transitionInteractive updateInteractive:MAX(0.0f, MIN(progress, 1.0f))];
             break;
         }
         case UIGestureRecognizerStateEnded:
