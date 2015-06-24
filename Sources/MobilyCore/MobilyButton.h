@@ -74,6 +74,9 @@ typedef NS_ENUM(NSInteger, MobilyButtonImageAlignment) {
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat disabledCornerRadius;
 @property(nonatomic, readonly, assign) CGFloat currentCornerRadius;
 
+@property(nonatomic, readwrite, assign) IBInspectable BOOL imageWrap;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat imageWrapValue;
+
 - (void)setup NS_REQUIRES_SUPER;
 
 @end
