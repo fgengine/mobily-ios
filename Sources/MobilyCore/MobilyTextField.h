@@ -65,6 +65,7 @@
 - (void)validate;
 
 - (BOOL)isEmptyText;
+- (BOOL)isPhoneComplete;
 
 @end
 
