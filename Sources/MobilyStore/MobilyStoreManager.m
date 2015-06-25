@@ -43,6 +43,7 @@
 @protected
     NSMutableArray* _requestProducts;
     NSMutableArray* _requestPayments;
+    MobilyStoreManagerPaymentTransactionProcessing _paymentTransactionProcessing;
 }
 
 - (void)_finishProductsRequest:(MobilyStoreProductsRequest*)productsRequest;
@@ -53,15 +54,16 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-@interface MobilyStoreProductsRequest () {
+@interface MobilyStoreProductsRequest () < SKProductsRequestDelegate > {
 @protected
     SKProductsRequest* _request;
     SKProductsResponse* _response;
-    MobilyStoreManagerProductsSuccess _success;
-    MobilyStoreManagerProductsFailure _failure;
+    MobilyStoreManagerProductsRequestSuccess _success;
+    MobilyStoreManagerProductsRequestFailure _failure;
 }
 
 @property(nonatomic, readwrite, strong) SKProductsRequest* request;
+@property(nonatomic, readwrite, strong) SKProductsResponse* response;
 @property(nonatomic, readwrite, copy) MobilyStoreManagerProductsRequestSuccess success;
 @property(nonatomic, readwrite, copy) MobilyStoreManagerProductsRequestFailure failure;
 
@@ -80,7 +82,9 @@
     MobilyStoreManagerPaymentRequestProcessing _processing;
 }
 
+@property(nonatomic, readwrite, strong) SKProduct* product;
 @property(nonatomic, readwrite, strong) SKPaymentTransaction* transaction;
+@property(nonatomic, readwrite, copy) MobilyStoreManagerPaymentRequestProcessing processing;
 
 - (instancetype)initWithProduct:(SKProduct*)product processing:(MobilyStoreManagerPaymentRequestProcessing)processing;
 - (void)_updateTransaction:(SKPaymentTransaction*)transaction;
@@ -92,6 +96,10 @@
 /*--------------------------------------------------*/
 
 @implementation MobilyStoreManager
+
+#pragma mark Synthesize
+
+@synthesize paymentTransactionProcessing = _paymentTransactionProcessing;
 
 #pragma mark Singleton
 
@@ -131,7 +139,7 @@
 #pragma mark Public
 
 - (MobilyStoreProductsRequest*)productsRequestByIdentifiers:(NSSet*)identifiers success:(MobilyStoreManagerProductsRequestSuccess)success failure:(MobilyStoreManagerProductsRequestFailure)failure {
-    MobilyStoreProductsRequest* productsRequest = [[MobilyStoreProductsRequest alloc] initWithIdentifiers:alloc success:success failure:failure];
+    MobilyStoreProductsRequest* productsRequest = [[MobilyStoreProductsRequest alloc] initWithIdentifiers:identifiers success:success failure:failure];
     if(productsRequest != nil) {
         [_requestProducts addObject:productsRequest];
     }
@@ -147,9 +155,10 @@
 }
 
 - (MobilyStorePaymentRequest*)paymentRequestWithProduct:(SKProduct*)product processing:(MobilyStoreManagerPaymentRequestProcessing)processing {
-    MobilyStorePaymentRequest paymentRequest = [[MobilyStorePaymentRequest alloc] initWithProduct:product processing:processing];
+    MobilyStorePaymentRequest* paymentRequest = [[MobilyStorePaymentRequest alloc] initWithProduct:product processing:processing];
     if(paymentRequest != nil) {
         [_requestPayments addObject:paymentRequest];
+        [SKPaymentQueue.defaultQueue addPayment:[SKPayment paymentWithProduct:product]];
     }
     return paymentRequest;
 }
@@ -176,12 +185,12 @@
             return [transaction.payment.productIdentifier isEqualToString:paymentRequest.product.productIdentifier];
         }];
         if(paymentRequest == nil) {
-            paymentRequest = [[MobilyStorePaymentRequest alloc] initWithTransaction:transaction];
-            if(paymentRequest != nil) {
-                [_requestPayments addObject:paymentRequest];
+            if(_paymentTransactionProcessing != nil) {
+                _paymentTransactionProcessing(queue, transaction);
             }
+        } else {
+            [paymentRequest _updateTransaction:transaction];
         }
-        [paymentRequest _updateTransaction:transaction];
     }];
 }
 
@@ -190,7 +199,11 @@
         MobilyStorePaymentRequest* paymentRequest = [_requestPayments find:^BOOL(MobilyStorePaymentRequest* paymentRequest) {
             return [transaction.payment.productIdentifier isEqualToString:paymentRequest.product.productIdentifier];
         }];
-        if(paymentRequest != nil) {
+        if(paymentRequest == nil) {
+            if(_paymentTransactionProcessing != nil) {
+                _paymentTransactionProcessing(queue, transaction);
+            }
+        } else {
             [self _finishPaymentRequest:paymentRequest];
         }
     }];
@@ -242,6 +255,12 @@
 }
 
 #pragma mark Public
+
+- (SKProduct*)productByIdentifier:(NSString*)identifier {
+    return [_response.products find:^BOOL(SKProduct* product) {
+        return [product.productIdentifier isEqualToString:identifier];
+    }];
+}
 
 - (void)cancel {
     self.request = nil;
@@ -295,7 +314,7 @@
 
 #pragma mark Private
 
-- (void)_updateTransaction:(SKPaymentTransaction*)transaction error:(NSError*)error {
+- (void)_updateTransaction:(SKPaymentTransaction*)transaction {
     if(_transaction == nil) {
         self.transaction = transaction;
     }
@@ -308,6 +327,22 @@
 
 - (void)finish {
     [SKPaymentQueue.defaultQueue finishTransaction:_transaction];
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation SKProduct (MobilyStore)
+
+- (NSString*)priceAsString {
+    NSNumberFormatter* formatter = [NSNumberFormatter new];
+    formatter.formatterBehavior = NSNumberFormatterBehavior10_4;
+    formatter.numberStyle = NSNumberFormatterCurrencyStyle;
+    formatter.locale = self.priceLocale;
+    return [formatter stringFromNumber:self.price];
 }
 
 @end

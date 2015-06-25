@@ -300,6 +300,7 @@
 		40B760431ADFA35600F0CB09 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B7603F1ADFA35600F0CB09 /* CoreData.framework */; };
 		40B760441ADFA35600F0CB09 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B760401ADFA35600F0CB09 /* Social.framework */; };
 		40B760451ADFA35600F0CB09 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B760411ADFA35600F0CB09 /* Twitter.framework */; };
+		40D005D81B3BFD1800DD7DA6 /* MobilyStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 40D005D71B3BFD1800DD7DA6 /* MobilyStore.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -336,7 +337,7 @@
 		4005C0831B1E13E4009A2185 /* TwitterCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterCore.framework; sourceTree = "<group>"; };
 		4005C0841B1E13E4009A2185 /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = "<group>"; };
 		4005C0851B1E13E4009A2185 /* VKSdk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = VKSdk.framework; sourceTree = "<group>"; };
-		4080D2281B3B44AB00328837 /* libMobilyStore-Library.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libMobilyStore-Library.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4080D2281B3B44AB00328837 /* libMobilyStore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMobilyStore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4080D23C1B3B44B800328837 /* MobilyStore-Framework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "MobilyStore-Framework.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4080D23D1B3B44B800328837 /* MobilyStore.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = MobilyStore.plist; path = /Users/fgengine/Dropbox/ObjC/GamesLooper/VoicyFM/MobilyFramework/Support/MobilyStore.plist; sourceTree = "<absolute>"; };
 		4080D2401B3B44EB00328837 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -538,6 +539,7 @@
 		40B760411ADFA35600F0CB09 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		40B7604E1ADFA6A200F0CB09 /* TwitterKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TwitterKitResources.bundle; sourceTree = "<group>"; };
 		40B7604F1ADFA6A200F0CB09 /* VKSdkResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = VKSdkResources.bundle; sourceTree = "<group>"; };
+		40D005D71B3BFD1800DD7DA6 /* MobilyStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyStore.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -605,6 +607,7 @@
 		4080D2451B3B454200328837 /* MobilyStore */ = {
 			isa = PBXGroup;
 			children = (
+				40D005D71B3BFD1800DD7DA6 /* MobilyStore.h */,
 				4080D2461B3B454200328837 /* MobilyStoreManager.h */,
 				4080D2471B3B454200328837 /* MobilyStoreManager.m */,
 			);
@@ -832,7 +835,7 @@
 				40B75EF61ADF9F1C00F0CB09 /* libMobilySocial.a */,
 				4096BC211B20230E0048B07E /* MobilyCore.framework */,
 				4096BC431B20237D0048B07E /* MobilySocial.framework */,
-				4080D2281B3B44AB00328837 /* libMobilyStore-Library.a */,
+				4080D2281B3B44AB00328837 /* libMobilyStore.a */,
 				4080D23C1B3B44B800328837 /* MobilyStore-Framework.framework */,
 			);
 			name = Products;
@@ -890,6 +893,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40D005D81B3BFD1800DD7DA6 /* MobilyStore.h in Headers */,
 				4080D2481B3B454200328837 /* MobilyStoreManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1009,7 +1013,7 @@
 			);
 			name = "MobilyStore-Library";
 			productName = MobilyCore;
-			productReference = 4080D2281B3B44AB00328837 /* libMobilyStore-Library.a */;
+			productReference = 4080D2281B3B44AB00328837 /* libMobilyStore.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		4080D2291B3B44B800328837 /* MobilyStore-Framework */ = {
@@ -1434,7 +1438,7 @@
 					"$(inherited)",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "MobilyStore-Library";
+				PRODUCT_NAME = MobilyStore;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -1443,7 +1447,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "MobilyStore-Library";
+				PRODUCT_NAME = MobilyStore;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;

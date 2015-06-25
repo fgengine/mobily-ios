@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import <MobilyCore/MobilyNS.h>
+#import <MobilyCore/MobilyObject.h>
 #import <StoreKit/StoreKit.h>
 
 /*--------------------------------------------------*/
@@ -47,11 +47,14 @@ typedef void (^MobilyStoreManagerProductsRequestSuccess)(MobilyStoreProductsRequ
 typedef void (^MobilyStoreManagerProductsRequestFailure)(MobilyStoreProductsRequest* productsRequest, NSError* error);
 
 typedef void (^MobilyStoreManagerPaymentRequestProcessing)(MobilyStorePaymentRequest* paymentRequest);
+typedef void (^MobilyStoreManagerPaymentTransactionProcessing)(SKPaymentQueue* paymentQueue, SKPaymentTransaction* paymentTransaction);
 
 /*--------------------------------------------------*/
 
 MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyStoreManager : NSObject < MobilyObject >
+
+@property(nonatomic, readwrite, copy) MobilyStoreManagerPaymentTransactionProcessing paymentTransactionProcessing;
 
 + (instancetype)shared;
 
@@ -75,6 +78,8 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @property(nonatomic, readonly, strong) SKProductsRequest* request;
 @property(nonatomic, readonly, strong) SKProductsResponse* response;
 
+- (SKProduct*)productByIdentifier:(NSString*)identifier;
+
 - (void)cancel;
 
 @end
@@ -88,6 +93,14 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @property(nonatomic, readonly, strong) SKPaymentTransaction* transaction;
 
 - (void)finish;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface SKProduct (MobilyStore)
+
+@property(nonatomic, readonly, strong) NSString* priceAsString;
 
 @end
 
