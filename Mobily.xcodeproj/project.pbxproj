@@ -12,6 +12,11 @@
 		4005C08C1B1E13E4009A2185 /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4005C0831B1E13E4009A2185 /* TwitterCore.framework */; };
 		4005C08D1B1E13E4009A2185 /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4005C0841B1E13E4009A2185 /* TwitterKit.framework */; };
 		4005C08E1B1E13E4009A2185 /* VKSdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4005C0851B1E13E4009A2185 /* VKSdk.framework */; };
+		4080D2411B3B44EB00328837 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4080D2401B3B44EB00328837 /* StoreKit.framework */; };
+		4080D2441B3B450000328837 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4080D2401B3B44EB00328837 /* StoreKit.framework */; };
+		4080D2481B3B454200328837 /* MobilyStoreManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4080D2461B3B454200328837 /* MobilyStoreManager.h */; };
+		4080D2491B3B454200328837 /* MobilyStoreManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4080D2471B3B454200328837 /* MobilyStoreManager.m */; };
+		4080D24A1B3B454200328837 /* MobilyStoreManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4080D2471B3B454200328837 /* MobilyStoreManager.m */; };
 		4096BD181B2024DA0048B07E /* MobilyActivityView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4096BC701B2024DA0048B07E /* MobilyActivityView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4096BD191B2024DA0048B07E /* MobilyActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4096BC711B2024DA0048B07E /* MobilyActivityView.m */; };
 		4096BD1A1B2024DA0048B07E /* MobilyActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4096BC711B2024DA0048B07E /* MobilyActivityView.m */; };
@@ -298,6 +303,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		4080D23E1B3B44E500328837 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 40B75B2A1ADEE82900F0CB09 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 40B75EBC1ADF9EE500F0CB09;
+			remoteInfo = "MobilyCore-Library";
+		};
+		4080D2421B3B44F300328837 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 40B75B2A1ADEE82900F0CB09 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4096BC201B20230E0048B07E;
+			remoteInfo = "MobilyCore-Framework";
+		};
 		40B760191ADFA05000F0CB09 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 40B75B2A1ADEE82900F0CB09 /* Project object */;
@@ -317,6 +336,12 @@
 		4005C0831B1E13E4009A2185 /* TwitterCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterCore.framework; sourceTree = "<group>"; };
 		4005C0841B1E13E4009A2185 /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = "<group>"; };
 		4005C0851B1E13E4009A2185 /* VKSdk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = VKSdk.framework; sourceTree = "<group>"; };
+		4080D2281B3B44AB00328837 /* libMobilyStore-Library.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libMobilyStore-Library.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4080D23C1B3B44B800328837 /* MobilyStore-Framework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "MobilyStore-Framework.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4080D23D1B3B44B800328837 /* MobilyStore.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = MobilyStore.plist; path = /Users/fgengine/Dropbox/ObjC/GamesLooper/VoicyFM/MobilyFramework/Support/MobilyStore.plist; sourceTree = "<absolute>"; };
+		4080D2401B3B44EB00328837 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		4080D2461B3B454200328837 /* MobilyStoreManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyStoreManager.h; sourceTree = "<group>"; };
+		4080D2471B3B454200328837 /* MobilyStoreManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyStoreManager.m; sourceTree = "<group>"; };
 		4096BC211B20230E0048B07E /* MobilyCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MobilyCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4096BC431B20237D0048B07E /* MobilySocial.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MobilySocial.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4096BC6D1B2024C00048B07E /* MobilyCore.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MobilyCore.plist; sourceTree = "<group>"; };
@@ -516,6 +541,22 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4080D1C41B3B44AB00328837 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4080D2411B3B44EB00328837 /* StoreKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4080D2301B3B44B800328837 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4080D2441B3B450000328837 /* StoreKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4096BC1D1B20230E0048B07E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -561,11 +602,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4080D2451B3B454200328837 /* MobilyStore */ = {
+			isa = PBXGroup;
+			children = (
+				4080D2461B3B454200328837 /* MobilyStoreManager.h */,
+				4080D2471B3B454200328837 /* MobilyStoreManager.m */,
+			);
+			path = MobilyStore;
+			sourceTree = "<group>";
+		};
 		4096BC6C1B2024C00048B07E /* Support */ = {
 			isa = PBXGroup;
 			children = (
 				4096BC6D1B2024C00048B07E /* MobilyCore.plist */,
 				4096BC6E1B2024C00048B07E /* MobilySocial.plist */,
+				4080D23D1B3B44B800328837 /* MobilyStore.plist */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -781,6 +832,8 @@
 				40B75EF61ADF9F1C00F0CB09 /* libMobilySocial.a */,
 				4096BC211B20230E0048B07E /* MobilyCore.framework */,
 				4096BC431B20237D0048B07E /* MobilySocial.framework */,
+				4080D2281B3B44AB00328837 /* libMobilyStore-Library.a */,
+				4080D23C1B3B44B800328837 /* MobilyStore-Framework.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -788,6 +841,7 @@
 		40B75E2B1ADF82CA00F0CB09 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4080D2401B3B44EB00328837 /* StoreKit.framework */,
 				40B7603E1ADFA35600F0CB09 /* Accounts.framework */,
 				40B7603F1ADFA35600F0CB09 /* CoreData.framework */,
 				40B760401ADFA35600F0CB09 /* Social.framework */,
@@ -815,6 +869,7 @@
 			children = (
 				4096BC6F1B2024DA0048B07E /* MobilyCore */,
 				4096BE1A1B2024E30048B07E /* MobilySocial */,
+				4080D2451B3B454200328837 /* MobilyStore */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -831,6 +886,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		4080D2311B3B44B800328837 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4080D2481B3B454200328837 /* MobilyStoreManager.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4096BC1E1B20230E0048B07E /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -932,6 +995,42 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		4080D1C31B3B44AB00328837 /* MobilyStore-Library */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4080D2251B3B44AB00328837 /* Build configuration list for PBXNativeTarget "MobilyStore-Library" */;
+			buildPhases = (
+				4080D1C41B3B44AB00328837 /* Frameworks */,
+				4080D1CA1B3B44AB00328837 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4080D23F1B3B44E500328837 /* PBXTargetDependency */,
+			);
+			name = "MobilyStore-Library";
+			productName = MobilyCore;
+			productReference = 4080D2281B3B44AB00328837 /* libMobilyStore-Library.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		4080D2291B3B44B800328837 /* MobilyStore-Framework */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4080D2391B3B44B800328837 /* Build configuration list for PBXNativeTarget "MobilyStore-Framework" */;
+			buildPhases = (
+				4080D22A1B3B44B800328837 /* Sources */,
+				4080D2301B3B44B800328837 /* Frameworks */,
+				4080D2311B3B44B800328837 /* Headers */,
+				4080D2381B3B44B800328837 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4080D2431B3B44F300328837 /* PBXTargetDependency */,
+			);
+			name = "MobilyStore-Framework";
+			productName = "MobilySocial-Framework";
+			productReference = 4080D23C1B3B44B800328837 /* MobilyStore-Framework.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		4096BC201B20230E0048B07E /* MobilyCore-Framework */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4096BC341B20230F0048B07E /* Build configuration list for PBXNativeTarget "MobilyCore-Framework" */;
@@ -1039,13 +1138,22 @@
 			targets = (
 				40B75EBC1ADF9EE500F0CB09 /* MobilyCore-Library */,
 				40B75EF51ADF9F1C00F0CB09 /* MobilySocial-Library */,
+				4080D1C31B3B44AB00328837 /* MobilyStore-Library */,
 				4096BC201B20230E0048B07E /* MobilyCore-Framework */,
 				4096BC421B20237D0048B07E /* MobilySocial-Framework */,
+				4080D2291B3B44B800328837 /* MobilyStore-Framework */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		4080D2381B3B44B800328837 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4096BC1F1B20230E0048B07E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1063,6 +1171,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4080D1CA1B3B44AB00328837 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4080D2491B3B454200328837 /* MobilyStoreManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4080D22A1B3B44B800328837 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4080D24A1B3B454200328837 /* MobilyStoreManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4096BC1C1B20230E0048B07E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1284,6 +1408,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		4080D23F1B3B44E500328837 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 40B75EBC1ADF9EE500F0CB09 /* MobilyCore-Library */;
+			targetProxy = 4080D23E1B3B44E500328837 /* PBXContainerItemProxy */;
+		};
+		4080D2431B3B44F300328837 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4096BC201B20230E0048B07E /* MobilyCore-Framework */;
+			targetProxy = 4080D2421B3B44F300328837 /* PBXContainerItemProxy */;
+		};
 		40B7601A1ADFA05000F0CB09 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 40B75EBC1ADF9EE500F0CB09 /* MobilyCore-Library */;
@@ -1292,6 +1426,64 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		4080D2261B3B44AB00328837 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "MobilyStore-Library";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		4080D2271B3B44AB00328837 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "MobilyStore-Library";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		4080D23A1B3B44B800328837 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = Support/MobilyStore.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "MobilyStore-Framework";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		4080D23B1B3B44B800328837 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Support/MobilyStore.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "MobilyStore-Framework";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		4096BC351B20230F0048B07E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1514,6 +1706,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4080D2251B3B44AB00328837 /* Build configuration list for PBXNativeTarget "MobilyStore-Library" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4080D2261B3B44AB00328837 /* Debug */,
+				4080D2271B3B44AB00328837 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4080D2391B3B44B800328837 /* Build configuration list for PBXNativeTarget "MobilyStore-Framework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4080D23A1B3B44B800328837 /* Debug */,
+				4080D23B1B3B44B800328837 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		4096BC341B20230F0048B07E /* Build configuration list for PBXNativeTarget "MobilyCore-Framework" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
