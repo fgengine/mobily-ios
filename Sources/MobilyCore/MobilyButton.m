@@ -628,6 +628,7 @@
             case MobilyButtonImageAlignmentBottom: CGRectDivide(contentRect, &imageRect, &titleRect, imageSize.height, CGRectMaxYEdge); break;
         }
         imageRect = UIEdgeInsetsInsetRect(imageRect, self.imageEdgeInsets);
+        imageRect = CGRectMakeCenterPoint(CGRectGetLeftPoint(imageRect), imageSize.width, imageSize.height);
         
         result = imageRect;
     } else {
