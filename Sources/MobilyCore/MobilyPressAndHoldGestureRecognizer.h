@@ -33,39 +33,14 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import <MobilyCore/MobilyBuilder.h>
-#import <MobilyCore/MobilyValidatedObject.h>
+#import <MobilyCore/MobilyUI.h>
 
 /*--------------------------------------------------*/
 
-@interface MobilyTextField : UITextField< MobilyBuilderObject, MobilyValidatedObject >
+@interface MobilyPressAndHoldGestureRecognizer : UILongPressGestureRecognizer
 
-@property(nonatomic, readwrite, strong) IBOutlet id<MobilyFieldValidator> validator;
-
-@property(nonatomic, readwrite, assign) IBInspectable BOOL hiddenToolbar;
-@property(nonatomic, readwrite, assign) IBInspectable BOOL hiddenToolbarArrows;
-@property(nonatomic, readwrite, strong) UIToolbar* toolbar;
-@property(nonatomic, readwrite, strong) UIBarButtonItem* prevButton;
-@property(nonatomic, readwrite, strong) UIBarButtonItem* nextButton;
-@property(nonatomic, readwrite, strong) UIBarButtonItem* flexButton;
-@property(nonatomic, readwrite, strong) UIBarButtonItem* doneButton;
-
-@property(nonatomic, readwrite, strong) NSString* phonePrefix;
-@property(nonatomic, readwrite, strong) NSString* phoneFormat;
-
-- (void)setup NS_REQUIRES_SUPER;
-
-- (void)setHiddenToolbar:(BOOL)hiddenToolbar animated:(BOOL)animated;
-- (void)setPhoneFormat:(NSString *)phoneFormat withPrefix:(NSString*)phonePrefix;
-
-- (void)didBeginEditing;
-- (void)didEndEditing;
-- (void)didValueChanged;
-
-- (void)validate;
-
-- (BOOL)isEmptyText;
-- (BOOL)isPhoneComplete;
+@property(nonatomic, readwrite, assign) NSTimeInterval reportInterval;
+@property(nonatomic, readwrite, assign) CGFloat allowableMovementWhenRecognized;
 
 @end
 

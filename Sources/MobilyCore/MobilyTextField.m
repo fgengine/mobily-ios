@@ -302,6 +302,10 @@ const NSString* kPhoneEmptySymbol = @"_";
     return NO;
 }
 
+- (BOOL)isPhoneComplete {
+    return (_formatDigitsCount <= [[self getDigits] count]);
+}
+
 #pragma mark MobilyValidatedObject
 
 - (void)validate {
