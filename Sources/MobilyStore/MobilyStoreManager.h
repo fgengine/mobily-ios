@@ -33,7 +33,7 @@
 /*                                                  */
 /*--------------------------------------------------*/
 
-#import <MobilyCore/MobilyObject.h>
+#import <MobilyCore/MobilyUI.h>
 #import <StoreKit/StoreKit.h>
 
 /*--------------------------------------------------*/
@@ -91,6 +91,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 
 @property(nonatomic, readonly, strong) SKProduct* product;
 @property(nonatomic, readonly, strong) SKPaymentTransaction* transaction;
+@property(nonatomic, readonly, strong) NSData* transactionReceipt;
 
 - (void)finish;
 
@@ -101,6 +102,14 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface SKProduct (MobilyStore)
 
 @property(nonatomic, readonly, strong) NSString* priceAsString;
+
+@end
+
+/*--------------------------------------------------*/
+
+@interface SKPaymentTransaction (MobilyStore)
+
+@property(nonatomic, readonly, strong) NSData* receipt;
 
 @end
 

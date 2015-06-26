@@ -312,6 +312,12 @@
     return self;
 }
 
+#pragma mark Property
+
+- (NSData*)transactionReceipt {
+    return _transaction.receipt;
+}
+
 #pragma mark Private
 
 - (void)_updateTransaction:(SKPaymentTransaction*)transaction {
@@ -343,6 +349,26 @@
     formatter.numberStyle = NSNumberFormatterCurrencyStyle;
     formatter.locale = self.priceLocale;
     return [formatter stringFromNumber:self.price];
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation SKPaymentTransaction (MobilyStore)
+
+- (NSData*)receipt {
+    if(UIDevice.systemVersion >= 7.0) {
+        NSData* base64 = [NSData dataWithContentsOfURL:NSBundle.mainBundle.appStoreReceiptURL];
+        NSString* receipt = [base64 base64EncodedStringWithOptions:kNilOptions];
+        return [receipt dataUsingEncoding:NSUTF8StringEncoding];
+    }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    return self.transactionReceipt;
+#pragma clang diagnostic pop
 }
 
 @end
