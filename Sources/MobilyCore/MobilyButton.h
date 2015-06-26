@@ -77,6 +77,8 @@ typedef NS_ENUM(NSInteger, MobilyButtonImageAlignment) {
 @property(nonatomic, readwrite, assign) IBInspectable BOOL imageWrap;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat imageWrapValue;
 
+@property(nonatomic, readonly, strong) UIFont* currentFont;
+
 - (void)setup NS_REQUIRES_SUPER;
 
 @end
