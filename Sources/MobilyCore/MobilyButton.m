@@ -78,9 +78,6 @@
 
 - (void)setup {
     [self _updateCurrentState];
-    
-    self.titleLabel.backgroundColor = UIColor.redColor;
-    self.imageView.backgroundColor = UIColor.yellowColor;
 }
 
 #pragma mark MobilyBuilderObject
