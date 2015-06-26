@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4002F3B31B3D425E00961E90 /* MobilyPressAndHoldGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4002F3B11B3D425E00961E90 /* MobilyPressAndHoldGestureRecognizer.h */; };
+		4002F3B41B3D425E00961E90 /* MobilyPressAndHoldGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4002F3B21B3D425E00961E90 /* MobilyPressAndHoldGestureRecognizer.m */; };
+		4002F3B51B3D425E00961E90 /* MobilyPressAndHoldGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4002F3B21B3D425E00961E90 /* MobilyPressAndHoldGestureRecognizer.m */; };
 		4005C0881B1E13E4009A2185 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4005C07F1B1E13E3009A2185 /* FBSDKCoreKit.framework */; };
 		4005C0891B1E13E4009A2185 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4005C0801B1E13E3009A2185 /* FBSDKLoginKit.framework */; };
 		4005C08C1B1E13E4009A2185 /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4005C0831B1E13E4009A2185 /* TwitterCore.framework */; };
@@ -328,6 +331,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4002F3B11B3D425E00961E90 /* MobilyPressAndHoldGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyPressAndHoldGestureRecognizer.h; sourceTree = "<group>"; };
+		4002F3B21B3D425E00961E90 /* MobilyPressAndHoldGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyPressAndHoldGestureRecognizer.m; sourceTree = "<group>"; };
 		4005C07D1B1E13E3009A2185 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		4005C07E1B1E13E3009A2185 /* FBAudienceNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBAudienceNetwork.framework; sourceTree = "<group>"; };
 		4005C07F1B1E13E3009A2185 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
@@ -737,6 +742,8 @@
 				4096BCDB1B2024DA0048B07E /* MobilyPageController.m */,
 				4096BCDC1B2024DA0048B07E /* MobilyPopoverController.h */,
 				4096BCDD1B2024DA0048B07E /* MobilyPopoverController.m */,
+				4002F3B11B3D425E00961E90 /* MobilyPressAndHoldGestureRecognizer.h */,
+				4002F3B21B3D425E00961E90 /* MobilyPressAndHoldGestureRecognizer.m */,
 				4096BCDE1B2024DA0048B07E /* MobilyRegExpParser.h */,
 				4096BCDF1B2024DA0048B07E /* MobilyRegExpParser.m */,
 				4096BCE01B2024DA0048B07E /* MobilyScrollView.h */,
@@ -902,6 +909,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4002F3B31B3D425E00961E90 /* MobilyPressAndHoldGestureRecognizer.h in Headers */,
 				4096BD2A1B2024DA0048B07E /* MobilyAudioPlayer.h in Headers */,
 				4096BD881B2024DA0048B07E /* MobilyGrid.h in Headers */,
 				4096BDA81B2024DA0048B07E /* MobilyModelJson.h in Headers */,
@@ -1263,6 +1271,7 @@
 				4096BD621B2024DA0048B07E /* MobilyDataContainerItemsList.m in Sources */,
 				4096BD381B2024DA0048B07E /* MobilyBuilderPreset.m in Sources */,
 				4096BD801B2024DA0048B07E /* MobilyEvent.m in Sources */,
+				4002F3B51B3D425E00961E90 /* MobilyPressAndHoldGestureRecognizer.m in Sources */,
 				4096BDDA1B2024DA0048B07E /* MobilySpinnerViewCircleFlip.m in Sources */,
 				4096BD581B2024DA0048B07E /* MobilyDataContainerCalendar.m in Sources */,
 				4096BD3E1B2024DA0048B07E /* MobilyCA.m in Sources */,
@@ -1372,6 +1381,7 @@
 				4096BD611B2024DA0048B07E /* MobilyDataContainerItemsList.m in Sources */,
 				4096BD371B2024DA0048B07E /* MobilyBuilderPreset.m in Sources */,
 				4096BD7F1B2024DA0048B07E /* MobilyEvent.m in Sources */,
+				4002F3B41B3D425E00961E90 /* MobilyPressAndHoldGestureRecognizer.m in Sources */,
 				4096BDD91B2024DA0048B07E /* MobilySpinnerViewCircleFlip.m in Sources */,
 				4096BD571B2024DA0048B07E /* MobilyDataContainerCalendar.m in Sources */,
 				4096BD3D1B2024DA0048B07E /* MobilyCA.m in Sources */,

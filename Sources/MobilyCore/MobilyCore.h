@@ -90,5 +90,6 @@
 #import <MobilyCore/MobilyAudioPlayer.h>
 #import <MobilyCore/MobilyGeoLocationManager.h>
 #import <MobilyCore/MobilySharedManager.h>
+#import <MobilyCore/MobilyPressAndHoldGestureRecognizer.h>
 
 /*--------------------------------------------------*/
