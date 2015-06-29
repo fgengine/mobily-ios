@@ -1198,9 +1198,9 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-1"]];
                 break;
             default:
+                [nibNames addObject:modelBaseName];
                 break;
         }
-        [nibNames addObject:modelBaseName];
     }
     [nibNames addObject:baseName];
     
@@ -2908,18 +2908,26 @@ static MobilyDeviceModel Mobily_DeviceModel = MobilyDeviceModelUnknown;
     static MobilyDeviceDisplay displayType = MobilyDeviceDisplayUnknown;
     if(displayType == MobilyDeviceDisplayUnknown) {
         CGRect screenRect = UIScreen.mainScreen.bounds;
-        CGFloat screenWidth = screenRect.size.width;
-        CGFloat screenHeight = screenRect.size.height;
-        if(((screenWidth == 768) && (screenHeight == 1024)) || ((screenWidth == 1024) && (screenHeight == 768))) {
-            displayType = MobilyDeviceDisplayPad;
-        } else if(((screenWidth == 320) && (screenHeight == 480)) || ((screenWidth == 480) && (screenHeight == 320))) {
-            displayType = MobilyDeviceDisplayPhone35Inch;
-        } else if(((screenWidth == 320) && (screenHeight == 568)) || ((screenWidth == 568) && (screenHeight == 320))) {
-            displayType = MobilyDeviceDisplayPhone4Inch;
-        } else if(((screenWidth == 375) && (screenHeight == 667)) || ((screenWidth == 667) && (screenHeight == 375))) {
-            displayType = MobilyDeviceDisplayPhone47Inch;
-        } else if(((screenWidth == 414) && (screenHeight == 736)) || ((screenWidth == 736) && (screenHeight == 414))) {
-            displayType = MobilyDeviceDisplayPhone55Inch;
+        CGFloat screenWidth = MAX(screenRect.size.width, screenRect.size.height);
+        CGFloat screenHeight = MIN(screenRect.size.width, screenRect.size.height);
+        switch(UI_USER_INTERFACE_IDIOM()) {
+            case UIUserInterfaceIdiomPhone:
+                if((screenWidth >= 736) && (screenHeight >= 414)) {
+                    displayType = MobilyDeviceDisplayPhone55Inch;
+                } else if((screenWidth >= 667) && (screenHeight >= 375)) {
+                    displayType = MobilyDeviceDisplayPhone47Inch;
+                } else if((screenWidth >= 568) && (screenHeight >= 320)) {
+                    displayType = MobilyDeviceDisplayPhone4Inch;
+                } else if((screenWidth >= 480) && (screenHeight >= 320)) {
+                    displayType = MobilyDeviceDisplayPhone35Inch;
+                }
+                break;
+            case UIUserInterfaceIdiomPad:
+                if((screenWidth >= 1024) && (screenHeight >= 768)) {
+                    displayType = MobilyDeviceDisplayPad;
+                }
+                break;
+            default: break;
         }
     }
     return displayType;
