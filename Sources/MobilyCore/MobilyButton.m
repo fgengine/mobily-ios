@@ -77,10 +77,8 @@
 }
 
 - (void)setup {
-    self.titleLabel.translatesAutoresizingMaskIntoConstraints = YES;
-    self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
-    self.imageView.translatesAutoresizingMaskIntoConstraints = YES;
-    self.imageView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+    self.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    self.imageView.contentMode = UIViewContentModeCenter;
     
     [self _updateCurrentState];
 }
@@ -128,6 +126,7 @@
     if(self.enabled != enabled) {
         super.enabled = enabled;
         [self _updateCurrentState];
+        [self setNeedsLayout];
     }
 }
 
@@ -135,6 +134,7 @@
     if(self.selected != selected) {
         super.selected = selected;
         [self _updateCurrentState];
+        [self setNeedsLayout];
     }
 }
 
@@ -142,6 +142,7 @@
     if(self.highlighted != highlighted) {
         super.highlighted = highlighted;
         [self _updateCurrentState];
+        [self setNeedsLayout];
     }
 }
 
