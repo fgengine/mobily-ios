@@ -163,35 +163,41 @@
 #pragma mark Private
 
 - (void)_showAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataRefreshViewCompleteBlock)complete {
-    self.state = MobilyDataRefreshViewStateLoading;
-    
-    UIEdgeInsets refreshViewInsets = _view.refreshViewInsets;
-    CGPoint contentOffset = _view.contentOffset;
-    switch(_type) {
-        case MobilyDataRefreshViewTypeTop: refreshViewInsets.top = _size; refreshViewInsets.bottom = -_size; break;
-        case MobilyDataRefreshViewTypeBottom: refreshViewInsets.top = -_size; refreshViewInsets.bottom = _size; break;
-        case MobilyDataRefreshViewTypeLeft: refreshViewInsets.left = _size; refreshViewInsets.right = -_size; break;
-        case MobilyDataRefreshViewTypeRight: refreshViewInsets.left = -_size; refreshViewInsets.right = _size; break;
-    }
-    _constraintOffset.constant = 0.0f;
-    _constraintSize.constant = _size;
-    if(animated == YES) {
-        [UIView animateWithDuration:ABS(_size - _constraintSize.constant) / ABS(velocity)
-                              delay:0.01f
-                            options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
-                         animations:^{
-                             _view.refreshViewInsets = refreshViewInsets;
-                             _view.contentOffset = contentOffset;
-                             [self.superview layoutIfNeeded];
-                         }
-                         completion:^(BOOL finished) {
-                             if(complete != nil) {
-                                 complete(finished);
+    if(_state != MobilyDataRefreshViewStateLoading) {
+        self.state = MobilyDataRefreshViewStateLoading;
+        
+        UIEdgeInsets refreshViewInsets = _view.refreshViewInsets;
+        CGPoint contentOffset = _view.contentOffset;
+        switch(_type) {
+            case MobilyDataRefreshViewTypeTop: refreshViewInsets.top = _size; refreshViewInsets.bottom = -_size; break;
+            case MobilyDataRefreshViewTypeBottom: refreshViewInsets.top = -_size; refreshViewInsets.bottom = _size; break;
+            case MobilyDataRefreshViewTypeLeft: refreshViewInsets.left = _size; refreshViewInsets.right = -_size; break;
+            case MobilyDataRefreshViewTypeRight: refreshViewInsets.left = -_size; refreshViewInsets.right = _size; break;
+        }
+        _constraintOffset.constant = 0.0f;
+        _constraintSize.constant = _size;
+        if(animated == YES) {
+            [UIView animateWithDuration:ABS(_size - _constraintSize.constant) / ABS(velocity)
+                                  delay:0.01f
+                                options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
+                             animations:^{
+                                 _view.refreshViewInsets = refreshViewInsets;
+                                 _view.contentOffset = contentOffset;
+                                 [self.superview layoutIfNeeded];
                              }
-                         }];
+                             completion:^(BOOL finished) {
+                                 if(complete != nil) {
+                                     complete(finished);
+                                 }
+                             }];
+        } else {
+            _view.refreshViewInsets = refreshViewInsets;
+            _view.contentOffset = contentOffset;
+            if(complete != nil) {
+                complete(YES);
+            }
+        }
     } else {
-        _view.refreshViewInsets = refreshViewInsets;
-        _view.contentOffset = contentOffset;
         if(complete != nil) {
             complete(YES);
         }
@@ -199,45 +205,51 @@
 }
 
 - (void)_hideAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataRefreshViewCompleteBlock)complete {
-    UIEdgeInsets refreshViewInsets = _view.refreshViewInsets;
-    CGPoint contentOffset = _view.contentOffset;
-    switch(_type) {
-        case MobilyDataRefreshViewTypeTop: refreshViewInsets.top = 0.0f; refreshViewInsets.bottom = 0.0f; break;
-        case MobilyDataRefreshViewTypeBottom: refreshViewInsets.top = 0.0f; refreshViewInsets.bottom = 0.0f; break;
-        case MobilyDataRefreshViewTypeLeft: refreshViewInsets.left = 0.0f; refreshViewInsets.right = 0.0f; break;
-        case MobilyDataRefreshViewTypeRight: refreshViewInsets.left = 0.0f; refreshViewInsets.right = 0.0f; break;
-    }
-    switch(_type) {
-        case MobilyDataRefreshViewTypeTop:
-        case MobilyDataRefreshViewTypeLeft:
-            _constraintOffset.constant = -_size;
-            _constraintSize.constant = _size;
-            break;
-        case MobilyDataRefreshViewTypeBottom:
-        case MobilyDataRefreshViewTypeRight:
-            _constraintOffset.constant = _size;
-            _constraintSize.constant = _size;
-            break;
-    }
-    if(animated == YES) {
-        [UIView animateWithDuration:_size / ABS(velocity)
-                              delay:0.01f
-                            options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
-                         animations:^{
-                             _view.refreshViewInsets = refreshViewInsets;
-                             _view.contentOffset = contentOffset;
-                             [self.superview layoutIfNeeded];
-                         }
-                         completion:^(BOOL finished) {
-                             self.state = MobilyDataRefreshViewStateIdle;
-                             if(complete != nil) {
-                                 complete(finished);
+    if(_state != MobilyDataRefreshViewStateIdle) {
+        UIEdgeInsets refreshViewInsets = _view.refreshViewInsets;
+        CGPoint contentOffset = _view.contentOffset;
+        switch(_type) {
+            case MobilyDataRefreshViewTypeTop: refreshViewInsets.top = 0.0f; refreshViewInsets.bottom = 0.0f; break;
+            case MobilyDataRefreshViewTypeBottom: refreshViewInsets.top = 0.0f; refreshViewInsets.bottom = 0.0f; break;
+            case MobilyDataRefreshViewTypeLeft: refreshViewInsets.left = 0.0f; refreshViewInsets.right = 0.0f; break;
+            case MobilyDataRefreshViewTypeRight: refreshViewInsets.left = 0.0f; refreshViewInsets.right = 0.0f; break;
+        }
+        switch(_type) {
+            case MobilyDataRefreshViewTypeTop:
+            case MobilyDataRefreshViewTypeLeft:
+                _constraintOffset.constant = -_size;
+                _constraintSize.constant = _size;
+                break;
+            case MobilyDataRefreshViewTypeBottom:
+            case MobilyDataRefreshViewTypeRight:
+                _constraintOffset.constant = _size;
+                _constraintSize.constant = _size;
+                break;
+        }
+        if(animated == YES) {
+            [UIView animateWithDuration:_size / ABS(velocity)
+                                  delay:0.01f
+                                options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
+                             animations:^{
+                                 _view.refreshViewInsets = refreshViewInsets;
+                                 _view.contentOffset = contentOffset;
+                                 [self.superview layoutIfNeeded];
                              }
-                         }];
+                             completion:^(BOOL finished) {
+                                 self.state = MobilyDataRefreshViewStateIdle;
+                                 if(complete != nil) {
+                                     complete(finished);
+                                 }
+                             }];
+        } else {
+            self.state = MobilyDataRefreshViewStateIdle;
+            _view.refreshViewInsets = refreshViewInsets;
+            _view.contentOffset = contentOffset;
+            if(complete != nil) {
+                complete(YES);
+            }
+        }
     } else {
-        self.state = MobilyDataRefreshViewStateIdle;
-        _view.refreshViewInsets = refreshViewInsets;
-        _view.contentOffset = contentOffset;
         if(complete != nil) {
             complete(YES);
         }
