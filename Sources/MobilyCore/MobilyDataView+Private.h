@@ -125,9 +125,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
     __weak NSLayoutConstraint* _constraintRightRefreshRight;
     __weak NSLayoutConstraint* _constraintRightRefreshSize;
     UIEdgeInsets _refreshViewInsets;
-    BOOL _searchBarDragging;
     BOOL _canDraggingSearchBar;
-    BOOL _refreshDragging;
     BOOL _canDraggingTopRefresh;
     BOOL _canDraggingBottomRefresh;
     BOOL _canDraggingLeftRefresh;
@@ -175,9 +173,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataViewDirection) {
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintRightRefreshRight;
 @property(nonatomic, readwrite, weak) NSLayoutConstraint* constraintRightRefreshSize;
 
-@property(nonatomic, readwrite, assign, getter=isSearchBarDragging) BOOL searchBarDragging;
 @property(nonatomic, readwrite, assign) BOOL canDraggingSearchBar;
-@property(nonatomic, readwrite, assign, getter=isRefreshDragging) BOOL refreshDragging;
 @property(nonatomic, readwrite, assign) BOOL canDraggingTopRefresh;
 @property(nonatomic, readwrite, assign) BOOL canDraggingBottomRefresh;
 @property(nonatomic, readwrite, assign) BOOL canDraggingLeftRefresh;

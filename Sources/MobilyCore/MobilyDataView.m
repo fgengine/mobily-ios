@@ -114,9 +114,7 @@
 @synthesize constraintRightRefreshBottom = _constraintRightRefreshBottom;
 @synthesize constraintRightRefreshRight = _constraintRightRefreshRight;
 @synthesize constraintRightRefreshSize = _constraintRightRefreshSize;
-@synthesize searchBarDragging = _searchBarDragging;
 @synthesize canDraggingSearchBar = _canDraggingSearchBar;
-@synthesize refreshDragging = _refreshDragging;
 @synthesize canDraggingTopRefresh = _canDraggingTopRefresh;
 @synthesize canDraggingBottomRefresh = _canDraggingBottomRefresh;
 @synthesize canDraggingLeftRefresh = _canDraggingLeftRefresh;
@@ -1402,7 +1400,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         self.scrollDirection = MobilyDataViewDirectionUnknown;
     }
     if(self.pagingEnabled == NO) {
-        if((_searchBarDragging == NO) && (_canDraggingSearchBar == NO)) {
+        if(_canDraggingSearchBar == NO) {
             if((_searchBar != nil) && (_searchBarIteractionEnabled == YES)) {
                 switch(_searchBarStyle) {
                     case MobilyDataViewSearchBarStyleStatic:
@@ -1425,9 +1423,8 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     }
                 }
             }
-            self.searchBarDragging = (_canDraggingSearchBar == YES);
         }
-        if((_refreshDragging == NO) && (_canDraggingTopRefresh == NO) && (_canDraggingBottomRefresh == NO) && (_canDraggingLeftRefresh == NO) && (_canDraggingRightRefresh == NO)) {
+        if((_canDraggingTopRefresh == NO) && (_canDraggingBottomRefresh == NO) && (_canDraggingLeftRefresh == NO) && (_canDraggingRightRefresh == NO)) {
             if((_topRefreshView != nil) && (_topRefreshIteractionEnabled == YES)) {
                 switch(_topRefreshView.state) {
                     case MobilyDataRefreshViewStateIdle: self.canDraggingTopRefresh = YES; break;
@@ -1452,7 +1449,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     default: self.canDraggingRightRefresh = NO; break;
                 }
             }
-            self.refreshDragging = ((_canDraggingTopRefresh == YES) || (_canDraggingBottomRefresh == YES) || (_canDraggingLeftRefresh == YES) || (_canDraggingRightRefresh == YES));
         }
     }
     if(_container != nil) {
@@ -1510,33 +1506,31 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     break;
             }
         }
-        if((_searchBarDragging == YES) && (dragging == YES)) {
-            if(_canDraggingSearchBar == YES) {
-                switch(_searchBarStyle) {
-                    case MobilyDataViewSearchBarStyleStatic:
-                        break;
-                    case MobilyDataViewSearchBarStyleInside: {
-                        searchBarInset = MAX(0.0f, MIN(searchBarInset - contentOffset.y, searchBarHeight));
-                        if(_showedSearchBar == YES) {
-                            _constraintSearchBarTop.constant = -(searchBarHeight - searchBarInset);
-                        } else {
-                            _constraintSearchBarTop.constant = searchBarInset;
-                        }
-                        self.searchBarInset = searchBarInset;
-                        break;
+        if((_canDraggingSearchBar == YES) && (dragging == YES)) {
+            switch(_searchBarStyle) {
+                case MobilyDataViewSearchBarStyleStatic:
+                    break;
+                case MobilyDataViewSearchBarStyleInside: {
+                    searchBarInset = MAX(0.0f, MIN(searchBarInset - contentOffset.y, searchBarHeight));
+                    if(_showedSearchBar == YES) {
+                        _constraintSearchBarTop.constant = -(searchBarHeight - searchBarInset);
+                    } else {
+                        _constraintSearchBarTop.constant = searchBarInset;
                     }
-                    case MobilyDataViewSearchBarStyleOverlay: {
-                        CGFloat diff = contentOffset.y - _searchBarOverlayLastPosition;
-                        CGFloat progress = ((_searchBarInset - diff) * 0.5f) / searchBarHeight;
-                        searchBarInset = MAX(0.0f, MIN(searchBarHeight * progress, searchBarHeight));
-                        if(_showedSearchBar == YES) {
-                            _constraintSearchBarTop.constant = -(searchBarHeight - searchBarInset);
-                        } else {
-                            _constraintSearchBarTop.constant = searchBarInset;
-                        }
-                        self.searchBarInset = searchBarInset;
-                        break;
+                    self.searchBarInset = searchBarInset;
+                    break;
+                }
+                case MobilyDataViewSearchBarStyleOverlay: {
+                    CGFloat diff = contentOffset.y - _searchBarOverlayLastPosition;
+                    CGFloat progress = ((_searchBarInset - diff) * 0.5f) / searchBarHeight;
+                    searchBarInset = MAX(0.0f, MIN(searchBarHeight * progress, searchBarHeight));
+                    if(_showedSearchBar == YES) {
+                        _constraintSearchBarTop.constant = -(searchBarHeight - searchBarInset);
+                    } else {
+                        _constraintSearchBarTop.constant = searchBarInset;
                     }
+                    self.searchBarInset = searchBarInset;
+                    break;
                 }
             }
         }
@@ -1547,7 +1541,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 if(contentOffset.y < -inset) {
                     progress = -(contentOffset.y + inset);
                 }
-                if((_refreshDragging == YES) && (_canDraggingTopRefresh == YES) && (dragging == YES)) {
+                if((_canDraggingTopRefresh == YES) && (dragging == YES)) {
                     switch(_topRefreshView.state) {
                         case MobilyDataRefreshViewStateIdle:
                             if(progress > 0.0f) {
@@ -1582,7 +1576,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 if(contentOffset.y > limit) {
                     progress = contentOffset.y - limit;
                 }
-                if((_refreshDragging == YES) && (_canDraggingBottomRefresh == YES) && (dragging == YES)) {
+                if((_canDraggingBottomRefresh == YES) && (dragging == YES)) {
                     switch(_bottomRefreshView.state) {
                         case MobilyDataRefreshViewStateIdle:
                             if(progress > 0.0f) {
@@ -1617,7 +1611,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 if(contentOffset.x < -inset) {
                     progress = -(contentOffset.x + inset);
                 }
-                if((_refreshDragging == YES) && (_canDraggingLeftRefresh == YES) && (dragging == YES)) {
+                if((_canDraggingLeftRefresh == YES) && (dragging == YES)) {
                     switch(_leftRefreshView.state) {
                         case MobilyDataRefreshViewStateIdle:
                             if(progress > 0.0f) {
@@ -1652,7 +1646,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 if(contentOffset.x > limit) {
                     progress = contentOffset.x - limit;
                 }
-                if((_refreshDragging == YES) && (_canDraggingRightRefresh == YES) && (dragging == YES)) {
+                if((_canDraggingRightRefresh == YES) && (dragging == YES)) {
                     switch(_rightRefreshView.state) {
                         case MobilyDataRefreshViewStateIdle:
                             if(progress > 0.0f) {
@@ -1690,148 +1684,142 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 
 - (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize {
     if(self.pagingEnabled == NO) {
-        if(_searchBarDragging == YES) {
-            self.searchBarDragging = NO;
-            if(_canDraggingSearchBar == YES) {
-                CGFloat searchBarHeight = _searchBar.frameHeight;
-                switch(_searchBarStyle) {
-                    case MobilyDataViewSearchBarStyleStatic:
-                        self.canDraggingSearchBar = NO;
-                        break;
-                    case MobilyDataViewSearchBarStyleInside: {
-                        if(_searchBarInset >= (searchBarHeight * 0.33f)) {
-                            contentOffset->y = MAX(-_searchBarInset, contentOffset->y - _searchBarInset);
-                            [self _showSearchBarAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
-                                self.canDraggingSearchBar = NO;
-                            }];
-                        } else {
-                            [self _hideSearchBarAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
-                                self.canDraggingSearchBar = NO;
-                            }];
-                        }
-                        break;
+        if(_canDraggingSearchBar == YES) {
+            CGFloat searchBarHeight = _searchBar.frameHeight;
+            switch(_searchBarStyle) {
+                case MobilyDataViewSearchBarStyleStatic:
+                    self.canDraggingSearchBar = NO;
+                    break;
+                case MobilyDataViewSearchBarStyleInside: {
+                    if(_searchBarInset >= (searchBarHeight * 0.33f)) {
+                        contentOffset->y = MAX(-_searchBarInset, contentOffset->y - _searchBarInset);
+                        [self _showSearchBarAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
+                            self.canDraggingSearchBar = NO;
+                        }];
+                    } else {
+                        [self _hideSearchBarAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
+                            self.canDraggingSearchBar = NO;
+                        }];
                     }
-                    case MobilyDataViewSearchBarStyleOverlay: {
-                        if(_searchBarInset >= (searchBarHeight * 0.33f)) {
-                            contentOffset->y = MAX(-_searchBarInset, contentOffset->y - _searchBarInset);
-                            [self _showSearchBarAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
-                                self.canDraggingSearchBar = NO;
-                            }];
-                        } else {
-                            [self _hideSearchBarAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
-                                self.canDraggingSearchBar = NO;
-                            }];
-                        }
-                        break;
+                    break;
+                }
+                case MobilyDataViewSearchBarStyleOverlay: {
+                    if(_searchBarInset >= (searchBarHeight * 0.33f)) {
+                        contentOffset->y = MAX(-_searchBarInset, contentOffset->y - _searchBarInset);
+                        [self _showSearchBarAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
+                            self.canDraggingSearchBar = NO;
+                        }];
+                    } else {
+                        [self _hideSearchBarAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
+                            self.canDraggingSearchBar = NO;
+                        }];
                     }
+                    break;
                 }
             }
         }
-        if(_refreshDragging == YES) {
-            self.refreshDragging = NO;
-            if(_canDraggingTopRefresh == YES) {
-                switch(_topRefreshView.state) {
-                    case MobilyDataRefreshViewStateRelease: {
-                        if([self containsEventForKey:MobilyDataViewTopRefreshTriggered] == YES) {
-                            [self _showTopRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished __unused) {
-                                [self fireEventForKey:MobilyDataViewTopRefreshTriggered byObject:_topRefreshView];
-                                self.canDraggingTopRefresh = NO;
-                            }];
-                        } else {
-                            [self _hideTopRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
-                                self.canDraggingTopRefresh = NO;
-                            }];
-                        }
-                        break;
-                    }
-                    case MobilyDataRefreshViewStatePull: {
+        if(_canDraggingTopRefresh == YES) {
+            switch(_topRefreshView.state) {
+                case MobilyDataRefreshViewStateRelease: {
+                    if([self containsEventForKey:MobilyDataViewTopRefreshTriggered] == YES) {
+                        [self _showTopRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished __unused) {
+                            [self fireEventForKey:MobilyDataViewTopRefreshTriggered byObject:_topRefreshView];
+                            self.canDraggingTopRefresh = NO;
+                        }];
+                    } else {
                         [self _hideTopRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
                             self.canDraggingTopRefresh = NO;
                         }];
-                        break;
                     }
-                    default:
-                        self.canDraggingTopRefresh = NO;
-                        break;
+                    break;
                 }
+                case MobilyDataRefreshViewStatePull: {
+                    [self _hideTopRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
+                        self.canDraggingTopRefresh = NO;
+                    }];
+                    break;
+                }
+                default:
+                    self.canDraggingTopRefresh = NO;
+                    break;
             }
-            if(_canDraggingBottomRefresh == YES) {
-                switch(_bottomRefreshView.state) {
-                    case MobilyDataRefreshViewStateRelease: {
-                        if([self containsEventForKey:MobilyDataViewBottomRefreshTriggered] == YES) {
-                            [self _showBottomRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished __unused) {
-                                [self fireEventForKey:MobilyDataViewBottomRefreshTriggered byObject:_bottomRefreshView];
-                                self.canDraggingBottomRefresh = NO;
-                            }];
-                        } else {
-                            [self _hideBottomRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
-                                self.canDraggingBottomRefresh = NO;
-                            }];
-                        }
-                        break;
-                    }
-                    case MobilyDataRefreshViewStatePull: {
+        }
+        if(_canDraggingBottomRefresh == YES) {
+            switch(_bottomRefreshView.state) {
+                case MobilyDataRefreshViewStateRelease: {
+                    if([self containsEventForKey:MobilyDataViewBottomRefreshTriggered] == YES) {
+                        [self _showBottomRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished __unused) {
+                            [self fireEventForKey:MobilyDataViewBottomRefreshTriggered byObject:_bottomRefreshView];
+                            self.canDraggingBottomRefresh = NO;
+                        }];
+                    } else {
                         [self _hideBottomRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
                             self.canDraggingBottomRefresh = NO;
                         }];
-                        break;
                     }
-                    default:
-                        self.canDraggingBottomRefresh = NO;
-                        break;
+                    break;
                 }
+                case MobilyDataRefreshViewStatePull: {
+                    [self _hideBottomRefreshAnimated:YES velocity:velocity.y complete:^(BOOL finished) {
+                        self.canDraggingBottomRefresh = NO;
+                    }];
+                    break;
+                }
+                default:
+                    self.canDraggingBottomRefresh = NO;
+                    break;
             }
-            if(_canDraggingLeftRefresh == YES) {
-                switch(_leftRefreshView.state) {
-                    case MobilyDataRefreshViewStateRelease: {
-                        if([self containsEventForKey:MobilyDataViewLeftRefreshTriggered] == YES) {
-                            [self _showLeftRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished __unused) {
-                                [self fireEventForKey:MobilyDataViewLeftRefreshTriggered byObject:_leftRefreshView];
-                                self.canDraggingLeftRefresh = NO;
-                            }];
-                        } else {
-                            [self _hideLeftRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished) {
-                                self.canDraggingLeftRefresh = NO;
-                            }];
-                        }
-                        break;
-                    }
-                    case MobilyDataRefreshViewStatePull: {
+        }
+        if(_canDraggingLeftRefresh == YES) {
+            switch(_leftRefreshView.state) {
+                case MobilyDataRefreshViewStateRelease: {
+                    if([self containsEventForKey:MobilyDataViewLeftRefreshTriggered] == YES) {
+                        [self _showLeftRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished __unused) {
+                            [self fireEventForKey:MobilyDataViewLeftRefreshTriggered byObject:_leftRefreshView];
+                            self.canDraggingLeftRefresh = NO;
+                        }];
+                    } else {
                         [self _hideLeftRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished) {
                             self.canDraggingLeftRefresh = NO;
                         }];
-                        break;
                     }
-                    default:
-                        self.canDraggingLeftRefresh = NO;
-                        break;
+                    break;
                 }
+                case MobilyDataRefreshViewStatePull: {
+                    [self _hideLeftRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished) {
+                        self.canDraggingLeftRefresh = NO;
+                    }];
+                    break;
+                }
+                default:
+                    self.canDraggingLeftRefresh = NO;
+                    break;
             }
-            if(_canDraggingRightRefresh == YES) {
-                switch(_rightRefreshView.state) {
-                    case MobilyDataRefreshViewStateRelease: {
-                        if([self containsEventForKey:MobilyDataViewRightRefreshTriggered] == YES) {
-                            [self _showRightRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished __unused) {
-                                [self fireEventForKey:MobilyDataViewRightRefreshTriggered byObject:_rightRefreshView];
-                                self.canDraggingRightRefresh = NO;
-                            }];
-                        } else {
-                            [self _hideRightRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished) {
-                                self.canDraggingRightRefresh = NO;
-                            }];
-                        }
-                        break;
-                    }
-                    case MobilyDataRefreshViewStatePull: {
+        }
+        if(_canDraggingRightRefresh == YES) {
+            switch(_rightRefreshView.state) {
+                case MobilyDataRefreshViewStateRelease: {
+                    if([self containsEventForKey:MobilyDataViewRightRefreshTriggered] == YES) {
+                        [self _showRightRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished __unused) {
+                            [self fireEventForKey:MobilyDataViewRightRefreshTriggered byObject:_rightRefreshView];
+                            self.canDraggingRightRefresh = NO;
+                        }];
+                    } else {
                         [self _hideRightRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished) {
                             self.canDraggingRightRefresh = NO;
                         }];
-                        break;
                     }
-                    default:
-                        self.canDraggingRightRefresh = NO;
-                        break;
+                    break;
                 }
+                case MobilyDataRefreshViewStatePull: {
+                    [self _hideRightRefreshAnimated:YES velocity:velocity.x complete:^(BOOL finished) {
+                        self.canDraggingRightRefresh = NO;
+                    }];
+                    break;
+                }
+                default:
+                    self.canDraggingRightRefresh = NO;
+                    break;
             }
         }
     }

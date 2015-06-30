@@ -206,6 +206,8 @@
 
 - (void)_hideAnimated:(BOOL)animated velocity:(CGFloat)velocity complete:(MobilyDataRefreshViewCompleteBlock)complete {
     if(_state != MobilyDataRefreshViewStateIdle) {
+        self.state = MobilyDataRefreshViewStateIdle;
+        
         UIEdgeInsets refreshViewInsets = _view.refreshViewInsets;
         CGPoint contentOffset = _view.contentOffset;
         switch(_type) {
@@ -228,7 +230,7 @@
         }
         if(animated == YES) {
             [UIView animateWithDuration:_size / ABS(velocity)
-                                  delay:0.01f
+                                  delay:0.00f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
                                  _view.refreshViewInsets = refreshViewInsets;
@@ -236,13 +238,11 @@
                                  [self.superview layoutIfNeeded];
                              }
                              completion:^(BOOL finished) {
-                                 self.state = MobilyDataRefreshViewStateIdle;
                                  if(complete != nil) {
                                      complete(finished);
                                  }
                              }];
         } else {
-            self.state = MobilyDataRefreshViewStateIdle;
             _view.refreshViewInsets = refreshViewInsets;
             _view.contentOffset = contentOffset;
             if(complete != nil) {
