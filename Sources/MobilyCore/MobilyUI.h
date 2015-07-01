@@ -135,6 +135,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 + (UIColor*)colorWithString:(NSString*)string;
 + (CGFloat)colorComponentFromString:(NSString*)string start:(NSUInteger)start length:(NSUInteger)length;
 
+- (UIColor*)multiplyColor:(UIColor*)color percent:(CGFloat)percent;
 - (UIColor*)multiplyBrightness:(CGFloat)brightness;
 
 -(MobilyColorHSB)hsb;

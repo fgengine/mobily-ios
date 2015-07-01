@@ -143,7 +143,9 @@ typedef NS_ENUM(NSUInteger, MobilyDataCellSwipeDirection) {
 
 - (UIOffset)_rootViewOffsetOfCenterBySwipeProgress:(CGFloat)swipeProgress;
 - (CGFloat)_leftViewOffsetBySwipeProgress:(CGFloat)swipeProgress;
+- (CGFloat)_leftViewSizeBySwipeProgress:(CGFloat)swipeProgress;
 - (CGFloat)_rightViewOffsetBySwipeProgress:(CGFloat)swipeProgress;
+- (CGFloat)_rightViewSizeBySwipeProgress:(CGFloat)swipeProgress;
 
 - (void)_updateSwipeProgress:(CGFloat)swipeProgress speed:(CGFloat)speed endedSwipe:(BOOL)endedSwipe;
 

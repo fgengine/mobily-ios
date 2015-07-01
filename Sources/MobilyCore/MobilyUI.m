@@ -679,6 +679,17 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     return ((CGFloat)result / 255.0f);
 }
 
+- (UIColor*)multiplyColor:(UIColor*)color percent:(CGFloat)percent {
+    CGFloat r1, g1, b1, a1;
+    CGFloat r2, g2, b2, a2;
+    [self getRed:&r1 green:&g1 blue:&b1 alpha:&a1];
+    [color getRed:&r2 green:&g2 blue:&b2 alpha:&a2];
+    return [UIColor colorWithRed:(r2 * percent) + (r1 * (1.0 - percent))
+                           green:(g2 * percent) + (g1 * (1.0 - percent))
+                            blue:(b2 * percent) + (b1 * (1.0 - percent))
+                           alpha:(a2 * percent) + (a1 * (1.0 - percent))];
+}
+
 - (UIColor*)multiplyBrightness:(CGFloat)brightness {
     CGFloat h, s, b, a;
     [self getHue:&h saturation:&s brightness:&b alpha:&a];

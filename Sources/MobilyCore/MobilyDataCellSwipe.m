@@ -157,7 +157,8 @@
 - (NSArray*)orderedSubviews {
     NSMutableArray* result = NSMutableArray.array;
     switch(_swipeStyle) {
-        case MobilyDataSwipeCellStyleStands: {
+        case MobilyDataSwipeCellStyleStands:
+        case MobilyDataSwipeCellStyleStretch: {
             if(_leftSwipeView != nil) {
                 [result addObject:_leftSwipeView];
             }
@@ -403,14 +404,20 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
 - (UIOffset)_rootViewOffsetOfCenterBySwipeProgress:(CGFloat)swipeProgress {
     switch(_swipeStyle) {
         case MobilyDataSwipeCellStyleStands:
-        case MobilyDataSwipeCellStyleLeaves: {
+        case MobilyDataSwipeCellStyleLeaves:
             if(swipeProgress < 0.0f) {
-                return UIOffsetMake(_leftSwipeView.frameWidth * (-swipeProgress), 0.0f);
+                return UIOffsetMake(_leftSwipeView.frameWidth * -swipeProgress, 0.0f);
             } else if(swipeProgress > 0.0f) {
-                return UIOffsetMake((-_rightSwipeView.frameWidth) * swipeProgress, 0.0f);
+                return UIOffsetMake(-_rightSwipeView.frameWidth * swipeProgress, 0.0f);
             }
             break;
-        }
+        case MobilyDataSwipeCellStyleStretch:
+            if(swipeProgress < 0.0f) {
+                return UIOffsetMake(_rootView.frameWidth * -swipeProgress, 0.0f);
+            } else if(swipeProgress > 0.0f) {
+                return UIOffsetMake(-_rootView.frameWidth * swipeProgress, 0.0f);
+            }
+            break;
         case MobilyDataSwipeCellStylePushes:
             break;
     }
@@ -418,33 +425,63 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
 }
 
 - (CGFloat)_leftViewOffsetBySwipeProgress:(CGFloat)swipeProgress {
-    CGFloat leftSwipeWidth = _leftSwipeView.frameWidth;
+    CGFloat leftWidth = _leftSwipeView.frameWidth;
     switch(_swipeStyle) {
         case MobilyDataSwipeCellStyleStands:
             return 0.0f;
         case MobilyDataSwipeCellStyleLeaves:
         case MobilyDataSwipeCellStylePushes:
             if(swipeProgress < 0.0f) {
-                return -leftSwipeWidth + (leftSwipeWidth * (-swipeProgress));
+                return -leftWidth + (leftWidth * (-swipeProgress));
             }
             break;
+        case MobilyDataSwipeCellStyleStretch:
+            return 0.0f;
     }
-    return -leftSwipeWidth;
+    return -leftWidth;
+}
+
+- (CGFloat)_leftViewSizeBySwipeProgress:(CGFloat)swipeProgress {
+    switch(_swipeStyle) {
+        case MobilyDataSwipeCellStyleStretch:
+            if(swipeProgress < 0.0f) {
+                return _rootView.frameWidth * -swipeProgress;
+            }
+            return 0.0f;
+        default:
+            break;
+    }
+    return -1.0f;
 }
 
 - (CGFloat)_rightViewOffsetBySwipeProgress:(CGFloat)swipeProgress {
-    CGFloat rightSwipeWidth = _rightSwipeView.frameWidth;
+    CGFloat rigthWidth = _rightSwipeView.frameWidth;
     switch(_swipeStyle) {
         case MobilyDataSwipeCellStyleStands:
             return 0.0f;
         case MobilyDataSwipeCellStyleLeaves:
         case MobilyDataSwipeCellStylePushes:
             if(swipeProgress > 0.0f) {
-                return rightSwipeWidth * (1.0f - swipeProgress);
+                return rigthWidth * (1.0f - swipeProgress);
             }
             break;
+        case MobilyDataSwipeCellStyleStretch:
+            return 0.0f;
     }
-    return rightSwipeWidth;
+    return rigthWidth;
+}
+
+- (CGFloat)_rightViewSizeBySwipeProgress:(CGFloat)swipeProgress {
+    switch(_swipeStyle) {
+        case MobilyDataSwipeCellStyleStretch:
+            if(swipeProgress > 0.0f) {
+                return _rootView.frameWidth * swipeProgress;
+            }
+            return 0.0f;
+        default:
+            break;
+    }
+    return -1.0f;
 }
 
 - (void)_updateSwipeProgress:(CGFloat)swipeProgress speed:(CGFloat)speed endedSwipe:(BOOL)endedSwipe {
@@ -455,11 +492,14 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
         _panSwipeProgress = normalizedSwipeProgress;
         self.rootOffsetOfCenter = [self _rootViewOffsetOfCenterBySwipeProgress:_panSwipeProgress];
         self.leftSwipeOffset = [self _leftViewOffsetBySwipeProgress:_panSwipeProgress];
+        self.leftSwipeSize = [self _leftViewSizeBySwipeProgress:_panSwipeProgress];
         self.rightSwipeOffset = [self _rightViewOffsetBySwipeProgress:_panSwipeProgress];
+        self.rightSwipeSize = [self _rightViewSizeBySwipeProgress:_panSwipeProgress];
         [self setNeedsUpdateConstraints];
         
         [UIView animateWithDuration:ABS(speed) / _swipeSpeed
                          animations:^{
+                             [self movingSwipe:_panSwipeProgress];
                              [self layoutIfNeeded];
                          } completion:^(BOOL finished __unused) {
                              if(endedSwipe == YES) {
@@ -482,8 +522,18 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
                 [self willBeganSwipe];
                 self.panSwipeLastOffset = translation.x;
                 self.panSwipeLastVelocity = velocity.x;
-                self.panSwipeLeftWidth = -_leftSwipeView.frameWidth;
-                self.panSwipeRightWidth = _rightSwipeView.frameWidth;
+                switch(_swipeStyle) {
+                    case MobilyDataSwipeCellStyleStands:
+                    case MobilyDataSwipeCellStyleLeaves:
+                    case MobilyDataSwipeCellStylePushes:
+                        self.panSwipeLeftWidth = -_leftSwipeView.frameWidth;
+                        self.panSwipeRightWidth = _rightSwipeView.frameWidth;
+                        break;
+                    case MobilyDataSwipeCellStyleStretch:
+                        self.panSwipeLeftWidth = (_leftSwipeView != nil) ? -_rootView.frameWidth : 0.0f;
+                        self.panSwipeRightWidth = (_rightSwipeView != nil) ? _rootView.frameWidth : 0.0f;
+                        break;
+                }
                 self.panSwipeDirection = MobilyDataCellSwipeDirectionUnknown;
                 break;
             }

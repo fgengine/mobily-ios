@@ -96,7 +96,8 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 typedef NS_ENUM(NSUInteger, MobilyDataSwipeCellStyle) {
     MobilyDataSwipeCellStyleStands,
     MobilyDataSwipeCellStyleLeaves,
-    MobilyDataSwipeCellStylePushes
+    MobilyDataSwipeCellStylePushes,
+    MobilyDataSwipeCellStyleStretch
 };
 
 /*--------------------------------------------------*/

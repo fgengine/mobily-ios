@@ -1131,6 +1131,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             [self _deselectItem:item user:YES animated:animated];
         }
     }
+    [self endedEditItem:item animated:animated];
 }
 
 - (void)_selectItem:(MobilyDataItem*)item user:(BOOL)user animated:(BOOL)animated {
