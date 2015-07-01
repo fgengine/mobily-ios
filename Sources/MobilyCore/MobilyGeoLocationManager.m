@@ -149,10 +149,13 @@
 
 + (instancetype)shared {
     static id shared = nil;
-    static dispatch_once_t dispatchOnce;
-    dispatch_once(&dispatchOnce, ^{
-        shared = [[self alloc] init];
-    });
+    if(shared == nil) {
+        @synchronized(self) {
+            if(shared == nil) {
+                shared = [self new];
+            }
+        }
+    }
     return shared;
 }
 
