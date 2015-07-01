@@ -50,7 +50,6 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 + (void)showView:(UIView*)view duration:(NSTimeInterval)duration statusBarStyle:(UIStatusBarStyle)statusBarStyle pressed:(MobilySimpleBlock)pressed;
 + (void)showView:(UIView*)view duration:(NSTimeInterval)duration statusBarHidden:(BOOL)statusBarHidden pressed:(MobilySimpleBlock)pressed;
 
-+ (void)hideTopAnimated:(BOOL)animated;
 + (void)hideAllAnimated:(BOOL)animated;
 
 @end

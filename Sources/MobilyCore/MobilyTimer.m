@@ -218,7 +218,7 @@
         }
         _timer = timer;
         if(_timer != nil) {
-            [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
+            [NSRunLoop.mainRunLoop addTimer:_timer forMode:NSRunLoopCommonModes];
         }
     }
 }

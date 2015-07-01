@@ -39,6 +39,10 @@
 
 /*--------------------------------------------------*/
 
+@class MobilyNotificationView;
+
+/*--------------------------------------------------*/
+
 MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyNotificationWindow : UIWindow {
 }
@@ -60,8 +64,11 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @property(nonatomic, readwrite, assign) UIStatusBarStyle statusBarStyle;
 @property(nonatomic, readwrite, assign) BOOL statusBarHidden;
 
+- (UIStatusBarStyle)defaultStatusBarStyle;
+- (BOOL)defaultStatusBarHidden;
+
 - (void)pushView:(UIView*)view duration:(NSTimeInterval)duration statusBarStyle:(UIStatusBarStyle)statusBarStyle statusBarHidden:(BOOL)statusBarHidden pressed:(MobilySimpleBlock)pressed;
-- (void)popTopAnimated:(BOOL)animated;
+- (void)popNotificationView:(MobilyNotificationView*)notificationView animated:(BOOL)animated;
 - (void)popAllAnimated:(BOOL)animated;
 
 @end
@@ -78,6 +85,10 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
     NSTimer* _timer;
 @protected
     UIView* _view;
+    NSLayoutConstraint* _constraintViewCenterX;
+    NSLayoutConstraint* _constraintViewCenterY;
+    NSLayoutConstraint* _constraintViewWidth;
+    NSLayoutConstraint* _constraintViewHeight;
     NSTimeInterval _duration;
     UIStatusBarStyle _statusBarStyle;
     BOOL _statusBarHidden;
@@ -85,10 +96,17 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 }
 
 @property(nonatomic, readwrite, weak) MobilyNotificationController* controller;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintControllerTop;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintControllerLeft;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintControllerRight;
 @property(nonatomic, readwrite, strong) UITapGestureRecognizer* tapGesture;
 @property(nonatomic, readwrite, strong) NSTimer* timer;
 
 @property(nonatomic, readwrite, strong) UIView* view;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintViewCenterX;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintViewCenterY;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintViewWidth;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintViewHeight;
 @property(nonatomic, readwrite, assign) NSTimeInterval duration;
 @property(nonatomic, readwrite, assign) UIStatusBarStyle statusBarStyle;
 @property(nonatomic, readwrite, assign) BOOL statusBarHidden;
@@ -121,7 +139,6 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 + (instancetype)shared;
 
 - (void)_showView:(UIView*)view duration:(NSTimeInterval)duration statusBarStyle:(UIStatusBarStyle)statusBarStyle statusBarHidden:(BOOL)statusBarHidden pressed:(MobilySimpleBlock)pressed;
-- (void)_hideTopAnimated:(BOOL)animated;
 - (void)_hideAllAnimated:(BOOL)animated;
 
 @end
@@ -148,6 +165,11 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 #pragma mark -
 /*--------------------------------------------------*/
 
+static NSTimeInterval MobilyNotificationController_ShowDutation = 0.1f;
+static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
+
+/*--------------------------------------------------*/
+
 @implementation MobilyNotificationController
 
 #pragma mark Synthesize
@@ -160,6 +182,8 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 - (instancetype)initWithNibName:(NSString*)nibName bundle:(NSBundle*)bundle {
     self = [super initWithNibName:nibName bundle:bundle];
     if(self != nil) {
+        _statusBarStyle = [self defaultStatusBarStyle];
+        _statusBarHidden = [self defaultStatusBarHidden];
         _queue = [NSMutableArray array];
     }
     return self;
@@ -195,29 +219,129 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
     return _statusBarHidden;
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+}
+
 #pragma mark Public
 
+- (UIStatusBarStyle)defaultStatusBarStyle {
+    return [UIApplication.sharedApplication.keyWindow.rootViewController preferredStatusBarStyle];
+}
+
+- (BOOL)defaultStatusBarHidden {
+    return [UIApplication.sharedApplication.keyWindow.rootViewController prefersStatusBarHidden];
+}
+
 - (void)pushView:(UIView*)view duration:(NSTimeInterval)duration statusBarStyle:(UIStatusBarStyle)statusBarStyle statusBarHidden:(BOOL)statusBarHidden pressed:(MobilySimpleBlock)pressed {
-    [_queue addObject:[[MobilyNotificationView alloc] initWithController:self view:view duration:duration statusBarStyle:statusBarStyle statusBarHidden:statusBarHidden pressed:pressed]];
-    if(_queue.count == 1) {
-        [self _showNextViewAnimated:YES];
+    MobilyNotificationView* notificationView = [[MobilyNotificationView alloc] initWithController:self view:view duration:duration statusBarStyle:statusBarStyle statusBarHidden:statusBarHidden pressed:pressed];
+    if(notificationView != nil) {
+        [_queue insertObject:notificationView atIndex:0];
+        [self _showNotificationView:notificationView animated:YES];
     }
 }
 
-- (void)popTopAnimated:(BOOL)animated {
+- (void)popNotificationView:(MobilyNotificationView*)notificationView animated:(BOOL)animated {
+    if([_queue containsObject:notificationView] == YES) {
+        [self _hideNotificationView:notificationView animated:animated];
+        [_queue removeObject:notificationView];
+    }
 }
 
 - (void)popAllAnimated:(BOOL)animated {
+    if(_queue.count > 0) {
+        [_queue each:^(MobilyNotificationView* notificationView) {
+            [self _hideNotificationView:notificationView animated:animated];
+            [_queue removeObject:notificationView];
+        } options:NSEnumerationReverse];
+    }
 }
 
 #pragma mark Private
 
-- (void)_showNextViewAnimated:(BOOL)animated {
-    MobilyNotificationView* view = _queue.firstObject;
-    [self.view addSubview:view];
+- (void)_showNotificationView:(MobilyNotificationView*)notificationView animated:(BOOL)animated {
+    MobilyNotificationView* prevNotificationView = [_queue prevObjectOfObject:notificationView];
+    MobilyNotificationView* nextNotificationView = [_queue nextObjectOfObject:notificationView];
+    notificationView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:notificationView];
+    if(animated == YES) {
+        if(prevNotificationView != nil) {
+            notificationView.constraintControllerTop = [NSLayoutConstraint constraintWithItem:notificationView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:prevNotificationView attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+        } else {
+            notificationView.constraintControllerTop = [NSLayoutConstraint constraintWithItem:notificationView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+        }
+    }
+    notificationView.constraintControllerLeft = [NSLayoutConstraint constraintWithItem:notificationView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
+    notificationView.constraintControllerRight = [NSLayoutConstraint constraintWithItem:notificationView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
+    if(nextNotificationView != nil) {
+        nextNotificationView.constraintControllerTop = [NSLayoutConstraint constraintWithItem:nextNotificationView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:notificationView attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+    }
+    if(animated == YES) {
+        [self.view layoutIfNeeded];
+    }
+    if(prevNotificationView != nil) {
+        notificationView.constraintControllerTop = [NSLayoutConstraint constraintWithItem:notificationView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:prevNotificationView attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+    } else {
+        notificationView.constraintControllerTop = [NSLayoutConstraint constraintWithItem:notificationView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+    }
+    [notificationView willShow];
+    if(_queue.firstObject == notificationView) {
+        self.statusBarStyle = notificationView.statusBarStyle;
+        self.statusBarHidden = notificationView.statusBarHidden;
+    }
+    if(animated == YES) {
+        [UIView animateWithDuration:MobilyNotificationController_ShowDutation delay:0.0f options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut) animations:^{
+            [self.view layoutIfNeeded];
+        } completion:^(BOOL finished) {
+            [notificationView didShow];
+        }];
+    } else {
+        [notificationView didShow];
+    }
 }
 
-- (void)_hideTopViewAnimated:(BOOL)animated {
+- (void)_hideNotificationView:(MobilyNotificationView*)notificationView animated:(BOOL)animated {
+    MobilyNotificationView* prevNotificationView = [_queue prevObjectOfObject:notificationView];
+    MobilyNotificationView* nextNotificationView = [_queue nextObjectOfObject:notificationView];
+    if(prevNotificationView != nil) {
+        notificationView.constraintControllerTop = [NSLayoutConstraint constraintWithItem:notificationView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:prevNotificationView attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+    } else {
+        notificationView.constraintControllerTop = [NSLayoutConstraint constraintWithItem:notificationView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+    }
+    if(nextNotificationView != nil) {
+        if(prevNotificationView != nil) {
+            nextNotificationView.constraintControllerTop = [NSLayoutConstraint constraintWithItem:nextNotificationView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:prevNotificationView attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+        } else {
+            nextNotificationView.constraintControllerTop = [NSLayoutConstraint constraintWithItem:nextNotificationView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+        }
+    }
+    [notificationView willHide];
+    if(_queue.firstObject == notificationView) {
+        if(nextNotificationView != nil) {
+            self.statusBarStyle = nextNotificationView.statusBarStyle;
+            self.statusBarHidden = nextNotificationView.statusBarHidden;
+        } else {
+            self.statusBarStyle = [self defaultStatusBarStyle];
+            self.statusBarHidden = [self defaultStatusBarHidden];
+        }
+    }
+    if(animated == YES) {
+        [UIView animateWithDuration:MobilyNotificationController_HideDutation delay:0.0f options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut) animations:^{
+            [self.view layoutIfNeeded];
+        } completion:^(BOOL finished) {
+            notificationView.constraintControllerTop = nil;
+            notificationView.constraintControllerLeft = nil;
+            notificationView.constraintControllerRight = nil;
+            [notificationView removeFromSuperview];
+            [notificationView didHide];
+        }];
+    } else {
+        notificationView.constraintControllerTop = nil;
+        notificationView.constraintControllerLeft = nil;
+        notificationView.constraintControllerRight = nil;
+        [notificationView removeFromSuperview];
+        [notificationView didHide];
+    }
 }
 
 @end
@@ -231,9 +355,16 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 #pragma mark Synthesize
 
 @synthesize controller = _controller;
+@synthesize constraintControllerTop = _constraintControllerTop;
+@synthesize constraintControllerLeft = _constraintControllerLeft;
+@synthesize constraintControllerRight = _constraintControllerRight;
 @synthesize tapGesture = _tapGesture;
 @synthesize timer = _timer;
 @synthesize view = _view;
+@synthesize constraintViewCenterX = _constraintViewCenterX;
+@synthesize constraintViewCenterY = _constraintViewCenterY;
+@synthesize constraintViewWidth = _constraintViewWidth;
+@synthesize constraintViewHeight = _constraintViewHeight;
 @synthesize duration = _duration;
 @synthesize statusBarStyle = _statusBarStyle;
 @synthesize statusBarHidden = _statusBarHidden;
@@ -244,23 +375,108 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 - (instancetype)initWithController:(MobilyNotificationController*)controller view:(UIView*)view duration:(NSTimeInterval)duration statusBarStyle:(UIStatusBarStyle)statusBarStyle statusBarHidden:(BOOL)statusBarHidden pressed:(MobilySimpleBlock)pressed {
     self = [super initWithFrame:view.bounds];
     if(self != nil) {
-        _controller = controller;
-        _view = view;
-        _view.translatesAutoresizingMaskIntoConstraints = NO;
-        _duration = duration;
-        _statusBarStyle = statusBarStyle;
-        _statusBarHidden = statusBarHidden;
-        _pressed = [pressed copy];
-        [self setup];
+        self.controller = controller;
+        self.view = view;
+        self.duration = duration;
+        self.statusBarStyle = statusBarStyle;
+        self.statusBarHidden = statusBarHidden;
+        self.pressed = [pressed copy];
     }
     return self;
 }
 
-- (void)setup {
-    [self addSubview:_view];
+#pragma mark Public override
+
+- (void)updateConstraints {
+    if(_view != nil) {
+        if(_constraintViewCenterX == nil) {
+            self.constraintViewCenterX = [NSLayoutConstraint constraintWithItem:_view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0f constant:0.0f];
+        }
+        if(_constraintViewCenterY == nil) {
+            self.constraintViewCenterY = [NSLayoutConstraint constraintWithItem:_view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:0.0f];
+        }
+        if(_constraintViewWidth == nil) {
+            self.constraintViewWidth = [NSLayoutConstraint constraintWithItem:_view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0f constant:0.0f];
+        }
+        if(_constraintViewHeight == nil) {
+            self.constraintViewHeight = [NSLayoutConstraint constraintWithItem:_view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:1.0f constant:0.0f];
+        }
+    } else {
+        self.constraintViewCenterX = nil;
+        self.constraintViewCenterY = nil;
+        self.constraintViewWidth = nil;
+        self.constraintViewHeight = nil;
+    }
+    [super updateConstraints];
 }
 
-#pragma mark Public override
+#pragma mark Property
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintControllerTop, constraintControllerTop, _controller.view, {
+}, {
+})
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintControllerLeft, constraintControllerLeft, _controller.view, {
+}, {
+})
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintControllerRight, constraintControllerRight, _controller.view, {
+}, {
+})
+
+- (void)setView:(UIView*)view {
+    if(_view != view) {
+        if(_view != nil) {
+            [_view removeFromSuperview];
+        }
+        _view = view;
+        if(_view != nil) {
+            _view.translatesAutoresizingMaskIntoConstraints = NO;
+            [self addSubview:_view];
+        }
+        [self setNeedsUpdateConstraints];
+    }
+}
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintViewCenterX, constraintViewCenterX, self, {
+}, {
+})
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintViewCenterY, constraintViewCenterY, self, {
+}, {
+})
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintViewWidth, constraintViewWidth, self, {
+}, {
+})
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintViewHeight, constraintViewHeight, self, {
+}, {
+})
+
+- (void)setTimer:(NSTimer*)timer {
+    if(_timer != timer) {
+        if(_timer != nil) {
+            [_timer invalidate];
+        }
+        _timer = timer;
+        if(_timer != nil) {
+            [NSRunLoop.mainRunLoop addTimer:_timer forMode:NSRunLoopCommonModes];
+        }
+    }
+}
+
+- (void)setTapGesture:(UITapGestureRecognizer*)tapGesture {
+    if(_tapGesture != tapGesture) {
+        if(_tapGesture != nil) {
+            [self removeGestureRecognizer:_tapGesture];
+        }
+        _tapGesture = tapGesture;
+        if(_tapGesture != nil) {
+            [self addGestureRecognizer:_tapGesture];
+        }
+    }
+}
 
 #pragma mark Public
 
@@ -268,22 +484,13 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 }
 
 - (void)didShow {
-    _timer = [NSTimer scheduledTimerWithTimeInterval:_duration target:self selector:@selector(pressed:) userInfo:nil repeats:NO];
-    [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
-
-    _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pressed:)];
-    [self addGestureRecognizer:_tapGesture];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:_duration target:self selector:@selector(pressed:) userInfo:nil repeats:NO];
+    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pressed:)];
 }
 
 - (void)willHide {
-    if(_timer != nil) {
-        [_timer invalidate];
-        _timer = nil;
-    }
-    if(_tapGesture != nil) {
-        [self removeGestureRecognizer:_tapGesture];
-        _tapGesture = nil;
-    }
+    self.tapGesture = nil;
+    self.timer = nil;
 }
 
 - (void)didHide {
@@ -292,7 +499,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 #pragma mark Actions
 
 - (IBAction)pressed:(id)sender {
-    [_controller popTopAnimated:YES];
+    [_controller popNotificationView:self animated:YES];
 }
 
 @end
@@ -333,7 +540,7 @@ static BOOL MobilyNotificationManager_StatusBarHidden = NO;
 - (instancetype)init {
     self = [super init];
     if(self != nil) {
-        [self.window makeKeyAndVisible];
+        self.window.hidden = NO;
     }
     return self;
 }
@@ -372,10 +579,6 @@ static BOOL MobilyNotificationManager_StatusBarHidden = NO;
     [self.shared _showView:view duration:duration statusBarStyle:MobilyNotificationManager_StatusBarStyle statusBarHidden:statusBarHidden pressed:pressed];
 }
 
-+ (void)hideTopAnimated:(BOOL)animated {
-    [self.shared _hideTopAnimated:animated];
-}
-
 + (void)hideAllAnimated:(BOOL)animated {
     [self.shared _hideAllAnimated:animated];
 }
@@ -385,7 +588,7 @@ static BOOL MobilyNotificationManager_StatusBarHidden = NO;
 - (MobilyNotificationWindow*)window {
     if(_window == nil) {
         _window = [[MobilyNotificationWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
-        _window.windowLevel = UIWindowLevelStatusBar - 1.0f;
+        _window.windowLevel = UIWindowLevelStatusBar + 1.0f;
         _window.rootViewController = self.controller;
     }
     return _window;
@@ -402,10 +605,6 @@ static BOOL MobilyNotificationManager_StatusBarHidden = NO;
 
 - (void)_showView:(UIView*)view duration:(NSTimeInterval)duration statusBarStyle:(UIStatusBarStyle)statusBarStyle statusBarHidden:(BOOL)statusBarHidden pressed:(MobilySimpleBlock)pressed {
     [self.controller pushView:view duration:duration statusBarStyle:statusBarStyle statusBarHidden:statusBarHidden pressed:pressed];
-}
-
-- (void)_hideTopAnimated:(BOOL)animated {
-    [self.controller popAllAnimated:animated];
 }
 
 - (void)_hideAllAnimated:(BOOL)animated {

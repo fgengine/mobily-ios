@@ -118,7 +118,7 @@
 - (void)_updateCorners {
     if(_roundCorners == YES) {
         CGRect bounds = self.bounds;
-        self.layer.cornerRadius = ceilf(MAX(bounds.size.width - 1.0f, bounds.size.height - 1.0f) * 0.5f);
+        self.layer.cornerRadius = ceilf(MIN(bounds.size.width - 1.0f, bounds.size.height - 1.0f) * 0.5f);
     }
 }
 

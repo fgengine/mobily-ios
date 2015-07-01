@@ -91,5 +91,6 @@
 #import <MobilyCore/MobilyGeoLocationManager.h>
 #import <MobilyCore/MobilySharedManager.h>
 #import <MobilyCore/MobilyPressAndHoldGestureRecognizer.h>
+#import <MobilyCore/MobilyNotificationManager.h>
 
 /*--------------------------------------------------*/
