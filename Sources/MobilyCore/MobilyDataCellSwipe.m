@@ -486,7 +486,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
 
 - (void)_updateSwipeProgress:(CGFloat)swipeProgress speed:(CGFloat)speed endedSwipe:(BOOL)endedSwipe {
     CGFloat minSwipeProgress = (_panSwipeDirection == MobilyDataCellSwipeDirectionLeft) ? -1.0f : 0.0f;
-    CGFloat maxSwipeProgress = (_panSwipeDirection == MobilyDataCellSwipeDirectionRight) ? 1.0f :0.0f;
+    CGFloat maxSwipeProgress = (_panSwipeDirection == MobilyDataCellSwipeDirectionRight) ? 1.0f : 0.0f;
     CGFloat normalizedSwipeProgress = MIN(MAX(minSwipeProgress, swipeProgress), maxSwipeProgress);
     if(_panSwipeProgress != normalizedSwipeProgress) {
         _panSwipeProgress = normalizedSwipeProgress;
