@@ -619,13 +619,13 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
                     CGFloat absX = ABS(translation.x);
                     CGFloat absY = ABS(translation.y);
                     if((absX >= absY) && (absX >= 2.0f)) {
-                        if((_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (translation.x < 0.0f)) {
+                        if((_leftSwipeEnabled == YES) && (_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (translation.x < 0.0f)) {
                             return YES;
-                        } else if((_showedRightSwipeView == YES) && (_rightSwipeView != nil) && (translation.x > 0.0f)) {
+                        } else if((_rightSwipeEnabled == YES) && (_showedRightSwipeView == YES) && (_rightSwipeView != nil) && (translation.x > 0.0f)) {
                             return YES;
-                        } else if((_showedLeftSwipeView == NO) && (_leftSwipeView != nil) && (translation.x > 0.0f)) {
+                        } else if((_leftSwipeEnabled == YES) && (_showedLeftSwipeView == NO) && (_leftSwipeView != nil) && (translation.x > 0.0f)) {
                             return YES;
-                        } else if((_showedRightSwipeView == NO) && (_rightSwipeView != nil) && (translation.x < 0.0f)) {
+                        } else if((_rightSwipeEnabled == YES) && (_showedRightSwipeView == NO) && (_rightSwipeView != nil) && (translation.x < 0.0f)) {
                             return YES;
                         }
                     }

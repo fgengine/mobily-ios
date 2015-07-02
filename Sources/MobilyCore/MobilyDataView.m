@@ -36,6 +36,7 @@
 /*--------------------------------------------------*/
 
 #import <MobilyCore/MobilyDataView+Private.h>
+#import <MobilyCore/MobilyTimeout.h>
 
 /*--------------------------------------------------*/
 
@@ -976,13 +977,14 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                              animations:^{
                                  [self _batchUpdate:update animated:YES];
                              }
-                             completion:^(BOOL finished) {
-                                 [self _batchComplete:^() {
-                                     if(complete != nil) {
-                                         complete(finished);
-                                     }
-                                 } animated:YES];
-                             }];
+                             completion:nil];
+            [MobilyTimeout executeBlock:^{
+                [self _batchComplete:^() {
+                    if(complete != nil) {
+                        complete(YES);
+                    }
+                } animated:YES];
+            } afterDelay:duration];
         } else {
             [self _batchUpdate:^{
                 if(update != nil) {
