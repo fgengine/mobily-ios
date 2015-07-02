@@ -37,20 +37,44 @@
 
 /*--------------------------------------------------*/
 
+@class MobilyNotificationView;
+
+/*--------------------------------------------------*/
+
 MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyNotificationManager : NSObject
 
-+ (void)showView:(UIView*)view;
-+ (void)showView:(UIView*)view pressed:(MobilySimpleBlock)pressed;
-+ (void)showView:(UIView*)view statusBarStyle:(UIStatusBarStyle)statusBarStyle pressed:(MobilySimpleBlock)pressed;
-+ (void)showView:(UIView*)view statusBarHidden:(BOOL)statusBarHidden pressed:(MobilySimpleBlock)pressed;
++ (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle;
++ (UIStatusBarStyle)statusBarStyle;
 
-+ (void)showView:(UIView*)view duration:(NSTimeInterval)duration;
-+ (void)showView:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilySimpleBlock)pressed;
-+ (void)showView:(UIView*)view duration:(NSTimeInterval)duration statusBarStyle:(UIStatusBarStyle)statusBarStyle pressed:(MobilySimpleBlock)pressed;
-+ (void)showView:(UIView*)view duration:(NSTimeInterval)duration statusBarHidden:(BOOL)statusBarHidden pressed:(MobilySimpleBlock)pressed;
++ (void)setStatusBarHidden:(BOOL)statusBarHidden;
++ (BOOL)statusBarHidden;
 
++ (MobilyNotificationView*)showView:(UIView*)view;
++ (MobilyNotificationView*)showView:(UIView*)view pressed:(MobilySimpleBlock)pressed;
++ (MobilyNotificationView*)showView:(UIView*)view duration:(NSTimeInterval)duration;
++ (MobilyNotificationView*)showView:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilySimpleBlock)pressed;
+
++ (void)hideNotificationView:(MobilyNotificationView*)notificationView animated:(BOOL)animated;
 + (void)hideAllAnimated:(BOOL)animated;
+
+@end
+
+/*--------------------------------------------------*/
+
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
+@interface MobilyNotificationView : UIView
+
+@property(nonatomic, readonly, strong) UIView* view;
+@property(nonatomic, readonly, assign) NSTimeInterval duration;
+@property(nonatomic, readonly, copy) MobilySimpleBlock pressed;
+
+- (void)hideAnimated:(BOOL)animated;
+
+- (void)willShow;
+- (void)didShow;
+- (void)willHide;
+- (void)didHide;
 
 @end
 

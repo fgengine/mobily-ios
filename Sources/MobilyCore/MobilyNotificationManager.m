@@ -39,10 +39,6 @@
 
 /*--------------------------------------------------*/
 
-@class MobilyNotificationView;
-
-/*--------------------------------------------------*/
-
 MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyNotificationWindow : UIWindow {
 }
@@ -62,12 +58,8 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 }
 
 @property(nonatomic, readwrite, assign) UIStatusBarStyle statusBarStyle;
-@property(nonatomic, readwrite, assign) BOOL statusBarHidden;
 
-- (UIStatusBarStyle)defaultStatusBarStyle;
-- (BOOL)defaultStatusBarHidden;
-
-- (void)pushView:(UIView*)view duration:(NSTimeInterval)duration statusBarStyle:(UIStatusBarStyle)statusBarStyle statusBarHidden:(BOOL)statusBarHidden pressed:(MobilySimpleBlock)pressed;
+- (MobilyNotificationView*)pushView:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilySimpleBlock)pressed;
 - (void)popNotificationView:(MobilyNotificationView*)notificationView animated:(BOOL)animated;
 - (void)popAllAnimated:(BOOL)animated;
 
@@ -77,8 +69,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 #pragma mark -
 /*--------------------------------------------------*/
 
-MOBILY_REQUIRES_PROPERTY_DEFINITIONS
-@interface MobilyNotificationView : UIView {
+@interface MobilyNotificationView () {
 @protected
     __weak MobilyNotificationController* _controller;
     UITapGestureRecognizer* _tapGesture;
@@ -108,16 +99,9 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintViewWidth;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintViewHeight;
 @property(nonatomic, readwrite, assign) NSTimeInterval duration;
-@property(nonatomic, readwrite, assign) UIStatusBarStyle statusBarStyle;
-@property(nonatomic, readwrite, assign) BOOL statusBarHidden;
 @property(nonatomic, readwrite, copy) MobilySimpleBlock pressed;
 
-- (instancetype)initWithController:(MobilyNotificationController*)controller view:(UIView*)view duration:(NSTimeInterval)duration statusBarStyle:(UIStatusBarStyle)statusBarStyle statusBarHidden:(BOOL)statusBarHidden pressed:(MobilySimpleBlock)pressed;
-
-- (void)willShow;
-- (void)didShow;
-- (void)willHide;
-- (void)didHide;
+- (instancetype)initWithController:(MobilyNotificationController*)controller view:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilySimpleBlock)pressed;
 
 - (IBAction)pressed:(id)sender;
 
@@ -138,7 +122,8 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 
 + (instancetype)shared;
 
-- (void)_showView:(UIView*)view duration:(NSTimeInterval)duration statusBarStyle:(UIStatusBarStyle)statusBarStyle statusBarHidden:(BOOL)statusBarHidden pressed:(MobilySimpleBlock)pressed;
+- (MobilyNotificationView*)_showView:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilySimpleBlock)pressed;
+- (void)_hideNotificationView:(MobilyNotificationView*)notificationView animated:(BOOL)animated;
 - (void)_hideAllAnimated:(BOOL)animated;
 
 @end
@@ -175,15 +160,14 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
 #pragma mark Synthesize
 
 @synthesize statusBarStyle = _statusBarStyle;
-@synthesize statusBarHidden = _statusBarHidden;
 
 #pragma mark Init / Free
 
 - (instancetype)initWithNibName:(NSString*)nibName bundle:(NSBundle*)bundle {
     self = [super initWithNibName:nibName bundle:bundle];
     if(self != nil) {
-        _statusBarStyle = [self defaultStatusBarStyle];
-        _statusBarHidden = [self defaultStatusBarHidden];
+        _statusBarStyle = UIStatusBarStyleDefault;
+        _statusBarHidden = NO;
         _queue = [NSMutableArray array];
     }
     return self;
@@ -200,23 +184,17 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
     }
 }
 
-- (void)setStatusBarHidden:(BOOL)statusBarHidden {
-    if(_statusBarHidden != statusBarHidden) {
-        _statusBarHidden = statusBarHidden;
-        if(UIDevice.systemVersion >= 7.0f) {
-            [self setNeedsStatusBarAppearanceUpdate];
-        }
-    }
-}
-
 #pragma mark Public override
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    return _statusBarStyle;
+    if(_queue.count > 0) {
+        return _statusBarStyle;
+    }
+    return [UIApplication.sharedApplication.keyWindow.rootViewController preferredStatusBarStyle];
 }
 
 - (BOOL)prefersStatusBarHidden {
-    return _statusBarHidden;
+    return [UIApplication.sharedApplication.keyWindow.rootViewController prefersStatusBarHidden];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -225,26 +203,25 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
 
 #pragma mark Public
 
-- (UIStatusBarStyle)defaultStatusBarStyle {
-    return [UIApplication.sharedApplication.keyWindow.rootViewController preferredStatusBarStyle];
-}
-
-- (BOOL)defaultStatusBarHidden {
-    return [UIApplication.sharedApplication.keyWindow.rootViewController prefersStatusBarHidden];
-}
-
-- (void)pushView:(UIView*)view duration:(NSTimeInterval)duration statusBarStyle:(UIStatusBarStyle)statusBarStyle statusBarHidden:(BOOL)statusBarHidden pressed:(MobilySimpleBlock)pressed {
-    MobilyNotificationView* notificationView = [[MobilyNotificationView alloc] initWithController:self view:view duration:duration statusBarStyle:statusBarStyle statusBarHidden:statusBarHidden pressed:pressed];
+- (MobilyNotificationView*)pushView:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilySimpleBlock)pressed {
+    MobilyNotificationView* notificationView = [[MobilyNotificationView alloc] initWithController:self view:view duration:duration pressed:pressed];
     if(notificationView != nil) {
         [_queue insertObject:notificationView atIndex:0];
+        if(UIDevice.systemVersion >= 7.0f) {
+            [self setNeedsStatusBarAppearanceUpdate];
+        }
         [self _showNotificationView:notificationView animated:YES];
     }
+    return notificationView;
 }
 
 - (void)popNotificationView:(MobilyNotificationView*)notificationView animated:(BOOL)animated {
     if([_queue containsObject:notificationView] == YES) {
         [self _hideNotificationView:notificationView animated:animated];
         [_queue removeObject:notificationView];
+        if(UIDevice.systemVersion >= 7.0f) {
+            [self setNeedsStatusBarAppearanceUpdate];
+        }
     }
 }
 
@@ -253,7 +230,13 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
         [_queue each:^(MobilyNotificationView* notificationView) {
             [self _hideNotificationView:notificationView animated:animated];
             [_queue removeObject:notificationView];
+            if(UIDevice.systemVersion >= 7.0f) {
+                [self setNeedsStatusBarAppearanceUpdate];
+            }
         } options:NSEnumerationReverse];
+        if(UIDevice.systemVersion >= 7.0f) {
+            [self setNeedsStatusBarAppearanceUpdate];
+        }
     }
 }
 
@@ -285,10 +268,6 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
         notificationView.constraintControllerTop = [NSLayoutConstraint constraintWithItem:notificationView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
     }
     [notificationView willShow];
-    if(_queue.firstObject == notificationView) {
-        self.statusBarStyle = notificationView.statusBarStyle;
-        self.statusBarHidden = notificationView.statusBarHidden;
-    }
     if(animated == YES) {
         [UIView animateWithDuration:MobilyNotificationController_ShowDutation delay:0.0f options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut) animations:^{
             [self.view layoutIfNeeded];
@@ -316,15 +295,6 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
         }
     }
     [notificationView willHide];
-    if(_queue.firstObject == notificationView) {
-        if(nextNotificationView != nil) {
-            self.statusBarStyle = nextNotificationView.statusBarStyle;
-            self.statusBarHidden = nextNotificationView.statusBarHidden;
-        } else {
-            self.statusBarStyle = [self defaultStatusBarStyle];
-            self.statusBarHidden = [self defaultStatusBarHidden];
-        }
-    }
     if(animated == YES) {
         [UIView animateWithDuration:MobilyNotificationController_HideDutation delay:0.0f options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut) animations:^{
             [self.view layoutIfNeeded];
@@ -366,20 +336,16 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
 @synthesize constraintViewWidth = _constraintViewWidth;
 @synthesize constraintViewHeight = _constraintViewHeight;
 @synthesize duration = _duration;
-@synthesize statusBarStyle = _statusBarStyle;
-@synthesize statusBarHidden = _statusBarHidden;
 @synthesize pressed = _pressed;
 
 #pragma mark Init / Free
 
-- (instancetype)initWithController:(MobilyNotificationController*)controller view:(UIView*)view duration:(NSTimeInterval)duration statusBarStyle:(UIStatusBarStyle)statusBarStyle statusBarHidden:(BOOL)statusBarHidden pressed:(MobilySimpleBlock)pressed {
+- (instancetype)initWithController:(MobilyNotificationController*)controller view:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilySimpleBlock)pressed {
     self = [super initWithFrame:view.bounds];
     if(self != nil) {
         self.controller = controller;
         self.view = view;
         self.duration = duration;
-        self.statusBarStyle = statusBarStyle;
-        self.statusBarHidden = statusBarHidden;
         self.pressed = [pressed copy];
     }
     return self;
@@ -480,11 +446,17 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintViewHeight, constraintViewHeigh
 
 #pragma mark Public
 
+- (void)hideAnimated:(BOOL)animated {
+    [_controller popNotificationView:self animated:animated];
+}
+
 - (void)willShow {
 }
 
 - (void)didShow {
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:_duration target:self selector:@selector(pressed:) userInfo:nil repeats:NO];
+    if(_duration > FLT_EPSILON) {
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:_duration target:self selector:@selector(pressed:) userInfo:nil repeats:NO];
+    }
     self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pressed:)];
 }
 
@@ -499,7 +471,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintViewHeight, constraintViewHeigh
 #pragma mark Actions
 
 - (IBAction)pressed:(id)sender {
-    [_controller popNotificationView:self animated:YES];
+    [self hideAnimated:YES];
 }
 
 @end
@@ -509,8 +481,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintViewHeight, constraintViewHeigh
 /*--------------------------------------------------*/
 
 static NSTimeInterval MobilyNotificationManager_Dutation = 3.0f;
-static UIStatusBarStyle MobilyNotificationManager_StatusBarStyle = UIStatusBarStyleDefault;
-static BOOL MobilyNotificationManager_StatusBarHidden = NO;
 
 /*--------------------------------------------------*/
 
@@ -547,36 +517,43 @@ static BOOL MobilyNotificationManager_StatusBarHidden = NO;
 
 #pragma mark Public
 
-+ (void)showView:(UIView*)view {
-    [self.shared _showView:view duration:MobilyNotificationManager_Dutation statusBarStyle:MobilyNotificationManager_StatusBarStyle statusBarHidden:MobilyNotificationManager_StatusBarHidden pressed:nil];
++ (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle {
+    [[self.shared controller] setStatusBarStyle:statusBarStyle];
 }
 
-+ (void)showView:(UIView*)view pressed:(MobilySimpleBlock)pressed {
-    [self.shared _showView:view duration:MobilyNotificationManager_Dutation statusBarStyle:MobilyNotificationManager_StatusBarStyle statusBarHidden:MobilyNotificationManager_StatusBarHidden pressed:pressed];
++ (UIStatusBarStyle)statusBarStyle {
+    return [[self.shared controller] statusBarStyle];
 }
 
-+ (void)showView:(UIView*)view statusBarStyle:(UIStatusBarStyle)statusBarStyle pressed:(MobilySimpleBlock)pressed {
-    [self.shared _showView:view duration:MobilyNotificationManager_Dutation statusBarStyle:statusBarStyle statusBarHidden:MobilyNotificationManager_StatusBarHidden pressed:pressed];
++ (void)setStatusBarHidden:(BOOL)statusBarHidden {
+    if(statusBarHidden == YES) {
+        [[self.shared window] setWindowLevel:UIWindowLevelStatusBar + 1];
+    } else {
+        [[self.shared window] setWindowLevel:UIWindowLevelStatusBar - 1];
+    }
 }
 
-+ (void)showView:(UIView*)view statusBarHidden:(BOOL)statusBarHidden pressed:(MobilySimpleBlock)pressed {
-    [self.shared _showView:view duration:MobilyNotificationManager_Dutation statusBarStyle:MobilyNotificationManager_StatusBarStyle statusBarHidden:statusBarHidden pressed:pressed];
++ (BOOL)statusBarHidden {
+    return [[self.shared window] windowLevel] > UIWindowLevelStatusBar;
 }
 
-+ (void)showView:(UIView*)view duration:(NSTimeInterval)duration {
-    [self.shared _showView:view duration:duration statusBarStyle:MobilyNotificationManager_StatusBarStyle statusBarHidden:MobilyNotificationManager_StatusBarHidden pressed:nil];
++ (MobilyNotificationView*)showView:(UIView*)view {
+    return [self.shared _showView:view duration:MobilyNotificationManager_Dutation pressed:nil];
 }
 
-+ (void)showView:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilySimpleBlock)pressed {
-    [self.shared _showView:view duration:duration statusBarStyle:MobilyNotificationManager_StatusBarStyle statusBarHidden:MobilyNotificationManager_StatusBarHidden pressed:pressed];
++ (MobilyNotificationView*)showView:(UIView*)view pressed:(MobilySimpleBlock)pressed {
+    return [self.shared _showView:view duration:MobilyNotificationManager_Dutation pressed:pressed];
 }
 
-+ (void)showView:(UIView*)view duration:(NSTimeInterval)duration statusBarStyle:(UIStatusBarStyle)statusBarStyle pressed:(MobilySimpleBlock)pressed {
-    [self.shared _showView:view duration:duration statusBarStyle:statusBarStyle statusBarHidden:MobilyNotificationManager_StatusBarHidden pressed:pressed];
++ (MobilyNotificationView*)showView:(UIView*)view duration:(NSTimeInterval)duration {
+    return [self.shared _showView:view duration:duration pressed:nil];
 }
 
-+ (void)showView:(UIView*)view duration:(NSTimeInterval)duration statusBarHidden:(BOOL)statusBarHidden pressed:(MobilySimpleBlock)pressed {
-    [self.shared _showView:view duration:duration statusBarStyle:MobilyNotificationManager_StatusBarStyle statusBarHidden:statusBarHidden pressed:pressed];
++ (MobilyNotificationView*)showView:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilySimpleBlock)pressed {
+    return [self.shared _showView:view duration:duration pressed:pressed];
+}
+
++ (void)hideNotificationView:(MobilyNotificationView*)notificationView animated:(BOOL)animated {
 }
 
 + (void)hideAllAnimated:(BOOL)animated {
@@ -588,7 +565,7 @@ static BOOL MobilyNotificationManager_StatusBarHidden = NO;
 - (MobilyNotificationWindow*)window {
     if(_window == nil) {
         _window = [[MobilyNotificationWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
-        _window.windowLevel = UIWindowLevelStatusBar + 1.0f;
+        _window.windowLevel = UIWindowLevelStatusBar - 1.0f;
         _window.rootViewController = self.controller;
     }
     return _window;
@@ -603,8 +580,12 @@ static BOOL MobilyNotificationManager_StatusBarHidden = NO;
 
 #pragma mark Private
 
-- (void)_showView:(UIView*)view duration:(NSTimeInterval)duration statusBarStyle:(UIStatusBarStyle)statusBarStyle statusBarHidden:(BOOL)statusBarHidden pressed:(MobilySimpleBlock)pressed {
-    [self.controller pushView:view duration:duration statusBarStyle:statusBarStyle statusBarHidden:statusBarHidden pressed:pressed];
+- (MobilyNotificationView*)_showView:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilySimpleBlock)pressed {
+    return [self.controller pushView:view duration:duration pressed:pressed];
+}
+
+- (void)_hideNotificationView:(MobilyNotificationView*)notificationView animated:(BOOL)animated {
+    [self.controller popNotificationView:notificationView animated:animated];
 }
 
 - (void)_hideAllAnimated:(BOOL)animated {
