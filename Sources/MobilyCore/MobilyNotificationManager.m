@@ -53,7 +53,6 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyNotificationController : UIViewController {
 @protected
     UIStatusBarStyle _statusBarStyle;
-    BOOL _statusBarHidden;
     NSMutableArray* _queue;
 }
 
@@ -167,7 +166,6 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
     self = [super initWithNibName:nibName bundle:bundle];
     if(self != nil) {
         _statusBarStyle = UIStatusBarStyleDefault;
-        _statusBarHidden = NO;
         _queue = [NSMutableArray array];
     }
     return self;

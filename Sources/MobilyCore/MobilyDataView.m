@@ -1383,11 +1383,9 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 - (void)_updateInsets {
     UIEdgeInsets scrollInsets = UIEdgeInsetsMake(_containerInsets.top + _searchBarInset + _refreshViewInsets.top, _containerInsets.left + _refreshViewInsets.left, _containerInsets.bottom + _refreshViewInsets.bottom, _containerInsets.right + _refreshViewInsets.right);
     UIEdgeInsets contentInset = UIEdgeInsetsMake(_containerInsets.top + _searchBarInset, _containerInsets.left, _containerInsets.bottom, _containerInsets.right);
-    if((_topRefreshView.state == MobilyDataRefreshViewStateLoading) || (_bottomRefreshView.state == MobilyDataRefreshViewStateLoading)) {
+    if(self.dragging == NO) {
         contentInset.top += _refreshViewInsets.top;
         contentInset.bottom += _refreshViewInsets.bottom;
-    }
-    if((_leftRefreshView.state == MobilyDataRefreshViewStateLoading) || (_rightRefreshView.state == MobilyDataRefreshViewStateLoading)) {
         contentInset.left += _refreshViewInsets.left;
         contentInset.right += _refreshViewInsets.right;
     }
