@@ -67,7 +67,6 @@
 @property(nonatomic, readwrite, weak) MobilyDataView* view;
 @property(nonatomic, readwrite, weak) MobilyDataContainer* parent;
 @property(nonatomic, readwrite, strong) NSString* identifier;
-@property(nonatomic, readwrite, strong) id data;
 @property(nonatomic, readwrite, assign) CGSize size;
 @property(nonatomic, readwrite, assign) BOOL needUpdateSize;
 @property(nonatomic, readwrite, strong) MobilyDataCell* cell;
