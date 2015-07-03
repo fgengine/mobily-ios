@@ -119,12 +119,14 @@ typedef NS_ENUM(NSUInteger, MobilyDataSwipeCellStyle) {
 @property(nonatomic, readwrite, strong) IBOutlet UIView* leftSwipeView;
 @property(nonatomic, readwrite, assign) CGFloat leftSwipeOffset;
 @property(nonatomic, readwrite, assign) CGFloat leftSwipeSize;
+@property(nonatomic, readwrite, assign) CGFloat leftSwipeStretchThreshold;
 
 @property(nonatomic, readwrite, assign, getter=isShowedRightSwipeView) IBInspectable BOOL showedRightSwipeView;
 @property(nonatomic, readwrite, assign, getter=isRightSwipeEnabled) IBInspectable BOOL rightSwipeEnabled;
 @property(nonatomic, readwrite, strong) IBOutlet UIView* rightSwipeView;
 @property(nonatomic, readwrite, assign) CGFloat rightSwipeOffset;
 @property(nonatomic, readwrite, assign) CGFloat rightSwipeSize;
+@property(nonatomic, readwrite, assign) CGFloat rightSwipeStretchThreshold;
 
 - (void)setShowedLeftSwipeView:(BOOL)showedLeftSwipeView animated:(BOOL)animated;
 - (void)setShowedRightSwipeView:(BOOL)showedRightSwipeView animated:(BOOL)animated;
@@ -133,8 +135,10 @@ typedef NS_ENUM(NSUInteger, MobilyDataSwipeCellStyle) {
 - (void)willBeganSwipe NS_REQUIRES_SUPER;
 - (void)didBeganSwipe NS_REQUIRES_SUPER;
 - (void)movingSwipe:(CGFloat)progress NS_REQUIRES_SUPER;
-- (void)willEndedSwipe NS_REQUIRES_SUPER;
-- (void)didEndedSwipe NS_REQUIRES_SUPER;
+- (void)willEndedSwipe:(CGFloat)progress NS_REQUIRES_SUPER;
+- (void)didEndedSwipe:(CGFloat)progress NS_REQUIRES_SUPER;
+
+- (CGFloat)endedSwipeProgress:(CGFloat)progress;
 
 @end
 

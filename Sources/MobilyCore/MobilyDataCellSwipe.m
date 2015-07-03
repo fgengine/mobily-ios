@@ -56,11 +56,13 @@
 @synthesize leftSwipeView = _leftSwipeView;
 @synthesize leftSwipeOffset = _leftSwipeOffset;
 @synthesize leftSwipeSize = _leftSwipeSize;
+@synthesize leftSwipeStretchThreshold = _leftSwipeStretchThreshold;
 @synthesize showedRightSwipeView = _showedRightSwipeView;
 @synthesize rightSwipeEnabled = _rightSwipeEnabled;
 @synthesize rightSwipeView = _rightSwipeView;
 @synthesize rightSwipeOffset = _rightSwipeOffset;
 @synthesize rightSwipeSize = _rightSwipeSize;
+@synthesize rightSwipeStretchThreshold = _rightSwipeStretchThreshold;
 @synthesize constraintLeftSwipeViewOffsetX = _constraintLeftSwipeViewOffsetX;
 @synthesize constraintLeftSwipeViewCenterY = _constraintLeftSwipeViewCenterY;
 @synthesize constraintLeftSwipeViewWidth = _constraintLeftSwipeViewWidth;
@@ -90,8 +92,10 @@
     _swipeVelocity = 570.0f;
     _leftSwipeEnabled = YES;
     _leftSwipeSize = -1.0f;
+    _leftSwipeStretchThreshold = 0.3f;
     _rightSwipeEnabled = YES;
     _rightSwipeSize = -1.0f;
+    _rightSwipeStretchThreshold = 0.3f;
     _rootOffsetOfCenter = [self _rootViewOffsetOfCenterBySwipeProgress:0.0f];
     _leftSwipeOffset = [self _leftViewOffsetBySwipeProgress:0.0f];
     _rightSwipeOffset = [self _rightViewOffsetBySwipeProgress:0.0f];
@@ -386,17 +390,40 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
 - (void)movingSwipe:(CGFloat __unused)progress {
 }
 
-- (void)willEndedSwipe {
+- (void)willEndedSwipe:(CGFloat __unused)progress {
     self.swipeDragging = NO;
     self.swipeDecelerating = YES;
 }
 
-- (void)didEndedSwipe {
-    _showedLeftSwipeView = (_panSwipeProgress < 0.0f) ? YES : NO;
-    _showedRightSwipeView = (_panSwipeProgress > 0.0f) ? YES : NO;
+- (void)didEndedSwipe:(CGFloat)progress {
+    _showedLeftSwipeView = (progress < 0.0f) ? YES : NO;
+    _showedRightSwipeView = (progress > 0.0f) ? YES : NO;
     self.swipeDecelerating = NO;
 
     [self.item setEditing:((_showedLeftSwipeView == YES) || (_showedRightSwipeView == YES)) animated:YES];
+}
+
+- (CGFloat)endedSwipeProgress:(CGFloat)progress {
+    CGFloat minProgress = (_panSwipeDirection == MobilyDataCellSwipeDirectionLeft) ? -1.0f : 0.0f;
+    CGFloat maxProgress = (_panSwipeDirection == MobilyDataCellSwipeDirectionRight) ? 1.0f : 0.0f;
+    if(_swipeStyle == MobilyDataSwipeCellStyleStretch) {
+        if(progress < 0.0f) {
+            if((progress < -_leftSwipeStretchThreshold) && (_panSwipeDirection == MobilyDataCellSwipeDirectionLeft)) {
+                progress = -1.0f;
+            } else {
+                progress = 0.0f;
+            }
+        } else if(progress > 0.0f) {
+            if((progress > _rightSwipeStretchThreshold) && (_panSwipeDirection == MobilyDataCellSwipeDirectionRight)) {
+                progress = 1.0f;
+            } else {
+                progress = 0.0f;
+            }
+        }
+    } else {
+        progress = roundf(progress);
+    }
+    return MIN(MAX(minProgress, progress), maxProgress);
 }
 
 #pragma mark Private
@@ -497,18 +524,24 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
         self.rightSwipeSize = [self _rightViewSizeBySwipeProgress:_panSwipeProgress];
         [self setNeedsUpdateConstraints];
         
+        if(endedSwipe == YES) {
+            [self willEndedSwipe:_panSwipeProgress];
+        }
         [UIView animateWithDuration:ABS(speed) / _swipeSpeed
+                              delay:0.0f
+                            options:UIViewAnimationOptionBeginFromCurrentState
                          animations:^{
                              [self movingSwipe:_panSwipeProgress];
                              [self layoutIfNeeded];
                          } completion:^(BOOL finished __unused) {
                              if(endedSwipe == YES) {
-                                 [self didEndedSwipe];
+                                 [self didEndedSwipe:_panSwipeProgress];
                              }
                          }];
     } else {
         if(endedSwipe == YES) {
-            [self didEndedSwipe];
+            [self willEndedSwipe:_panSwipeProgress];
+            [self didEndedSwipe:_panSwipeProgress];
         }
     }
 }
@@ -555,22 +588,14 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
                     }
                 }
                 if(_panSwipeDirection != MobilyDataCellSwipeDirectionUnknown) {
-                    switch(_panSwipeDirection) {
-                        case MobilyDataCellSwipeDirectionUnknown: {
-                            break;
-                        }
-                        case MobilyDataCellSwipeDirectionLeft: {
-                            CGFloat localDelta = MIN(MAX(_panSwipeLeftWidth, delta), -_panSwipeLeftWidth);
-                            [self _updateSwipeProgress:_panSwipeProgress - (localDelta / _panSwipeLeftWidth) speed:localDelta endedSwipe:NO];
-                            [self movingSwipe:_panSwipeProgress];
-                            break;
-                        }
-                        case MobilyDataCellSwipeDirectionRight: {
-                            CGFloat localDelta = MIN(MAX(-_panSwipeRightWidth, delta), _panSwipeRightWidth);
-                            [self _updateSwipeProgress:_panSwipeProgress + (localDelta / _panSwipeRightWidth) speed:localDelta endedSwipe:NO];
-                            [self movingSwipe:_panSwipeProgress];
-                            break;
-                        }
+                    if(_panSwipeDirection == MobilyDataCellSwipeDirectionLeft) {
+                        CGFloat localDelta = MIN(MAX(_panSwipeLeftWidth, delta), -_panSwipeLeftWidth);
+                        [self _updateSwipeProgress:_panSwipeProgress - (localDelta / _panSwipeLeftWidth) speed:localDelta endedSwipe:NO];
+                        [self movingSwipe:_panSwipeProgress];
+                    } else if(_panSwipeDirection == MobilyDataCellSwipeDirectionRight) {
+                        CGFloat localDelta = MIN(MAX(-_panSwipeRightWidth, delta), _panSwipeRightWidth);
+                        [self _updateSwipeProgress:_panSwipeProgress + (localDelta / _panSwipeRightWidth) speed:localDelta endedSwipe:NO];
+                        [self movingSwipe:_panSwipeProgress];
                     }
                     self.panSwipeLastOffset = translation.x;
                     self.panSwipeLastVelocity = velocity.x;
@@ -579,24 +604,11 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
             }
             case UIGestureRecognizerStateEnded:
             case UIGestureRecognizerStateCancelled: {
-                [self willEndedSwipe];
-                CGFloat swipeProgress = roundf(_panSwipeProgress - (_panSwipeLastVelocity / _swipeVelocity));
-                CGFloat minSwipeProgress = (_panSwipeDirection == MobilyDataCellSwipeDirectionLeft) ? -1.0f : 0.0f;
-                CGFloat maxSwipeProgress = (_panSwipeDirection == MobilyDataCellSwipeDirectionRight) ? 1.0f : 0.0f;
-                CGFloat needSwipeProgress = MIN(MAX(minSwipeProgress, swipeProgress), maxSwipeProgress);
-                switch(_panSwipeDirection) {
-                    case MobilyDataCellSwipeDirectionLeft: {
-                        [self _updateSwipeProgress:needSwipeProgress speed:_panSwipeLeftWidth * ABS(needSwipeProgress - _panSwipeProgress) endedSwipe:YES];
-                        break;
-                    }
-                    case MobilyDataCellSwipeDirectionRight: {
-                        [self _updateSwipeProgress:needSwipeProgress speed:_panSwipeRightWidth * ABS(needSwipeProgress - _panSwipeProgress) endedSwipe:YES];
-                        break;
-                    }
-                    default: {
-                        [self didEndedSwipe];
-                        break;
-                    }
+                CGFloat swipeProgress = [self endedSwipeProgress:_panSwipeProgress - (_panSwipeLastVelocity / _swipeVelocity)];
+                if(_panSwipeDirection == MobilyDataCellSwipeDirectionLeft) {
+                    [self _updateSwipeProgress:swipeProgress speed:_panSwipeLeftWidth * ABS(swipeProgress - _panSwipeProgress) endedSwipe:YES];
+                } else if(_panSwipeDirection == MobilyDataCellSwipeDirectionRight) {
+                    [self _updateSwipeProgress:swipeProgress speed:_panSwipeRightWidth * ABS(swipeProgress - _panSwipeProgress) endedSwipe:YES];
                 }
                 break;
             }
@@ -618,14 +630,10 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
                     CGPoint translation = [_panGestureRecognizer translationInView:self];
                     CGFloat absX = ABS(translation.x);
                     CGFloat absY = ABS(translation.y);
-                    if((absX >= absY) && (absX >= 2.0f)) {
-                        if((_leftSwipeEnabled == YES) && (_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (translation.x < 0.0f)) {
+                    if(absX >= absY) {
+                        if((_leftSwipeEnabled == YES) && (_leftSwipeView != nil)) {
                             return YES;
-                        } else if((_rightSwipeEnabled == YES) && (_showedRightSwipeView == YES) && (_rightSwipeView != nil) && (translation.x > 0.0f)) {
-                            return YES;
-                        } else if((_leftSwipeEnabled == YES) && (_showedLeftSwipeView == NO) && (_leftSwipeView != nil) && (translation.x > 0.0f)) {
-                            return YES;
-                        } else if((_rightSwipeEnabled == YES) && (_showedRightSwipeView == NO) && (_rightSwipeView != nil) && (translation.x < 0.0f)) {
+                        } else if((_rightSwipeEnabled == YES) && (_rightSwipeView != nil)) {
                             return YES;
                         }
                     }

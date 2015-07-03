@@ -99,11 +99,13 @@ typedef NS_ENUM(NSUInteger, MobilyDataCellSwipeDirection) {
     UIView* _leftSwipeView;
     CGFloat _leftSwipeOffset;
     CGFloat _leftSwipeSize;
+    CGFloat _leftSwipeStretchThreshold;
     BOOL _showedRightSwipeView;
     BOOL _rightSwipeEnabled;
     UIView* _rightSwipeView;
     CGFloat _rightSwipeOffset;
     CGFloat _rightSwipeSize;
+    CGFloat _rightSwipeStretchThreshold;
     NSLayoutConstraint* _constraintLeftSwipeViewOffsetX;
     NSLayoutConstraint* _constraintLeftSwipeViewCenterY;
     NSLayoutConstraint* _constraintLeftSwipeViewWidth;
