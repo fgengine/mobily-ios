@@ -389,43 +389,47 @@
 
 - (CGRect)titleRectForContentRect:(CGRect)contentRect {
     if(((self.currentTitle.length > 0) || (self.currentAttributedTitle.length > 0)) && (self.currentImage != nil)) {
-        UIEdgeInsets titleEdgeInsets = self.titleEdgeInsets;
-        UIEdgeInsets imageEdgeInsets = self.imageEdgeInsets;
-        CGRect titleRect = UIEdgeInsetsInsetRect([super titleRectForContentRect:contentRect], UIEdgeInsetsMake(-titleEdgeInsets.top, -titleEdgeInsets.left, -titleEdgeInsets.bottom, -titleEdgeInsets.right));
-        CGRect imageRect = UIEdgeInsetsInsetRect([super imageRectForContentRect:contentRect], UIEdgeInsetsMake(-imageEdgeInsets.top, -imageEdgeInsets.left, -imageEdgeInsets.bottom, -imageEdgeInsets.right));
-        [self _layoutContentRect:contentRect titleRect:&titleRect imageRect:&imageRect imageSize:self.currentImage.size];
-        return UIEdgeInsetsInsetRect(titleRect, titleEdgeInsets);
+        CGRect titleRect = [super titleRectForContentRect:contentRect];
+        CGRect imageRect = [super imageRectForContentRect:contentRect];
+        [self _layoutContentRect:contentRect imageRect:&imageRect imageEdgeInsets:self.imageEdgeInsets imageSize:self.currentImage.size titleRect:&titleRect titleEdgeInsets:self.titleEdgeInsets];
+        return titleRect;
     }
     return [super titleRectForContentRect:contentRect];
 }
 
 - (CGRect)imageRectForContentRect:(CGRect)contentRect {
     if(((self.currentTitle.length > 0) || (self.currentAttributedTitle.length > 0)) && (self.currentImage != nil)) {
-        UIEdgeInsets titleEdgeInsets = self.titleEdgeInsets;
-        UIEdgeInsets imageEdgeInsets = self.imageEdgeInsets;
-        CGRect titleRect = UIEdgeInsetsInsetRect([super titleRectForContentRect:contentRect], UIEdgeInsetsMake(-titleEdgeInsets.top, -titleEdgeInsets.left, -titleEdgeInsets.bottom, -titleEdgeInsets.right));
-        CGRect imageRect = UIEdgeInsetsInsetRect([super imageRectForContentRect:contentRect], UIEdgeInsetsMake(-imageEdgeInsets.top, -imageEdgeInsets.left, -imageEdgeInsets.bottom, -imageEdgeInsets.right));
-        [self _layoutContentRect:contentRect titleRect:&titleRect imageRect:&imageRect imageSize:self.currentImage.size];
-        return UIEdgeInsetsInsetRect(imageRect, imageEdgeInsets);
+        CGRect titleRect = [super titleRectForContentRect:contentRect];
+        CGRect imageRect = [super imageRectForContentRect:contentRect];
+        [self _layoutContentRect:contentRect imageRect:&imageRect imageEdgeInsets:self.imageEdgeInsets imageSize:self.currentImage.size titleRect:&titleRect titleEdgeInsets:self.titleEdgeInsets];
+        return imageRect;
     }
     return [super imageRectForContentRect:contentRect];
 }
 
 #pragma mark Private
 
-- (void)_layoutContentRect:(CGRect)contentRect titleRect:(CGRect*)titleRect imageRect:(CGRect*)imageRect imageSize:(CGSize)imageSize {
+- (void)_layoutContentRect:(CGRect)contentRect imageRect:(CGRect*)imageRect imageEdgeInsets:(UIEdgeInsets)imageEdgeInsets imageSize:(CGSize)imageSize titleRect:(CGRect*)titleRect titleEdgeInsets:(UIEdgeInsets)titleEdgeInsets {
+    imageRect->size.width = imageSize.width;
+    imageRect->size.height = imageSize.height;
+    CGSize fullImageSize = CGSizeMake(imageEdgeInsets.left + imageRect->size.width + imageEdgeInsets.right, imageEdgeInsets.top + imageRect->size.height + imageEdgeInsets.bottom);
+    CGSize fullTitleSize = CGSizeMake(titleEdgeInsets.left + titleRect->size.width + titleEdgeInsets.right, titleEdgeInsets.top + titleRect->size.height + titleEdgeInsets.bottom);
+    CGSize fullSize = CGSizeMake(fullImageSize.width + fullTitleSize.width, fullImageSize.height + fullTitleSize.height);
     switch(self.contentHorizontalAlignment) {
         case UIControlContentHorizontalAlignmentLeft: {
             switch(_imageAlignment) {
                 case MobilyButtonImageAlignmentTop:
                 case MobilyButtonImageAlignmentBottom:
-                    titleRect->origin.x = imageRect->origin.x;
+                    imageRect->origin.x = contentRect.origin.x + imageEdgeInsets.left;
+                    titleRect->origin.x = contentRect.origin.x + titleEdgeInsets.left;
                     break;
                 case MobilyButtonImageAlignmentLeft:
+                    imageRect->origin.x = contentRect.origin.x + imageEdgeInsets.left;
+                    titleRect->origin.x = (imageRect->origin.x + imageRect->size.width + imageEdgeInsets.right) + titleEdgeInsets.left;
                     break;
                 case MobilyButtonImageAlignmentRight:
-                    titleRect->origin.x -= imageRect->size.width;
-                    imageRect->origin.x += titleRect->size.width;
+                    titleRect->origin.x = contentRect.origin.x + titleEdgeInsets.left;
+                    imageRect->origin.x = (titleRect->origin.x + titleRect->size.width + titleEdgeInsets.right) + imageEdgeInsets.left;
                     break;
             }
             break;
@@ -434,14 +438,16 @@
             switch(_imageAlignment) {
                 case MobilyButtonImageAlignmentTop:
                 case MobilyButtonImageAlignmentBottom:
-                    titleRect->origin.x -= imageRect->size.width * 0.5f;
-                    imageRect->origin.x = (titleRect->origin.x + (titleRect->size.width * 0.5f)) - (imageRect->size.width * 0.5f);
+                    imageRect->origin.x = (contentRect.origin.x + (contentRect.size.width * 0.5f)) - (imageRect->size.width * 0.5f);
+                    titleRect->origin.x = (contentRect.origin.x + (contentRect.size.width * 0.5f)) - (titleRect->size.width * 0.5f);
                     break;
                 case MobilyButtonImageAlignmentLeft:
+                    imageRect->origin.x = ((contentRect.origin.x + (contentRect.size.width * 0.5f)) - (fullSize.width * 0.5f)) + imageEdgeInsets.left;
+                    titleRect->origin.x = (imageRect->origin.x + imageRect->size.width + imageEdgeInsets.right) + titleEdgeInsets.left;
                     break;
                 case MobilyButtonImageAlignmentRight:
-                    titleRect->origin.x -= imageRect->size.width;
-                    imageRect->origin.x += titleRect->size.width;
+                    titleRect->origin.x = ((contentRect.origin.x + (contentRect.size.width * 0.5f)) - (fullSize.width * 0.5f)) + titleEdgeInsets.left;
+                    imageRect->origin.x = (titleRect->origin.x + titleRect->size.width + titleEdgeInsets.right) + imageEdgeInsets.left;
                     break;
             }
             break;
@@ -450,13 +456,16 @@
             switch(_imageAlignment) {
                 case MobilyButtonImageAlignmentTop:
                 case MobilyButtonImageAlignmentBottom:
-                    imageRect->origin.x = (titleRect->origin.x + titleRect->size.width) - imageRect->size.width ;
+                    imageRect->origin.x = (contentRect.origin.x + contentRect.size.width) - (imageRect->size.width + imageEdgeInsets.right);
+                    titleRect->origin.x = (contentRect.origin.x + contentRect.size.width) - (titleRect->size.width + titleEdgeInsets.right);
                     break;
                 case MobilyButtonImageAlignmentLeft:
+                    titleRect->origin.x = (contentRect.origin.x + contentRect.size.width) - (titleRect->size.width + titleEdgeInsets.right);
+                    imageRect->origin.x = (titleRect->origin.x - titleEdgeInsets.left) - (imageRect->size.width + imageEdgeInsets.right);
                     break;
                 case MobilyButtonImageAlignmentRight:
-                    titleRect->origin.x -= imageRect->size.width;
-                    imageRect->origin.x += titleRect->size.width;
+                    imageRect->origin.x = (contentRect.origin.x + contentRect.size.width) - (imageRect->size.width + imageEdgeInsets.right);
+                    titleRect->origin.x = (imageRect->origin.x - imageEdgeInsets.left) - (titleRect->size.width + titleEdgeInsets.right);
                     break;
             }
             break;
@@ -464,16 +473,20 @@
         case UIControlContentHorizontalAlignmentFill: {
             switch(_imageAlignment) {
                 case MobilyButtonImageAlignmentLeft:
-                    CGRectDivide(contentRect, imageRect, titleRect, imageSize.width, CGRectMinXEdge);
+                    imageRect->origin.x = contentRect.origin.x + imageEdgeInsets.left;
+                    titleRect->origin.x = (imageRect->origin.x + imageRect->size.width + imageEdgeInsets.right) + titleEdgeInsets.left;
+                    titleRect->size.width = contentRect.size.width - (imageEdgeInsets.left + imageRect->size.width + imageEdgeInsets.right + titleEdgeInsets.left + titleEdgeInsets.right);
                     break;
                 case MobilyButtonImageAlignmentRight:
-                    CGRectDivide(contentRect, imageRect, titleRect, imageSize.width, CGRectMaxXEdge);
+                    titleRect->origin.x = contentRect.origin.x + titleEdgeInsets.left;
+                    titleRect->size.width = contentRect.size.width - (imageEdgeInsets.left + imageRect->size.width + imageEdgeInsets.right + titleEdgeInsets.left + titleEdgeInsets.right);
+                    imageRect->origin.x = (titleRect->origin.x + titleRect->size.width + titleEdgeInsets.right) + imageEdgeInsets.left;
                     break;
                 default:
-                    imageRect->origin.x = contentRect.origin.x;
-                    imageRect->size.width = contentRect.size.width;
-                    titleRect->origin.x = contentRect.origin.x;
-                    titleRect->size.width = contentRect.size.width;
+                    imageRect->origin.x = contentRect.origin.x + imageEdgeInsets.left;
+                    imageRect->size.width = contentRect.size.width - (imageEdgeInsets.left + imageEdgeInsets.right);
+                    titleRect->origin.x = contentRect.origin.x + titleEdgeInsets.left;
+                    titleRect->size.width = contentRect.size.width - (titleEdgeInsets.left + titleEdgeInsets.right);
                     break;
             }
             break;
@@ -483,14 +496,17 @@
         case UIControlContentVerticalAlignmentTop: {
             switch(_imageAlignment) {
                 case MobilyButtonImageAlignmentTop:
-                    titleRect->origin.y += imageRect->size.height;
+                    imageRect->origin.y = contentRect.origin.y + imageEdgeInsets.top;
+                    titleRect->origin.y = (imageRect->origin.y + imageRect->size.height + imageEdgeInsets.bottom) + titleEdgeInsets.top;
                     break;
                 case MobilyButtonImageAlignmentBottom:
-                    imageRect->origin.y += titleRect->size.height;
+                    imageRect->origin.y = (contentRect.origin.y + contentRect.size.height) + imageEdgeInsets.top;
+                    titleRect->origin.y = (imageRect->origin.y - imageEdgeInsets.top) + titleEdgeInsets.bottom;
                     break;
                 case MobilyButtonImageAlignmentLeft:
-                    break;
                 case MobilyButtonImageAlignmentRight:
+                    imageRect->origin.y = contentRect.origin.y + imageEdgeInsets.top;
+                    titleRect->origin.y = contentRect.origin.y + titleEdgeInsets.top;
                     break;
             }
             break;
@@ -498,16 +514,17 @@
         case UIControlContentVerticalAlignmentCenter: {
             switch(_imageAlignment) {
                 case MobilyButtonImageAlignmentTop:
-                    titleRect->origin.y += (imageRect->size.height * 0.5f);
-                    imageRect->origin.y -= (imageRect->size.height * 0.5f);
+                    imageRect->origin.y = ((contentRect.origin.y + (contentRect.size.height * 0.5f)) - (fullSize.height * 0.5f)) + imageEdgeInsets.top;
+                    titleRect->origin.y = (imageRect->origin.y + imageRect->size.height + imageEdgeInsets.bottom) + titleEdgeInsets.top;
                     break;
                 case MobilyButtonImageAlignmentBottom:
-                    titleRect->origin.y -= (imageRect->size.height * 0.5f);
-                    imageRect->origin.y += (imageRect->size.height * 0.5f);
+                    imageRect->origin.y = ((contentRect.origin.y + (contentRect.size.height * 0.5f)) - (fullSize.height * 0.5f)) + imageEdgeInsets.top;
+                    titleRect->origin.y = (imageRect->origin.y + imageRect->size.height + imageEdgeInsets.bottom) + titleEdgeInsets.top;
                     break;
                 case MobilyButtonImageAlignmentLeft:
-                    break;
                 case MobilyButtonImageAlignmentRight:
+                    imageRect->origin.y = (contentRect.origin.y + (contentRect.size.height * 0.5f)) - (imageRect->size.height * 0.5f);
+                    titleRect->origin.y = (contentRect.origin.y + (contentRect.size.height * 0.5f)) - (titleRect->size.height * 0.5f);
                     break;
             }
             break;
@@ -515,12 +532,17 @@
         case UIControlContentVerticalAlignmentBottom: {
             switch(_imageAlignment) {
                 case MobilyButtonImageAlignmentTop:
+                    titleRect->origin.y = (contentRect.origin.y + contentRect.size.height) - (titleRect->size.width + titleEdgeInsets.bottom);
+                    imageRect->origin.y = (titleRect->origin.y - titleEdgeInsets.top) - (imageRect->size.height + imageEdgeInsets.bottom);
+                    break;
                 case MobilyButtonImageAlignmentBottom:
-                    titleRect->origin.y -= imageRect->size.height;
+                    imageRect->origin.y = (contentRect.origin.y + contentRect.size.height) - (imageRect->size.width + imageEdgeInsets.bottom);
+                    titleRect->origin.y = (imageRect->origin.y - imageEdgeInsets.top) - (titleRect->size.height + titleEdgeInsets.bottom);
                     break;
                 case MobilyButtonImageAlignmentLeft:
-                    break;
                 case MobilyButtonImageAlignmentRight:
+                    imageRect->origin.y = (contentRect.origin.y + contentRect.size.height) - (imageRect->size.height + imageEdgeInsets.bottom);
+                    titleRect->origin.y = (contentRect.origin.y + contentRect.size.height) - (titleRect->size.height + titleEdgeInsets.bottom);
                     break;
             }
             break;
@@ -528,16 +550,20 @@
         case UIControlContentVerticalAlignmentFill: {
             switch(_imageAlignment) {
                 case MobilyButtonImageAlignmentTop:
-                    CGRectDivide(contentRect, imageRect, titleRect, imageSize.height, CGRectMinYEdge);
+                    imageRect->origin.y = contentRect.origin.y + imageEdgeInsets.top;
+                    titleRect->origin.y = (imageRect->origin.y + imageRect->size.height + imageEdgeInsets.bottom) + titleEdgeInsets.top;
+                    titleRect->size.height = contentRect.size.height - (imageEdgeInsets.top + imageRect->size.height + imageEdgeInsets.bottom + titleEdgeInsets.top + titleEdgeInsets.bottom);
                     break;
                 case MobilyButtonImageAlignmentBottom:
-                    CGRectDivide(contentRect, imageRect, titleRect, imageSize.height, CGRectMaxYEdge);
+                    titleRect->origin.y = contentRect.origin.y + titleEdgeInsets.top;
+                    titleRect->size.height = contentRect.size.height - (imageEdgeInsets.top + imageRect->size.height + imageEdgeInsets.bottom + titleEdgeInsets.top + titleEdgeInsets.bottom);
+                    imageRect->origin.y = (titleRect->origin.y + titleRect->size.height + titleEdgeInsets.bottom) + imageEdgeInsets.top;
                     break;
                 default:
-                    imageRect->origin.y = contentRect.origin.y;
-                    imageRect->size.height = contentRect.size.height;
-                    titleRect->origin.y = contentRect.origin.y;
-                    titleRect->size.height = contentRect.size.height;
+                    imageRect->origin.y = contentRect.origin.y + imageEdgeInsets.top;
+                    imageRect->size.height = contentRect.size.height - (imageEdgeInsets.top + imageEdgeInsets.bottom);
+                    titleRect->origin.y = contentRect.origin.y + titleEdgeInsets.top;
+                    titleRect->size.height = contentRect.size.height - (titleEdgeInsets.top + titleEdgeInsets.bottom);
                     break;
             }
             break;
