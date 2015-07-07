@@ -122,6 +122,31 @@
 
 #pragma mark Property
 
+- (void)setTitle:(NSString*)title forState:(UIControlState)state {
+    [super setTitle:title forState:state];
+    [self setNeedsLayout];
+}
+
+- (void)setAttributedTitle:(NSAttributedString*)attributedTitle forState:(UIControlState)state {
+    [super setAttributedTitle:attributedTitle forState:state];
+    [self setNeedsLayout];
+}
+
+- (void)setTitleEdgeInsets:(UIEdgeInsets)titleEdgeInsets {
+    [super setTitleEdgeInsets:titleEdgeInsets];
+    [self setNeedsLayout];
+}
+
+- (void)setImage:(UIImage*)image forState:(UIControlState)state {
+    [super setImage:image forState:state];
+    [self setNeedsLayout];
+}
+
+- (void)setImageEdgeInsets:(UIEdgeInsets)imageEdgeInsets {
+    [super setImageEdgeInsets:imageEdgeInsets];
+    [self setNeedsLayout];
+}
+
 - (void)setEnabled:(BOOL)enabled {
     if(self.enabled != enabled) {
         super.enabled = enabled;
