@@ -77,10 +77,6 @@
 }
 
 - (void)setup {
-    self.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    self.imageView.contentMode = UIViewContentModeCenter;
-    
-    [self _updateCurrentState];
 }
 
 #pragma mark MobilyBuilderObject
@@ -374,14 +370,6 @@
 
 #pragma mark Public override
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    CGRect contentRect = [self contentRectForBounds:self.bounds];
-    self.titleLabel.frame = [self titleRectForContentRect:contentRect];
-    self.imageView.frame = [self imageRectForContentRect:contentRect];
-}
-
 - (CGSize)sizeThatFits:(CGSize __unused)size {
     return [self intrinsicContentSize];
 }
@@ -392,19 +380,21 @@
         UIEdgeInsets titleEdgeInsets = self.titleEdgeInsets;
         UIEdgeInsets imageEdgeInsets = self.imageEdgeInsets;
         CGRect contentRect = [super contentRectForBounds:CGRectMake(0.0f, 0.0f, FLT_MAX, FLT_MAX)];
-        CGRect titleRect = UIEdgeInsetsInsetRect([super titleRectForContentRect:contentRect], UIEdgeInsetsMake(-titleEdgeInsets.top, -titleEdgeInsets.left, -titleEdgeInsets.bottom, -titleEdgeInsets.right));
-        CGRect imageRect = UIEdgeInsetsInsetRect([super imageRectForContentRect:contentRect], UIEdgeInsetsMake(-imageEdgeInsets.top, -imageEdgeInsets.left, -imageEdgeInsets.bottom, -imageEdgeInsets.right));
+        CGRect titleRect = [super titleRectForContentRect:contentRect];
+        CGRect imageRect = [super imageRectForContentRect:contentRect];
+        CGSize fullTitleSize = CGSizeMake(titleEdgeInsets.left + titleRect.size.width + titleEdgeInsets.right, titleEdgeInsets.top + titleRect.size.height + titleEdgeInsets.bottom);
+        CGSize fullImageSize = CGSizeMake(imageEdgeInsets.left + imageRect.size.width + imageEdgeInsets.right, imageEdgeInsets.top + imageRect.size.height + imageEdgeInsets.bottom);
         CGSize result = CGSizeMake(contentEdgeInsets.left + contentEdgeInsets.right, contentEdgeInsets.top + contentEdgeInsets.bottom);
         switch(_imageAlignment) {
             case MobilyButtonImageAlignmentLeft:
             case MobilyButtonImageAlignmentRight:
-                result.width += titleRect.size.width + imageRect.size.width;
-                result.height += MAX(titleRect.size.height, imageRect.size.height);
+                result.width += fullTitleSize.width + fullImageSize.width;
+                result.height += MAX(fullTitleSize.height, fullImageSize.height);
                 break;
             case MobilyButtonImageAlignmentTop:
             case MobilyButtonImageAlignmentBottom:
-                result.width += MAX(titleRect.size.width, imageRect.size.width);
-                result.height += titleRect.size.height + imageRect.size.height;
+                result.width += MAX(fullTitleSize.width, fullImageSize.width);
+                result.height += fullTitleSize.height + fullImageSize.height;
                 break;
         }
         return result;
