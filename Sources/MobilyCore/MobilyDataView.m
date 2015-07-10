@@ -276,7 +276,9 @@
 
 - (void)setContentSize:(CGSize)contentSize {
     [super setContentSize:contentSize];
-    self.contentView.frameSize = contentSize;
+    CGFloat width = (contentSize.width > FLT_EPSILON) ? contentSize.width : self.frame.size.width;
+    CGFloat height = (contentSize.height > FLT_EPSILON) ? contentSize.height : self.frame.size.height;
+    self.contentView.frameSize = CGSizeMake(width, height);
 }
 
 - (void)setDelegateProxy:(MobilyDataViewDelegateProxy*)delegateProxy {
@@ -307,7 +309,10 @@
 
 - (MobilyDataContentView*)contentView {
     if(_contentView == nil) {
-        _contentView = [[MobilyDataContentView alloc] initWithFrame:CGRectMakeOriginAndSize(CGPointZero, self.contentSize)];
+        CGSize contentSize = self.contentSize;
+        CGFloat width = (contentSize.width > FLT_EPSILON) ? contentSize.width : self.frame.size.width;
+        CGFloat height = (contentSize.height > FLT_EPSILON) ? contentSize.height : self.frame.size.height;
+        _contentView = [[MobilyDataContentView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, width, height)];
         [self addSubview:_contentView];
     }
     return _contentView;
@@ -432,7 +437,6 @@
         _searchBarStyle = searchBarStyle;
         if(_searchBar != nil) {
             [self _updateSuperviewConstraints];
-            [self.superview layoutIfNeeded];
         }
         self.searchBarInset = (_showedSearchBar == YES) ? _searchBar.frameHeight : 0.0f;
     }
@@ -453,7 +457,6 @@
             if(self.superview != nil) {
                 [self.superview insertSubview:_searchBar aboveSubview:self];
                 [self _updateSuperviewConstraints];
-                [self.superview layoutIfNeeded];
             }
         }
         self.searchBarInset = (_showedSearchBar == YES) ? _searchBar.frameHeight : 0.0f;
@@ -1380,6 +1383,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         self.constraintRightRefreshRight = nil;
         self.constraintRightRefreshSize = nil;
     }
+    [self.superview layoutIfNeeded];
 }
 
 - (void)_updateInsets {
@@ -1537,7 +1541,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         }
         if(_topRefreshView != nil) {
             CGFloat progress = 0.0f;
-            if((_topRefreshIteractionEnabled == YES) && (contentSize.height > 0.0f)) {
+            if((_topRefreshIteractionEnabled == YES) && ((contentSize.height > 0.0f) || (dragging == NO))) {
                 CGFloat inset = containerInsets.top + searchBarInset;
                 if(contentOffset.y < -inset) {
                     progress = -(contentOffset.y + inset);
@@ -1572,7 +1576,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         }
         if(_bottomRefreshView != nil) {
             CGFloat progress = 0.0f;
-            if((_bottomRefreshIteractionEnabled == YES) && (contentSize.height >= frameSize.height)) {
+            if((_bottomRefreshIteractionEnabled == YES) && ((contentSize.height >= frameSize.height) || (dragging == NO))) {
                 CGFloat limit = (contentSize.height - frameSize.height);
                 if(contentOffset.y > limit) {
                     progress = contentOffset.y - limit;
@@ -1607,7 +1611,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         }
         if(_leftRefreshView != nil) {
             CGFloat progress = 0.0f;
-            if((_leftRefreshIteractionEnabled == YES) && (contentSize.width >= 0.0f)) {
+            if((_leftRefreshIteractionEnabled == YES) && ((contentSize.width >= 0.0f) || (dragging == NO))) {
                 CGFloat inset = containerInsets.left;
                 if(contentOffset.x < -inset) {
                     progress = -(contentOffset.x + inset);
@@ -1642,7 +1646,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         }
         if(_rightRefreshView != nil) {
             CGFloat progress = 0.0f;
-            if((_rightRefreshIteractionEnabled == YES) && (contentSize.width >= frameSize.width)) {
+            if((_rightRefreshIteractionEnabled == YES) && ((contentSize.width >= frameSize.width) || (dragging == NO))) {
                 CGFloat limit = (contentSize.width - frameSize.width);
                 if(contentOffset.x > limit) {
                     progress = contentOffset.x - limit;

@@ -174,6 +174,10 @@
             case MobilyDataRefreshViewTypeLeft: refreshViewInsets.left = _size; refreshViewInsets.right = -_size; break;
             case MobilyDataRefreshViewTypeRight: refreshViewInsets.left = -_size; refreshViewInsets.right = _size; break;
         }
+        if(_view.isTracking == NO) {
+            contentOffset.x -= refreshViewInsets.left;
+            contentOffset.y -= refreshViewInsets.top;
+        }
         _constraintOffset.constant = 0.0f;
         _constraintSize.constant = _size;
         if(animated == YES) {

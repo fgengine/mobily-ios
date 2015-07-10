@@ -167,6 +167,7 @@
                 _cell.highlighted = _highlighted;
                 _cell.editing = _editing;
                 _cell.item = self;
+                [_cell layoutIfNeeded];
             }];
         }
     }
