@@ -1471,7 +1471,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         CGFloat searchBarHeight = _searchBar.frameHeight;
         CGFloat searchBarInset = _searchBarInset;
         UIEdgeInsets refreshViewInsets = _refreshViewInsets;
-        CGSize contentViewSize = _contentView.frameSize;
+        CGSize contentViewSize = self.contentView.frameSize;
         if(self.bounces == YES) {
             if(self.alwaysBounceVertical == YES) {
                 if(_bouncesTop == NO) {
