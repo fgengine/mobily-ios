@@ -1127,7 +1127,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = Mobily;
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0640;
 				ORGANIZATIONNAME = Mobily;
 				TargetAttributes = {
 					4096BC201B20230E0048B07E = {
@@ -1623,6 +1623,7 @@
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
