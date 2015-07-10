@@ -41,6 +41,10 @@
 
 /*--------------------------------------------------*/
 
+typedef void(^MobilyNotificationPressed)(MobilyNotificationView* notificationView);
+
+/*--------------------------------------------------*/
+
 MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyNotificationManager : NSObject
 
@@ -51,9 +55,9 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 + (BOOL)statusBarHidden;
 
 + (MobilyNotificationView*)showView:(UIView*)view;
-+ (MobilyNotificationView*)showView:(UIView*)view pressed:(MobilySimpleBlock)pressed;
++ (MobilyNotificationView*)showView:(UIView*)view pressed:(MobilyNotificationPressed)pressed;
 + (MobilyNotificationView*)showView:(UIView*)view duration:(NSTimeInterval)duration;
-+ (MobilyNotificationView*)showView:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilySimpleBlock)pressed;
++ (MobilyNotificationView*)showView:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilyNotificationPressed)pressed;
 
 + (void)hideNotificationView:(MobilyNotificationView*)notificationView animated:(BOOL)animated;
 + (void)hideAllAnimated:(BOOL)animated;
@@ -67,7 +71,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 
 @property(nonatomic, readonly, strong) UIView* view;
 @property(nonatomic, readonly, assign) NSTimeInterval duration;
-@property(nonatomic, readonly, copy) MobilySimpleBlock pressed;
+@property(nonatomic, readonly, copy) MobilyNotificationPressed pressed;
 
 - (void)hideAnimated:(BOOL)animated;
 

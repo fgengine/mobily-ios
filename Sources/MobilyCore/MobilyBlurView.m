@@ -374,12 +374,15 @@
             }
         }
     }
-    UIGraphicsBeginImageContextWithOptions(size, NO, scale);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextTranslateCTM(context, -bounds.origin.x, -bounds.origin.y);
-    [underlyingLayer renderInContext:context];
-    UIImage* snapshot = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
+    UIImage* snapshot = nil;
+    if(floorf(size.width) * floorf(size.height) > FLT_EPSILON) {
+        UIGraphicsBeginImageContextWithOptions(size, NO, scale);
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGContextTranslateCTM(context, -bounds.origin.x, -bounds.origin.y);
+        [underlyingLayer renderInContext:context];
+        snapshot = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+    }
     for(CALayer* layer in hiddenLayers) {
         layer.hidden = NO;
     }

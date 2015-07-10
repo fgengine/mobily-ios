@@ -82,7 +82,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
     NSTimeInterval _duration;
     UIStatusBarStyle _statusBarStyle;
     BOOL _statusBarHidden;
-    MobilySimpleBlock _pressed;
+    MobilyNotificationPressed _pressed;
 }
 
 @property(nonatomic, readwrite, weak) MobilyNotificationController* controller;
@@ -98,9 +98,9 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintViewWidth;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintViewHeight;
 @property(nonatomic, readwrite, assign) NSTimeInterval duration;
-@property(nonatomic, readwrite, copy) MobilySimpleBlock pressed;
+@property(nonatomic, readwrite, copy) MobilyNotificationPressed pressed;
 
-- (instancetype)initWithController:(MobilyNotificationController*)controller view:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilySimpleBlock)pressed;
+- (instancetype)initWithController:(MobilyNotificationController*)controller view:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilyNotificationPressed)pressed;
 
 - (IBAction)pressed:(id)sender;
 
@@ -132,6 +132,16 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 /*--------------------------------------------------*/
 
 @implementation MobilyNotificationWindow
+
+#pragma mark Init / Free
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if(self != nil) {
+        self.backgroundColor = [UIColor clearColor];
+    }
+    return self;
+}
 
 #pragma mark Public override
 
@@ -195,8 +205,10 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
     return [UIApplication.sharedApplication.keyWindow.rootViewController prefersStatusBarHidden];
 }
 
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor clearColor];
 }
 
 #pragma mark Public
@@ -338,7 +350,7 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
 
 #pragma mark Init / Free
 
-- (instancetype)initWithController:(MobilyNotificationController*)controller view:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilySimpleBlock)pressed {
+- (instancetype)initWithController:(MobilyNotificationController*)controller view:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilyNotificationPressed)pressed {
     self = [super initWithFrame:view.bounds];
     if(self != nil) {
         self.controller = controller;
@@ -469,7 +481,12 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintViewHeight, constraintViewHeigh
 #pragma mark Actions
 
 - (IBAction)pressed:(id)sender {
-    [self hideAnimated:YES];
+    self.timer = nil;
+    if(_pressed != nil) {
+        _pressed(self);
+    } else {
+        [self hideAnimated:YES];
+    }
 }
 
 @end
@@ -539,7 +556,7 @@ static NSTimeInterval MobilyNotificationManager_Dutation = 3.0f;
     return [self.shared _showView:view duration:MobilyNotificationManager_Dutation pressed:nil];
 }
 
-+ (MobilyNotificationView*)showView:(UIView*)view pressed:(MobilySimpleBlock)pressed {
++ (MobilyNotificationView*)showView:(UIView*)view pressed:(MobilyNotificationPressed)pressed {
     return [self.shared _showView:view duration:MobilyNotificationManager_Dutation pressed:pressed];
 }
 
@@ -547,7 +564,7 @@ static NSTimeInterval MobilyNotificationManager_Dutation = 3.0f;
     return [self.shared _showView:view duration:duration pressed:nil];
 }
 
-+ (MobilyNotificationView*)showView:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilySimpleBlock)pressed {
++ (MobilyNotificationView*)showView:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilyNotificationPressed)pressed {
     return [self.shared _showView:view duration:duration pressed:pressed];
 }
 
