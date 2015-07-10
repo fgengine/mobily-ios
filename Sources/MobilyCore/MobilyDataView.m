@@ -1471,6 +1471,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         CGFloat searchBarHeight = _searchBar.frameHeight;
         CGFloat searchBarInset = _searchBarInset;
         UIEdgeInsets refreshViewInsets = _refreshViewInsets;
+        CGSize contentViewSize = _contentView.frameSize;
         if(self.bounces == YES) {
             if(self.alwaysBounceVertical == YES) {
                 if(_bouncesTop == NO) {
@@ -1541,7 +1542,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         }
         if(_topRefreshView != nil) {
             CGFloat progress = 0.0f;
-            if((_topRefreshIteractionEnabled == YES) && ((contentSize.height > 0.0f) || (dragging == NO))) {
+            if((_topRefreshIteractionEnabled == YES) && ((contentViewSize.height > 0.0f) || (dragging == NO))) {
                 CGFloat inset = containerInsets.top + searchBarInset;
                 if(contentOffset.y < -inset) {
                     progress = -(contentOffset.y + inset);
@@ -1576,8 +1577,8 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         }
         if(_bottomRefreshView != nil) {
             CGFloat progress = 0.0f;
-            if((_bottomRefreshIteractionEnabled == YES) && ((contentSize.height >= frameSize.height) || (dragging == NO))) {
-                CGFloat limit = (contentSize.height - frameSize.height);
+            if((_bottomRefreshIteractionEnabled == YES) && ((contentViewSize.height >= frameSize.height) || (dragging == NO))) {
+                CGFloat limit = (contentViewSize.height - frameSize.height);
                 if(contentOffset.y > limit) {
                     progress = contentOffset.y - limit;
                 }
@@ -1611,7 +1612,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         }
         if(_leftRefreshView != nil) {
             CGFloat progress = 0.0f;
-            if((_leftRefreshIteractionEnabled == YES) && ((contentSize.width >= 0.0f) || (dragging == NO))) {
+            if((_leftRefreshIteractionEnabled == YES) && ((contentViewSize.width >= 0.0f) || (dragging == NO))) {
                 CGFloat inset = containerInsets.left;
                 if(contentOffset.x < -inset) {
                     progress = -(contentOffset.x + inset);
@@ -1646,8 +1647,8 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         }
         if(_rightRefreshView != nil) {
             CGFloat progress = 0.0f;
-            if((_rightRefreshIteractionEnabled == YES) && ((contentSize.width >= frameSize.width) || (dragging == NO))) {
-                CGFloat limit = (contentSize.width - frameSize.width);
+            if((_rightRefreshIteractionEnabled == YES) && ((contentViewSize.width >= frameSize.width) || (dragging == NO))) {
+                CGFloat limit = (contentViewSize.width - frameSize.width);
                 if(contentOffset.x > limit) {
                     progress = contentOffset.x - limit;
                 }
