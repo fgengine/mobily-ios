@@ -560,8 +560,10 @@
         
         NSNumber* number = [numberFormat numberFromString:value];
         if(number == nil) {
-            if([[numberFormat decimalSeparator] isEqualToString:@"."] == YES) {
+            if([numberFormat.decimalSeparator isEqualToString:@"."] == YES) {
                 numberFormat.decimalSeparator = @",";
+            } else {
+                numberFormat.decimalSeparator = @".";
             }
             number = [numberFormat numberFromString:value];
         }
