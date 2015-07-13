@@ -426,6 +426,28 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
     return MIN(MAX(minProgress, progress), maxProgress);
 }
 
+#pragma mark Private override
+
+- (void)_pressed {
+    if(_showedLeftSwipeView == YES) {
+        [self setShowedLeftSwipeView:NO animated:YES];
+    } else if(_showedRightSwipeView == YES) {
+        [self setShowedRightSwipeView:NO animated:YES];
+    } else {
+        [super _pressed];
+    }
+}
+
+- (void)_longPressed {
+    if(_showedLeftSwipeView == YES) {
+        [self setShowedLeftSwipeView:NO animated:YES];
+    } else if(_showedRightSwipeView == YES) {
+        [self setShowedRightSwipeView:NO animated:YES];
+    } else {
+        [super _longPressed];
+    }
+}
+
 #pragma mark Private
 
 - (UIOffset)_rootViewOffsetOfCenterBySwipeProgress:(CGFloat)swipeProgress {

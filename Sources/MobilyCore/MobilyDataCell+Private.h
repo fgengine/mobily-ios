@@ -68,6 +68,9 @@
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintRootViewWidth;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintRootViewHeight;
 
+- (void)_pressed;
+- (void)_longPressed;
+
 - (void)_handlerPressGestureRecognizer:(UILongPressGestureRecognizer*)gestureRecognizer;
 - (void)_handlerTapGestureRecognizer:(UITapGestureRecognizer*)gestureRecognizer;
 - (void)_handlerLongPressGestureRecognizer:(UILongPressGestureRecognizer*)gestureRecognizer;

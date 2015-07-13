@@ -332,6 +332,15 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRootViewHeight, constraintRootV
 
 #pragma mark Private
 
+- (void)_pressed {
+    [_view _pressedItem:_item animated:YES];
+    [self fireEventForKey:MobilyDataCellPressed byObject:_item];
+}
+
+- (void)_longPressed {
+    [self fireEventForKey:MobilyDataCellLongPressed byObject:_item];
+}
+
 - (void)_handlerPressGestureRecognizer:(UILongPressGestureRecognizer*)gestureRecognizer {
     if(gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         if(_highlighted == NO) {
@@ -344,14 +353,13 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRootViewHeight, constraintRootV
 
 - (void)_handlerTapGestureRecognizer:(UITapGestureRecognizer*)gestureRecognizer {
     if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-        [_view _pressedItem:_item animated:YES];
-        [self fireEventForKey:MobilyDataCellPressed byObject:_item];
+        [self _pressed];
     }
 }
 
 - (void)_handlerLongPressGestureRecognizer:(UILongPressGestureRecognizer*)gestureRecognizer {
     if(gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        [self fireEventForKey:MobilyDataCellLongPressed byObject:_item];
+        [self _longPressed];
     }
 }
 
