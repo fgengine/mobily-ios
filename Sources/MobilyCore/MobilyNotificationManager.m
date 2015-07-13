@@ -52,10 +52,12 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyNotificationController : UIViewController {
 @protected
+    __weak UIWindow* _parentWindow;
     UIStatusBarStyle _statusBarStyle;
     NSMutableArray* _queue;
 }
 
+@property(nonatomic, readwrite, weak) UIWindow* parentWindow;
 @property(nonatomic, readwrite, assign) UIStatusBarStyle statusBarStyle;
 
 - (MobilyNotificationView*)pushView:(UIView*)view duration:(NSTimeInterval)duration pressed:(MobilySimpleBlock)pressed;
@@ -168,6 +170,7 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
 
 #pragma mark Synthesize
 
+@synthesize parentWindow = _parentWindow;
 @synthesize statusBarStyle = _statusBarStyle;
 
 #pragma mark Init / Free
@@ -182,6 +185,15 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
 }
 
 #pragma mark Property
+
+- (void)setParentWindow:(UIWindow*)parentWindow {
+    if(_parentWindow != parentWindow) {
+        _parentWindow = parentWindow;
+        if(UIDevice.systemVersion >= 7.0f) {
+            [self setNeedsStatusBarAppearanceUpdate];
+        }
+    }
+}
 
 - (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle {
     if(_statusBarStyle != statusBarStyle) {
@@ -198,11 +210,11 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
     if(_queue.count > 0) {
         return _statusBarStyle;
     }
-    return [UIApplication.sharedApplication.keyWindow.rootViewController preferredStatusBarStyle];
+    return [_parentWindow.rootViewController preferredStatusBarStyle];
 }
 
 - (BOOL)prefersStatusBarHidden {
-    return [UIApplication.sharedApplication.keyWindow.rootViewController prefersStatusBarHidden];
+    return [_parentWindow.rootViewController prefersStatusBarHidden];
 }
 
 - (void)viewDidLoad {
@@ -532,6 +544,14 @@ static NSTimeInterval MobilyNotificationManager_Dutation = 3.0f;
 
 #pragma mark Public
 
++ (void)setParentWindow:(UIWindow*)parentWindow {
+    [[self.shared controller] setParentWindow:parentWindow];
+}
+
++ (UIWindow*)parentWindow {
+    return [[self.shared controller] parentWindow];
+}
+
 + (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle {
     [[self.shared controller] setStatusBarStyle:statusBarStyle];
 }
@@ -589,6 +609,7 @@ static NSTimeInterval MobilyNotificationManager_Dutation = 3.0f;
 - (MobilyNotificationController*)controller {
     if(_controller == nil) {
         _controller = [MobilyNotificationController new];
+        _controller.parentWindow = UIApplication.sharedApplication.keyWindow;
     }
     return _controller;
 }

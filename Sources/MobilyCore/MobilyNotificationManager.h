@@ -48,6 +48,9 @@ typedef void(^MobilyNotificationPressed)(MobilyNotificationView* notificationVie
 MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyNotificationManager : NSObject
 
++ (void)setParentWindow:(UIWindow*)parentWindow;
++ (UIWindow*)parentWindow;
+
 + (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle;
 + (UIStatusBarStyle)statusBarStyle;
 
