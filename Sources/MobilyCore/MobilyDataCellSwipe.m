@@ -595,16 +595,16 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
             case UIGestureRecognizerStateChanged: {
                 CGFloat delta = _panSwipeLastOffset - translation.x;
                 if(_panSwipeDirection == MobilyDataCellSwipeDirectionUnknown) {
-                    if((_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (delta > _swipeThreshold)) {
+                    if((_leftSwipeEnabled == YES) && (_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (delta > _swipeThreshold)) {
                         self.panSwipeDirection = MobilyDataCellSwipeDirectionLeft;
                         [self didBeganSwipe];
-                    } else if((_showedRightSwipeView == YES) && (_rightSwipeView != nil) && (delta < -_swipeThreshold)) {
+                    } else if((_rightSwipeEnabled == YES) && (_showedRightSwipeView == YES) && (_rightSwipeView != nil) && (delta < -_swipeThreshold)) {
                         self.panSwipeDirection = MobilyDataCellSwipeDirectionRight;
                         [self didBeganSwipe];
-                    } else if((_showedLeftSwipeView == NO) && (_leftSwipeView != nil) && (delta < -_swipeThreshold)) {
+                    } else if((_leftSwipeEnabled == YES) && (_showedLeftSwipeView == NO) && (_leftSwipeView != nil) && (delta < -_swipeThreshold)) {
                         self.panSwipeDirection = MobilyDataCellSwipeDirectionLeft;
                         [self didBeganSwipe];
-                    } else if((_showedRightSwipeView == NO) && (_rightSwipeView != nil) && (delta > _swipeThreshold)) {
+                    } else if((_rightSwipeEnabled == YES) && (_showedRightSwipeView == NO) && (_rightSwipeView != nil) && (delta > _swipeThreshold)) {
                         self.panSwipeDirection = MobilyDataCellSwipeDirectionRight;
                         [self didBeganSwipe];
                     }
