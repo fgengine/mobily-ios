@@ -37,23 +37,6 @@
 
 /*--------------------------------------------------*/
 
-typedef NS_ENUM(NSUInteger, MobilyDialogControllerPresentationStyle) {
-    MobilyDialogControllerPresentationStyleTop,
-    MobilyDialogControllerPresentationStyleBottom,
-    MobilyDialogControllerPresentationStyleUnderNavBar,
-    MobilyDialogControllerPresentationStyleUnderToolbar,
-    MobilyDialogControllerPresentationStyleCentered
-};
-
-typedef NS_ENUM(NSUInteger, MobilyDialogControllerHorizontalJustification) {
-    MobilyDialogControllerHorizontalJustificationCentered,
-    MobilyDialogControllerHorizontalJustificationLeft,
-    MobilyDialogControllerHorizontalJustificationRight,
-    MobilyDialogControllerHorizontalJustificationFull
-};
-
-/*--------------------------------------------------*/
-
 @class MobilyDialogController;
 
 /*--------------------------------------------------*/
@@ -62,11 +45,10 @@ typedef void(^MobilyDialogControllerBlock)(MobilyDialogController* dialogControl
 
 /*--------------------------------------------------*/
 
+MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyDialogController : UIViewController < MobilyObject >
 
 @property(nonatomic, readwrite, assign) CGFloat animationDuration;
-@property(nonatomic, readwrite, assign) CGRect presentationRect;
-@property(nonatomic, readwrite, assign) CGFloat slideInset;
 
 @property(nonatomic, readwrite, assign, getter=isBackgroundBlurred) BOOL backgroundBlurred;
 @property(nonatomic, readwrite, assign) CGFloat backgroundBlurRadius;
@@ -75,29 +57,18 @@ typedef void(^MobilyDialogControllerBlock)(MobilyDialogController* dialogControl
 @property(nonatomic, readwrite, strong) UIColor* backgroundTintColor;
 @property(nonatomic, readwrite, assign) CGFloat backgroundAlpha;
 
-@property(nonatomic, readwrite, strong) UIColor* contentColor;
-@property(nonatomic, readwrite, assign) CGFloat contentAlpha;
-@property(nonatomic, readwrite, assign) CGFloat contentCornerRadius;
-@property(nonatomic, readwrite, assign) CGFloat contentBorderWidth;
-@property(nonatomic, readwrite, strong) UIColor* contentBorderColor;
-@property(nonatomic, readwrite, strong) UIColor* contentShadowColor;
-@property(nonatomic, readwrite, assign) CGFloat contentShadowOpacity;
-@property(nonatomic, readwrite, assign) CGSize contentShadowOffset;
-@property(nonatomic, readwrite, assign) CGFloat contentShadowRadius;
+@property(nonatomic, readwrite, assign) CGSize contentMinSize;
+@property(nonatomic, readwrite, assign) CGSize contentMaxSize;
+@property(nonatomic, readwrite, assign) UIEdgeInsets contentInsets;
 
-@property(nonatomic, readwrite, assign) MobilyDialogControllerPresentationStyle presentationStyle;
-@property(nonatomic, readwrite, assign) MobilyDialogControllerHorizontalJustification horizontalJustification;
 @property(nonatomic, readwrite, copy) MobilyDialogControllerBlock touchedOutsideContent;
 @property(nonatomic, readwrite, copy) MobilyDialogControllerBlock dismiss;
 
-- (instancetype)initWithViewController:(UIViewController*)viewController presentationStyle:(MobilyDialogControllerPresentationStyle)style;
+- (instancetype)initWithContentController:(UIViewController*)contentController;
 
-- (void)presentFromViewController:(UIViewController*)presentingVC withCompletion:(MobilySimpleBlock)completion;
+- (void)presentController:(UIViewController*)controller withCompletion:(MobilySimpleBlock)completion;
 - (void)presentWithCompletion:(MobilySimpleBlock)completion;
-
 - (void)dismissWithCompletion:(MobilySimpleBlock)completion;
-
-- (void)adjustContentSize:(CGSize)newSize animated:(BOOL)animated;
 
 @end
 

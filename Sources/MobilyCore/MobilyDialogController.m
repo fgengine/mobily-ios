@@ -1,4 +1,4 @@
-/*--------------------------------------------------*/
+ /*--------------------------------------------------*/
 /*                                                  */
 /* The MIT License (MIT)                            */
 /*                                                  */
@@ -38,30 +38,62 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyDialogController () < UIGestureRecognizerDelegate > {
-@protected
-    UIWindow* _presentingWindow;
-    UIWindow* _previousWindow;
-    __weak UIViewController* _presentingViewController;
-    UIViewController* _contentViewController;
-    UITapGestureRecognizer* _tapGesture;
-    MobilyBlurView* _backgroundView;
-    UIView* _rootContainerView;
-    UIView* _containerView;
-    UIView* _contentView;
-    CGRect _contentHiddenFrame;
-}
+@interface MobilyDialogController () < UIGestureRecognizerDelegate >
 
-- (void)_adjustFramesForBounds:(CGRect)windowBounds contentSize:(CGSize)contentSize animated:(BOOL)animated;
-- (void)_adjustFramesForBounds:(CGRect)mainBounds contentSize:(CGSize)contentSize;
-- (void)_adjustHiddenRectsForBounds:(CGRect)mainBounds;
-- (CGRect)_mainBoundsForOrientation:(UIInterfaceOrientation)orientation;
+@property(nonatomic, readwrite, strong) UIWindow* presentedWindow;
+@property(nonatomic, readwrite, weak) UIWindow* presentingWindow;
+@property(nonatomic, readwrite, strong) UIViewController* presentingController;
+
+@property(nonatomic, readwrite, strong) MobilyBlurView* backgroundView;
+@property(nonatomic, readwrite, strong) UIViewController* contentController;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewCenterX;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewCenterY;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewMinWidth;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewMinHeight;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewMaxWidth;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewMaxHeight;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewTop;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewBottom;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewLeft;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewRight;
+@property(nonatomic, readwrite, strong) UITapGestureRecognizer* tapGesture;
 
 @end
 
 /*--------------------------------------------------*/
 
 @implementation MobilyDialogController
+
+#pragma mark Synthesize
+
+@synthesize presentedWindow = _presentedWindow;
+@synthesize presentingWindow = _presentingWindow;
+@synthesize presentingController = _presentingController;
+@synthesize backgroundView = _backgroundView;
+@synthesize contentController = _contentController;
+@synthesize constraintContentViewCenterX = _constraintContentViewCenterX;
+@synthesize constraintContentViewCenterY = _constraintContentViewCenterY;
+@synthesize constraintContentViewMinWidth = _constraintContentViewMinWidth;
+@synthesize constraintContentViewMinHeight = _constraintContentViewMinHeight;
+@synthesize constraintContentViewMaxWidth = _constraintContentViewMaxWidth;
+@synthesize constraintContentViewMaxHeight = _constraintContentViewMaxHeight;
+@synthesize constraintContentViewTop = _constraintContentViewTop;
+@synthesize constraintContentViewBottom = _constraintContentViewBottom;
+@synthesize constraintContentViewLeft = _constraintContentViewLeft;
+@synthesize constraintContentViewRight = _constraintContentViewRight;
+@synthesize tapGesture = _tapGesture;
+@synthesize animationDuration = _animationDuration;
+@synthesize backgroundBlurred = _backgroundBlurred;
+@synthesize backgroundBlurRadius = _backgroundBlurRadius;
+@synthesize backgroundBlurIterations = _backgroundBlurIterations;
+@synthesize backgroundColor = _backgroundColor;
+@synthesize backgroundTintColor = _backgroundTintColor;
+@synthesize backgroundAlpha = _backgroundAlpha;
+@synthesize contentMinSize = _contentMinSize;
+@synthesize contentMaxSize = _contentMaxSize;
+@synthesize contentInsets = _contentInsets;
+@synthesize touchedOutsideContent = _touchedOutsideContent;
+@synthesize dismiss = _dismiss;
 
 #pragma mark Init / Free
 
@@ -81,12 +113,11 @@
     return self;
 }
 
-- (instancetype)initWithViewController:(UIViewController*)viewController presentationStyle:(MobilyDialogControllerPresentationStyle)style {
+- (instancetype)initWithContentController:(UIViewController*)contentController {
     self = [super initWithNibName:nil bundle:nil];
     if(self != nil) {
-        _presentationStyle = style;
-        _contentViewController = viewController;
-        _contentViewController.dialogController = self;
+        _contentController = contentController;
+        _contentController.dialogController = self;
         [self setup];
     }
     return self;
@@ -94,32 +125,198 @@
 
 - (void)setup {
     _animationDuration = 0.4f;
-    _presentationRect = CGRectZero;
-    _previousWindow = UIApplication.sharedApplication.keyWindow;
     _backgroundBlurred = YES;
     _backgroundBlurRadius = 20.0f;
     _backgroundBlurIterations = 4;
     _backgroundColor = nil;
     _backgroundTintColor = [UIColor colorWithWhite:0.5f alpha:1.0f];
-    
-    _contentColor = [UIColor whiteColor];
-    _contentAlpha = 1.0f;
-    _contentCornerRadius = 4.0f;
-    _contentBorderWidth = 0.0f;
-    _contentBorderColor = nil;
-    _contentShadowColor = [UIColor blackColor];
-    _contentShadowOpacity = 0.8f;
-    _contentShadowOffset = CGSizeZero;
-    _contentShadowRadius = 4.0f;
+    _contentInsets = UIEdgeInsetsMake(-1.0f, -1.0f, -1.0f, -1.0f);
 }
 
 #pragma mark Property
 
-- (void)setPresentationRect:(CGRect)presentationRect {
-    if(CGRectEqualToRect(_presentationRect, presentationRect) == NO) {
-        _presentationRect = presentationRect;
-        if([self isViewLoaded] == YES) {
-            [self _adjustFramesForBounds:self.view.bounds contentSize:_presentationRect.size];
+- (void)setPresentingController:(UIViewController*)presentingController {
+    if(_presentingController != presentingController) {
+        _presentingController = presentingController;
+        if(self.isViewLoaded == YES) {
+            [self setNeedsStatusBarAppearanceUpdate];
+        }
+    }
+}
+
+- (void)setPresentedWindow:(UIWindow*)presentedWindow {
+    if(_presentedWindow != presentedWindow) {
+        if((_presentingWindow != nil) && (_presentedWindow != nil)) {
+            [_presentingWindow makeKeyAndVisible];
+        }
+        _presentedWindow = presentedWindow;
+        if(_presentedWindow != nil) {
+            _presentedWindow.windowLevel = _presentingWindow.windowLevel + 0.01f;
+            _presentedWindow.backgroundColor = [UIColor clearColor];
+            _presentedWindow.rootViewController = self;
+            [_presentedWindow makeKeyAndVisible];
+            [_presentedWindow layoutIfNeeded];
+        }
+    }
+}
+
+- (void)setBackgroundView:(MobilyBlurView*)backgroundView {
+    if(_backgroundView != backgroundView) {
+        if(_backgroundView != nil) {
+            [_backgroundView removeFromSuperview];
+        }
+        _backgroundView = backgroundView;
+        if(_backgroundView != nil) {
+            _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+            _backgroundView.underlyingView = _presentingWindow;
+            _backgroundView.blurEnabled = _backgroundBlurred;
+            _backgroundView.blurRadius = _backgroundBlurRadius;
+            _backgroundView.blurIterations = _backgroundBlurIterations;
+            _backgroundView.backgroundColor = _backgroundColor;
+            _backgroundView.tintColor = _backgroundTintColor;
+            _backgroundView.alpha = _backgroundAlpha;
+            [self.view addSubview:_backgroundView];
+        }
+    }
+}
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewCenterX, constraintContentViewCenterX, self.view, {
+}, {
+})
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewCenterY, constraintContentViewCenterY, self.view, {
+}, {
+})
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewMinWidth, constraintContentViewMinWidth, self.view, {
+}, {
+    _constraintContentViewMinWidth.priority = UILayoutPriorityDefaultLow;
+    _constraintContentViewMinWidth.constant = _contentMinSize.width;
+})
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewHeight, constraintContentViewMinHeight, self.view, {
+}, {
+    _constraintContentViewMinHeight.priority = UILayoutPriorityDefaultLow;
+    _constraintContentViewMinHeight.constant = _contentMinSize.height;
+})
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewMaxWidth, constraintContentViewMaxWidth, self.view, {
+}, {
+    _constraintContentViewMaxWidth.priority = UILayoutPriorityDefaultHigh;
+    _constraintContentViewMaxWidth.constant = _contentMaxSize.width;
+})
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewMaxHeight, constraintContentViewMaxHeight, self.view, {
+}, {
+    _constraintContentViewMaxHeight.priority = UILayoutPriorityDefaultHigh;
+    _constraintContentViewMaxHeight.constant = _contentMaxSize.height;
+})
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewTop, constraintContentViewTop, self.view, {
+}, {
+    _constraintContentViewTop.priority = UILayoutPriorityDefaultLow;
+    _constraintContentViewTop.constant = _contentInsets.top;
+})
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewBottom, constraintContentViewBottom, self.view, {
+}, {
+    _constraintContentViewBottom.priority = UILayoutPriorityDefaultLow;
+    _constraintContentViewBottom.constant = _contentInsets.bottom;
+})
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewLeft, constraintContentViewLeft, self.view, {
+}, {
+    _constraintContentViewLeft.priority = UILayoutPriorityDefaultLow;
+    _constraintContentViewLeft.constant = _contentInsets.left;
+})
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewRight, constraintContentViewRight, self.view, {
+}, {
+    _constraintContentViewRight.priority = UILayoutPriorityDefaultLow;
+    _constraintContentViewRight.constant = _contentInsets.right;
+})
+
+- (void)setTapGesture:(UITapGestureRecognizer*)tapGesture {
+    if(_tapGesture != tapGesture) {
+        if(_tapGesture != nil) {
+            [self.view removeGestureRecognizer:_tapGesture];
+        }
+        _tapGesture = tapGesture;
+        if(_tapGesture != nil) {
+            [self.view addGestureRecognizer:_tapGesture];
+            _tapGesture.delegate = self;
+        }
+        
+    }
+}
+
+- (void)setBackgroundBlurred:(BOOL)backgroundBlurred {
+    if(_backgroundBlurred != backgroundBlurred) {
+        _backgroundBlurred = backgroundBlurred;
+        if(self.isViewLoaded == YES) {
+            _backgroundView.blurEnabled = _backgroundBlurred;
+        }
+    }
+}
+
+- (void)setBackgroundBlurRadius:(CGFloat)backgroundBlurRadius {
+    if(_backgroundBlurRadius != backgroundBlurRadius) {
+        _backgroundBlurRadius = backgroundBlurRadius;
+        if(self.isViewLoaded == YES) {
+            _backgroundView.blurRadius = _backgroundBlurRadius;
+        }
+    }
+}
+
+- (void)setBackgroundBlurIterations:(NSUInteger)backgroundBlurIterations {
+    if(_backgroundBlurIterations != backgroundBlurIterations) {
+        _backgroundBlurIterations = backgroundBlurIterations;
+        if(self.isViewLoaded == YES) {
+            _backgroundView.blurIterations = _backgroundBlurIterations;
+        }
+    }
+}
+
+- (void)setBackgroundColor:(UIColor*)backgroundColor {
+    if([_backgroundColor isEqual:backgroundColor] == NO) {
+        _backgroundColor = backgroundColor;
+        if(self.isViewLoaded == YES) {
+            _backgroundView.backgroundColor = _backgroundColor;
+        }
+    }
+}
+
+- (void)setBackgroundTintColor:(UIColor*)backgroundTintColor {
+    if([_backgroundTintColor isEqual:backgroundTintColor] == NO) {
+        _backgroundTintColor = backgroundTintColor;
+        if(self.isViewLoaded == YES) {
+            _backgroundView.tintColor = _backgroundTintColor;
+        }
+    }
+}
+
+- (void)setContentMinSize:(CGSize)contentMinSize {
+    if(CGSizeEqualToSize(_contentMinSize, contentMinSize) == NO) {
+        _contentMinSize = contentMinSize;
+        if(self.isViewLoaded == YES) {
+            [self _updateConstraintContentView];
+        }
+    }
+}
+
+- (void)setContentMaxSize:(CGSize)contentMaxSize {
+    if(CGSizeEqualToSize(_contentMaxSize, contentMaxSize) == NO) {
+        _contentMaxSize = contentMaxSize;
+        if(self.isViewLoaded == YES) {
+            [self _updateConstraintContentView];
+        }
+    }
+}
+- (void)setContentInsets:(UIEdgeInsets)contentInsets {
+    if(UIEdgeInsetsEqualToEdgeInsets(_contentInsets, contentInsets) == NO) {
+        _contentInsets = contentInsets;
+        if(self.isViewLoaded == YES) {
+            [self _updateConstraintContentView];
         }
     }
 }
@@ -127,319 +324,153 @@
 #pragma mark UIViewController
 
 - (BOOL)prefersStatusBarHidden {
-    if(_presentingViewController != nil) {
-        return [_presentingViewController prefersStatusBarHidden];
+    if(self.presentingController != nil) {
+        return [self.presentingController prefersStatusBarHidden];
     }
-    return [_contentViewController prefersStatusBarHidden];
+    return [self.contentController prefersStatusBarHidden];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    if(_presentingViewController != nil) {
-        return [_presentingViewController preferredStatusBarStyle];
+    if(self.presentingController != nil) {
+        return [self.presentingController preferredStatusBarStyle];
     }
-    return [_contentViewController preferredStatusBarStyle];
+    return [self.contentController preferredStatusBarStyle];
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
-    if(_presentingViewController != nil) {
-        return [_presentingViewController preferredStatusBarUpdateAnimation];
+    if(self.presentingController != nil) {
+        return [self.presentingController preferredStatusBarUpdateAnimation];
     }
-    return [_contentViewController preferredStatusBarUpdateAnimation];
+    return [self.contentController preferredStatusBarUpdateAnimation];
 }
 
 - (BOOL)shouldAutorotate {
-    if(_presentingViewController != nil) {
-        return [_presentingViewController shouldAutorotate];
+    if(self.presentingController != nil) {
+        return [self.presentingController shouldAutorotate];
     }
-    return [_contentViewController shouldAutorotate];
+    return [self.contentController shouldAutorotate];
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    if(_presentingViewController != nil) {
-        return [_presentingViewController supportedInterfaceOrientations];
+    if(self.presentingController != nil) {
+        return [self.presentingController supportedInterfaceOrientations];
     }
-    return [_contentViewController supportedInterfaceOrientations];
+    return [self.contentController supportedInterfaceOrientations];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    if(_presentingViewController != nil) {
-        return [_presentingViewController shouldAutorotateToInterfaceOrientation:interfaceOrientation];
+    if(self.presentingController != nil) {
+        return [self.presentingController shouldAutorotateToInterfaceOrientation:interfaceOrientation];
     }
-    return [_contentViewController shouldAutorotateToInterfaceOrientation:interfaceOrientation];
-}
-
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    [self _adjustFramesForBounds:self.view.bounds contentSize:_contentView.frame.size animated:NO];
+    return [self.contentController shouldAutorotateToInterfaceOrientation:interfaceOrientation];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.view.userInteractionEnabled = YES;
+    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pressedBackground:)];
+    self.backgroundView = [[MobilyBlurView alloc] initWithFrame:self.view.bounds];
     
-    _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundTouched:)];
-    [self.view addGestureRecognizer:_tapGesture];
-    _tapGesture.delegate = self;
+    [self addChildViewController:self.contentController];
+    self.contentController.view.translatesAutoresizingMaskIntoConstraints = NO;
+    self.contentController.view.frame = self.view.bounds;
+    [self.view addSubview:self.contentController.view];
+    [self.contentController didMoveToParentViewController:self];
     
-    _backgroundView = [[MobilyBlurView alloc] initWithFrame:self.view.bounds];
-    _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    _backgroundView.underlyingView = _previousWindow;
-    _backgroundView.blurEnabled = _backgroundBlurred;
-    _backgroundView.blurRadius = _backgroundBlurRadius;
-    _backgroundView.blurIterations = _backgroundBlurIterations;
-    _backgroundView.backgroundColor = _backgroundColor;
-    _backgroundView.tintColor = _backgroundTintColor;
-    _backgroundView.alpha = _backgroundAlpha;
-    [self.view addSubview:_backgroundView];
-    
-    _rootContainerView = [[UIView alloc] initWithFrame:self.view.bounds];
-    _rootContainerView.backgroundColor = [UIColor clearColor];
-    _rootContainerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    _rootContainerView.clipsToBounds = YES;
-    _rootContainerView.shadowColor = _contentShadowColor;
-    _rootContainerView.shadowOpacity = _contentShadowOpacity;
-    _rootContainerView.shadowOffset = _contentShadowOffset;
-    _rootContainerView.shadowRadius = _contentShadowRadius;
-    [self.view addSubview:_rootContainerView];
-    
-    [self addChildViewController:_contentViewController];
-    _contentView =_contentViewController.view;
-    
-    CGRect childBounds = _contentView.bounds;
-    _containerView = [[UIView alloc] initWithFrame:childBounds];
-    switch(_presentationStyle) {
-        case MobilyDialogControllerPresentationStyleTop:
-        case MobilyDialogControllerPresentationStyleUnderNavBar:
-            _containerView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
-            break;
-        case MobilyDialogControllerPresentationStyleBottom:
-        case MobilyDialogControllerPresentationStyleUnderToolbar:
-            _containerView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
-            break;
-        case MobilyDialogControllerPresentationStyleCentered:
-            _containerView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-            break;
-    }
-    _containerView.backgroundColor = [UIColor clearColor];
-    _containerView.cornerRadius = _contentCornerRadius;
-    _containerView.clipsToBounds = YES;
-    [_rootContainerView addSubview:_containerView];
-    
-    _contentView.frame = _containerView.bounds;
-    _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _contentView.backgroundColor = _contentColor;
-    _contentView.alpha = _contentAlpha;
-    _contentView.cornerRadius = _contentCornerRadius;
-    _contentView.borderWidth = _contentBorderWidth;
-    _contentView.borderColor = _contentBorderColor;
-    [_containerView addSubview:_contentView];
-    
-    CGRect mainBounds = [self _mainBoundsForOrientation:self.interfaceOrientation];
-    self.view.frame = mainBounds;
-    [self _adjustFramesForBounds:mainBounds contentSize:childBounds.size];
+    [self _updateConstraintContentView];
 }
 
 #pragma mark Public
 
-- (void)presentFromViewController:(UIViewController*)viewController withCompletion:(MobilySimpleBlock)completion {
-    _presentingViewController = viewController;
+- (void)presentController:(UIViewController*)controller withCompletion:(MobilySimpleBlock)completion {
+    self.presentingWindow = UIApplication.sharedApplication.keyWindow;
+    self.presentingController = controller;
+    self.presentedWindow = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
+    self.backgroundView.alpha = 1.0;
+    self.view.userInteractionEnabled = YES;
+    self.view.alpha = 0.0;
     
-    _presentingWindow = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
-    _presentingWindow.windowLevel = _previousWindow.windowLevel + 0.01f;
-    _presentingWindow.rootViewController = self;
-    [_presentingWindow makeKeyAndVisible];
-
-    [self _adjustFramesForBounds:self.view.bounds contentSize:_contentView.bounds.size animated:NO];
-    
-    CGRect containerOriginFrame = _containerView.frame;
-    _containerView.frame = _contentHiddenFrame;
-    if(_presentationStyle == MobilyDialogControllerPresentationStyleCentered) {
-        self.view.alpha = 0.0;
-        _backgroundView.alpha = 1.0;
-    } else {
+    [UIView animateWithDuration:self.animationDuration animations:^{
         self.view.alpha = 1.0;
-        _backgroundView.alpha = 0.0;
-    }
-    [UIView animateWithDuration:self.animationDuration
-                     animations:^{
-                         _containerView.frame = containerOriginFrame;
-                         _backgroundView.alpha = 1.0;
-                         self.view.alpha = 1.0;
-                     }
-                     completion:^(BOOL finished) {
-                         _tapGesture.enabled = YES;
-                         _containerView.userInteractionEnabled = YES;
-                         if(completion != nil) {
-                             completion();
-                         }
-                     }];
+    } completion:^(BOOL finished) {
+        self.tapGesture.enabled = YES;
+        if(completion != nil) {
+            completion();
+        }
+    }];
 }
 
 - (void)presentWithCompletion:(MobilySimpleBlock)completion {
-    [self presentFromViewController:nil withCompletion:completion];
+    [self presentController:UIApplication.sharedApplication.keyWindow.rootViewController withCompletion:completion];
 }
 
 - (void)dismissWithCompletion:(MobilySimpleBlock)completion {
-    _tapGesture.enabled = NO;
-    _containerView.userInteractionEnabled = NO;
-    [_previousWindow makeKeyAndVisible];
-    
-    [UIView animateWithDuration:self.animationDuration
-                     animations:^{
-                         _containerView.frame = _contentHiddenFrame;
-                         _backgroundView.alpha = 0.0;
-                         if(_presentationStyle == MobilyDialogControllerPresentationStyleCentered) {
-                             self.view.alpha = 0.0;
-                         }
-                     }
-                     completion:^(BOOL finished) {
-                         [_contentViewController.view removeFromSuperview];
-                         [_contentViewController removeFromParentViewController];
-                         _presentingWindow.hidden = YES;
-                         if(_dismiss != nil) {
-                             _dismiss(self);
-                         }
-                         if(completion != nil) {
-                             completion();
-                         }
-                     }];
-}
-
-- (void)adjustContentSize:(CGSize)newSize animated:(BOOL)animated {
-    [self _adjustFramesForBounds:self.view.bounds contentSize:newSize animated:YES];
+    self.tapGesture.enabled = NO;
+    [UIView animateWithDuration:self.animationDuration animations:^{
+        self.view.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        self.presentedWindow = nil;
+        if(self.dismiss != nil) {
+            self.dismiss(self);
+        }
+        if(completion != nil) {
+            completion();
+        }
+    }];
 }
 
 #pragma mark Private
 
-- (void)_adjustFramesForBounds:(CGRect)windowBounds contentSize:(CGSize)contentSize animated:(BOOL)animated {
-    if(animated == YES) {
-        [UIView animateWithDuration:_animationDuration animations:^{
-            [self _adjustFramesForBounds:windowBounds contentSize:contentSize];
-        }];
+- (void)_updateConstraintContentView {
+    self.constraintContentViewCenterX = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1.0f constant:0.0f];
+    self.constraintContentViewCenterY = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:0.0f];
+    if(_contentMinSize.width > FLT_EPSILON) {
+        self.constraintContentViewMinWidth = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
     } else {
-        [self _adjustFramesForBounds:windowBounds contentSize:contentSize];
+        self.constraintContentViewMinWidth = nil;
     }
-}
-
-- (void)_adjustFramesForBounds:(CGRect)mainBounds contentSize:(CGSize)contentSize {
-    CGFloat insetFromEdge = _slideInset;
-    if(_horizontalJustification == MobilyDialogControllerHorizontalJustificationFull) {
-        contentSize.width = CGRectGetWidth(mainBounds);
+    if(_contentMinSize.height > FLT_EPSILON) {
+        self.constraintContentViewMinHeight = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
+    } else {
+        self.constraintContentViewMinHeight = nil;
     }
-    UIViewController* rootViewController = _previousWindow.rootViewController;
-    switch(_presentationStyle) {
-        case MobilyDialogControllerPresentationStyleUnderNavBar: {
-            CGRect statusBarFrame = UIApplication.sharedApplication.statusBarFrame;
-            CGFloat statusBarHeight = UIInterfaceOrientationIsPortrait(UIApplication.sharedApplication.statusBarOrientation) ? statusBarFrame.size.height : statusBarFrame.size.width;
-            CGFloat navBarHeight = 0;
-            if([rootViewController isKindOfClass:[UINavigationController class]] == YES) {
-                navBarHeight = ((UINavigationController*)rootViewController).navigationBar.frame.size.height;
-            }
-            insetFromEdge = statusBarHeight + navBarHeight;
-            break;
-        }
-        case MobilyDialogControllerPresentationStyleUnderToolbar: {
-            CGFloat toolbarHeight = 0;
-            if([rootViewController isKindOfClass:[UINavigationController class]] == YES) {
-                toolbarHeight = ((UINavigationController*)rootViewController).toolbar.frame.size.height;
-            }
-            insetFromEdge = toolbarHeight;
-            break;
-        }
-        default:
-            break;
+    if(_contentMaxSize.width > FLT_EPSILON) {
+        self.constraintContentViewMaxWidth = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
+    } else {
+        self.constraintContentViewMaxWidth = nil;
     }
-    CGRect tintRect = mainBounds;
-    if(insetFromEdge > 0.0) {
-        switch(_presentationStyle) {
-            case MobilyDialogControllerPresentationStyleTop:
-            case MobilyDialogControllerPresentationStyleUnderNavBar:
-                tintRect.size.height -= insetFromEdge;
-                tintRect.origin.y += insetFromEdge;
-                break;
-            case MobilyDialogControllerPresentationStyleBottom:
-            case MobilyDialogControllerPresentationStyleUnderToolbar:
-                tintRect.size.height -= insetFromEdge;
-                break;
-            default:
-                break;
-        }
+    if(_contentMaxSize.height > FLT_EPSILON) {
+        self.constraintContentViewMaxHeight = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
+    } else {
+        self.constraintContentViewMaxHeight = nil;
     }
-    CGRect _containerViewRect = tintRect;
-    _containerViewRect.size = contentSize;
-    switch(_horizontalJustification) {
-        case MobilyDialogControllerHorizontalJustificationCentered:
-            _containerViewRect.origin.x = CGRectGetMidX(tintRect) - roundf(0.5 * contentSize.width);
-            break;
-        case MobilyDialogControllerHorizontalJustificationLeft:
-        case MobilyDialogControllerHorizontalJustificationFull:
-            _containerViewRect.origin.x = CGRectGetMinX(tintRect);
-            break;
-        case MobilyDialogControllerHorizontalJustificationRight:
-            _containerViewRect.origin.x = CGRectGetMaxX(tintRect) - contentSize.width;
-            break;
+    if(_contentInsets.top > FLT_EPSILON) {
+        self.constraintContentViewTop = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+    } else {
+        self.constraintContentViewTop = nil;
     }
-    switch(_presentationStyle) {
-        case MobilyDialogControllerPresentationStyleTop:
-        case MobilyDialogControllerPresentationStyleUnderNavBar:
-            _containerViewRect.origin.y = 0.0;
-            break;
-        case MobilyDialogControllerPresentationStyleBottom:
-        case MobilyDialogControllerPresentationStyleUnderToolbar:
-            _containerViewRect.origin.y = CGRectGetMaxY(tintRect) - contentSize.height;
-            break;
-        case MobilyDialogControllerPresentationStyleCentered:
-            _containerViewRect.origin.y = CGRectGetMidY(tintRect) - roundf(0.5 * contentSize.height);
-            break;
+    if(_contentInsets.bottom > FLT_EPSILON) {
+        self.constraintContentViewBottom = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+    } else {
+        self.constraintContentViewBottom = nil;
     }
-    _backgroundView.frame = tintRect;
-    _rootContainerView.frame = tintRect;
-    _containerView.frame = _containerViewRect;
-    
-    CGRect blurBgndRect;
-    blurBgndRect.size = mainBounds.size;
-    blurBgndRect.origin.x = -_containerViewRect.origin.x;
-    blurBgndRect.origin.y = -_containerViewRect.origin.y;
-    _contentView.frame = _containerView.bounds;
-    
-    if(_contentShadowColor != nil) {
-        _rootContainerView.shadowPath = [UIBezierPath bezierPathWithRoundedRect:_containerView.frame cornerRadius:_contentCornerRadius];
+    if(_contentInsets.left > FLT_EPSILON) {
+        self.constraintContentViewLeft = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
+    } else {
+        self.constraintContentViewLeft = nil;
     }
-    
-    [self _adjustHiddenRectsForBounds:mainBounds];
-}
-
-- (void)_adjustHiddenRectsForBounds:(CGRect)mainBounds {
-    _contentHiddenFrame = _containerView.frame;
-    switch(_presentationStyle) {
-        case MobilyDialogControllerPresentationStyleTop:
-        case MobilyDialogControllerPresentationStyleUnderNavBar:
-            _contentHiddenFrame.origin.y = -CGRectGetHeight(_containerView.frame);
-            break;
-        case MobilyDialogControllerPresentationStyleBottom:
-        case MobilyDialogControllerPresentationStyleUnderToolbar:
-            _contentHiddenFrame.origin.y = CGRectGetMaxY(_rootContainerView.bounds);
-            break;
-        default:
-            break;
+    if(_contentInsets.right > FLT_EPSILON) {
+        self.constraintContentViewRight = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
+    } else {
+        self.constraintContentViewRight = nil;
     }
-}
-
-- (CGRect)_mainBoundsForOrientation:(UIInterfaceOrientation)orientation {
-    CGRect mainBounds = _presentingWindow.bounds;
-    if(UIInterfaceOrientationIsLandscape(orientation) == YES) {
-        CGFloat h = mainBounds.size.height;
-        mainBounds.size.height = mainBounds.size.width;
-        mainBounds.size.width = h;
-    }
-    return mainBounds;
 }
 
 #pragma mark Actions
 
-- (IBAction)backgroundTouched:(id)sender {
-    if(_touchedOutsideContent != nil) {
-        _touchedOutsideContent(self);
+- (IBAction)pressedBackground:(id)sender {
+    if(self.touchedOutsideContent != nil) {
+        self.touchedOutsideContent(self);
     } else {
         [self dismissWithCompletion:nil];
     }
@@ -448,7 +479,7 @@
 #pragma mark UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldReceiveTouch:(UITouch*)touch {
-    return (CGRectContainsPoint(_contentViewController.view.bounds, [touch locationInView:_contentViewController.view]) == NO);
+    return (CGRectContainsPoint(self.contentController.view.bounds, [touch locationInView:self.contentController.view]) == NO);
 }
 
 @end
