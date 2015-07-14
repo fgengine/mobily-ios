@@ -312,9 +312,9 @@
 }
 
 - (void)_completeAllRequests {
-    for(MobilyGeoLocationRequest* request in _requests) {
+    [_requests each:^(MobilyGeoLocationRequest* request) {
         [self _completeRequest:request];
-    }
+    }];
 }
 
 - (void)_cancelRequest:(MobilyGeoLocationRequest*)request {
@@ -328,9 +328,9 @@
 }
 
 - (void)_cancelAllRequests {
-    for(MobilyGeoLocationRequest* request in _requests) {
+    [_requests each:^(MobilyGeoLocationRequest* request) {
         [self _cancelRequest:request];
-    }
+    }];
 }
 
 - (CLLocation*)_currentLocation {
