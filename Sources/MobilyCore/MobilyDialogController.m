@@ -444,22 +444,22 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewRight, constraintCon
     } else {
         self.constraintContentViewMaxHeight = nil;
     }
-    if(_contentInsets.top > FLT_EPSILON) {
+    if(_contentInsets.top > -FLT_EPSILON) {
         self.constraintContentViewTop = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
     } else {
         self.constraintContentViewTop = nil;
     }
-    if(_contentInsets.bottom > FLT_EPSILON) {
+    if(_contentInsets.bottom > -FLT_EPSILON) {
         self.constraintContentViewBottom = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
     } else {
         self.constraintContentViewBottom = nil;
     }
-    if(_contentInsets.left > FLT_EPSILON) {
+    if(_contentInsets.left > -FLT_EPSILON) {
         self.constraintContentViewLeft = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
     } else {
         self.constraintContentViewLeft = nil;
     }
-    if(_contentInsets.right > FLT_EPSILON) {
+    if(_contentInsets.right > -FLT_EPSILON) {
         self.constraintContentViewRight = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
     } else {
         self.constraintContentViewRight = nil;
