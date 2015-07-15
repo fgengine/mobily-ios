@@ -113,7 +113,7 @@ typedef NS_ENUM(NSInteger, MobilyPageControllerDirection) {
 
 @interface UIViewController (MobilyPageController)
 
-@property(nonatomic, readwrite, strong) MobilyPageController* pageController;
+@property(nonatomic, readwrite, weak) MobilyPageController* pageController;
 
 @end
 

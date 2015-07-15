@@ -41,6 +41,7 @@
 
 @interface MobilyPopoverController () < UIPopoverControllerDelegate >
 
+@property(nonatomic, readwrite, weak) UIViewController* controller;
 @property(nonatomic, readwrite, strong) UIPopoverController* popover;
 @property(nonatomic, readwrite, strong) UIView* view;
 @property(nonatomic, readwrite, strong) UIView* arrowTargetView;
@@ -54,13 +55,13 @@
 
 @implementation MobilyPopoverController
 
-#pragma mark Init/Free
+#pragma mark Init / Free
 
-- (instancetype)initWithContentViewController:(UIViewController *)viewController fromView:(UIView*)view arrowTargetView:(UIView*)arrowTargetView arrowDirection:(UIPopoverArrowDirection)arrowDirection {
+- (instancetype)initWithController:(UIViewController*)controller fromView:(UIView*)view arrowTargetView:(UIView*)arrowTargetView arrowDirection:(UIPopoverArrowDirection)arrowDirection {
     self = [super init];
     if(self != nil) {
-        viewController.popoverController = self;
-        self.popover = [[UIPopoverController alloc] initWithContentViewController:viewController];
+        self.controller = controller;
+        self.popover = [[UIPopoverController alloc] initWithContentViewController:controller];
         self.popover.delegate = self;
         self.view = view;
         self.arrowTargetView = arrowTargetView;
@@ -73,10 +74,33 @@
 - (void)setup {
 }
 
+#pragma mark Property
+
+- (void)setController:(UIViewController*)controller {
+    if(_controller != controller) {
+        if(_controller != nil) {
+            _controller.popoverController = nil;
+        }
+        _controller = controller;
+        if(_controller != nil) {
+            _controller.popoverController = self;
+        }
+    }
+}
+
+- (void)setPopover:(UIPopoverController*)popover {
+    if(_popover != popover) {
+        _popover = popover;
+        if(_popover != nil) {
+            _popover.delegate = self;
+        }
+    }
+}
+
 #pragma mark Public static
 
 + (instancetype)presentController:(UIViewController*)controller fromView:(UIView*)view arrowTargetView:(UIView*)arrowTargetView arrowDirection:(UIPopoverArrowDirection)arrowDirection animated:(BOOL)animated {
-    MobilyPopoverController* popoverController = [[MobilyPopoverController alloc] initWithContentViewController:controller fromView:view arrowTargetView:arrowTargetView arrowDirection:arrowDirection];
+    MobilyPopoverController* popoverController = [[MobilyPopoverController alloc] initWithController:controller fromView:view arrowTargetView:arrowTargetView arrowDirection:arrowDirection];
     [popoverController presentAnimated:animated];
     return popoverController;
 }
@@ -89,12 +113,17 @@
 
 - (void)dismissAnimated:(BOOL)animated {
     [_popover dismissPopoverAnimated:animated];
+    self.controller = nil;
 }
 
 #pragma mark UIPopoverControllerDelegate
 
-- (void)popoverController:(UIPopoverController *)popoverController willRepositionPopoverToRect:(inout CGRect *)rect inView:(inout UIView **)view {
+- (void)popoverController:(UIPopoverController*)popoverController willRepositionPopoverToRect:(inout CGRect*)rect inView:(inout UIView**)view {
     *rect = [_arrowTargetView convertRect:[_arrowTargetView bounds] toView:*view];
+}
+
+- (void)popoverControllerDidDismissPopover:(UIPopoverController*)popoverController {
+    self.controller = nil;
 }
 
 @end
@@ -116,7 +145,7 @@ static char const* const MobilyPopoverControllerKey = "popoverControllerKey";
 @implementation UIViewController (MobilyPopoverController)
 
 - (void)setPopoverController:(MobilyPopoverController*)popoverController {
-    objc_setAssociatedObject(self, MobilyPopoverControllerKey, popoverController, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, MobilyPopoverControllerKey, popoverController, OBJC_ASSOCIATION_RETAIN);
 }
 
 - (MobilyPopoverController*)popoverController {

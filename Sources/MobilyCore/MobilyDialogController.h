@@ -76,7 +76,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 
 @interface UIViewController (MobilyDialogController)
 
-@property(nonatomic, readwrite, strong) MobilyDialogController* dialogController;
+@property(nonatomic, readwrite, weak) MobilyDialogController* dialogController;
 
 @end
 

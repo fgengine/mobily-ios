@@ -39,9 +39,11 @@
 
 @interface MobilyPopoverController : NSObject <MobilyObject>
 
+@property(nonatomic, readonly, weak) UIViewController* controller;
+
 + (instancetype)presentController:(UIViewController*)controller fromView:(UIView*)view arrowTargetView:(UIView*)arrowTargetView arrowDirection:(UIPopoverArrowDirection)arrowDirection animated:(BOOL)animated;
 
-- (instancetype)initWithContentViewController:(UIViewController *)viewController fromView:(UIView*)view arrowTargetView:(UIView*)arrowTargetView arrowDirection:(UIPopoverArrowDirection)arrowDirection;
+- (instancetype)initWithController:(UIViewController*)controller fromView:(UIView*)view arrowTargetView:(UIView*)arrowTargetView arrowDirection:(UIPopoverArrowDirection)arrowDirection;
 
 - (void)presentAnimated:(BOOL)animated;
 - (void)dismissAnimated:(BOOL)animated;
