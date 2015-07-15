@@ -751,31 +751,6 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     return image;
 }
 
-- (UIImage*)scaleToSize:(CGSize)size {
-    UIImage* result = nil;
-    CGColorSpaceRef colourSpace = CGColorSpaceCreateDeviceRGB();
-    if(colourSpace != NULL) {
-        CGRect drawRect = CGRectAspectFitFromBoundsAndSize(CGRectMake(0.0f, 0.0f, size.width, size.height), self.size);
-        drawRect.size.width = floorf(drawRect.size.width);
-        drawRect.size.height = floorf(drawRect.size.height);
-        
-        CGContextRef context = CGBitmapContextCreate(NULL, drawRect.size.width, drawRect.size.height, 8, drawRect.size.width * 4, colourSpace, kCGBitmapByteOrder32Big | kCGImageAlphaPremultipliedLast);
-        if(context != NULL) {
-            CGContextClearRect(context, CGRectMake(0.0f, 0.0f, drawRect.size.width, drawRect.size.height));
-            CGContextDrawImage(context, CGRectMake(0.0f, 0.0f, drawRect.size.width, drawRect.size.height), self.CGImage);
-            
-            CGImageRef image = CGBitmapContextCreateImage(context);
-            if(image != NULL) {
-                result = [UIImage imageWithCGImage:image scale:self.scale orientation:self.imageOrientation];
-                CGImageRelease(image);
-            }
-            CGContextRelease(context);
-        }
-        CGColorSpaceRelease(colourSpace);
-    }
-    return result;
-}
-
 - (UIImage*)unrotate {
     UIImage* result = nil;
     CGImageRef imageRef = self.CGImage;
@@ -856,6 +831,49 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
             }
             UIGraphicsEndImageContext();
         }
+    }
+    return result;
+}
+
+- (UIImage*)scaleToSize:(CGSize)size {
+    UIImage* result = nil;
+    CGColorSpaceRef colourSpace = CGColorSpaceCreateDeviceRGB();
+    if(colourSpace != NULL) {
+        CGRect drawRect = CGRectAspectFitFromBoundsAndSize(CGRectMake(0.0f, 0.0f, size.width, size.height), self.size);
+        drawRect.size.width = floorf(drawRect.size.width);
+        drawRect.size.height = floorf(drawRect.size.height);
+        
+        CGContextRef context = CGBitmapContextCreate(NULL, drawRect.size.width, drawRect.size.height, 8, drawRect.size.width * 4, colourSpace, kCGBitmapByteOrder32Big | kCGImageAlphaPremultipliedLast);
+        if(context != NULL) {
+            CGContextClearRect(context, CGRectMake(0.0f, 0.0f, drawRect.size.width, drawRect.size.height));
+            CGContextDrawImage(context, CGRectMake(0.0f, 0.0f, drawRect.size.width, drawRect.size.height), self.CGImage);
+            
+            CGImageRef image = CGBitmapContextCreateImage(context);
+            if(image != NULL) {
+                result = [UIImage imageWithCGImage:image scale:self.scale orientation:self.imageOrientation];
+                CGImageRelease(image);
+            }
+            CGContextRelease(context);
+        }
+        CGColorSpaceRelease(colourSpace);
+    }
+    return result;
+}
+
+- (UIImage*)rotateToAngleInRadians:(CGFloat)angleInRadians {
+    UIImage* result = nil;
+    CGSize size = self.size;
+    if((size.width > 0.0f) && (size.height > 0.0f)) {
+        UIGraphicsBeginImageContextWithOptions(size, NO, self.scale);
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        if(context != NULL) {
+            CGContextTranslateCTM(context, 0.5f * size.width, 0.5f * size.height);
+            CGContextRotateCTM(context, angleInRadians);
+            CGContextTranslateCTM(context, -0.5f * size.width, -0.5f * size.height);
+            [self drawAtPoint:CGPointZero];
+            result = UIGraphicsGetImageFromCurrentImageContext();
+        }
+        UIGraphicsEndImageContext();
     }
     return result;
 }

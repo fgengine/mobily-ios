@@ -157,8 +157,9 @@ typedef NS_OPTIONS(NSUInteger, MobilyImageAlignment) {
 + (UIImage*)imageNamed:(NSString*)name capInsets:(UIEdgeInsets)capInsets;
 + (UIImage*)imageWithColor:(UIColor*)color;
 
+- (UIImage*)unrotate;
 - (UIImage*)scaleToSize:(CGSize)size;
-- (UIImage *)unrotate;
+- (UIImage*)rotateToAngleInRadians:(CGFloat)angleInRadians;
 
 - (UIImage*)grayscale;
 - (UIImage*)blackAndWhite;
