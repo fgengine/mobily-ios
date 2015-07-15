@@ -59,7 +59,6 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 
 @property(nonatomic, readwrite, assign) CGSize contentMinSize;
 @property(nonatomic, readwrite, assign) CGSize contentMaxSize;
-@property(nonatomic, readwrite, assign) UIEdgeInsets contentInsets;
 
 @property(nonatomic, readwrite, copy) MobilyDialogControllerBlock touchedOutsideContent;
 @property(nonatomic, readwrite, copy) MobilyDialogControllerBlock dismiss;

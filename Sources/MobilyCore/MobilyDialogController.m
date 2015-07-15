@@ -52,10 +52,6 @@
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewMinHeight;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewMaxWidth;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewMaxHeight;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewTop;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewBottom;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewLeft;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewRight;
 @property(nonatomic, readwrite, strong) UITapGestureRecognizer* tapGesture;
 
 @end
@@ -77,10 +73,6 @@
 @synthesize constraintContentViewMinHeight = _constraintContentViewMinHeight;
 @synthesize constraintContentViewMaxWidth = _constraintContentViewMaxWidth;
 @synthesize constraintContentViewMaxHeight = _constraintContentViewMaxHeight;
-@synthesize constraintContentViewTop = _constraintContentViewTop;
-@synthesize constraintContentViewBottom = _constraintContentViewBottom;
-@synthesize constraintContentViewLeft = _constraintContentViewLeft;
-@synthesize constraintContentViewRight = _constraintContentViewRight;
 @synthesize tapGesture = _tapGesture;
 @synthesize animationDuration = _animationDuration;
 @synthesize backgroundBlurred = _backgroundBlurred;
@@ -91,7 +83,6 @@
 @synthesize backgroundAlpha = _backgroundAlpha;
 @synthesize contentMinSize = _contentMinSize;
 @synthesize contentMaxSize = _contentMaxSize;
-@synthesize contentInsets = _contentInsets;
 @synthesize touchedOutsideContent = _touchedOutsideContent;
 @synthesize dismiss = _dismiss;
 
@@ -130,7 +121,6 @@
     _backgroundBlurIterations = 4;
     _backgroundColor = nil;
     _backgroundTintColor = [UIColor colorWithWhite:0.5f alpha:1.0f];
-    _contentInsets = UIEdgeInsetsMake(-1.0f, -1.0f, -1.0f, -1.0f);
 }
 
 #pragma mark Property
@@ -212,30 +202,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewMaxHeight, constrain
     _constraintContentViewMaxHeight.constant = _contentMaxSize.height;
 })
 
-MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewTop, constraintContentViewTop, self.view, {
-}, {
-    _constraintContentViewTop.priority = UILayoutPriorityDefaultLow;
-    _constraintContentViewTop.constant = _contentInsets.top;
-})
-
-MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewBottom, constraintContentViewBottom, self.view, {
-}, {
-    _constraintContentViewBottom.priority = UILayoutPriorityDefaultLow;
-    _constraintContentViewBottom.constant = _contentInsets.bottom;
-})
-
-MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewLeft, constraintContentViewLeft, self.view, {
-}, {
-    _constraintContentViewLeft.priority = UILayoutPriorityDefaultLow;
-    _constraintContentViewLeft.constant = _contentInsets.left;
-})
-
-MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewRight, constraintContentViewRight, self.view, {
-}, {
-    _constraintContentViewRight.priority = UILayoutPriorityDefaultLow;
-    _constraintContentViewRight.constant = _contentInsets.right;
-})
-
 - (void)setTapGesture:(UITapGestureRecognizer*)tapGesture {
     if(_tapGesture != tapGesture) {
         if(_tapGesture != nil) {
@@ -307,14 +273,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewRight, constraintCon
 - (void)setContentMaxSize:(CGSize)contentMaxSize {
     if(CGSizeEqualToSize(_contentMaxSize, contentMaxSize) == NO) {
         _contentMaxSize = contentMaxSize;
-        if(self.isViewLoaded == YES) {
-            [self _updateConstraintContentView];
-        }
-    }
-}
-- (void)setContentInsets:(UIEdgeInsets)contentInsets {
-    if(UIEdgeInsetsEqualToEdgeInsets(_contentInsets, contentInsets) == NO) {
-        _contentInsets = contentInsets;
         if(self.isViewLoaded == YES) {
             [self _updateConstraintContentView];
         }
@@ -443,26 +401,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewRight, constraintCon
         self.constraintContentViewMaxHeight = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
     } else {
         self.constraintContentViewMaxHeight = nil;
-    }
-    if(_contentInsets.top > -FLT_EPSILON) {
-        self.constraintContentViewTop = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
-    } else {
-        self.constraintContentViewTop = nil;
-    }
-    if(_contentInsets.bottom > -FLT_EPSILON) {
-        self.constraintContentViewBottom = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
-    } else {
-        self.constraintContentViewBottom = nil;
-    }
-    if(_contentInsets.left > -FLT_EPSILON) {
-        self.constraintContentViewLeft = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
-    } else {
-        self.constraintContentViewLeft = nil;
-    }
-    if(_contentInsets.right > -FLT_EPSILON) {
-        self.constraintContentViewRight = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
-    } else {
-        self.constraintContentViewRight = nil;
     }
 }
 
