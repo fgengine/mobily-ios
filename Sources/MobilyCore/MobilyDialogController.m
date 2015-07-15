@@ -48,6 +48,8 @@
 @property(nonatomic, readwrite, strong) UIViewController* contentController;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewCenterX;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewCenterY;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewWidth;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewHeight;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewMinWidth;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewMinHeight;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintContentViewMaxWidth;
@@ -69,6 +71,8 @@
 @synthesize contentController = _contentController;
 @synthesize constraintContentViewCenterX = _constraintContentViewCenterX;
 @synthesize constraintContentViewCenterY = _constraintContentViewCenterY;
+@synthesize constraintContentViewWidth = _constraintContentViewWidth;
+@synthesize constraintContentViewHeight = _constraintContentViewHeight;
 @synthesize constraintContentViewMinWidth = _constraintContentViewMinWidth;
 @synthesize constraintContentViewMinHeight = _constraintContentViewMinHeight;
 @synthesize constraintContentViewMaxWidth = _constraintContentViewMaxWidth;
@@ -81,6 +85,7 @@
 @synthesize backgroundColor = _backgroundColor;
 @synthesize backgroundTintColor = _backgroundTintColor;
 @synthesize backgroundAlpha = _backgroundAlpha;
+@synthesize contentSize = _contentSize;
 @synthesize contentMinSize = _contentMinSize;
 @synthesize contentMaxSize = _contentMaxSize;
 @synthesize touchedOutsideContent = _touchedOutsideContent;
@@ -178,27 +183,33 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewCenterY, constraintC
 }, {
 })
 
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewWidth, constraintContentViewWidth, self.view, {
+}, {
+    _constraintContentViewWidth.constant = _contentSize.width;
+})
+
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewHeight, constraintContentViewHeight, self.view, {
+}, {
+    _constraintContentViewHeight.constant = _contentSize.height;
+})
+
 MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewMinWidth, constraintContentViewMinWidth, self.view, {
 }, {
-    _constraintContentViewMinWidth.priority = UILayoutPriorityDefaultLow;
     _constraintContentViewMinWidth.constant = _contentMinSize.width;
 })
 
-MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewHeight, constraintContentViewMinHeight, self.view, {
+MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewMinHeight, constraintContentViewMinHeight, self.view, {
 }, {
-    _constraintContentViewMinHeight.priority = UILayoutPriorityDefaultLow;
     _constraintContentViewMinHeight.constant = _contentMinSize.height;
 })
 
 MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewMaxWidth, constraintContentViewMaxWidth, self.view, {
 }, {
-    _constraintContentViewMaxWidth.priority = UILayoutPriorityDefaultHigh;
     _constraintContentViewMaxWidth.constant = _contentMaxSize.width;
 })
 
 MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewMaxHeight, constraintContentViewMaxHeight, self.view, {
 }, {
-    _constraintContentViewMaxHeight.priority = UILayoutPriorityDefaultHigh;
     _constraintContentViewMaxHeight.constant = _contentMaxSize.height;
 })
 
@@ -257,6 +268,15 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewMaxHeight, constrain
         _backgroundTintColor = backgroundTintColor;
         if(self.isViewLoaded == YES) {
             _backgroundView.tintColor = _backgroundTintColor;
+        }
+    }
+}
+
+- (void)setContentSize:(CGSize)contentSize {
+    if(CGSizeEqualToSize(_contentSize, contentSize) == NO) {
+        _contentSize = contentSize;
+        if(self.isViewLoaded == YES) {
+            [self _updateConstraintContentView];
         }
     }
 }
@@ -382,25 +402,39 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewMaxHeight, constrain
 - (void)_updateConstraintContentView {
     self.constraintContentViewCenterX = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1.0f constant:0.0f];
     self.constraintContentViewCenterY = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:0.0f];
-    if(_contentMinSize.width > FLT_EPSILON) {
-        self.constraintContentViewMinWidth = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
-    } else {
+    if(_contentSize.width > FLT_EPSILON) {
+        self.constraintContentViewWidth = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
         self.constraintContentViewMinWidth = nil;
-    }
-    if(_contentMinSize.height > FLT_EPSILON) {
-        self.constraintContentViewMinHeight = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
-    } else {
-        self.constraintContentViewMinHeight = nil;
-    }
-    if(_contentMaxSize.width > FLT_EPSILON) {
-        self.constraintContentViewMaxWidth = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
-    } else {
         self.constraintContentViewMaxWidth = nil;
-    }
-    if(_contentMaxSize.height > FLT_EPSILON) {
-        self.constraintContentViewMaxHeight = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
     } else {
+        if(_contentMinSize.width > FLT_EPSILON) {
+            self.constraintContentViewMinWidth = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
+        } else {
+            self.constraintContentViewMinWidth = nil;
+        }
+        if(_contentMaxSize.width > FLT_EPSILON) {
+            self.constraintContentViewMaxWidth = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
+        } else {
+            self.constraintContentViewMaxWidth = nil;
+        }
+        self.constraintContentViewWidth = nil;
+    }
+    if(_contentSize.height > FLT_EPSILON) {
+        self.constraintContentViewHeight = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
+        self.constraintContentViewMinHeight = nil;
         self.constraintContentViewMaxHeight = nil;
+    } else {
+        if(_contentMinSize.height > FLT_EPSILON) {
+            self.constraintContentViewMinHeight = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
+        } else {
+            self.constraintContentViewMinHeight = nil;
+        }
+        if(_contentMaxSize.height > FLT_EPSILON) {
+            self.constraintContentViewMaxHeight = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
+        } else {
+            self.constraintContentViewMaxHeight = nil;
+        }
+        self.constraintContentViewHeight = nil;
     }
 }
 

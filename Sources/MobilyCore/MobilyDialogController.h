@@ -57,6 +57,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @property(nonatomic, readwrite, strong) UIColor* backgroundTintColor;
 @property(nonatomic, readwrite, assign) CGFloat backgroundAlpha;
 
+@property(nonatomic, readwrite, assign) CGSize contentSize;
 @property(nonatomic, readwrite, assign) CGSize contentMinSize;
 @property(nonatomic, readwrite, assign) CGSize contentMaxSize;
 
