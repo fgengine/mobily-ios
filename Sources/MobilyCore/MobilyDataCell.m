@@ -359,6 +359,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRootViewHeight, constraintRootV
 
 - (void)_handlerLongPressGestureRecognizer:(UILongPressGestureRecognizer*)gestureRecognizer {
     if(gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        [self.tapGestureRecognizer requireGestureRecognizerToFail:gestureRecognizer];
         [self _longPressed];
     }
 }
