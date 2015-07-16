@@ -839,7 +839,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     UIImage* result = nil;
     CGColorSpaceRef colourSpace = CGColorSpaceCreateDeviceRGB();
     if(colourSpace != NULL) {
-        CGRect drawRect = CGRectAspectFitFromBoundsAndSize(CGRectMake(0.0f, 0.0f, size.width, size.height), self.size);
+        CGRect drawRect = MobilyRectAspectFitFromBoundsAndSize(CGRectMake(0.0f, 0.0f, size.width, size.height), self.size);
         drawRect.size.width = floorf(drawRect.size.width);
         drawRect.size.height = floorf(drawRect.size.height);
         
@@ -1026,8 +1026,8 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     [path addClip];
     switch(alignment) {
         case MobilyImageAlignmentStretch: break;
-        case MobilyImageAlignmentAspectFill: rect = CGRectAspectFillFromBoundsAndSize(rect, self.size); break;
-        case MobilyImageAlignmentAspectFit: rect = CGRectAspectFitFromBoundsAndSize(rect, self.size); break;
+        case MobilyImageAlignmentAspectFill: rect = MobilyRectAspectFillFromBoundsAndSize(rect, self.size); break;
+        case MobilyImageAlignmentAspectFit: rect = MobilyRectAspectFitFromBoundsAndSize(rect, self.size); break;
     }
     [self drawInRect:rect blendMode:blendMode alpha:alpha];
     CGContextRestoreGState(contextRef);

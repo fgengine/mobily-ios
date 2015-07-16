@@ -46,6 +46,13 @@
 
 /*--------------------------------------------------*/
 
+typedef struct {
+    CGPoint start;
+    CGPoint end;
+} MobilyLineSegment;
+
+/*--------------------------------------------------*/
+
 @interface NSString (MobilyCG)
 
 - (CGPoint)convertToPoint;
@@ -60,52 +67,73 @@
 /*--------------------------------------------------*/
 
 #define MOBILY_DEG_TO_RAD                           0.0174532925f
+#ifdef CGFLOAT_IS_DOUBLE
+#   define MOBILY_EPSILON DBL_EPSILON
+#else
+#   define MOBILY_EPSILON FLT_EPSILON
+#endif
 
 /*--------------------------------------------------*/
 
-CGFloat CGFloatNearestMore(CGFloat value, CGFloat step);
+CGFloat MobilyFloatNearestMore(CGFloat value, CGFloat step);
 
 /*--------------------------------------------------*/
 
-CGPoint CGPointAdd(CGPoint point, CGFloat value);
-CGPoint CGPointSub(CGPoint point, CGFloat value);
-CGPoint CGPointMul(CGPoint point, CGFloat value);
-CGPoint CGPointDiv(CGPoint point, CGFloat value);
-CGPoint CGPointAddPoint(CGPoint point1, CGPoint point2);
-CGPoint CGPointSubPoint(CGPoint point1, CGPoint point2);
-CGPoint CGPointMulPoint(CGPoint point1, CGPoint point2);
-CGPoint CGPointDivPoint(CGPoint point1, CGPoint point2);
+CG_EXTERN const CGPoint MobilyPointInfinity;
+
+bool MobilyPointIsInfinity(CGPoint point);
+
+CGPoint MobilyPointAdd(CGPoint point, CGFloat value);
+CGPoint MobilyPointSub(CGPoint point, CGFloat value);
+CGPoint MobilyPointMul(CGPoint point, CGFloat value);
+CGPoint MobilyPointDiv(CGPoint point, CGFloat value);
+CGPoint MobilyPointAddPoint(CGPoint point1, CGPoint point2);
+CGPoint MobilyPointSubPoint(CGPoint point1, CGPoint point2);
+CGPoint MobilyPointMulPoint(CGPoint point1, CGPoint point2);
+CGPoint MobilyPointDivPoint(CGPoint point1, CGPoint point2);
+
+CGPoint MobilyPointRotateAroundPoint(CGPoint point, CGPoint pivot, CGFloat angle);
+
+CGFloat MobilyPointDistance(CGPoint p1, CGPoint p2);
 
 /*--------------------------------------------------*/
 
-CGSize CGSizeNearestMore(CGSize size, CGFloat step);
-CGSize CGSizeAdd(CGSize size, CGFloat value);
-CGSize CGSizeSub(CGSize size, CGFloat value);
-CGSize CGSizeMul(CGSize size, CGFloat value);
-CGSize CGSizeDiv(CGSize size, CGFloat value);
+CGSize MobilySizeNearestMore(CGSize size, CGFloat step);
+CGSize MobilySizeAdd(CGSize size, CGFloat value);
+CGSize MobilySizeSub(CGSize size, CGFloat value);
+CGSize MobilySizeMul(CGSize size, CGFloat value);
+CGSize MobilySizeDiv(CGSize size, CGFloat value);
 
 /*--------------------------------------------------*/
 
-CGRect CGRectMakeOriginAndSize(CGPoint origin, CGSize size);
-CGRect CGRectMakeCenterPoint(CGPoint center, CGFloat width, CGFloat height);
+CGRect MobilyRectMakeOriginAndSize(CGPoint origin, CGSize size);
+CGRect MobilyRectMakeCenterPoint(CGPoint center, CGFloat width, CGFloat height);
 
-CGRect CGRectAdd(CGRect rect, CGFloat value);
-CGRect CGRectSub(CGRect rect, CGFloat value);
-CGRect CGRectMul(CGRect rect, CGFloat value);
-CGRect CGRectDiv(CGRect rect, CGFloat value);
-CGRect CGRectLerp(CGRect rect1, CGRect rect2, CGFloat t);
-CGRect CGRectAspectFillFromBoundsAndSize(CGRect bounds, CGSize size);
-CGRect CGRectAspectFitFromBoundsAndSize(CGRect bounds, CGSize size);
+CGRect MobilyRectAdd(CGRect rect, CGFloat value);
+CGRect MobilyRectSub(CGRect rect, CGFloat value);
+CGRect MobilyRectMul(CGRect rect, CGFloat value);
+CGRect MobilyRectDiv(CGRect rect, CGFloat value);
+CGRect MobilyRectLerp(CGRect rect1, CGRect rect2, CGFloat t);
+CGRect MobilyRectAspectFillFromBoundsAndSize(CGRect bounds, CGSize size);
+CGRect MobilyRectAspectFitFromBoundsAndSize(CGRect bounds, CGSize size);
 
-CGPoint CGRectGetTopLeftPoint(CGRect rect);
-CGPoint CGRectGetTopCenterPoint(CGRect rect);
-CGPoint CGRectGetTopRightPoint(CGRect rect);
-CGPoint CGRectGetLeftPoint(CGRect rect);
-CGPoint CGRectGetCenterPoint(CGRect rect);
-CGPoint CGRectGetRightPoint(CGRect rect);
-CGPoint CGRectGetBottomLeftPoint(CGRect rect);
-CGPoint CGRectGetBottomCenterPoint(CGRect rect);
-CGPoint CGRectGetBottomRightPoint(CGRect rect);
+CGRect MobilyRectScaleAroundPoint(CGRect rect, CGPoint point, CGFloat sx, CGFloat sy);
+
+CGPoint MobilyRectGetTopLeftPoint(CGRect rect);
+CGPoint MobilyRectGetTopCenterPoint(CGRect rect);
+CGPoint MobilyRectGetTopRightPoint(CGRect rect);
+CGPoint MobilyRectGetLeftPoint(CGRect rect);
+CGPoint MobilyRectGetCenterPoint(CGRect rect);
+CGPoint MobilyRectGetRightPoint(CGRect rect);
+CGPoint MobilyRectGetBottomLeftPoint(CGRect rect);
+CGPoint MobilyRectGetBottomCenterPoint(CGRect rect);
+CGPoint MobilyRectGetBottomRightPoint(CGRect rect);
+
+/*--------------------------------------------------*/
+
+MobilyLineSegment MobilyLineSegmentMake(CGPoint start, CGPoint end);
+MobilyLineSegment MobilyLineSegmentRotateAroundPoint(MobilyLineSegment line, CGPoint pivot, CGFloat angle);
+CGPoint MobilyLineSegmentIntersection(MobilyLineSegment ls1, MobilyLineSegment ls2);
 
 /*--------------------------------------------------*/
 #endif

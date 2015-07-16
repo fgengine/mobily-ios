@@ -158,8 +158,8 @@
 - (void)_updateInteractive:(CGFloat)percentComplete {
     [super _updateInteractive:percentComplete];
     
-    _fromView.frame = CGRectLerp(_initialFrameFromViewController, _finalFrameFromViewController, percentComplete);
-    _toView.frame = CGRectLerp(_initialFrameToViewController, _finalFrameToViewController, percentComplete);
+    _fromView.frame = MobilyRectLerp(_initialFrameFromViewController, _finalFrameFromViewController, percentComplete);
+    _toView.frame = MobilyRectLerp(_initialFrameToViewController, _finalFrameToViewController, percentComplete);
 }
 
 - (void)_finishInteractive {

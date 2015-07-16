@@ -1261,7 +1261,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 - (void)_validateLayout {
     CGRect layoutRect = CGRectZero;
     if(_container != nil) {
-        layoutRect = [_container _validateLayoutForAvailableFrame:CGRectMakeOriginAndSize(CGPointZero, self.frameSize)];
+        layoutRect = [_container _validateLayoutForAvailableFrame:MobilyRectMakeOriginAndSize(CGPointZero, self.frameSize)];
     }
     self.contentSize = layoutRect.size;
 }

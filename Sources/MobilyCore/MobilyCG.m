@@ -152,7 +152,7 @@
 #pragma mark -
 /*--------------------------------------------------*/
 
-CGFloat CGFloatNearestMore(CGFloat value, CGFloat step) {
+CGFloat MobilyFloatNearestMore(CGFloat value, CGFloat step) {
     CGFloat result = step;
     while(result < value) {
         result += step;
@@ -164,59 +164,76 @@ CGFloat CGFloatNearestMore(CGFloat value, CGFloat step) {
 #pragma mark -
 /*--------------------------------------------------*/
 
-CGPoint CGPointAdd(CGPoint point, CGFloat value) {
+const CGPoint MobilyPointInfinity = { INFINITY, INFINITY };
+
+bool MobilyPointIsInfinity(CGPoint point) {
+    return CGPointEqualToPoint(point, MobilyPointInfinity);
+}
+
+CGPoint MobilyPointAdd(CGPoint point, CGFloat value) {
     return CGPointMake(point.x + value, point.y + value);
 }
 
-CGPoint CGPointSub(CGPoint point, CGFloat value) {
+CGPoint MobilyPointSub(CGPoint point, CGFloat value) {
     return CGPointMake(point.x - value, point.y - value);
 }
 
-CGPoint CGPointMul(CGPoint point, CGFloat value) {
+CGPoint MobilyPointMul(CGPoint point, CGFloat value) {
     return CGPointMake(point.x * value, point.y * value);
 }
 
-CGPoint CGPointDiv(CGPoint point, CGFloat value) {
+CGPoint MobilyPointDiv(CGPoint point, CGFloat value) {
     return CGPointMake(point.x / value, point.y / value);
 }
 
-CGPoint CGPointAddPoint(CGPoint point1, CGPoint point2) {
+CGPoint MobilyPointAddPoint(CGPoint point1, CGPoint point2) {
     return CGPointMake(point1.x + point2.x, point1.y + point2.y);
 }
 
-CGPoint CGPointSubPoint(CGPoint point1, CGPoint point2) {
+CGPoint MobilyPointSubPoint(CGPoint point1, CGPoint point2) {
     return CGPointMake(point1.x - point2.x, point1.y - point2.y);
 }
 
-CGPoint CGPointMulPoint(CGPoint point1, CGPoint point2) {
+CGPoint MobilyPointMulPoint(CGPoint point1, CGPoint point2) {
     return CGPointMake(point1.x * point2.x, point1.y * point2.y);
 }
 
-CGPoint CGPointDivPoint(CGPoint point1, CGPoint point2) {
+CGPoint MobilyPointDivPoint(CGPoint point1, CGPoint point2) {
     return CGPointMake(point1.x / point2.x, point1.y / point2.y);
+}
+
+CGPoint MobilyPointRotateAroundPoint(CGPoint point, CGPoint pivot, CGFloat angle) {
+    point = CGPointApplyAffineTransform(point, CGAffineTransformMakeTranslation(-pivot.x, -pivot.y));
+    point = CGPointApplyAffineTransform(point, CGAffineTransformMakeRotation(angle));
+    point = CGPointApplyAffineTransform(point, CGAffineTransformMakeTranslation(pivot.x, pivot.y));
+    return point;
+}
+
+CGFloat MobilyPointDistance(CGPoint p1, CGPoint p2) {
+    return sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
 }
 
 /*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
-CGSize CGSizeNearestMore(CGSize size, CGFloat step) {
-    return CGSizeMake(CGFloatNearestMore(size.width, step), CGFloatNearestMore(size.height, step));
+CGSize MobilySizeNearestMore(CGSize size, CGFloat step) {
+    return CGSizeMake(MobilyFloatNearestMore(size.width, step), MobilyFloatNearestMore(size.height, step));
 }
 
-CGSize CGSizeAdd(CGSize size, CGFloat value) {
+CGSize MobilySizeAdd(CGSize size, CGFloat value) {
     return CGSizeMake(size.width + value, size.height + value);
 }
 
-CGSize CGSizeSub(CGSize size, CGFloat value) {
+CGSize MobilySizeSub(CGSize size, CGFloat value) {
     return CGSizeMake(size.width - value, size.height - value);
 }
 
-CGSize CGSizeMul(CGSize size, CGFloat value) {
+CGSize MobilySizeMul(CGSize size, CGFloat value) {
     return CGSizeMake(size.width * value, size.height * value);
 }
 
-CGSize CGSizeDiv(CGSize size, CGFloat value) {
+CGSize MobilySizeDiv(CGSize size, CGFloat value) {
     return CGSizeMake(size.width / value, size.height / value);
 }
 
@@ -224,31 +241,31 @@ CGSize CGSizeDiv(CGSize size, CGFloat value) {
 #pragma mark -
 /*--------------------------------------------------*/
 
-CGRect CGRectMakeOriginAndSize(CGPoint origin, CGSize size) {
+CGRect MobilyRectMakeOriginAndSize(CGPoint origin, CGSize size) {
     return CGRectMake(origin.x, origin.y, size.width, size.height);
 }
 
-CGRect CGRectMakeCenterPoint(CGPoint center, CGFloat width, CGFloat height) {
+CGRect MobilyRectMakeCenterPoint(CGPoint center, CGFloat width, CGFloat height) {
     return CGRectMake(center.x - (width * 0.5f), center.y - (height * 0.5f), width, height);
 }
 
-CGRect CGRectAdd(CGRect rect, CGFloat value) {
+CGRect MobilyRectAdd(CGRect rect, CGFloat value) {
     return CGRectMake(rect.origin.x + value, rect.origin.y + value, rect.size.width + value, rect.size.height + value);
 }
 
-CGRect CGRectSub(CGRect rect, CGFloat value) {
+CGRect MobilyRectSub(CGRect rect, CGFloat value) {
     return CGRectMake(rect.origin.x - value, rect.origin.y - value, rect.size.width - value, rect.size.height - value);
 }
 
-CGRect CGRectMul(CGRect rect, CGFloat value) {
+CGRect MobilyRectMul(CGRect rect, CGFloat value) {
     return CGRectMake(rect.origin.x * value, rect.origin.y * value, rect.size.width * value, rect.size.height * value);
 }
 
-CGRect CGRectDiv(CGRect rect, CGFloat value) {
+CGRect MobilyRectDiv(CGRect rect, CGFloat value) {
     return CGRectMake(rect.origin.x / value, rect.origin.y / value, rect.size.width / value, rect.size.height / value);
 }
 
-CGRect CGRectLerp(CGRect rect1, CGRect rect2, CGFloat t) {
+CGRect MobilyRectLerp(CGRect rect1, CGRect rect2, CGFloat t) {
     return CGRectMake(
         ((1.0f - t) * rect1.origin.x) + (t * rect2.origin.x),
         ((1.0f - t) * rect1.origin.y) + (t * rect2.origin.y),
@@ -257,7 +274,7 @@ CGRect CGRectLerp(CGRect rect1, CGRect rect2, CGFloat t) {
     );
 }
 
-CGRect CGRectAspectFillFromBoundsAndSize(CGRect bounds, CGSize size) {
+CGRect MobilyRectAspectFillFromBoundsAndSize(CGRect bounds, CGSize size) {
     CGFloat iw = floorf(size.width);
     CGFloat ih = floorf(size.height);
     CGFloat bw = floorf(bounds.size.width);
@@ -272,7 +289,7 @@ CGRect CGRectAspectFillFromBoundsAndSize(CGRect bounds, CGSize size) {
     return CGRectMake(bounds.origin.x + rx, bounds.origin.y + ry, rw, rh);
 }
 
-CGRect CGRectAspectFitFromBoundsAndSize(CGRect bounds, CGSize size) {
+CGRect MobilyRectAspectFitFromBoundsAndSize(CGRect bounds, CGSize size) {
     CGFloat iw = floorf(size.width);
     CGFloat ih = floorf(size.height);
     CGFloat bw = floorf(bounds.size.width);
@@ -287,40 +304,81 @@ CGRect CGRectAspectFitFromBoundsAndSize(CGRect bounds, CGSize size) {
     return CGRectMake(bounds.origin.x + rx, bounds.origin.y + ry, rw, rh);
 }
 
-CGPoint CGRectGetTopLeftPoint(CGRect rect) {
+CGRect MobilyRectScaleAroundPoint(CGRect rect, CGPoint point, CGFloat sx, CGFloat sy) {
+    rect = CGRectApplyAffineTransform(rect, CGAffineTransformMakeTranslation(-point.x, -point.y));
+    rect = CGRectApplyAffineTransform(rect, CGAffineTransformMakeScale(sx, sy));
+    rect = CGRectApplyAffineTransform(rect, CGAffineTransformMakeTranslation(point.x, point.y));
+    return rect;
+}
+
+CGPoint MobilyRectGetTopLeftPoint(CGRect rect) {
     return CGPointMake(CGRectGetMinX(rect), CGRectGetMinY(rect));
 }
 
-CGPoint CGRectGetTopCenterPoint(CGRect rect) {
+CGPoint MobilyRectGetTopCenterPoint(CGRect rect) {
     return CGPointMake(CGRectGetMidX(rect), CGRectGetMinY(rect));
 }
 
-CGPoint CGRectGetTopRightPoint(CGRect rect) {
+CGPoint MobilyRectGetTopRightPoint(CGRect rect) {
     return CGPointMake(CGRectGetMaxX(rect), CGRectGetMinY(rect));
 }
 
-CGPoint CGRectGetLeftPoint(CGRect rect) {
+CGPoint MobilyRectGetLeftPoint(CGRect rect) {
     return CGPointMake(CGRectGetMinX(rect), CGRectGetMidY(rect));
 }
 
-CGPoint CGRectGetCenterPoint(CGRect rect) {
+CGPoint MobilyRectGetCenterPoint(CGRect rect) {
     return CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect));
 }
 
-CGPoint CGRectGetRightPoint(CGRect rect) {
+CGPoint MobilyRectGetRightPoint(CGRect rect) {
     return CGPointMake(CGRectGetMaxX(rect), CGRectGetMidY(rect));
 }
 
-CGPoint CGRectGetBottomLeftPoint(CGRect rect) {
+CGPoint MobilyRectGetBottomLeftPoint(CGRect rect) {
     return CGPointMake(CGRectGetMinX(rect), CGRectGetMaxY(rect));
 }
 
-CGPoint CGRectGetBottomCenterPoint(CGRect rect) {
+CGPoint MobilyRectGetBottomCenterPoint(CGRect rect) {
     return CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect));
 }
 
-CGPoint CGRectGetBottomRightPoint(CGRect rect) {
+CGPoint MobilyRectGetBottomRightPoint(CGRect rect) {
     return CGPointMake(CGRectGetMaxX(rect), CGRectGetMaxY(rect));
+}
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+MobilyLineSegment MobilyLineSegmentMake(CGPoint start, CGPoint end) {
+    return (MobilyLineSegment){ start, end };
+}
+
+MobilyLineSegment MobilyLineSegmentRotateAroundPoint(MobilyLineSegment line, CGPoint pivot, CGFloat angle) {
+    return MobilyLineSegmentMake(MobilyPointRotateAroundPoint(line.start, pivot, angle), MobilyPointRotateAroundPoint(line.end, pivot, angle));
+}
+
+CGPoint MobilyLineSegmentIntersection(MobilyLineSegment ls1, MobilyLineSegment ls2) {
+    CGFloat x1 = ls1.start.x, y1 = ls1.start.y;
+    CGFloat x2 = ls1.end.x, y2 = ls1.end.y;
+    CGFloat x3 = ls2.start.x, y3 = ls2.start.y;
+    CGFloat x4 = ls2.end.x, y4 = ls2.end.y;
+    CGFloat numeratorA = (x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3);
+    CGFloat numeratorB = (x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3);
+    CGFloat denominator = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+    if((fabs(numeratorA) < MOBILY_EPSILON) && (fabs(numeratorB) < MOBILY_EPSILON) && (fabs(denominator) < MOBILY_EPSILON)) {
+        return CGPointMake((x1 + x2) * 0.5, (y1 + y2) * 0.5);
+    }
+    if(fabs(denominator) < MOBILY_EPSILON) {
+        return MobilyPointInfinity;
+    }
+    CGFloat uA = numeratorA / denominator;
+    CGFloat uB = numeratorB / denominator;
+    if((uA < 0) || (uA > 1) || (uB < 0) || (uB > 1)) {
+        return MobilyPointInfinity;
+    }
+    return CGPointMake(x1 + uA * (x2 - x1), y1 + uA * (y2 - y1));
 }
 
 /*--------------------------------------------------*/

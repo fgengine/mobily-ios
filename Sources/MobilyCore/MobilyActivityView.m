@@ -156,7 +156,7 @@
     CGSize panelSize = CGSizeMake(_margin + MAX(spinnerSize.width, textSize.width) + _margin, _margin + spinnerSize.height + ((_textView.text.length > 0) ? _spacing + textSize.height : 0.0f) + _margin);
     CGFloat spinnerOffset = floorf((panelSize.width - spinnerSize.width) * 0.5f);
     
-    _panelView.frame = CGRectMakeCenterPoint(self.frameCenter, panelSize.width, panelSize.height);
+    _panelView.frame = MobilyRectMakeCenterPoint(self.frameCenter, panelSize.width, panelSize.height);
     _spinnerView.frame = CGRectMake(spinnerOffset, _margin, spinnerSize.width, spinnerSize.height);
     _textView.frame = CGRectMake(_margin, _margin + spinnerSize.height + _spacing, textSize.width, textSize.height);
 }
