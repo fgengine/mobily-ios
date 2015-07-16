@@ -58,6 +58,9 @@
 @synthesize canSelectDays = _canSelectDays;
 @synthesize canSelectPreviousDays = _canSelectPreviousDays;
 @synthesize canSelectNextDays = _canSelectNextDays;
+@synthesize canSelectEarlierDays = _canSelectEarlierDays;
+@synthesize canSelectCurrentDay = _canSelectCurrentDay;
+@synthesize canSelectAfterDays = _canSelectAfterDays;
 @synthesize daysMargin = _daysMargin;
 @synthesize daysHeight = _daysHeight;
 @synthesize daysSpacing = _daysSpacing;
@@ -93,6 +96,9 @@
         _canSelectDays = YES;
         _canSelectPreviousDays = NO;
         _canSelectNextDays = NO;
+        _canSelectEarlierDays = YES;
+        _canSelectCurrentDay = YES;
+        _canSelectAfterDays = YES;
         _daysMargin = UIEdgeInsetsZero;
         _daysHeight = 44.0f;
         _daysSpacing = UIOffsetZero;
@@ -236,6 +242,32 @@
     }
 }
 
+- (void)setCanSelectEarlierDays:(BOOL)canSelectEarlierDays {
+    if(_canSelectEarlierDays != canSelectEarlierDays) {
+        _canSelectEarlierDays = canSelectEarlierDays;
+        
+        NSDate* now = [NSDate.date withoutTime];
+        [_weekdayItems each:^(MobilyDataItemCalendarDay* dayItem) {
+            if([dayItem.date isEarlier:now] == YES) {
+                dayItem.allowsSelection = _canSelectEarlierDays;
+            }
+        }];
+    }
+}
+
+- (void)setCanSelectAfterDays:(BOOL)canSelectAfterDays {
+    if(_canSelectAfterDays != canSelectAfterDays) {
+        _canSelectAfterDays = canSelectAfterDays;
+        
+        NSDate* now = [NSDate.date withoutTime];
+        [_weekdayItems each:^(MobilyDataItemCalendarDay* dayItem) {
+            if([dayItem.date isAfter:now] == YES) {
+                dayItem.allowsSelection = _canSelectAfterDays;
+            }
+        }];
+    }
+}
+
 - (void)setDaysMargin:(UIEdgeInsets)daysMargin {
     if(UIEdgeInsetsEqualToEdgeInsets(_daysMargin, daysMargin) == NO) {
         _daysMargin = daysMargin;
@@ -335,6 +367,7 @@
             }
         }
         if(_canShowDays == YES) {
+            NSDate* now = [NSDate.date withoutTime];
             NSDate* beginDayDate = [_displayBeginDate copy];
             NSDate* endDayDate = [_displayEndDate copy];
             NSInteger weekOfMonth = [beginDayDate weeksToDate:[endDayDate nextSecond]];
@@ -349,11 +382,17 @@
                             dayItem = [MobilyDataItemCalendarDay itemWithCalendar:_calendar date:beginDayDate data:dayBlock(beginDayDate)];
                         }
                         if([dayItem.date isEarlier:_beginDate] == YES) {
-                            dayItem.allowsSelection = _canSelectPreviousDays;
+                            dayItem.allowsSelection = (_canSelectDays == YES) ? _canSelectPreviousDays : _canSelectDays;
                         } else if([dayItem.date isAfter:_endDate] == YES) {
-                            dayItem.allowsSelection = _canSelectNextDays;
+                            dayItem.allowsSelection = (_canSelectDays == YES) ? _canSelectNextDays : _canSelectDays;
                         } else {
-                            dayItem.allowsSelection = _canSelectDays;
+                            if([dayItem.date isEarlier:now] == YES) {
+                                dayItem.allowsSelection = (_canSelectDays == YES) ? _canSelectEarlierDays : _canSelectDays;
+                            } else if([dayItem.date isAfter:now] == YES) {
+                                dayItem.allowsSelection = (_canSelectDays == YES) ? _canSelectAfterDays : _canSelectDays;
+                            } else {
+                                dayItem.allowsSelection = (_canSelectDays == YES) ? _canSelectCurrentDay : _canSelectDays;
+                            }
                         }
                         [_dayItems setObject:dayItem atColumn:weekdayIndex atRow:weekIndex];
                         [self _appendEntry:dayItem];
@@ -383,6 +422,7 @@
         } else {
             newDayItem = [MobilyDataItemCalendarDay itemWithCalendar:oldDayItem.calendar date:date data:data];
         }
+        newDayItem.allowsSelection = oldDayItem.allowsSelection;
         [_dayItems setObject:newDayItem atColumn:foundColumn atRow:foundRow];
         [self _replaceOriginEntry:oldDayItem withEntry:newDayItem];
     }

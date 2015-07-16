@@ -72,8 +72,8 @@ typedef void(^MobilyImageCropControllerCancel)(MobilyImageCropController* contol
 @property(nonatomic, readwrite, assign) BOOL applyMaskToCroppedImage;
 @property(nonatomic, readwrite, assign, getter=isRotationEnabled) BOOL rotationEnabled;
 
-@property(nonatomic, readonly, copy) MobilyImageCropControllerChoose didChoose;
-@property(nonatomic, readonly, copy) MobilyImageCropControllerCancel didCancel;
+@property(nonatomic, readwrite, copy) MobilyImageCropControllerChoose didChoose;
+@property(nonatomic, readwrite, copy) MobilyImageCropControllerCancel didCancel;
 
 @property(nonatomic, readonly, strong) UILabel* titleLabel;
 @property(nonatomic, readonly, strong) UIButton* chooseButton;

@@ -1036,10 +1036,7 @@
 #pragma mark MobilyModelJson
 
 - (id)convertValue:(id)value {
-    if(_hasAnySource == YES) {
-        return [[_customClass alloc] initWithJson:value];
-    }
-    if([value isKindOfClass:NSDictionary.class] == YES) {
+    if((_hasAnySource == YES) || ([value isKindOfClass:NSDictionary.class] == YES)) {
         return [[_customClass alloc] initWithJson:value];
     }
     return nil;

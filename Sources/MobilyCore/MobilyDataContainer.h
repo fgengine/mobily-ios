@@ -325,6 +325,9 @@ typedef void (^MobilyDataContainerCalendarEachDayItemsBlock)(MobilyDataItemCalen
 @property(nonatomic, readwrite, assign) BOOL canSelectDays;
 @property(nonatomic, readwrite, assign) BOOL canSelectPreviousDays;
 @property(nonatomic, readwrite, assign) BOOL canSelectNextDays;
+@property(nonatomic, readwrite, assign) BOOL canSelectEarlierDays;
+@property(nonatomic, readwrite, assign) BOOL canSelectCurrentDay;
+@property(nonatomic, readwrite, assign) BOOL canSelectAfterDays;
 @property(nonatomic, readwrite, assign) UIEdgeInsets daysMargin;
 @property(nonatomic, readwrite, assign) CGFloat daysHeight;
 @property(nonatomic, readwrite, assign) UIOffset daysSpacing;

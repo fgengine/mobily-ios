@@ -92,5 +92,7 @@
 #import <MobilyCore/MobilySharedManager.h>
 #import <MobilyCore/MobilyPressAndHoldGestureRecognizer.h>
 #import <MobilyCore/MobilyNotificationManager.h>
+#import <MobilyCore/MobilyImageCropController.h>
+#import <MobilyCore/MobilyTouchView.h>
 
 /*--------------------------------------------------*/
