@@ -152,7 +152,7 @@
 
 - (BOOL)validate:(NSString*)value {
     NSString* trimmed = [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if((_required == YES) && (trimmed.length > 0)) {
+    if(trimmed.length > 0) {
         return YES;
     } else if((_required == NO) && (trimmed.length < 1)) {
         return YES;
@@ -194,7 +194,7 @@
 
 - (BOOL)validate:(NSString*)value {
     NSString* trimmed = [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if((_required == YES) && (trimmed.length > 0)) {
+    if(trimmed.length > 0) {
         return [trimmed isEmail];
     } else if((_required == NO) && (trimmed.length < 1)) {
         return YES;
@@ -244,7 +244,7 @@
 
 - (BOOL)validate:(NSString*)value {
     NSString* trimmed = [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if((_required == YES) && (trimmed.length > 0)) {
+    if(trimmed.length > 0) {
         return [[NSPredicate predicateWithFormat:@"SELF MATCHES %@", _regExp] evaluateWithObject:trimmed];
     } else if((_required == NO) && (trimmed.length < 1)) {
         return YES;
@@ -297,7 +297,7 @@
 
 - (BOOL)validate:(NSString*)value {
     NSString* trimmed = [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if((_required == YES) && (trimmed.length > 0)) {
+    if(trimmed.length > 0) {
         return (trimmed.length >= _minLength);
     } else if((_required == NO) && (trimmed.length < 1)) {
         return YES;
@@ -342,7 +342,7 @@
 
 - (BOOL)validate:(NSString*)value {
     NSString* trimmed = [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if((_required == YES) && (trimmed.length > 0)) {
+    if(trimmed.length > 0) {
         return (trimmed.length <= _maxLength);
     } else if((_required == NO) && (trimmed.length < 1)) {
         return YES;
@@ -381,7 +381,7 @@
 
 - (BOOL)validate:(NSString*)value {
     NSString* trimmed = [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if((_required == YES) && (trimmed.length > 0)) {
+    if(trimmed.length > 0) {
         static NSPredicate* predicate = nil;
         if(predicate == nil) {
             predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", @"[0-9]+"];
