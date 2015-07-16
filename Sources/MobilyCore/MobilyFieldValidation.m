@@ -133,20 +133,28 @@
 
 @implementation MobilyFieldEmptyValidator
 
-@synthesize message = _message;
 @synthesize control = _control;
+
+- (instancetype)init {
+    if(self = [super init]) {
+        _required = YES;
+    }
+    return self;
+}
 
 - (instancetype)initWithMessage:(NSString*)message {
     if(self = [super init]) {
         _message = message;
+        _required = YES;
     }
     return self;
 }
 
 - (BOOL)validate:(NSString*)value {
-    NSCharacterSet* whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-    NSString* trimmed = [value stringByTrimmingCharactersInSet:whitespace];
-    if([trimmed length] > 0) {
+    NSString* trimmed = [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if((_required == YES) && (trimmed.length > 0)) {
+        return YES;
+    } else if((_required == NO) && (trimmed.length < 1)) {
         return YES;
     }
     return NO;
@@ -167,18 +175,31 @@
 
 @implementation MobilyFieldEmailValidator
 
-@synthesize message = _message;
 @synthesize control = _control;
+
+- (instancetype)init {
+    if(self = [super init]) {
+        _required = YES;
+    }
+    return self;
+}
 
 - (instancetype)initWithMessage:(NSString*)message {
     if(self = [super init]) {
         _message = message;
+        _required = YES;
     }
     return self;
 }
 
 - (BOOL)validate:(NSString*)value {
-    return [value isEmail];
+    NSString* trimmed = [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if((_required == YES) && (trimmed.length > 0)) {
+        return [trimmed isEmail];
+    } else if((_required == NO) && (trimmed.length < 1)) {
+        return YES;
+    }
+    return NO;
 }
 
 - (NSArray*)messages:(NSString*)value {
@@ -196,13 +217,20 @@
 
 @implementation MobilyFieldRegExpValidator
 
-@synthesize message = _message;
 @synthesize control = _control;
+
+- (instancetype)init {
+    if(self = [super init]) {
+        _required = YES;
+    }
+    return self;
+}
 
 - (instancetype)initWithRegExp:(NSString*)regExp andMessage:(NSString*)message {
     if(self = [super init]) {
         _regExp = regExp;
         _message = message;
+        _required = YES;
     }
     return self;
 }
@@ -215,8 +243,10 @@
 }
 
 - (BOOL)validate:(NSString*)value {
-    NSPredicate* test = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", _regExp];
-    if([test evaluateWithObject:value] == YES) {
+    NSString* trimmed = [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if((_required == YES) && (trimmed.length > 0)) {
+        return [[NSPredicate predicateWithFormat:@"SELF MATCHES %@", _regExp] evaluateWithObject:trimmed];
+    } else if((_required == NO) && (trimmed.length < 1)) {
         return YES;
     }
     return NO;
@@ -240,13 +270,20 @@
 
 @implementation MobilyFieldMinLengthValidator
 
-@synthesize message = _message;
 @synthesize control = _control;
+
+- (instancetype)init {
+    if(self = [super init]) {
+        _required = YES;
+    }
+    return self;
+}
 
 - (instancetype)initWithMessage:(NSString*)message minLength:(NSInteger)minLength {
     if(self = [super init]) {
         _message = message;
         _minLength = minLength;
+        _required = YES;
     }
     return self;
 }
@@ -259,7 +296,10 @@
 }
 
 - (BOOL)validate:(NSString*)value {
-    if([value length] >= _minLength) {
+    NSString* trimmed = [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if((_required == YES) && (trimmed.length > 0)) {
+        return (trimmed.length >= _minLength);
+    } else if((_required == NO) && (trimmed.length < 1)) {
         return YES;
     }
     return NO;
@@ -275,13 +315,20 @@
 
 @implementation MobilyFieldMaxLengthValidator
 
-@synthesize message = _message;
 @synthesize control = _control;
+
+- (instancetype)init {
+    if(self = [super init]) {
+        _required = YES;
+    }
+    return self;
+}
 
 - (instancetype)initWithMessage:(NSString*)message maxLength:(NSInteger)maxLength {
     if(self = [super init]) {
         _message = message;
         _maxLength = maxLength;
+        _required = YES;
     }
     return self;
 }
@@ -294,7 +341,10 @@
 }
 
 - (BOOL)validate:(NSString*)value {
-    if([value length] <= _maxLength) {
+    NSString* trimmed = [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if((_required == YES) && (trimmed.length > 0)) {
+        return (trimmed.length <= _maxLength);
+    } else if((_required == NO) && (trimmed.length < 1)) {
         return YES;
     }
     return NO;
@@ -312,19 +362,32 @@
 
 @implementation MobilyFieldDigitValidator
 
-@synthesize message = _message;
 @synthesize control = _control;
+
+- (instancetype)init {
+    if(self = [super init]) {
+        _required = YES;
+    }
+    return self;
+}
 
 - (instancetype)initWithMessage:(NSString*)message {
     if(self = [super init]) {
         _message = message;
+        _required = YES;
     }
     return self;
 }
 
 - (BOOL)validate:(NSString*)value {
-    NSPredicate* test = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", @"[0-9]+"];
-    if([test evaluateWithObject:value] == YES) {
+    NSString* trimmed = [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if((_required == YES) && (trimmed.length > 0)) {
+        static NSPredicate* predicate = nil;
+        if(predicate == nil) {
+            predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", @"[0-9]+"];
+        }
+        return [predicate evaluateWithObject:value];
+    } else if((_required == NO) && (trimmed.length < 1)) {
         return YES;
     }
     return NO;
@@ -342,13 +405,17 @@
 
 @implementation MobilyFieldANDValidator
 
-@synthesize message = _message;
 @synthesize control = _control;
 
-- (instancetype)initWithValidators:(NSArray*)validators andMessage:(NSString*)message {
+- (instancetype)init {
+    if(self = [super init]) {
+    }
+    return self;
+}
+
+- (instancetype)initWithValidators:(NSArray*)validators {
     if(self = [super init]) {
         _validators = validators;
-        _message = message;
     }
     return self;
 }
@@ -380,13 +447,17 @@
 
 @implementation MobilyFieldORValidator
 
-@synthesize message = _message;
 @synthesize control = _control;
 
-- (instancetype)initWithValidators:(NSArray*)validators andMessage:(NSString*)message {
+- (instancetype)init {
+    if(self = [super init]) {
+    }
+    return self;
+}
+
+- (instancetype)initWithValidators:(NSArray*)validators {
     if(self = [super init]) {
         _validators = validators;
-        _message = message;
     }
     return self;
 }
