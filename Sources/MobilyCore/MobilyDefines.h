@@ -44,6 +44,10 @@
 
 /*--------------------------------------------------*/
 
+#include <tgmath.h>
+
+/*--------------------------------------------------*/
+
 #ifdef DEBUG
 #   define MOBILY_DEBUG
 #endif
@@ -76,5 +80,23 @@
 #else
 #   define MOBILY_DEVICE
 #endif
+
+
+#ifdef CGFLOAT_IS_DOUBLE
+#   define MOBILY_EPSILON DBL_EPSILON
+#else
+#   define MOBILY_EPSILON MOBILY_EPSILON
+#endif
+
+/*--------------------------------------------------*/
+
+#define MOBILY_COS(X) __tg_cos(__tg_promote1((X))(X))
+#define MOBILY_SIN(X) __tg_sin(__tg_promote1((X))(X))
+#define MOBILY_ATAN2(X, Y) __tg_atan2(__tg_promote2((X), (Y))(X), __tg_promote2((X), (Y))(Y))
+#define MOBILY_POW(X, Y) __tg_pow(__tg_promote2((X), (Y))(X), __tg_promote2((X), (Y))(Y))
+#define MOBILY_SQRT(X) __tg_sqrt(__tg_promote1((X))(X))
+#define MOBILY_FABS(X) __tg_fabs(__tg_promote1((X))(X))
+#define MOBILY_CEIL(X) __tg_ceil(__tg_promote1((X))(X))
+#define MOBILY_FLOOR(X) __tg_floor(__tg_promote1((X))(X))
 
 /*--------------------------------------------------*/

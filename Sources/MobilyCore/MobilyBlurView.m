@@ -224,7 +224,7 @@
 
 - (void)setUpdateInterval:(NSTimeInterval)updateInterval {
     _updateInterval = updateInterval;
-    if(_updateInterval <= FLT_EPSILON) {
+    if(_updateInterval <= MOBILY_EPSILON) {
         _updateInterval = 1.0f / 60.0f;
     }
 }
@@ -375,7 +375,7 @@
         }
     }
     UIImage* snapshot = nil;
-    if(floorf(size.width) * floorf(size.height) > FLT_EPSILON) {
+    if(floorf(size.width) * floorf(size.height) > MOBILY_EPSILON) {
         UIGraphicsBeginImageContextWithOptions(size, NO, scale);
         CGContextRef context = UIGraphicsGetCurrentContext();
         CGContextTranslateCTM(context, -bounds.origin.x, -bounds.origin.y);

@@ -110,7 +110,7 @@
 }
 
 - (NSString*)formatShortTime {
-    NSTimeInterval diff = ABS(self.timeIntervalSinceNow);
+    NSTimeInterval diff = MOBILY_FABS(self.timeIntervalSinceNow);
     if(diff < MOBILY_DAY) {
         return [self formatTime];
     } else if(diff < MOBILY_5_DAYS) {
@@ -135,7 +135,7 @@
 }
 
 - (NSString*)formatDateTime {
-    NSTimeInterval diff = ABS(self.timeIntervalSinceNow);
+    NSTimeInterval diff = MOBILY_FABS(self.timeIntervalSinceNow);
     if(diff < MOBILY_DAY) {
         return [self formatTime];
     } else if(diff < MOBILY_5_DAYS) {
@@ -160,7 +160,7 @@
 }
 
 - (NSString*)formatRelativeTime {
-    NSTimeInterval elapsed = ABS(self.timeIntervalSinceNow);
+    NSTimeInterval elapsed = MOBILY_FABS(self.timeIntervalSinceNow);
     if(elapsed <= 1.0f) {
         return NSLocalizedStringFromTable(@"just a moment ago", @"MobilyNS", @"");
     } else if(elapsed < MOBILY_MINUTE) {
@@ -182,7 +182,7 @@
 }
 
 - (NSString*)formatShortRelativeTime {
-    NSTimeInterval elapsed = ABS(self.timeIntervalSinceNow);
+    NSTimeInterval elapsed = MOBILY_FABS(self.timeIntervalSinceNow);
     if(elapsed < MOBILY_MINUTE) {
         return NSLocalizedStringFromTable(@"<1m", @"MobilyNS", @"Date format: less than one minute ago");
     } else if(elapsed < MOBILY_HOUR) {

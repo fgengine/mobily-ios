@@ -463,9 +463,9 @@
         _data = data;
         _size = _data.length;
         _memoryStorageInterval = memoryStorageInterval;
-        _memoryStorageTime = ceil(NSDate.timeIntervalSinceReferenceDate + memoryStorageInterval);
+        _memoryStorageTime = MOBILY_CEIL(NSDate.timeIntervalSinceReferenceDate + memoryStorageInterval);
         _discStorageInterval = discStorageInterval;
-        _discStorageTime = ceil(NSDate.timeIntervalSinceReferenceDate + discStorageInterval);
+        _discStorageTime = MOBILY_CEIL(NSDate.timeIntervalSinceReferenceDate + discStorageInterval);
         
         _cache.currentMemoryUsage = _cache.currentMemoryUsage + _size;
         [self saveToDiscCache];
@@ -532,9 +532,9 @@
     _size = data.length;
     _cache.currentMemoryUsage = _cache.currentMemoryUsage + _size;
     _memoryStorageInterval = memoryStorageInterval;
-    _memoryStorageTime = ceil(NSDate.timeIntervalSinceReferenceDate + memoryStorageInterval);
+    _memoryStorageTime = MOBILY_CEIL(NSDate.timeIntervalSinceReferenceDate + memoryStorageInterval);
     _discStorageInterval = discStorageInterval;
-    _discStorageTime = ceil(NSDate.timeIntervalSinceReferenceDate + discStorageInterval);
+    _discStorageTime = MOBILY_CEIL(NSDate.timeIntervalSinceReferenceDate + discStorageInterval);
     [self saveToDiscCache];
 }
 

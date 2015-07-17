@@ -279,7 +279,7 @@
                 });
             } else {
                 CLLocationAccuracy desiredAccuracy = MAX(location.horizontalAccuracy, location.verticalAccuracy);
-                NSTimeInterval timeSinceUpdate = fabs(location.timestamp.timeIntervalSinceNow);
+                NSTimeInterval timeSinceUpdate = MOBILY_FABS(location.timestamp.timeIntervalSinceNow);
                 if((desiredAccuracy <= request.desiredAccuracy) || (timeSinceUpdate <= request.staleThreshold)) {
                     [completingRequests addObject:request];
                 }
@@ -438,7 +438,7 @@
     if(_requestStartTime == nil) {
         return 0.0f;
     }
-    return fabs(_requestStartTime.timeIntervalSinceNow);
+    return MOBILY_FABS(_requestStartTime.timeIntervalSinceNow);
 }
 
 - (BOOL)hasTimedOut {
@@ -459,7 +459,7 @@
 }
 
 - (void)_forceTimeout {
-    if(_desiredAccuracy > FLT_EPSILON) {
+    if(_desiredAccuracy > MOBILY_EPSILON) {
         _hasTimedOut = YES;
     }
 }

@@ -450,12 +450,12 @@
     switch(_orientation) {
         case MobilyPageControllerOrientationVertical: {
             CGFloat delta = CGRectGetMinY(currentFrame) - CGRectGetMaxY(beforeFrame);
-            result = MAX(0.0f, ABS(delta) / _beforeDecorSize.height);
+            result = MAX(0.0f, MOBILY_FABS(delta) / _beforeDecorSize.height);
             break;
         }
         case MobilyPageControllerOrientationHorizontal: {
             CGFloat delta = CGRectGetMinX(currentFrame) - CGRectGetMaxX(beforeFrame);
-            result = MAX(0.0f, ABS(delta) / _beforeDecorSize.width);
+            result = MAX(0.0f, MOBILY_FABS(delta) / _beforeDecorSize.width);
             break;
         }
     }
@@ -518,12 +518,12 @@
     switch(_orientation) {
         case MobilyPageControllerOrientationVertical: {
             CGFloat delta = CGRectGetMinY(afterFrame) - CGRectGetMaxY(currentFrame);
-            result = MAX(0.0f, ABS(delta) / _afterDecorSize.height);
+            result = MAX(0.0f, MOBILY_FABS(delta) / _afterDecorSize.height);
             break;
         }
         case MobilyPageControllerOrientationHorizontal: {
             CGFloat delta = CGRectGetMinX(afterFrame) - CGRectGetMaxX(currentFrame);
-            result = MAX(0.0f, ABS(delta) / _afterDecorSize.width);
+            result = MAX(0.0f, MOBILY_FABS(delta) / _afterDecorSize.width);
             break;
         }
     }
@@ -755,7 +755,7 @@
             CGPoint translation = [_panGesture translationInView:_rootView];
             switch(_orientation) {
                 case MobilyPageControllerOrientationVertical:
-                    if(fabs(translation.y) >= fabs(translation.x)) {
+                    if(MOBILY_FABS(translation.y) >= MOBILY_FABS(translation.x)) {
                         if(translation.y > 0.0f) {
                             result = (_allowBeforeController == YES) || (_bounceRate > 0.0f);
                         } else if(translation.y < 0.0f) {
@@ -766,7 +766,7 @@
                     }
                     break;
                 case MobilyPageControllerOrientationHorizontal:
-                    if(fabs(translation.x) >= fabs(translation.y)) {
+                    if(MOBILY_FABS(translation.x) >= MOBILY_FABS(translation.y)) {
                         if(translation.x > 0.0f) {
                             result = (_allowBeforeController == YES) || (_bounceRate > 0.0f);
                         } else if(translation.x < 0.0f) {

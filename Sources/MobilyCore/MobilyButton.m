@@ -305,15 +305,15 @@
 - (CGFloat)currentBorderWidth {
     if(_normalBorderWidth != 0.0f) {
         if(self.isEnabled == NO) {
-            if(_disabledBorderWidth > FLT_EPSILON) {
+            if(_disabledBorderWidth > MOBILY_EPSILON) {
                 return _disabledBorderWidth;
             }
         } else if(self.isHighlighted == YES) {
-            if(_highlightedBorderWidth > FLT_EPSILON) {
+            if(_highlightedBorderWidth > MOBILY_EPSILON) {
                 return _highlightedBorderWidth;
             }
         } else if(self.isSelected == YES) {
-            if(_selectedBorderWidth > FLT_EPSILON) {
+            if(_selectedBorderWidth > MOBILY_EPSILON) {
                 return _selectedBorderWidth;
             }
         }
@@ -352,15 +352,15 @@
 - (CGFloat)currentCornerRadius {
     if(_normalCornerRadius != 0.0f) {
         if(self.isEnabled == NO) {
-            if(_disabledCornerRadius > FLT_EPSILON) {
+            if(_disabledCornerRadius > MOBILY_EPSILON) {
                 return _disabledCornerRadius;
             }
         } else if(self.isHighlighted == YES) {
-            if(_highlightedCornerRadius > FLT_EPSILON) {
+            if(_highlightedCornerRadius > MOBILY_EPSILON) {
                 return _highlightedCornerRadius;
             }
         } else if(self.isSelected == YES) {
-            if(_selectedCornerRadius > FLT_EPSILON) {
+            if(_selectedCornerRadius > MOBILY_EPSILON) {
                 return _selectedCornerRadius;
             }
         }

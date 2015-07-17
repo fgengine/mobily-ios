@@ -81,13 +81,10 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 @property(nonatomic, readwrite, strong) CAShapeLayer* maskLayer;
 @property(nonatomic, readwrite, assign) CGRect maskRect;
 
-@property(nonatomic, readwrite, assign) CGFloat scale;
-
 @property(nonatomic, readwrite, strong) UILabel* titleLabel;
 @property(nonatomic, readwrite, strong) UIButton* chooseButton;
 @property(nonatomic, readwrite, strong) UIButton* cancelButton;
 @property(nonatomic, readwrite, strong) UITapGestureRecognizer* doubleTapGestureRecognizer;
-@property(nonatomic, readwrite, strong) UIRotationGestureRecognizer* rotationGestureRecognizer;
 
 @end
 
@@ -116,22 +113,16 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 - (void)setup {
     [super setup];
     
-    _cropMode = MobilyImageCropModeCircle;
-    _avoidEmptySpaceAroundImage = NO;
+    _cropMode = MobilyImageCropModeSquare;
+    _avoidEmptySpaceAroundImage = YES;
     _applyMaskToCroppedImage = NO;
-    _rotationEnabled = NO;
 }
 
 #pragma mark Load / Unload
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    /*
-    if([self respondsToSelector:@selector(edgesForExtendedLayout)] == YES) {
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-        self.automaticallyAdjustsScrollViewInsets = NO;
-    }
-    */
+
     self.view.backgroundColor = [UIColor blackColor];
     self.view.clipsToBounds = YES;
     
@@ -142,7 +133,6 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
     [self.view addSubview:self.chooseButton];
     
     [self.view addGestureRecognizer:self.doubleTapGestureRecognizer];
-    [self.view addGestureRecognizer:self.rotationGestureRecognizer];
 }
 
 #pragma mark Layout subviews
@@ -150,12 +140,19 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
-    [self _updateMaskRect];
+    [self _updateMask];
     [self _layoutImageScrollView];
     [self _layoutOverlayView];
-    [self _updateMaskPath];
     
-    [self.view setNeedsUpdateConstraints];
+    CGRect bounds = self.view.bounds;
+    BOOL isPortrait = UIInterfaceOrientationIsPortrait(self.interfaceOrientation);
+    CGFloat titleLabelVerticalMargin = (isPortrait == YES) ? MobilyImageCropController_PortraitTitleLabelVerticalMargin : MobilyImageCropController_LandscapeTitleLabelVerticalMargin;
+    CGFloat buttonsHorizontalMargin = (isPortrait == YES) ? MobilyImageCropController_PortraitButtonsHorizontalMargin : MobilyImageCropController_LandscapeButtonsHorizontalMargin;
+    CGFloat buttonsVerticalMargin = (isPortrait == YES) ? MobilyImageCropController_PortraitButtonsVerticalMargin : MobilyImageCropController_LandscapeButtonsVerticalMargin;
+
+    self.titleLabel.framePosition = CGPointMake((bounds.origin.x + (bounds.size.width * 0.5f)) - (self.titleLabel.frameWidth * 0.5f), bounds.origin.y + titleLabelVerticalMargin);
+    self.cancelButton.framePosition = CGPointMake(bounds.origin.x + buttonsHorizontalMargin, (bounds.origin.y + bounds.size.height) - (self.cancelButton.frameHeight + buttonsVerticalMargin));
+    self.chooseButton.framePosition = CGPointMake((bounds.origin.x + bounds.size.width) - (self.chooseButton.frameWidth + buttonsHorizontalMargin), (bounds.origin.y + bounds.size.height) - (self.cancelButton.frameHeight + buttonsVerticalMargin));
 }
 
 - (void)viewDidLayoutSubviews {
@@ -166,76 +163,22 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
     }
 }
 
-#pragma mark Update constraints
-
-- (void)updateViewConstraints {
-    [super updateViewConstraints];
-    
-    BOOL isPortrait = UIInterfaceOrientationIsPortrait(self.interfaceOrientation);
-    CGFloat titleLabelVerticalMargin = (isPortrait == YES) ? MobilyImageCropController_PortraitTitleLabelVerticalMargin : MobilyImageCropController_LandscapeTitleLabelVerticalMargin;
-    CGFloat buttonsHorizontalMargin = (isPortrait == YES) ? MobilyImageCropController_PortraitButtonsHorizontalMargin : MobilyImageCropController_LandscapeButtonsHorizontalMargin;
-    CGFloat buttonsVerticalMargin = (isPortrait == YES) ? MobilyImageCropController_PortraitButtonsVerticalMargin : MobilyImageCropController_LandscapeButtonsVerticalMargin;
-    NSDictionary* metrics = @{
-        @"scroll_margin" : @(0.0f),
-        @"overlay_margin" : @(0.0f),
-        @"title_hmargin" : @(0.0f),
-        @"title_vmargin" : @(titleLabelVerticalMargin),
-        @"buttons_hmargin" : @(buttonsHorizontalMargin),
-        @"buttons_vmargin" : @(buttonsVerticalMargin)
-    };
-    NSDictionary* views = @{
-        @"view" : self.view,
-        @"scroll" : self.scrollView,
-        @"overlay" : self.overlayView,
-        @"title" : self.titleLabel,
-        @"cancel" : self.cancelButton,
-        @"choose" : self.chooseButton,
-    };
-    [self.view removeConstraints:self.view.constraints];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[view]-(==scroll_margin)-[scroll]-(==scroll_margin)-[view]" options:0 metrics:metrics views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[view]-(==scroll_margin)-[scroll]-(==scroll_margin)-[view]" options:0 metrics:metrics views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[view]-(==overlay_margin)-[overlay]-(==overlay_margin)-[view]" options:0 metrics:metrics views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[view]-(==overlay_margin)-[overlay]-(==overlay_margin)-[view]" options:0 metrics:metrics views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[view]-(>=title_hmargin)-[title]-(>=title_hmargin)-[view]" options:0 metrics:metrics views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[view]-(title_vmargin)-[title]" options:NSLayoutFormatAlignAllTop metrics:metrics views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[view]-(>=buttons_hmargin)-[cancel]-(>=0)-[choose]-(>=buttons_hmargin)-[view]" options:0 metrics:metrics views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[view]-(buttons_vmargin)-[cancel]" options:NSLayoutFormatAlignAllBottom metrics:metrics views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[view]-(buttons_vmargin)-[choose]" options:NSLayoutFormatAlignAllBottom metrics:metrics views:views]];
-}
-
 #pragma mark Property
-
-- (void)setCropRect:(CGRect)cropRect {
-    CGFloat zoom = 1.0f / self.scrollView.zoomScale;
-    CGFloat x = round(cropRect.origin.x / zoom);
-    CGFloat y = round(cropRect.origin.y / zoom);
-    CGFloat w = round(cropRect.size.width / zoom);
-    CGFloat h = round(cropRect.size.height / zoom);
-    [self.scrollView scrollRectToVisible:CGRectMake(x, y, w, h) animated:YES];
-}
 
 - (CGRect)cropRect {
     CGFloat zoom = 1.0f / self.scrollView.zoomScale;
-    CGFloat x = round(self.scrollView.contentOffset.x * zoom);
-    CGFloat y = round(self.scrollView.contentOffset.y * zoom);
-    CGFloat w = CGRectGetWidth(self.scrollView.bounds) * zoom;
-    CGFloat h = CGRectGetHeight(self.scrollView.bounds) * zoom;
+    CGPoint offset = self.scrollView.contentOffset;
+    CGSize boundsSize = self.scrollView.boundsSize;
+    CGFloat x = round(offset.x * zoom);
+    CGFloat y = round(offset.y * zoom);
+    CGFloat w = MOBILY_CEIL(boundsSize.width * zoom);
+    CGFloat h = MOBILY_CEIL(boundsSize.height * zoom);
     return CGRectIntegral(CGRectMake(x, y, w, h));
-}
-
-- (void)setAngle:(CGFloat)angle {
-    if(self.angle != angle) {
-        self.scrollView.transform = CGAffineTransformRotate(self.scrollView.transform, (angle - self.angle));
-    }
 }
 
 - (CGFloat)angle {
     CGAffineTransform transform = self.scrollView.transform;
-    return atan2(transform.b, transform.a);
-}
-
-- (void)setScale:(CGFloat)scale {
-    self.scrollView.zoomScale = scale;
+    return MOBILY_ATAN2(transform.b, transform.a);
 }
 
 - (CGFloat)scale {
@@ -245,14 +188,9 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 - (void)setAvoidEmptySpaceAroundImage:(BOOL)avoidEmptySpaceAroundImage {
     if(_avoidEmptySpaceAroundImage != avoidEmptySpaceAroundImage) {
         _avoidEmptySpaceAroundImage = avoidEmptySpaceAroundImage;
-        self.scrollView.aspectFill = avoidEmptySpaceAroundImage;
-    }
-}
-
-- (void)setRotationEnabled:(BOOL)rotationEnabled {
-    if(_rotationEnabled != rotationEnabled) {
-        _rotationEnabled = rotationEnabled;
-        self.rotationGestureRecognizer.enabled = rotationEnabled;
+        if(self.isViewLoaded == YES) {
+            self.scrollView.aspectFill = _avoidEmptySpaceAroundImage;
+        }
     }
 }
 
@@ -284,8 +222,7 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 
 - (MobilyImageScrollView*)scrollView {
     if(_scrollView == nil) {
-        _scrollView = [[MobilyImageScrollView alloc] init];
-        _scrollView.clipsToBounds = NO;
+        _scrollView = [[MobilyImageScrollView alloc] initWithFrame:self.view.bounds];
         _scrollView.aspectFill = self.avoidEmptySpaceAroundImage;
         _scrollView.delegate = self;
     }
@@ -294,7 +231,7 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 
 - (MobilyTouchView*)overlayView {
     if(_overlayView == nil) {
-        _overlayView = [[MobilyTouchView alloc] init];
+        _overlayView = [[MobilyTouchView alloc] initWithFrame:self.view.bounds];
         _overlayView.receiver = self.scrollView;
         [_overlayView.layer addSublayer:self.maskLayer];
     }
@@ -320,11 +257,11 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 - (UILabel*)titleLabel {
     if(_titleLabel == nil) {
         _titleLabel = [[UILabel alloc] init];
-        _titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
         _titleLabel.backgroundColor = [UIColor clearColor];
         _titleLabel.text = NSLocalizedString(@"Move and Scale", @"Move and Scale label");
         _titleLabel.textColor = [UIColor whiteColor];
         _titleLabel.opaque = NO;
+        [_titleLabel sizeToFit];
     }
     return _titleLabel;
 }
@@ -332,11 +269,11 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 - (UIButton*)cancelButton {
     if(_cancelButton == nil) {
         _cancelButton = [[UIButton alloc] init];
-        _cancelButton.translatesAutoresizingMaskIntoConstraints = NO;
-        _chooseButton.normalTitle = NSLocalizedString(@"Cancel", @"Cancel button");
+        _cancelButton.normalTitle = NSLocalizedString(@"Cancel", @"Cancel button");
         _cancelButton.opaque = NO;
         
         [_cancelButton addTarget:self action:@selector(onCancelButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
+        [_cancelButton sizeToFit];
     }
     return _cancelButton;
 }
@@ -344,11 +281,11 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 - (UIButton*)chooseButton {
     if(_chooseButton == nil) {
         _chooseButton = [[UIButton alloc] init];
-        _chooseButton.translatesAutoresizingMaskIntoConstraints = NO;
         _chooseButton.normalTitle = NSLocalizedString(@"Choose", @"Choose button");
         _chooseButton.opaque = NO;
         
         [_chooseButton addTarget:self action:@selector(onChooseButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
+        [_chooseButton sizeToFit];
     }
     return _chooseButton;
 }
@@ -356,21 +293,11 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 - (UITapGestureRecognizer*)doubleTapGestureRecognizer {
     if(_doubleTapGestureRecognizer == nil) {
         _doubleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
-        _doubleTapGestureRecognizer.delaysTouchesEnded = NO;
         _doubleTapGestureRecognizer.numberOfTapsRequired = 2;
+        _doubleTapGestureRecognizer.delaysTouchesEnded = NO;
         _doubleTapGestureRecognizer.delegate = self;
     }
     return _doubleTapGestureRecognizer;
-}
-
-- (UIRotationGestureRecognizer*)rotationGestureRecognizer {
-    if(_rotationGestureRecognizer == nil) {
-        _rotationGestureRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(handleRotation:)];
-        _rotationGestureRecognizer.delaysTouchesEnded = NO;
-        _rotationGestureRecognizer.delegate = self;
-        _rotationGestureRecognizer.enabled = self.isRotationEnabled;
-    }
-    return _rotationGestureRecognizer;
 }
 
 #pragma mark Actions
@@ -388,7 +315,7 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 }
 
 - (void)handleRotation:(UIRotationGestureRecognizer*)gestureRecognizer {
-    [self setAngle:(self.angle + gestureRecognizer.rotation)];
+    [self _applyAngle:(self.angle + gestureRecognizer.rotation)];
     gestureRecognizer.rotation = 0;
     
     if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
@@ -438,7 +365,7 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 }
 
 - (void)_resetRotation {
-    [self setAngle:0.0];
+    [self _applyAngle:0.0];
 }
 
 - (void)_resetZoomScale {
@@ -451,6 +378,10 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
         zoomScale = boundsSize.width / imageSize.width;
     }
     self.scrollView.zoomScale = zoomScale;
+}
+
+- (void)_applyAngle:(CGFloat)angle {
+    self.scrollView.transform = CGAffineTransformRotate(self.scrollView.transform, (angle - self.angle));
 }
 
 - (NSArray*)_intersectionPointsOfLineSegment:(MobilyLineSegment)lineSegment withRect:(CGRect)rect {
@@ -491,32 +422,32 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 
 - (void)_layoutImageScrollView {
     CGRect frame = CGRectZero;
-    switch (self.cropMode) {
+    switch(self.cropMode) {
         case MobilyImageCropModeSquare: {
             CGFloat angle = self.angle;
             if(angle == 0.0f) {
                 frame = self.maskRect;
             } else {
-                CGFloat absAlpha = fabs(angle);
+                CGFloat rotation = MOBILY_FABS(angle);
                 CGRect initialRect = self.maskRect;
                 CGPoint leftTopPoint = CGPointMake(initialRect.origin.x, initialRect.origin.y);
                 CGPoint leftBottomPoint = CGPointMake(initialRect.origin.x, initialRect.origin.y + initialRect.size.height);
                 CGPoint pivot = MobilyRectGetCenterPoint(initialRect);
                 MobilyLineSegment leftLineSegment = MobilyLineSegmentMake(leftTopPoint, leftBottomPoint);
-                MobilyLineSegment rotatedLeftLineSegment = MobilyLineSegmentRotateAroundPoint(leftLineSegment, pivot, absAlpha);
+                MobilyLineSegment rotatedLeftLineSegment = MobilyLineSegmentRotateAroundPoint(leftLineSegment, pivot, rotation);
                 NSArray* points = [self _intersectionPointsOfLineSegment:rotatedLeftLineSegment withRect:initialRect];
                 if(points.count > 1) {
-                    if((absAlpha > M_PI_2) && (absAlpha < M_PI)) {
-                        absAlpha = absAlpha - M_PI_2;
-                    } else if((absAlpha > (M_PI + M_PI_2)) && (absAlpha < (M_PI + M_PI))) {
-                        absAlpha = absAlpha - (M_PI + M_PI_2);
+                    if((rotation > M_PI_2) && (rotation < M_PI)) {
+                        rotation = rotation - M_PI_2;
+                    } else if((rotation > (M_PI + M_PI_2)) && (rotation < (M_PI + M_PI))) {
+                        rotation = rotation - (M_PI + M_PI_2);
                     }
-                    CGFloat sinAlpha = sin(absAlpha);
-                    CGFloat cosAlpha = cos(absAlpha);
+                    CGFloat sinAlpha = MOBILY_SIN(rotation);
+                    CGFloat cosAlpha = MOBILY_COS(rotation);
                     CGFloat hypotenuse = MobilyPointDistance([points[0] CGPointValue], [points[1] CGPointValue]);
                     CGFloat altitude = hypotenuse * sinAlpha * cosAlpha;
                     CGFloat initialWidth = initialRect.size.width;
-                    CGFloat targetWidth = initialWidth + altitude * 2;
+                    CGFloat targetWidth = initialWidth + altitude * 2.0f;
                     CGFloat scale = targetWidth / initialWidth;
                     CGPoint center = MobilyRectGetCenterPoint(initialRect);
                     frame = MobilyRectScaleAroundPoint(initialRect, center, scale, scale);
@@ -546,7 +477,7 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
     self.overlayView.frame = CGRectMake(0, 0, boundsSize.width * 2.0f, boundsSize.height * 2.0f);
 }
 
-- (void)_updateMaskRect {
+- (void)_updateMask {
     CGSize boundsSize = self.view.bounds.size;
     switch(self.cropMode) {
         case MobilyImageCropModeCircle: {
@@ -557,6 +488,7 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
                 diameter = MIN(boundsSize.width, boundsSize.height) - MobilyImageCropController_LandscapeCircleInsets * 2;
             }
             self.maskRect = CGRectMake((boundsSize.width - diameter) * 0.5f, (boundsSize.height - diameter) * 0.5f, diameter, diameter);
+            self.maskPath = [UIBezierPath bezierPathWithOvalInRect:self.maskRect];
             break;
         }
         case MobilyImageCropModeSquare: {
@@ -567,25 +499,13 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
                 length = MIN(boundsSize.width, boundsSize.height) - MobilyImageCropController_LandscapeSquareInsets * 2;
             }
             self.maskRect = CGRectMake((boundsSize.width - length) * 0.5f, (boundsSize.height - length) * 0.5f, length, length);
-            break;
-        }
-    }
-}
-
-- (void)_updateMaskPath {
-    switch(self.cropMode) {
-        case MobilyImageCropModeCircle: {
-            self.maskPath = [UIBezierPath bezierPathWithOvalInRect:self.maskRect];
-            break;
-        }
-        case MobilyImageCropModeSquare: {
             self.maskPath = [UIBezierPath bezierPathWithRect:self.maskRect];
             break;
         }
     }
 }
 
-- (UIImage*)_croppedImage:(UIImage*)image cropMode:(MobilyImageCropMode)cropMode cropRect:(CGRect)cropRect angle:(CGFloat)angle zoom:(CGFloat)zoom maskPath:(UIBezierPath*)maskPath applyMaskToCroppedImage:(BOOL)applyMaskToCroppedImage {
+- (UIImage*)_croppedImage:(UIImage*)image cropMode:(MobilyImageCropMode)cropMode cropRect:(CGRect)cropRect zoom:(CGFloat)zoom maskPath:(UIBezierPath*)maskPath applyMaskToCroppedImage:(BOOL)applyMaskToCroppedImage {
     CGSize imageSize = image.size;
     CGFloat x = CGRectGetMinX(cropRect);
     CGFloat y = CGRectGetMinY(cropRect);
@@ -613,11 +533,11 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
     CGImageRelease(croppedCGImage);
     croppedImage = [croppedImage unrotate];
     imageOrientation = croppedImage.imageOrientation;
-    if(((cropMode == MobilyImageCropModeSquare) || (applyMaskToCroppedImage == NO)) && (angle == 0.0f)) {
+    if((cropMode == MobilyImageCropModeSquare) || (applyMaskToCroppedImage == NO)) {
         return croppedImage;
     } else {
         CGSize maskSize = CGRectIntegral(maskPath.bounds).size;
-        CGSize contextSize = CGSizeMake(ceil(maskSize.width / zoom), ceil(maskSize.height / zoom));
+        CGSize contextSize = CGSizeMake(MOBILY_CEIL(maskSize.width / zoom), MOBILY_CEIL(maskSize.height / zoom));
         UIGraphicsBeginImageContextWithOptions(contextSize, NO, imageScale);
         if(applyMaskToCroppedImage == YES) {
             UIBezierPath* maskPathCopy = [maskPath copy];
@@ -626,9 +546,6 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
             CGPoint translation = CGPointMake(-CGRectGetMinX(maskPathCopy.bounds), -CGRectGetMinY(maskPathCopy.bounds));
             [maskPathCopy applyTransform:CGAffineTransformMakeTranslation(translation.x, translation.y)];
             [maskPathCopy addClip];
-        }
-        if(angle != 0) {
-            croppedImage = [croppedImage rotateToAngleInRadians:angle];
         }
         CGPoint point = CGPointMake(round((contextSize.width - croppedImage.size.width) * 0.5f), round((contextSize.height - croppedImage.size.height) * 0.5f));
         [croppedImage drawAtPoint:point];
@@ -642,11 +559,10 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 - (void)_cropImage {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         CGRect cropRect = self.cropRect;
-        CGFloat angle = self.angle;
-        UIImage* croppedImage = [self _croppedImage:self.originalImage cropMode:self.cropMode cropRect:self.cropRect angle:self.angle zoom:self.scrollView.zoomScale maskPath:self.maskPath applyMaskToCroppedImage:self.applyMaskToCroppedImage];
+        UIImage* croppedImage = [self _croppedImage:self.originalImage cropMode:self.cropMode cropRect:self.cropRect zoom:self.scrollView.zoomScale maskPath:self.maskPath applyMaskToCroppedImage:self.applyMaskToCroppedImage];
         dispatch_async(dispatch_get_main_queue(), ^{
             if(_didChoose != nil) {
-                _didChoose(self, croppedImage, cropRect, angle);
+                _didChoose(self, croppedImage, cropRect);
             }
         });
     });
@@ -658,7 +574,7 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
     }
 }
 
-#pragma mark - UIScrollViewDelegate
+#pragma mark UIScrollViewDelegate
 
 - (UIView*)viewForZoomingInScrollView:(__unused UIScrollView*)scrollView {
     return self.scrollView.zoomView;
@@ -683,12 +599,13 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self != nil) {
-        _aspectFill = NO;
-        
         self.decelerationRate = UIScrollViewDecelerationRateFast;
-        self.showsVerticalScrollIndicator = NO;
         self.showsHorizontalScrollIndicator = NO;
+        self.showsVerticalScrollIndicator = NO;
+        self.alwaysBounceHorizontal = YES;
+        self.alwaysBounceVertical = YES;
         self.bouncesZoom = YES;
+        self.clipsToBounds = NO;
         self.scrollsToTop = NO;
     }
     return self;
@@ -700,15 +617,15 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 }
 
 - (void)setFrame:(CGRect)frame {
-    BOOL sizeChanging = CGSizeEqualToSize(frame.size, self.frame.size);
+    BOOL sizeChanging = CGSizeEqualToSize(self.frameSize, frame.size);
     if(sizeChanging == NO) {
         [self _prepareToResize];
     }
     [super setFrame:frame];
     if(sizeChanging == NO) {
         [self _recoverFromResizing];
+        [self _centerZoomView];
     }
-    [self _centerZoomView];
 }
 
 #pragma mark Private
@@ -716,29 +633,31 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 - (void)_centerZoomView {
     CGSize boundsSize = self.bounds.size;
     CGSize contentSize = self.contentSize;
-    if(self.aspectFill == YES) {
-        CGFloat top = 0.0f;
-        CGFloat left = 0.0f;
-        if(contentSize.height < boundsSize.height) {
-            top = (boundsSize.height - contentSize.height) * 0.5f;
-        }
-        if(contentSize.width < boundsSize.width) {
-            left = (boundsSize.width - contentSize.width) * 0.5f;
-        }
-        self.contentInset = UIEdgeInsetsMake(top, left, top, left);
-    } else {
-        CGRect frameToCenter = self.zoomView.frame;
-        if(frameToCenter.size.width < boundsSize.width) {
-            frameToCenter.origin.x = (boundsSize.width - frameToCenter.size.width) * 0.5f;
+    if((boundsSize.width > MOBILY_EPSILON) && (boundsSize.height > MOBILY_EPSILON) && (contentSize.width > MOBILY_EPSILON) && (contentSize.height > MOBILY_EPSILON)) {
+        if(self.aspectFill == YES) {
+            CGFloat top = 0.0f;
+            CGFloat left = 0.0f;
+            if(contentSize.height < boundsSize.height) {
+                top = (boundsSize.height - contentSize.height) * 0.5f;
+            }
+            if(contentSize.width < boundsSize.width) {
+                left = (boundsSize.width - contentSize.width) * 0.5f;
+            }
+            self.contentInset = UIEdgeInsetsMake(top, left, top, left);
         } else {
-            frameToCenter.origin.x = 0.0f;
+            CGRect frameToCenter = self.zoomView.frame;
+            if(frameToCenter.size.width < boundsSize.width) {
+                frameToCenter.origin.x = (boundsSize.width - frameToCenter.size.width) * 0.5f;
+            } else {
+                frameToCenter.origin.x = 0.0f;
+            }
+            if(CGRectGetHeight(frameToCenter) < contentSize.height) {
+                frameToCenter.origin.y = (contentSize.height - frameToCenter.size.height) * 0.5f;
+            } else {
+                frameToCenter.origin.y = 0.0f;
+            }
+            self.zoomView.frame = frameToCenter;
         }
-        if(CGRectGetHeight(frameToCenter) < contentSize.height) {
-            frameToCenter.origin.y = (contentSize.height - frameToCenter.size.height) * 0.5f;
-        } else {
-            frameToCenter.origin.y = 0.0f;
-        }
-        self.zoomView.frame = frameToCenter;
     }
 }
 
@@ -762,80 +681,83 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 
 - (void)_setMaxMinZoomScalesForCurrentBounds {
     CGSize boundsSize = self.bounds.size;
-    CGFloat xScale = boundsSize.width  / _imageSize.width;
-    CGFloat yScale = boundsSize.height / _imageSize.height;
-    CGFloat minScale;
-    if(self.aspectFill == YES) {
-        minScale = MAX(xScale, yScale);
+    if((boundsSize.width > MOBILY_EPSILON) && (boundsSize.height > MOBILY_EPSILON) && (_imageSize.width > MOBILY_EPSILON) && (_imageSize.height > MOBILY_EPSILON)) {
+        CGFloat xScale = boundsSize.width  / _imageSize.width;
+        CGFloat yScale = boundsSize.height / _imageSize.height;
+        CGFloat minScale;
+        if(self.aspectFill == YES) {
+            minScale = MAX(xScale, yScale);
+        } else {
+            minScale = MIN(xScale, yScale);
+        }
+        CGFloat maxScale = MAX(xScale, yScale);
+        CGFloat xImageScale = maxScale * _imageSize.width / boundsSize.width;
+        CGFloat yImageScale = maxScale * _imageSize.height / boundsSize.width;
+        CGFloat maxImageScale = MAX(xImageScale, yImageScale);
+        maxImageScale = MAX(minScale, maxImageScale);
+        maxScale = MAX(maxScale, maxImageScale);
+        if(minScale > maxScale) {
+            minScale = maxScale;
+        }
+        self.minimumZoomScale = minScale;
+        self.maximumZoomScale = maxScale;
     } else {
-        minScale = MIN(xScale, yScale);
+        self.minimumZoomScale = 1.0f;
+        self.maximumZoomScale = 1.0f;
     }
-    CGFloat maxScale = MAX(xScale, yScale);
-    CGFloat xImageScale = maxScale * _imageSize.width / boundsSize.width;
-    CGFloat yImageScale = maxScale * _imageSize.height / boundsSize.width;
-    CGFloat maxImageScale = MAX(xImageScale, yImageScale);
-    maxImageScale = MAX(minScale, maxImageScale);
-    maxScale = MAX(maxScale, maxImageScale);
-    if(minScale > maxScale) {
-        minScale = maxScale;
-    }
-    self.maximumZoomScale = maxScale;
-    self.minimumZoomScale = minScale;
 }
 
 - (void)_setInitialZoomScale {
     CGSize boundsSize = self.bounds.size;
-    CGFloat xScale = boundsSize.width / _imageSize.width;
-    CGFloat yScale = boundsSize.height / _imageSize.height;
-    CGFloat scale = MAX(xScale, yScale);
-    self.zoomScale = scale;
+    if((boundsSize.width > MOBILY_EPSILON) && (boundsSize.height > MOBILY_EPSILON) && (_imageSize.width > MOBILY_EPSILON) && (_imageSize.height > MOBILY_EPSILON)) {
+        CGFloat xScale = boundsSize.width / _imageSize.width;
+        CGFloat yScale = boundsSize.height / _imageSize.height;
+        CGFloat scale = MAX(xScale, yScale);
+        self.zoomScale = scale;
+    } else {
+        self.zoomScale = 1.0f;
+    }
 }
 
 - (void)_setInitialContentOffset {
     CGSize boundsSize = self.bounds.size;
-    CGRect frameToCenter = self.zoomView.frame;
-    CGPoint contentOffset;
-    if(CGRectGetWidth(frameToCenter) > boundsSize.width) {
-        contentOffset.x = (CGRectGetWidth(frameToCenter) - boundsSize.width) * 0.5f;
-    } else {
-        contentOffset.x = 0.0f;
+    CGSize zoomSize = self.zoomView.frameSize;
+    if((boundsSize.width > MOBILY_EPSILON) && (boundsSize.height > MOBILY_EPSILON) && (zoomSize.width > MOBILY_EPSILON) && (zoomSize.height > MOBILY_EPSILON)) {
+        CGPoint contentOffset = CGPointZero;
+        if(zoomSize.width > boundsSize.width) {
+            contentOffset.x = (zoomSize.width - boundsSize.width) * 0.5f;
+        }
+        if(zoomSize.height > boundsSize.height) {
+            contentOffset.y = (zoomSize.height - boundsSize.height) * 0.5f;
+        }
+        self.contentOffset = contentOffset;
     }
-    if(CGRectGetHeight(frameToCenter) > boundsSize.height) {
-        contentOffset.y = (CGRectGetHeight(frameToCenter) - boundsSize.height) * 0.5f;
-    } else {
-        contentOffset.y = 0.0f;
-    }
-    [self setContentOffset:contentOffset];
 }
 
 - (void)_prepareToResize {
     CGRect bounds = self.bounds;
-    CGPoint boundsCenter = MobilyRectGetCenterPoint(bounds);
-    _pointToCenterAfterResize = [self convertPoint:boundsCenter toView:self.zoomView];
+    _pointToCenterAfterResize = [self convertPoint:MobilyRectGetCenterPoint(bounds) toView:self.zoomView];
     _scaleToRestoreAfterResize = self.zoomScale;
-    if(_scaleToRestoreAfterResize <= self.minimumZoomScale + FLT_EPSILON) {
+    if(_scaleToRestoreAfterResize <= self.minimumZoomScale + MOBILY_EPSILON) {
         _scaleToRestoreAfterResize = 0;
     }
 }
 
 - (void)_recoverFromResizing {
     [self _setMaxMinZoomScalesForCurrentBounds];
-    CGFloat maxZoomScale = MAX(self.minimumZoomScale, _scaleToRestoreAfterResize);
-    self.zoomScale = MIN(self.maximumZoomScale, maxZoomScale);
+    self.zoomScale = MIN(self.maximumZoomScale, MAX(_scaleToRestoreAfterResize, self.minimumZoomScale));
     CGPoint boundsCenter = [self convertPoint:_pointToCenterAfterResize fromView:self.zoomView];
     CGPoint offset = CGPointMake(boundsCenter.x - self.bounds.size.width * 0.5f, boundsCenter.y - self.bounds.size.height * 0.5f);
     CGPoint maxOffset = [self _maximumContentOffset];
     CGPoint minOffset = [self _minimumContentOffset];
-    CGFloat realMaxOffset = MIN(maxOffset.x, offset.x);
-    offset.x = MAX(minOffset.x, realMaxOffset);
-    realMaxOffset = MIN(maxOffset.y, offset.y);
-    offset.y = MAX(minOffset.y, realMaxOffset);
+    offset.x = MAX(minOffset.x, MIN(maxOffset.x, offset.x));
+    offset.y = MAX(minOffset.y, MIN(maxOffset.y, offset.y));
     self.contentOffset = offset;
 }
 
 - (CGPoint)_maximumContentOffset {
     CGSize contentSize = self.contentSize;
-    CGSize boundsSize = self.bounds.size;
+    CGSize boundsSize = self.boundsSize;
     return CGPointMake(contentSize.width - boundsSize.width, contentSize.height - boundsSize.height);
 }
 

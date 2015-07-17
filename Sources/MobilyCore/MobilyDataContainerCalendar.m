@@ -495,10 +495,10 @@
     UIOffset daysSpacing = (canShowDays == YES) ? _daysSpacing : UIOffsetZero;
     CGFloat monthWidth = frame.size.width - (monthMargin.left + monthMargin.right);
     CGFloat availableWeekdaysWidth = monthWidth - (weekdaysMargin.left + weekdaysMargin.right) - (weekdaysSpacing.horizontal * 6);
-    CGFloat defaultWeekdaysWidth = floor(availableWeekdaysWidth / 7);
+    CGFloat defaultWeekdaysWidth = MOBILY_FLOOR(availableWeekdaysWidth / 7);
     CGFloat lastWeekdaysWidth = availableWeekdaysWidth - (defaultWeekdaysWidth * 6);
     CGFloat availableDaysWidth = monthWidth - (daysMargin.left + daysMargin.right) - (daysSpacing.horizontal * 6);
-    CGFloat defaultDaysWidth = floor(availableDaysWidth / 7);
+    CGFloat defaultDaysWidth = MOBILY_FLOOR(availableDaysWidth / 7);
     CGFloat lastDaysWidth = availableDaysWidth - (defaultDaysWidth * 6);
     __block CGPoint offset = CGPointMake(frame.origin.x + monthMargin.left, frame.origin.y + monthMargin.top);
     __block CGSize cumulative = CGSizeMake(monthWidth, 0.0f);

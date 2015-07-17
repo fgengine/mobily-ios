@@ -181,7 +181,7 @@
         _constraintOffset.constant = 0.0f;
         _constraintSize.constant = _size;
         if(animated == YES) {
-            [UIView animateWithDuration:ABS(_size - _constraintSize.constant) / ABS(velocity)
+            [UIView animateWithDuration:MOBILY_FABS(_size - _constraintSize.constant) / MOBILY_FABS(velocity)
                                   delay:0.01f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{
@@ -232,7 +232,7 @@
                 break;
         }
         if(animated == YES) {
-            [UIView animateWithDuration:_size / ABS(velocity)
+            [UIView animateWithDuration:_size / MOBILY_FABS(velocity)
                                   delay:0.00f
                                 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                              animations:^{

@@ -671,7 +671,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataCellSwipeDirection) {
 }
 
 - (void)setSwipeProgress:(CGFloat)swipeProgress {
-    [self setSwipeProgress:swipeProgress speed:FLT_EPSILON endedSwipe:NO];
+    [self setSwipeProgress:swipeProgress speed:MOBILY_EPSILON endedSwipe:NO];
 }
 
 #pragma mark Public
@@ -683,7 +683,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataCellSwipeDirection) {
         
         CGFloat needSwipeProgress = (showedLeftSwipeView == YES) ? -1.0f : 0.0f;
         [self setSwipeProgress:needSwipeProgress
-                         speed:(animated == YES) ? [_leftSwipeView frameWidth] * ABS(needSwipeProgress - _swipeProgress) : FLT_EPSILON
+                         speed:(animated == YES) ? [_leftSwipeView frameWidth] * MOBILY_FABS(needSwipeProgress - _swipeProgress) : MOBILY_EPSILON
                     endedSwipe:NO];
     }
 }
@@ -695,7 +695,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataCellSwipeDirection) {
         
         CGFloat needSwipeProgress = (_showedRightSwipeView == YES) ? 1.0f : 0.0f;
         [self setSwipeProgress:needSwipeProgress
-                         speed:(animated == YES) ? [_rightSwipeView frameWidth] * ABS(needSwipeProgress - _swipeProgress) : FLT_EPSILON
+                         speed:(animated == YES) ? [_rightSwipeView frameWidth] * MOBILY_FABS(needSwipeProgress - _swipeProgress) : MOBILY_EPSILON
                     endedSwipe:NO];
     }
 }
@@ -740,7 +740,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataCellSwipeDirection) {
     [super prepareForReuse];
     if((_showedLeftSwipeView == YES) || (_showedRightSwipeView == YES)) {
         [self willEndedSwipe];
-        [self setSwipeProgress:0.0f speed:FLT_EPSILON endedSwipe:YES];
+        [self setSwipeProgress:0.0f speed:MOBILY_EPSILON endedSwipe:YES];
     }
 }
 
@@ -896,7 +896,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataCellSwipeDirection) {
         _swipeProgress = normalizedSwipeProgress;
         [self setNeedsUpdateConstraints];
         
-        [UIView animateWithDuration:ABS(speed) / _swipeSpeed
+        [UIView animateWithDuration:MOBILY_FABS(speed) / _swipeSpeed
                          animations:^{
                              [self updateConstraintsIfNeeded];
                              [self layoutIfNeeded];
@@ -975,11 +975,11 @@ typedef NS_ENUM(NSUInteger, MobilyDataCellSwipeDirection) {
                 CGFloat needSwipeProgress = MIN(MAX(minSwipeProgress, swipeProgress), maxSwipeProgress);
                 switch(_swipeDirection) {
                     case MobilyDataCellSwipeDirectionLeft: {
-                        [self setSwipeProgress:needSwipeProgress speed:_swipeLeftWidth * ABS(needSwipeProgress - _swipeProgress) endedSwipe:YES];
+                        [self setSwipeProgress:needSwipeProgress speed:_swipeLeftWidth * MOBILY_FABS(needSwipeProgress - _swipeProgress) endedSwipe:YES];
                         break;
                     }
                     case MobilyDataCellSwipeDirectionRight: {
-                        [self setSwipeProgress:needSwipeProgress speed:_swipeRightWidth * ABS(needSwipeProgress - _swipeProgress) endedSwipe:YES];
+                        [self setSwipeProgress:needSwipeProgress speed:_swipeRightWidth * MOBILY_FABS(needSwipeProgress - _swipeProgress) endedSwipe:YES];
                         break;
                     }
                     default: {
@@ -1002,7 +1002,7 @@ typedef NS_ENUM(NSUInteger, MobilyDataCellSwipeDirection) {
     if(gestureRecognizer == _panGesture) {
         if((_swipeDragging == NO) && (_swipeDecelerating == NO)) {
             CGPoint translation = [_panGesture translationInView:self];
-            if(fabs(translation.x) >= fabs(translation.y)) {
+            if(MOBILY_FABS(translation.x) >= MOBILY_FABS(translation.y)) {
                 if((_showedLeftSwipeView == YES) && (_leftSwipeView != nil) && (translation.x < 0.0f)) {
                     return YES;
                 } else if((_showedRightSwipeView == YES) && (_rightSwipeView != nil) && (translation.x > 0.0f)) {

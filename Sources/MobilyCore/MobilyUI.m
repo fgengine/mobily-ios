@@ -810,7 +810,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
             default:
                 break;
         }
-        if((finalSize.width > FLT_EPSILON) && (finalSize.height > FLT_EPSILON)) {
+        if((finalSize.width > MOBILY_EPSILON) && (finalSize.height > MOBILY_EPSILON)) {
             UIGraphicsBeginImageContext(finalSize);
             CGContextRef context = UIGraphicsGetCurrentContext();
             if(context != NULL) {
@@ -937,7 +937,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     UIImage* image = nil;
     CGSize size = self.size;
     CGFloat scale = self.scale;
-    if(floorf(size.width) * floorf(size.height) > FLT_EPSILON) {
+    if(floorf(size.width) * floorf(size.height) > MOBILY_EPSILON) {
         CGImageRef imageRef = self.CGImage;
         uint32_t boxSize = (uint32_t)(radius * scale);
         if(boxSize % 2 == 0) {
@@ -1993,7 +1993,7 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
     CGRect keyboardRect = [[notification userInfo][UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGRect intersectionRect = CGRectIntersection(scrollRect, keyboardRect);
     if(CGRectIsNull(intersectionRect) == NO) {
-        if(intersectionRect.size.height > FLT_EPSILON) {
+        if(intersectionRect.size.height > MOBILY_EPSILON) {
             if([self isKindOfClass:MobilyDataView.class] == YES) {
                 MobilyDataView* dataView = (MobilyDataView*)self;
                 UIEdgeInsets containerInsets = dataView.containerInsets;
@@ -2775,7 +2775,7 @@ MOBILY_DEFINE_VALIDATE_IMAGE(BackIndicatorTransitionMaskImage)
 #pragma mark -
 /*--------------------------------------------------*/
 
-static CGFloat Mobily_SystemVersion = FLT_EPSILON;
+static CGFloat Mobily_SystemVersion = MOBILY_EPSILON;
 static NSString* Mobily_DeviceTypeString = nil;
 static NSString* Mobily_DeviceVersionString = nil;
 static MobilyDeviceFamily Mobily_DeviceFamily = MobilyDeviceFamilyUnknown;
@@ -2786,7 +2786,7 @@ static MobilyDeviceModel Mobily_DeviceModel = MobilyDeviceModelUnknown;
 @implementation UIDevice (MobilyUI)
 
 + (CGFloat)systemVersion {
-    if(Mobily_SystemVersion <= FLT_EPSILON) {
+    if(Mobily_SystemVersion <= MOBILY_EPSILON) {
         Mobily_SystemVersion = [self.currentDevice.systemVersion floatValue];
     }
     return Mobily_SystemVersion;

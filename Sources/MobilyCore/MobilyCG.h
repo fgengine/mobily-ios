@@ -36,13 +36,10 @@
 #define MOBILY_CG
 /*--------------------------------------------------*/
 
+#import <MobilyCore/MobilyDefines.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 #import <Accelerate/Accelerate.h>
-
-/*--------------------------------------------------*/
-
-#include <tgmath.h>
 
 /*--------------------------------------------------*/
 
@@ -67,11 +64,6 @@ typedef struct {
 /*--------------------------------------------------*/
 
 #define MOBILY_DEG_TO_RAD                           0.0174532925f
-#ifdef CGFLOAT_IS_DOUBLE
-#   define MOBILY_EPSILON DBL_EPSILON
-#else
-#   define MOBILY_EPSILON FLT_EPSILON
-#endif
 
 /*--------------------------------------------------*/
 

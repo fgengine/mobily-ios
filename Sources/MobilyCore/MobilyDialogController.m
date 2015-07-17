@@ -402,34 +402,34 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewMaxHeight, constrain
 - (void)_updateConstraintContentView {
     self.constraintContentViewCenterX = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1.0f constant:0.0f];
     self.constraintContentViewCenterY = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:0.0f];
-    if(_contentSize.width > FLT_EPSILON) {
+    if(_contentSize.width > MOBILY_EPSILON) {
         self.constraintContentViewWidth = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
         self.constraintContentViewMinWidth = nil;
         self.constraintContentViewMaxWidth = nil;
     } else {
-        if(_contentMinSize.width > FLT_EPSILON) {
+        if(_contentMinSize.width > MOBILY_EPSILON) {
             self.constraintContentViewMinWidth = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
         } else {
             self.constraintContentViewMinWidth = nil;
         }
-        if(_contentMaxSize.width > FLT_EPSILON) {
+        if(_contentMaxSize.width > MOBILY_EPSILON) {
             self.constraintContentViewMaxWidth = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
         } else {
             self.constraintContentViewMaxWidth = nil;
         }
         self.constraintContentViewWidth = nil;
     }
-    if(_contentSize.height > FLT_EPSILON) {
+    if(_contentSize.height > MOBILY_EPSILON) {
         self.constraintContentViewHeight = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
         self.constraintContentViewMinHeight = nil;
         self.constraintContentViewMaxHeight = nil;
     } else {
-        if(_contentMinSize.height > FLT_EPSILON) {
+        if(_contentMinSize.height > MOBILY_EPSILON) {
             self.constraintContentViewMinHeight = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
         } else {
             self.constraintContentViewMinHeight = nil;
         }
-        if(_contentMaxSize.height > FLT_EPSILON) {
+        if(_contentMaxSize.height > MOBILY_EPSILON) {
             self.constraintContentViewMaxHeight = [NSLayoutConstraint constraintWithItem:self.contentController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
         } else {
             self.constraintContentViewMaxHeight = nil;

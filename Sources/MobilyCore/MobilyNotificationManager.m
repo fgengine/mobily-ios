@@ -476,7 +476,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintViewHeight, constraintViewHeigh
 }
 
 - (void)didShow {
-    if(_duration > FLT_EPSILON) {
+    if(_duration > MOBILY_EPSILON) {
         self.timer = [NSTimer scheduledTimerWithTimeInterval:_duration target:self selector:@selector(hideTimer:) userInfo:nil repeats:NO];
     }
     self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pressed:)];

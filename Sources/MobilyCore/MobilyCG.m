@@ -210,7 +210,7 @@ CGPoint MobilyPointRotateAroundPoint(CGPoint point, CGPoint pivot, CGFloat angle
 }
 
 CGFloat MobilyPointDistance(CGPoint p1, CGPoint p2) {
-    return sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
+    return MOBILY_SQRT(MOBILY_POW(p1.x - p2.x, 2) + MOBILY_POW(p1.y - p2.y, 2));
 }
 
 /*--------------------------------------------------*/
@@ -275,10 +275,10 @@ CGRect MobilyRectLerp(CGRect rect1, CGRect rect2, CGFloat t) {
 }
 
 CGRect MobilyRectAspectFillFromBoundsAndSize(CGRect bounds, CGSize size) {
-    CGFloat iw = floorf(size.width);
-    CGFloat ih = floorf(size.height);
-    CGFloat bw = floorf(bounds.size.width);
-    CGFloat bh = floorf(bounds.size.height);
+    CGFloat iw = MOBILY_FLOOR(size.width);
+    CGFloat ih = MOBILY_FLOOR(size.height);
+    CGFloat bw = MOBILY_FLOOR(bounds.size.width);
+    CGFloat bh = MOBILY_FLOOR(bounds.size.height);
     CGFloat fw = bw / iw;
     CGFloat fh = bh / ih;
     CGFloat scale = (fw > fh) ? fw : fh;
@@ -290,10 +290,10 @@ CGRect MobilyRectAspectFillFromBoundsAndSize(CGRect bounds, CGSize size) {
 }
 
 CGRect MobilyRectAspectFitFromBoundsAndSize(CGRect bounds, CGSize size) {
-    CGFloat iw = floorf(size.width);
-    CGFloat ih = floorf(size.height);
-    CGFloat bw = floorf(bounds.size.width);
-    CGFloat bh = floorf(bounds.size.height);
+    CGFloat iw = MOBILY_FLOOR(size.width);
+    CGFloat ih = MOBILY_FLOOR(size.height);
+    CGFloat bw = MOBILY_FLOOR(bounds.size.width);
+    CGFloat bh = MOBILY_FLOOR(bounds.size.height);
     CGFloat fw = bw / iw;
     CGFloat fh = bh / ih;
     CGFloat scale = (fw < fh) ? fw : fh;
@@ -367,15 +367,15 @@ CGPoint MobilyLineSegmentIntersection(MobilyLineSegment ls1, MobilyLineSegment l
     CGFloat numeratorA = (x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3);
     CGFloat numeratorB = (x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3);
     CGFloat denominator = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
-    if((fabs(numeratorA) < MOBILY_EPSILON) && (fabs(numeratorB) < MOBILY_EPSILON) && (fabs(denominator) < MOBILY_EPSILON)) {
-        return CGPointMake((x1 + x2) * 0.5, (y1 + y2) * 0.5);
+    if((MOBILY_FABS(numeratorA) < MOBILY_EPSILON) && (MOBILY_FABS(numeratorB) < MOBILY_EPSILON) && (MOBILY_FABS(denominator) < MOBILY_EPSILON)) {
+        return CGPointMake((x1 + x2) * 0.5f, (y1 + y2) * 0.5f);
     }
-    if(fabs(denominator) < MOBILY_EPSILON) {
+    if(MOBILY_FABS(denominator) < MOBILY_EPSILON) {
         return MobilyPointInfinity;
     }
     CGFloat uA = numeratorA / denominator;
     CGFloat uB = numeratorB / denominator;
-    if((uA < 0) || (uA > 1) || (uB < 0) || (uB > 1)) {
+    if((uA < 0.0f) || (uA > 1.0f) || (uB < 0.0f) || (uB > 1.0f)) {
         return MobilyPointInfinity;
     }
     return CGPointMake(x1 + uA * (x2 - x1), y1 + uA * (y2 - y1));

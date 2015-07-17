@@ -400,10 +400,10 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             _swipeProgress = -1.0f;
             CGRect leftFrame = [self leftViewFrameByPercent:_swipeProgress];
             CGRect centerFrame = [self centerViewFrameByPercent:_swipeProgress];
-            CGFloat diffX = ABS(leftFrame.origin.x - centerFrame.origin.x);
-            CGFloat diffY = ABS(leftFrame.origin.y - centerFrame.origin.y);
-            CGFloat diffW = ABS(leftFrame.size.width - centerFrame.size.width);
-            CGFloat diffH = ABS(leftFrame.size.height - centerFrame.size.height);
+            CGFloat diffX = MOBILY_FABS(leftFrame.origin.x - centerFrame.origin.x);
+            CGFloat diffY = MOBILY_FABS(leftFrame.origin.y - centerFrame.origin.y);
+            CGFloat diffW = MOBILY_FABS(leftFrame.size.width - centerFrame.size.width);
+            CGFloat diffH = MOBILY_FABS(leftFrame.size.height - centerFrame.size.height);
             CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
             if(animated == YES) {
                 NSTimeInterval duration = speed / _swipeVelocity;
@@ -466,10 +466,10 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         _swipeProgress = 0.0f;
         CGRect leftFrame = [self leftViewFrameByPercent:_swipeProgress];
         CGRect centerFrame = [self centerViewFrameByPercent:_swipeProgress];
-        CGFloat diffX = ABS(leftFrame.origin.x - centerFrame.origin.x);
-        CGFloat diffY = ABS(leftFrame.origin.y - centerFrame.origin.y);
-        CGFloat diffW = ABS(leftFrame.size.width - centerFrame.size.width);
-        CGFloat diffH = ABS(leftFrame.size.height - centerFrame.size.height);
+        CGFloat diffX = MOBILY_FABS(leftFrame.origin.x - centerFrame.origin.x);
+        CGFloat diffY = MOBILY_FABS(leftFrame.origin.y - centerFrame.origin.y);
+        CGFloat diffW = MOBILY_FABS(leftFrame.size.width - centerFrame.size.width);
+        CGFloat diffH = MOBILY_FABS(leftFrame.size.height - centerFrame.size.height);
         CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
         if(animated == YES) {
             NSTimeInterval duration = speed / _swipeVelocity;
@@ -542,10 +542,10 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
             _swipeProgress = 1.0f;
             CGRect rightFrame = [self rightViewFrameByPercent:_swipeProgress];
             CGRect centerFrame = [self centerViewFrameByPercent:_swipeProgress];
-            CGFloat diffX = ABS(rightFrame.origin.x - centerFrame.origin.x);
-            CGFloat diffY = ABS(rightFrame.origin.y - centerFrame.origin.y);
-            CGFloat diffW = ABS(rightFrame.size.width - centerFrame.size.width);
-            CGFloat diffH = ABS(rightFrame.size.height - centerFrame.size.height);
+            CGFloat diffX = MOBILY_FABS(rightFrame.origin.x - centerFrame.origin.x);
+            CGFloat diffY = MOBILY_FABS(rightFrame.origin.y - centerFrame.origin.y);
+            CGFloat diffW = MOBILY_FABS(rightFrame.size.width - centerFrame.size.width);
+            CGFloat diffH = MOBILY_FABS(rightFrame.size.height - centerFrame.size.height);
             CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
             if(animated == YES) {
                 NSTimeInterval duration = speed / _swipeVelocity;
@@ -608,10 +608,10 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         _swipeProgress = 0.0f;
         CGRect rightFrame = [self rightViewFrameByPercent:_swipeProgress];
         CGRect centerFrame = [self centerViewFrameByPercent:_swipeProgress];
-        CGFloat diffX = ABS(rightFrame.origin.x - centerFrame.origin.x);
-        CGFloat diffY = ABS(rightFrame.origin.y - centerFrame.origin.y);
-        CGFloat diffW = ABS(rightFrame.size.width - centerFrame.size.width);
-        CGFloat diffH = ABS(rightFrame.size.height - centerFrame.size.height);
+        CGFloat diffX = MOBILY_FABS(rightFrame.origin.x - centerFrame.origin.x);
+        CGFloat diffY = MOBILY_FABS(rightFrame.origin.y - centerFrame.origin.y);
+        CGFloat diffW = MOBILY_FABS(rightFrame.size.width - centerFrame.size.width);
+        CGFloat diffH = MOBILY_FABS(rightFrame.size.height - centerFrame.size.height);
         CGFloat speed = MAX(MAX(diffX, diffY), MAX(diffW, diffH));
         if(animated == YES) {
             NSTimeInterval duration = speed / _swipeVelocity;
@@ -678,9 +678,9 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (CGRect)centerViewFrameFromBounds:(CGRect)bounds byPercent:(CGFloat)percent {
-    if(percent < -FLT_EPSILON) {
+    if(percent < -MOBILY_EPSILON) {
         return CGRectMake(bounds.origin.x + (_leftControllerWidth * -percent), bounds.origin.y, bounds.size.width, bounds.size.height);
-    } else if(percent > FLT_EPSILON) {
+    } else if(percent > MOBILY_EPSILON) {
         return CGRectMake(bounds.origin.x - (_rightControllerWidth * percent), bounds.origin.y, bounds.size.width, bounds.size.height);
     }
     return bounds;
@@ -770,7 +770,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
         _swipeProgress = normalizedSwipeProgress;
         
         CGRect bounds = self.view.bounds;
-        [UIView animateWithDuration:ABS(speed) / _swipeVelocity
+        [UIView animateWithDuration:MOBILY_FABS(speed) / _swipeVelocity
                          animations:^{
                              _leftView.frame = [self leftViewFrameFromBounds:bounds byPercent:_swipeProgress];
                              _centerView.frame = [self centerViewFrameFromBounds:bounds byPercent:_swipeProgress];
@@ -882,11 +882,11 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
                 CGFloat needSwipeProgress = MIN(MAX(minSwipeProgress, swipeProgress), maxSwipeProgress);
                 switch(_swipeDirection) {
                     case MobilySlideControllerSwipeCellDirectionLeft: {
-                        [self setSwipeProgress:needSwipeProgress speed:_swipeLeftWidth * ABS(needSwipeProgress - _swipeProgress) endedSwipe:YES];
+                        [self setSwipeProgress:needSwipeProgress speed:_swipeLeftWidth * MOBILY_FABS(needSwipeProgress - _swipeProgress) endedSwipe:YES];
                         break;
                     }
                     case MobilySlideControllerSwipeCellDirectionRight: {
-                        [self setSwipeProgress:needSwipeProgress speed:_swipeRightWidth * ABS(needSwipeProgress - _swipeProgress) endedSwipe:YES];
+                        [self setSwipeProgress:needSwipeProgress speed:_swipeRightWidth * MOBILY_FABS(needSwipeProgress - _swipeProgress) endedSwipe:YES];
                         break;
                     }
                     default: {
@@ -927,7 +927,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
                     allowPan = YES;
                 }
             } else if((_showedLeftController == NO) && (_leftController != nil) && (translation.x > 0.0f)) {
-                if(fabs(translation.x) >= fabs(translation.y)) {
+                if(MOBILY_FABS(translation.x) >= MOBILY_FABS(translation.y)) {
                     allowPan = CGRectContainsPoint(_centerView.frame, location);
                     if(allowPan == YES) {
                         id< MobilySlideControllerDelegate > centerController = ([_centerController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_centerController : nil;
@@ -944,7 +944,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
                     }
                 }
             } else if((_showedRightController == NO) && (_rightController != nil) && (translation.x < 0.0f)) {
-                if(fabs(translation.x) >= fabs(translation.y)) {
+                if(MOBILY_FABS(translation.x) >= MOBILY_FABS(translation.y)) {
                     allowPan = CGRectContainsPoint(_centerView.frame, location);
                     if(allowPan == YES) {
                         id< MobilySlideControllerDelegate > centerController = ([_centerController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_centerController : nil;

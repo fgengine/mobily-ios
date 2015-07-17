@@ -45,7 +45,7 @@
     [super prepareAnimation];
     
     NSTimeInterval beginTime = CACurrentMediaTime();
-    CGFloat cubeSize = floor(self.size / 3.0f);
+    CGFloat cubeSize = MOBILY_FLOOR(self.size / 3.0f);
     CGFloat widthMinusCubeSize = self.size - cubeSize;
     for(NSInteger i = 0; i < 2; i++) {
         CALayer* cube = [CALayer layer];

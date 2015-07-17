@@ -276,8 +276,8 @@
 
 - (void)setContentSize:(CGSize)contentSize {
     [super setContentSize:contentSize];
-    CGFloat width = (contentSize.width > FLT_EPSILON) ? contentSize.width : self.frame.size.width;
-    CGFloat height = (contentSize.height > FLT_EPSILON) ? contentSize.height : self.frame.size.height;
+    CGFloat width = (contentSize.width > MOBILY_EPSILON) ? contentSize.width : self.frame.size.width;
+    CGFloat height = (contentSize.height > MOBILY_EPSILON) ? contentSize.height : self.frame.size.height;
     self.contentView.frameSize = CGSizeMake(width, height);
 }
 
@@ -310,8 +310,8 @@
 - (MobilyDataContentView*)contentView {
     if(_contentView == nil) {
         CGSize contentSize = self.contentSize;
-        CGFloat width = (contentSize.width > FLT_EPSILON) ? contentSize.width : self.frame.size.width;
-        CGFloat height = (contentSize.height > FLT_EPSILON) ? contentSize.height : self.frame.size.height;
+        CGFloat width = (contentSize.width > MOBILY_EPSILON) ? contentSize.width : self.frame.size.width;
+        CGFloat height = (contentSize.height > MOBILY_EPSILON) ? contentSize.height : self.frame.size.height;
         _contentView = [[MobilyDataContentView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, width, height)];
         [self addSubview:_contentView];
     }
@@ -973,7 +973,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 
 - (void)batchDuration:(NSTimeInterval)duration update:(MobilyDataViewUpdateBlock)update complete:(MobilyDataViewCompleteBlock)complete {
     if(_updating == NO) {
-        if(duration > FLT_EPSILON) {
+        if(duration > MOBILY_EPSILON) {
             [UIView animateWithDuration:duration
                                   delay:0.0f
                                 options:UIViewAnimationOptionCurveEaseInOut
@@ -1493,8 +1493,8 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         if((self.directionalLockEnabled == YES) && (dragging == YES)) {
             switch(_scrollDirection) {
                 case MobilyDataViewDirectionUnknown: {
-                    CGFloat dx = ABS(contentOffset.x - _scrollBeginPosition.x);
-                    CGFloat dy = ABS(contentOffset.y - _scrollBeginPosition.y);
+                    CGFloat dx = MOBILY_FABS(contentOffset.x - _scrollBeginPosition.x);
+                    CGFloat dy = MOBILY_FABS(contentOffset.y - _scrollBeginPosition.y);
                     if(dx > dy) {
                         self.scrollDirection = MobilyDataViewDirectionHorizontal;
                         contentOffset.y = _scrollBeginPosition.y;
@@ -1878,7 +1878,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
     [self _updateSuperviewConstraints];
     
     if(animated == YES) {
-        [UIView animateWithDuration:ABS(from - to) / ABS(velocity)
+        [UIView animateWithDuration:MOBILY_FABS(from - to) / MOBILY_FABS(velocity)
                               delay:0.01f
                             options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                          animations:^{
@@ -1906,7 +1906,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
     [self _updateSuperviewConstraints];
     
     if(animated == YES) {
-        [UIView animateWithDuration:ABS(from - to) / ABS(velocity)
+        [UIView animateWithDuration:MOBILY_FABS(from - to) / MOBILY_FABS(velocity)
                               delay:0.01f
                             options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut)
                          animations:^{
@@ -2251,11 +2251,11 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 }
 
 - (void)scrollViewWillEndDragging:(UIScrollView*)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint*)targetContentOffset {
-    CGFloat vx = (ABS(velocity.x) > FLT_EPSILON) ? (velocity.x * 1000.0f) : _view.velocity;
-    CGFloat vy = (ABS(velocity.y) > FLT_EPSILON) ? (velocity.y * 1000.0f) : _view.velocity;
-    CGFloat nvx = MAX(_view.velocityMin, MIN(ABS(vx), _view.velocityMax));
-    CGFloat nvy = MAX(_view.velocityMin, MIN(ABS(vy), _view.velocityMax));
-    [_view _willEndDraggingWithVelocity:CGPointMake((vx > FLT_EPSILON) ? nvx : -nvx, (vy > FLT_EPSILON) ? nvy : -nvy) contentOffset:targetContentOffset contentSize:scrollView.contentSize visibleSize:_view.boundsSize];
+    CGFloat vx = (MOBILY_FABS(velocity.x) > MOBILY_EPSILON) ? (velocity.x * 1000.0f) : _view.velocity;
+    CGFloat vy = (MOBILY_FABS(velocity.y) > MOBILY_EPSILON) ? (velocity.y * 1000.0f) : _view.velocity;
+    CGFloat nvx = MAX(_view.velocityMin, MIN(MOBILY_FABS(vx), _view.velocityMax));
+    CGFloat nvy = MAX(_view.velocityMin, MIN(MOBILY_FABS(vy), _view.velocityMax));
+    [_view _willEndDraggingWithVelocity:CGPointMake((vx > MOBILY_EPSILON) ? nvx : -nvx, (vy > MOBILY_EPSILON) ? nvy : -nvy) contentOffset:targetContentOffset contentSize:scrollView.contentSize visibleSize:_view.boundsSize];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     }

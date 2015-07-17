@@ -48,7 +48,7 @@ typedef NS_ENUM(NSUInteger, MobilyImageCropMode) {
 
 /*--------------------------------------------------*/
 
-typedef void(^MobilyImageCropControllerChoose)(MobilyImageCropController* contoller, UIImage* image, CGRect cropRect, CGFloat angle);
+typedef void(^MobilyImageCropControllerChoose)(MobilyImageCropController* contoller, UIImage* image, CGRect cropRect);
 typedef void(^MobilyImageCropControllerCancel)(MobilyImageCropController* contoller);
 
 /*--------------------------------------------------*/
@@ -64,13 +64,11 @@ typedef void(^MobilyImageCropControllerCancel)(MobilyImageCropController* contol
 @property(nonatomic, readonly, assign) CGRect maskRect;
 
 @property(nonatomic, readonly, assign) MobilyImageCropMode cropMode;
-@property(nonatomic, readwrite, assign) CGRect cropRect;
-@property(nonatomic, readwrite, assign) CGFloat angle;
+@property(nonatomic, readonly, assign) CGRect cropRect;
 @property(nonatomic, readonly, assign) CGFloat scale;
 
 @property(nonatomic, readwrite, assign) BOOL avoidEmptySpaceAroundImage;
 @property(nonatomic, readwrite, assign) BOOL applyMaskToCroppedImage;
-@property(nonatomic, readwrite, assign, getter=isRotationEnabled) BOOL rotationEnabled;
 
 @property(nonatomic, readwrite, copy) MobilyImageCropControllerChoose didChoose;
 @property(nonatomic, readwrite, copy) MobilyImageCropControllerCancel didCancel;

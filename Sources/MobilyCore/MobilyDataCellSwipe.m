@@ -358,7 +358,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
         
         CGFloat needSwipeProgress = (showedLeftSwipeView == YES) ? -1.0f : 0.0f;
         [self _updateSwipeProgress:needSwipeProgress
-                         speed:(animated == YES) ? [_leftSwipeView frameWidth] * ABS(needSwipeProgress - _panSwipeProgress) : FLT_EPSILON
+                         speed:(animated == YES) ? [_leftSwipeView frameWidth] * MOBILY_FABS(needSwipeProgress - _panSwipeProgress) : MOBILY_EPSILON
                     endedSwipe:NO];
     }
 }
@@ -370,7 +370,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
         
         CGFloat needSwipeProgress = (_showedRightSwipeView == YES) ? 1.0f : 0.0f;
         [self _updateSwipeProgress:needSwipeProgress
-                         speed:(animated == YES) ? [_rightSwipeView frameWidth] * ABS(needSwipeProgress - _panSwipeProgress) : FLT_EPSILON
+                         speed:(animated == YES) ? [_rightSwipeView frameWidth] * MOBILY_FABS(needSwipeProgress - _panSwipeProgress) : MOBILY_EPSILON
                     endedSwipe:NO];
     }
 }
@@ -549,7 +549,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
         if(endedSwipe == YES) {
             [self willEndedSwipe:_panSwipeProgress];
         }
-        [UIView animateWithDuration:ABS(speed) / _swipeSpeed
+        [UIView animateWithDuration:MOBILY_FABS(speed) / _swipeSpeed
                               delay:0.0f
                             options:UIViewAnimationOptionBeginFromCurrentState
                          animations:^{
@@ -628,9 +628,9 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
             case UIGestureRecognizerStateCancelled: {
                 CGFloat swipeProgress = [self endedSwipeProgress:_panSwipeProgress - (_panSwipeLastVelocity / _swipeVelocity)];
                 if(_panSwipeDirection == MobilyDataCellSwipeDirectionLeft) {
-                    [self _updateSwipeProgress:swipeProgress speed:_panSwipeLeftWidth * ABS(swipeProgress - _panSwipeProgress) endedSwipe:YES];
+                    [self _updateSwipeProgress:swipeProgress speed:_panSwipeLeftWidth * MOBILY_FABS(swipeProgress - _panSwipeProgress) endedSwipe:YES];
                 } else if(_panSwipeDirection == MobilyDataCellSwipeDirectionRight) {
-                    [self _updateSwipeProgress:swipeProgress speed:_panSwipeRightWidth * ABS(swipeProgress - _panSwipeProgress) endedSwipe:YES];
+                    [self _updateSwipeProgress:swipeProgress speed:_panSwipeRightWidth * MOBILY_FABS(swipeProgress - _panSwipeProgress) endedSwipe:YES];
                 }
                 break;
             }
@@ -650,8 +650,8 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
             if((_swipeEnabled == YES) && (_swipeDragging == NO) && (_swipeDecelerating == NO)) {
                 if([self.item.view shouldBeganEditItem:self.item] == YES) {
                     CGPoint translation = [_panGestureRecognizer translationInView:self];
-                    CGFloat absX = ABS(translation.x);
-                    CGFloat absY = ABS(translation.y);
+                    CGFloat absX = MOBILY_FABS(translation.x);
+                    CGFloat absY = MOBILY_FABS(translation.y);
                     if(absX >= absY) {
                         if((_leftSwipeEnabled == YES) && (_leftSwipeView != nil)) {
                             return YES;

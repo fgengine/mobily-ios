@@ -119,7 +119,7 @@
         CGPoint newLocation = [touches.anyObject locationInView:self.view];
         CGFloat dx = newLocation.x - _beginLocation.x;
         CGFloat dy = newLocation.y - _beginLocation.y;
-        if(sqrt(dx * dx + dy * dy) > _allowableMovementWhenRecognized) {
+        if(MOBILY_SQRT(dx * dx + dy * dy) > _allowableMovementWhenRecognized) {
             self.state = UIGestureRecognizerStateEnded;
         }
     }

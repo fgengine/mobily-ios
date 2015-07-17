@@ -283,7 +283,7 @@
                         offset.y += entrySize.height + _spacing.vertical;
                     }
                 }
-                if(cumulative.height > FLT_EPSILON) {
+                if(cumulative.height > MOBILY_EPSILON) {
                     cumulative.height -= _spacing.vertical;
                 }
             } else {
@@ -295,7 +295,7 @@
                 }
                 if(frame.size.height > cumulative.height) {
                     cumulative.height = frame.size.height;
-                } else if(cumulative.height > FLT_EPSILON) {
+                } else if(cumulative.height > MOBILY_EPSILON) {
                     cumulative.height -= _spacing.vertical;
                 }
                 offset.y += cumulative.height;
@@ -321,7 +321,7 @@
                         offset.x += entrySize.width + _spacing.horizontal;
                     }
                 }
-                if(cumulative.width > FLT_EPSILON) {
+                if(cumulative.width > MOBILY_EPSILON) {
                     cumulative.width -= _spacing.horizontal;
                 }
             } else {
@@ -333,7 +333,7 @@
                 }
                 if(frame.size.width > cumulative.width) {
                     cumulative.width = frame.size.width;
-                } else if(cumulative.width > FLT_EPSILON) {
+                } else if(cumulative.width > MOBILY_EPSILON) {
                     cumulative.width -= _spacing.horizontal;
                 }
                 offset.y += cumulative.width;
