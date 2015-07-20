@@ -126,6 +126,7 @@
     _backgroundBlurIterations = 4;
     _backgroundColor = nil;
     _backgroundTintColor = [UIColor colorWithWhite:0.5f alpha:1.0f];
+    _backgroundAlpha = 1.0f;
 }
 
 #pragma mark Property
@@ -364,11 +365,12 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewMaxHeight, constrain
     self.presentingWindow = UIApplication.sharedApplication.keyWindow;
     self.presentingController = controller;
     self.presentedWindow = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
-    self.backgroundView.alpha = 1.0;
     self.view.userInteractionEnabled = YES;
     self.view.alpha = 0.0;
     
+    self.backgroundView.blurRadius = (_backgroundBlurred == YES) ? 0.0f : _backgroundBlurRadius;
     [UIView animateWithDuration:self.animationDuration animations:^{
+        self.backgroundView.blurRadius = (_backgroundBlurred == YES) ? _backgroundBlurRadius : _backgroundBlurRadius;
         self.view.alpha = 1.0;
     } completion:^(BOOL finished) {
         self.tapGesture.enabled = YES;
@@ -385,6 +387,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewMaxHeight, constrain
 - (void)dismissWithCompletion:(MobilySimpleBlock)completion {
     self.tapGesture.enabled = NO;
     [UIView animateWithDuration:self.animationDuration animations:^{
+        self.backgroundView.blurRadius = (_backgroundBlurred == YES) ? 0.0f : _backgroundBlurRadius;
         self.view.alpha = 0.0;
     } completion:^(BOOL finished) {
         self.presentedWindow = nil;
