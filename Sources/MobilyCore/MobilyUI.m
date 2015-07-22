@@ -1750,6 +1750,48 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
                      }];
 }
 
+- (NSLayoutConstraint*)addConstraintAttribute:(NSLayoutAttribute)constraintAttribute relation:(NSLayoutRelation)relation constant:(CGFloat)constant {
+    return [self addConstraintAttribute:constraintAttribute relation:relation constant:constant priority:UILayoutPriorityRequired multiplier:1.0f];
+}
+
+- (NSLayoutConstraint*)addConstraintAttribute:(NSLayoutAttribute)constraintAttribute relation:(NSLayoutRelation)relation constant:(CGFloat)constant priority:(UILayoutPriority)priority {
+    return [self addConstraintAttribute:constraintAttribute relation:relation constant:constant priority:priority multiplier:1.0f];
+}
+
+- (NSLayoutConstraint*)addConstraintAttribute:(NSLayoutAttribute)constraintAttribute relation:(NSLayoutRelation)relation constant:(CGFloat)constant priority:(UILayoutPriority)priority multiplier:(CGFloat)multiplier {
+    NSLayoutConstraint* constraint = [NSLayoutConstraint constraintWithItem:self attribute:constraintAttribute relatedBy:relation toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:multiplier constant:constant];
+    constraint.priority = priority;
+    [self addConstraint:constraint];
+    return constraint;
+}
+
+- (NSLayoutConstraint*)addConstraintAttribute:(NSLayoutAttribute)constraintAttribute relation:(NSLayoutRelation)relation attribute:(NSLayoutAttribute)attribute constant:(CGFloat)constant {
+    return [self addConstraintAttribute:constraintAttribute relation:relation view:self.superview attribute:attribute constant:constant priority:UILayoutPriorityRequired multiplier:1.0f];
+}
+
+- (NSLayoutConstraint*)addConstraintAttribute:(NSLayoutAttribute)constraintAttribute relation:(NSLayoutRelation)relation attribute:(NSLayoutAttribute)attribute constant:(CGFloat)constant priority:(UILayoutPriority)priority {
+    return [self addConstraintAttribute:constraintAttribute relation:relation view:self.superview attribute:attribute constant:constant priority:priority multiplier:1.0f];
+}
+
+- (NSLayoutConstraint*)addConstraintAttribute:(NSLayoutAttribute)constraintAttribute relation:(NSLayoutRelation)relation attribute:(NSLayoutAttribute)attribute constant:(CGFloat)constant priority:(UILayoutPriority)priority multiplier:(CGFloat)multiplier {
+    return [self addConstraintAttribute:constraintAttribute relation:relation view:self.superview attribute:attribute constant:constant priority:priority multiplier:multiplier];
+}
+
+- (NSLayoutConstraint*)addConstraintAttribute:(NSLayoutAttribute)constraintAttribute relation:(NSLayoutRelation)relation view:(UIView*)view attribute:(NSLayoutAttribute)attribute constant:(CGFloat)constant {
+    return [self addConstraintAttribute:constraintAttribute relation:relation view:view attribute:attribute constant:constant priority:UILayoutPriorityRequired multiplier:1.0f];
+}
+
+- (NSLayoutConstraint*)addConstraintAttribute:(NSLayoutAttribute)constraintAttribute relation:(NSLayoutRelation)relation view:(UIView*)view attribute:(NSLayoutAttribute)attribute constant:(CGFloat)constant priority:(UILayoutPriority)priority {
+    return [self addConstraintAttribute:constraintAttribute relation:relation view:view attribute:attribute constant:constant priority:priority multiplier:1.0f];
+}
+
+- (NSLayoutConstraint*)addConstraintAttribute:(NSLayoutAttribute)constraintAttribute relation:(NSLayoutRelation)relation view:(UIView*)view attribute:(NSLayoutAttribute)attribute constant:(CGFloat)constant priority:(UILayoutPriority)priority multiplier:(CGFloat)multiplier {
+    NSLayoutConstraint* constraint = [NSLayoutConstraint constraintWithItem:self attribute:constraintAttribute relatedBy:relation toItem:view attribute:attribute multiplier:multiplier constant:constant];
+    constraint.priority = priority;
+    [self.superview addConstraint:constraint];
+    return constraint;
+}
+
 @end
 
 /*--------------------------------------------------*/

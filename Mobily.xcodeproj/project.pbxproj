@@ -310,6 +310,9 @@
 		40B760441ADFA35600F0CB09 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B760401ADFA35600F0CB09 /* Social.framework */; };
 		40B760451ADFA35600F0CB09 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B760411ADFA35600F0CB09 /* Twitter.framework */; };
 		40D005D81B3BFD1800DD7DA6 /* MobilyStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 40D005D71B3BFD1800DD7DA6 /* MobilyStore.h */; };
+		40D09BEE1B5F819300C9F4CB /* MobilyLayoutView.h in Headers */ = {isa = PBXBuildFile; fileRef = 40D09BEC1B5F819300C9F4CB /* MobilyLayoutView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		40D09BEF1B5F819300C9F4CB /* MobilyLayoutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D09BED1B5F819300C9F4CB /* MobilyLayoutView.m */; };
+		40D09BF01B5F819300C9F4CB /* MobilyLayoutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D09BED1B5F819300C9F4CB /* MobilyLayoutView.m */; };
 		40FF59D71B4421410028CAB2 /* MobilyNotificationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 40FF59D51B4421410028CAB2 /* MobilyNotificationManager.h */; };
 		40FF59D81B4421410028CAB2 /* MobilyNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FF59D61B4421410028CAB2 /* MobilyNotificationManager.m */; };
 		40FF59D91B4421410028CAB2 /* MobilyNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FF59D61B4421410028CAB2 /* MobilyNotificationManager.m */; };
@@ -558,6 +561,8 @@
 		40B7604E1ADFA6A200F0CB09 /* TwitterKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TwitterKitResources.bundle; sourceTree = "<group>"; };
 		40B7604F1ADFA6A200F0CB09 /* VKSdkResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = VKSdkResources.bundle; sourceTree = "<group>"; };
 		40D005D71B3BFD1800DD7DA6 /* MobilyStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyStore.h; sourceTree = "<group>"; };
+		40D09BEC1B5F819300C9F4CB /* MobilyLayoutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyLayoutView.h; sourceTree = "<group>"; };
+		40D09BED1B5F819300C9F4CB /* MobilyLayoutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyLayoutView.m; sourceTree = "<group>"; };
 		40FF59D51B4421410028CAB2 /* MobilyNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyNotificationManager.h; sourceTree = "<group>"; };
 		40FF59D61B4421410028CAB2 /* MobilyNotificationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyNotificationManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -733,6 +738,8 @@
 				4096BCC11B2024DA0048B07E /* MobilyImageView.m */,
 				4096BCC21B2024DA0048B07E /* MobilyKVO.h */,
 				4096BCC31B2024DA0048B07E /* MobilyKVO.m */,
+				40D09BEC1B5F819300C9F4CB /* MobilyLayoutView.h */,
+				40D09BED1B5F819300C9F4CB /* MobilyLayoutView.m */,
 				4096BCC41B2024DA0048B07E /* MobilyListField.h */,
 				4096BCC51B2024DA0048B07E /* MobilyListField.m */,
 				4096BCC61B2024DA0048B07E /* MobilyLoadedView.h */,
@@ -982,6 +989,7 @@
 				40FF59D71B4421410028CAB2 /* MobilyNotificationManager.h in Headers */,
 				4096BD391B2024DA0048B07E /* MobilyButton.h in Headers */,
 				4096BDB21B2024DA0048B07E /* MobilyPageControl.h in Headers */,
+				40D09BEE1B5F819300C9F4CB /* MobilyLayoutView.h in Headers */,
 				4096BD301B2024DA0048B07E /* MobilyAV.h in Headers */,
 				4064D18F1B577A6400F2F0FF /* MobilyImageCropController.h in Headers */,
 				4096BD421B2024DA0048B07E /* MobilyCG.h in Headers */,
@@ -1275,6 +1283,7 @@
 				4096BD941B2024DA0048B07E /* MobilyKVO.m in Sources */,
 				4096BD201B2024DA0048B07E /* MobilyApiProvider.m in Sources */,
 				4096BDC01B2024DA0048B07E /* MobilyScrollView.m in Sources */,
+				40D09BF01B5F819300C9F4CB /* MobilyLayoutView.m in Sources */,
 				4096BD261B2024DA0048B07E /* MobilyApiResponse.m in Sources */,
 				4096BDE21B2024DA0048B07E /* MobilySpinnerViewPulse.m in Sources */,
 				4096BDD01B2024DA0048B07E /* MobilySpinnerViewArc.m in Sources */,
@@ -1388,6 +1397,7 @@
 				4096BD931B2024DA0048B07E /* MobilyKVO.m in Sources */,
 				4096BD1F1B2024DA0048B07E /* MobilyApiProvider.m in Sources */,
 				4096BDBF1B2024DA0048B07E /* MobilyScrollView.m in Sources */,
+				40D09BEF1B5F819300C9F4CB /* MobilyLayoutView.m in Sources */,
 				4096BD251B2024DA0048B07E /* MobilyApiResponse.m in Sources */,
 				4096BDE11B2024DA0048B07E /* MobilySpinnerViewPulse.m in Sources */,
 				4096BDCF1B2024DA0048B07E /* MobilySpinnerViewArc.m in Sources */,
