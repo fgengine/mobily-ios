@@ -1399,6 +1399,10 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return ([self.domain isEqualToString:NSURLErrorDomain] || (self.code == NSURLErrorNotConnectedToInternet));
 }
 
+- (BOOL)isTimedOut {
+    return ([self.domain isEqualToString:NSURLErrorDomain] && (self.code == NSURLErrorTimedOut));
+}
+
 @end
 
 /*--------------------------------------------------*/

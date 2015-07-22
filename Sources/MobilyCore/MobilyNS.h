@@ -337,6 +337,7 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 @interface NSError (MobilyNS)
 
 - (BOOL)isNoInternetConnection;
+- (BOOL)isTimedOut;
 
 @end
 
