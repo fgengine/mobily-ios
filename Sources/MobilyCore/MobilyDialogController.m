@@ -164,7 +164,7 @@
         _backgroundView = backgroundView;
         if(_backgroundView != nil) {
             _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-            _backgroundView.underlyingView = _presentingWindow;
+            _backgroundView.underlyingView = _presentingWindow.rootViewController.view;
             _backgroundView.blurEnabled = _backgroundBlurred;
             _backgroundView.blurRadius = _backgroundBlurRadius;
             _backgroundView.blurIterations = _backgroundBlurIterations;
