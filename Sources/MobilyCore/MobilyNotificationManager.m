@@ -217,6 +217,18 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
     return [_parentWindow.rootViewController prefersStatusBarHidden];
 }
 
+- (BOOL)shouldAutorotate {
+    return [_parentWindow.rootViewController shouldAutorotate];
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return [_parentWindow.rootViewController supportedInterfaceOrientations];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation {
+    return [_parentWindow.rootViewController shouldAutorotateToInterfaceOrientation:orientation];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
