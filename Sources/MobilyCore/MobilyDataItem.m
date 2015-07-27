@@ -350,9 +350,11 @@
 }
 
 - (void)setNeedUpdateCell {
-    MobilyDataCell* cell = _cell;
-    self.cell = nil;
-    self.cell = cell;
+    if(_cell != nil) {
+        MobilyDataCell* cell = _cell;
+        self.cell = nil;
+        self.cell = cell;
+    }
 }
 
 - (void)appear {
