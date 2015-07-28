@@ -212,9 +212,8 @@ typedef void (*MobilyBuilderPreset_SetterImp)(id, SEL, id);
             property = key.moStringByLowercaseFirstCharacterString;
         }
         if(property.length > 0) {
-            NSString* baseProperty = property.moStringByUppercaseFirstCharacterString;
-            if([self applyPresetProperty:baseProperty value:value object:object] == NO) {
-                NSString* moProperty = [NSString stringWithFormat:@"Mo%@", baseProperty];
+            if([self applyPresetProperty:property value:value object:object] == NO) {
+                NSString* moProperty = [NSString stringWithFormat:@"mo%@", property.moStringByUppercaseFirstCharacterString];
                 if([self applyPresetProperty:moProperty value:value object:object] == NO) {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
                     NSLog(@"Failure set value in property: '%@=%@'; object: '%@'", property, value, object);
@@ -224,26 +223,24 @@ typedef void (*MobilyBuilderPreset_SetterImp)(id, SEL, id);
         }
     }];
 }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 
 + (BOOL)applyPresetProperty:(NSString*)property value:(id)value object:(id)object {
-    BOOL result = YES;
-    NSString* baseProperty = property.moStringByUppercaseFirstCharacterString;
-    SEL validateSelector = NSSelectorFromString([NSString stringWithFormat:@"validate%@:", baseProperty]);
+    SEL validateSelector = NSSelectorFromString([NSString stringWithFormat:@"validate%@:", property.moStringByUppercaseFirstCharacterString]);
     if([object respondsToSelector:validateSelector] == YES) {
-        MobilyBuilderPreset_ValidateImp validateImp = (MobilyBuilderPreset_ValidateImp)[object methodForSelector:validateSelector];
-        result = validateImp(object, validateSelector, &value);
+        value = [object performSelector:validateSelector withObject:value];
     }
-    if(result == YES) {
-        SEL setterSelector = NSSelectorFromString([NSString stringWithFormat:@"set%@:", baseProperty]);
-        if([object respondsToSelector:setterSelector] == YES) {
-            MobilyBuilderPreset_SetterImp setterImp = (MobilyBuilderPreset_SetterImp)[object methodForSelector:setterSelector];
-            setterImp(object, setterSelector, value);
-        } else {
-            result = NO;
+    if(value != nil) {
+        @try {
+            [object setValue:value forKey:property];
+        }
+        @catch(NSException* exception) {
         }
     }
-    return result;
+    return (value != nil);
 }
+#pragma clang diagnostic pop
 
 @end
 

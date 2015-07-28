@@ -81,7 +81,7 @@
 
 #pragma mark NSKeyValueCoding
 
-MOBILY_DEFINE_VALIDATE_STRING_BASED(NotificationType, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToApplicationNotificationType]])
+MOBILY_DEFINE_VALIDATE_STRING_BASED(NotificationType, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToApplicationNotificationType]])
 
 #pragma mark Synthesize
 
@@ -346,7 +346,7 @@ MOBILY_DEFINE_VALIDATE_STRING(Identifier)
 
 MOBILY_DEFINE_VALIDATE_STRING(Identifier)
 MOBILY_DEFINE_VALIDATE_STRING(Title)
-MOBILY_DEFINE_VALIDATE_STRING_BASED(ActivationMode, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToUserNotificationActivationMode]])
+MOBILY_DEFINE_VALIDATE_STRING_BASED(ActivationMode, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToUserNotificationActivationMode]])
 MOBILY_DEFINE_VALIDATE_BOOL(AuthenticationRequired)
 MOBILY_DEFINE_VALIDATE_BOOL(Destructive)
 

@@ -583,46 +583,52 @@ typedef NS_ENUM(NSInteger, MobilyDeviceDisplay) {
 /*--------------------------------------------------*/
 
 #define MOBILY_DEFINE_VALIDATE_STRING(name) \
-- (BOOL)validate##name:(inout id*)value { \
-    return [*value isKindOfClass:NSString.class]; \
+- (id)validate##name:(id)value { \
+    if([value isKindOfClass:NSString.class] == YES) { \
+        return value; \
+    } \
+    return nil; \
 }
 
 /*--------------------------------------------------*/
 
 #define MOBILY_DEFINE_VALIDATE_STRING_BASED(name, resultClass, convertValue) \
-- (BOOL)validate##name:(inout id*)value { \
-    if([*value isKindOfClass:NSString.class] == YES) { \
-        *value = convertValue; \
+- (id)validate##name:(id)value { \
+    if([value isKindOfClass:NSString.class] == YES) { \
+        value = convertValue; \
     } \
-    return [*value isKindOfClass:resultClass.class]; \
+    if([value isKindOfClass:resultClass.class] == YES) { \
+        return value; \
+    } \
+    return nil; \
 }
 
-#define MOBILY_DEFINE_VALIDATE_BOOL(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithBool:[*value moConvertToBool]])
-#define MOBILY_DEFINE_VALIDATE_NUMBER(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [*value moConvertToNumber])
-#define MOBILY_DEFINE_VALIDATE_RECT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSValue, [NSValue valueWithCGRect:[*value moConvertToRect]])
-#define MOBILY_DEFINE_VALIDATE_POINT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSValue, [NSValue valueWithCGPoint:[*value moConvertToPoint]])
-#define MOBILY_DEFINE_VALIDATE_SIZE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSValue, [NSValue valueWithCGSize:[*value moConvertToSize]])
-#define MOBILY_DEFINE_VALIDATE_EDGE_INSETS(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSValue, [NSValue valueWithUIEdgeInsets:[*value moConvertToEdgeInsets]])
-#define MOBILY_DEFINE_VALIDATE_COLOR(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, UIColor, [UIColor moColorWithString:*value])
-#define MOBILY_DEFINE_VALIDATE_BEZIER_PATH(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, UIBezierPath, [*value moConvertToBezierPath])
-#define MOBILY_DEFINE_VALIDATE_IMAGE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, UIImage, [*value moConvertToImage])
-#define MOBILY_DEFINE_VALIDATE_FONT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, UIFont, [*value moConvertToFont])
-#define MOBILY_DEFINE_VALIDATE_REMOTE_NOTIFICATION_TYPE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToRemoteNotificationType]])
-#define MOBILY_DEFINE_VALIDATE_INTERFACE_ORIENTATION_MASK(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToInterfaceOrientationMask]])
-#define MOBILY_DEFINE_VALIDATE_STATUS_BAR_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToStatusBarStyle]])
-#define MOBILY_DEFINE_VALIDATE_STATUS_BAR_ANIMATION(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToStatusBarAnimation]])
-#define MOBILY_DEFINE_VALIDATE_AUTORESIZING(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToViewAutoresizing]])
-#define MOBILY_DEFINE_VALIDATE_CONTENT_MODE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToViewContentMode]])
-#define MOBILY_DEFINE_VALIDATE_TEXT_ALIGNMENT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToTextAlignment]])
-#define MOBILY_DEFINE_VALIDATE_LINE_BREAKMODE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToLineBreakMode]])
-#define MOBILY_DEFINE_VALIDATE_BASELINE_ADJUSTMENT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToBaselineAdjustment]])
-#define MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_INDICATOR_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToScrollViewIndicatorStyle]])
-#define MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToScrollViewKeyboardDismissMode]])
-#define MOBILY_DEFINE_VALIDATE_BAR_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToBarStyle]])
-#define MOBILY_DEFINE_VALIDATE_TAB_BAR_ITEM_POSITIONING(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToTabBarItemPositioning]])
-#define MOBILY_DEFINE_VALIDATE_SEARCH_BAR_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToSearchBarStyle]])
-#define MOBILY_DEFINE_VALIDATE_PROGRESS_VIEW_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToProgressViewStyle]])
-#define MOBILY_DEFINE_VALIDATE_TEXT_BORDER_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToTextBorderStyle]])
+#define MOBILY_DEFINE_VALIDATE_BOOL(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithBool:[value moConvertToBool]])
+#define MOBILY_DEFINE_VALIDATE_NUMBER(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [value moConvertToNumber])
+#define MOBILY_DEFINE_VALIDATE_RECT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSValue, [NSValue valueWithCGRect:[value moConvertToRect]])
+#define MOBILY_DEFINE_VALIDATE_POINT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSValue, [NSValue valueWithCGPoint:[value moConvertToPoint]])
+#define MOBILY_DEFINE_VALIDATE_SIZE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSValue, [NSValue valueWithCGSize:[value moConvertToSize]])
+#define MOBILY_DEFINE_VALIDATE_EDGE_INSETS(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSValue, [NSValue valueWithUIEdgeInsets:[value moConvertToEdgeInsets]])
+#define MOBILY_DEFINE_VALIDATE_COLOR(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, UIColor, [UIColor moColorWithString:value])
+#define MOBILY_DEFINE_VALIDATE_BEZIER_PATH(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, UIBezierPath, [value moConvertToBezierPath])
+#define MOBILY_DEFINE_VALIDATE_IMAGE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, UIImage, [value moConvertToImage])
+#define MOBILY_DEFINE_VALIDATE_FONT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, UIFont, [value moConvertToFont])
+#define MOBILY_DEFINE_VALIDATE_REMOTE_NOTIFICATION_TYPE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToRemoteNotificationType]])
+#define MOBILY_DEFINE_VALIDATE_INTERFACE_ORIENTATION_MASK(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToInterfaceOrientationMask]])
+#define MOBILY_DEFINE_VALIDATE_STATUS_BAR_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToStatusBarStyle]])
+#define MOBILY_DEFINE_VALIDATE_STATUS_BAR_ANIMATION(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToStatusBarAnimation]])
+#define MOBILY_DEFINE_VALIDATE_AUTORESIZING(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToViewAutoresizing]])
+#define MOBILY_DEFINE_VALIDATE_CONTENT_MODE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToViewContentMode]])
+#define MOBILY_DEFINE_VALIDATE_TEXT_ALIGNMENT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToTextAlignment]])
+#define MOBILY_DEFINE_VALIDATE_LINE_BREAKMODE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToLineBreakMode]])
+#define MOBILY_DEFINE_VALIDATE_BASELINE_ADJUSTMENT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToBaselineAdjustment]])
+#define MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_INDICATOR_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToScrollViewIndicatorStyle]])
+#define MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToScrollViewKeyboardDismissMode]])
+#define MOBILY_DEFINE_VALIDATE_BAR_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToBarStyle]])
+#define MOBILY_DEFINE_VALIDATE_TAB_BAR_ITEM_POSITIONING(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToTabBarItemPositioning]])
+#define MOBILY_DEFINE_VALIDATE_SEARCH_BAR_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToSearchBarStyle]])
+#define MOBILY_DEFINE_VALIDATE_PROGRESS_VIEW_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToProgressViewStyle]])
+#define MOBILY_DEFINE_VALIDATE_TEXT_BORDER_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[value moConvertToTextBorderStyle]])
 
 /*--------------------------------------------------*/
 

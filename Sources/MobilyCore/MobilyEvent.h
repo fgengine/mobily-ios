@@ -113,21 +113,24 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 /*--------------------------------------------------*/
 
 #define MOBILY_DEFINE_VALIDATE_EVENT(name) \
-- (BOOL)validate##name:(inout id*)value { \
-    if([*value isKindOfClass:NSString.class] == YES) { \
-        SEL action = NSSelectorFromString(*value); \
+- (id)validate##name:(id)value { \
+    if([value isKindOfClass:NSString.class] == YES) { \
+        SEL action = NSSelectorFromString(value); \
         if(action != nil) { \
             id target = [self objectForSelector:action]; \
             if(target != nil) { \
-                *value = [MobilyEventSelector eventWithTarget:target action:action]; \
+                value = [MobilyEventSelector eventWithTarget:target action:action]; \
             } else { \
-                NSLog(@"Failure bind event %@=\"%@\"", @#name, *value); \
+                NSLog(@"Failure bind event %@=\"%@\"", @#name, value); \
             } \
         } else { \
-            NSLog(@"Unknown selector %@=\"%@\"", @#name, *value); \
+            NSLog(@"Unknown selector %@=\"%@\"", @#name, value); \
         } \
     } \
-    return [*value conformsToProtocol:@protocol(MobilyEvent)]; \
+    if([value conformsToProtocol:@protocol(MobilyEvent)] == YES) { \
+        return value; \
+    } \
+    return nil; \
 }
 
 /*--------------------------------------------------*/
