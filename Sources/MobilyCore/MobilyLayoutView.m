@@ -87,22 +87,22 @@
 - (void)setMargins:(UIEdgeInsets)margins{
     if(UIEdgeInsetsEqualToEdgeInsets(_margins, margins) == NO) {
         if(_margins.top != margins.top) {
-            [_topConstraints each:^(NSLayoutConstraint* constraint) {
+            [_topConstraints moEach:^(NSLayoutConstraint* constraint) {
                 constraint.constant = margins.top;
             }];
         }
         if(_margins.bottom != margins.bottom) {
-            [_bottomConstraints each:^(NSLayoutConstraint* constraint) {
+            [_bottomConstraints moEach:^(NSLayoutConstraint* constraint) {
                 constraint.constant = margins.bottom;
             }];
         }
         if(_margins.left != margins.left) {
-            [_leftConstraints each:^(NSLayoutConstraint* constraint) {
+            [_leftConstraints moEach:^(NSLayoutConstraint* constraint) {
                 constraint.constant = margins.left;
             }];
         }
         if(_margins.right != margins.right) {
-            [_rightConstraints each:^(NSLayoutConstraint* constraint) {
+            [_rightConstraints moEach:^(NSLayoutConstraint* constraint) {
                 constraint.constant = margins.right;
             }];
         }
@@ -113,7 +113,7 @@
 - (void)setSpacing:(CGFloat)spacing {
     if(_spacing != spacing) {
         _spacing = spacing;
-        [_spacingConstraints each:^(NSLayoutConstraint* constraint) {
+        [_spacingConstraints moEach:^(NSLayoutConstraint* constraint) {
             constraint.constant = _spacing;
         }];
     }
@@ -130,7 +130,7 @@
 }
 
 - (void)willRemoveSubview:(UIView*)subview {
-    [_hiddenObservers each:^(MobilyKVO* kvo) {
+    [_hiddenObservers moEach:^(MobilyKVO* kvo) {
         if(kvo.subject == subview) {
             [kvo stopObservation];
             [_hiddenObservers removeObject:kvo];
@@ -158,7 +158,7 @@
     }
     
     __block UIView* prevSubview = nil;
-    [self.subviews each:^(UIView* subview) {
+    [self.subviews moEach:^(UIView* subview) {
         switch(_axis) {
             case UILayoutConstraintAxisHorizontal:
                 if(prevSubview == nil) {
