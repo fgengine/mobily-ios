@@ -180,7 +180,7 @@
 #pragma mark SKPaymentTransactionObserver
 
 - (void)paymentQueue:(SKPaymentQueue*)queue updatedTransactions:(NSArray*)transactions {
-    [transactions each:^(SKPaymentTransaction* transaction) {
+    [transactions moEach:^(SKPaymentTransaction* transaction) {
         MobilyStorePaymentRequest* paymentRequest = [_requestPayments find:^BOOL(MobilyStorePaymentRequest* paymentRequest) {
             return [transaction.payment.productIdentifier isEqualToString:paymentRequest.product.productIdentifier];
         }];
@@ -195,7 +195,7 @@
 }
 
 - (void)paymentQueue:(SKPaymentQueue*)queue removedTransactions:(NSArray*)transactions {
-    [transactions each:^(SKPaymentTransaction* transaction) {
+    [transactions moEach:^(SKPaymentTransaction* transaction) {
         MobilyStorePaymentRequest* paymentRequest = [_requestPayments find:^BOOL(MobilyStorePaymentRequest* paymentRequest) {
             return [transaction.payment.productIdentifier isEqualToString:paymentRequest.product.productIdentifier];
         }];
@@ -343,7 +343,7 @@
 
 @implementation SKProduct (MobilyStore)
 
-- (NSString*)priceAsString {
+- (NSString*)moPriceAsString {
     NSNumberFormatter* formatter = [NSNumberFormatter new];
     formatter.formatterBehavior = NSNumberFormatterBehavior10_4;
     formatter.numberStyle = NSNumberFormatterCurrencyStyle;
@@ -359,8 +359,8 @@
 
 @implementation SKPaymentTransaction (MobilyStore)
 
-- (NSData*)receipt {
-    if(UIDevice.systemVersion >= 7.0) {
+- (NSData*)moReceipt {
+    if(UIDevice.moSystemVersion >= 7.0) {
         NSData* base64 = [NSData dataWithContentsOfURL:NSBundle.mainBundle.appStoreReceiptURL];
         NSString* receipt = [base64 base64EncodedStringWithOptions:kNilOptions];
         return [receipt dataUsingEncoding:NSUTF8StringEncoding];

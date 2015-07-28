@@ -135,20 +135,20 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 
 - (NSArray*)relatedObjects {
     if(_objectChilds.count > 0) {
-        return [_objectChilds unionWithArrays:self.childViewControllers, nil];
+        return [_objectChilds moUnionWithArrays:self.childViewControllers, nil];
     }
-    return [self.childViewControllers unionWithArray:self.viewControllers];
+    return [self.childViewControllers moUnionWithArray:self.viewControllers];
 }
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIViewController.class] == YES) {
-        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
+        self.objectChilds = [NSArray moArrayWithArray:_objectChilds andAddingObject:objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIViewController.class] == YES) {
-        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
+        self.objectChilds = [NSArray moArrayWithArray:_objectChilds andRemovingObject:objectChild];
     }
 }
 
@@ -156,8 +156,8 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 }
 
 - (void)didLoadObjectChilds {
-    if(self.rootViewController == nil) {
-        UIViewController* viewController = [_objectChilds firstObjectIsClass:UIViewController.class];
+    if(self.moRootController == nil) {
+        UIViewController* viewController = [_objectChilds moFirstObjectIsClass:UIViewController.class];
         if(viewController != nil) {
             self.viewControllers = @[ viewController ];
         }
@@ -179,7 +179,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
     
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    if((UIDevice.systemVersion >= 6.0f) && (view == nil)) {
+    if((UIDevice.moSystemVersion >= 6.0f) && (view == nil)) {
         [self viewDidUnload];
     }
 #pragma clang diagnostic pop
@@ -211,7 +211,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
         } else {
             self.needUpdate = YES;
         }
-        [self.relatedObjects each:^(id object) {
+        [self.relatedObjects moEach:^(id object) {
             if([object respondsToSelector:@selector(setNeedUpdate)] == YES) {
                 [object setNeedUpdate];
             }
@@ -255,8 +255,8 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if(self.rootViewController == nil) {
-        UIViewController* viewController = [_objectChilds firstObjectIsClass:UIViewController.class];
+    if(self.moRootController == nil) {
+        UIViewController* viewController = [_objectChilds moFirstObjectIsClass:UIViewController.class];
         if(viewController != nil) {
             self.viewControllers = @[ viewController ];
         }

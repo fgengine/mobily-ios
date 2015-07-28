@@ -108,12 +108,12 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 - (void)setup {
     [super setup];
     
-    if([UIDevice isIPhone] == YES) {
+    if(UIDevice.moIsIPhone == YES) {
         _swipeThreshold = 2.0f;
         _swipeVelocity = 1050.0f;
         _leftControllerWidth = 280.0f;
         _rightControllerWidth = 280.0f;
-    } else if([UIDevice isIPad] == YES) {
+    } else if(UIDevice.moIsIPad == YES) {
         _swipeThreshold = 2.0f;
         _swipeVelocity = 3000.0f;
         _leftControllerWidth = 320.0f;
@@ -695,7 +695,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (void)appearBackgroundController {
-    _backgroundController.slideController = self;
+    _backgroundController.moSlideController = self;
     
     [self addChildViewController:_backgroundController];
     _backgroundController.view.frame = _backgroundView.bounds;
@@ -704,7 +704,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (void)disappearBackgroundController {
-    _backgroundController.slideController = nil;
+    _backgroundController.moSlideController = nil;
     
     [_backgroundController viewWillDisappear:NO];
     [_backgroundController.view removeFromSuperview];
@@ -712,7 +712,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (void)appearLeftController {
-    _leftController.slideController = self;
+    _leftController.moSlideController = self;
     
     [self addChildViewController:_leftController];
     _leftController.view.frame = _leftView.bounds;
@@ -721,7 +721,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (void)disappearLeftController {
-    _leftController.slideController = nil;
+    _leftController.moSlideController = nil;
     
     [_leftController willMoveToParentViewController:nil];
     [_leftController.view removeFromSuperview];
@@ -729,7 +729,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (void)appearCenterController {
-    _centerController.slideController = self;
+    _centerController.moSlideController = self;
     
     [self addChildViewController:_centerController];
     _centerController.view.frame = _centerView.bounds;
@@ -738,7 +738,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (void)disappearCenterController {
-    _centerController.slideController = nil;
+    _centerController.moSlideController = nil;
     
     [_centerController willMoveToParentViewController:nil];
     [_centerController.view removeFromSuperview];
@@ -746,7 +746,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (void)appearRightController {
-    _rightController.slideController = self;
+    _rightController.moSlideController = self;
     
     [self addChildViewController:_rightController];
     _rightController.view.frame = _rightView.bounds;
@@ -755,7 +755,7 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (void)disappearRightController {
-    _rightController.slideController = nil;
+    _rightController.moSlideController = nil;
     
     [_rightController willMoveToParentViewController:nil];
     [_rightController.view removeFromSuperview];
@@ -976,25 +976,21 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 #import <objc/runtime.h>
 
 /*--------------------------------------------------*/
-
-static char const* const slideControllerKey = "slideControllerKey";
-
-/*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
 @implementation UIViewController (MobilySlideController)
 
-- (void)setSlideController:(MobilySlideController*)slideController {
-    objc_setAssociatedObject(self, slideControllerKey, slideController, OBJC_ASSOCIATION_ASSIGN);
+- (void)setMoSlideController:(MobilySlideController*)moSlideController {
+    objc_setAssociatedObject(self, @selector(moSlideController), moSlideController, OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (MobilySlideController*)slideController {
-    MobilySlideController* slideController = objc_getAssociatedObject(self, slideControllerKey);
-    if(slideController == nil) {
-        slideController = self.parentViewController.slideController;
+- (MobilySlideController*)moSlideController {
+    MobilySlideController* controller = objc_getAssociatedObject(self, @selector(moSlideController));
+    if(controller == nil) {
+        controller = self.parentViewController.moSlideController;
     }
-    return slideController;
+    return controller;
 }
 
 @end

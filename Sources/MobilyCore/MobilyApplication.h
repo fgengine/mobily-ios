@@ -105,10 +105,10 @@ typedef NS_OPTIONS(NSUInteger, MobilyApplicationNotificationType) {
 
 @interface NSString (MobilyApplication)
 
-- (MobilyApplicationNotificationType)convertToApplicationNotificationType;
-- (MobilyApplicationNotificationType)convertToApplicationNotificationTypeSeparated:(NSString*)separated;
+- (MobilyApplicationNotificationType)moConvertToApplicationNotificationType;
+- (MobilyApplicationNotificationType)moConvertToApplicationNotificationTypeSeparated:(NSString*)separated;
 
-- (UIUserNotificationActivationMode)convertToUserNotificationActivationMode;
+- (UIUserNotificationActivationMode)moConvertToUserNotificationActivationMode;
 
 @end
 

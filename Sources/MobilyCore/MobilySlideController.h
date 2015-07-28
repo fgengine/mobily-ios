@@ -100,7 +100,7 @@ typedef void(^MobilySlideControllerBlock)();
 
 @interface UIViewController (MobilySlideController)
 
-@property(nonatomic, readwrite, weak) MobilySlideController* slideController;
+@property(nonatomic, readwrite, weak) MobilySlideController* moSlideController;
 
 @end
 

@@ -114,11 +114,11 @@
         @synchronized(self) {
             if(shared == nil) {
                 NSBundle* bundle = NSBundle.mainBundle;
-                NSString* name = [bundle objectForInfoDictionaryKey:@"MobilyCacheName" defaultValue:MOBILY_CACHE_NAME];
-                NSNumber* memoryCapacity = [bundle objectForInfoDictionaryKey:@"MobilyCacheMemoryCapacity" defaultValue:@(MOBILY_CACHE_MEMORY_CAPACITY)];
-                NSNumber* memoryStorageInterval = [bundle objectForInfoDictionaryKey:@"MobilyCacheMemoryStorageInterval" defaultValue:@(MOBILY_CACHE_MEMORY_STORAGE_INTERVAL)];
-                NSNumber* discCapacity = [bundle objectForInfoDictionaryKey:@"MobilyCacheDiscCapacity" defaultValue:@(MOBILY_CACHE_DISC_CAPACITY)];
-                NSNumber* discStorageInterval = [bundle objectForInfoDictionaryKey:@"MobilyCacheDiscStorageInterval" defaultValue:@(MOBILY_CACHE_DISC_STORAGE_INTERVAL)];
+                NSString* name = [bundle moObjectForInfoDictionaryKey:@"MobilyCacheName" defaultValue:MOBILY_CACHE_NAME];
+                NSNumber* memoryCapacity = [bundle moObjectForInfoDictionaryKey:@"MobilyCacheMemoryCapacity" defaultValue:@(MOBILY_CACHE_MEMORY_CAPACITY)];
+                NSNumber* memoryStorageInterval = [bundle moObjectForInfoDictionaryKey:@"MobilyCacheMemoryStorageInterval" defaultValue:@(MOBILY_CACHE_MEMORY_STORAGE_INTERVAL)];
+                NSNumber* discCapacity = [bundle moObjectForInfoDictionaryKey:@"MobilyCacheDiscCapacity" defaultValue:@(MOBILY_CACHE_DISC_CAPACITY)];
+                NSNumber* discStorageInterval = [bundle moObjectForInfoDictionaryKey:@"MobilyCacheDiscStorageInterval" defaultValue:@(MOBILY_CACHE_DISC_STORAGE_INTERVAL)];
                 shared = [[self alloc] initWithName:name memoryCapacity:memoryCapacity.unsignedIntegerValue memoryStorageInterval:memoryStorageInterval.doubleValue discCapacity:discCapacity.unsignedIntegerValue discStorageInterval:discStorageInterval.doubleValue];
             }
         }
@@ -144,8 +144,8 @@
     self = [super init];
     if(self != nil) {
         self.name = name;
-        self.fileName = [[[_name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString] stringByMD5];
-        self.filePath = [MobilyStorage.fileSystemDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", _fileName, MOBILY_CACHE_EXTENSION]];
+        self.fileName = [[[_name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString] moStringByMD5];
+        self.filePath = [MobilyStorage.moFileSystemDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", _fileName, MOBILY_CACHE_EXTENSION]];
         self.memoryCapacity = (memoryCapacity > discCapacity) ? discCapacity : memoryCapacity;
         self.memoryStorageInterval = (memoryStorageInterval > discStorageInterval) ? discStorageInterval : memoryStorageInterval;
         self.discCapacity = (discCapacity > memoryCapacity) ? discCapacity : memoryCapacity;
@@ -458,8 +458,8 @@
     if(self != nil) {
         _cache = cache;
         _key = [key stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        _fileName = _key.lowercaseString.stringByMD5;
-        _filePath = [MobilyStorage.fileSystemDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", _fileName, MOBILY_CACHE_ITEM_EXTENSION]];
+        _fileName = _key.lowercaseString.moStringByMD5;
+        _filePath = [MobilyStorage.moFileSystemDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", _fileName, MOBILY_CACHE_ITEM_EXTENSION]];
         _data = data;
         _size = _data.length;
         _memoryStorageInterval = memoryStorageInterval;
@@ -503,7 +503,7 @@
     if([_fileName isEqualToString:fileName] == NO) {
         _fileName = fileName;
         if(_fileName != nil) {
-            _filePath = [MobilyStorage.fileSystemDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", _fileName, MOBILY_CACHE_ITEM_EXTENSION]];
+            _filePath = [MobilyStorage.moFileSystemDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", _fileName, MOBILY_CACHE_ITEM_EXTENSION]];
         } else {
             _filePath = nil;
         }

@@ -144,11 +144,11 @@
 - (void)setup {
     self.delegateProxy = [MobilyDataViewDelegateProxy new];
     
-    if([UIDevice isIPhone] == YES) {
+    if(UIDevice.moIsIPhone == YES) {
         _velocity = 400.0f;
         _velocityMin = 300.0f;
         _velocityMax = 900.0f;
-    } else if([UIDevice isIPad] == YES) {
+    } else if(UIDevice.moIsIPad == YES) {
         _velocity = 2000.0f;
         _velocityMin = 3000.0f;
         _velocityMax = 6000.0f;
@@ -183,7 +183,7 @@
     _leftRefreshIteractionEnabled = YES;
     _rightRefreshIteractionEnabled = YES;
     
-    [self registerAdjustmentResponder];
+    [self moRegisterAdjustmentResponder];
     
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(_receiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 }
@@ -191,27 +191,27 @@
 - (void)dealloc {
     [NSNotificationCenter.defaultCenter removeObserver:self name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     
-    [self unregisterAdjustmentResponder];
+    [self moUnregisterAdjustmentResponder];
 }
 
 #pragma mark MobilyBuilderObject
 
 - (NSArray*)relatedObjects {
     if(_objectChilds.count > 0) {
-        return [_objectChilds unionWithArrays:self.subviews, nil];
+        return [_objectChilds moUnionWithArrays:self.subviews, nil];
     }
     return self.subviews;
 }
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIView.class] == YES) {
-        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
+        self.objectChilds = [NSArray moArrayWithArray:_objectChilds andAddingObject:objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIView.class] == YES) {
-        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
+        self.objectChilds = [NSArray moArrayWithArray:_objectChilds andRemovingObject:objectChild];
     }
 }
 
@@ -278,7 +278,7 @@
     [super setContentSize:contentSize];
     CGFloat width = (contentSize.width > MOBILY_EPSILON) ? contentSize.width : self.frame.size.width;
     CGFloat height = (contentSize.height > MOBILY_EPSILON) ? contentSize.height : self.frame.size.height;
-    self.contentView.frameSize = CGSizeMake(width, height);
+    self.contentView.moFrameSize = CGSizeMake(width, height);
 }
 
 - (void)setDelegateProxy:(MobilyDataViewDelegateProxy*)delegateProxy {
@@ -438,7 +438,7 @@
         if(_searchBar != nil) {
             [self _updateSuperviewConstraints];
         }
-        self.searchBarInset = (_showedSearchBar == YES) ? _searchBar.frameHeight : 0.0f;
+        self.searchBarInset = (_showedSearchBar == YES) ? _searchBar.moFrameHeight : 0.0f;
     }
 }
 
@@ -459,7 +459,7 @@
                 [self _updateSuperviewConstraints];
             }
         }
-        self.searchBarInset = (_showedSearchBar == YES) ? _searchBar.frameHeight : 0.0f;
+        self.searchBarInset = (_showedSearchBar == YES) ? _searchBar.moFrameHeight : 0.0f;
     }
 }
 
@@ -893,7 +893,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 
 - (void)unhighlightAllItemsAnimated:(BOOL)animated {
     if(_highlightedItems.count > 0) {
-        [_highlightedItems each:^(MobilyDataItem* item) {
+        [_highlightedItems moEach:^(MobilyDataItem* item) {
             if([self shouldUnhighlightItem:item] == YES) {
                 [_highlightedItems removeObject:item];
                 [item setHighlighted:NO animated:animated];
@@ -925,7 +925,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 [item setEditing:YES animated:animated];
             } else {
                 if(_editingItems.count > 0) {
-                    [[_editingItems copy] each:^(MobilyDataItem* item) {
+                    [[_editingItems copy] moEach:^(MobilyDataItem* item) {
                         if([self shouldEndedEditItem:item] == YES) {
                             [_editingItems removeObject:item];
                             [item setEditing:NO animated:animated];
@@ -950,7 +950,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 
 - (void)endedEditAllItemsAnimated:(BOOL)animated {
     if(_editingItems.count > 0) {
-        [[_editingItems copy] each:^(MobilyDataItem* item) {
+        [[_editingItems copy] moEach:^(MobilyDataItem* item) {
             if([self shouldEndedEditItem:item] == YES) {
                 [_editingItems removeObject:item];
                 [item setEditing:NO animated:animated];
@@ -1117,7 +1117,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 #pragma mark Private
 
 - (void)_receiveMemoryWarning {
-    [_queueCells each:^(NSString* identifier, NSArray* cells) {
+    [_queueCells moEach:^(NSString* identifier, NSArray* cells) {
         for(MobilyDataCell* cell in cells) {
             [cell removeFromSuperview];
             cell.view = nil;
@@ -1149,7 +1149,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             }
         } else {
             if(_selectedItems.count > 0) {
-                [[_selectedItems copy] each:^(MobilyDataItem* item) {
+                [[_selectedItems copy] moEach:^(MobilyDataItem* item) {
                     [self _deselectItem:item user:user animated:animated];
                 }];
             }
@@ -1174,7 +1174,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 
 - (void)_deselectAllItemsUser:(BOOL)user animated:(BOOL)animated {
     if(_selectedItems.count > 0) {
-        [[_selectedItems copy] each:^(MobilyDataItem* item) {
+        [[_selectedItems copy] moEach:^(MobilyDataItem* item) {
             if([self shouldDeselectItem:item] == YES) {
                 [_selectedItems removeObject:item];
                 [item setSelected:NO animated:animated];
@@ -1220,7 +1220,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             for(MobilyDataItem* item in items) {
                 MobilyDataCell* cell = item.cell;
                 if(cell != nil) {
-                    cell.zPosition = 0.0f;
+                    cell.moZPosition = 0.0f;
                     cell.alpha = 1.0f;
                 }
                 [self _disappearItem:item];
@@ -1248,7 +1248,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             for(MobilyDataItem* item in originItems) {
                 MobilyDataCell* cell = item.cell;
                 if(cell != nil) {
-                    cell.zPosition = 0.0f;
+                    cell.moZPosition = 0.0f;
                     cell.alpha = 1.0f;
                 }
                 [self _disappearItem:item];
@@ -1261,7 +1261,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 - (void)_validateLayout {
     CGRect layoutRect = CGRectZero;
     if(_container != nil) {
-        layoutRect = [_container _validateLayoutForAvailableFrame:MobilyRectMakeOriginAndSize(CGPointZero, self.frameSize)];
+        layoutRect = [_container _validateLayoutForAvailableFrame:MobilyRectMakeOriginAndSize(CGPointZero, self.moFrameSize)];
     }
     self.contentSize = layoutRect.size;
 }
@@ -1415,12 +1415,12 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                         self.canDraggingSearchBar = ((_searchBar.searching == NO) && (_searchBar.editing == NO));
                         break;
                     case MobilyDataViewSearchBarStyleOverlay: {
-                        CGFloat searchBarHeight = _searchBar.frameHeight;
-                        if(self.contentSizeHeight > self.frameHeight + searchBarHeight) {
+                        CGFloat searchBarHeight = _searchBar.moFrameHeight;
+                        if(self.moContentSizeHeight > self.moFrameHeight + searchBarHeight) {
                             if(_showedSearchBar == YES) {
-                                self.searchBarOverlayLastPosition = MAX(_searchBar.frameHeight, _scrollBeginPosition.y + _searchBar.frameHeight);
+                                self.searchBarOverlayLastPosition = MAX(_searchBar.moFrameHeight, _scrollBeginPosition.y + _searchBar.moFrameHeight);
                             } else {
-                                self.searchBarOverlayLastPosition = MAX(0.0f, _scrollBeginPosition.y - _searchBar.frameHeight);
+                                self.searchBarOverlayLastPosition = MAX(0.0f, _scrollBeginPosition.y - _searchBar.moFrameHeight);
                             }
                             self.canDraggingSearchBar = ((_searchBar.searching == NO) && (_searchBar.editing == NO));
                         }
@@ -1463,15 +1463,15 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 
 - (void)_didScrollDragging:(BOOL)dragging decelerating:(BOOL)decelerating {
     if(self.pagingEnabled == NO) {
-        CGSize frameSize = self.frameSize;
+        CGSize frameSize = self.moFrameSize;
         CGPoint contentOffset = self.contentOffset;
         CGSize contentSize = self.contentSize;
         UIEdgeInsets contentInset = self.contentInset;
         UIEdgeInsets containerInsets = _containerInsets;
-        CGFloat searchBarHeight = _searchBar.frameHeight;
+        CGFloat searchBarHeight = _searchBar.moFrameHeight;
         CGFloat searchBarInset = _searchBarInset;
         UIEdgeInsets refreshViewInsets = _refreshViewInsets;
-        CGSize contentViewSize = self.contentView.frameSize;
+        CGSize contentViewSize = self.contentView.moFrameSize;
         if(self.bounces == YES) {
             if(self.alwaysBounceVertical == YES) {
                 if(_bouncesTop == NO) {
@@ -1691,7 +1691,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
 - (void)_willEndDraggingWithVelocity:(CGPoint)velocity contentOffset:(inout CGPoint*)contentOffset contentSize:(CGSize)contentSize visibleSize:(CGSize)visibleSize {
     if(self.pagingEnabled == NO) {
         if(_canDraggingSearchBar == YES) {
-            CGFloat searchBarHeight = _searchBar.frameHeight;
+            CGFloat searchBarHeight = _searchBar.moFrameHeight;
             switch(_searchBarStyle) {
                 case MobilyDataViewSearchBarStyleStatic:
                     self.canDraggingSearchBar = NO;
@@ -1873,7 +1873,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
     _showedSearchBar = YES;
     
     CGFloat from = _searchBarInset;
-    CGFloat to = _searchBar.frameHeight;
+    CGFloat to = _searchBar.moFrameHeight;
     self.constraintSearchBarTop = nil;
     [self _updateSuperviewConstraints];
     
@@ -1974,7 +1974,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 MobilyDataCell* cell = item.cell;
                 if(cell != nil) {
                     [UIView performWithoutAnimation:^{
-                        cell.zPosition = -1.0f;
+                        cell.moZPosition = -1.0f;
                         cell.alpha = 1.0f;
                     }];
                     cell.alpha = 0.0f;
@@ -1990,7 +1990,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 MobilyDataCell* cell = item.cell;
                 if(cell != nil) {
                     [UIView performWithoutAnimation:^{
-                        cell.zPosition = -1.0f;
+                        cell.moZPosition = -1.0f;
                         cell.alpha = 0.0f;
                     }];
                     cell.alpha = 1.0f;
@@ -2006,7 +2006,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 MobilyDataCell* cell = item.cell;
                 if(cell != nil) {
                     [UIView performWithoutAnimation:^{
-                        cell.zPosition = -1.0f;
+                        cell.moZPosition = -1.0f;
                         cell.alpha = 0.0f;
                     }];
                     cell.alpha = 1.0f;
@@ -2022,7 +2022,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                 MobilyDataCell* cell = item.cell;
                 if(cell != nil) {
                     [UIView performWithoutAnimation:^{
-                        cell.zPosition = -1.0f;
+                        cell.moZPosition = -1.0f;
                         cell.alpha = 1.0f;
                     }];
                     cell.alpha = 0.0f;
@@ -2043,7 +2043,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             for(MobilyDataItem* item in _reloadedBeforeItems) {
                 MobilyDataCell* cell = item.cell;
                 if(cell != nil) {
-                    cell.zPosition = 0.0f;
+                    cell.moZPosition = 0.0f;
                     cell.alpha = 1.0f;
                 }
                 [self _disappearItem:item];
@@ -2055,7 +2055,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         for(MobilyDataItem* item in _reloadedAfterItems) {
             MobilyDataCell* cell = item.cell;
             if(cell != nil) {
-                cell.zPosition = 0.0f;
+                cell.moZPosition = 0.0f;
                 cell.alpha = 1.0f;
             }
         }
@@ -2065,7 +2065,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         for(MobilyDataItem* item in _insertedItems) {
             MobilyDataCell* cell = item.cell;
             if(cell != nil) {
-                cell.zPosition = 0.0f;
+                cell.moZPosition = 0.0f;
                 cell.alpha = 1.0f;
             }
         }
@@ -2081,7 +2081,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             for(MobilyDataItem* item in _deletedItems) {
                 MobilyDataCell* cell = item.cell;
                 if(cell != nil) {
-                    cell.zPosition = 0.0f;
+                    cell.moZPosition = 0.0f;
                     cell.alpha = 1.0f;
                 }
                 [self _disappearItem:item];
@@ -2255,7 +2255,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
     CGFloat vy = (MOBILY_FABS(velocity.y) > MOBILY_EPSILON) ? (velocity.y * 1000.0f) : _view.velocity;
     CGFloat nvx = MAX(_view.velocityMin, MIN(MOBILY_FABS(vx), _view.velocityMax));
     CGFloat nvy = MAX(_view.velocityMin, MIN(MOBILY_FABS(vy), _view.velocityMax));
-    [_view _willEndDraggingWithVelocity:CGPointMake((vx > MOBILY_EPSILON) ? nvx : -nvx, (vy > MOBILY_EPSILON) ? nvy : -nvy) contentOffset:targetContentOffset contentSize:scrollView.contentSize visibleSize:_view.boundsSize];
+    [_view _willEndDraggingWithVelocity:CGPointMake((vx > MOBILY_EPSILON) ? nvx : -nvx, (vy > MOBILY_EPSILON) ? nvy : -nvy) contentOffset:targetContentOffset contentSize:scrollView.contentSize visibleSize:_view.moBoundsSize];
     if([_delegate respondsToSelector:_cmd] == YES) {
         [_delegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     }

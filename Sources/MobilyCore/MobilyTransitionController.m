@@ -45,7 +45,7 @@
 
 @implementation NSString (MobilyTransitionController)
 
-- (MobilyTransitionController*)convertToTransitionController {
+- (MobilyTransitionController*)moConvertToTransitionController {
     static NSCharacterSet* characterSet = nil;
     if(characterSet == nil) {
         characterSet = [NSCharacterSet characterSetWithCharactersInString:@":-"];
@@ -54,10 +54,10 @@
     NSArray* components = [self componentsSeparatedByCharactersInSet:characterSet];
     if(components.count > 1) {
         for(NSString* component in components) {
-            validKey = [validKey stringByAppendingString:[component stringByUppercaseFirstCharacterString]];
+            validKey = [validKey stringByAppendingString:[component moStringByUppercaseFirstCharacterString]];
         }
     } else {
-        validKey = [self stringByUppercaseFirstCharacterString];
+        validKey = [self moStringByUppercaseFirstCharacterString];
     }
     Class resultClass = nil;
     if(validKey.length > 0) {
@@ -174,8 +174,8 @@
     _initialFrameToViewController = [_transitionContext initialFrameForViewController:_toViewController];
     _finalFrameToViewController = [_transitionContext finalFrameForViewController:_toViewController];
     _containerView = _transitionContext.containerView;
-    _fromView = (UIDevice.systemVersion >= 8.0f) ? [_transitionContext viewForKey:UITransitionContextFromViewKey] : _fromViewController.view;
-    _toView = (UIDevice.systemVersion >= 8.0f) ? [_transitionContext viewForKey:UITransitionContextToViewKey] : _toViewController.view;
+    _fromView = (UIDevice.moSystemVersion >= 8.0f) ? [_transitionContext viewForKey:UITransitionContextFromViewKey] : _fromViewController.view;
+    _toView = (UIDevice.moSystemVersion >= 8.0f) ? [_transitionContext viewForKey:UITransitionContextToViewKey] : _toViewController.view;
 }
 
 - (void)_startTransition {

@@ -231,7 +231,7 @@
         self.constraintRightSwipeViewWidth = nil;
         self.constraintRightSwipeViewHeight = nil;
         _swipeStyle = swipeStyle;
-        [self setSubviews:self.orderedSubviews];
+        [self moSetSubviews:self.orderedSubviews];
         self.rootOffsetOfCenter = [self _rootViewOffsetOfCenterBySwipeProgress:0.0f];
         self.leftSwipeOffset = [self _leftViewOffsetBySwipeProgress:0.0f];
         self.rightSwipeOffset = [self _rightViewOffsetBySwipeProgress:0.0f];
@@ -251,7 +251,7 @@
         _leftSwipeView = leftSwipeView;
         if(_leftSwipeView != nil) {
             _leftSwipeView.translatesAutoresizingMaskIntoConstraints = NO;
-            [self setSubviews:self.orderedSubviews];
+            [self moSetSubviews:self.orderedSubviews];
         }
         self.leftSwipeOffset = [self _leftViewOffsetBySwipeProgress:0.0f];
         [self setNeedsUpdateConstraints];
@@ -306,7 +306,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintLeftSwipeViewHeight, constraint
         _rightSwipeView = rightSwipeView;
         if(_rightSwipeView != nil) {
             _rightSwipeView.translatesAutoresizingMaskIntoConstraints = NO;
-            [self setSubviews:self.orderedSubviews];
+            [self moSetSubviews:self.orderedSubviews];
         }
         self.rightSwipeOffset = [self _rightViewOffsetBySwipeProgress:0.0f];
         [self setNeedsUpdateConstraints];
@@ -358,7 +358,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
         
         CGFloat needSwipeProgress = (showedLeftSwipeView == YES) ? -1.0f : 0.0f;
         [self _updateSwipeProgress:needSwipeProgress
-                         speed:(animated == YES) ? [_leftSwipeView frameWidth] * MOBILY_FABS(needSwipeProgress - _panSwipeProgress) : MOBILY_EPSILON
+                         speed:(animated == YES) ? _leftSwipeView.moFrameWidth * MOBILY_FABS(needSwipeProgress - _panSwipeProgress) : MOBILY_EPSILON
                     endedSwipe:NO];
     }
 }
@@ -370,7 +370,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
         
         CGFloat needSwipeProgress = (_showedRightSwipeView == YES) ? 1.0f : 0.0f;
         [self _updateSwipeProgress:needSwipeProgress
-                         speed:(animated == YES) ? [_rightSwipeView frameWidth] * MOBILY_FABS(needSwipeProgress - _panSwipeProgress) : MOBILY_EPSILON
+                         speed:(animated == YES) ? _rightSwipeView.moFrameWidth * MOBILY_FABS(needSwipeProgress - _panSwipeProgress) : MOBILY_EPSILON
                     endedSwipe:NO];
     }
 }
@@ -455,16 +455,16 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
         case MobilyDataSwipeCellStyleStands:
         case MobilyDataSwipeCellStyleLeaves:
             if(swipeProgress < 0.0f) {
-                return UIOffsetMake(_leftSwipeView.frameWidth * -swipeProgress, 0.0f);
+                return UIOffsetMake(_leftSwipeView.moFrameWidth * -swipeProgress, 0.0f);
             } else if(swipeProgress > 0.0f) {
-                return UIOffsetMake(-_rightSwipeView.frameWidth * swipeProgress, 0.0f);
+                return UIOffsetMake(-_rightSwipeView.moFrameWidth * swipeProgress, 0.0f);
             }
             break;
         case MobilyDataSwipeCellStyleStretch:
             if(swipeProgress < 0.0f) {
-                return UIOffsetMake(_rootView.frameWidth * -swipeProgress, 0.0f);
+                return UIOffsetMake(_rootView.moFrameWidth * -swipeProgress, 0.0f);
             } else if(swipeProgress > 0.0f) {
-                return UIOffsetMake(-_rootView.frameWidth * swipeProgress, 0.0f);
+                return UIOffsetMake(-_rootView.moFrameWidth * swipeProgress, 0.0f);
             }
             break;
         case MobilyDataSwipeCellStylePushes:
@@ -474,7 +474,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
 }
 
 - (CGFloat)_leftViewOffsetBySwipeProgress:(CGFloat)swipeProgress {
-    CGFloat leftWidth = _leftSwipeView.frameWidth;
+    CGFloat leftWidth = _leftSwipeView.moFrameWidth;
     switch(_swipeStyle) {
         case MobilyDataSwipeCellStyleStands:
             return 0.0f;
@@ -494,7 +494,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
     switch(_swipeStyle) {
         case MobilyDataSwipeCellStyleStretch:
             if(swipeProgress < 0.0f) {
-                return _rootView.frameWidth * -swipeProgress;
+                return _rootView.moFrameWidth * -swipeProgress;
             }
             return 0.0f;
         default:
@@ -504,7 +504,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
 }
 
 - (CGFloat)_rightViewOffsetBySwipeProgress:(CGFloat)swipeProgress {
-    CGFloat rigthWidth = _rightSwipeView.frameWidth;
+    CGFloat rigthWidth = _rightSwipeView.moFrameWidth;
     switch(_swipeStyle) {
         case MobilyDataSwipeCellStyleStands:
             return 0.0f;
@@ -524,7 +524,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
     switch(_swipeStyle) {
         case MobilyDataSwipeCellStyleStretch:
             if(swipeProgress > 0.0f) {
-                return _rootView.frameWidth * swipeProgress;
+                return _rootView.moFrameWidth * swipeProgress;
             }
             return 0.0f;
         default:
@@ -581,12 +581,12 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
                     case MobilyDataSwipeCellStyleStands:
                     case MobilyDataSwipeCellStyleLeaves:
                     case MobilyDataSwipeCellStylePushes:
-                        self.panSwipeLeftWidth = -_leftSwipeView.frameWidth;
-                        self.panSwipeRightWidth = _rightSwipeView.frameWidth;
+                        self.panSwipeLeftWidth = -_leftSwipeView.moFrameWidth;
+                        self.panSwipeRightWidth = _rightSwipeView.moFrameWidth;
                         break;
                     case MobilyDataSwipeCellStyleStretch:
-                        self.panSwipeLeftWidth = (_leftSwipeView != nil) ? -_rootView.frameWidth : 0.0f;
-                        self.panSwipeRightWidth = (_rightSwipeView != nil) ? _rootView.frameWidth : 0.0f;
+                        self.panSwipeLeftWidth = (_leftSwipeView != nil) ? -_rootView.moFrameWidth : 0.0f;
+                        self.panSwipeRightWidth = (_rightSwipeView != nil) ? _rootView.moFrameWidth : 0.0f;
                         break;
                 }
                 self.panSwipeDirection = MobilyDataCellSwipeDirectionUnknown;

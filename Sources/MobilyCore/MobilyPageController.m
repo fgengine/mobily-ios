@@ -115,7 +115,7 @@
     [_rootView addGestureRecognizer:_panGesture];
     
     if(_controller != nil) {
-        _controller.pageController = self;
+        _controller.moPageController = self;
         if(_controller.parentViewController != self) {
             if(_controller.parentViewController != nil) {
                 [_controller willMoveToParentViewController:nil];
@@ -180,7 +180,7 @@
             }
             _controller = controller;
             if(_controller != nil) {
-                _controller.pageController = self;
+                _controller.moPageController = self;
                 if(_controller.parentViewController != self) {
                     if(_controller.parentViewController != nil) {
                         [_controller willMoveToParentViewController:nil];
@@ -560,10 +560,10 @@
                                 switch(_orientation) {
                                     case MobilyPageControllerOrientationVertical: {
                                         if(((contentOffset.y + contentInsets.top) <= offset.y) && (offset.y > 0.0f)) {
-                                            scrollView.contentOffsetY = -contentInsets.top;
+                                            scrollView.moContentOffsetY = -contentInsets.top;
                                             scrollView.scrollEnabled = NO;
                                         } else if(((contentOffset.y + frame.size.height) >= contentSize.height + offset.y) && (offset.y < 0.0f)) {
-                                            scrollView.contentOffsetY = (contentSize.height - frame.size.height) + contentInsets.bottom;
+                                            scrollView.moContentOffsetY = (contentSize.height - frame.size.height) + contentInsets.bottom;
                                             scrollView.scrollEnabled = NO;
                                         } else {
                                             _panBeganPosition.y = currentPosition.y;
@@ -572,10 +572,10 @@
                                     }
                                     case MobilyPageControllerOrientationHorizontal: {
                                         if(((contentOffset.x + contentInsets.left) <= offset.x) && (offset.x > 0.0f)) {
-                                            scrollView.contentOffsetX = -contentInsets.left;
+                                            scrollView.moContentOffsetX = -contentInsets.left;
                                             scrollView.scrollEnabled = NO;
                                         } else if(((contentOffset.x + frame.size.width) >= contentSize.width + offset.x) && (offset.x < 0.0f)) {
-                                            scrollView.contentOffsetX = (contentSize.width - frame.size.width) + contentInsets.right;
+                                            scrollView.moContentOffsetX = (contentSize.width - frame.size.width) + contentInsets.right;
                                             scrollView.scrollEnabled = NO;
                                         } else {
                                             _panBeganPosition.x = currentPosition.x;
@@ -803,25 +803,21 @@
 #import <objc/runtime.h>
 
 /*--------------------------------------------------*/
-
-static char const* const MobilySlideControllerKey = "MobilySlideControllerKey";
-
-/*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
 @implementation UIViewController (MobilyPageController)
 
-- (void)setPageController:(MobilyPageController*)pageController {
-    objc_setAssociatedObject(self, MobilySlideControllerKey, pageController, OBJC_ASSOCIATION_ASSIGN);
+- (void)setMoPageController:(MobilyPageController*)moPageController {
+    objc_setAssociatedObject(self, @selector(moPageController), moPageController, OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (MobilyPageController*)pageController {
-    MobilyPageController* pageController = objc_getAssociatedObject(self, MobilySlideControllerKey);
-    if(pageController == nil) {
-        pageController = self.parentViewController.pageController;
+- (MobilyPageController*)moPageController {
+    MobilyPageController* controller = objc_getAssociatedObject(self, @selector(moPageController));
+    if(controller == nil) {
+        controller = self.parentViewController.moPageController;
     }
-    return pageController;
+    return controller;
 }
 
 @end

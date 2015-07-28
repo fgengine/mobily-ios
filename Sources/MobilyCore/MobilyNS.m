@@ -46,11 +46,11 @@
 
 @implementation NSObject (MobilyNS)
 
-+ (NSString*)className {
++ (NSString*)moClassName {
     return NSStringFromClass(self.class);
 }
 
-- (NSString*)className {
+- (NSString*)moClassName {
     return NSStringFromClass(self.class);
 }
 
@@ -60,7 +60,7 @@
 
 @implementation NSDate (MobilyNS)
 
-+ (NSDate*)dateByYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day {
++ (NSDate*)moDateByYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day {
     NSDateComponents* components = [NSDateComponents new];
     components.year = year;
     components.month = month;
@@ -68,7 +68,7 @@
     return [NSCalendar.currentCalendar dateFromComponents:components];
 }
 
-+ (NSDate*)dateByHour:(NSInteger)hour minute:(NSInteger)minute second:(NSInteger)seccond {
++ (NSDate*)moDateByHour:(NSInteger)hour minute:(NSInteger)minute second:(NSInteger)seccond {
     NSDateComponents* components = [NSDateComponents new];
     components.hour = hour;
     components.minute = minute;
@@ -76,7 +76,7 @@
     return [NSCalendar.currentCalendar dateFromComponents:components];
 }
 
-+ (NSDate*)dateByYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day hour:(NSInteger)hour minute:(NSInteger)minute second:(NSInteger)seccond {
++ (NSDate*)moDateByYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day hour:(NSInteger)hour minute:(NSInteger)minute second:(NSInteger)seccond {
     NSDateComponents* components = [NSDateComponents new];
     components.year = year;
     components.month = month;
@@ -87,7 +87,7 @@
     return [NSCalendar.currentCalendar dateFromComponents:components];
 }
 
-- (NSString*)formatTime {
+- (NSString*)moFormatTime {
     static NSDateFormatter* formatter = nil;
     if(formatter == nil) {
         formatter = [NSDateFormatter new];
@@ -98,7 +98,7 @@
     return [formatter stringFromDate:self];
 }
 
-- (NSString*)formatDate {
+- (NSString*)moFormatDate {
     static NSDateFormatter* formatter = nil;
     if(formatter == nil) {
         formatter = [NSDateFormatter new];
@@ -109,10 +109,10 @@
     return [formatter stringFromDate:self];
 }
 
-- (NSString*)formatShortTime {
+- (NSString*)moFormatShortTime {
     NSTimeInterval diff = MOBILY_FABS(self.timeIntervalSinceNow);
     if(diff < MOBILY_DAY) {
-        return [self formatTime];
+        return [self moFormatTime];
     } else if(diff < MOBILY_5_DAYS) {
         static NSDateFormatter* formatter = nil;
         if(formatter == nil) {
@@ -134,10 +134,10 @@
     }
 }
 
-- (NSString*)formatDateTime {
+- (NSString*)moFormatDateTime {
     NSTimeInterval diff = MOBILY_FABS(self.timeIntervalSinceNow);
     if(diff < MOBILY_DAY) {
-        return [self formatTime];
+        return [self moFormatTime];
     } else if(diff < MOBILY_5_DAYS) {
         static NSDateFormatter* formatter = nil;
         if(formatter == nil) {
@@ -159,7 +159,7 @@
     }
 }
 
-- (NSString*)formatRelativeTime {
+- (NSString*)moFormatRelativeTime {
     NSTimeInterval elapsed = MOBILY_FABS(self.timeIntervalSinceNow);
     if(elapsed <= 1.0f) {
         return NSLocalizedStringFromTable(@"just a moment ago", @"MobilyNS", @"");
@@ -177,11 +177,11 @@
         int hours = (int)((elapsed + MOBILY_HOUR * 0.5f) / MOBILY_HOUR);
         return [NSString stringWithFormat:NSLocalizedStringFromTable(@"%d hours ago", @"MobilyNS", @""), hours];
     } else {
-        return [self formatDateTime];
+        return [self moFormatDateTime];
     }
 }
 
-- (NSString*)formatShortRelativeTime {
+- (NSString*)moFormatShortRelativeTime {
     NSTimeInterval elapsed = MOBILY_FABS(self.timeIntervalSinceNow);
     if(elapsed < MOBILY_MINUTE) {
         return NSLocalizedStringFromTable(@"<1m", @"MobilyNS", @"Date format: less than one minute ago");
@@ -195,63 +195,63 @@
         int day = (int)((elapsed + MOBILY_DAY / 2) / MOBILY_DAY);
         return [NSString stringWithFormat:NSLocalizedStringFromTable(@"%dd", @"MobilyNS", @"Date format: 3d"), day];
     } else {
-        return [self formatShortTime];
+        return [self moFormatShortTime];
     }
 }
 
-+ (NSDate*)dateWithUnixTimestamp:(NSUInteger)timestamp {
++ (NSDate*)moDateWithUnixTimestamp:(NSUInteger)timestamp {
     return [NSDate dateWithTimeIntervalSince1970:timestamp];
 }
 
-- (NSUInteger)unixTimestamp {
+- (NSUInteger)moUnixTimestamp {
     return (NSUInteger)self.timeIntervalSince1970;
 }
 
 
-- (NSDate*)extractCalendarUnit:(NSCalendarUnit)calendarUnit {
+- (NSDate*)moExtractCalendarUnit:(NSCalendarUnit)calendarUnit {
     return [NSCalendar.currentCalendar dateFromComponents:[NSCalendar.currentCalendar components:calendarUnit fromDate:self]];
 }
 
-- (NSDate*)withoutDate {
-    return [self extractCalendarUnit:(NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond)];
+- (NSDate*)moWithoutDate {
+    return [self moExtractCalendarUnit:(NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond)];
 }
 
-- (NSDate*)withoutTime {
-    return [self extractCalendarUnit:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay)];
+- (NSDate*)moWithoutTime {
+    return [self moExtractCalendarUnit:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay)];
 }
 
-- (NSDate*)beginningOfYear {
+- (NSDate*)moBeginningOfYear {
     NSDateComponents* components = [NSCalendar.currentCalendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:self];
     components.month = 1;
     components.day = 1;
     return [NSCalendar.currentCalendar dateFromComponents:components];
 }
 
-- (NSDate*)endOfYear {
+- (NSDate*)moEndOfYear {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = NSDateComponents.new;
         components.year = 1;
     }
-    return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:[self beginningOfYear] options:0] dateByAddingTimeInterval:-1];
+    return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:self.moBeginningOfYear options:0] dateByAddingTimeInterval:-1];
 }
 
-- (NSDate*)beginningOfMonth {
+- (NSDate*)moBeginningOfMonth {
     NSDateComponents* components = [NSCalendar.currentCalendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:self];
     components.day = 1;
     return [NSCalendar.currentCalendar dateFromComponents:components];
 }
 
-- (NSDate*)endOfMonth {
+- (NSDate*)moEndOfMonth {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = NSDateComponents.new;
         components.month = 1;
     }
-    return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:[self beginningOfMonth] options:0] dateByAddingTimeInterval:-1];
+    return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:self.moBeginningOfMonth options:0] dateByAddingTimeInterval:-1];
 }
 
-- (NSDate*)beginningOfWeek {
+- (NSDate*)moBeginningOfWeek {
     NSDateComponents* components = [NSCalendar.currentCalendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay) fromDate:self];
     NSInteger offset = components.weekday - (NSInteger)NSCalendar.currentCalendar.firstWeekday;
     if(offset < 0) {
@@ -261,55 +261,55 @@
     return [NSCalendar.currentCalendar dateFromComponents:components];
 }
 
-- (NSDate*)endOfWeek {
+- (NSDate*)moEndOfWeek {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = NSDateComponents.new;
         components.weekOfMonth = 1;
     }
-    return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:[self beginningOfWeek] options:0] dateByAddingTimeInterval:-1];
+    return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:self.moBeginningOfWeek options:0] dateByAddingTimeInterval:-1];
 }
 
-- (NSDate*)beginningOfDay {
+- (NSDate*)moBeginningOfDay {
     return [NSCalendar.currentCalendar dateFromComponents:[NSCalendar.currentCalendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:self]];
 }
 
-- (NSDate*)endOfDay {
+- (NSDate*)moEndOfDay {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = NSDateComponents.new;
         components.day = 1;
     }
-    return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:[self beginningOfDay] options:0] dateByAddingTimeInterval:-1];
+    return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:self.moBeginningOfDay options:0] dateByAddingTimeInterval:-1];
 }
 
-- (NSDate*)beginningOfHour {
+- (NSDate*)moBeginningOfHour {
     return [NSCalendar.currentCalendar dateFromComponents:[NSCalendar.currentCalendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour) fromDate:self]];
 }
 
-- (NSDate*)endOfHour {
+- (NSDate*)moEndOfHour {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = NSDateComponents.new;
         components.hour = 1;
     }
-    return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:[self beginningOfHour] options:0] dateByAddingTimeInterval:-1];
+    return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:self.moBeginningOfHour options:0] dateByAddingTimeInterval:-1];
 }
 
-- (NSDate*)beginningOfMinute {
+- (NSDate*)moBeginningOfMinute {
     return [NSCalendar.currentCalendar dateFromComponents:[NSCalendar.currentCalendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:self]];
 }
 
-- (NSDate*)endOfMinute {
+- (NSDate*)moEndOfMinute {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = NSDateComponents.new;
         components.minute = 1;
     }
-    return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:[self beginningOfMinute] options:0] dateByAddingTimeInterval:-1];
+    return [[NSCalendar.currentCalendar dateByAddingComponents:components toDate:self.moBeginningOfMinute options:0] dateByAddingTimeInterval:-1];
 }
 
-- (NSDate*)previousYear {
+- (NSDate*)moPreviousYear {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = [NSDateComponents new];
@@ -318,7 +318,7 @@
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
-- (NSDate*)nextYear {
+- (NSDate*)moNextYear {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = [NSDateComponents new];
@@ -327,7 +327,7 @@
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
-- (NSDate*)previousMonth {
+- (NSDate*)moPreviousMonth {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = [NSDateComponents new];
@@ -336,7 +336,7 @@
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
-- (NSDate*)nextMonth {
+- (NSDate*)moNextMonth {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = [NSDateComponents new];
@@ -345,7 +345,7 @@
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
-- (NSDate*)previousWeek {
+- (NSDate*)moPreviousWeek {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = [NSDateComponents new];
@@ -354,7 +354,7 @@
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
-- (NSDate*)nextWeek {
+- (NSDate*)moNextWeek {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = [NSDateComponents new];
@@ -363,7 +363,7 @@
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
-- (NSDate*)previousDay {
+- (NSDate*)moPreviousDay {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = [NSDateComponents new];
@@ -372,7 +372,7 @@
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
-- (NSDate*)nextDay {
+- (NSDate*)moNextDay {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = [NSDateComponents new];
@@ -381,7 +381,7 @@
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
-- (NSDate*)previousHour {
+- (NSDate*)moPreviousHour {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = [NSDateComponents new];
@@ -390,7 +390,7 @@
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
-- (NSDate*)nextHour {
+- (NSDate*)moNextHour {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = [NSDateComponents new];
@@ -399,7 +399,7 @@
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
-- (NSDate*)previousMinute {
+- (NSDate*)moPreviousMinute {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = [NSDateComponents new];
@@ -408,7 +408,7 @@
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
-- (NSDate*)nextMinute {
+- (NSDate*)moNextMinute {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = [NSDateComponents new];
@@ -417,7 +417,7 @@
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
-- (NSDate*)previousSecond {
+- (NSDate*)moPreviousSecond {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = [NSDateComponents new];
@@ -426,7 +426,7 @@
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
-- (NSDate*)nextSecond {
+- (NSDate*)moNextSecond {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = [NSDateComponents new];
@@ -435,35 +435,35 @@
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
-- (NSInteger)yearsToDate:(NSDate*)date {
+- (NSInteger)moYearsToDate:(NSDate*)date {
     return [[NSCalendar.currentCalendar components:NSCalendarUnitYear fromDate:self toDate:date options:0] year];
 }
 
-- (NSInteger)monthsToDate:(NSDate*)date {
+- (NSInteger)moMonthsToDate:(NSDate*)date {
     return [[NSCalendar.currentCalendar components:NSCalendarUnitMonth fromDate:self toDate:date options:0] month];
 }
 
-- (NSInteger)daysToDate:(NSDate*)date {
+- (NSInteger)moDaysToDate:(NSDate*)date {
     return [[NSCalendar.currentCalendar components:NSCalendarUnitDay fromDate:self toDate:date options:0] day];
 }
 
-- (NSInteger)weeksToDate:(NSDate*)date {
+- (NSInteger)moWeeksToDate:(NSDate*)date {
     return [[NSCalendar.currentCalendar components:NSCalendarUnitWeekOfYear fromDate:self toDate:date options:0] weekOfYear];
 }
 
-- (NSInteger)hoursToDate:(NSDate*)date {
+- (NSInteger)moHoursToDate:(NSDate*)date {
     return [[NSCalendar.currentCalendar components:NSCalendarUnitHour fromDate:self toDate:date options:0] hour];
 }
 
-- (NSInteger)minutesToDate:(NSDate*)date {
+- (NSInteger)moMinutesToDate:(NSDate*)date {
     return [[NSCalendar.currentCalendar components:NSCalendarUnitMinute fromDate:self toDate:date options:0] minute];
 }
 
-- (NSInteger)secondsToDate:(NSDate*)date {
+- (NSInteger)moSecondsToDate:(NSDate*)date {
     return [[NSCalendar.currentCalendar components:NSCalendarUnitSecond fromDate:self toDate:date options:0] second];
 }
 
-- (NSDate*)addYears:(NSInteger)years {
+- (NSDate*)moAddYears:(NSInteger)years {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = [NSDateComponents new];
@@ -472,7 +472,7 @@
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
-- (NSDate*)addMonths:(NSInteger)months {
+- (NSDate*)moAddMonths:(NSInteger)months {
     static NSDateComponents* components = nil;
     if(components == nil) {
         components = [NSDateComponents new];
@@ -481,66 +481,66 @@
     return [NSCalendar.currentCalendar dateByAddingComponents:components toDate:self options:0];
 }
 
-- (NSDate*)addWeeks:(NSInteger)weeks {
+- (NSDate*)moAddWeeks:(NSInteger)weeks {
     return [self dateByAddingTimeInterval:(MOBILY_DAY * 7)*weeks];
 }
 
-- (NSDate*)addDays:(NSInteger)days {
+- (NSDate*)moAddDays:(NSInteger)days {
     return [self dateByAddingTimeInterval:MOBILY_DAY * days];
 }
 
-- (NSDate*)addHours:(NSInteger)hours {
+- (NSDate*)moAddHours:(NSInteger)hours {
     return [self dateByAddingTimeInterval:MOBILY_HOUR * hours];
 }
 
-- (NSDate*)addMinutes:(NSInteger)minutes {
+- (NSDate*)moAddMinutes:(NSInteger)minutes {
     return [self dateByAddingTimeInterval:MOBILY_MINUTE * minutes];
 }
 
-- (NSDate*)addSeconds:(NSInteger)seconds {
+- (NSDate*)moAddSeconds:(NSInteger)seconds {
     return [self dateByAddingTimeInterval:seconds];
 }
 
-- (BOOL)isYesterday {
-    NSDate* date = NSDate.date.previousDay;
-    return [self insideFrom:date.beginningOfDay to:date.endOfDay];
+- (BOOL)moIsYesterday {
+    NSDate* date = NSDate.date.moPreviousDay;
+    return [self moInsideFrom:date.moBeginningOfDay to:date.moEndOfDay];
 }
 
-- (BOOL)isToday {
+- (BOOL)moIsToday {
     NSDate* date = NSDate.date;
-    return [self insideFrom:date.beginningOfDay to:date.endOfDay];
+    return [self moInsideFrom:date.moBeginningOfDay to:date.moEndOfDay];
 }
 
-- (BOOL)isTomorrow {
-    NSDate* date = NSDate.date.nextDay;
-    return [self insideFrom:date.beginningOfDay to:date.endOfDay];
+- (BOOL)moIsTomorrow {
+    NSDate* date = NSDate.date.moNextDay;
+    return [self moInsideFrom:date.moBeginningOfDay to:date.moEndOfDay];
 }
 
-- (BOOL)insideFrom:(NSDate*)from to:(NSDate*)to {
-    return ([self isAfterOrSame:from] == YES) && ([self isEarlierOrSame:to]);
+- (BOOL)moInsideFrom:(NSDate*)from to:(NSDate*)to {
+    return ([self moIsAfterOrSame:from] == YES) && ([self moIsEarlierOrSame:to]);
 }
 
-- (BOOL)isEarlier:(NSDate*)anotherDate {
+- (BOOL)moIsEarlier:(NSDate*)anotherDate {
     return ([self compare:anotherDate] == NSOrderedAscending);
 }
 
-- (BOOL)isEarlierOrSame:(NSDate*)anotherDate {
-    return ([self isEarlier:anotherDate] || [self isSame:anotherDate]);
+- (BOOL)moIsEarlierOrSame:(NSDate*)anotherDate {
+    return ([self moIsEarlier:anotherDate] || [self moIsSame:anotherDate]);
 }
 
-- (BOOL)isSame:(NSDate*)anotherDate {
+- (BOOL)moIsSame:(NSDate*)anotherDate {
     return ([self compare:anotherDate] == NSOrderedSame);
 }
 
-- (BOOL)isAfter:(NSDate*)anotherDate {
+- (BOOL)moIsAfter:(NSDate*)anotherDate {
     return ([self compare:anotherDate] == NSOrderedDescending);
 }
 
-- (BOOL)isAfterOrSame:(NSDate*)anotherDate {
-    return ([self isAfter:anotherDate] || [self isSame:anotherDate]);
+- (BOOL)moIsAfterOrSame:(NSDate*)anotherDate {
+    return ([self moIsAfter:anotherDate] || [self moIsSame:anotherDate]);
 }
 
-- (MobilyDateSeason)season {
+- (MobilyDateSeason)moSeason {
     NSDateComponents* components = [NSCalendar.currentCalendar components:NSCalendarUnitMonth fromDate:self];
     NSInteger month = [components month];
     if((month >= 3) && (month <= 5)) {
@@ -553,7 +553,7 @@
     return MobilyDateSeasonWinter;
 }
 
-- (MobilyDateWeekday)weekday {
+- (MobilyDateWeekday)moWeekday {
     NSDateComponents* components = [NSCalendar.currentCalendar components:NSCalendarUnitWeekday fromDate:self];
     return [components weekday];
 }
@@ -566,22 +566,22 @@
 
 @implementation NSDateFormatter (MobilyNS)
 
-+ (instancetype)dateFormatterWithFormat:(NSString*)format {
-    return [self dateFormatterWithFormat:format locale:NSLocale.currentLocale];
++ (instancetype)moDateFormatterWithFormat:(NSString*)format {
+    return [self moDateFormatterWithFormat:format locale:NSLocale.currentLocale];
 }
 
-+ (instancetype)dateFormatterWithFormat:(NSString*)format locale:(NSLocale*)locale {
++ (instancetype)moDateFormatterWithFormat:(NSString*)format locale:(NSLocale*)locale {
     NSDateFormatter* dateFormatter = [NSDateFormatter new];
     dateFormatter.dateFormat = format;
     dateFormatter.locale = locale;
     return dateFormatter;
 }
 
-+ (instancetype)dateFormatterWithFormatTemplate:(NSString*)formatTemplate {
-    return [self dateFormatterWithFormat:formatTemplate locale:NSLocale.currentLocale];
++ (instancetype)moDateFormatterWithFormatTemplate:(NSString*)formatTemplate {
+    return [self moDateFormatterWithFormatTemplate:formatTemplate locale:NSLocale.currentLocale];
 }
 
-+ (instancetype)dateFormatterWithFormatTemplate:(NSString*)formatTemplate locale:(NSLocale*)locale {
++ (instancetype)moDateFormatterWithFormatTemplate:(NSString*)formatTemplate locale:(NSLocale*)locale {
     NSDateFormatter* dateFormatter = [NSDateFormatter new];
     dateFormatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:formatTemplate options:0 locale:locale];
     dateFormatter.locale = locale;
@@ -600,7 +600,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 
 @implementation NSData (MobilyNS)
 
-- (NSString*)toHex {
+- (NSString*)moToHex {
     NSUInteger length = self.length;
     unsigned char* bytes = (unsigned char*)self.bytes;
     NSMutableString* hex = [NSMutableString stringWithCapacity:self.length];
@@ -610,7 +610,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return hex;
 }
 
-- (NSString*)toBase64 {
+- (NSString*)moToBase64 {
     NSData* data = [NSData dataWithBytes:self.bytes length:self.length];
     const uint8_t* input = (const uint8_t*)data.bytes;
     NSInteger length = data.length;
@@ -630,7 +630,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
         output[index + 2] = (i + 1) < length ? Mobily_Base64Table[(value >> 6) & 0x3F] : '=';
         output[index + 3] = (i + 2) < length ? Mobily_Base64Table[(value >> 0) & 0x3F] : '=';
     }
-    return [NSString stringWithData:result encoding:NSASCIIStringEncoding];
+    return [NSString moStringWithData:result encoding:NSASCIIStringEncoding];
 }
 
 @end
@@ -641,39 +641,39 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 
 @implementation NSString (MobilyNS)
 
-+ (instancetype)stringWithData:(NSData*)data encoding:(NSStringEncoding)encoding {
++ (instancetype)moStringWithData:(NSData*)data encoding:(NSStringEncoding)encoding {
     return [[self alloc] initWithData:data encoding:encoding];
 }
 
-- (NSString*)stringByUppercaseFirstCharacterString {
+- (NSString*)moStringByUppercaseFirstCharacterString {
     if(self.length > 0) {
         return [[[self substringToIndex:1] uppercaseString] stringByAppendingString:[self substringFromIndex:1]];
     }
     return NSString.string;
 }
 
-- (NSString*)stringByLowercaseFirstCharacterString {
+- (NSString*)moStringByLowercaseFirstCharacterString {
     if(self.length > 0) {
         return [[[self substringToIndex:1] lowercaseString] stringByAppendingString:[self substringFromIndex:1]];
     }
     return NSString.string;
 }
 
-- (NSString*)stringByMD5 {
+- (NSString*)moStringByMD5 {
     unsigned char result[16];
     const char* string = self.UTF8String;
     CC_MD5(string, (CC_LONG)strlen(string), result);
     return [[NSString stringWithFormat:@"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X", result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10], result[11], result[12], result[13], result[14], result[15]] lowercaseString];
 }
 
-- (NSString*)stringBySHA256 {
+- (NSString*)moStringBySHA256 {
     unsigned char result[CC_SHA256_DIGEST_LENGTH];
     const char* string = self.UTF8String;
     CC_SHA256(string, (CC_LONG)strlen(string), result);
     return [[NSString  stringWithFormat:@"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X", result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10], result[11], result[12], result[13], result[14], result[15], result[16], result[17], result[18], result[19], result[20], result[21], result[22], result[23], result[24], result[25], result[26], result[27], result[28], result[29], result[30], result[31]] lowercaseString];
 }
 
-- (NSString*)stringByDecodingURLFormat {
+- (NSString*)moStringByDecodingURLFormat {
     NSString* result = nil;
     CFStringRef string = CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL, (__bridge CFStringRef)self, CFSTR(""), kCFStringEncodingUTF8);
     if(string != nil) {
@@ -683,7 +683,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return result;
 }
 
-- (NSString*)stringByEncodingURLFormat {
+- (NSString*)moStringByEncodingURLFormat {
     NSString* result = nil;
     CFStringRef string = CFURLCreateStringByAddingPercentEscapes(NULL, (__bridge CFStringRef)self, NULL, CFSTR("!*'();:@&=+$,/?%#[]"), kCFStringEncodingUTF8);
     if(string != nil) {
@@ -693,15 +693,15 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return result;
 }
 
-- (NSMutableDictionary*)dictionaryFromQueryComponents {
+- (NSMutableDictionary*)moDictionaryFromQueryComponents {
     NSMutableDictionary* queryComponents = NSMutableDictionary.dictionary;
     for(NSString* keyValuePairString in [self componentsSeparatedByString:@"&"]) {
         NSArray* keyValuePairArray = [keyValuePairString componentsSeparatedByString:@"="];
         if(keyValuePairArray.count < 2) {
             continue;
         }
-        NSString* key = [keyValuePairArray[0] stringByDecodingURLFormat];
-        NSString* value = [keyValuePairArray[1] stringByDecodingURLFormat];
+        NSString* key = [keyValuePairArray[0] moStringByDecodingURLFormat];
+        NSString* value = [keyValuePairArray[1] moStringByDecodingURLFormat];
         NSMutableArray* results = queryComponents[key];
         if(results == nil) {
             results = [NSMutableArray arrayWithCapacity:1];
@@ -712,7 +712,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return queryComponents;
 }
 
-- (BOOL)isEmail {
+- (BOOL)moIsEmail {
     static NSPredicate* predicate = nil;
     if(predicate == nil) {
         predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES[c] %@", @".+@.+\\..+"];
@@ -720,7 +720,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return [predicate evaluateWithObject:self];
 }
 
-- (NSData*)HMACSHA1:(NSString*)key {
+- (NSData*)moHMACSHA1:(NSString*)key {
     const char* cKey  = [key cStringUsingEncoding:NSASCIIStringEncoding];
     const char* cData = [self cStringUsingEncoding:NSASCIIStringEncoding];
     unsigned char cHMAC[CC_SHA1_DIGEST_LENGTH];
@@ -728,14 +728,14 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return [NSData dataWithBytes:cHMAC length:sizeof(cHMAC)];
 }
 
-- (BOOL)convertToBool {
+- (BOOL)moConvertToBool {
     if(([self isEqualToString:@"yes"] == YES) || ([self isEqualToString:@"true"] == YES)) {
         return YES;
     }
     return NO;
 }
 
-- (NSNumber*)convertToNumber {
+- (NSNumber*)moConvertToNumber {
     static NSNumberFormatter* formatter = nil;
     if(formatter == nil) {
         formatter = [NSNumberFormatter new];
@@ -744,7 +744,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return [formatter numberFromString:self];
 }
 
-- (NSDate*)convertToDateWithFormat:(NSString*)format {
+- (NSDate*)moConvertToDateWithFormat:(NSString*)format {
     static NSDateFormatter* formatter = nil;
     if(formatter == nil) {
         formatter = [NSDateFormatter new];
@@ -753,7 +753,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return [formatter dateFromString:self];
 }
 
-- (NSTextAlignment)convertToTextAlignment {
+- (NSTextAlignment)moConvertToTextAlignment {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"left"] == YES) {
         return NSTextAlignmentLeft;
@@ -769,7 +769,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return NSTextAlignmentLeft;
 }
 
-- (NSLineBreakMode)convertToLineBreakMode {
+- (NSLineBreakMode)moConvertToLineBreakMode {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"word-wrap"] == YES) {
         return NSLineBreakByWordWrapping;
@@ -787,7 +787,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return NSLineBreakByWordWrapping;
 }
 
-+ (NSString*)rightWordFormByCount:(NSInteger)count andForms:(NSArray*)forms {
++ (NSString*)moRightWordFormByCount:(NSInteger)count andForms:(NSArray*)forms {
     NSInteger count100 = (ABS(count) % 100);
     NSInteger count10 = count100 % 10;
     
@@ -797,7 +797,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return forms[2];
 }
 
-- (NSArray*)charactersArray {
+- (NSArray*)moCharactersArray {
     NSMutableArray* chars = NSMutableArray.array;
     for(int i=0; i < self.length; i++) {
         [chars addObject:[NSString stringWithFormat:@"%c", [self characterAtIndex:i]]];
@@ -814,55 +814,55 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 
 @implementation NSArray (MobilyNS)
 
-+ (instancetype)arrayWithArray:(NSArray*)array andAddingObject:(id)object {
++ (instancetype)moArrayWithArray:(NSArray*)array andAddingObject:(id)object {
     NSMutableArray* result = [NSMutableArray arrayWithArray:array];
     [result addObject:object];
     return [NSArray arrayWithArray:result];
 }
 
-+ (instancetype)arrayWithArray:(NSArray*)array andAddingObjectsFromArray:(NSArray*)addingObjects {
++ (instancetype)moArrayWithArray:(NSArray*)array andAddingObjectsFromArray:(NSArray*)addingObjects {
     NSMutableArray* result = [NSMutableArray arrayWithArray:array];
     [result addObjectsFromArray:addingObjects];
     return [NSArray arrayWithArray:result];
 }
 
-+ (instancetype)arrayWithArray:(NSArray*)array andRemovingObject:(id)object {
++ (instancetype)moArrayWithArray:(NSArray*)array andRemovingObject:(id)object {
     NSMutableArray* result = [NSMutableArray arrayWithArray:array];
     [result removeObject:object];
     return [NSArray arrayWithArray:result];
 }
 
-+ (instancetype)arrayWithArray:(NSArray*)array andRemovingObjectsInArray:(NSArray*)removingObjects {
++ (instancetype)moArrayWithArray:(NSArray*)array andRemovingObjectsInArray:(NSArray*)removingObjects {
     NSMutableArray* result = [NSMutableArray arrayWithArray:array];
     [result removeObjectsInArray:removingObjects];
     return [NSArray arrayWithArray:result];
 }
 
-- (NSArray*)arrayByReplaceObject:(id)object atIndex:(NSUInteger)index {
+- (NSArray*)moArrayByReplaceObject:(id)object atIndex:(NSUInteger)index {
     NSMutableArray* result = [NSMutableArray arrayWithArray:self];
     result[index] = object;
     return [NSArray arrayWithArray:result];
 }
 
-- (NSArray*)arrayByRemovedObjectAtIndex:(NSUInteger)index {
+- (NSArray*)moArrayByRemovedObjectAtIndex:(NSUInteger)index {
     NSMutableArray* result = [NSMutableArray arrayWithArray:self];
     [result removeObjectAtIndex:index];
     return [NSArray arrayWithArray:result];
 }
 
-- (NSArray*)arrayByRemovedObject:(id)object {
+- (NSArray*)moArrayByRemovedObject:(id)object {
     NSMutableArray* result = [NSMutableArray arrayWithArray:self];
     [result removeObject:object];
     return [NSArray arrayWithArray:result];
 }
 
-- (NSArray*)arrayByRemovedObjectsFromArray:(NSArray*)array {
+- (NSArray*)moArrayByRemovedObjectsFromArray:(NSArray*)array {
     NSMutableArray* result = [NSMutableArray arrayWithArray:self];
     [result removeObjectsInArray:array];
     return [NSArray arrayWithArray:result];
 }
 
-- (NSArray*)arrayByObjectClass:(Class)objectClass {
+- (NSArray*)moArrayByObjectClass:(Class)objectClass {
     NSMutableArray* result = NSMutableArray.array;
     for(id object in self) {
         if([object isKindOfClass:objectClass] == YES) {
@@ -872,7 +872,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return [NSArray arrayWithArray:result];
 }
 
-- (NSArray*)arrayByObjectProtocol:(Protocol*)objectProtocol {
+- (NSArray*)moArrayByObjectProtocol:(Protocol*)objectProtocol {
     NSMutableArray* result = NSMutableArray.array;
     for(id object in self) {
         if([object conformsToProtocol:objectProtocol] == YES) {
@@ -882,7 +882,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return [NSArray arrayWithArray:result];
 }
 
-- (id)firstObjectIsClass:(Class)objectClass {
+- (id)moFirstObjectIsClass:(Class)objectClass {
     id result = nil;
     for(id object in self) {
         if([object isKindOfClass:objectClass] == YES) {
@@ -893,7 +893,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return result;
 }
 
-- (id)lastObjectIsClass:(Class)objectClass {
+- (id)moLastObjectIsClass:(Class)objectClass {
     __block id result = nil;
     [self enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id object, NSUInteger index __unused, BOOL *stop __unused) {
         if([object isKindOfClass:objectClass] == YES) {
@@ -904,7 +904,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return result;
 }
 
-- (id)firstObjectIsProtocol:(Protocol*)objectProtocol {
+- (id)moFirstObjectIsProtocol:(Protocol*)objectProtocol {
     id result = nil;
     for(id object in self) {
         if([object conformsToProtocol:objectProtocol] == YES) {
@@ -915,7 +915,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return result;
 }
 
-- (id)lastObjectIsProtocol:(Protocol*)objectProtocol {
+- (id)moLastObjectIsProtocol:(Protocol*)objectProtocol {
     __block id result = nil;
     [self enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id object, NSUInteger index __unused, BOOL *stop __unused) {
         if([object conformsToProtocol:objectProtocol] == YES) {
@@ -926,7 +926,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return result;
 }
 
-- (BOOL)containsObjectsInArray:(NSArray*)objectsArray {
+- (BOOL)moContainsObjectsInArray:(NSArray*)objectsArray {
     for(id object in objectsArray) {
         if([self containsObject:object] == NO) {
             return NO;
@@ -935,7 +935,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return (self.count > 0);
 }
 
-- (NSUInteger)nextIndexOfObject:(id)object {
+- (NSUInteger)moNextIndexOfObject:(id)object {
     NSUInteger index = [self indexOfObject:object];
     if(index != NSNotFound) {
         if(index == self.count - 1) {
@@ -947,7 +947,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return index;
 }
 
-- (NSUInteger)prevIndexOfObject:(id)object {
+- (NSUInteger)moPrevIndexOfObject:(id)object {
     NSUInteger index = [self indexOfObject:object];
     if(index != NSNotFound) {
         if(index == 0) {
@@ -959,7 +959,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return index;
 }
 
-- (id)nextObjectOfObject:(id)object {
+- (id)moNextObjectOfObject:(id)object {
     NSUInteger index = [self indexOfObject:object];
     if(index != NSNotFound) {
         if(index < self.count - 1) {
@@ -969,7 +969,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return nil;
 }
 
-- (id)prevObjectOfObject:(id)object {
+- (id)moPrevObjectOfObject:(id)object {
     NSUInteger index = [self indexOfObject:object];
     if(index != NSNotFound) {
         if(index != 0) {
@@ -979,35 +979,35 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return nil;
 }
 
-- (void)enumerateObjectsAtRange:(NSRange)range options:(NSEnumerationOptions)options usingBlock:(void(^)(id obj, NSUInteger idx, BOOL *stop))block {
+- (void)moEnumerateObjectsAtRange:(NSRange)range options:(NSEnumerationOptions)options usingBlock:(void(^)(id obj, NSUInteger idx, BOOL *stop))block {
     [self enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:options usingBlock:block];
 }
 
-- (void)each:(void(^)(id object))block {
+- (void)moEach:(void(^)(id object))block {
     [self enumerateObjectsUsingBlock:^(id object, NSUInteger index __unused, BOOL* stop __unused) {
         block(object);
     }];
 }
 
-- (void)eachWithIndex:(void(^)(id object, NSUInteger index))block {
+- (void)moEachWithIndex:(void(^)(id object, NSUInteger index))block {
     [self enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL* stop __unused) {
         block(object, index);
     }];
 }
 
-- (void)each:(void(^)(id object))block options:(NSEnumerationOptions)options {
+- (void)moEach:(void(^)(id object))block options:(NSEnumerationOptions)options {
     [self enumerateObjectsWithOptions:options usingBlock:^(id object, NSUInteger index __unused, BOOL* stop __unused) {
         block(object);
     }];
 }
 
-- (void)eachWithIndex:(void(^)(id object, NSUInteger index))block options:(NSEnumerationOptions)options {
+- (void)moEachWithIndex:(void(^)(id object, NSUInteger index))block options:(NSEnumerationOptions)options {
     [self enumerateObjectsWithOptions:options usingBlock:^(id object, NSUInteger index, BOOL* stop __unused) {
         block(object, index);
     }];
 }
 
-- (NSArray*)map:(id(^)(id object))block {
+- (NSArray*)moMap:(id(^)(id object))block {
     NSMutableArray* array = [NSMutableArray arrayWithCapacity:self.count];
     for(id object in self) {
         id temp = block(object);
@@ -1018,11 +1018,11 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return array;
 }
 
-- (NSDictionary*)groupBy:(id(^)(id object))block {
+- (NSDictionary*)moGroupBy:(id(^)(id object))block {
     NSMutableDictionary* dictionary = NSMutableDictionary.dictionary;
     for(id object in self) {
         id temp = block(object);
-        if([dictionary hasKey:temp]) {
+        if([dictionary moHasKey:temp] == YES) {
             [dictionary[temp] addObject:object];
         } else {
             dictionary[temp] = [NSMutableArray arrayWithObject:object];
@@ -1031,19 +1031,19 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return dictionary;
 }
 
-- (NSArray*)select:(BOOL(^)(id object))block {
+- (NSArray*)moSelect:(BOOL(^)(id object))block {
     return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings __unused) {
         return (block(evaluatedObject) == YES);
     }]];
 }
 
-- (NSArray*)reject:(BOOL(^)(id object))block {
+- (NSArray*)moReject:(BOOL(^)(id object))block {
     return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings __unused) {
         return (block(evaluatedObject) == NO);
     }]];
 }
 
-- (id)find:(BOOL(^)(id object))block {
+- (id)moFind:(BOOL(^)(id object))block {
     for(id object in self) {
         if(block(object) == YES) {
             return object;
@@ -1052,23 +1052,23 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return nil;
 }
 
-- (NSArray*)reverse {
+- (NSArray*)moReverse {
     return self.reverseObjectEnumerator.allObjects;
 }
 
-- (NSArray*)intersectionWithArray:(NSArray*)array {
+- (NSArray*)moIntersectionWithArray:(NSArray*)array {
     return [self filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", array]];
 }
 
-- (NSArray*)intersectionWithArrays:(NSArray*)firstArray, ... {
+- (NSArray*)moIntersectionWithArrays:(NSArray*)firstArray, ... {
     NSArray* resultArray = nil;
     if(firstArray != nil) {
         NSArray* eachArray = nil;
-        resultArray = [self intersectionWithArray:firstArray];
+        resultArray = [self moIntersectionWithArray:firstArray];
         va_list argumentList;
         va_start(argumentList, firstArray);
         while((eachArray = va_arg(argumentList, id)) != nil) {
-            resultArray = [resultArray intersectionWithArray:eachArray];
+            resultArray = [resultArray moIntersectionWithArray:eachArray];
         }
         va_end(argumentList);
     } else {
@@ -1077,19 +1077,19 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return resultArray;
 }
 
-- (NSArray*)unionWithArray:(NSArray*)array {
-    return [[self relativeComplement:array] arrayByAddingObjectsFromArray:array];
+- (NSArray*)moUnionWithArray:(NSArray*)array {
+    return [[self moRelativeComplement:array] arrayByAddingObjectsFromArray:array];
 }
 
-- (NSArray*)unionWithArrays:(NSArray*)firstArray, ... {
+- (NSArray*)moUnionWithArrays:(NSArray*)firstArray, ... {
     NSArray* resultArray = nil;
     if(firstArray != nil) {
         NSArray* eachArray = nil;
-        resultArray = [self unionWithArray:firstArray];
+        resultArray = [self moUnionWithArray:firstArray];
         va_list argumentList;
         va_start(argumentList, firstArray);
         while((eachArray = va_arg(argumentList, id)) != nil) {
-            resultArray = [resultArray unionWithArray:eachArray];
+            resultArray = [resultArray moUnionWithArray:eachArray];
         }
         va_end(argumentList);
     } else {
@@ -1098,19 +1098,19 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return resultArray;
 }
 
-- (NSArray*)relativeComplement:(NSArray*)array {
+- (NSArray*)moRelativeComplement:(NSArray*)array {
     return [self filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT SELF IN %@", array]];
 }
 
-- (NSArray*)relativeComplements:(NSArray*)firstArray, ... {
+- (NSArray*)moRelativeComplements:(NSArray*)firstArray, ... {
     NSArray* resultArray = nil;
     if(firstArray != nil) {
         NSArray* eachArray = nil;
-        resultArray = [self relativeComplement:firstArray];
+        resultArray = [self moRelativeComplement:firstArray];
         va_list argumentList;
         va_start(argumentList, firstArray);
         while((eachArray = va_arg(argumentList, id)) != nil) {
-            resultArray = [resultArray relativeComplement:eachArray];
+            resultArray = [resultArray moRelativeComplement:eachArray];
         }
         va_end(argumentList);
     } else {
@@ -1119,10 +1119,10 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return resultArray;
 }
 
-- (NSArray*)symmetricDifference:(NSArray*)array {
-    NSArray* subA = [array relativeComplement:self];
-    NSArray* subB = [self relativeComplement:array];
-    return [subB unionWithArray:subA];
+- (NSArray*)moSymmetricDifference:(NSArray*)array {
+    NSArray* subA = [array moRelativeComplement:self];
+    NSArray* subB = [self moRelativeComplement:array];
+    return [subB moUnionWithArray:subA];
 }
 
 @end
@@ -1133,11 +1133,11 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 
 @implementation NSMutableArray (MobilyNS)
 
-- (void)removeFirstObjectsByCount:(NSUInteger)count {
+- (void)moRemoveFirstObjectsByCount:(NSUInteger)count {
     [self removeObjectsInRange:NSMakeRange(0, count)];
 }
 
-- (void)removeLastObjectsByCount:(NSUInteger)count {
+- (void)moRemoveLastObjectsByCount:(NSUInteger)count {
     [self removeObjectsInRange:NSMakeRange((self.count - 1) - count, count)];
 }
 
@@ -1149,47 +1149,47 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 
 @implementation NSDictionary (MobilyNS)
 
-- (BOOL)boolValueForKey:(NSString*)key orDefault:(BOOL)defaultValue {
-    NSNumber* number = [self numberValueForKey:key orDefault:nil];
+- (BOOL)moBoolValueForKey:(NSString*)key orDefault:(BOOL)defaultValue {
+    NSNumber* number = [self moNumberValueForKey:key orDefault:nil];
     if(number != nil) {
         return number.boolValue;
     }
     return defaultValue;
 }
 
-- (NSInteger)integerValueForKey:(NSString*)key orDefault:(NSInteger)defaultValue {
-    NSNumber* number = [self numberValueForKey:key orDefault:nil];
+- (NSInteger)moIntegerValueForKey:(NSString*)key orDefault:(NSInteger)defaultValue {
+    NSNumber* number = [self moNumberValueForKey:key orDefault:nil];
     if(number != nil) {
         return number.integerValue;
     }
     return defaultValue;
 }
 
-- (NSUInteger)unsignedIntegerValueForKey:(NSString*)key orDefault:(NSUInteger)defaultValue {
-    NSNumber* number = [self numberValueForKey:key orDefault:nil];
+- (NSUInteger)moUnsignedIntegerValueForKey:(NSString*)key orDefault:(NSUInteger)defaultValue {
+    NSNumber* number = [self moNumberValueForKey:key orDefault:nil];
     if(number != nil) {
         return number.unsignedIntegerValue;
     }
     return defaultValue;
 }
 
-- (float)floatValueForKey:(NSString*)key orDefault:(float)defaultValue {
-    NSNumber* number = [self numberValueForKey:key orDefault:nil];
+- (float)moFloatValueForKey:(NSString*)key orDefault:(float)defaultValue {
+    NSNumber* number = [self moNumberValueForKey:key orDefault:nil];
     if(number != nil) {
         return number.floatValue;
     }
     return defaultValue;
 }
 
-- (double)doubleValueForKey:(NSString*)key orDefault:(double)defaultValue {
-    NSNumber* number = [self numberValueForKey:key orDefault:nil];
+- (double)moDoubleValueForKey:(NSString*)key orDefault:(double)defaultValue {
+    NSNumber* number = [self moNumberValueForKey:key orDefault:nil];
     if(number != nil) {
         return number.doubleValue;
     }
     return defaultValue;
 }
 
-- (NSNumber*)numberValueForKey:(NSString*)key orDefault:(NSNumber*)defaultValue {
+- (NSNumber*)moNumberValueForKey:(NSString*)key orDefault:(NSNumber*)defaultValue {
     id value = self[key];
     if([value isKindOfClass:NSNumber.class] == YES) {
         return value;
@@ -1197,7 +1197,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return defaultValue;
 }
 
-- (NSString*)stringValueForKey:(NSString*)key orDefault:(NSString*)defaultValue {
+- (NSString*)moStringValueForKey:(NSString*)key orDefault:(NSString*)defaultValue {
     id value = self[key];
     if([value isKindOfClass:NSString.class] == YES) {
         return value;
@@ -1205,7 +1205,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return defaultValue;
 }
 
-- (NSArray*)arrayValueForKey:(NSString*)key orDefault:(NSArray*)defaultValue {
+- (NSArray*)moArrayValueForKey:(NSString*)key orDefault:(NSArray*)defaultValue {
     id value = self[key];
     if([value isKindOfClass:NSArray.class] == YES) {
         return value;
@@ -1213,7 +1213,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return defaultValue;
 }
 
-- (NSDictionary*)dictionaryValueForKey:(NSString*)key orDefault:(NSDictionary*)defaultValue {
+- (NSDictionary*)moDictionaryValueForKey:(NSString*)key orDefault:(NSDictionary*)defaultValue {
     id value = self[key];
     if([value isKindOfClass:NSDictionary.class] == YES) {
         return value;
@@ -1221,14 +1221,14 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return defaultValue;
 }
 
-- (NSString*)stringFromQueryComponents {
+- (NSString*)moStringFromQueryComponents {
     NSString* result = nil;
     for(NSString* dictKey in self.allKeys) {
-        NSString* key = [dictKey stringByEncodingURLFormat];
+        NSString* key = [dictKey moStringByEncodingURLFormat];
         NSArray* allValues = self[key];
         if([allValues isKindOfClass:NSArray.class]) {
             for(NSString* dictValue in allValues) {
-                NSString* value = [dictValue.description stringByEncodingURLFormat];
+                NSString* value = [dictValue.description moStringByEncodingURLFormat];
                 if(result == nil) {
                     result = [NSString stringWithFormat:@"%@=%@", key, value];
                 } else {
@@ -1236,7 +1236,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
                 }
             }
         } else {
-            NSString* value = [allValues.description stringByEncodingURLFormat];
+            NSString* value = [allValues.description moStringByEncodingURLFormat];
             if(result == nil) {
                 result = [NSString stringWithFormat:@"%@=%@", key, value];
             } else {
@@ -1247,13 +1247,13 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return result;
 }
 
-- (void)each:(void(^)(id key, id value))block {
+- (void)moEach:(void(^)(id key, id value))block {
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL* stop __unused) {
         block(key, obj);
     }];
 }
 
-- (void)eachWithIndex:(void(^)(id key, id value, NSUInteger index))block {
+- (void)moEachWithIndex:(void(^)(id key, id value, NSUInteger index))block {
     __block NSInteger index = 0;
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL* stop __unused) {
         block(key, obj, index);
@@ -1261,13 +1261,13 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     }];
 }
 
-- (void)eachKey:(void(^)(id key))block {
+- (void)moEachKey:(void(^)(id key))block {
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj __unused, BOOL* stop __unused) {
         block(key);
     }];
 }
 
-- (void)eachKeyWithIndex:(void(^)(id key, NSUInteger index))block {
+- (void)moEachKeyWithIndex:(void(^)(id key, NSUInteger index))block {
     __block NSInteger index = 0;
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj __unused, BOOL* stop __unused) {
         block(key, index);
@@ -1275,13 +1275,13 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     }];
 }
 
-- (void)eachValue:(void(^)(id value))block {
+- (void)moEachValue:(void(^)(id value))block {
     [self enumerateKeysAndObjectsUsingBlock:^(id key __unused, id obj, BOOL* stop __unused) {
         block(obj);
     }];
 }
 
-- (void)eachValueWithIndex:(void(^)(id value, NSUInteger index))block {
+- (void)moEachValueWithIndex:(void(^)(id value, NSUInteger index))block {
     __block NSInteger index = 0;
     [self enumerateKeysAndObjectsUsingBlock:^(id key __unused, id obj, BOOL* stop __unused) {
         block(obj, index);
@@ -1289,7 +1289,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     }];
 }
 
-- (NSArray*)map:(id(^)(id key, id value))block {
+- (NSArray*)moMap:(id(^)(id key, id value))block {
     NSMutableArray* array = [NSMutableArray array];
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL* stop __unused) {
         id object = block(key, obj);
@@ -1300,7 +1300,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return array;
 }
 
-- (BOOL)hasKey:(id)key {
+- (BOOL)moHasKey:(id)key {
     return (self[key] != nil);
 }
 
@@ -1312,12 +1312,12 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 
 @implementation NSURL (MobilyNS)
 
-- (NSMutableDictionary*)queryComponents {
-    return self.query.dictionaryFromQueryComponents;
+- (NSMutableDictionary*)moQueryComponents {
+    return self.query.moDictionaryFromQueryComponents;
 }
 
-- (NSMutableDictionary*)fragmentComponents {
-    return self.fragment.dictionaryFromQueryComponents;
+- (NSMutableDictionary*)moFragmentComponents {
+    return self.fragment.moDictionaryFromQueryComponents;
 }
 
 @end
@@ -1328,7 +1328,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 
 @implementation NSFileManager (MobilyNS)
 
-+ (NSString*)documentDirectory {
++ (NSString*)moDocumentDirectory {
     static NSString* result = nil;
     if(result == nil) {
         NSArray* directories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -1339,7 +1339,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return result;
 }
 
-+ (NSString*)cachesDirectory {
++ (NSString*)moCachesDirectory {
     static NSString* result = nil;
     if(result == nil) {
         NSArray* directories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
@@ -1358,7 +1358,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 
 @implementation NSHTTPCookieStorage (MobilyNS)
 
-+ (void)clearCookieWithDomain:(NSString*)domain {
++ (void)moClearCookieWithDomain:(NSString*)domain {
     NSHTTPCookieStorage* storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     if(storage != nil) {
         for(NSHTTPCookie* cookie in storage.cookies) {
@@ -1379,7 +1379,7 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 
 @implementation NSBundle (MobilyNS)
 
-- (id)objectForInfoDictionaryKey:(NSString*)key defaultValue:(id)defaultValue {
+- (id)moObjectForInfoDictionaryKey:(NSString*)key defaultValue:(id)defaultValue {
     id value = [self objectForInfoDictionaryKey:key];
     if(value == nil) {
         return defaultValue;
@@ -1395,11 +1395,11 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 
 @implementation NSError (MobilyNS)
 
-- (BOOL)isNoInternetConnection {
+- (BOOL)moIsNoInternetConnection {
     return ([self.domain isEqualToString:NSURLErrorDomain] || (self.code == NSURLErrorNotConnectedToInternet));
 }
 
-- (BOOL)isTimedOut {
+- (BOOL)moIsTimedOut {
     return ([self.domain isEqualToString:NSURLErrorDomain] && (self.code == NSURLErrorTimedOut));
 }
 
@@ -1411,11 +1411,11 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 
 @implementation MobilyStorage
 
-+ (NSString*)fileSystemDirectory {
++ (NSString*)moFileSystemDirectory {
     static NSString* fileSystemDirectory = nil;
     if(fileSystemDirectory == nil) {
         NSFileManager* fileManager = NSFileManager.defaultManager;
-        NSString* path = [[NSFileManager cachesDirectory] stringByAppendingPathComponent:[NSBundle.mainBundle bundleIdentifier]];
+        NSString* path = [NSFileManager.moCachesDirectory stringByAppendingPathComponent:NSBundle.mainBundle.bundleIdentifier];
         if([fileManager fileExistsAtPath:path] == NO) {
             if([fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil] == YES) {
                 fileSystemDirectory = path;

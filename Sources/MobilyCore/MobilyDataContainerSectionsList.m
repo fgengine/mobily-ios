@@ -157,7 +157,7 @@
 
 - (void)deleteSection:(MobilyDataContainer*)section {
     if((_pagingEnabled == YES) && (_currentSection == section)) {
-        _currentSection = [_sections nextObjectOfObject:_currentSection];
+        _currentSection = [_sections moNextObjectOfObject:_currentSection];
     }
     [super deleteSection:section];
 }

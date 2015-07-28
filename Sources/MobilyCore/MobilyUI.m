@@ -55,17 +55,17 @@
 
 @implementation NSString (MobilyUI)
 
-- (CGSize)implicitSizeWithFont:(UIFont*)font lineBreakMode:(NSLineBreakMode)lineBreakMode {
-    return [self implicitSizeWithFont:font forSize:CGSizeMake(NSIntegerMax, NSIntegerMax) lineBreakMode:lineBreakMode];
+- (CGSize)moImplicitSizeWithFont:(UIFont*)font lineBreakMode:(NSLineBreakMode)lineBreakMode {
+    return [self moImplicitSizeWithFont:font forSize:CGSizeMake(NSIntegerMax, NSIntegerMax) lineBreakMode:lineBreakMode];
 }
 
-- (CGSize)implicitSizeWithFont:(UIFont*)font forWidth:(CGFloat)width lineBreakMode:(NSLineBreakMode)lineBreakMode {
-    return [self implicitSizeWithFont:font forSize:CGSizeMake(width, NSIntegerMax) lineBreakMode:lineBreakMode];
+- (CGSize)moImplicitSizeWithFont:(UIFont*)font forWidth:(CGFloat)width lineBreakMode:(NSLineBreakMode)lineBreakMode {
+    return [self moImplicitSizeWithFont:font forSize:CGSizeMake(width, NSIntegerMax) lineBreakMode:lineBreakMode];
 }
 
-- (CGSize)implicitSizeWithFont:(UIFont*)font forSize:(CGSize)size lineBreakMode:(NSLineBreakMode)lineBreakMode {
+- (CGSize)moImplicitSizeWithFont:(UIFont*)font forSize:(CGSize)size lineBreakMode:(NSLineBreakMode)lineBreakMode {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
-    if(UIDevice.systemVersion >= 7.0) {
+    if(UIDevice.moSystemVersion >= 7.0) {
         NSMutableParagraphStyle* paragraphStyle = [NSMutableParagraphStyle new];
         paragraphStyle.lineBreakMode = lineBreakMode;
         NSDictionary* attributes = @{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle };
@@ -86,11 +86,11 @@
     return CGSizeMake(ceilf(size.width), ceilf(size.height));
 }
 
-- (UIEdgeInsets)convertToEdgeInsets {
-    return [self convertToEdgeInsetsSeparated:@";"];
+- (UIEdgeInsets)moConvertToEdgeInsets {
+    return [self moConvertToEdgeInsetsSeparated:@";"];
 }
 
-- (UIEdgeInsets)convertToEdgeInsetsSeparated:(NSString*)separated {
+- (UIEdgeInsets)moConvertToEdgeInsetsSeparated:(NSString*)separated {
     UIEdgeInsets result = UIEdgeInsetsZero;
     static NSNumberFormatter* formatter = nil;
     if(formatter == nil) {
@@ -124,19 +124,19 @@
     return result;
 }
 
-- (UIBezierPath*)convertToBezierPath {
-    return [self convertToBezierPathSeparated:@";"];
+- (UIBezierPath*)moConvertToBezierPath {
+    return [self moConvertToBezierPathSeparated:@";"];
 }
 
-- (UIBezierPath*)convertToBezierPathSeparated:(NSString*)separated {
+- (UIBezierPath*)moConvertToBezierPathSeparated:(NSString*)separated {
     return nil;
 }
 
-- (UIFont*)convertToFont {
-    return [self convertToFontSeparated:@";"];
+- (UIFont*)moConvertToFont {
+    return [self moConvertToFontSeparated:@";"];
 }
 
-- (UIFont*)convertToFontSeparated:(NSString*)separated {
+- (UIFont*)moConvertToFontSeparated:(NSString*)separated {
     UIFont* result = nil;
     NSArray* array = [self componentsSeparatedByString:separated];
     if(array.count > 0) {
@@ -161,11 +161,11 @@
     return result;
 }
 
-- (UIImage*)convertToImage {
-    return [self convertToImageSeparated:@";" edgeInsetsSeparated:@";"];
+- (UIImage*)moConvertToImage {
+    return [self moConvertToImageSeparated:@";" edgeInsetsSeparated:@";"];
 }
 
-- (UIImage*)convertToImageSeparated:(NSString*)separated edgeInsetsSeparated:(NSString*)edgeInsetsSeparated {
+- (UIImage*)moConvertToImageSeparated:(NSString*)separated edgeInsetsSeparated:(NSString*)edgeInsetsSeparated {
     UIImage* result = nil;
     NSArray* array = [self componentsSeparatedByString:separated];
     switch(array.count) {
@@ -186,7 +186,7 @@
                         UIEdgeInsets edgeInsets = UIEdgeInsetsZero;
                         NSString* imageInsets = [self substringWithRange:[match rangeAtIndex:2]];
                         if(imageInsets != nil) {
-                            [imageInsets convertToEdgeInsetsSeparated:edgeInsetsSeparated];
+                            [imageInsets moConvertToEdgeInsetsSeparated:edgeInsetsSeparated];
                         }
                         result = [result resizableImageWithCapInsets:edgeInsets];
                     }
@@ -198,16 +198,16 @@
     return result;
 }
 
-- (NSArray*)convertToImages {
-    return [self convertToImagesSeparated:@";" edgeInsetsSeparated:@";" frameSeparated:@"|"];
+- (NSArray*)moConvertToImages {
+    return [self moConvertToImagesSeparated:@";" edgeInsetsSeparated:@";" frameSeparated:@"|"];
 }
 
-- (NSArray*)convertToImagesSeparated:(NSString*)separated edgeInsetsSeparated:(NSString*)edgeInsetsSeparated frameSeparated:(NSString*)frameSeparated {
+- (NSArray*)moConvertToImagesSeparated:(NSString*)separated edgeInsetsSeparated:(NSString*)edgeInsetsSeparated frameSeparated:(NSString*)frameSeparated {
     NSMutableArray* result = NSMutableArray.array;
     NSArray* array = [self componentsSeparatedByString:frameSeparated];
     if(array.count > 0) {
         for(NSString* frame in array) {
-            UIImage* image = [frame convertToImageSeparated:separated edgeInsetsSeparated:edgeInsetsSeparated];
+            UIImage* image = [frame moConvertToImageSeparated:separated edgeInsetsSeparated:edgeInsetsSeparated];
             if(image != nil) {
                 [result addObject:image];
             }
@@ -216,11 +216,11 @@
     return result;
 }
 
-- (UIRemoteNotificationType)convertToRemoteNotificationType {
-    return [self convertToRemoteNotificationTypeSeparated:@"|"];
+- (UIRemoteNotificationType)moConvertToRemoteNotificationType {
+    return [self moConvertToRemoteNotificationTypeSeparated:@"|"];
 }
 
-- (UIRemoteNotificationType)convertToRemoteNotificationTypeSeparated:(NSString*)separated {
+- (UIRemoteNotificationType)moConvertToRemoteNotificationTypeSeparated:(NSString*)separated {
     UIRemoteNotificationType result = UIRemoteNotificationTypeNone;
     NSString* value = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([value isEqualToString:@"all"] == YES) {
@@ -243,11 +243,11 @@
     return result;
 }
 
-- (UIInterfaceOrientationMask)convertToInterfaceOrientationMask {
-    return [self convertToInterfaceOrientationMaskSeparated:@"|"];
+- (UIInterfaceOrientationMask)moConvertToInterfaceOrientationMask {
+    return [self moConvertToInterfaceOrientationMaskSeparated:@"|"];
 }
 
-- (UIInterfaceOrientationMask)convertToInterfaceOrientationMaskSeparated:(NSString*)separated {
+- (UIInterfaceOrientationMask)moConvertToInterfaceOrientationMaskSeparated:(NSString*)separated {
     UIInterfaceOrientationMask result = 0;
     NSString* value = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([value isEqualToString:@"all"] == YES) {
@@ -274,7 +274,7 @@
     return result;
 }
 
-- (UIStatusBarStyle)convertToStatusBarStyle {
+- (UIStatusBarStyle)moConvertToStatusBarStyle {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"default"] == YES) {
         return UIStatusBarStyleDefault;
@@ -294,7 +294,7 @@
     return UIStatusBarStyleDefault;
 }
 
-- (UIStatusBarAnimation)convertToStatusBarAnimation {
+- (UIStatusBarAnimation)moConvertToStatusBarAnimation {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"fade"] == YES) {
         return UIStatusBarAnimationFade;
@@ -304,11 +304,11 @@
     return UIStatusBarAnimationNone;
 }
 
-- (UIViewAutoresizing)convertToViewAutoresizing {
-    return [self convertToViewAutoresizingSeparated:@"|"];
+- (UIViewAutoresizing)moConvertToViewAutoresizing {
+    return [self moConvertToViewAutoresizingSeparated:@"|"];
 }
 
-- (UIViewAutoresizing)convertToViewAutoresizingSeparated:(NSString*)separated {
+- (UIViewAutoresizing)moConvertToViewAutoresizingSeparated:(NSString*)separated {
     UIViewAutoresizing result = UIViewAutoresizingNone;
     NSString* value = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([value isEqualToString:@"all"] == YES) {
@@ -337,7 +337,7 @@
     return result;
 }
 
-- (UIViewContentMode)convertToViewContentMode {
+- (UIViewContentMode)moConvertToViewContentMode {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"stretch"] == YES) {
         return UIViewContentModeScaleToFill;
@@ -369,7 +369,7 @@
     return UIViewContentModeScaleToFill;
 }
 
-- (UIControlContentHorizontalAlignment)convertToControlContentHorizontalAlignment {
+- (UIControlContentHorizontalAlignment)moConvertToControlContentHorizontalAlignment {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"center"] == YES) {
         return UIControlContentHorizontalAlignmentCenter;
@@ -383,7 +383,7 @@
     return UIControlContentHorizontalAlignmentCenter;
 }
 
-- (UIControlContentVerticalAlignment)convertToControlContentVerticalAlignment {
+- (UIControlContentVerticalAlignment)moConvertToControlContentVerticalAlignment {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"center"] == YES) {
         return UIControlContentVerticalAlignmentCenter;
@@ -397,7 +397,7 @@
     return UIControlContentVerticalAlignmentCenter;
 }
 
-- (UITextAutocapitalizationType)convertToTextAutocapitalizationType {
+- (UITextAutocapitalizationType)moConvertToTextAutocapitalizationType {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"none"] == YES) {
         return UITextAutocapitalizationTypeNone;
@@ -411,7 +411,7 @@
     return UITextAutocapitalizationTypeNone;
 }
 
-- (UITextAutocorrectionType)convertToTextAutocorrectionType {
+- (UITextAutocorrectionType)moConvertToTextAutocorrectionType {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"default"] == YES) {
         return UITextAutocorrectionTypeDefault;
@@ -423,7 +423,7 @@
     return UITextAutocorrectionTypeDefault;
 }
 
-- (UITextSpellCheckingType)convertToTestSpellCheckingType {
+- (UITextSpellCheckingType)moConvertToTestSpellCheckingType {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"default"] == YES) {
         return UITextSpellCheckingTypeDefault;
@@ -435,7 +435,7 @@
     return UITextSpellCheckingTypeDefault;
 }
 
-- (UIKeyboardType)convertToKeyboardType {
+- (UIKeyboardType)moConvertToKeyboardType {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"default"] == YES) {
         return UIKeyboardTypeDefault;
@@ -463,7 +463,7 @@
     return UIKeyboardTypeDefault;
 }
 
-- (UIReturnKeyType)convertToReturnKeyType {
+- (UIReturnKeyType)moConvertToReturnKeyType {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"default"] == YES) {
         return UIReturnKeyDefault;
@@ -491,7 +491,7 @@
     return UIReturnKeyDefault;
 }
 
-- (UIBaselineAdjustment)convertToBaselineAdjustment {
+- (UIBaselineAdjustment)moConvertToBaselineAdjustment {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"baselines"] == YES) {
         return UIBaselineAdjustmentAlignBaselines;
@@ -503,7 +503,7 @@
     return UIBaselineAdjustmentAlignBaselines;
 }
 
-- (UIScrollViewIndicatorStyle)convertToScrollViewIndicatorStyle {
+- (UIScrollViewIndicatorStyle)moConvertToScrollViewIndicatorStyle {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"default"] == YES) {
         return UIScrollViewIndicatorStyleDefault;
@@ -515,7 +515,7 @@
     return UIScrollViewIndicatorStyleDefault;
 }
 
-- (UIScrollViewKeyboardDismissMode)convertToScrollViewKeyboardDismissMode {
+- (UIScrollViewKeyboardDismissMode)moConvertToScrollViewKeyboardDismissMode {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"none"] == YES) {
         return UIScrollViewKeyboardDismissModeNone;
@@ -527,7 +527,7 @@
     return UIScrollViewKeyboardDismissModeNone;
 }
 
-- (UIBarStyle)convertToBarStyle {
+- (UIBarStyle)moConvertToBarStyle {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"default"] == YES) {
         return UIBarStyleDefault;
@@ -541,7 +541,7 @@
     return UIBarStyleDefault;
 }
 
-- (UITabBarItemPositioning)convertToTabBarItemPositioning {
+- (UITabBarItemPositioning)moConvertToTabBarItemPositioning {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"automatic"] == YES) {
         return UITabBarItemPositioningAutomatic;
@@ -553,7 +553,7 @@
     return UITabBarItemPositioningAutomatic;
 }
 
-- (UISearchBarStyle)convertToSearchBarStyle {
+- (UISearchBarStyle)moConvertToSearchBarStyle {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"default"] == YES) {
         return UISearchBarStyleDefault;
@@ -565,7 +565,7 @@
     return UISearchBarStyleDefault;
 }
 
-- (UIProgressViewStyle)convertToProgressViewStyle {
+- (UIProgressViewStyle)moConvertToProgressViewStyle {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"default"] == YES) {
         return UIProgressViewStyleDefault;
@@ -575,7 +575,7 @@
     return UIProgressViewStyleDefault;
 }
 
-- (UITextBorderStyle)convertToTextBorderStyle {
+- (UITextBorderStyle)moConvertToTextBorderStyle {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"none"] == YES) {
         return UITextBorderStyleNone;
@@ -589,7 +589,7 @@
     return UITextBorderStyleNone;
 }
 
-- (void)drawAtPoint:(CGPoint)point font:(UIFont*)font color:(UIColor*)color vAlignment:(MobilyVerticalAlignment)vAlignment hAlignment:(MobilyHorizontalAlignment)hAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode {
+- (void)moDrawAtPoint:(CGPoint)point font:(UIFont*)font color:(UIColor*)color vAlignment:(MobilyVerticalAlignment)vAlignment hAlignment:(MobilyHorizontalAlignment)hAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode {
     NSStringDrawingOptions options = NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine;
     NSMutableParagraphStyle* paragraphStyle = [NSMutableParagraphStyle new];
     paragraphStyle.lineBreakMode = lineBreakMode;
@@ -609,7 +609,7 @@
     [self drawWithRect:CGRectMake(floorf(rect.origin.x), floorf(rect.origin.y), ceilf(rect.size.width), ceilf(rect.size.height)) options:options attributes:attributes context:nil];
 }
 
-- (void)drawInRect:(CGRect)rect font:(UIFont*)font color:(UIColor*)color vAlignment:(MobilyVerticalAlignment)vAlignment hAlignment:(MobilyHorizontalAlignment)hAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode {
+- (void)moDrawInRect:(CGRect)rect font:(UIFont*)font color:(UIColor*)color vAlignment:(MobilyVerticalAlignment)vAlignment hAlignment:(MobilyHorizontalAlignment)hAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode {
     NSStringDrawingOptions options = NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine;
     NSMutableParagraphStyle* paragraphStyle = [NSMutableParagraphStyle new];
     paragraphStyle.lineBreakMode = lineBreakMode;
@@ -643,7 +643,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 @implementation UIColor (MobilyUI)
 
-+ (UIColor*)colorWithString:(NSString*)string {
++ (UIColor*)moColorWithString:(NSString*)string {
     UIColor* result = nil;
     NSRange range = [string rangeOfString:@"#"];
     if((range.location != NSNotFound) && (range.length > 0)) {
@@ -651,15 +651,15 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
         NSString* colorString = [[string stringByReplacingOccurrencesOfString:@"#" withString:@""] uppercaseString];
         switch (colorString.length) {
             case 6: // #RRGGBB
-                red = [self colorComponentFromString:colorString start:0 length:2];
-                green = [self colorComponentFromString:colorString start:2 length:2];
-                blue = [self colorComponentFromString:colorString start:4 length:2];
+                red = [self moColorComponentFromString:colorString start:0 length:2];
+                green = [self moColorComponentFromString:colorString start:2 length:2];
+                blue = [self moColorComponentFromString:colorString start:4 length:2];
                 break;
             case 8: // #RRGGBBAA
-                red = [self colorComponentFromString:colorString start:0 length:2];
-                green = [self colorComponentFromString:colorString start:2 length:2];
-                blue = [self colorComponentFromString:colorString start:4 length:2];
-                alpha = [self colorComponentFromString:colorString start:6 length:2];
+                red = [self moColorComponentFromString:colorString start:0 length:2];
+                green = [self moColorComponentFromString:colorString start:2 length:2];
+                blue = [self moColorComponentFromString:colorString start:4 length:2];
+                alpha = [self moColorComponentFromString:colorString start:6 length:2];
                 break;
         }
         result = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
@@ -667,7 +667,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     return result;
 }
 
-+ (CGFloat)colorComponentFromString:(NSString*)string start:(NSUInteger)start length:(NSUInteger)length {
++ (CGFloat)moColorComponentFromString:(NSString*)string start:(NSUInteger)start length:(NSUInteger)length {
     unsigned result = 0;
     NSString* part = [string substringWithRange:NSMakeRange(start, length)];
     if(part != nil) {
@@ -679,7 +679,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     return ((CGFloat)result / 255.0f);
 }
 
-- (UIColor*)multiplyColor:(UIColor*)color percent:(CGFloat)percent {
+- (UIColor*)moMultiplyColor:(UIColor*)color percent:(CGFloat)percent {
     CGFloat r1, g1, b1, a1;
     CGFloat r2, g2, b2, a2;
     [self getRed:&r1 green:&g1 blue:&b1 alpha:&a1];
@@ -690,13 +690,13 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
                            alpha:(a2 * percent) + (a1 * (1.0 - percent))];
 }
 
-- (UIColor*)multiplyBrightness:(CGFloat)brightness {
+- (UIColor*)moMultiplyBrightness:(CGFloat)brightness {
     CGFloat h, s, b, a;
     [self getHue:&h saturation:&s brightness:&b alpha:&a];
     return [UIColor colorWithHue:h saturation:s brightness:b * brightness alpha:a];
 }
 
-- (MobilyColorHSB)hsb {
+- (MobilyColorHSB)moHsb {
     MobilyColorHSB hsb;
     hsb.hue = 0.0f;
     hsb.saturation = 0.0f;
@@ -729,7 +729,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 @implementation UIImage (MobilyUI)
 
-+ (UIImage*)imageNamed:(NSString*)name capInsets:(UIEdgeInsets)capInsets {
++ (UIImage*)moImageNamed:(NSString*)name capInsets:(UIEdgeInsets)capInsets {
     UIImage* result = [self imageNamed:name];
     if(result != nil) {
         result = [result resizableImageWithCapInsets:capInsets];
@@ -737,21 +737,20 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     return result;
 }
 
-+ (UIImage*)imageWithColor:(UIColor*)color {
-    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
-    UIGraphicsBeginImageContext(rect.size);
++ (UIImage*)moImageWithColor:(UIColor*)color size:(CGSize)size {
+    UIImage* image = nil;
+    UIGraphicsBeginImageContext(size);
     CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextSetFillColorWithColor(context, [color CGColor]);
-    CGContextFillRect(context, rect);
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
+    if(context != NULL) {
+        CGContextSetFillColorWithColor(context, [color CGColor]);
+        CGContextFillRect(context, CGRectMake(0.0f, 0.0f, size.width, size.height));
+        image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+    }
     return image;
 }
 
-- (UIImage*)unrotate {
+- (UIImage*)moUnrotate {
     UIImage* result = nil;
     CGImageRef imageRef = self.CGImage;
     if(imageRef != NULL) {
@@ -835,7 +834,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     return result;
 }
 
-- (UIImage*)scaleToSize:(CGSize)size {
+- (UIImage*)moScaleToSize:(CGSize)size {
     UIImage* result = nil;
     CGColorSpaceRef colourSpace = CGColorSpaceCreateDeviceRGB();
     if(colourSpace != NULL) {
@@ -860,7 +859,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     return result;
 }
 
-- (UIImage*)rotateToAngleInRadians:(CGFloat)angleInRadians {
+- (UIImage*)moRotateToAngleInRadians:(CGFloat)angleInRadians {
     UIImage* result = nil;
     CGSize size = self.size;
     if((size.width > 0.0f) && (size.height > 0.0f)) {
@@ -878,7 +877,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     return result;
 }
 
-- (UIImage*)grayscale {
+- (UIImage*)moGrayscale {
     UIImage* result = nil;
     CGSize size = self.size;
     CGRect rect = CGRectMake(0.0f, 0.0f, size.width, size.height);
@@ -899,7 +898,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     return result;
 }
 
-- (UIImage*)blackAndWhite {
+- (UIImage*)moBlackAndWhite {
     UIImage* result = nil;
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
     if(colorSpace != NULL) {
@@ -920,7 +919,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     return result;
 }
 
-- (UIImage*)invertColors {
+- (UIImage*)moInvertColors {
     UIImage* result = nil;
     UIGraphicsBeginImageContext(self.size);
     CGContextSetBlendMode(UIGraphicsGetCurrentContext(), kCGBlendModeCopy);
@@ -933,7 +932,7 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     return result;
 }
 
-- (UIImage*)blurredImageWithRadius:(CGFloat)radius iterations:(NSUInteger)iterations tintColor:(UIColor*)tintColor {
+- (UIImage*)moBlurredImageWithRadius:(CGFloat)radius iterations:(NSUInteger)iterations tintColor:(UIColor*)tintColor {
     UIImage* image = nil;
     CGSize size = self.size;
     CGFloat scale = self.scale;
@@ -999,27 +998,27 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     return image;
 }
 
-- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment {
-    return [self drawInRect:rect alignment:alignment corners:UIRectCornerAllCorners radius:0.0f blendMode:kCGBlendModeNormal alpha:1.0f];
+- (void)moDrawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment {
+    return [self moDrawInRect:rect alignment:alignment corners:UIRectCornerAllCorners radius:0.0f blendMode:kCGBlendModeNormal alpha:1.0f];
 }
 
-- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha {
-    return [self drawInRect:rect alignment:alignment corners:UIRectCornerAllCorners radius:0.0f blendMode:blendMode alpha:alpha];
+- (void)moDrawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha {
+    return [self moDrawInRect:rect alignment:alignment corners:UIRectCornerAllCorners radius:0.0f blendMode:blendMode alpha:alpha];
 }
 
-- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment radius:(CGFloat)radius {
-    return [self drawInRect:rect alignment:alignment corners:UIRectCornerAllCorners radius:radius blendMode:kCGBlendModeNormal alpha:1.0f];
+- (void)moDrawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment radius:(CGFloat)radius {
+    return [self moDrawInRect:rect alignment:alignment corners:UIRectCornerAllCorners radius:radius blendMode:kCGBlendModeNormal alpha:1.0f];
 }
 
-- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment radius:(CGFloat)radius blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha {
-    return [self drawInRect:rect alignment:alignment corners:UIRectCornerAllCorners radius:radius blendMode:blendMode alpha:alpha];
+- (void)moDrawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment radius:(CGFloat)radius blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha {
+    return [self moDrawInRect:rect alignment:alignment corners:UIRectCornerAllCorners radius:radius blendMode:blendMode alpha:alpha];
 }
 
-- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment corners:(UIRectCorner)corners radius:(CGFloat)radius {
-    return [self drawInRect:rect alignment:alignment corners:corners radius:radius blendMode:kCGBlendModeNormal alpha:1.0f];
+- (void)moDrawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment corners:(UIRectCorner)corners radius:(CGFloat)radius {
+    return [self moDrawInRect:rect alignment:alignment corners:corners radius:radius blendMode:kCGBlendModeNormal alpha:1.0f];
 }
 
-- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment corners:(UIRectCorner)corners radius:(CGFloat)radius blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha {
+- (void)moDrawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment corners:(UIRectCorner)corners radius:(CGFloat)radius blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha {
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
     CGContextSaveGState(contextRef);
     UIBezierPath* path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:corners cornerRadii:CGSizeMake(radius, radius)];
@@ -1041,11 +1040,11 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 @implementation UIBezierPath (MobilyUI)
 
-+ (void)drawRect:(CGRect)rect fillColor:(UIColor*)fillColor {
-    [self drawRect:rect fillColor:fillColor strokeColor:nil strokeWidth:0.0f];
++ (void)moDrawRect:(CGRect)rect fillColor:(UIColor*)fillColor {
+    [self moDrawRect:rect fillColor:fillColor strokeColor:nil strokeWidth:0.0f];
 }
 
-+ (void)drawRect:(CGRect)rect fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth {
++ (void)moDrawRect:(CGRect)rect fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth {
     UIBezierPath* path = [UIBezierPath bezierPathWithRect:rect];
     if(fillColor != nil) {
         [fillColor setFill];
@@ -1058,11 +1057,11 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     }
 }
 
-+ (void)drawOvalInRect:(CGRect)rect fillColor:(UIColor*)fillColor {
-    [self drawOvalInRect:rect fillColor:fillColor strokeColor:nil strokeWidth:0.0f];
++ (void)moDrawOvalInRect:(CGRect)rect fillColor:(UIColor*)fillColor {
+    [self moDrawOvalInRect:rect fillColor:fillColor strokeColor:nil strokeWidth:0.0f];
 }
 
-+ (void)drawOvalInRect:(CGRect)rect fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth {
++ (void)moDrawOvalInRect:(CGRect)rect fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth {
     UIBezierPath* path = [UIBezierPath bezierPathWithOvalInRect:rect];
     if(fillColor != nil) {
         [fillColor setFill];
@@ -1075,11 +1074,11 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     }
 }
 
-+ (void)drawRoundedRect:(CGRect)rect radius:(CGFloat)radius fillColor:(UIColor*)fillColor {
-    [self drawRoundedRect:rect radius:radius fillColor:fillColor strokeColor:nil strokeWidth:0.0f];
++ (void)moDrawRoundedRect:(CGRect)rect radius:(CGFloat)radius fillColor:(UIColor*)fillColor {
+    [self moDrawRoundedRect:rect radius:radius fillColor:fillColor strokeColor:nil strokeWidth:0.0f];
 }
 
-+ (void)drawRoundedRect:(CGRect)rect radius:(CGFloat)radius fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth {
++ (void)moDrawRoundedRect:(CGRect)rect radius:(CGFloat)radius fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth {
     UIBezierPath* path = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:radius];
     if(fillColor != nil) {
         [fillColor setFill];
@@ -1092,11 +1091,11 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     }
 }
 
-+ (void)drawRoundedRect:(CGRect)rect corners:(UIRectCorner)corners radius:(CGSize)radius fillColor:(UIColor*)fillColor {
-    [self drawRoundedRect:rect corners:corners radius:radius fillColor:fillColor strokeColor:nil strokeWidth:0.0f];
++ (void)moDrawRoundedRect:(CGRect)rect corners:(UIRectCorner)corners radius:(CGSize)radius fillColor:(UIColor*)fillColor {
+    [self moDrawRoundedRect:rect corners:corners radius:radius fillColor:fillColor strokeColor:nil strokeWidth:0.0f];
 }
 
-+ (void)drawRoundedRect:(CGRect)rect corners:(UIRectCorner)corners radius:(CGSize)radius fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth {
++ (void)moDrawRoundedRect:(CGRect)rect corners:(UIRectCorner)corners radius:(CGSize)radius fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth {
     UIBezierPath* path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:corners cornerRadii:radius];
     if(fillColor != nil) {
         [fillColor setFill];
@@ -1109,15 +1108,15 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     }
 }
 
-+ (void)drawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges width:(CGFloat)width fillColor:(UIColor*)fillColor {
-    [self drawSeparatorRect:rect edges:edges widthEdges:UIEdgeInsetsMake(width, width, width, width) edgeInsets:UIEdgeInsetsZero fillColor:fillColor];
++ (void)moDrawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges width:(CGFloat)width fillColor:(UIColor*)fillColor {
+    [self moDrawSeparatorRect:rect edges:edges widthEdges:UIEdgeInsetsMake(width, width, width, width) edgeInsets:UIEdgeInsetsZero fillColor:fillColor];
 }
 
-+ (void)drawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges width:(CGFloat)width edgeInsets:(UIEdgeInsets)edgeInsets fillColor:(UIColor*)fillColor {
-    [self drawSeparatorRect:rect edges:edges widthEdges:UIEdgeInsetsMake(width, width, width, width) edgeInsets:edgeInsets fillColor:fillColor];
++ (void)moDrawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges width:(CGFloat)width edgeInsets:(UIEdgeInsets)edgeInsets fillColor:(UIColor*)fillColor {
+    [self moDrawSeparatorRect:rect edges:edges widthEdges:UIEdgeInsetsMake(width, width, width, width) edgeInsets:edgeInsets fillColor:fillColor];
 }
 
-+ (void)drawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges widthEdges:(UIEdgeInsets)widthEdges edgeInsets:(UIEdgeInsets)edgeInsets fillColor:(UIColor*)fillColor {
++ (void)moDrawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges widthEdges:(UIEdgeInsets)widthEdges edgeInsets:(UIEdgeInsets)edgeInsets fillColor:(UIColor*)fillColor {
     UIBezierPath* path = [UIBezierPath bezierPath];
     if((edges & MobilyBezierPathSeparatorEdgeTop) != 0) {
         CGRect lineRect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, widthEdges.top);
@@ -1161,27 +1160,27 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 @implementation UINib (MobilyUI)
 
-+ (id)viewWithNibName:(NSString*)nibName withClass:(Class)class {
-    return [self viewWithNibName:nibName withClass:class withOwner:nil];
++ (id)moViewWithNibName:(NSString*)nibName withClass:(Class)class {
+    return [self moViewWithNibName:nibName withClass:class withOwner:nil];
 }
 
-+ (id)viewWithNibName:(NSString*)nibName withClass:(Class)class withOwner:(id)owner {
++ (id)moViewWithNibName:(NSString*)nibName withClass:(Class)class withOwner:(id)owner {
     UINib* nib = [UINib nibWithNibName:nibName bundle:nil];
     if(nib != nil) {
-        return [nib instantiateWithClass:class owner:owner options:nil];
+        return [nib moInstantiateWithClass:class owner:owner options:nil];
     }
     return nil;
 }
 
-+ (UINib*)nibWithBaseName:(NSString*)baseName bundle:(NSBundle*)bundle {
++ (UINib*)moNibWithBaseName:(NSString*)baseName bundle:(NSBundle*)bundle {
     if(bundle == nil) {
         bundle = NSBundle.mainBundle;
     }
     NSMutableArray* nibNames = [NSMutableArray array];
     NSFileManager* fileManager = NSFileManager.defaultManager;
-    if([UIDevice isIPhone] == YES) {
+    if(UIDevice.moIsIPhone == YES) {
         NSString* modelBaseName = [NSString stringWithFormat:@"%@%@", baseName, @"-iPhone"];
-        switch(UIDevice.model) {
+        switch(UIDevice.moModel) {
             case MobilyDeviceModelPhone6Plus:
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-6Plus"]];
             case MobilyDeviceModelPhone6:
@@ -1200,9 +1199,9 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
                 [nibNames addObject:modelBaseName];
                 break;
         }
-    } else if([UIDevice isIPad] == YES) {
+    } else if(UIDevice.moIsIPad == YES) {
         NSString* modelBaseName = [NSString stringWithFormat:@"%@%@", baseName, @"-iPad"];
-        switch(UIDevice.model) {
+        switch(UIDevice.moModel) {
             case MobilyDeviceModelPadAir2:
                 [nibNames addObject:[NSString stringWithFormat:@"%@%@", modelBaseName, @"-Air2"]];
             case MobilyDeviceModelPadAir1:
@@ -1246,15 +1245,15 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
     return nil;
 }
 
-+ (UINib*)nibWithClass:(Class)class bundle:(NSBundle*)bundle {
-    UINib* nib = [self nibWithBaseName:NSStringFromClass(class) bundle:bundle];
++ (UINib*)moNibWithClass:(Class)class bundle:(NSBundle*)bundle {
+    UINib* nib = [self moNibWithBaseName:NSStringFromClass(class) bundle:bundle];
     if((nib == nil) && ([class superclass] != nil)) {
-        nib = [self nibWithClass:[class superclass] bundle:bundle];
+        nib = [self moNibWithClass:[class superclass] bundle:bundle];
     }
     return nib;
 }
 
-- (id)instantiateWithClass:(Class)class owner:(id)owner options:(NSDictionary*)options {
+- (id)moInstantiateWithClass:(Class)class owner:(id)owner options:(NSDictionary*)options {
     NSArray* content = [self instantiateWithOwner:owner options:options];
     for(id item in content) {
         if([item isKindOfClass:class] == YES) {
@@ -1276,28 +1275,28 @@ static UIResponder* MOBILY_CURRENT_FIRST_RESPONDER = nil;
 
 @implementation UIResponder (MobilyUI)
 
-+ (id)currentFirstResponderInView:(UIView*)view {
-    id currentFirstResponder = self.currentFirstResponder;
-    if([currentFirstResponder isKindOfClass:UIView.class] == YES) {
-        if([view isContainsSubview:currentFirstResponder] == YES) {
-            return currentFirstResponder;
++ (id)moCurrentFirstResponderInView:(UIView*)view {
+    id responder = self.moCurrentFirstResponder;
+    if([responder isKindOfClass:UIView.class] == YES) {
+        if([view moIsContainsSubview:responder] == YES) {
+            return responder;
         }
     }
     return nil;
 }
 
-+ (id)currentFirstResponder {
++ (id)moCurrentFirstResponder {
     MOBILY_CURRENT_FIRST_RESPONDER = nil;
-    [UIApplication.sharedApplication sendAction:@selector(findFirstResponder) to:nil from:nil forEvent:nil];
+    [UIApplication.sharedApplication sendAction:@selector(moFindFirstResponder) to:nil from:nil forEvent:nil];
     return MOBILY_CURRENT_FIRST_RESPONDER;
 }
 
-- (void)findFirstResponder {
+- (void)moFindFirstResponder {
     MOBILY_CURRENT_FIRST_RESPONDER = self;
 }
 
-+ (UIResponder*)prevResponderFromView:(UIView*)view {
-    NSArray* responders = view.window.responders;
++ (UIResponder*)moPrevResponderFromView:(UIView*)view {
+    NSArray* responders = view.window.moResponders;
     if(responders.count > 1) {
         NSInteger index = [responders indexOfObject:view];
         if(index != NSNotFound) {
@@ -1309,8 +1308,8 @@ static UIResponder* MOBILY_CURRENT_FIRST_RESPONDER = nil;
     return nil;
 }
 
-+ (UIResponder*)nextResponderFromView:(UIView*)view {
-    NSArray* responders = view.window.responders;
++ (UIResponder*)moNextResponderFromView:(UIView*)view {
+    NSArray* responders = view.window.moResponders;
     if(responders.count > 1) {
         NSInteger index = [responders indexOfObject:view];
         if(index != NSNotFound) {
@@ -1334,26 +1333,26 @@ static UIResponder* MOBILY_CURRENT_FIRST_RESPONDER = nil;
 
 #pragma mark Property
 
-- (UIViewController*)currentViewController {
-    return self.rootViewController.currentViewController;
+- (UIViewController*)moCurrentController {
+    return self.rootViewController.moCurrentController;
 }
 
 #ifdef __IPHONE_7_0
 
-- (UIViewController*)viewControllerForStatusBarStyle {
-    UIViewController* currentViewController = self.currentViewController;
-    while(currentViewController.childViewControllerForStatusBarStyle != nil) {
-        currentViewController = currentViewController.childViewControllerForStatusBarStyle;
+- (UIViewController*)moControllerForStatusBarStyle {
+    UIViewController* controller = self.moCurrentController;
+    while(controller.childViewControllerForStatusBarStyle != nil) {
+        controller = controller.childViewControllerForStatusBarStyle;
     }
-    return currentViewController;
+    return controller;
 }
 
-- (UIViewController*)viewControllerForStatusBarHidden {
-    UIViewController* currentViewController = self.currentViewController;
-    while(currentViewController.childViewControllerForStatusBarHidden != nil) {
-        currentViewController = currentViewController.childViewControllerForStatusBarHidden;
+- (UIViewController*)moControllerForStatusBarHidden {
+    UIViewController* controller = self.moCurrentController;
+    while(controller.childViewControllerForStatusBarHidden != nil) {
+        controller = controller.childViewControllerForStatusBarHidden;
     }
-    return currentViewController;
+    return controller;
 }
 
 #endif
@@ -1370,29 +1369,29 @@ static UIResponder* MOBILY_CURRENT_FIRST_RESPONDER = nil;
 
 MOBILY_DEFINE_VALIDATE_BOOL(UserInteractionEnabled)
 MOBILY_DEFINE_VALIDATE_RECT(Frame)
-MOBILY_DEFINE_VALIDATE_POINT(FramePosition)
-MOBILY_DEFINE_VALIDATE_POINT(FrameCenter)
-MOBILY_DEFINE_VALIDATE_SIZE(FrameSize)
-MOBILY_DEFINE_VALIDATE_NUMBER(FrameSX)
-MOBILY_DEFINE_VALIDATE_NUMBER(FrameSY)
-MOBILY_DEFINE_VALIDATE_NUMBER(FrameCX)
-MOBILY_DEFINE_VALIDATE_NUMBER(FrameCY)
-MOBILY_DEFINE_VALIDATE_NUMBER(FrameEX)
-MOBILY_DEFINE_VALIDATE_NUMBER(FrameEY)
-MOBILY_DEFINE_VALIDATE_NUMBER(FrameWidth)
-MOBILY_DEFINE_VALIDATE_NUMBER(FrameHeight)
-MOBILY_DEFINE_VALIDATE_NUMBER(FrameLeft)
-MOBILY_DEFINE_VALIDATE_NUMBER(FrameRight)
-MOBILY_DEFINE_VALIDATE_NUMBER(FrameTop)
-MOBILY_DEFINE_VALIDATE_NUMBER(FrameBottom)
-MOBILY_DEFINE_VALIDATE_NUMBER(CornerRadius)
-MOBILY_DEFINE_VALIDATE_NUMBER(BorderWidth)
-MOBILY_DEFINE_VALIDATE_COLOR(BorderColor)
-MOBILY_DEFINE_VALIDATE_COLOR(ShadowColor)
-MOBILY_DEFINE_VALIDATE_NUMBER(ShadowOpacity);
-MOBILY_DEFINE_VALIDATE_SIZE(ShadowOffset);
-MOBILY_DEFINE_VALIDATE_NUMBER(ShadowRadius);
-MOBILY_DEFINE_VALIDATE_BEZIER_PATH(ShadowPath);
+MOBILY_DEFINE_VALIDATE_POINT(MoFramePosition)
+MOBILY_DEFINE_VALIDATE_POINT(MoFrameCenter)
+MOBILY_DEFINE_VALIDATE_SIZE(MoFrameSize)
+MOBILY_DEFINE_VALIDATE_NUMBER(MoFrameSX)
+MOBILY_DEFINE_VALIDATE_NUMBER(MoFrameSY)
+MOBILY_DEFINE_VALIDATE_NUMBER(MoFrameCX)
+MOBILY_DEFINE_VALIDATE_NUMBER(MoFrameCY)
+MOBILY_DEFINE_VALIDATE_NUMBER(MoFrameEX)
+MOBILY_DEFINE_VALIDATE_NUMBER(MoFrameEY)
+MOBILY_DEFINE_VALIDATE_NUMBER(MoFrameWidth)
+MOBILY_DEFINE_VALIDATE_NUMBER(MoFrameHeight)
+MOBILY_DEFINE_VALIDATE_NUMBER(MoFrameLeft)
+MOBILY_DEFINE_VALIDATE_NUMBER(MoFrameRight)
+MOBILY_DEFINE_VALIDATE_NUMBER(MoFrameTop)
+MOBILY_DEFINE_VALIDATE_NUMBER(MoFrameBottom)
+MOBILY_DEFINE_VALIDATE_NUMBER(MoCornerRadius)
+MOBILY_DEFINE_VALIDATE_NUMBER(MoBorderWidth)
+MOBILY_DEFINE_VALIDATE_COLOR(MoBorderColor)
+MOBILY_DEFINE_VALIDATE_COLOR(MoShadowColor)
+MOBILY_DEFINE_VALIDATE_NUMBER(MoShadowOpacity);
+MOBILY_DEFINE_VALIDATE_SIZE(MoShadowOffset);
+MOBILY_DEFINE_VALIDATE_NUMBER(MoShadowRadius);
+MOBILY_DEFINE_VALIDATE_BEZIER_PATH(MoShadowPath);
 MOBILY_DEFINE_VALIDATE_RECT(Bounds)
 MOBILY_DEFINE_VALIDATE_POINT(Center)
 MOBILY_DEFINE_VALIDATE_NUMBER(ContentScaleFactor)
@@ -1411,268 +1410,267 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 
 #pragma mark Property
 
-- (void)setFramePosition:(CGPoint)framePosition {
+- (void)setMoFramePosition:(CGPoint)moFramePosition {
     CGRect frame = self.frame;
-    self.frame = CGRectMake(framePosition.x, framePosition.y, frame.size.width, frame.size.height);
+    self.frame = CGRectMake(moFramePosition.x, moFramePosition.y, frame.size.width, frame.size.height);
 }
 
-- (CGPoint)framePosition {
+- (CGPoint)moFramePosition {
     return self.frame.origin;
 }
 
-- (void)setFrameCenter:(CGPoint)frameCenter {
+- (void)setMoFrameCenter:(CGPoint)moFrameCenter {
     CGRect frame = self.frame;
-    self.frame = CGRectMake(frameCenter.x - (frame.size.width * 0.5f), frameCenter.y - (frame.size.height * 0.5f), frame.size.width, frame.size.height);
+    self.frame = CGRectMake(moFrameCenter.x - (frame.size.width * 0.5f), moFrameCenter.y - (frame.size.height * 0.5f), frame.size.width, frame.size.height);
 }
 
-- (CGPoint)frameCenter {
+- (CGPoint)moFrameCenter {
     CGRect frame = self.frame;
     return CGPointMake(frame.origin.x + (frame.size.width * 0.5f), frame.origin.y + (frame.size.height * 0.5f));
 }
 
-- (void)setFrameSize:(CGSize)frameSize {
+- (void)setMoFrameSize:(CGSize)moFrameSize {
     CGRect frame = self.frame;
-    self.frame = CGRectMake(frame.origin.x, frame.origin.y, frameSize.width, frameSize.height);
+    self.frame = CGRectMake(frame.origin.x, frame.origin.y, moFrameSize.width, moFrameSize.height);
 }
 
-- (CGSize)frameSize {
+- (CGSize)moFrameSize {
     return self.frame.size;
 }
 
-- (void)setFrameSX:(CGFloat)frameSX {
+- (void)setMoFrameSX:(CGFloat)moFrameSX {
     CGRect frame = self.frame;
-    self.frame = CGRectMake(frameSX, frame.origin.y, frame.size.width, frame.size.height);
+    self.frame = CGRectMake(moFrameSX, frame.origin.y, frame.size.width, frame.size.height);
 }
 
-- (CGFloat)frameSX {
+- (CGFloat)moFrameSX {
     return CGRectGetMinX(self.frame);
 }
 
-- (void)setFrameCX:(CGFloat)frameCX {
+- (void)setMoFrameCX:(CGFloat)moFrameCX {
     CGRect frame = self.frame;
-    self.frame = CGRectMake(frameCX - (frame.size.width * 0.5f), frame.origin.y, frame.size.width, frame.size.height);
+    self.frame = CGRectMake(moFrameCX - (frame.size.width * 0.5f), frame.origin.y, frame.size.width, frame.size.height);
 }
 
-- (CGFloat)frameCX {
+- (CGFloat)moFrameCX {
     return CGRectGetMidX(self.frame);
 }
 
-- (void)setFrameEX:(CGFloat)frameEX {
+- (void)setMoFrameEX:(CGFloat)moFrameEX {
     CGRect frame = self.frame;
-    self.frame = CGRectMake(frame.origin.x, frame.origin.y, frameEX - frame.origin.x, frame.size.height);
+    self.frame = CGRectMake(frame.origin.x, frame.origin.y, moFrameEX - frame.origin.x, frame.size.height);
 }
 
-- (CGFloat)frameEX {
+- (CGFloat)moFrameEX {
     return CGRectGetMaxX(self.frame);
 }
 
-- (void)setFrameSY:(CGFloat)frameSY {
+- (void)setMoFrameSY:(CGFloat)moFrameSY {
     CGRect frame = self.frame;
-    self.frame = CGRectMake(frame.origin.x, frameSY, frame.size.width, frame.size.height);
+    self.frame = CGRectMake(frame.origin.x, moFrameSY, frame.size.width, frame.size.height);
 }
 
-- (CGFloat)frameSY {
+- (CGFloat)moFrameSY {
     return CGRectGetMinY(self.frame);
 }
 
-- (void)setFrameCY:(CGFloat)frameCY {
+- (void)setMoFrameCY:(CGFloat)moFrameCY {
     CGRect frame = self.frame;
-    self.frame = CGRectMake(frame.origin.x, frameCY - (frame.size.height * 0.5f), frame.size.width, frame.size.height);
+    self.frame = CGRectMake(frame.origin.x, moFrameCY - (frame.size.height * 0.5f), frame.size.width, frame.size.height);
 }
 
-- (CGFloat)frameCY {
+- (CGFloat)moFrameCY {
     return CGRectGetMidY(self.frame);
 }
 
-- (void)setFrameEY:(CGFloat)frameEY {
+- (void)setMoFrameEY:(CGFloat)moFrameEY {
     CGRect frame = self.frame;
-    self.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frameEY - frame.origin.y);
+    self.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, moFrameEY - frame.origin.y);
 }
 
-- (CGFloat)frameEY {
+- (CGFloat)moFrameEY {
     return CGRectGetMaxY(self.frame);
 }
 
-- (void)setFrameWidth:(CGFloat)frameWidth {
+- (void)setMoFrameWidth:(CGFloat)moFrameWidth {
     CGRect frame = self.frame;
-    self.frame = CGRectMake(frame.origin.x, frame.origin.y, frameWidth, frame.size.height);
+    self.frame = CGRectMake(frame.origin.x, frame.origin.y, moFrameWidth, frame.size.height);
 }
 
-- (CGFloat)frameWidth {
+- (CGFloat)moFrameWidth {
     return CGRectGetWidth(self.frame);
 }
 
-- (void)setFrameHeight:(CGFloat)frameHeight {
+- (void)setMoFrameHeight:(CGFloat)moFrameHeight {
     CGRect frame = self.frame;
-    self.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frameHeight);
+    self.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, moFrameHeight);
 }
 
-- (CGFloat)frameHeight {
+- (CGFloat)moFrameHeight {
     return CGRectGetHeight(self.frame);
 }
 
-- (void)setFrameLeft:(CGFloat)frameLeft {
+- (void)setMoFrameLeft:(CGFloat)moFrameLeft {
     CGRect frame = self.frame;
-    CGFloat offset = frameLeft;
-    CGFloat size = frame.size.width - (frameLeft - frame.origin.x);
+    CGFloat offset = moFrameLeft;
+    CGFloat size = frame.size.width - (moFrameLeft - frame.origin.x);
     self.frame = CGRectMake(offset, frame.origin.y, size, frame.size.height);
 }
 
-- (CGFloat)frameLeft {
-    CGRect frame = self.frame;
-    return frame.origin.x;
+- (CGFloat)moFrameLeft {
+    return self.frame.origin.x;
 }
 
-- (void)setFrameRight:(CGFloat)frameRight {
+- (void)setMoFrameRight:(CGFloat)moFrameRight {
     CGRect frame = self.frame;
     CGRect bounds = self.superview.bounds;
     CGFloat offset = frame.origin.x;
-    CGFloat size = bounds.size.width - (frame.origin.x + frameRight);
+    CGFloat size = bounds.size.width - (frame.origin.x + moFrameRight);
     self.frame = CGRectMake(offset, frame.origin.y, size, frame.size.height);
 }
 
-- (CGFloat)frameRight {
+- (CGFloat)moFrameRight {
     CGRect frame = self.frame;
     CGRect bounds = self.superview.bounds;
     return bounds.size.width - (frame.origin.x + frame.size.width);
 }
 
-- (void)setFrameTop:(CGFloat)frameTop {
+- (void)setMoFrameTop:(CGFloat)moFrameTop {
     CGRect frame = self.frame;
-    CGFloat offset = frameTop;
-    CGFloat size = frame.size.height - (frameTop - frame.origin.y);
+    CGFloat offset = moFrameTop;
+    CGFloat size = frame.size.height - (moFrameTop - frame.origin.y);
     self.frame = CGRectMake(frame.origin.x, offset, frame.size.width, size);
 }
 
-- (CGFloat)frameTop {
+- (CGFloat)moFrameTop {
     CGRect frame = self.frame;
     return frame.origin.y;
 }
 
-- (void)setFrameBottom:(CGFloat)frameBottom {
+- (void)setMoFrameBottom:(CGFloat)moFrameBottom {
     CGRect frame = self.frame;
     CGRect bounds = self.superview.bounds;
     CGFloat offset = frame.origin.y;
-    CGFloat size = bounds.size.height - (frame.origin.y + frameBottom);
+    CGFloat size = bounds.size.height - (frame.origin.y + moFrameBottom);
     self.frame = CGRectMake(frame.origin.x, offset, frame.size.width, size);
 }
 
-- (CGFloat)frameBottom {
+- (CGFloat)moFrameBottom {
     CGRect frame = self.frame;
     CGRect bounds = self.superview.bounds;
     return bounds.size.height - (frame.origin.y + frame.size.height);
 }
 
-- (CGPoint)boundsPosition {
+- (CGPoint)moBoundsPosition {
     return self.bounds.origin;
 }
 
-- (CGSize)boundsSize {
+- (CGSize)moBoundsSize {
     return self.bounds.size;
 }
 
-- (CGPoint)boundsCenter {
+- (CGPoint)moBoundsCenter {
     CGRect bounds = self.bounds;
     return CGPointMake(bounds.origin.x + (bounds.size.width * 0.5f), bounds.origin.y + (bounds.size.height * 0.5f));
 }
 
-- (CGFloat)boundsCX {
+- (CGFloat)moBoundsCX {
     return CGRectGetMidX(self.bounds);
 }
 
-- (CGFloat)boundsCY {
+- (CGFloat)moBoundsCY {
     return CGRectGetMidY(self.bounds);
 }
 
-- (CGFloat)boundsWidth {
+- (CGFloat)moBoundsWidth {
     return CGRectGetWidth(self.bounds);
 }
 
-- (CGFloat)boundsHeight {
+- (CGFloat)moBoundsHeight {
     return CGRectGetHeight(self.bounds);
 }
 
-- (void)setZPosition:(CGFloat)zPosition {
-    self.layer.zPosition = zPosition;
+- (void)setMoZPosition:(CGFloat)moZPosition {
+    self.layer.zPosition = moZPosition;
 }
 
-- (CGFloat)zPosition {
+- (CGFloat)moZPosition {
     return self.layer.zPosition;
 }
 
-- (void)setCornerRadius:(CGFloat)cornerRadius {
-    self.layer.cornerRadius = cornerRadius;
+- (void)setMoCornerRadius:(CGFloat)moCornerRadius {
+    self.layer.cornerRadius = moCornerRadius;
 }
 
-- (CGFloat)cornerRadius {
+- (CGFloat)moCornerRadius {
     return self.layer.cornerRadius;
 }
 
-- (void)setBorderWidth:(CGFloat)borderWidth {
-    self.layer.borderWidth = borderWidth;
+- (void)setMoBorderWidth:(CGFloat)moBorderWidth {
+    self.layer.borderWidth = moBorderWidth;
 }
 
-- (CGFloat)borderWidth {
+- (CGFloat)moBorderWidth {
     return self.layer.borderWidth;
 }
 
-- (void)setBorderColor:(UIColor*)borderColor {
-    self.layer.borderColor = borderColor.CGColor;
+- (void)setMoBorderColor:(UIColor*)moBorderColor {
+    self.layer.borderColor = moBorderColor.CGColor;
 }
 
-- (UIColor*)borderColor {
+- (UIColor*)moBorderColor {
     return [UIColor colorWithCGColor:self.layer.borderColor];
 }
 
-- (void)setShadowColor:(UIColor*)shadowColor {
-    self.layer.shadowColor = shadowColor.CGColor;
+- (void)setMoShadowColor:(UIColor*)moShadowColor {
+    self.layer.shadowColor = moShadowColor.CGColor;
 }
 
-- (UIColor*)shadowColor {
+- (UIColor*)moShadowColor {
     return [UIColor colorWithCGColor:self.layer.shadowColor];
 }
 
-- (void)setShadowOpacity:(CGFloat)shadowOpacity {
-    self.layer.shadowOpacity = shadowOpacity;
+- (void)setMoShadowOpacity:(CGFloat)moShadowOpacity {
+    self.layer.shadowOpacity = moShadowOpacity;
 }
 
-- (CGFloat)shadowOpacity {
+- (CGFloat)moShadowOpacity {
     return self.layer.shadowOpacity;
 }
 
-- (void)setShadowOffset:(CGSize)shadowOffset {
-    self.layer.shadowOffset = shadowOffset;
+- (void)setMoShadowOffset:(CGSize)moShadowOffset {
+    self.layer.shadowOffset = moShadowOffset;
 }
 
-- (CGSize)shadowOffset {
+- (CGSize)moShadowOffset {
     return self.layer.shadowOffset;
 }
 
-- (void)setShadowRadius:(CGFloat)shadowRadius {
-    self.layer.shadowRadius = shadowRadius;
+- (void)setMoShadowRadius:(CGFloat)moShadowRadius {
+    self.layer.shadowRadius = moShadowRadius;
 }
 
-- (CGFloat)shadowRadius {
+- (CGFloat)moShadowRadius {
     return self.layer.shadowRadius;
 }
 
-- (void)setShadowPath:(UIBezierPath*)shadowPath {
-    self.layer.shadowPath = shadowPath.CGPath;
+- (void)setMoShadowPath:(UIBezierPath*)moShadowPath {
+    self.layer.shadowPath = moShadowPath.CGPath;
 }
 
-- (UIBezierPath*)shadowPath {
+- (UIBezierPath*)moShadowPath {
     return [UIBezierPath bezierPathWithCGPath:self.layer.shadowPath];
 }
 
 #pragma mark Public
 
-- (NSArray*)responders {
+- (NSArray*)moResponders {
     NSMutableArray* result = NSMutableArray.array;
     if(self.canBecomeFirstResponder == YES) {
         [result addObject:self];
     }
     for(UIView* view in self.subviews) {
-        [result addObjectsFromArray:view.responders];
+        [result addObjectsFromArray:view.moResponders];
     }
     [result sortWithOptions:0 usingComparator:^NSComparisonResult(UIView* viewA, UIView* viewB) {
         CGRect aFrame = [viewA convertRect:[viewA bounds] toView:nil], bFrame = [viewB convertRect:[viewB bounds] toView:nil];
@@ -1699,24 +1697,24 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
     return result;
 }
 
-- (BOOL)isContainsSubview:(UIView*)subview {
+- (BOOL)moIsContainsSubview:(UIView*)subview {
     NSArray* subviews = self.subviews;
     if([subviews containsObject:subview] == YES) {
         return YES;
     }
     for(UIView* view in subviews) {
-        if([view isContainsSubview:subview] == YES) {
+        if([view moIsContainsSubview:subview] == YES) {
             return YES;
         }
     }
     return NO;
 }
 
-- (void)removeSubview:(UIView*)subview {
+- (void)moRemoveSubview:(UIView*)subview {
     [subview removeFromSuperview];
 }
 
-- (void)setSubviews:(NSArray*)subviews {
+- (void)moSetSubviews:(NSArray*)subviews {
     NSArray* currentSubviews = self.subviews;
     if([currentSubviews isEqualToArray:subviews] == NO) {
         for(UIView* view in currentSubviews) {
@@ -1728,13 +1726,13 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
     }
 }
 
-- (void)removeAllSubviews {
+- (void)moRemoveAllSubviews {
     for(UIView* view in self.subviews) {
         [view removeFromSuperview];
     }
 }
 
-- (void)blinkBackgroundColor:(UIColor*)color duration:(NSTimeInterval)duration timeout:(NSTimeInterval)timeout {
+- (void)moBlinkBackgroundColor:(UIColor*)color duration:(NSTimeInterval)duration timeout:(NSTimeInterval)timeout {
     UIColor* prevColor = self.backgroundColor;
     [UIView animateWithDuration:duration
                      animations:^{
@@ -1800,10 +1798,10 @@ MOBILY_DEFINE_VALIDATE_COLOR(TintColor);
 
 @interface UIScrollView (MobilyUI_Keyboard)
 
-@property(nonatomic, readwrite, assign) BOOL keyboardShowed;
-@property(nonatomic, readwrite, weak) UIResponder* keyboardResponder;
-@property(nonatomic, readwrite, assign) UIEdgeInsets keyboardContentInset;
-@property(nonatomic, readwrite, assign) UIEdgeInsets keyboardIndicatorInset;
+@property(nonatomic, readwrite, assign) BOOL moKeyboardShowed;
+@property(nonatomic, readwrite, weak) UIResponder* moKeyboardResponder;
+@property(nonatomic, readwrite, assign) UIEdgeInsets moKeyboardContentInset;
+@property(nonatomic, readwrite, assign) UIEdgeInsets moKeyboardIndicatorInset;
 
 @end
 
@@ -1837,190 +1835,190 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 
 #pragma mark Property
 
-- (void)setKeyboardShowed:(BOOL)keyboardShowed {
-    if(self.keyboardShowed != keyboardShowed) {
-        if(keyboardShowed == NO) {
+- (void)setMoKeyboardShowed:(BOOL)moKeyboardShowed {
+    if(self.moKeyboardShowed != moKeyboardShowed) {
+        if(moKeyboardShowed == NO) {
             if([self isKindOfClass:MobilyDataView.class] == YES) {
                 MobilyDataView* dataView = (MobilyDataView*)self;
-                dataView.containerInsets = self.keyboardContentInset;
+                dataView.containerInsets = self.moKeyboardContentInset;
             } else {
-                self.contentInset = self.keyboardContentInset;
-                self.scrollIndicatorInsets = self.keyboardIndicatorInset;
+                self.contentInset = self.moKeyboardContentInset;
+                self.scrollIndicatorInsets = self.moKeyboardIndicatorInset;
             }
-            self.keyboardResponder = nil;
+            self.moKeyboardResponder = nil;
         }
-        objc_setAssociatedObject(self, @selector(keyboardShowed), @(keyboardShowed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        if(keyboardShowed == YES) {
+        objc_setAssociatedObject(self, @selector(moKeyboardShowed), @(moKeyboardShowed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        if(moKeyboardShowed == YES) {
             if([self isKindOfClass:MobilyDataView.class] == YES) {
                 MobilyDataView* dataView = (MobilyDataView*)self;
-                self.keyboardContentInset = dataView.containerInsets;
+                self.moKeyboardContentInset = dataView.containerInsets;
             } else {
-                self.keyboardContentInset = self.contentInset;
-                self.keyboardIndicatorInset = self.scrollIndicatorInsets;
+                self.moKeyboardContentInset = self.contentInset;
+                self.moKeyboardIndicatorInset = self.scrollIndicatorInsets;
             }
-            self.keyboardResponder = [UIResponder currentFirstResponderInView:self];
+            self.moKeyboardResponder = [UIResponder moCurrentFirstResponderInView:self];
         }
     }
 }
 
-- (BOOL)keyboardShowed {
-    return [objc_getAssociatedObject(self, @selector(keyboardShowed)) boolValue];
+- (BOOL)moKeyboardShowed {
+    return [objc_getAssociatedObject(self, @selector(moKeyboardShowed)) boolValue];
 }
 
-- (void)setKeyboardResponder:(UIResponder*)keyboardResponder {
-    objc_setAssociatedObject(self, @selector(keyboardResponder), keyboardResponder, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setMoKeyboardResponder:(UIResponder*)moKeyboardResponder {
+    objc_setAssociatedObject(self, @selector(moKeyboardResponder), moKeyboardResponder, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (UIResponder*)keyboardResponder {
-    return objc_getAssociatedObject(self, @selector(keyboardResponder));
+- (UIResponder*)moKeyboardResponder {
+    return objc_getAssociatedObject(self, @selector(moKeyboardResponder));
 }
 
-- (void)setKeyboardContentInset:(UIEdgeInsets)keyboardContentInset {
-    objc_setAssociatedObject(self, @selector(keyboardContentInset), [NSValue valueWithUIEdgeInsets:keyboardContentInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setMoKeyboardContentInset:(UIEdgeInsets)moKeyboardContentInset {
+    objc_setAssociatedObject(self, @selector(moKeyboardContentInset), [NSValue valueWithUIEdgeInsets:moKeyboardContentInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (UIEdgeInsets)keyboardContentInset {
-    return [objc_getAssociatedObject(self, @selector(keyboardContentInset)) UIEdgeInsetsValue];
+- (UIEdgeInsets)moKeyboardContentInset {
+    return [objc_getAssociatedObject(self, @selector(moKeyboardContentInset)) UIEdgeInsetsValue];
 }
 
-- (void)setKeyboardIndicatorInset:(UIEdgeInsets)keyboardIndicatorInset {
-    objc_setAssociatedObject(self, @selector(keyboardIndicatorInset), [NSValue valueWithUIEdgeInsets:keyboardIndicatorInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setMoKeyboardIndicatorInset:(UIEdgeInsets)moKeyboardIndicatorInset {
+    objc_setAssociatedObject(self, @selector(moKeyboardIndicatorInset), [NSValue valueWithUIEdgeInsets:moKeyboardIndicatorInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (UIEdgeInsets)keyboardIndicatorInset {
-    return [objc_getAssociatedObject(self, @selector(keyboardIndicatorInset)) UIEdgeInsetsValue];
+- (UIEdgeInsets)moKeyboardIndicatorInset {
+    return [objc_getAssociatedObject(self, @selector(moKeyboardIndicatorInset)) UIEdgeInsetsValue];
 }
 
-- (void)setKeyboardInset:(UIEdgeInsets)keyboardInset {
-    objc_setAssociatedObject(self, @selector(keyboardInset), [NSValue valueWithUIEdgeInsets:keyboardInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setMoKeyboardInset:(UIEdgeInsets)moKeyboardInset {
+    objc_setAssociatedObject(self, @selector(moKeyboardInset), [NSValue valueWithUIEdgeInsets:moKeyboardInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (UIEdgeInsets)keyboardInset {
-    NSValue* value = objc_getAssociatedObject(self, @selector(keyboardInset));
+- (UIEdgeInsets)moKeyboardInset {
+    NSValue* value = objc_getAssociatedObject(self, @selector(moKeyboardInset));
     if(value != nil) {
         return value.UIEdgeInsetsValue;
     }
     return UIEdgeInsetsMake(2.0f, 0.0f, 2.0f, 0.0f);
 }
 
-- (void)setContentOffsetX:(CGFloat)contentOffsetX {
-    [self setContentOffset:CGPointMake(contentOffsetX, self.contentOffset.y)];
+- (void)setMoContentOffsetX:(CGFloat)moContentOffsetX {
+    [self setContentOffset:CGPointMake(moContentOffsetX, self.contentOffset.y)];
 }
 
-- (CGFloat)contentOffsetX {
+- (CGFloat)moContentOffsetX {
     return self.contentOffset.x;
 }
 
-- (void)setContentOffsetY:(CGFloat)contentOffsetY {
-    [self setContentOffset:CGPointMake(self.contentOffset.x, contentOffsetY)];
+- (void)setMoContentOffsetY:(CGFloat)moContentOffsetY {
+    [self setContentOffset:CGPointMake(self.contentOffset.x, moContentOffsetY)];
 }
 
-- (CGFloat)contentOffsetY {
+- (CGFloat)moContentOffsetY {
     return self.contentOffset.y;
 }
 
-- (void)setContentSizeWidth:(CGFloat)contentSizeWidth {
-    [self setContentSize:CGSizeMake(contentSizeWidth, self.contentSize.height)];
+- (void)setMoContentSizeWidth:(CGFloat)moContentSizeWidth {
+    [self setContentSize:CGSizeMake(moContentSizeWidth, self.contentSize.height)];
 }
 
-- (CGFloat)contentSizeWidth {
+- (CGFloat)moContentSizeWidth {
     return self.contentSize.width;
 }
 
-- (void)setContentSizeHeight:(CGFloat)contentSizeHeight {
-    self.contentSize = CGSizeMake(self.contentSize.width, contentSizeHeight);
+- (void)setMoContentSizeHeight:(CGFloat)moContentSizeHeight {
+    self.contentSize = CGSizeMake(self.contentSize.width, moContentSizeHeight);
 }
 
-- (CGFloat)contentSizeHeight {
+- (CGFloat)moContentSizeHeight {
     return self.contentSize.height;
 }
 
-- (void)setContentInsetTop:(CGFloat)contentInsetTop {
-    self.contentInset = UIEdgeInsetsMake(contentInsetTop, self.contentInset.left, self.contentInset.bottom, self.contentInset.right);
+- (void)setMoContentInsetTop:(CGFloat)moContentInsetTop {
+    self.contentInset = UIEdgeInsetsMake(moContentInsetTop, self.contentInset.left, self.contentInset.bottom, self.contentInset.right);
 }
 
-- (CGFloat)contentInsetTop {
+- (CGFloat)moContentInsetTop {
     return self.contentInset.top;
 }
 
-- (void)setContentInsetRight:(CGFloat)contentInsetRight {
-    self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, self.contentInset.bottom, contentInsetRight);
+- (void)setMoContentInsetRight:(CGFloat)moContentInsetRight {
+    self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, self.contentInset.bottom, moContentInsetRight);
 }
 
-- (CGFloat)contentInsetRight {
+- (CGFloat)moContentInsetRight {
     return self.contentInset.right;
 }
 
-- (void)setContentInsetBottom:(CGFloat)contentInsetBottom {
-    self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, contentInsetBottom, self.contentInset.right);
+- (void)setMoContentInsetBottom:(CGFloat)moContentInsetBottom {
+    self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, moContentInsetBottom, self.contentInset.right);
 }
 
-- (CGFloat)contentInsetBottom {
+- (CGFloat)moContentInsetBottom {
     return self.contentInset.bottom;
 }
 
-- (void)setContentInsetLeft:(CGFloat)contentInsetLeft {
-    self.contentInset = UIEdgeInsetsMake(self.contentInset.top, contentInsetLeft, self.contentInset.bottom, self.contentInset.right);
+- (void)setMoContentInsetLeft:(CGFloat)moContentInsetLeft {
+    self.contentInset = UIEdgeInsetsMake(self.contentInset.top, moContentInsetLeft, self.contentInset.bottom, self.contentInset.right);
 }
 
-- (CGFloat)contentInsetLeft {
+- (CGFloat)moContentInsetLeft {
     return self.contentInset.left;
 }
 
-- (void)setScrollIndicatorInsetTop:(CGFloat)scrollIndicatorInsetTop {
-    self.scrollIndicatorInsets = UIEdgeInsetsMake(scrollIndicatorInsetTop, self.scrollIndicatorInsets.left, self.scrollIndicatorInsets.bottom, self.scrollIndicatorInsets.right);
+- (void)setMoScrollIndicatorInsetTop:(CGFloat)moScrollIndicatorInsetTop {
+    self.scrollIndicatorInsets = UIEdgeInsetsMake(moScrollIndicatorInsetTop, self.scrollIndicatorInsets.left, self.scrollIndicatorInsets.bottom, self.scrollIndicatorInsets.right);
 }
 
-- (CGFloat)scrollIndicatorInsetTop {
+- (CGFloat)moScrollIndicatorInsetTop {
     return self.scrollIndicatorInsets.top;
 }
 
-- (void)setScrollIndicatorInsetRight:(CGFloat)scrollIndicatorInsetRight {
-    self.scrollIndicatorInsets = UIEdgeInsetsMake(self.scrollIndicatorInsets.top, self.scrollIndicatorInsets.left, self.scrollIndicatorInsets.bottom, scrollIndicatorInsetRight);
+- (void)setMoScrollIndicatorInsetRight:(CGFloat)moScrollIndicatorInsetRight {
+    self.scrollIndicatorInsets = UIEdgeInsetsMake(self.scrollIndicatorInsets.top, self.scrollIndicatorInsets.left, self.scrollIndicatorInsets.bottom, moScrollIndicatorInsetRight);
 }
 
-- (CGFloat)scrollIndicatorInsetRight {
+- (CGFloat)moScrollIndicatorInsetRight {
     return self.scrollIndicatorInsets.right;
 }
 
-- (void)setScrollIndicatorInsetBottom:(CGFloat)scrollIndicatorInsetBottom {
-    self.scrollIndicatorInsets = UIEdgeInsetsMake(self.scrollIndicatorInsets.top, self.scrollIndicatorInsets.left, scrollIndicatorInsetBottom, self.scrollIndicatorInsets.right);
+- (void)setMoScrollIndicatorInsetBottom:(CGFloat)moScrollIndicatorInsetBottom {
+    self.scrollIndicatorInsets = UIEdgeInsetsMake(self.scrollIndicatorInsets.top, self.scrollIndicatorInsets.left, moScrollIndicatorInsetBottom, self.scrollIndicatorInsets.right);
 }
 
-- (CGFloat)scrollIndicatorInsetBottom {
+- (CGFloat)moScrollIndicatorInsetBottom {
     return self.scrollIndicatorInsets.bottom;
 }
 
-- (void)setScrollIndicatorInsetLeft:(CGFloat)scrollIndicatorInsetLeft {
-    self.scrollIndicatorInsets = UIEdgeInsetsMake(self.scrollIndicatorInsets.top, scrollIndicatorInsetLeft, self.scrollIndicatorInsets.bottom, self.scrollIndicatorInsets.right);
+- (void)setMoScrollIndicatorInsetLeft:(CGFloat)moScrollIndicatorInsetLeft {
+    self.scrollIndicatorInsets = UIEdgeInsetsMake(self.scrollIndicatorInsets.top, moScrollIndicatorInsetLeft, self.scrollIndicatorInsets.bottom, self.scrollIndicatorInsets.right);
 }
 
-- (CGFloat)scrollIndicatorInsetLeft {
+- (CGFloat)moScrollIndicatorInsetLeft {
     return self.scrollIndicatorInsets.left;
 }
 
-- (CGRect)visibleBounds {
+- (CGRect)moVisibleBounds {
     return UIEdgeInsetsInsetRect(self.bounds, self.contentInset);
 }
 
 #pragma mark Public
 
-- (void)setContentOffsetX:(CGFloat)contentOffsetX animated:(BOOL)animated {
-    [self setContentOffset:CGPointMake(contentOffsetX, self.contentOffset.y) animated:animated];
+- (void)setMoContentOffsetX:(CGFloat)moContentOffsetX animated:(BOOL)animated {
+    [self setContentOffset:CGPointMake(moContentOffsetX, self.contentOffset.y) animated:animated];
 }
 
-- (void)setContentOffsetY:(CGFloat)contentOffsetY animated:(BOOL)animated {
-    [self setContentOffset:CGPointMake(self.contentOffset.x, contentOffsetY) animated:animated];
+- (void)setMoContentOffsetY:(CGFloat)moContentOffsetY animated:(BOOL)animated {
+    [self setContentOffset:CGPointMake(self.contentOffset.x, moContentOffsetY) animated:animated];
 }
 
-- (void)registerAdjustmentResponder {
+- (void)moRegisterAdjustmentResponder {
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(adjustmentNotificationKeyboardShow:) name:UIKeyboardWillShowNotification object:nil];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(adjustmentNotificationKeyboardShow:) name:UIKeyboardDidShowNotification object:nil];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(adjustmentNotificationKeyboardHide:) name:UIKeyboardWillHideNotification object:nil];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(adjustmentNotificationKeyboardHide:) name:UIKeyboardDidHideNotification object:nil];
 }
 
-- (void)unregisterAdjustmentResponder {
+- (void)moUnregisterAdjustmentResponder {
     [NSNotificationCenter.defaultCenter removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [NSNotificationCenter.defaultCenter removeObserver:self name:UIKeyboardDidShowNotification object:nil];
     [NSNotificationCenter.defaultCenter removeObserver:self name:UIKeyboardWillHideNotification object:nil];
@@ -2030,7 +2028,7 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 #pragma mark UIKeyboarNotification
 
 - (void)adjustmentNotificationKeyboardShow:(NSNotification*)notification {
-    self.keyboardShowed = YES;
+    self.moKeyboardShowed = YES;
     CGRect scrollRect = [self convertRect:self.bounds toView:nil];
     CGRect keyboardRect = [[notification userInfo][UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGRect intersectionRect = CGRectIntersection(scrollRect, keyboardRect);
@@ -2049,9 +2047,9 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
                 self.scrollIndicatorInsets = indicatorInsets;
             }
         }
-        if([self.keyboardResponder isKindOfClass:UIView.class] == YES) {
-            CGRect visibleRect = UIEdgeInsetsInsetRect(self.visibleBounds, self.keyboardInset);
-            CGRect responderRect = [(UIView*)self.keyboardResponder convertRect:((UIView*)self.keyboardResponder).bounds toView:self];
+        if([self.moKeyboardResponder isKindOfClass:UIView.class] == YES) {
+            CGRect visibleRect = UIEdgeInsetsInsetRect(self.moVisibleBounds, self.moKeyboardInset);
+            CGRect responderRect = [(UIView*)self.moKeyboardResponder convertRect:((UIView*)self.moKeyboardResponder).bounds toView:self];
             if(CGRectContainsRect(visibleRect, responderRect) == NO) {
                 CGPoint contentOffset = self.contentOffset;
                 CGFloat vrsx = CGRectGetMinX(visibleRect), vrsy = CGRectGetMinY(visibleRect);
@@ -2081,7 +2079,7 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 }
 
 - (void)adjustmentNotificationKeyboardHide:(NSNotification* __unused)notification {
-    self.keyboardShowed = NO;
+    self.moKeyboardShowed = NO;
 }
 
 @end
@@ -2109,11 +2107,11 @@ MOBILY_DEFINE_VALIDATE_NUMBER(SelectedItemIndex)
 
 #pragma mark Property
 
-- (void)setSelectedItemIndex:(NSUInteger)index {
-    self.selectedItem = (self.items)[index];
+- (void)setMoSelectedItemIndex:(NSUInteger)moSelectedItemIndex {
+    self.selectedItem = (self.items)[moSelectedItemIndex];
 }
 
-- (NSUInteger)selectedItemIndex {
+- (NSUInteger)moSelectedItemIndex {
     return [self.items indexOfObject:self.selectedItem];
 }
 
@@ -2159,16 +2157,16 @@ MOBILY_DEFINE_VALIDATE_NUMBER(PreferredMaxLayoutWidth)
 
 #pragma mark Public
 
-- (CGSize)implicitSize {
-    return [self implicitSizeForSize:CGSizeMake(NSIntegerMax, NSIntegerMax)];
+- (CGSize)moImplicitSize {
+    return [self moImplicitSizeForSize:CGSizeMake(NSIntegerMax, NSIntegerMax)];
 }
 
-- (CGSize)implicitSizeForWidth:(CGFloat)width {
-    return [self implicitSizeForSize:CGSizeMake(width, NSIntegerMax)];
+- (CGSize)moImplicitSizeForWidth:(CGFloat)width {
+    return [self moImplicitSizeForSize:CGSizeMake(width, NSIntegerMax)];
 }
 
-- (CGSize)implicitSizeForSize:(CGSize)size {
-    return [self.text implicitSizeWithFont:self.font forSize:size lineBreakMode:self.lineBreakMode];
+- (CGSize)moImplicitSizeForSize:(CGSize)size {
+    return [self.text moImplicitSizeWithFont:self.font forSize:size lineBreakMode:self.lineBreakMode];
 }
 
 @end
@@ -2190,186 +2188,186 @@ MOBILY_DEFINE_VALIDATE_BOOL(AdjustsImageWhenDisabled)
 MOBILY_DEFINE_VALIDATE_BOOL(ShowsTouchWhenHighlighted)
 MOBILY_DEFINE_VALIDATE_COLOR(TintColor)
 
-MOBILY_DEFINE_VALIDATE_STRING(NormalTitle)
-MOBILY_DEFINE_VALIDATE_COLOR(NormalTitleColor)
-MOBILY_DEFINE_VALIDATE_COLOR(NormalTitleShadowColor)
-MOBILY_DEFINE_VALIDATE_IMAGE(NormalImage)
-MOBILY_DEFINE_VALIDATE_IMAGE(NormalBackgroundImage)
-MOBILY_DEFINE_VALIDATE_STRING(HighlightedTitle)
-MOBILY_DEFINE_VALIDATE_COLOR(HighlightedTitleColor)
-MOBILY_DEFINE_VALIDATE_COLOR(HighlightedTitleShadowColor)
-MOBILY_DEFINE_VALIDATE_IMAGE(HighlightedImage)
-MOBILY_DEFINE_VALIDATE_IMAGE(HighlightedBackgroundImage)
-MOBILY_DEFINE_VALIDATE_STRING(DisabledTitle)
-MOBILY_DEFINE_VALIDATE_COLOR(DisabledTitleColor)
-MOBILY_DEFINE_VALIDATE_COLOR(DisabledTitleShadowColor)
-MOBILY_DEFINE_VALIDATE_IMAGE(DisabledImage)
-MOBILY_DEFINE_VALIDATE_IMAGE(DisabledBackgroundImage)
-MOBILY_DEFINE_VALIDATE_STRING(SelectedTitle)
-MOBILY_DEFINE_VALIDATE_COLOR(SelectedTitleColor)
-MOBILY_DEFINE_VALIDATE_COLOR(SelectedTitleShadowColor)
-MOBILY_DEFINE_VALIDATE_IMAGE(SelectedImage)
-MOBILY_DEFINE_VALIDATE_IMAGE(SelectedBackgroundImage)
+MOBILY_DEFINE_VALIDATE_STRING(MoNormalTitle)
+MOBILY_DEFINE_VALIDATE_COLOR(MoNormalTitleColor)
+MOBILY_DEFINE_VALIDATE_COLOR(MoNormalTitleShadowColor)
+MOBILY_DEFINE_VALIDATE_IMAGE(MoNormalImage)
+MOBILY_DEFINE_VALIDATE_IMAGE(MoNormalBackgroundImage)
+MOBILY_DEFINE_VALIDATE_STRING(MoHighlightedTitle)
+MOBILY_DEFINE_VALIDATE_COLOR(MoHighlightedTitleColor)
+MOBILY_DEFINE_VALIDATE_COLOR(MoHighlightedTitleShadowColor)
+MOBILY_DEFINE_VALIDATE_IMAGE(MoHighlightedImage)
+MOBILY_DEFINE_VALIDATE_IMAGE(MoHighlightedBackgroundImage)
+MOBILY_DEFINE_VALIDATE_STRING(MoDisabledTitle)
+MOBILY_DEFINE_VALIDATE_COLOR(MoDisabledTitleColor)
+MOBILY_DEFINE_VALIDATE_COLOR(MoDisabledTitleShadowColor)
+MOBILY_DEFINE_VALIDATE_IMAGE(MoDisabledImage)
+MOBILY_DEFINE_VALIDATE_IMAGE(MoDisabledBackgroundImage)
+MOBILY_DEFINE_VALIDATE_STRING(MoSelectedTitle)
+MOBILY_DEFINE_VALIDATE_COLOR(MoSelectedTitleColor)
+MOBILY_DEFINE_VALIDATE_COLOR(MoSelectedTitleShadowColor)
+MOBILY_DEFINE_VALIDATE_IMAGE(MoSelectedImage)
+MOBILY_DEFINE_VALIDATE_IMAGE(MoSelectedBackgroundImage)
 
 #pragma mark Property
 
-- (void)setNormalTitle:(NSString*)normalTitle {
-    [self setTitle:normalTitle forState:UIControlStateNormal];
+- (void)setMoNormalTitle:(NSString*)moNormalTitle {
+    [self setTitle:moNormalTitle forState:UIControlStateNormal];
 }
 
-- (NSString*)normalTitle {
+- (NSString*)moNormalTitle {
     return [self titleForState:UIControlStateNormal];
 }
 
-- (void)setNormalTitleColor:(UIColor*)normalTitleColor {
-    [self setTitleColor:normalTitleColor forState:UIControlStateNormal];
+- (void)setMoNormalTitleColor:(UIColor*)moNormalTitleColor {
+    [self setTitleColor:moNormalTitleColor forState:UIControlStateNormal];
 }
 
-- (UIColor*)normalTitleColor {
+- (UIColor*)moNormalTitleColor {
     return [self titleColorForState:UIControlStateNormal];
 }
 
-- (void)setNormalTitleShadowColor:(UIColor*)normalTitleShadowColor {
-    [self setTitleShadowColor:normalTitleShadowColor forState:UIControlStateNormal];
+- (void)setMoNormalTitleShadowColor:(UIColor*)moNormalTitleShadowColor {
+    [self setTitleShadowColor:moNormalTitleShadowColor forState:UIControlStateNormal];
 }
 
-- (UIColor*)normalTitleShadowColor {
+- (UIColor*)moNormalTitleShadowColor {
     return [self titleShadowColorForState:UIControlStateNormal];
 }
 
-- (void)setNormalImage:(UIImage*)normalImage {
-    [self setImage:normalImage forState:UIControlStateNormal];
+- (void)setMoNormalImage:(UIImage*)moNormalImage {
+    [self setImage:moNormalImage forState:UIControlStateNormal];
 }
 
-- (UIImage*)normalImage {
+- (UIImage*)moNormalImage {
     return [self imageForState:UIControlStateNormal];
 }
 
-- (void)setNormalBackgroundImage:(UIImage*)normalBackgroundImage {
-    [self setBackgroundImage:normalBackgroundImage forState:UIControlStateNormal];
+- (void)setMoNormalBackgroundImage:(UIImage*)moNormalBackgroundImage {
+    [self setBackgroundImage:moNormalBackgroundImage forState:UIControlStateNormal];
 }
 
-- (UIImage*)normalBackgroundImage {
+- (UIImage*)moNormalBackgroundImage {
     return [self backgroundImageForState:UIControlStateNormal];
 }
 
-- (void)setHighlightedTitle:(NSString*)highlightedTitle {
-    [self setTitle:highlightedTitle forState:UIControlStateHighlighted];
+- (void)setMoHighlightedTitle:(NSString*)moHighlightedTitle {
+    [self setTitle:moHighlightedTitle forState:UIControlStateHighlighted];
 }
 
-- (NSString*)highlightedTitle {
+- (NSString*)moHighlightedTitle {
     return [self titleForState:UIControlStateHighlighted];
 }
 
-- (void)setHighlightedTitleColor:(UIColor*)highlightedTitleColor {
-    [self setTitleColor:highlightedTitleColor forState:UIControlStateHighlighted];
+- (void)setMoHighlightedTitleColor:(UIColor*)moHighlightedTitleColor {
+    [self setTitleColor:moHighlightedTitleColor forState:UIControlStateHighlighted];
 }
 
-- (UIColor*)highlightedTitleColor {
+- (UIColor*)moHighlightedTitleColor {
     return [self titleColorForState:UIControlStateHighlighted];
 }
 
-- (void)setHighlightedTitleShadowColor:(UIColor*)highlightedTitleShadowColor {
-    [self setTitleShadowColor:highlightedTitleShadowColor forState:UIControlStateHighlighted];
+- (void)setMoHighlightedTitleShadowColor:(UIColor*)moHighlightedTitleShadowColor {
+    [self setTitleShadowColor:moHighlightedTitleShadowColor forState:UIControlStateHighlighted];
 }
 
-- (UIColor*)highlightedTitleShadowColor {
+- (UIColor*)moHighlightedTitleShadowColor {
     return [self titleShadowColorForState:UIControlStateHighlighted];
 }
 
-- (void)setHighlightedImage:(UIImage*)highlightedImage {
-    [self setImage:highlightedImage forState:UIControlStateHighlighted];
+- (void)setMoHighlightedImage:(UIImage*)moHighlightedImage {
+    [self setImage:moHighlightedImage forState:UIControlStateHighlighted];
 }
 
-- (UIImage*)highlightedImage {
+- (UIImage*)moHighlightedImage {
     return [self imageForState:UIControlStateHighlighted];
 }
 
-- (void)setHighlightedBackgroundImage:(UIImage*)highlightedBackgroundImage {
-    [self setBackgroundImage:highlightedBackgroundImage forState:UIControlStateHighlighted];
+- (void)setMoHighlightedBackgroundImage:(UIImage*)moHighlightedBackgroundImage {
+    [self setBackgroundImage:moHighlightedBackgroundImage forState:UIControlStateHighlighted];
 }
 
-- (UIImage*)highlightedBackgroundImage {
+- (UIImage*)moHighlightedBackgroundImage {
     return [self backgroundImageForState:UIControlStateHighlighted];
 }
 
-- (void)setSelectedTitle:(NSString*)selectedTitle {
-    [self setTitle:selectedTitle forState:UIControlStateSelected];
+- (void)setMoSelectedTitle:(NSString*)moSelectedTitle {
+    [self setTitle:moSelectedTitle forState:UIControlStateSelected];
 }
 
-- (NSString*)selectedTitle {
+- (NSString*)moSelectedTitle {
     return [self titleForState:UIControlStateSelected];
 }
 
-- (void)setSelectedTitleColor:(UIColor*)selectedTitleColor {
-    [self setTitleColor:selectedTitleColor forState:UIControlStateSelected];
+- (void)setMoSelectedTitleColor:(UIColor*)moSelectedTitleColor {
+    [self setTitleColor:moSelectedTitleColor forState:UIControlStateSelected];
 }
 
-- (UIColor*)selectedTitleColor {
+- (UIColor*)moSelectedTitleColor {
     return [self titleColorForState:UIControlStateSelected];
 }
 
-- (void)setSelectedTitleShadowColor:(UIColor*)selectedTitleShadowColor {
-    [self setTitleShadowColor:selectedTitleShadowColor forState:UIControlStateSelected];
+- (void)setMoSelectedTitleShadowColor:(UIColor*)moSelectedTitleShadowColor {
+    [self setTitleShadowColor:moSelectedTitleShadowColor forState:UIControlStateSelected];
 }
 
-- (UIColor*)selectedTitleShadowColor {
+- (UIColor*)moSelectedTitleShadowColor {
     return [self titleShadowColorForState:UIControlStateSelected];
 }
 
-- (void)setSelectedImage:(UIImage*)selectedImage {
-    [self setImage:selectedImage forState:UIControlStateSelected];
+- (void)setMoSelectedImage:(UIImage*)moSelectedImage {
+    [self setImage:moSelectedImage forState:UIControlStateSelected];
 }
 
-- (UIImage*)selectedImage {
+- (UIImage*)moSelectedImage {
     return [self imageForState:UIControlStateSelected];
 }
 
-- (void)setSelectedBackgroundImage:(UIImage*)selectedBackgroundImage {
-    [self setBackgroundImage:selectedBackgroundImage forState:UIControlStateSelected];
+- (void)setMoSelectedBackgroundImage:(UIImage*)moSelectedBackgroundImage {
+    [self setBackgroundImage:moSelectedBackgroundImage forState:UIControlStateSelected];
 }
 
-- (UIImage*)selectedBackgroundImage {
+- (UIImage*)moSelectedBackgroundImage {
     return [self backgroundImageForState:UIControlStateSelected];
 }
 
-- (void)setDisabledTitle:(NSString*)disabledTitle {
-    [self setTitle:disabledTitle forState:UIControlStateDisabled];
+- (void)setMoDisabledTitle:(NSString*)moDisabledTitle {
+    [self setTitle:moDisabledTitle forState:UIControlStateDisabled];
 }
 
-- (NSString*)disabledTitle {
+- (NSString*)moDisabledTitle {
     return [self titleForState:UIControlStateDisabled];
 }
 
-- (void)setDisabledTitleColor:(UIColor*)disabledTitleColor {
-    [self setTitleColor:disabledTitleColor forState:UIControlStateDisabled];
+- (void)setMoDisabledTitleColor:(UIColor*)moDisabledTitleColor {
+    [self setTitleColor:moDisabledTitleColor forState:UIControlStateDisabled];
 }
 
-- (UIColor*)disabledTitleColor {
+- (UIColor*)moDisabledTitleColor {
     return [self titleColorForState:UIControlStateDisabled];
 }
 
-- (void)setDisabledTitleShadowColor:(UIColor*)disabledTitleShadowColor {
-    [self setTitleShadowColor:disabledTitleShadowColor forState:UIControlStateDisabled];
+- (void)setMoDisabledTitleShadowColor:(UIColor*)moDisabledTitleShadowColor {
+    [self setTitleShadowColor:moDisabledTitleShadowColor forState:UIControlStateDisabled];
 }
 
-- (UIColor*)disabledTitleShadowColor {
+- (UIColor*)moDisabledTitleShadowColor {
     return [self titleShadowColorForState:UIControlStateDisabled];
 }
 
-- (void)setDisabledImage:(UIImage*)disabledImage {
-    [self setImage:disabledImage forState:UIControlStateDisabled];
+- (void)setMoDisabledImage:(UIImage*)moDisabledImage {
+    [self setImage:moDisabledImage forState:UIControlStateDisabled];
 }
 
-- (UIImage*)disabledImage {
+- (UIImage*)moDisabledImage {
     return [self imageForState:UIControlStateDisabled];
 }
 
-- (void)setDisabledBackgroundImage:(UIImage*)disabledBackgroundImage {
-    [self setBackgroundImage:disabledBackgroundImage forState:UIControlStateDisabled];
+- (void)setMoDisabledBackgroundImage:(UIImage*)moDisabledBackgroundImage {
+    [self setBackgroundImage:moDisabledBackgroundImage forState:UIControlStateDisabled];
 }
 
-- (UIImage*)disabledBackgroundImage {
+- (UIImage*)moDisabledBackgroundImage {
     return [self backgroundImageForState:UIControlStateDisabled];
 }
 
@@ -2388,13 +2386,13 @@ MOBILY_DEFINE_VALIDATE_BOOL(HidesBottomBarWhenPushed)
 
 #pragma mark Public
 
-- (void)loadViewIfNeed {
+- (void)moLoadViewIfNeed {
     if(self.isViewLoaded == NO) {
         [self loadView];
     }
 }
 
-- (void)unloadViewIfPossible {
+- (void)moUnloadViewIfPossible {
     if(self.isViewLoaded == YES) {
         if(self.view.window == nil) {
             self.view = nil;
@@ -2402,36 +2400,36 @@ MOBILY_DEFINE_VALIDATE_BOOL(HidesBottomBarWhenPushed)
     }
 }
 
-- (void)unloadView {
+- (void)moUnloadView {
     if(self.isViewLoaded == YES) {
         self.view = nil;
     }
 }
 
-- (UIViewController*)currentViewController {
-    return [UIViewController currentViewController:self];
+- (UIViewController*)moCurrentController {
+    return [UIViewController _moCurrentController:self];
 }
 
 #pragma mark Private
 
-+ (UIViewController*)currentViewController:(UIViewController*)rootViewController {
++ (UIViewController*)_moCurrentController:(UIViewController*)rootViewController {
     if([rootViewController presentedViewController] != nil) {
-        return [self currentViewController:[rootViewController presentedViewController]];
+        return [self _moCurrentController:[rootViewController presentedViewController]];
     }
     if([rootViewController isKindOfClass:UINavigationController.class] == YES) {
         UINavigationController* navigationController = (UINavigationController*)rootViewController;
-        return [self currentViewController:navigationController.topViewController];
+        return [self _moCurrentController:navigationController.topViewController];
     } else if([rootViewController isKindOfClass:UITabBarController.class] == YES) {
         UITabBarController* tabBarController = (UITabBarController*)rootViewController;
-        return [self currentViewController:tabBarController.selectedViewController];
+        return [self _moCurrentController:tabBarController.selectedViewController];
     } else if([rootViewController isKindOfClass:MobilySlideController.class] == YES) {
         MobilySlideController* slideController = (MobilySlideController*)rootViewController;
         if(slideController.isShowedLeftController == YES) {
-            return [self currentViewController:slideController.leftController];
+            return [self _moCurrentController:slideController.leftController];
         } else if(slideController.isShowedRightController == YES) {
-            return [self currentViewController:slideController.rightController];
+            return [self _moCurrentController:slideController.rightController];
         }
-        return [self currentViewController:slideController.centerController];
+        return [self _moCurrentController:slideController.centerController];
     }
     return rootViewController;
 }
@@ -2448,73 +2446,73 @@ MOBILY_DEFINE_VALIDATE_BOOL(HidesBottomBarWhenPushed)
 
 MOBILY_DEFINE_VALIDATE_BOOL(NavigationBarHidden)
 MOBILY_DEFINE_VALIDATE_BOOL(ToolbarHidden)
-MOBILY_DEFINE_VALIDATE_BOOL(Translucent)
-MOBILY_DEFINE_VALIDATE_COLOR(TintColor)
-MOBILY_DEFINE_VALIDATE_COLOR(BarTintColor)
-MOBILY_DEFINE_VALIDATE_IMAGE(ShadowImage)
-//MOBILY_DEFINE_VALIDATE_TEXT_ATTRIBUTES(TitleTextAttributes)
-MOBILY_DEFINE_VALIDATE_IMAGE(BackIndicatorImage)
-MOBILY_DEFINE_VALIDATE_IMAGE(BackIndicatorTransitionMaskImage)
+MOBILY_DEFINE_VALIDATE_BOOL(MoTranslucent)
+MOBILY_DEFINE_VALIDATE_COLOR(MoTintColor)
+MOBILY_DEFINE_VALIDATE_COLOR(MoBarTintColor)
+MOBILY_DEFINE_VALIDATE_IMAGE(MoShadowImage)
+//MOBILY_DEFINE_VALIDATE_TEXT_ATTRIBUTES(MoTitleTextAttributes)
+MOBILY_DEFINE_VALIDATE_IMAGE(MoBackIndicatorImage)
+MOBILY_DEFINE_VALIDATE_IMAGE(MoBackIndicatorTransitionMaskImage)
 
 #pragma mark Property
 
-- (void)setTranslucent:(BOOL)translucent {
-    [[self navigationBar] setTranslucent:translucent];
+- (void)setMoTranslucent:(BOOL)moTranslucent {
+    [self.navigationBar setTranslucent:moTranslucent];
 }
 
-- (BOOL)isTranslucent {
-    return [[self navigationBar] isTranslucent];
+- (BOOL)moTranslucent {
+    return [self.navigationBar isTranslucent];
 }
 
-- (void)setTintColor:(UIColor*)tintColor {
-    [[self navigationBar] setTintColor:tintColor];
+- (void)setMoTintColor:(UIColor*)moTintColor {
+    [self.navigationBar setTintColor:moTintColor];
 }
 
-- (UIColor*)tintColor {
-    return [[self navigationBar] tintColor];
+- (UIColor*)moTintColor {
+    return [self.navigationBar tintColor];
 }
 
-- (void)setBarTintColor:(UIColor*)barTintColor {
-    [[self navigationBar] setBarTintColor:barTintColor];
+- (void)setMoBarTintColor:(UIColor*)moBarTintColor {
+    [self.navigationBar setBarTintColor:moBarTintColor];
 }
 
-- (UIColor*)barTintColor {
-    return [[self navigationBar] barTintColor];
+- (UIColor*)moBarTintColor {
+    return [self.navigationBar barTintColor];
 }
 
-- (void)setShadowImage:(UIImage*)shadowImage {
-    [[self navigationBar] setShadowImage:shadowImage];
+- (void)setMoShadowImage:(UIImage*)moShadowImage {
+    [self.navigationBar setShadowImage:moShadowImage];
 }
 
-- (UIImage*)shadowImage {
-    return [[self navigationBar] shadowImage];
+- (UIImage*)moShadowImage {
+    return [self.navigationBar shadowImage];
 }
 
-- (void)setTitleTextAttributes:(NSDictionary*)titleTextAttributes {
-    [[self navigationBar] setTitleTextAttributes:titleTextAttributes];
+- (void)setMoTitleTextAttributes:(NSDictionary*)moTitleTextAttributes {
+    [self.navigationBar setTitleTextAttributes:moTitleTextAttributes];
 }
 
-- (NSDictionary*)titleTextAttributes {
-    return [[self navigationBar] titleTextAttributes];
+- (NSDictionary*)moTitleTextAttributes {
+    return [self.navigationBar titleTextAttributes];
 }
 
-- (void)setBackIndicatorImage:(UIImage*)backIndicatorImage {
-    [[self navigationBar] setBackIndicatorImage:backIndicatorImage];
+- (void)setMoBackIndicatorImage:(UIImage*)moBackIndicatorImage {
+    [self.navigationBar setBackIndicatorImage:moBackIndicatorImage];
 }
 
-- (UIImage*)backIndicatorImage {
-    return [[self navigationBar] backIndicatorImage];
+- (UIImage*)moBackIndicatorImage {
+    return [self.navigationBar backIndicatorImage];
 }
 
-- (void)setBackIndicatorTransitionMaskImage:(UIImage*)backIndicatorTransitionMaskImage {
-    [[self navigationBar] setBackIndicatorTransitionMaskImage:backIndicatorTransitionMaskImage];
+- (void)setMoBackIndicatorTransitionMaskImage:(UIImage*)moBackIndicatorTransitionMaskImage {
+    [self.navigationBar setBackIndicatorTransitionMaskImage:moBackIndicatorTransitionMaskImage];
 }
 
-- (UIImage*)backIndicatorTransitionMaskImage {
-    return [[self navigationBar] backIndicatorTransitionMaskImage];
+- (UIImage*)moBackIndicatorTransitionMaskImage {
+    return [self.navigationBar backIndicatorTransitionMaskImage];
 }
 
-- (UIViewController*)rootViewController {
+- (UIViewController*)moRootController {
     NSArray* viewControllers = self.viewControllers;
     if(viewControllers.count > 0) {
         return viewControllers[0];
@@ -2534,132 +2532,132 @@ MOBILY_DEFINE_VALIDATE_IMAGE(BackIndicatorTransitionMaskImage)
 
 #pragma mark Property
 
-- (UIBarButtonItem*)addLeftBarFixedSpace:(CGFloat)fixedSpaceWidth animated:(BOOL)animated {
+- (UIBarButtonItem*)moAddLeftBarFixedSpace:(CGFloat)fixedSpaceWidth animated:(BOOL)animated {
     UIBarButtonItem* fixedSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     [fixedSpaceItem setWidth:fixedSpaceWidth];
-    [self addLeftBarButtonItem:fixedSpaceItem animated:animated];
+    [self moAddLeftBarButtonItem:fixedSpaceItem animated:animated];
     return fixedSpaceItem;
 }
 
-- (UIBarButtonItem*)addRightBarFixedSpace:(CGFloat)fixedSpaceWidth animated:(BOOL)animated {
+- (UIBarButtonItem*)moAddRightBarFixedSpace:(CGFloat)fixedSpaceWidth animated:(BOOL)animated {
     UIBarButtonItem* fixedSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     [fixedSpaceItem setWidth:fixedSpaceWidth];
-    [self addRightBarButtonItem:fixedSpaceItem animated:animated];
+    [self moAddRightBarButtonItem:fixedSpaceItem animated:animated];
     return fixedSpaceItem;
 }
 
-- (MobilyImageView*)addLeftBarImageUrl:(NSURL*)imageUrl defaultImage:(UIImage*)defaultImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+- (MobilyImageView*)moAddLeftBarImageUrl:(NSURL*)imageUrl defaultImage:(UIImage*)defaultImage target:(id)target action:(SEL)action animated:(BOOL)animated {
     MobilyImageView* imageView = [[MobilyImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 36.0f, 36.0f)];
     imageView.defaultImage = defaultImage;
     imageView.imageUrl = imageUrl;
-    [self addLeftBarView:imageView target:target action:action animated:animated];
+    [self moAddLeftBarView:imageView target:target action:action animated:animated];
     return imageView;
 }
 
-- (MobilyImageView*)addRightBarImageUrl:(NSURL*)imageUrl defaultImage:(UIImage*)defaultImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+- (MobilyImageView*)moAddRightBarImageUrl:(NSURL*)imageUrl defaultImage:(UIImage*)defaultImage target:(id)target action:(SEL)action animated:(BOOL)animated {
     MobilyImageView* imageView = [[MobilyImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 36.0f, 36.0f)];
     imageView.defaultImage = defaultImage;
     imageView.imageUrl = imageUrl;
-    [self addRightBarView:imageView target:target action:action animated:animated];
+    [self moAddRightBarView:imageView target:target action:action animated:animated];
     return imageView;
 }
 
-- (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addLeftBarButtonNormalImage:normalImage highlightedImage:nil selectedImage:nil disabledImage:nil target:target action:action animated:animated];
+- (UIButton*)moAddLeftBarButtonNormalImage:(UIImage*)normalImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddLeftBarButtonNormalImage:normalImage highlightedImage:nil selectedImage:nil disabledImage:nil target:target action:action animated:animated];
 }
 
-- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addRightBarButtonNormalImage:normalImage highlightedImage:nil selectedImage:nil disabledImage:nil target:target action:action animated:animated];
+- (UIButton*)moAddRightBarButtonNormalImage:(UIImage*)normalImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddRightBarButtonNormalImage:normalImage highlightedImage:nil selectedImage:nil disabledImage:nil target:target action:action animated:animated];
 }
 
-- (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addLeftBarButtonNormalImage:normalImage highlightedImage:highlightedImage selectedImage:nil disabledImage:nil target:target action:action animated:animated];
+- (UIButton*)moAddLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddLeftBarButtonNormalImage:normalImage highlightedImage:highlightedImage selectedImage:nil disabledImage:nil target:target action:action animated:animated];
 }
 
-- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addRightBarButtonNormalImage:normalImage highlightedImage:highlightedImage selectedImage:nil disabledImage:nil target:target action:action animated:animated];
+- (UIButton*)moAddRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddRightBarButtonNormalImage:normalImage highlightedImage:highlightedImage selectedImage:nil disabledImage:nil target:target action:action animated:animated];
 }
 
-- (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addLeftBarButtonNormalImage:normalImage highlightedImage:highlightedImage selectedImage:nil disabledImage:disabledImage target:target action:action animated:animated];
+- (UIButton*)moAddLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddLeftBarButtonNormalImage:normalImage highlightedImage:highlightedImage selectedImage:nil disabledImage:disabledImage target:target action:action animated:animated];
 }
 
-- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addRightBarButtonNormalImage:normalImage highlightedImage:highlightedImage selectedImage:nil disabledImage:disabledImage target:target action:action animated:animated];
+- (UIButton*)moAddRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddRightBarButtonNormalImage:normalImage highlightedImage:highlightedImage selectedImage:nil disabledImage:disabledImage target:target action:action animated:animated];
 }
 
-- (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage selectedImage:(UIImage*)selectedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+- (UIButton*)moAddLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage selectedImage:(UIImage*)selectedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated {
     UIButton* button = [[UIButton alloc] initWithFrame:CGRectZero];
-    button.normalImage = normalImage;
-    button.highlightedImage = highlightedImage;
-    button.selectedImage = selectedImage;
-    button.disabledImage = disabledImage;
+    button.moNormalImage = normalImage;
+    button.moHighlightedImage = highlightedImage;
+    button.moSelectedImage = selectedImage;
+    button.moDisabledImage = disabledImage;
     [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
     [button sizeToFit];
-    [self addLeftBarView:button animated:animated];
+    [self moAddLeftBarView:button animated:animated];
     return button;
 }
 
-- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage selectedImage:(UIImage*)selectedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated {
+- (UIButton*)moAddRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage selectedImage:(UIImage*)selectedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated {
     UIButton* button = [[UIButton alloc] initWithFrame:CGRectZero];
-    button.normalImage = normalImage;
-    button.highlightedImage = highlightedImage;
-    button.selectedImage = selectedImage;
-    button.disabledImage = disabledImage;
+    button.moNormalImage = normalImage;
+    button.moHighlightedImage = highlightedImage;
+    button.moSelectedImage = selectedImage;
+    button.moDisabledImage = disabledImage;
     [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
     [button sizeToFit];
-    [self addRightBarView:button animated:animated];
+    [self moAddRightBarView:button animated:animated];
     return button;
 }
 
-- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
+- (UIButton*)moAddLeftBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddLeftBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
 }
 
-- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
+- (UIButton*)moAddLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddLeftBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
 }
 
-- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:font frame:CGRectZero target:target action:action animated:animated];
+- (UIButton*)moAddLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddLeftBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:font frame:CGRectZero target:target action:action animated:animated];
 }
 
-- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font frame:(CGRect)frame target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:font frame:frame target:target action:action animated:animated];
+- (UIButton*)moAddLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font frame:(CGRect)frame target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddLeftBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:font frame:frame target:target action:action animated:animated];
 }
 
-- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:nil normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
+- (UIButton*)moAddLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddLeftBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:nil normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
 }
 
-- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:disabledTitle normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
+- (UIButton*)moAddLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddLeftBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:disabledTitle normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
 }
 
-- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle selectedTitle:(NSString*)selectedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addLeftBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:selectedTitle disabledTitle:disabledTitle normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
+- (UIButton*)moAddLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle selectedTitle:(NSString*)selectedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddLeftBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:selectedTitle disabledTitle:disabledTitle normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
 }
 
-- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle
-                        highlightedTitle:(NSString*)highlightedTitle
-                           selectedTitle:(NSString*)selectedTitle
-                           disabledTitle:(NSString*)disabledTitle
-                        normalTitleColor:(UIColor*)normatTitleColor
-                   highlightedTitleColor:(UIColor*)highlightedTitleColor
-                      selectedTitleColor:(UIColor*)selectedTitleColor
-                      disabledTitleColor:(UIColor*)disabledTitleColor
-                                    font:(UIFont*)font
-                                   frame:(CGRect)frame
-                                  target:(id)target
-                                  action:(SEL)action
-                                animated:(BOOL)animated {
+- (UIButton*)moAddLeftBarButtonNormalTitle:(NSString*)normalTitle
+                          highlightedTitle:(NSString*)highlightedTitle
+                             selectedTitle:(NSString*)selectedTitle
+                             disabledTitle:(NSString*)disabledTitle
+                          normalTitleColor:(UIColor*)normatTitleColor
+                     highlightedTitleColor:(UIColor*)highlightedTitleColor
+                        selectedTitleColor:(UIColor*)selectedTitleColor
+                        disabledTitleColor:(UIColor*)disabledTitleColor
+                                      font:(UIFont*)font
+                                     frame:(CGRect)frame
+                                    target:(id)target
+                                    action:(SEL)action
+                                  animated:(BOOL)animated {
     UIButton* button = [[UIButton alloc] initWithFrame:frame];
     
     // titles
-    button.normalTitle = normalTitle;
-    button.highlightedTitle = highlightedTitle;
-    button.selectedTitle = selectedTitle;
-    button.disabledTitle = disabledTitle;
+    button.moNormalTitle = normalTitle;
+    button.moHighlightedTitle = highlightedTitle;
+    button.moSelectedTitle = selectedTitle;
+    button.moDisabledTitle = disabledTitle;
     
     // title colors
     [button setTitleColor:normatTitleColor forState:UIControlStateNormal];
@@ -2672,61 +2670,61 @@ MOBILY_DEFINE_VALIDATE_IMAGE(BackIndicatorTransitionMaskImage)
     
     [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
     [button sizeToFit];
-    [self addLeftBarView:button animated:animated];
+    [self moAddLeftBarView:button animated:animated];
     return button;
 }
 
 
 // right
 
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
+- (UIButton*)moAddRightBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddRightBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
 }
 
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
+- (UIButton*)moAddRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddRightBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
 }
 
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:font frame:CGRectZero target:target action:action animated:animated];
+- (UIButton*)moAddRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddRightBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:font frame:CGRectZero target:target action:action animated:animated];
 }
 
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font frame:(CGRect)frame target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:font frame:frame target:target action:action animated:animated];
+- (UIButton*)moAddRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font frame:(CGRect)frame target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddRightBarButtonNormalTitle:normalTitle highlightedTitle:nil selectedTitle:nil disabledTitle:nil normalTitleColor:normatTitleColor highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:font frame:frame target:target action:action animated:animated];
 }
 
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:nil normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
+- (UIButton*)moAddRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddRightBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:nil normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
 }
 
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:disabledTitle normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
+- (UIButton*)moAddRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddRightBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:nil disabledTitle:disabledTitle normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
 }
 
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle selectedTitle:(NSString*)selectedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
-    return [self addRightBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:selectedTitle disabledTitle:disabledTitle normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
+- (UIButton*)moAddRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle selectedTitle:(NSString*)selectedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated {
+    return [self moAddRightBarButtonNormalTitle:normalTitle highlightedTitle:highlightedTitle selectedTitle:selectedTitle disabledTitle:disabledTitle normalTitleColor:nil highlightedTitleColor:nil selectedTitleColor:nil disabledTitleColor:nil font:nil frame:CGRectZero target:target action:action animated:animated];
 }
 
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle
-                         highlightedTitle:(NSString*)highlightedTitle
-                            selectedTitle:(NSString*)selectedTitle
-                            disabledTitle:(NSString*)disabledTitle
-                         normalTitleColor:(UIColor*)normatTitleColor
-                    highlightedTitleColor:(UIColor*)highlightedTitleColor
-                       selectedTitleColor:(UIColor*)selectedTitleColor
-                       disabledTitleColor:(UIColor*)disabledTitleColor
-                                     font:(UIFont*)font
-                                    frame:(CGRect)frame
-                                   target:(id)target
-                                   action:(SEL)action
-                                 animated:(BOOL)animated {
+- (UIButton*)moAddRightBarButtonNormalTitle:(NSString*)normalTitle
+                           highlightedTitle:(NSString*)highlightedTitle
+                              selectedTitle:(NSString*)selectedTitle
+                              disabledTitle:(NSString*)disabledTitle
+                           normalTitleColor:(UIColor*)normatTitleColor
+                      highlightedTitleColor:(UIColor*)highlightedTitleColor
+                         selectedTitleColor:(UIColor*)selectedTitleColor
+                         disabledTitleColor:(UIColor*)disabledTitleColor
+                                       font:(UIFont*)font
+                                      frame:(CGRect)frame
+                                     target:(id)target
+                                     action:(SEL)action
+                                   animated:(BOOL)animated {
     UIButton* button = [[UIButton alloc] initWithFrame:frame];
     
     // titles
-    button.normalTitle = normalTitle;
-    button.highlightedTitle = highlightedTitle;
-    button.selectedTitle = selectedTitle;
-    button.disabledTitle = disabledTitle;
+    button.moNormalTitle = normalTitle;
+    button.moHighlightedTitle = highlightedTitle;
+    button.moSelectedTitle = selectedTitle;
+    button.moDisabledTitle = disabledTitle;
     
     // title colors
     [button setTitleColor:normatTitleColor forState:UIControlStateNormal];
@@ -2739,73 +2737,73 @@ MOBILY_DEFINE_VALIDATE_IMAGE(BackIndicatorTransitionMaskImage)
     
     [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
     [button sizeToFit];
-    [self addRightBarView:button animated:animated];
+    [self moAddRightBarView:button animated:animated];
     return button;
 }
 
-- (UIBarButtonItem*)addLeftBarView:(UIView*)view animated:(BOOL)animated {
-    return [self addLeftBarView:view target:nil action:nil animated:animated];
+- (UIBarButtonItem*)moAddLeftBarView:(UIView*)view animated:(BOOL)animated {
+    return [self moAddLeftBarView:view target:nil action:nil animated:animated];
 }
 
-- (UIBarButtonItem*)addRightBarView:(UIView*)view animated:(BOOL)animated {
-    return [self addRightBarView:view target:nil action:nil animated:animated];
+- (UIBarButtonItem*)moAddRightBarView:(UIView*)view animated:(BOOL)animated {
+    return [self moAddRightBarView:view target:nil action:nil animated:animated];
 }
 
-- (UIBarButtonItem*)addLeftBarView:(UIView*)view target:(id)target action:(SEL)action animated:(BOOL)animated {
+- (UIBarButtonItem*)moAddLeftBarView:(UIView*)view target:(id)target action:(SEL)action animated:(BOOL)animated {
     UIBarButtonItem* barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:view];
     if((target != nil) && (action != nil)) {
         UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:target action:action];
         [view addGestureRecognizer:tapGesture];
     }
-    [self addLeftBarButtonItem:barButtonItem animated:animated];
+    [self moAddLeftBarButtonItem:barButtonItem animated:animated];
     return barButtonItem;
 }
 
-- (UIBarButtonItem*)addRightBarView:(UIView*)view target:(id)target action:(SEL)action animated:(BOOL)animated {
+- (UIBarButtonItem*)moAddRightBarView:(UIView*)view target:(id)target action:(SEL)action animated:(BOOL)animated {
     UIBarButtonItem* barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:view];
     if((target != nil) && (action != nil)) {
         UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:target action:action];
         [view addGestureRecognizer:tapGesture];
     }
-    [self addRightBarButtonItem:barButtonItem animated:animated];
+    [self moAddRightBarButtonItem:barButtonItem animated:animated];
     return barButtonItem;
 }
 
-- (void)addLeftBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated {
-    [self setLeftBarButtonItems:[NSArray arrayWithArray:self.leftBarButtonItems andAddingObject:barButtonItem] animated:animated];
+- (void)moAddLeftBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated {
+    [self setLeftBarButtonItems:[NSArray moArrayWithArray:self.leftBarButtonItems andAddingObject:barButtonItem] animated:animated];
 }
 
-- (void)addRightBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated {
-    [self setRightBarButtonItems:[NSArray arrayWithArray:self.rightBarButtonItems andAddingObject:barButtonItem] animated:animated];
+- (void)moAddRightBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated {
+    [self setRightBarButtonItems:[NSArray moArrayWithArray:self.rightBarButtonItems andAddingObject:barButtonItem] animated:animated];
 }
 
-- (void)removeLeftBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated {
-    [self setLeftBarButtonItems:[NSArray arrayWithArray:self.leftBarButtonItems andRemovingObject:barButtonItem] animated:animated];
+- (void)moRemoveLeftBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated {
+    [self setLeftBarButtonItems:[NSArray moArrayWithArray:self.leftBarButtonItems andRemovingObject:barButtonItem] animated:animated];
 }
 
-- (void)removeRightBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated {
-    [self setRightBarButtonItems:[NSArray arrayWithArray:self.rightBarButtonItems andRemovingObject:barButtonItem] animated:animated];
+- (void)moRemoveRightBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated {
+    [self setRightBarButtonItems:[NSArray moArrayWithArray:self.rightBarButtonItems andRemovingObject:barButtonItem] animated:animated];
 }
 
-- (void)removeAllLeftBarButtonItemsAnimated:(BOOL)animated {
+- (void)moRemoveAllLeftBarButtonItemsAnimated:(BOOL)animated {
     [self setLeftBarButtonItems:@[] animated:animated];
 }
 
-- (void)removeAllRightBarButtonItemsAnimated:(BOOL)animated {
+- (void)moRemoveAllRightBarButtonItemsAnimated:(BOOL)animated {
     [self setRightBarButtonItems:@[] animated:animated];
 }
 
-- (void)setLeftBarAutomaticAlignmentAnimated:(BOOL)animated {
+- (void)moSetLeftBarAutomaticAlignmentAnimated:(BOOL)animated {
     __block CGFloat rightWidth = 0.0f;
-    [self.rightBarButtonItems each:^(UIBarButtonItem* barButtonItem) {
+    [self.rightBarButtonItems moEach:^(UIBarButtonItem* barButtonItem) {
         rightWidth += barButtonItem.width;
     }];
     [self setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:[[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, rightWidth, 0.0f)]] animated:animated];
 }
 
-- (void)setRightBarAutomaticAlignmentAnimated:(BOOL)animated {
+- (void)moSetRightBarAutomaticAlignmentAnimated:(BOOL)animated {
     __block CGFloat leftWidth = 0.0f;
-    [self.leftBarButtonItems each:^(UIBarButtonItem* barButtonItem) {
+    [self.leftBarButtonItems moEach:^(UIBarButtonItem* barButtonItem) {
         leftWidth += barButtonItem.width;
     }];
     [self setRightBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:[[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, leftWidth, 0.0f)]] animated:animated];
@@ -2827,14 +2825,14 @@ static MobilyDeviceModel Mobily_DeviceModel = MobilyDeviceModelUnknown;
 
 @implementation UIDevice (MobilyUI)
 
-+ (CGFloat)systemVersion {
++ (CGFloat)moSystemVersion {
     if(Mobily_SystemVersion <= MOBILY_EPSILON) {
         Mobily_SystemVersion = [self.currentDevice.systemVersion floatValue];
     }
     return Mobily_SystemVersion;
 }
 
-+ (BOOL)isSimulator {
++ (BOOL)moIsSimulator {
 #ifdef MOBILY_SIMULATOR
     return YES;
 #else
@@ -2842,15 +2840,15 @@ static MobilyDeviceModel Mobily_DeviceModel = MobilyDeviceModelUnknown;
 #endif
 }
 
-+ (BOOL)isIPhone {
++ (BOOL)moIsIPhone {
     return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone);
 }
 
-+ (BOOL)isIPad {
++ (BOOL)moIsIPad {
     return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
 }
 
-+ (NSString*)deviceTypeString {
++ (NSString*)moDeviceTypeString {
     if(Mobily_DeviceTypeString == nil) {
         struct utsname systemInfo;
         uname(&systemInfo);
@@ -2859,9 +2857,9 @@ static MobilyDeviceModel Mobily_DeviceModel = MobilyDeviceModelUnknown;
     return Mobily_DeviceTypeString;
 }
 
-+ (NSString*)deviceVersionString {
++ (NSString*)moDeviceVersionString {
     if(Mobily_DeviceVersionString == nil) {
-        NSString* deviceType = self.deviceTypeString;
+        NSString* deviceType = self.moDeviceTypeString;
         NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"[0-9]{1,},[0-9]{1,}" options:0 error:nil];
         NSRange rangeOfVersion = [regex rangeOfFirstMatchInString:deviceType options:0 range:NSMakeRange(0, deviceType.length)];
         if((rangeOfVersion.location != NSNotFound) && (rangeOfVersion.length > 0)) {
@@ -2871,7 +2869,7 @@ static MobilyDeviceModel Mobily_DeviceModel = MobilyDeviceModelUnknown;
     return Mobily_DeviceVersionString;
 }
 
-+ (MobilyDeviceFamily)family {
++ (MobilyDeviceFamily)moFamily {
     if(Mobily_DeviceFamily == MobilyDeviceFamilyUnknown) {
 #ifdef MOBILY_SIMULATOR
         Mobily_DeviceFamily = MobilyDeviceFamilySimulator;
@@ -2881,7 +2879,7 @@ static MobilyDeviceModel Mobily_DeviceModel = MobilyDeviceModelUnknown;
             @"iPad": @(MobilyDeviceFamilyPad),
             @"iPod": @(MobilyDeviceFamilyPod),
         };
-        NSString* deviceType = self.deviceTypeString;
+        NSString* deviceType = self.moDeviceTypeString;
         [modelManifest enumerateKeysAndObjectsUsingBlock:^(NSString* string, NSNumber* number, BOOL* stop) {
             if([deviceType hasPrefix:string] == YES) {
                 Mobily_DeviceFamily = number.unsignedIntegerValue;
@@ -2893,12 +2891,12 @@ static MobilyDeviceModel Mobily_DeviceModel = MobilyDeviceModelUnknown;
     return Mobily_DeviceFamily;
 }
 
-+ (MobilyDeviceModel)model {
++ (MobilyDeviceModel)moModel {
     if(Mobily_DeviceModel == MobilyDeviceModelUnknown) {
 #ifdef MOBILY_SIMULATOR
         switch(UI_USER_INTERFACE_IDIOM()) {
             case UIUserInterfaceIdiomPhone:
-                switch(self.display) {
+                switch(self.moDisplay) {
                     case MobilyDeviceDisplayPhone35Inch: Mobily_DeviceModel = MobilyDeviceModelPhone4S; break;
                     case MobilyDeviceDisplayPhone4Inch: Mobily_DeviceModel = MobilyDeviceModelPhone5S; break;
                     case MobilyDeviceDisplayPhone47Inch: Mobily_DeviceModel = MobilyDeviceModelPhone6; break;
@@ -2963,9 +2961,9 @@ static MobilyDeviceModel Mobily_DeviceModel = MobilyDeviceModelUnknown;
                 @"5,1": @(MobilyDeviceModelPod5),
             },
         };
-        NSDictionary* modelManifest = familyModelManifest[@(self.family)];
+        NSDictionary* modelManifest = familyModelManifest[@(self.moFamily)];
         if(modelManifest != nil) {
-            NSNumber* modelType = modelManifest[self.deviceVersionString];
+            NSNumber* modelType = modelManifest[self.moDeviceVersionString];
             if(modelType != nil) {
                 Mobily_DeviceModel = modelType.unsignedIntegerValue;
             }
@@ -2975,7 +2973,7 @@ static MobilyDeviceModel Mobily_DeviceModel = MobilyDeviceModelUnknown;
     return Mobily_DeviceModel;
 }
 
-+ (MobilyDeviceDisplay)display {
++ (MobilyDeviceDisplay)moDisplay {
     static MobilyDeviceDisplay displayType = MobilyDeviceDisplayUnknown;
     if(displayType == MobilyDeviceDisplayUnknown) {
         CGRect screenRect = UIScreen.mainScreen.bounds;

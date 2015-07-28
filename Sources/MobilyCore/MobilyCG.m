@@ -45,11 +45,11 @@
 
 @implementation NSString (MobilyCG)
 
-- (CGPoint)convertToPoint {
-    return [self convertToPointSeparated:@";"];
+- (CGPoint)moConvertToPoint {
+    return [self moConvertToPointSeparated:@";"];
 }
 
-- (CGPoint)convertToPointSeparated:(NSString*)separated {
+- (CGPoint)moConvertToPointSeparated:(NSString*)separated {
     CGPoint result = CGPointZero;
     static NSNumberFormatter* formatter = nil;
     if(formatter == nil) {
@@ -74,11 +74,11 @@
     return result;
 }
 
-- (CGSize)convertToSize {
-    return [self convertToSizeSeparated:@";"];
+- (CGSize)moConvertToSize {
+    return [self moConvertToSizeSeparated:@";"];
 }
 
-- (CGSize)convertToSizeSeparated:(NSString*)separated {
+- (CGSize)moConvertToSizeSeparated:(NSString*)separated {
     CGSize result = CGSizeZero;
     static NSNumberFormatter* formatter = nil;
     if(formatter == nil) {
@@ -103,11 +103,11 @@
     return result;
 }
 
-- (CGRect)convertToRect {
-    return [self convertToRectSeparated:@";"];
+- (CGRect)moConvertToRect {
+    return [self moConvertToRectSeparated:@";"];
 }
 
-- (CGRect)convertToRectSeparated:(NSString*)separated {
+- (CGRect)moConvertToRectSeparated:(NSString*)separated {
     CGRect result = CGRectZero;
     static NSNumberFormatter* formatter = nil;
     if(formatter == nil) {

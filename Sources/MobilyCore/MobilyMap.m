@@ -439,7 +439,7 @@
     [_objects enumerateObjectsAtIndexes:indexSet options:opts usingBlock:block];
 }
 
-- (void)each:(void(^)(id key, id object))block {
+- (void)moEach:(void(^)(id key, id object))block {
     [_objects enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL* stop __unused) {
         block(_keys[index], object);
     }];

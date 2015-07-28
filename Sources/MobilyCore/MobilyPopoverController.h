@@ -54,7 +54,7 @@
 
 @interface UIViewController (MobilyPopoverController)
 
-@property(nonatomic, readwrite, strong) MobilyPopoverController* popoverController;
+@property(nonatomic, readwrite, strong) MobilyPopoverController* moPopoverController;
 
 @end
 

@@ -130,35 +130,31 @@
 #import <objc/runtime.h>
 
 /*--------------------------------------------------*/
-
-static char const* const MobilyStyleKey = "mobilyStyleKey";
-
-/*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
 @implementation UIResponder (MobilyStyle)
 
-- (void)setMobilyStyle:(MobilyStyle*)mobilyStyle {
-    MobilyStyle* currentStyle = objc_getAssociatedObject(self, MobilyStyleKey);
-    if(currentStyle != mobilyStyle) {
-        objc_setAssociatedObject(self, MobilyStyleKey, mobilyStyle, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        if(mobilyStyle != nil) {
-            [mobilyStyle _applyWithTarget:self];
+- (void)setMoStyle:(MobilyStyle*)moStyle {
+    MobilyStyle* currentStyle = objc_getAssociatedObject(self, @selector(moStyle));
+    if(currentStyle != moStyle) {
+        objc_setAssociatedObject(self, @selector(moStyle), moStyle, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        if(moStyle != nil) {
+            [moStyle _applyWithTarget:self];
         }
     }
 }
 
-- (MobilyStyle*)mobilyStyle {
-    return objc_getAssociatedObject(self, MobilyStyleKey);
+- (MobilyStyle*)moStyle {
+    return objc_getAssociatedObject(self, @selector(moStyle));
 }
 
-- (void)setMobilyStyleName:(NSString*)mobilyStyleName {
-    self.mobilyStyle = [MobilyStyle styleWithName:mobilyStyleName];
+- (void)setMoStyleName:(NSString*)moStyleName {
+    self.moStyle = [MobilyStyle styleWithName:moStyleName];
 }
 
-- (NSString*)mobilyStyleName {
-    return self.mobilyStyle.name;
+- (NSString*)moStyleName {
+    return self.moStyle.name;
 }
 
 @end

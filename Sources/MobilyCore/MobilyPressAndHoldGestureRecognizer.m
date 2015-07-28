@@ -99,7 +99,7 @@
 }
 
 - (void)removeTarget:(id)target action:(SEL)action {
-    [_actions each:^(MobilyEventSelector* event) {
+    [_actions moEach:^(MobilyEventSelector* event) {
         if((event.target == target) && (event.action == action)) {
             [_actions removeObject:event];
         }
@@ -127,7 +127,7 @@
 }
 
 - (void)_invokeMethods {
-    [_actions each:^(MobilyEventSelector* event) {
+    [_actions moEach:^(MobilyEventSelector* event) {
         [event fireSender:self object:nil];
     }];
 }

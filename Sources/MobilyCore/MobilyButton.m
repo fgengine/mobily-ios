@@ -83,22 +83,22 @@
 
 - (NSArray*)relatedObjects {
     if(_objectChilds.count > 0) {
-        return [_objectChilds unionWithArrays:self.subviews, nil];
+        return [_objectChilds moUnionWithArrays:self.subviews, nil];
     }
     return self.subviews;
 }
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIView.class] == YES) {
-        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
+        self.objectChilds = [NSArray moArrayWithArray:_objectChilds andAddingObject:objectChild];
         [self addSubview:(UIView*)objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIView.class] == YES) {
-        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
-        [self removeSubview:(UIView*)objectChild];
+        self.objectChilds = [NSArray moArrayWithArray:_objectChilds andRemovingObject:objectChild];
+        [self moRemoveSubview:(UIView*)objectChild];
     }
 }
 
@@ -208,17 +208,17 @@
             if(_disabledBackgroundColor != nil) {
                 return _disabledBackgroundColor;
             }
-            return [_normalBackgroundColor multiplyBrightness:0.85f];
+            return [_normalBackgroundColor moMultiplyBrightness:0.85f];
         } else if(self.isHighlighted == YES) {
             if(_highlightedBackgroundColor != nil) {
                 return _highlightedBackgroundColor;
             }
-            return [_normalBackgroundColor multiplyBrightness:1.35f];
+            return [_normalBackgroundColor moMultiplyBrightness:1.35f];
         } else if(self.isSelected == YES) {
             if(_selectedBackgroundColor != nil) {
                 return _selectedBackgroundColor;
             }
-            return [_normalBackgroundColor multiplyBrightness:1.10f];
+            return [_normalBackgroundColor moMultiplyBrightness:1.10f];
         }
     }
     return _normalBackgroundColor;
@@ -258,17 +258,17 @@
             if(_disabledBorderColor != nil) {
                 return _disabledBorderColor;
             }
-            return [_normalBorderColor multiplyBrightness:0.85f];
+            return [_normalBorderColor moMultiplyBrightness:0.85f];
         } else if(self.isHighlighted == YES) {
             if(_highlightedBorderColor != nil) {
                 return _highlightedBorderColor;
             }
-            return [_normalBorderColor multiplyBrightness:1.35f];
+            return [_normalBorderColor moMultiplyBrightness:1.35f];
         } else if(self.isSelected == YES) {
             if(_selectedBorderColor != nil) {
                 return _selectedBorderColor;
             }
-            return [_normalBorderColor multiplyBrightness:1.10f];
+            return [_normalBorderColor moMultiplyBrightness:1.10f];
         }
     }
     return _normalBorderColor;
@@ -591,9 +591,9 @@
     if(backgroundColor != nil) {
         self.backgroundColor = backgroundColor;
     }
-    self.borderColor = [self currentBorderColor];
-    self.borderWidth = [self currentBorderWidth];
-    self.cornerRadius = [self currentCornerRadius];
+    self.moBorderColor = [self currentBorderColor];
+    self.moBorderWidth = [self currentBorderWidth];
+    self.moCornerRadius = [self currentCornerRadius];
 }
 
 @end

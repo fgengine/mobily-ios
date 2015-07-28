@@ -108,20 +108,20 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 
 - (NSArray*)relatedObjects {
     if(_objectChilds.count > 0) {
-        return [_objectChilds unionWithArrays:@[ self.rootViewController ], nil];
+        return [_objectChilds moUnionWithArrays:@[ self.rootViewController ], nil];
     }
     return @[ self.rootViewController ];
 }
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIViewController.class] == YES) {
-        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
+        self.objectChilds = [NSArray moArrayWithArray:_objectChilds andAddingObject:objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIViewController.class] == YES) {
-        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
+        self.objectChilds = [NSArray moArrayWithArray:_objectChilds andRemovingObject:objectChild];
     }
 }
 
@@ -192,15 +192,15 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 
 - (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
     if(_emptyView.isHidden == NO) {
-        UIViewController* currentViewController = [self currentViewController];
-        UIViewController* parentViewController = [currentViewController parentViewController];
-        if(parentViewController == nil) {
-            parentViewController = currentViewController;
+        UIViewController* currentController = self.moCurrentController;
+        UIViewController* parentController = [currentController parentViewController];
+        if(parentController == nil) {
+            parentController = currentController;
         }
         if(_automaticallyHideKeyboard == YES) {
             UIView* view = nil;
-            if([currentViewController isKindOfClass:MobilyViewController.class] == YES) {
-                MobilyViewController* mobilyViewController = (MobilyViewController*)currentViewController;
+            if([currentController isKindOfClass:MobilyViewController.class] == YES) {
+                MobilyViewController* mobilyViewController = (MobilyViewController*)currentController;
                 if(mobilyViewController.isAutomaticallyHideKeyboard == NO) {
                     _emptyView.hidden = YES;
                     view = [super hitTest:point withEvent:event];
@@ -208,7 +208,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
                 }
             }
             if(view == nil) {
-                view = [parentViewController.view hitTest:point withEvent:event];
+                view = [parentController.view hitTest:point withEvent:event];
                 if(view.canBecomeFirstResponder == NO) {
                     if([view isKindOfClass:UIControl.class] == YES) {
                         UIControl* control = (UIControl*)view;
@@ -260,9 +260,9 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 }
 
 - (void)resignCurrentFirstResponder {
-    UIResponder* firstResponder = UIResponder.currentFirstResponder;
-    if(firstResponder != nil) {
-        [firstResponder resignFirstResponder];
+    UIResponder* responder = UIResponder.moCurrentFirstResponder;
+    if(responder != nil) {
+        [responder resignFirstResponder];
     }
 }
 

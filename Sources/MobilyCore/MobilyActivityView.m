@@ -100,7 +100,7 @@
         
         _panelView = [[MobilyBlurView alloc] initWithFrame:CGRectZero];
         _panelView.tintColor = MobilyActivityViewPanelColor;
-        _panelView.cornerRadius = MobilyActivityViewPanelCornerRadius;
+        _panelView.moCornerRadius = MobilyActivityViewPanelCornerRadius;
         _panelView.clipsToBounds = YES;
         [self addSubview:_panelView];
         
@@ -152,11 +152,11 @@
     [super layoutSubviews];
     
     CGSize spinnerSize = CGSizeMake(self.spinnerSize, self.spinnerSize);
-    CGSize textSize = [_textView implicitSizeForWidth:_textWidth];
+    CGSize textSize = [_textView moImplicitSizeForWidth:_textWidth];
     CGSize panelSize = CGSizeMake(_margin + MAX(spinnerSize.width, textSize.width) + _margin, _margin + spinnerSize.height + ((_textView.text.length > 0) ? _spacing + textSize.height : 0.0f) + _margin);
     CGFloat spinnerOffset = floorf((panelSize.width - spinnerSize.width) * 0.5f);
     
-    _panelView.frame = MobilyRectMakeCenterPoint(self.frameCenter, panelSize.width, panelSize.height);
+    _panelView.frame = MobilyRectMakeCenterPoint(self.moFrameCenter, panelSize.width, panelSize.height);
     _spinnerView.frame = CGRectMake(spinnerOffset, _margin, spinnerSize.width, spinnerSize.height);
     _textView.frame = CGRectMake(_margin, _margin + spinnerSize.height + _spacing, textSize.width, textSize.height);
 }
@@ -189,14 +189,14 @@
 }
 
 - (void)setPanelCornerRadius:(CGFloat)panelCornerRadius {
-    if(_panelView.cornerRadius != panelCornerRadius) {
-        _panelView.cornerRadius = panelCornerRadius;
+    if(_panelView.moCornerRadius != panelCornerRadius) {
+        _panelView.moCornerRadius = panelCornerRadius;
         [self setNeedsLayout];
     }
 }
 
 - (CGFloat)panelCornerRadius {
-    return _panelView.cornerRadius;
+    return _panelView.moCornerRadius;
 }
 
 - (void)setSpinnerColor:(UIColor*)spinnerColor {

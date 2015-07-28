@@ -63,8 +63,8 @@ typedef void (^MobilyKVOBlock)(MobilyKVO* kvo, id oldValue, id newValue);
 
 @interface NSObject (MobilyKVO)
 
-- (MobilyKVO*)observeKeyPath:(NSString*)keyPath withBlock:(MobilyKVOBlock)block;
-- (MobilyKVO*)observeSelector:(SEL)selector withBlock:(MobilyKVOBlock)block;
+- (MobilyKVO*)moObserveKeyPath:(NSString*)keyPath withBlock:(MobilyKVOBlock)block;
+- (MobilyKVO*)moObserveSelector:(SEL)selector withBlock:(MobilyKVOBlock)block;
 
 @end
 

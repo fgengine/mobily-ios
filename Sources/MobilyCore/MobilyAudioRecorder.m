@@ -147,7 +147,7 @@
 #pragma mark Public
 
 - (BOOL)prepareWithName:(NSString*)name {
-    return [self prepareWithPath:NSFileManager.documentDirectory name:name];
+    return [self prepareWithPath:NSFileManager.moDocumentDirectory name:name];
 }
 
 - (BOOL)prepareWithPath:(NSString*)path name:(NSString*)name {

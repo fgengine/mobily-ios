@@ -130,7 +130,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 - (void)enumerateObjectsUsingBlock:(void(^)(id obj, NSUInteger idx, BOOL* stop))block;
 - (void)enumerateObjectsWithOptions:(NSEnumerationOptions)opts usingBlock:(void(^)(id obj, NSUInteger idx, BOOL* stop))block;
 - (void)enumerateObjectsAtIndices:(NSIndexSet*)indexSet options:(NSEnumerationOptions)opts usingBlock:(void(^)(id obj, NSUInteger idx, BOOL* stop))block;
-- (void)each:(void(^)(id key, id object))block;
+- (void)moEach:(void(^)(id key, id object))block;
 - (void)eachWithIndex:(void(^)(id key, id object, NSUInteger index))block;
 - (void)eachKey:(void(^)(id key))block;
 - (void)eachKeyWithIndex:(void(^)(id key, NSUInteger index))block;

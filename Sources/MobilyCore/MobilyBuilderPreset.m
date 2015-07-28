@@ -200,11 +200,11 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
         NSArray* components = [key componentsSeparatedByCharactersInSet:characterSet];
         if(components.count > 1) {
             for(NSString* component in components) {
-                validKey = [validKey stringByAppendingString:[component stringByUppercaseFirstCharacterString]];
+                validKey = [validKey stringByAppendingString:component.moStringByUppercaseFirstCharacterString];
             }
-            validKey = [validKey stringByLowercaseFirstCharacterString];
+            validKey = validKey.moStringByLowercaseFirstCharacterString;
         } else {
-            validKey = [key stringByLowercaseFirstCharacterString];
+            validKey = key.moStringByLowercaseFirstCharacterString;
         }
         if(validKey.length > 0) {
             if([object validateValue:&value forKey:validKey error:nil] == YES) {

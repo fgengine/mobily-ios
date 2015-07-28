@@ -39,8 +39,8 @@
 
 @interface NSObject (MobilyNS)
 
-+ (NSString*)className;
-- (NSString*)className;
++ (NSString*)moClassName;
+- (NSString*)moClassName;
 
 @end
 
@@ -77,80 +77,80 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 
 @interface NSDate (MobilyNS)
 
-+ (NSDate*)dateByYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day;
-+ (NSDate*)dateByHour:(NSInteger)hour minute:(NSInteger)minute second:(NSInteger)seccond;
-+ (NSDate*)dateByYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day hour:(NSInteger)hour minute:(NSInteger)minute second:(NSInteger)seccond;
++ (NSDate*)moDateByYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day;
++ (NSDate*)moDateByHour:(NSInteger)hour minute:(NSInteger)minute second:(NSInteger)seccond;
++ (NSDate*)moDateByYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day hour:(NSInteger)hour minute:(NSInteger)minute second:(NSInteger)seccond;
 
-- (NSString*)formatTime;
-- (NSString*)formatDate;
-- (NSString*)formatShortTime;
-- (NSString*)formatDateTime;
-- (NSString*)formatRelativeTime;
-- (NSString*)formatShortRelativeTime;
+- (NSString*)moFormatTime;
+- (NSString*)moFormatDate;
+- (NSString*)moFormatShortTime;
+- (NSString*)moFormatDateTime;
+- (NSString*)moFormatRelativeTime;
+- (NSString*)moFormatShortRelativeTime;
 
-+ (NSDate*)dateWithUnixTimestamp:(NSUInteger)timestamp;
-- (NSUInteger)unixTimestamp;
++ (NSDate*)moDateWithUnixTimestamp:(NSUInteger)timestamp;
+- (NSUInteger)moUnixTimestamp;
 
-- (NSDate*)extractCalendarUnit:(NSCalendarUnit)calendarUnit;
-- (NSDate*)withoutDate;
-- (NSDate*)withoutTime;
+- (NSDate*)moExtractCalendarUnit:(NSCalendarUnit)calendarUnit;
+- (NSDate*)moWithoutDate;
+- (NSDate*)moWithoutTime;
 
-- (NSDate*)beginningOfYear;
-- (NSDate*)endOfYear;
-- (NSDate*)beginningOfMonth;
-- (NSDate*)endOfMonth;
-- (NSDate*)beginningOfWeek;
-- (NSDate*)endOfWeek;
-- (NSDate*)beginningOfDay;
-- (NSDate*)endOfDay;
-- (NSDate*)beginningOfHour;
-- (NSDate*)endOfHour;
-- (NSDate*)beginningOfMinute;
-- (NSDate*)endOfMinute;
+- (NSDate*)moBeginningOfYear;
+- (NSDate*)moEndOfYear;
+- (NSDate*)moBeginningOfMonth;
+- (NSDate*)moEndOfMonth;
+- (NSDate*)moBeginningOfWeek;
+- (NSDate*)moEndOfWeek;
+- (NSDate*)moBeginningOfDay;
+- (NSDate*)moEndOfDay;
+- (NSDate*)moBeginningOfHour;
+- (NSDate*)moEndOfHour;
+- (NSDate*)moBeginningOfMinute;
+- (NSDate*)moEndOfMinute;
 
-- (NSDate*)previousYear;
-- (NSDate*)nextYear;
-- (NSDate*)previousMonth;
-- (NSDate*)nextMonth;
-- (NSDate*)previousWeek;
-- (NSDate*)nextWeek;
-- (NSDate*)previousDay;
-- (NSDate*)nextDay;
-- (NSDate*)previousHour;
-- (NSDate*)nextHour;
-- (NSDate*)previousMinute;
-- (NSDate*)nextMinute;
-- (NSDate*)previousSecond;
-- (NSDate*)nextSecond;
+- (NSDate*)moPreviousYear;
+- (NSDate*)moNextYear;
+- (NSDate*)moPreviousMonth;
+- (NSDate*)moNextMonth;
+- (NSDate*)moPreviousWeek;
+- (NSDate*)moNextWeek;
+- (NSDate*)moPreviousDay;
+- (NSDate*)moNextDay;
+- (NSDate*)moPreviousHour;
+- (NSDate*)moNextHour;
+- (NSDate*)moPreviousMinute;
+- (NSDate*)moNextMinute;
+- (NSDate*)moPreviousSecond;
+- (NSDate*)moNextSecond;
 
-- (NSInteger)yearsToDate:(NSDate*)date;
-- (NSInteger)monthsToDate:(NSDate*)date;
-- (NSInteger)daysToDate:(NSDate*)date;
-- (NSInteger)weeksToDate:(NSDate*)date;
-- (NSInteger)hoursToDate:(NSDate*)date;
-- (NSInteger)minutesToDate:(NSDate*)date;
-- (NSInteger)secondsToDate:(NSDate*)date;
+- (NSInteger)moYearsToDate:(NSDate*)date;
+- (NSInteger)moMonthsToDate:(NSDate*)date;
+- (NSInteger)moDaysToDate:(NSDate*)date;
+- (NSInteger)moWeeksToDate:(NSDate*)date;
+- (NSInteger)moHoursToDate:(NSDate*)date;
+- (NSInteger)moMinutesToDate:(NSDate*)date;
+- (NSInteger)moSecondsToDate:(NSDate*)date;
 
-- (NSDate*)addYears:(NSInteger)years;
-- (NSDate*)addMonths:(NSInteger)months;
-- (NSDate*)addWeeks:(NSInteger)weeks;
-- (NSDate*)addDays:(NSInteger)days;
-- (NSDate*)addHours:(NSInteger)hours;
-- (NSDate*)addMinutes:(NSInteger)minutes;
-- (NSDate*)addSeconds:(NSInteger)seconds;
+- (NSDate*)moAddYears:(NSInteger)years;
+- (NSDate*)moAddMonths:(NSInteger)months;
+- (NSDate*)moAddWeeks:(NSInteger)weeks;
+- (NSDate*)moAddDays:(NSInteger)days;
+- (NSDate*)moAddHours:(NSInteger)hours;
+- (NSDate*)moAddMinutes:(NSInteger)minutes;
+- (NSDate*)moAddSeconds:(NSInteger)seconds;
 
-- (BOOL)isYesterday;
-- (BOOL)isToday;
-- (BOOL)isTomorrow;
-- (BOOL)insideFrom:(NSDate*)from to:(NSDate*)to;
-- (BOOL)isEarlier:(NSDate*)anotherDate;
-- (BOOL)isEarlierOrSame:(NSDate*)anotherDate;
-- (BOOL)isSame:(NSDate*)anotherDate;
-- (BOOL)isAfter:(NSDate*)anotherDate;
-- (BOOL)isAfterOrSame:(NSDate*)anotherDate;
+- (BOOL)moIsYesterday;
+- (BOOL)moIsToday;
+- (BOOL)moIsTomorrow;
+- (BOOL)moInsideFrom:(NSDate*)from to:(NSDate*)to;
+- (BOOL)moIsEarlier:(NSDate*)anotherDate;
+- (BOOL)moIsEarlierOrSame:(NSDate*)anotherDate;
+- (BOOL)moIsSame:(NSDate*)anotherDate;
+- (BOOL)moIsAfter:(NSDate*)anotherDate;
+- (BOOL)moIsAfterOrSame:(NSDate*)anotherDate;
 
-- (MobilyDateSeason)season;
-- (MobilyDateWeekday)weekday;
+- (MobilyDateSeason)moSeason;
+- (MobilyDateWeekday)moWeekday;
 
 @end
 
@@ -158,10 +158,10 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 
 @interface NSDateFormatter (MobilyNS)
 
-+ (instancetype)dateFormatterWithFormat:(NSString*)format;
-+ (instancetype)dateFormatterWithFormat:(NSString*)format locale:(NSLocale*)locale;
-+ (instancetype)dateFormatterWithFormatTemplate:(NSString*)formatTemplate;
-+ (instancetype)dateFormatterWithFormatTemplate:(NSString*)formatTemplate locale:(NSLocale*)locale;
++ (instancetype)moDateFormatterWithFormat:(NSString*)format;
++ (instancetype)moDateFormatterWithFormat:(NSString*)format locale:(NSLocale*)locale;
++ (instancetype)moDateFormatterWithFormatTemplate:(NSString*)formatTemplate;
++ (instancetype)moDateFormatterWithFormatTemplate:(NSString*)formatTemplate locale:(NSLocale*)locale;
 
 @end
 
@@ -169,9 +169,9 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 
 @interface NSData (MobilyNS)
 
-- (NSString*)toHex;
+- (NSString*)moToHex;
 
-- (NSString*)toBase64;
+- (NSString*)moToBase64;
 
 @end
 
@@ -179,32 +179,32 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 
 @interface NSString (MobilyNS)
 
-+ (id)stringWithData:(NSData*)data encoding:(NSStringEncoding)encoding;
++ (id)moStringWithData:(NSData*)data encoding:(NSStringEncoding)encoding;
 
-- (NSString*)stringByUppercaseFirstCharacterString;
-- (NSString*)stringByLowercaseFirstCharacterString;
+- (NSString*)moStringByUppercaseFirstCharacterString;
+- (NSString*)moStringByLowercaseFirstCharacterString;
 
-- (NSString*)stringByMD5;
-- (NSString*)stringBySHA256;
+- (NSString*)moStringByMD5;
+- (NSString*)moStringBySHA256;
 
-- (NSString*)stringByDecodingURLFormat;
-- (NSString*)stringByEncodingURLFormat;
-- (NSMutableDictionary*)dictionaryFromQueryComponents;
+- (NSString*)moStringByDecodingURLFormat;
+- (NSString*)moStringByEncodingURLFormat;
+- (NSMutableDictionary*)moDictionaryFromQueryComponents;
 
-- (BOOL)isEmail;
+- (BOOL)moIsEmail;
 
-- (NSData*)HMACSHA1:(NSString*)key;
+- (NSData*)moHMACSHA1:(NSString*)key;
 
-- (BOOL)convertToBool;
-- (NSNumber*)convertToNumber;
-- (NSDate*)convertToDateWithFormat:(NSString*)format;
+- (BOOL)moConvertToBool;
+- (NSNumber*)moConvertToNumber;
+- (NSDate*)moConvertToDateWithFormat:(NSString*)format;
 
-- (NSTextAlignment)convertToTextAlignment;
-- (NSLineBreakMode)convertToLineBreakMode;
+- (NSTextAlignment)moConvertToTextAlignment;
+- (NSLineBreakMode)moConvertToLineBreakMode;
 
-+ (NSString*)rightWordFormByCount:(NSInteger)count andForms:(NSArray*)forms;
++ (NSString*)moRightWordFormByCount:(NSInteger)count andForms:(NSArray*)forms;
 
-- (NSArray*)charactersArray;
+- (NSArray*)moCharactersArray;
 
 @end
 
@@ -212,53 +212,53 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 
 @interface NSArray (MobilyNS)
 
-+ (instancetype)arrayWithArray:(NSArray*)array andAddingObject:(id)object;
-+ (instancetype)arrayWithArray:(NSArray*)array andAddingObjectsFromArray:(NSArray*)addingObjects;
-+ (instancetype)arrayWithArray:(NSArray*)array andRemovingObject:(id)object;
-+ (instancetype)arrayWithArray:(NSArray*)array andRemovingObjectsInArray:(NSArray*)removingObjects;
++ (instancetype)moArrayWithArray:(NSArray*)array andAddingObject:(id)object;
++ (instancetype)moArrayWithArray:(NSArray*)array andAddingObjectsFromArray:(NSArray*)addingObjects;
++ (instancetype)moArrayWithArray:(NSArray*)array andRemovingObject:(id)object;
++ (instancetype)moArrayWithArray:(NSArray*)array andRemovingObjectsInArray:(NSArray*)removingObjects;
 
-- (NSArray*)arrayByReplaceObject:(id)object atIndex:(NSUInteger)index;
+- (NSArray*)moArrayByReplaceObject:(id)object atIndex:(NSUInteger)index;
 
-- (NSArray*)arrayByRemovedObjectAtIndex:(NSUInteger)index;
-- (NSArray*)arrayByRemovedObject:(id)object;
-- (NSArray*)arrayByRemovedObjectsFromArray:(NSArray*)array;
+- (NSArray*)moArrayByRemovedObjectAtIndex:(NSUInteger)index;
+- (NSArray*)moArrayByRemovedObject:(id)object;
+- (NSArray*)moArrayByRemovedObjectsFromArray:(NSArray*)array;
 
-- (NSArray*)arrayByObjectClass:(Class)objectClass;
-- (NSArray*)arrayByObjectProtocol:(Protocol*)objectProtocol;
+- (NSArray*)moArrayByObjectClass:(Class)objectClass;
+- (NSArray*)moArrayByObjectProtocol:(Protocol*)objectProtocol;
 
-- (id)firstObjectIsClass:(Class)objectClass;
-- (id)lastObjectIsClass:(Class)objectClass;
+- (id)moFirstObjectIsClass:(Class)objectClass;
+- (id)moLastObjectIsClass:(Class)objectClass;
 
-- (id)firstObjectIsProtocol:(Protocol*)objectProtocol;
-- (id)lastObjectIsProtocol:(Protocol*)objectProtocol;
+- (id)moFirstObjectIsProtocol:(Protocol*)objectProtocol;
+- (id)moLastObjectIsProtocol:(Protocol*)objectProtocol;
 
-- (BOOL)containsObjectsInArray:(NSArray*)objectsArray;
+- (BOOL)moContainsObjectsInArray:(NSArray*)objectsArray;
 
-- (NSUInteger)nextIndexOfObject:(id)object;
-- (NSUInteger)prevIndexOfObject:(id)object;
+- (NSUInteger)moNextIndexOfObject:(id)object;
+- (NSUInteger)moPrevIndexOfObject:(id)object;
 
-- (id)nextObjectOfObject:(id)object;
-- (id)prevObjectOfObject:(id)object;
+- (id)moNextObjectOfObject:(id)object;
+- (id)moPrevObjectOfObject:(id)object;
 
-- (void)enumerateObjectsAtRange:(NSRange)range options:(NSEnumerationOptions)options usingBlock:(void(^)(id obj, NSUInteger idx, BOOL *stop))block NS_AVAILABLE(10_6, 4_0);
+- (void)moEnumerateObjectsAtRange:(NSRange)range options:(NSEnumerationOptions)options usingBlock:(void(^)(id obj, NSUInteger idx, BOOL *stop))block NS_AVAILABLE(10_6, 4_0);
 
-- (void)each:(void(^)(id object))block;
-- (void)eachWithIndex:(void(^)(id object, NSUInteger index))block;
-- (void)each:(void(^)(id object))block options:(NSEnumerationOptions)options;
-- (void)eachWithIndex:(void(^)(id object, NSUInteger index))block options:(NSEnumerationOptions)options;
-- (NSArray*)map:(id(^)(id object))block;
-- (NSDictionary*)groupBy:(id(^)(id object))block;
-- (NSArray*)select:(BOOL(^)(id object))block;
-- (NSArray*)reject:(BOOL(^)(id object))block;
-- (id)find:(BOOL(^)(id object))block;
-- (NSArray*)reverse;
-- (NSArray*)intersectionWithArray:(NSArray*)array;
-- (NSArray*)intersectionWithArrays:(NSArray*)firstArray, ... NS_REQUIRES_NIL_TERMINATION;
-- (NSArray*)unionWithArray:(NSArray*)array;
-- (NSArray*)unionWithArrays:(NSArray*)firstArray, ... NS_REQUIRES_NIL_TERMINATION;
-- (NSArray*)relativeComplement:(NSArray*)array;
-- (NSArray*)relativeComplements:(NSArray*)firstArray, ... NS_REQUIRES_NIL_TERMINATION;
-- (NSArray*)symmetricDifference:(NSArray*)array;
+- (void)moEach:(void(^)(id object))block;
+- (void)moEachWithIndex:(void(^)(id object, NSUInteger index))block;
+- (void)moEach:(void(^)(id object))block options:(NSEnumerationOptions)options;
+- (void)moEachWithIndex:(void(^)(id object, NSUInteger index))block options:(NSEnumerationOptions)options;
+- (NSArray*)moMap:(id(^)(id object))block;
+- (NSDictionary*)moGroupBy:(id(^)(id object))block;
+- (NSArray*)moSelect:(BOOL(^)(id object))block;
+- (NSArray*)moReject:(BOOL(^)(id object))block;
+- (id)moFind:(BOOL(^)(id object))block;
+- (NSArray*)moReverse;
+- (NSArray*)moIntersectionWithArray:(NSArray*)array;
+- (NSArray*)moIntersectionWithArrays:(NSArray*)firstArray, ... NS_REQUIRES_NIL_TERMINATION;
+- (NSArray*)moUnionWithArray:(NSArray*)array;
+- (NSArray*)moUnionWithArrays:(NSArray*)firstArray, ... NS_REQUIRES_NIL_TERMINATION;
+- (NSArray*)moRelativeComplement:(NSArray*)array;
+- (NSArray*)moRelativeComplements:(NSArray*)firstArray, ... NS_REQUIRES_NIL_TERMINATION;
+- (NSArray*)moSymmetricDifference:(NSArray*)array;
 
 @end
 
@@ -266,8 +266,8 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 
 @interface NSMutableArray (MobilyNS)
 
-- (void)removeFirstObjectsByCount:(NSUInteger)count;
-- (void)removeLastObjectsByCount:(NSUInteger)count;
+- (void)moRemoveFirstObjectsByCount:(NSUInteger)count;
+- (void)moRemoveLastObjectsByCount:(NSUInteger)count;
 
 @end
 
@@ -275,26 +275,26 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 
 @interface NSDictionary (MobilyNS)
 
-- (BOOL)boolValueForKey:(NSString*)key orDefault:(BOOL)defaultValue;
-- (NSInteger)integerValueForKey:(NSString*)key orDefault:(NSInteger)defaultValue;
-- (NSUInteger)unsignedIntegerValueForKey:(NSString*)key orDefault:(NSUInteger)defaultValue;
-- (float)floatValueForKey:(NSString*)key orDefault:(float)defaultValue;
-- (double)doubleValueForKey:(NSString*)key orDefault:(double)defaultValue;
-- (NSNumber*)numberValueForKey:(NSString*)key orDefault:(NSNumber*)defaultValue;
-- (NSString*)stringValueForKey:(NSString*)key orDefault:(NSString*)defaultValue;
-- (NSArray*)arrayValueForKey:(NSString*)key orDefault:(NSArray*)defaultValue;
-- (NSDictionary*)dictionaryValueForKey:(NSString*)key orDefault:(NSDictionary*)defaultValue;
+- (BOOL)moBoolValueForKey:(NSString*)key orDefault:(BOOL)defaultValue;
+- (NSInteger)moIntegerValueForKey:(NSString*)key orDefault:(NSInteger)defaultValue;
+- (NSUInteger)moUnsignedIntegerValueForKey:(NSString*)key orDefault:(NSUInteger)defaultValue;
+- (float)moFloatValueForKey:(NSString*)key orDefault:(float)defaultValue;
+- (double)moDoubleValueForKey:(NSString*)key orDefault:(double)defaultValue;
+- (NSNumber*)moNumberValueForKey:(NSString*)key orDefault:(NSNumber*)defaultValue;
+- (NSString*)moStringValueForKey:(NSString*)key orDefault:(NSString*)defaultValue;
+- (NSArray*)moArrayValueForKey:(NSString*)key orDefault:(NSArray*)defaultValue;
+- (NSDictionary*)moDictionaryValueForKey:(NSString*)key orDefault:(NSDictionary*)defaultValue;
 
-- (NSString*)stringFromQueryComponents;
+- (NSString*)moStringFromQueryComponents;
 
-- (void)each:(void(^)(id key, id value))block;
-- (void)eachWithIndex:(void(^)(id key, id value, NSUInteger index))block;
-- (void)eachKey:(void(^)(id key))block;
-- (void)eachKeyWithIndex:(void(^)(id key, NSUInteger index))block;
-- (void)eachValue:(void(^)(id value))block;
-- (void)eachValueWithIndex:(void(^)(id value, NSUInteger index))block;
-- (NSArray*)map:(id(^)(id key, id value))block;
-- (BOOL)hasKey:(id)key;
+- (void)moEach:(void(^)(id key, id value))block;
+- (void)moEachWithIndex:(void(^)(id key, id value, NSUInteger index))block;
+- (void)moEachKey:(void(^)(id key))block;
+- (void)moEachKeyWithIndex:(void(^)(id key, NSUInteger index))block;
+- (void)moEachValue:(void(^)(id value))block;
+- (void)moEachValueWithIndex:(void(^)(id value, NSUInteger index))block;
+- (NSArray*)moMap:(id(^)(id key, id value))block;
+- (BOOL)moHasKey:(id)key;
 
 @end
 
@@ -302,8 +302,8 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 
 @interface NSURL (MobilyNS)
 
-- (NSMutableDictionary*)queryComponents;
-- (NSMutableDictionary*)fragmentComponents;
+- (NSMutableDictionary*)moQueryComponents;
+- (NSMutableDictionary*)moFragmentComponents;
 
 @end
 
@@ -311,8 +311,8 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 
 @interface NSFileManager (MobilyNS)
 
-+ (NSString*)documentDirectory;
-+ (NSString*)cachesDirectory;
++ (NSString*)moDocumentDirectory;
++ (NSString*)moCachesDirectory;
 
 @end
 
@@ -320,7 +320,7 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 
 @interface NSHTTPCookieStorage (MobilyNS)
 
-+ (void)clearCookieWithDomain:(NSString*)domain;
++ (void)moClearCookieWithDomain:(NSString*)domain;
 
 @end
 
@@ -328,7 +328,7 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 
 @interface NSBundle (MobilyNS)
 
-- (id)objectForInfoDictionaryKey:(NSString*)key defaultValue:(id)defaultValue;
+- (id)moObjectForInfoDictionaryKey:(NSString*)key defaultValue:(id)defaultValue;
 
 @end
 
@@ -336,8 +336,8 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 
 @interface NSError (MobilyNS)
 
-- (BOOL)isNoInternetConnection;
-- (BOOL)isTimedOut;
+- (BOOL)moIsNoInternetConnection;
+- (BOOL)moIsTimedOut;
 
 @end
 
@@ -345,7 +345,7 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 
 @interface MobilyStorage : NSObject
 
-+ (NSString*)fileSystemDirectory;
++ (NSString*)moFileSystemDirectory;
 
 @end
 

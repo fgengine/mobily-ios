@@ -241,7 +241,7 @@
 }
 
 - (void)deleteItems:(NSArray*)items {
-    if([_items containsObjectsInArray:items] == YES) {
+    if([_items moContainsObjectsInArray:items] == YES) {
         [_items removeObjectsInArray:items];
         [self _deleteEntries:items];
     }

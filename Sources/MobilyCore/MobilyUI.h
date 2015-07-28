@@ -59,53 +59,53 @@ typedef NS_OPTIONS(NSUInteger, MobilyHorizontalAlignment) {
 
 @interface NSString (MobilyUI)
 
-- (CGSize)implicitSizeWithFont:(UIFont*)font lineBreakMode:(NSLineBreakMode)lineBreakMode;
-- (CGSize)implicitSizeWithFont:(UIFont*)font forWidth:(CGFloat)width lineBreakMode:(NSLineBreakMode)lineBreakMode;
-- (CGSize)implicitSizeWithFont:(UIFont*)font forSize:(CGSize)size lineBreakMode:(NSLineBreakMode)lineBreakMode;
+- (CGSize)moImplicitSizeWithFont:(UIFont*)font lineBreakMode:(NSLineBreakMode)lineBreakMode;
+- (CGSize)moImplicitSizeWithFont:(UIFont*)font forWidth:(CGFloat)width lineBreakMode:(NSLineBreakMode)lineBreakMode;
+- (CGSize)moImplicitSizeWithFont:(UIFont*)font forSize:(CGSize)size lineBreakMode:(NSLineBreakMode)lineBreakMode;
 
-- (UIEdgeInsets)convertToEdgeInsets;
-- (UIEdgeInsets)convertToEdgeInsetsSeparated:(NSString*)separated;
+- (UIEdgeInsets)moConvertToEdgeInsets;
+- (UIEdgeInsets)moConvertToEdgeInsetsSeparated:(NSString*)separated;
 
-- (UIBezierPath*)convertToBezierPath;
-- (UIBezierPath*)convertToBezierPathSeparated:(NSString*)separated;
+- (UIBezierPath*)moConvertToBezierPath;
+- (UIBezierPath*)moConvertToBezierPathSeparated:(NSString*)separated;
 
-- (UIFont*)convertToFont;
-- (UIFont*)convertToFontSeparated:(NSString*)separated;
-- (UIImage*)convertToImage;
-- (UIImage*)convertToImageSeparated:(NSString*)separated edgeInsetsSeparated:(NSString*)edgeInsetsSeparated;
-- (NSArray*)convertToImages;
-- (NSArray*)convertToImagesSeparated:(NSString*)separated edgeInsetsSeparated:(NSString*)edgeInsetsSeparated frameSeparated:(NSString*)frameSeparated;
+- (UIFont*)moConvertToFont;
+- (UIFont*)moConvertToFontSeparated:(NSString*)separated;
+- (UIImage*)moConvertToImage;
+- (UIImage*)moConvertToImageSeparated:(NSString*)separated edgeInsetsSeparated:(NSString*)edgeInsetsSeparated;
+- (NSArray*)moConvertToImages;
+- (NSArray*)moConvertToImagesSeparated:(NSString*)separated edgeInsetsSeparated:(NSString*)edgeInsetsSeparated frameSeparated:(NSString*)frameSeparated;
 
-- (UIRemoteNotificationType)convertToRemoteNotificationType;
-- (UIRemoteNotificationType)convertToRemoteNotificationTypeSeparated:(NSString*)separated;
-- (UIInterfaceOrientationMask)convertToInterfaceOrientationMask;
-- (UIInterfaceOrientationMask)convertToInterfaceOrientationMaskSeparated:(NSString*)separated;
+- (UIRemoteNotificationType)moConvertToRemoteNotificationType;
+- (UIRemoteNotificationType)moConvertToRemoteNotificationTypeSeparated:(NSString*)separated;
+- (UIInterfaceOrientationMask)moConvertToInterfaceOrientationMask;
+- (UIInterfaceOrientationMask)moConvertToInterfaceOrientationMaskSeparated:(NSString*)separated;
 
-- (UIStatusBarStyle)convertToStatusBarStyle;
-- (UIStatusBarAnimation)convertToStatusBarAnimation;
+- (UIStatusBarStyle)moConvertToStatusBarStyle;
+- (UIStatusBarAnimation)moConvertToStatusBarAnimation;
 
-- (UIViewAutoresizing)convertToViewAutoresizing;
-- (UIViewAutoresizing)convertToViewAutoresizingSeparated:(NSString*)separated;
-- (UIViewContentMode)convertToViewContentMode;
-- (UIControlContentHorizontalAlignment)convertToControlContentHorizontalAlignment;
-- (UIControlContentVerticalAlignment)convertToControlContentVerticalAlignment;
-- (UITextAutocapitalizationType)convertToTextAutocapitalizationType;
-- (UITextAutocorrectionType)convertToTextAutocorrectionType;
-- (UITextSpellCheckingType)convertToTestSpellCheckingType;
-- (UIKeyboardType)convertToKeyboardType;
-- (UIReturnKeyType)convertToReturnKeyType;
-- (UIBaselineAdjustment)convertToBaselineAdjustment;
+- (UIViewAutoresizing)moConvertToViewAutoresizing;
+- (UIViewAutoresizing)moConvertToViewAutoresizingSeparated:(NSString*)separated;
+- (UIViewContentMode)moConvertToViewContentMode;
+- (UIControlContentHorizontalAlignment)moConvertToControlContentHorizontalAlignment;
+- (UIControlContentVerticalAlignment)moConvertToControlContentVerticalAlignment;
+- (UITextAutocapitalizationType)moConvertToTextAutocapitalizationType;
+- (UITextAutocorrectionType)moConvertToTextAutocorrectionType;
+- (UITextSpellCheckingType)moConvertToTestSpellCheckingType;
+- (UIKeyboardType)moConvertToKeyboardType;
+- (UIReturnKeyType)moConvertToReturnKeyType;
+- (UIBaselineAdjustment)moConvertToBaselineAdjustment;
 
-- (UIScrollViewIndicatorStyle)convertToScrollViewIndicatorStyle;
-- (UIScrollViewKeyboardDismissMode)convertToScrollViewKeyboardDismissMode;
-- (UIBarStyle)convertToBarStyle;
-- (UITabBarItemPositioning)convertToTabBarItemPositioning;
-- (UISearchBarStyle)convertToSearchBarStyle;
-- (UIProgressViewStyle)convertToProgressViewStyle;
-- (UITextBorderStyle)convertToTextBorderStyle;
+- (UIScrollViewIndicatorStyle)moConvertToScrollViewIndicatorStyle;
+- (UIScrollViewKeyboardDismissMode)moConvertToScrollViewKeyboardDismissMode;
+- (UIBarStyle)moConvertToBarStyle;
+- (UITabBarItemPositioning)moConvertToTabBarItemPositioning;
+- (UISearchBarStyle)moConvertToSearchBarStyle;
+- (UIProgressViewStyle)moConvertToProgressViewStyle;
+- (UITextBorderStyle)moConvertToTextBorderStyle;
 
-- (void)drawAtPoint:(CGPoint)point font:(UIFont*)font color:(UIColor*)color vAlignment:(MobilyVerticalAlignment)vAlignment hAlignment:(MobilyHorizontalAlignment)hAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode;
-- (void)drawInRect:(CGRect)rect font:(UIFont*)font color:(UIColor*)color vAlignment:(MobilyVerticalAlignment)vAlignment hAlignment:(MobilyHorizontalAlignment)hAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode;
+- (void)moDrawAtPoint:(CGPoint)point font:(UIFont*)font color:(UIColor*)color vAlignment:(MobilyVerticalAlignment)vAlignment hAlignment:(MobilyHorizontalAlignment)hAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode;
+- (void)moDrawInRect:(CGRect)rect font:(UIFont*)font color:(UIColor*)color vAlignment:(MobilyVerticalAlignment)vAlignment hAlignment:(MobilyHorizontalAlignment)hAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode;
 
 @end
 
@@ -132,13 +132,13 @@ BOOL MobilyColorHSBEqualToColorHSB(MobilyColorHSB color1, MobilyColorHSB color2)
 
 @interface UIColor (MobilyUI)
 
-+ (UIColor*)colorWithString:(NSString*)string;
-+ (CGFloat)colorComponentFromString:(NSString*)string start:(NSUInteger)start length:(NSUInteger)length;
++ (UIColor*)moColorWithString:(NSString*)string;
++ (CGFloat)moColorComponentFromString:(NSString*)string start:(NSUInteger)start length:(NSUInteger)length;
 
-- (UIColor*)multiplyColor:(UIColor*)color percent:(CGFloat)percent;
-- (UIColor*)multiplyBrightness:(CGFloat)brightness;
+- (UIColor*)moMultiplyColor:(UIColor*)color percent:(CGFloat)percent;
+- (UIColor*)moMultiplyBrightness:(CGFloat)brightness;
 
--(MobilyColorHSB)hsb;
+-(MobilyColorHSB)moHsb;
 
 @end
 
@@ -154,25 +154,25 @@ typedef NS_OPTIONS(NSUInteger, MobilyImageAlignment) {
 
 @interface UIImage (MobilyUI)
 
-+ (UIImage*)imageNamed:(NSString*)name capInsets:(UIEdgeInsets)capInsets;
-+ (UIImage*)imageWithColor:(UIColor*)color;
++ (UIImage*)moImageNamed:(NSString*)name capInsets:(UIEdgeInsets)capInsets;
++ (UIImage*)moImageWithColor:(UIColor*)color size:(CGSize)size;
 
-- (UIImage*)unrotate;
-- (UIImage*)scaleToSize:(CGSize)size;
-- (UIImage*)rotateToAngleInRadians:(CGFloat)angleInRadians;
+- (UIImage*)moUnrotate;
+- (UIImage*)moScaleToSize:(CGSize)size;
+- (UIImage*)moRotateToAngleInRadians:(CGFloat)angleInRadians;
 
-- (UIImage*)grayscale;
-- (UIImage*)blackAndWhite;
-- (UIImage*)invertColors;
+- (UIImage*)moGrayscale;
+- (UIImage*)moBlackAndWhite;
+- (UIImage*)moInvertColors;
 
-- (UIImage*)blurredImageWithRadius:(CGFloat)radius iterations:(NSUInteger)iterations tintColor:(UIColor*)tintColor;
+- (UIImage*)moBlurredImageWithRadius:(CGFloat)radius iterations:(NSUInteger)iterations tintColor:(UIColor*)tintColor;
 
-- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment;
-- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
-- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment radius:(CGFloat)radius;
-- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment radius:(CGFloat)radius blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
-- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment corners:(UIRectCorner)corners radius:(CGFloat)radius;
-- (void)drawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment corners:(UIRectCorner)corners radius:(CGFloat)radius blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
+- (void)moDrawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment;
+- (void)moDrawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
+- (void)moDrawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment radius:(CGFloat)radius;
+- (void)moDrawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment radius:(CGFloat)radius blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
+- (void)moDrawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment corners:(UIRectCorner)corners radius:(CGFloat)radius;
+- (void)moDrawInRect:(CGRect)rect alignment:(MobilyImageAlignment)alignment corners:(UIRectCorner)corners radius:(CGFloat)radius blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
 
 @end
 
@@ -190,21 +190,21 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 
 @interface UIBezierPath (MobilyUI)
 
-+ (void)drawRect:(CGRect)rect fillColor:(UIColor*)fillColor;
-+ (void)drawRect:(CGRect)rect fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth;
++ (void)moDrawRect:(CGRect)rect fillColor:(UIColor*)fillColor;
++ (void)moDrawRect:(CGRect)rect fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth;
 
-+ (void)drawOvalInRect:(CGRect)rect fillColor:(UIColor*)fillColor;
-+ (void)drawOvalInRect:(CGRect)rect fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth;
++ (void)moDrawOvalInRect:(CGRect)rect fillColor:(UIColor*)fillColor;
++ (void)moDrawOvalInRect:(CGRect)rect fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth;
 
-+ (void)drawRoundedRect:(CGRect)rect radius:(CGFloat)radius fillColor:(UIColor*)fillColor;
-+ (void)drawRoundedRect:(CGRect)rect radius:(CGFloat)radius fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth;
++ (void)moDrawRoundedRect:(CGRect)rect radius:(CGFloat)radius fillColor:(UIColor*)fillColor;
++ (void)moDrawRoundedRect:(CGRect)rect radius:(CGFloat)radius fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth;
 
-+ (void)drawRoundedRect:(CGRect)rect corners:(UIRectCorner)corners radius:(CGSize)radius fillColor:(UIColor*)fillColor;
-+ (void)drawRoundedRect:(CGRect)rect corners:(UIRectCorner)corners radius:(CGSize)radius fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth;
++ (void)moDrawRoundedRect:(CGRect)rect corners:(UIRectCorner)corners radius:(CGSize)radius fillColor:(UIColor*)fillColor;
++ (void)moDrawRoundedRect:(CGRect)rect corners:(UIRectCorner)corners radius:(CGSize)radius fillColor:(UIColor*)fillColor strokeColor:(UIColor*)strokeColor strokeWidth:(CGFloat)strokeWidth;
 
-+ (void)drawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges width:(CGFloat)width fillColor:(UIColor*)fillColor;
-+ (void)drawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges width:(CGFloat)width edgeInsets:(UIEdgeInsets)edgeInsets fillColor:(UIColor*)fillColor;
-+ (void)drawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges widthEdges:(UIEdgeInsets)widthEdges edgeInsets:(UIEdgeInsets)edgeInsets fillColor:(UIColor*)fillColor;
++ (void)moDrawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges width:(CGFloat)width fillColor:(UIColor*)fillColor;
++ (void)moDrawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges width:(CGFloat)width edgeInsets:(UIEdgeInsets)edgeInsets fillColor:(UIColor*)fillColor;
++ (void)moDrawSeparatorRect:(CGRect)rect edges:(MobilyBezierPathSeparatorEdges)edges widthEdges:(UIEdgeInsets)widthEdges edgeInsets:(UIEdgeInsets)edgeInsets fillColor:(UIColor*)fillColor;
 
 @end
 
@@ -212,13 +212,13 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 
 @interface UINib (MobilyUI)
 
-+ (id)viewWithNibName:(NSString*)nibName withClass:(Class)class;
-+ (id)viewWithNibName:(NSString*)nibName withClass:(Class)class withOwner:(id)owner;
++ (id)moViewWithNibName:(NSString*)nibName withClass:(Class)class;
++ (id)moViewWithNibName:(NSString*)nibName withClass:(Class)class withOwner:(id)owner;
 
-+ (UINib*)nibWithBaseName:(NSString*)baseName bundle:(NSBundle*)bundle;
-+ (UINib*)nibWithClass:(Class)class bundle:(NSBundle*)bundle;
++ (UINib*)moNibWithBaseName:(NSString*)baseName bundle:(NSBundle*)bundle;
++ (UINib*)moNibWithClass:(Class)class bundle:(NSBundle*)bundle;
 
-- (id)instantiateWithClass:(Class)class owner:(id)owner options:(NSDictionary*)options;
+- (id)moInstantiateWithClass:(Class)class owner:(id)owner options:(NSDictionary*)options;
 
 @end
 
@@ -226,11 +226,11 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 
 @interface UIResponder (MobilyUI)
 
-+ (id)currentFirstResponderInView:(UIView*)view;
-+ (id)currentFirstResponder;
++ (id)moCurrentFirstResponderInView:(UIView*)view;
++ (id)moCurrentFirstResponder;
 
-+ (UIResponder*)prevResponderFromView:(UIView*)view;
-+ (UIResponder*)nextResponderFromView:(UIView*)view;
++ (UIResponder*)moPrevResponderFromView:(UIView*)view;
++ (UIResponder*)moNextResponderFromView:(UIView*)view;
 
 @end
 
@@ -240,12 +240,12 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 
 @interface UIWindow (MobilyUI)
 
-@property(nonatomic, readonly, strong) UIViewController* currentViewController;
+@property(nonatomic, readonly, strong) UIViewController* moCurrentController;
 
 #ifdef __IPHONE_7_0
 
-@property(nonatomic, readonly, strong) UIViewController* viewControllerForStatusBarStyle;
-@property(nonatomic, readonly, strong) UIViewController* viewControllerForStatusBarHidden;
+@property(nonatomic, readonly, strong) UIViewController* moControllerForStatusBarStyle;
+@property(nonatomic, readonly, strong) UIViewController* moControllerForStatusBarHidden;
 
 #endif
 
@@ -255,50 +255,50 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 
 @interface UIView (MobilyUI)
 
-@property(nonatomic, readwrite, assign) CGPoint framePosition;
-@property(nonatomic, readwrite, assign) CGPoint frameCenter;
-@property(nonatomic, readwrite, assign) CGSize frameSize;
-@property(nonatomic, readwrite, assign) CGFloat frameSX;
-@property(nonatomic, readwrite, assign) CGFloat frameCX;
-@property(nonatomic, readwrite, assign) CGFloat frameEX;
-@property(nonatomic, readwrite, assign) CGFloat frameSY;
-@property(nonatomic, readwrite, assign) CGFloat frameCY;
-@property(nonatomic, readwrite, assign) CGFloat frameEY;
-@property(nonatomic, readwrite, assign) CGFloat frameWidth;
-@property(nonatomic, readwrite, assign) CGFloat frameHeight;
-@property(nonatomic, readwrite, assign) CGFloat frameLeft;
-@property(nonatomic, readwrite, assign) CGFloat frameRight;
-@property(nonatomic, readwrite, assign) CGFloat frameTop;
-@property(nonatomic, readwrite, assign) CGFloat frameBottom;
+@property(nonatomic, readwrite, assign) CGPoint moFramePosition;
+@property(nonatomic, readwrite, assign) CGPoint moFrameCenter;
+@property(nonatomic, readwrite, assign) CGSize moFrameSize;
+@property(nonatomic, readwrite, assign) CGFloat moFrameSX;
+@property(nonatomic, readwrite, assign) CGFloat moFrameCX;
+@property(nonatomic, readwrite, assign) CGFloat moFrameEX;
+@property(nonatomic, readwrite, assign) CGFloat moFrameSY;
+@property(nonatomic, readwrite, assign) CGFloat moFrameCY;
+@property(nonatomic, readwrite, assign) CGFloat moFrameEY;
+@property(nonatomic, readwrite, assign) CGFloat moFrameWidth;
+@property(nonatomic, readwrite, assign) CGFloat moFrameHeight;
+@property(nonatomic, readwrite, assign) CGFloat moFrameLeft;
+@property(nonatomic, readwrite, assign) CGFloat moFrameRight;
+@property(nonatomic, readwrite, assign) CGFloat moFrameTop;
+@property(nonatomic, readwrite, assign) CGFloat moFrameBottom;
 
-@property(nonatomic, readonly, assign) CGPoint boundsPosition;
-@property(nonatomic, readonly, assign) CGPoint boundsCenter;
-@property(nonatomic, readonly, assign) CGSize boundsSize;
-@property(nonatomic, readonly, assign) CGFloat boundsCX;
-@property(nonatomic, readonly, assign) CGFloat boundsCY;
-@property(nonatomic, readonly, assign) CGFloat boundsWidth;
-@property(nonatomic, readonly, assign) CGFloat boundsHeight;
+@property(nonatomic, readonly, assign) CGPoint moBoundsPosition;
+@property(nonatomic, readonly, assign) CGPoint moBoundsCenter;
+@property(nonatomic, readonly, assign) CGSize moBoundsSize;
+@property(nonatomic, readonly, assign) CGFloat moBoundsCX;
+@property(nonatomic, readonly, assign) CGFloat moBoundsCY;
+@property(nonatomic, readonly, assign) CGFloat moBoundsWidth;
+@property(nonatomic, readonly, assign) CGFloat moBoundsHeight;
 
-@property(nonatomic, readwrite, assign) IBInspectable CGFloat zPosition;
-@property(nonatomic, readwrite, assign) IBInspectable CGFloat cornerRadius;
-@property(nonatomic, readwrite, assign) IBInspectable CGFloat borderWidth;
-@property(nonatomic, readwrite, strong) IBInspectable UIColor* borderColor;
-@property(nonatomic, readwrite, strong) IBInspectable UIColor* shadowColor;
-@property(nonatomic, readwrite, assign) IBInspectable CGFloat shadowOpacity;
-@property(nonatomic, readwrite, assign) IBInspectable CGSize shadowOffset;
-@property(nonatomic, readwrite, assign) IBInspectable CGFloat shadowRadius;
-@property(nonatomic, readwrite, strong) UIBezierPath* shadowPath;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat moZPosition;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat moCornerRadius;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat moBorderWidth;
+@property(nonatomic, readwrite, strong) IBInspectable UIColor* moBorderColor;
+@property(nonatomic, readwrite, strong) IBInspectable UIColor* moShadowColor;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat moShadowOpacity;
+@property(nonatomic, readwrite, assign) IBInspectable CGSize moShadowOffset;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat moShadowRadius;
+@property(nonatomic, readwrite, strong) UIBezierPath* moShadowPath;
 
-- (NSArray*)responders;
+- (NSArray*)moResponders;
 
-- (BOOL)isContainsSubview:(UIView*)subview;
+- (BOOL)moIsContainsSubview:(UIView*)subview;
 
-- (void)removeSubview:(UIView*)subview;
+- (void)moRemoveSubview:(UIView*)subview;
 
-- (void)setSubviews:(NSArray*)subviews;
-- (void)removeAllSubviews;
+- (void)moSetSubviews:(NSArray*)subviews;
+- (void)moRemoveAllSubviews;
 
-- (void)blinkBackgroundColor:(UIColor*)color duration:(NSTimeInterval)duration timeout:(NSTimeInterval)timeout;
+- (void)moBlinkBackgroundColor:(UIColor*)color duration:(NSTimeInterval)duration timeout:(NSTimeInterval)timeout;
 
 - (NSLayoutConstraint*)addConstraintAttribute:(NSLayoutAttribute)constraintAttribute relation:(NSLayoutRelation)relation constant:(CGFloat)constant;
 - (NSLayoutConstraint*)addConstraintAttribute:(NSLayoutAttribute)constraintAttribute relation:(NSLayoutRelation)relation constant:(CGFloat)constant priority:(UILayoutPriority)priority;
@@ -318,27 +318,27 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 
 @interface UIScrollView (MobilyUI)
 
-@property(nonatomic, readwrite, assign) IBInspectable UIEdgeInsets keyboardInset;
+@property(nonatomic, readwrite, assign) IBInspectable UIEdgeInsets moKeyboardInset;
 
-@property(nonatomic, readwrite, assign) CGFloat contentOffsetX;
-@property(nonatomic, readwrite, assign) CGFloat contentOffsetY;
-@property(nonatomic, readwrite, assign) CGFloat contentSizeWidth;
-@property(nonatomic, readwrite, assign) CGFloat contentSizeHeight;
-@property(nonatomic, readwrite, assign) CGFloat contentInsetTop;
-@property(nonatomic, readwrite, assign) CGFloat contentInsetRight;
-@property(nonatomic, readwrite, assign) CGFloat contentInsetBottom;
-@property(nonatomic, readwrite, assign) CGFloat contentInsetLeft;
-@property(nonatomic, readwrite, assign) CGFloat scrollIndicatorInsetTop;
-@property(nonatomic, readwrite, assign) CGFloat scrollIndicatorInsetRight;
-@property(nonatomic, readwrite, assign) CGFloat scrollIndicatorInsetBottom;
-@property(nonatomic, readwrite, assign) CGFloat scrollIndicatorInsetLeft;
-@property(nonatomic, readonly, assign) CGRect visibleBounds;
+@property(nonatomic, readwrite, assign) CGFloat moContentOffsetX;
+@property(nonatomic, readwrite, assign) CGFloat moContentOffsetY;
+@property(nonatomic, readwrite, assign) CGFloat moContentSizeWidth;
+@property(nonatomic, readwrite, assign) CGFloat moContentSizeHeight;
+@property(nonatomic, readwrite, assign) CGFloat moContentInsetTop;
+@property(nonatomic, readwrite, assign) CGFloat moContentInsetRight;
+@property(nonatomic, readwrite, assign) CGFloat moContentInsetBottom;
+@property(nonatomic, readwrite, assign) CGFloat moContentInsetLeft;
+@property(nonatomic, readwrite, assign) CGFloat moScrollIndicatorInsetTop;
+@property(nonatomic, readwrite, assign) CGFloat moScrollIndicatorInsetRight;
+@property(nonatomic, readwrite, assign) CGFloat moScrollIndicatorInsetBottom;
+@property(nonatomic, readwrite, assign) CGFloat moScrollIndicatorInsetLeft;
+@property(nonatomic, readonly, assign) CGRect moVisibleBounds;
 
-- (void)setContentOffsetX:(CGFloat)contentOffsetX animated:(BOOL)animated;
-- (void)setContentOffsetY:(CGFloat)contentOffsetY animated:(BOOL)animated;
+- (void)setMoContentOffsetX:(CGFloat)moContentOffsetX animated:(BOOL)animated;
+- (void)setMoContentOffsetY:(CGFloat)moContentOffsetY animated:(BOOL)animated;
 
-- (void)registerAdjustmentResponder;
-- (void)unregisterAdjustmentResponder;
+- (void)moRegisterAdjustmentResponder;
+- (void)moUnregisterAdjustmentResponder;
 
 @end
 
@@ -346,7 +346,7 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 
 @interface UITabBar (MobilyUI)
 
-@property(nonatomic, readwrite, assign) NSUInteger selectedItemIndex;
+@property(nonatomic, readwrite, assign) NSUInteger moSelectedItemIndex;
 
 @end
 
@@ -362,9 +362,9 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 
 @interface UILabel (MobilyUI)
 
-- (CGSize)implicitSize;
-- (CGSize)implicitSizeForWidth:(CGFloat)width;
-- (CGSize)implicitSizeForSize:(CGSize)size;
+- (CGSize)moImplicitSize;
+- (CGSize)moImplicitSizeForWidth:(CGFloat)width;
+- (CGSize)moImplicitSizeForSize:(CGSize)size;
 
 @end
 
@@ -372,29 +372,29 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 
 @interface UIButton (MobilyUI)
 
-@property(nonatomic, readwrite, strong) NSString* normalTitle;
-@property(nonatomic, readwrite, strong) UIColor* normalTitleColor;
-@property(nonatomic, readwrite, strong) UIColor* normalTitleShadowColor;
-@property(nonatomic, readwrite, strong) UIImage* normalImage;
-@property(nonatomic, readwrite, strong) UIImage* normalBackgroundImage;
+@property(nonatomic, readwrite, strong) NSString* moNormalTitle;
+@property(nonatomic, readwrite, strong) UIColor* moNormalTitleColor;
+@property(nonatomic, readwrite, strong) UIColor* moNormalTitleShadowColor;
+@property(nonatomic, readwrite, strong) UIImage* moNormalImage;
+@property(nonatomic, readwrite, strong) UIImage* moNormalBackgroundImage;
 
-@property(nonatomic, readwrite, strong) NSString* highlightedTitle;
-@property(nonatomic, readwrite, strong) UIColor* highlightedTitleColor;
-@property(nonatomic, readwrite, strong) UIColor* highlightedTitleShadowColor;
-@property(nonatomic, readwrite, strong) UIImage* highlightedImage;
-@property(nonatomic, readwrite, strong) UIImage* highlightedBackgroundImage;
+@property(nonatomic, readwrite, strong) NSString* moHighlightedTitle;
+@property(nonatomic, readwrite, strong) UIColor* moHighlightedTitleColor;
+@property(nonatomic, readwrite, strong) UIColor* moHighlightedTitleShadowColor;
+@property(nonatomic, readwrite, strong) UIImage* moHighlightedImage;
+@property(nonatomic, readwrite, strong) UIImage* moHighlightedBackgroundImage;
 
-@property(nonatomic, readwrite, strong) NSString* selectedTitle;
-@property(nonatomic, readwrite, strong) UIColor* selectedTitleColor;
-@property(nonatomic, readwrite, strong) UIColor* selectedTitleShadowColor;
-@property(nonatomic, readwrite, strong) UIImage* selectedImage;
-@property(nonatomic, readwrite, strong) UIImage* selectedBackgroundImage;
+@property(nonatomic, readwrite, strong) NSString* moSelectedTitle;
+@property(nonatomic, readwrite, strong) UIColor* moSelectedTitleColor;
+@property(nonatomic, readwrite, strong) UIColor* moSelectedTitleShadowColor;
+@property(nonatomic, readwrite, strong) UIImage* moSelectedImage;
+@property(nonatomic, readwrite, strong) UIImage* moSelectedBackgroundImage;
 
-@property(nonatomic, readwrite, strong) NSString* disabledTitle;
-@property(nonatomic, readwrite, strong) UIColor* disabledTitleColor;
-@property(nonatomic, readwrite, strong) UIColor* disabledTitleShadowColor;
-@property(nonatomic, readwrite, strong) UIImage* disabledImage;
-@property(nonatomic, readwrite, strong) UIImage* disabledBackgroundImage;
+@property(nonatomic, readwrite, strong) NSString* moDisabledTitle;
+@property(nonatomic, readwrite, strong) UIColor* moDisabledTitleColor;
+@property(nonatomic, readwrite, strong) UIColor* moDisabledTitleShadowColor;
+@property(nonatomic, readwrite, strong) UIImage* moDisabledImage;
+@property(nonatomic, readwrite, strong) UIImage* moDisabledBackgroundImage;
 
 @end
 
@@ -404,11 +404,11 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 
 @interface UIViewController (MobilyUI)
 
-- (void)loadViewIfNeed;
-- (void)unloadViewIfPossible;
-- (void)unloadView;
+- (void)moLoadViewIfNeed;
+- (void)moUnloadViewIfPossible;
+- (void)moUnloadView;
 
-- (UIViewController*)currentViewController;
+- (UIViewController*)moCurrentController;
 
 @end
 
@@ -416,15 +416,15 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 
 @interface UINavigationController (MobilyUI)
 
-@property(nonatomic, readwrite, assign, getter=isTranslucent) BOOL translucent NS_AVAILABLE_IOS(3_0);
-@property(nonatomic, readwrite, retain) UIColor* tintColor;
-@property(nonatomic, readwrite, retain) UIColor* barTintColor NS_AVAILABLE_IOS(7_0);
-@property(nonatomic, readwrite, retain) UIImage* shadowImage NS_AVAILABLE_IOS(6_0);
-@property(nonatomic, readwrite, copy) NSDictionary* titleTextAttributes NS_AVAILABLE_IOS(5_0);
-@property(nonatomic, readwrite, retain) UIImage* backIndicatorImage NS_AVAILABLE_IOS(7_0);
-@property(nonatomic, readwrite, retain) UIImage* backIndicatorTransitionMaskImage NS_AVAILABLE_IOS(7_0);
+@property(nonatomic, readwrite, assign) BOOL moTranslucent NS_AVAILABLE_IOS(3_0);
+@property(nonatomic, readwrite, retain) UIColor* moTintColor;
+@property(nonatomic, readwrite, retain) UIColor* moBarTintColor NS_AVAILABLE_IOS(7_0);
+@property(nonatomic, readwrite, retain) UIImage* moShadowImage NS_AVAILABLE_IOS(6_0);
+@property(nonatomic, readwrite, copy) NSDictionary* moTitleTextAttributes NS_AVAILABLE_IOS(5_0);
+@property(nonatomic, readwrite, retain) UIImage* moBackIndicatorImage NS_AVAILABLE_IOS(7_0);
+@property(nonatomic, readwrite, retain) UIImage* moBackIndicatorTransitionMaskImage NS_AVAILABLE_IOS(7_0);
 
-- (UIViewController*)rootViewController;
+- (UIViewController*)moRootController;
 
 @end
 
@@ -436,77 +436,77 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 
 @interface UINavigationItem (MobilyUI)
 
-- (UIBarButtonItem*)addLeftBarFixedSpace:(CGFloat)fixedSpaceWidth animated:(BOOL)animated;
-- (UIBarButtonItem*)addRightBarFixedSpace:(CGFloat)fixedSpaceWidth animated:(BOOL)animated;
+- (UIBarButtonItem*)moAddLeftBarFixedSpace:(CGFloat)fixedSpaceWidth animated:(BOOL)animated;
+- (UIBarButtonItem*)moAddRightBarFixedSpace:(CGFloat)fixedSpaceWidth animated:(BOOL)animated;
 
-- (MobilyImageView*)addLeftBarImageUrl:(NSURL*)imageUrl defaultImage:(UIImage*)defaultImage target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (MobilyImageView*)addRightBarImageUrl:(NSURL*)imageUrl defaultImage:(UIImage*)defaultImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (MobilyImageView*)moAddLeftBarImageUrl:(NSURL*)imageUrl defaultImage:(UIImage*)defaultImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (MobilyImageView*)moAddRightBarImageUrl:(NSURL*)imageUrl defaultImage:(UIImage*)defaultImage target:(id)target action:(SEL)action animated:(BOOL)animated;
 
-- (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage selectedImage:(UIImage*)selectedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddLeftBarButtonNormalImage:(UIImage*)normalImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddLeftBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage selectedImage:(UIImage*)selectedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated;
 
-- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage selectedImage:(UIImage*)selectedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddRightBarButtonNormalImage:(UIImage*)normalImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddRightBarButtonNormalImage:(UIImage*)normalImage highlightedImage:(UIImage*)highlightedImage selectedImage:(UIImage*)selectedImage disabledImage:(UIImage*)disabledImage target:(id)target action:(SEL)action animated:(BOOL)animated;
 
-- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font frame:(CGRect)frame target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle selectedTitle:(NSString*)selectedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addLeftBarButtonNormalTitle:(NSString*)normalTitle
-                        highlightedTitle:(NSString*)highlightedTitle
-                           selectedTitle:(NSString*)selectedTitle
-                           disabledTitle:(NSString*)disabledTitle
-                        normalTitleColor:(UIColor*)normatTitleColor
-                   highlightedTitleColor:(UIColor*)highlightedTitleColor
-                      selectedTitleColor:(UIColor*)selectedTitleColor
-                      disabledTitleColor:(UIColor*)disabledTitleColor
-                                    font:(UIFont*)font
-                                   frame:(CGRect)frame
-                                  target:(id)target
-                                  action:(SEL)action
-                                animated:(BOOL)animated;
+- (UIButton*)moAddLeftBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddLeftBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font frame:(CGRect)frame target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddLeftBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle selectedTitle:(NSString*)selectedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddLeftBarButtonNormalTitle:(NSString*)normalTitle
+                          highlightedTitle:(NSString*)highlightedTitle
+                             selectedTitle:(NSString*)selectedTitle
+                             disabledTitle:(NSString*)disabledTitle
+                          normalTitleColor:(UIColor*)normatTitleColor
+                     highlightedTitleColor:(UIColor*)highlightedTitleColor
+                        selectedTitleColor:(UIColor*)selectedTitleColor
+                        disabledTitleColor:(UIColor*)disabledTitleColor
+                                      font:(UIFont*)font
+                                     frame:(CGRect)frame
+                                    target:(id)target
+                                    action:(SEL)action
+                                  animated:(BOOL)animated;
 
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font frame:(CGRect)frame target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle selectedTitle:(NSString*)selectedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIButton*)addRightBarButtonNormalTitle:(NSString*)normalTitle
-                         highlightedTitle:(NSString*)highlightedTitle
-                            selectedTitle:(NSString*)selectedTitle
-                            disabledTitle:(NSString*)disabledTitle
-                         normalTitleColor:(UIColor*)normatTitleColor
-                    highlightedTitleColor:(UIColor*)highlightedTitleColor
-                       selectedTitleColor:(UIColor*)selectedTitleColor
-                       disabledTitleColor:(UIColor*)disabledTitleColor
-                                     font:(UIFont*)font
-                                    frame:(CGRect)frame
-                                   target:(id)target
-                                   action:(SEL)action
-                                 animated:(BOOL)animated;
+- (UIButton*)moAddRightBarButtonNormalTitle:(NSString*)normalTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddRightBarButtonNormalTitle:(NSString*)normalTitle normalTitleColor:(UIColor*)normatTitleColor font:(UIFont*)font frame:(CGRect)frame target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddRightBarButtonNormalTitle:(NSString*)normalTitle highlightedTitle:(NSString*)highlightedTitle selectedTitle:(NSString*)selectedTitle disabledTitle:(NSString*)disabledTitle target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIButton*)moAddRightBarButtonNormalTitle:(NSString*)normalTitle
+                           highlightedTitle:(NSString*)highlightedTitle
+                              selectedTitle:(NSString*)selectedTitle
+                              disabledTitle:(NSString*)disabledTitle
+                           normalTitleColor:(UIColor*)normatTitleColor
+                      highlightedTitleColor:(UIColor*)highlightedTitleColor
+                         selectedTitleColor:(UIColor*)selectedTitleColor
+                         disabledTitleColor:(UIColor*)disabledTitleColor
+                                       font:(UIFont*)font
+                                      frame:(CGRect)frame
+                                     target:(id)target
+                                     action:(SEL)action
+                                   animated:(BOOL)animated;
 
-- (UIBarButtonItem*)addLeftBarView:(UIView*)view animated:(BOOL)animated;
-- (UIBarButtonItem*)addRightBarView:(UIView*)view animated:(BOOL)animated;
-- (UIBarButtonItem*)addLeftBarView:(UIView*)view target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (UIBarButtonItem*)addRightBarView:(UIView*)view target:(id)target action:(SEL)action animated:(BOOL)animated;
-- (void)addLeftBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated;
-- (void)addRightBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated;
-- (void)removeLeftBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated;
-- (void)removeRightBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated;
-- (void)removeAllLeftBarButtonItemsAnimated:(BOOL)animated;
-- (void)removeAllRightBarButtonItemsAnimated:(BOOL)animated;
+- (UIBarButtonItem*)moAddLeftBarView:(UIView*)view animated:(BOOL)animated;
+- (UIBarButtonItem*)moAddRightBarView:(UIView*)view animated:(BOOL)animated;
+- (UIBarButtonItem*)moAddLeftBarView:(UIView*)view target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (UIBarButtonItem*)moAddRightBarView:(UIView*)view target:(id)target action:(SEL)action animated:(BOOL)animated;
+- (void)moAddLeftBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated;
+- (void)moAddRightBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated;
+- (void)moRemoveLeftBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated;
+- (void)moRemoveRightBarButtonItem:(UIBarButtonItem*)barButtonItem animated:(BOOL)animated;
+- (void)moRemoveAllLeftBarButtonItemsAnimated:(BOOL)animated;
+- (void)moRemoveAllRightBarButtonItemsAnimated:(BOOL)animated;
 
-- (void)setLeftBarAutomaticAlignmentAnimated:(BOOL)animated;
-- (void)setRightBarAutomaticAlignmentAnimated:(BOOL)animated;
+- (void)moSetLeftBarAutomaticAlignmentAnimated:(BOOL)animated;
+- (void)moSetRightBarAutomaticAlignmentAnimated:(BOOL)animated;
 
 @end
 
@@ -565,18 +565,18 @@ typedef NS_ENUM(NSInteger, MobilyDeviceDisplay) {
 
 @interface UIDevice (MobilyUI)
 
-+ (CGFloat)systemVersion;
++ (CGFloat)moSystemVersion;
 
-+ (BOOL)isSimulator;
-+ (BOOL)isIPhone;
-+ (BOOL)isIPad;
++ (BOOL)moIsSimulator;
++ (BOOL)moIsIPhone;
++ (BOOL)moIsIPad;
 
-+ (NSString*)deviceTypeString;
-+ (NSString*)deviceVersionString;
++ (NSString*)moDeviceTypeString;
++ (NSString*)moDeviceVersionString;
 
-+ (MobilyDeviceFamily)family;
-+ (MobilyDeviceModel)model;
-+ (MobilyDeviceDisplay)display;
++ (MobilyDeviceFamily)moFamily;
++ (MobilyDeviceModel)moModel;
++ (MobilyDeviceDisplay)moDisplay;
 
 @end
 
@@ -597,32 +597,32 @@ typedef NS_ENUM(NSInteger, MobilyDeviceDisplay) {
     return [*value isKindOfClass:resultClass.class]; \
 }
 
-#define MOBILY_DEFINE_VALIDATE_BOOL(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithBool:[*value convertToBool]])
-#define MOBILY_DEFINE_VALIDATE_NUMBER(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [*value convertToNumber])
-#define MOBILY_DEFINE_VALIDATE_RECT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSValue, [NSValue valueWithCGRect:[*value convertToRect]])
-#define MOBILY_DEFINE_VALIDATE_POINT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSValue, [NSValue valueWithCGPoint:[*value convertToPoint]])
-#define MOBILY_DEFINE_VALIDATE_SIZE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSValue, [NSValue valueWithCGSize:[*value convertToSize]])
-#define MOBILY_DEFINE_VALIDATE_EDGE_INSETS(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSValue, [NSValue valueWithUIEdgeInsets:[*value convertToEdgeInsets]])
-#define MOBILY_DEFINE_VALIDATE_COLOR(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, UIColor, [UIColor colorWithString:*value])
-#define MOBILY_DEFINE_VALIDATE_BEZIER_PATH(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, UIBezierPath, [*value convertToBezierPath])
-#define MOBILY_DEFINE_VALIDATE_IMAGE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, UIImage, [*value convertToImage])
-#define MOBILY_DEFINE_VALIDATE_FONT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, UIFont, [*value convertToFont])
-#define MOBILY_DEFINE_VALIDATE_REMOTE_NOTIFICATION_TYPE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToRemoteNotificationType]])
-#define MOBILY_DEFINE_VALIDATE_INTERFACE_ORIENTATION_MASK(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToInterfaceOrientationMask]])
-#define MOBILY_DEFINE_VALIDATE_STATUS_BAR_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToStatusBarStyle]])
-#define MOBILY_DEFINE_VALIDATE_STATUS_BAR_ANIMATION(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToStatusBarAnimation]])
-#define MOBILY_DEFINE_VALIDATE_AUTORESIZING(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToViewAutoresizing]])
-#define MOBILY_DEFINE_VALIDATE_CONTENT_MODE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToViewContentMode]])
-#define MOBILY_DEFINE_VALIDATE_TEXT_ALIGNMENT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToTextAlignment]])
-#define MOBILY_DEFINE_VALIDATE_LINE_BREAKMODE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToLineBreakMode]])
-#define MOBILY_DEFINE_VALIDATE_BASELINE_ADJUSTMENT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToBaselineAdjustment]])
-#define MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_INDICATOR_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToScrollViewIndicatorStyle]])
-#define MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToScrollViewKeyboardDismissMode]])
-#define MOBILY_DEFINE_VALIDATE_BAR_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToBarStyle]])
-#define MOBILY_DEFINE_VALIDATE_TAB_BAR_ITEM_POSITIONING(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToTabBarItemPositioning]])
-#define MOBILY_DEFINE_VALIDATE_SEARCH_BAR_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToSearchBarStyle]])
-#define MOBILY_DEFINE_VALIDATE_PROGRESS_VIEW_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToProgressViewStyle]])
-#define MOBILY_DEFINE_VALIDATE_TEXT_BORDER_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToTextBorderStyle]])
+#define MOBILY_DEFINE_VALIDATE_BOOL(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithBool:[*value moConvertToBool]])
+#define MOBILY_DEFINE_VALIDATE_NUMBER(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [*value moConvertToNumber])
+#define MOBILY_DEFINE_VALIDATE_RECT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSValue, [NSValue valueWithCGRect:[*value moConvertToRect]])
+#define MOBILY_DEFINE_VALIDATE_POINT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSValue, [NSValue valueWithCGPoint:[*value moConvertToPoint]])
+#define MOBILY_DEFINE_VALIDATE_SIZE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSValue, [NSValue valueWithCGSize:[*value moConvertToSize]])
+#define MOBILY_DEFINE_VALIDATE_EDGE_INSETS(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSValue, [NSValue valueWithUIEdgeInsets:[*value moConvertToEdgeInsets]])
+#define MOBILY_DEFINE_VALIDATE_COLOR(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, UIColor, [UIColor moColorWithString:*value])
+#define MOBILY_DEFINE_VALIDATE_BEZIER_PATH(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, UIBezierPath, [*value moConvertToBezierPath])
+#define MOBILY_DEFINE_VALIDATE_IMAGE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, UIImage, [*value moConvertToImage])
+#define MOBILY_DEFINE_VALIDATE_FONT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, UIFont, [*value moConvertToFont])
+#define MOBILY_DEFINE_VALIDATE_REMOTE_NOTIFICATION_TYPE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToRemoteNotificationType]])
+#define MOBILY_DEFINE_VALIDATE_INTERFACE_ORIENTATION_MASK(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToInterfaceOrientationMask]])
+#define MOBILY_DEFINE_VALIDATE_STATUS_BAR_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToStatusBarStyle]])
+#define MOBILY_DEFINE_VALIDATE_STATUS_BAR_ANIMATION(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToStatusBarAnimation]])
+#define MOBILY_DEFINE_VALIDATE_AUTORESIZING(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToViewAutoresizing]])
+#define MOBILY_DEFINE_VALIDATE_CONTENT_MODE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToViewContentMode]])
+#define MOBILY_DEFINE_VALIDATE_TEXT_ALIGNMENT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToTextAlignment]])
+#define MOBILY_DEFINE_VALIDATE_LINE_BREAKMODE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToLineBreakMode]])
+#define MOBILY_DEFINE_VALIDATE_BASELINE_ADJUSTMENT(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToBaselineAdjustment]])
+#define MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_INDICATOR_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToScrollViewIndicatorStyle]])
+#define MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToScrollViewKeyboardDismissMode]])
+#define MOBILY_DEFINE_VALIDATE_BAR_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToBarStyle]])
+#define MOBILY_DEFINE_VALIDATE_TAB_BAR_ITEM_POSITIONING(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToTabBarItemPositioning]])
+#define MOBILY_DEFINE_VALIDATE_SEARCH_BAR_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToSearchBarStyle]])
+#define MOBILY_DEFINE_VALIDATE_PROGRESS_VIEW_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToProgressViewStyle]])
+#define MOBILY_DEFINE_VALIDATE_TEXT_BORDER_STYLE(name) MOBILY_DEFINE_VALIDATE_STRING_BASED(name, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToTextBorderStyle]])
 
 /*--------------------------------------------------*/
 

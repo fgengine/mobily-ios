@@ -150,9 +150,9 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
     CGFloat buttonsHorizontalMargin = (isPortrait == YES) ? MobilyImageCropController_PortraitButtonsHorizontalMargin : MobilyImageCropController_LandscapeButtonsHorizontalMargin;
     CGFloat buttonsVerticalMargin = (isPortrait == YES) ? MobilyImageCropController_PortraitButtonsVerticalMargin : MobilyImageCropController_LandscapeButtonsVerticalMargin;
 
-    self.titleLabel.framePosition = CGPointMake((bounds.origin.x + (bounds.size.width * 0.5f)) - (self.titleLabel.frameWidth * 0.5f), bounds.origin.y + titleLabelVerticalMargin);
-    self.cancelButton.framePosition = CGPointMake(bounds.origin.x + buttonsHorizontalMargin, (bounds.origin.y + bounds.size.height) - (self.cancelButton.frameHeight + buttonsVerticalMargin));
-    self.chooseButton.framePosition = CGPointMake((bounds.origin.x + bounds.size.width) - (self.chooseButton.frameWidth + buttonsHorizontalMargin), (bounds.origin.y + bounds.size.height) - (self.cancelButton.frameHeight + buttonsVerticalMargin));
+    self.titleLabel.moFramePosition = CGPointMake((bounds.origin.x + (bounds.size.width * 0.5f)) - (self.titleLabel.moFrameWidth * 0.5f), bounds.origin.y + titleLabelVerticalMargin);
+    self.cancelButton.moFramePosition = CGPointMake(bounds.origin.x + buttonsHorizontalMargin, (bounds.origin.y + bounds.size.height) - (self.cancelButton.moFrameHeight + buttonsVerticalMargin));
+    self.chooseButton.moFramePosition = CGPointMake((bounds.origin.x + bounds.size.width) - (self.chooseButton.moFrameWidth + buttonsHorizontalMargin), (bounds.origin.y + bounds.size.height) - (self.cancelButton.moFrameHeight + buttonsVerticalMargin));
 }
 
 - (void)viewDidLayoutSubviews {
@@ -168,7 +168,7 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 - (CGRect)cropRect {
     CGFloat zoom = 1.0f / self.scrollView.zoomScale;
     CGPoint offset = self.scrollView.contentOffset;
-    CGSize boundsSize = self.scrollView.boundsSize;
+    CGSize boundsSize = self.scrollView.moBoundsSize;
     CGFloat x = round(offset.x * zoom);
     CGFloat y = round(offset.y * zoom);
     CGFloat w = MOBILY_CEIL(boundsSize.width * zoom);
@@ -269,7 +269,7 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 - (UIButton*)cancelButton {
     if(_cancelButton == nil) {
         _cancelButton = [[UIButton alloc] init];
-        _cancelButton.normalTitle = NSLocalizedString(@"Cancel", @"Cancel button");
+        _cancelButton.moNormalTitle = NSLocalizedString(@"Cancel", @"Cancel button");
         _cancelButton.opaque = NO;
         
         [_cancelButton addTarget:self action:@selector(onCancelButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
@@ -281,7 +281,7 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 - (UIButton*)chooseButton {
     if(_chooseButton == nil) {
         _chooseButton = [[UIButton alloc] init];
-        _chooseButton.normalTitle = NSLocalizedString(@"Choose", @"Choose button");
+        _chooseButton.moNormalTitle = NSLocalizedString(@"Choose", @"Choose button");
         _chooseButton.opaque = NO;
         
         [_chooseButton addTarget:self action:@selector(onChooseButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
@@ -531,7 +531,7 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
     CGImageRef croppedCGImage = CGImageCreateWithImageInRect(image.CGImage, cropRect);
     UIImage *croppedImage = [UIImage imageWithCGImage:croppedCGImage scale:imageScale orientation:imageOrientation];
     CGImageRelease(croppedCGImage);
-    croppedImage = [croppedImage unrotate];
+    croppedImage = [croppedImage moUnrotate];
     imageOrientation = croppedImage.imageOrientation;
     if((cropMode == MobilyImageCropModeSquare) || (applyMaskToCroppedImage == NO)) {
         return croppedImage;
@@ -617,7 +617,7 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 }
 
 - (void)setFrame:(CGRect)frame {
-    BOOL sizeChanging = CGSizeEqualToSize(self.frameSize, frame.size);
+    BOOL sizeChanging = CGSizeEqualToSize(self.moFrameSize, frame.size);
     if(sizeChanging == NO) {
         [self _prepareToResize];
     }
@@ -721,7 +721,7 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 
 - (void)_setInitialContentOffset {
     CGSize boundsSize = self.bounds.size;
-    CGSize zoomSize = self.zoomView.frameSize;
+    CGSize zoomSize = self.zoomView.moFrameSize;
     if((boundsSize.width > MOBILY_EPSILON) && (boundsSize.height > MOBILY_EPSILON) && (zoomSize.width > MOBILY_EPSILON) && (zoomSize.height > MOBILY_EPSILON)) {
         CGPoint contentOffset = CGPointZero;
         if(zoomSize.width > boundsSize.width) {
@@ -757,7 +757,7 @@ static const CGFloat MobilyImageCropController_ScrollDuration = 0.25f;
 
 - (CGPoint)_maximumContentOffset {
     CGSize contentSize = self.contentSize;
-    CGSize boundsSize = self.boundsSize;
+    CGSize boundsSize = self.moBoundsSize;
     return CGPointMake(contentSize.width - boundsSize.width, contentSize.height - boundsSize.height);
 }
 

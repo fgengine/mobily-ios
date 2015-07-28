@@ -69,8 +69,8 @@
 
 - (void)eachColumnsRows:(void(^)(id object, NSUInteger column, NSUInteger row))block;
 - (void)eachRowsColumns:(void(^)(id object, NSUInteger column, NSUInteger row))block;
-- (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block byColumn:(NSInteger)column;
-- (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block byRow:(NSInteger)row;
+- (void)moEach:(void(^)(id object, NSUInteger column, NSUInteger row))block byColumn:(NSInteger)column;
+- (void)moEach:(void(^)(id object, NSUInteger column, NSUInteger row))block byRow:(NSInteger)row;
 
 @end
 

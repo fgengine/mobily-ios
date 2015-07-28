@@ -173,7 +173,7 @@
                 [result setValue:array forKey:field];
             } else if([value isKindOfClass:NSDictionary.class] == YES) {
                 NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithCapacity:[value count]];
-                [value each:^(id key, id item) {
+                [value moEach:^(id key, id item) {
                     dict[key] = [item copyWithZone:zone];
                 }];
                 [result setValue:dict forKey:field];
@@ -201,7 +201,7 @@
     if(_fileName != fileName) {
         _fileName = fileName;
         if(_fileName != nil) {
-            _filePath = [MobilyStorage.fileSystemDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", _fileName, MOBILY_MODEL_EXTENSION]];
+            _filePath = [MobilyStorage.moFileSystemDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", _fileName, MOBILY_MODEL_EXTENSION]];
         } else {
             _filePath = nil;
         }
@@ -578,7 +578,7 @@
     if(_fileName != fileName) {
         _fileName = fileName;
         if(_fileName != nil) {
-            _filePath = [MobilyStorage.fileSystemDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", _fileName, MOBILY_STORAGE_COLLECTION_EXTENSION]];
+            _filePath = [MobilyStorage.moFileSystemDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", _fileName, MOBILY_STORAGE_COLLECTION_EXTENSION]];
         } else {
             _filePath = nil;
         }

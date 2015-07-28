@@ -123,22 +123,22 @@ const NSString* kPhoneEmptySymbol = @"_";
 
 - (NSArray*)relatedObjects {
     if(_objectChilds.count > 0) {
-        return [_objectChilds unionWithArrays:self.subviews, nil];
+        return [_objectChilds moUnionWithArrays:self.subviews, nil];
     }
     return self.subviews;
 }
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIView.class] == YES) {
-        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
+        self.objectChilds = [NSArray moArrayWithArray:_objectChilds andAddingObject:objectChild];
         [self addSubview:(UIView*)objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIView.class] == YES) {
-        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
-        [self removeSubview:(UIView*)objectChild];
+        self.objectChilds = [NSArray moArrayWithArray:_objectChilds andRemovingObject:objectChild];
+        [self moRemoveSubview:(UIView*)objectChild];
     }
 }
 
@@ -229,10 +229,10 @@ const NSString* kPhoneEmptySymbol = @"_";
             if(animated == YES) {
                 [UIView animateWithDuration:MOBILY_DURATION
                                  animations:^{
-                                     _toolbar.frameHeight = toolbarHeight;
+                                     _toolbar.moFrameHeight = toolbarHeight;
                                  }];
             } else {
-                _toolbar.frameHeight = toolbarHeight;
+                _toolbar.moFrameHeight = toolbarHeight;
             }
         }
     }
@@ -259,8 +259,8 @@ const NSString* kPhoneEmptySymbol = @"_";
         _toolbar.clipsToBounds = YES;
     }
     if(_toolbar != nil) {
-        _prevInputResponder = [UIResponder prevResponderFromView:self];
-        _nextInputResponder = [UIResponder nextResponderFromView:self];
+        _prevInputResponder = [UIResponder moPrevResponderFromView:self];
+        _nextInputResponder = [UIResponder moNextResponderFromView:self];
         if(_hiddenToolbarArrows == YES) {
             _toolbar.items = @[ _flexButton, _doneButton ];
         } else {
@@ -268,7 +268,7 @@ const NSString* kPhoneEmptySymbol = @"_";
         }
         _prevButton.enabled = (_prevInputResponder != nil);
         _nextButton.enabled = (_nextInputResponder != nil);
-        _toolbar.frameHeight = (_hiddenToolbar == NO) ? MOBILY_TOOLBAR_HEIGHT : 0.0f;
+        _toolbar.moFrameHeight = (_hiddenToolbar == NO) ? MOBILY_TOOLBAR_HEIGHT : 0.0f;
         self.inputAccessoryView = _toolbar;
         [self reloadInputViews];
     }
@@ -336,7 +336,7 @@ const NSString* kPhoneEmptySymbol = @"_";
                 [digits removeLastObject];
             }
         }
-        [digits each:^(NSString* digit) {
+        [digits moEach:^(NSString* digit) {
             NSRange range = [newValue rangeOfString:(NSString*)kPhoneEmptySymbol];
             if(range.location != NSNotFound) {
                 newValue = [newValue stringByReplacingCharactersInRange:range withString:digit];
@@ -368,7 +368,7 @@ const NSString* kPhoneEmptySymbol = @"_";
         }
     }
     
-    NSArray* digits = [[[text componentsSeparatedByCharactersInSet:NSCharacterSet.decimalDigitCharacterSet.invertedSet] componentsJoinedByString:@""] charactersArray];
+    NSArray* digits = [[[text componentsSeparatedByCharactersInSet:NSCharacterSet.decimalDigitCharacterSet.invertedSet] componentsJoinedByString:@""] moCharactersArray];
     if(_prevPhoneDigitsCount < 1) {
         if(digits.count > _formatDigitsCount) {
             digits = [digits subarrayWithRange:NSMakeRange((digits.count - _formatDigitsCount), _formatDigitsCount)];

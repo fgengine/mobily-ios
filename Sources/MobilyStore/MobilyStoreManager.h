@@ -89,9 +89,9 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @interface MobilyStorePaymentRequest : NSObject
 
-@property(nonatomic, readonly, strong) SKProduct* product;
-@property(nonatomic, readonly, strong) SKPaymentTransaction* transaction;
-@property(nonatomic, readonly, strong) NSData* transactionReceipt;
+@property(nonatomic, readonly, strong) SKProduct* moProduct;
+@property(nonatomic, readonly, strong) SKPaymentTransaction* moTransaction;
+@property(nonatomic, readonly, strong) NSData* moTransactionReceipt;
 
 - (void)finish;
 
@@ -101,7 +101,7 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 
 @interface SKProduct (MobilyStore)
 
-@property(nonatomic, readonly, strong) NSString* priceAsString;
+@property(nonatomic, readonly, strong) NSString* moPriceAsString;
 
 @end
 

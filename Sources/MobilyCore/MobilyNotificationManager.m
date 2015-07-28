@@ -189,7 +189,7 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
 - (void)setParentWindow:(UIWindow*)parentWindow {
     if(_parentWindow != parentWindow) {
         _parentWindow = parentWindow;
-        if(UIDevice.systemVersion >= 7.0f) {
+        if(UIDevice.moSystemVersion >= 7.0f) {
             [self setNeedsStatusBarAppearanceUpdate];
         }
     }
@@ -198,7 +198,7 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
 - (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle {
     if(_statusBarStyle != statusBarStyle) {
         _statusBarStyle = statusBarStyle;
-        if(UIDevice.systemVersion >= 7.0f) {
+        if(UIDevice.moSystemVersion >= 7.0f) {
             [self setNeedsStatusBarAppearanceUpdate];
         }
     }
@@ -241,7 +241,7 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
     MobilyNotificationView* notificationView = [[MobilyNotificationView alloc] initWithController:self view:view duration:duration pressed:pressed];
     if(notificationView != nil) {
         [_queue insertObject:notificationView atIndex:0];
-        if(UIDevice.systemVersion >= 7.0f) {
+        if(UIDevice.moSystemVersion >= 7.0f) {
             [self setNeedsStatusBarAppearanceUpdate];
         }
         [self _showNotificationView:notificationView animated:YES];
@@ -253,7 +253,7 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
     if([_queue containsObject:notificationView] == YES) {
         [self _hideNotificationView:notificationView animated:animated];
         [_queue removeObject:notificationView];
-        if(UIDevice.systemVersion >= 7.0f) {
+        if(UIDevice.moSystemVersion >= 7.0f) {
             [self setNeedsStatusBarAppearanceUpdate];
         }
     }
@@ -261,14 +261,14 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
 
 - (void)popAllAnimated:(BOOL)animated {
     if(_queue.count > 0) {
-        [_queue each:^(MobilyNotificationView* notificationView) {
+        [_queue moEach:^(MobilyNotificationView* notificationView) {
             [self _hideNotificationView:notificationView animated:animated];
             [_queue removeObject:notificationView];
-            if(UIDevice.systemVersion >= 7.0f) {
+            if(UIDevice.moSystemVersion >= 7.0f) {
                 [self setNeedsStatusBarAppearanceUpdate];
             }
         } options:NSEnumerationReverse];
-        if(UIDevice.systemVersion >= 7.0f) {
+        if(UIDevice.moSystemVersion >= 7.0f) {
             [self setNeedsStatusBarAppearanceUpdate];
         }
     }
@@ -277,8 +277,8 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
 #pragma mark Private
 
 - (void)_showNotificationView:(MobilyNotificationView*)notificationView animated:(BOOL)animated {
-    MobilyNotificationView* prevNotificationView = [_queue prevObjectOfObject:notificationView];
-    MobilyNotificationView* nextNotificationView = [_queue nextObjectOfObject:notificationView];
+    MobilyNotificationView* prevNotificationView = [_queue moPrevObjectOfObject:notificationView];
+    MobilyNotificationView* nextNotificationView = [_queue moNextObjectOfObject:notificationView];
     notificationView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:notificationView];
     if(animated == YES) {
@@ -314,8 +314,8 @@ static NSTimeInterval MobilyNotificationController_HideDutation = 0.2f;
 }
 
 - (void)_hideNotificationView:(MobilyNotificationView*)notificationView animated:(BOOL)animated {
-    MobilyNotificationView* prevNotificationView = [_queue prevObjectOfObject:notificationView];
-    MobilyNotificationView* nextNotificationView = [_queue nextObjectOfObject:notificationView];
+    MobilyNotificationView* prevNotificationView = [_queue moPrevObjectOfObject:notificationView];
+    MobilyNotificationView* nextNotificationView = [_queue moNextObjectOfObject:notificationView];
     if(prevNotificationView != nil) {
         notificationView.constraintControllerTop = [NSLayoutConstraint constraintWithItem:notificationView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:prevNotificationView attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
     } else {

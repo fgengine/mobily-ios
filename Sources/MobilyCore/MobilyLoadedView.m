@@ -96,7 +96,7 @@
 }
 
 - (void)setup {
-    UINib* nib = [UINib nibWithClass:self.class bundle:nil];
+    UINib* nib = [UINib moNibWithClass:self.class bundle:nil];
     if(nib != nil) {
         [nib instantiateWithOwner:self options:nil];
     }
@@ -188,22 +188,22 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRootViewHeight, constraintRootV
 
 - (NSArray*)relatedObjects {
     if(_objectChilds.count > 0) {
-        return [_objectChilds unionWithArrays:self.subviews, nil];
+        return [_objectChilds moUnionWithArrays:self.subviews, nil];
     }
     return self.subviews;
 }
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIView.class] == YES) {
-        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
+        self.objectChilds = [NSArray moArrayWithArray:_objectChilds andAddingObject:objectChild];
         [self addSubview:(UIView*)objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIView.class] == YES) {
-        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
-        [self removeSubview:(UIView*)objectChild];
+        self.objectChilds = [NSArray moArrayWithArray:_objectChilds andRemovingObject:objectChild];
+        [self moRemoveSubview:(UIView*)objectChild];
     }
 }
 

@@ -65,7 +65,7 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
     [super setup];
     
     self.automaticallyHideKeyboard = YES;
-    if([UIDevice isIPhone] == YES) {
+    if(UIDevice.moIsIPhone == YES) {
         self.orientation = UIInterfaceOrientationMaskPortrait;
     } else {
         self.orientation = UIInterfaceOrientationMaskLandscape;
@@ -116,9 +116,9 @@ MOBILY_DEFINE_VALIDATE_STRING(MobilyName)
         UINib* nib = nil;
         NSString* nibName = self.nibName;
         if(nibName.length > 0) {
-            nib = [UINib nibWithBaseName:nibName bundle:self.nibBundle];
+            nib = [UINib moNibWithBaseName:nibName bundle:self.nibBundle];
         } else {
-            nib = [UINib nibWithClass:self.class bundle:self.nibBundle];
+            nib = [UINib moNibWithClass:self.class bundle:self.nibBundle];
         }
         if(nib != nil) {
             NSArray* objects = [nib instantiateWithOwner:self options:nil];

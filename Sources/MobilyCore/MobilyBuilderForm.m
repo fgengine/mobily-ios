@@ -120,7 +120,7 @@
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 + (BOOL)object:(id)object outletName:(NSString*)outletName outletObject:(id< MobilyBuilderObject >)outletObject {
     BOOL isLinked = NO;
-    SEL setter = NSSelectorFromString([NSString stringWithFormat:@"set%@:", [outletName stringByUppercaseFirstCharacterString]]);
+    SEL setter = NSSelectorFromString([NSString stringWithFormat:@"set%@:", outletName.moStringByUppercaseFirstCharacterString]);
     if([object respondsToSelector:setter] == YES) {
         [object performSelector:setter withObject:outletObject];
         isLinked = YES;

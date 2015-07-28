@@ -81,7 +81,7 @@
 
 #pragma mark NSKeyValueCoding
 
-MOBILY_DEFINE_VALIDATE_STRING_BASED(NotificationType, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToApplicationNotificationType]])
+MOBILY_DEFINE_VALIDATE_STRING_BASED(NotificationType, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToApplicationNotificationType]])
 
 #pragma mark Synthesize
 
@@ -113,15 +113,15 @@ MOBILY_DEFINE_VALIDATE_STRING_BASED(NotificationType, NSNumber, [NSNumber number
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:MobilyApplicationNotificationCategory.class] == YES) {
-        self.notificationCategories = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
+        self.notificationCategories = [NSArray moArrayWithArray:_objectChilds andAddingObject:objectChild];
     } else if([objectChild isKindOfClass:UIWindow.class] == YES) {
-        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
+        self.objectChilds = [NSArray moArrayWithArray:_objectChilds andAddingObject:objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:UIWindow.class] == YES) {
-        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
+        self.objectChilds = [NSArray moArrayWithArray:_objectChilds andRemovingObject:objectChild];
     }
 }
 
@@ -144,7 +144,7 @@ MOBILY_DEFINE_VALIDATE_STRING_BASED(NotificationType, NSNumber, [NSNumber number
 - (BOOL)launchingWithOptions:(NSDictionary* __unused)options {
     MobilyWindow* window = nil;
     if(_notificationType != UIRemoteNotificationTypeNone) {
-        if([UIDevice systemVersion] >= 8.0f) {
+        if(UIDevice.moSystemVersion >= 8.0f) {
             UIUserNotificationType notificationType = UIUserNotificationTypeNone;
             if((_notificationType & MobilyApplicationNotificationTypeBadge) != 0) {
                 notificationType |= UIUserNotificationTypeBadge;
@@ -196,7 +196,7 @@ MOBILY_DEFINE_VALIDATE_STRING_BASED(NotificationType, NSNumber, [NSNumber number
             window.objectParent = self;
         }
     } else {
-        window = [_objectChilds firstObjectIsClass:UIWindow.class];
+        window = [_objectChilds moFirstObjectIsClass:UIWindow.class];
     }
     if(window != nil) {
         [window makeKeyAndVisible];
@@ -304,13 +304,13 @@ MOBILY_DEFINE_VALIDATE_STRING(Identifier)
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:MobilyApplicationNotificationAction.class] == YES) {
-        self.objectChilds = [NSArray arrayWithArray:_objectChilds andAddingObject:objectChild];
+        self.objectChilds = [NSArray moArrayWithArray:_objectChilds andAddingObject:objectChild];
     }
 }
 
 - (void)removeObjectChild:(id< MobilyBuilderObject >)objectChild {
     if([objectChild isKindOfClass:MobilyApplicationNotificationAction.class] == YES) {
-        self.objectChilds = [NSArray arrayWithArray:_objectChilds andRemovingObject:objectChild];
+        self.objectChilds = [NSArray moArrayWithArray:_objectChilds andRemovingObject:objectChild];
     }
 }
 
@@ -346,7 +346,7 @@ MOBILY_DEFINE_VALIDATE_STRING(Identifier)
 
 MOBILY_DEFINE_VALIDATE_STRING(Identifier)
 MOBILY_DEFINE_VALIDATE_STRING(Title)
-MOBILY_DEFINE_VALIDATE_STRING_BASED(ActivationMode, NSNumber, [NSNumber numberWithUnsignedInt:[*value convertToUserNotificationActivationMode]])
+MOBILY_DEFINE_VALIDATE_STRING_BASED(ActivationMode, NSNumber, [NSNumber numberWithUnsignedInt:[*value moConvertToUserNotificationActivationMode]])
 MOBILY_DEFINE_VALIDATE_BOOL(AuthenticationRequired)
 MOBILY_DEFINE_VALIDATE_BOOL(Destructive)
 
@@ -406,11 +406,11 @@ MOBILY_DEFINE_VALIDATE_BOOL(Destructive)
 
 @implementation NSString (MobilyApplication)
 
-- (MobilyApplicationNotificationType)convertToApplicationNotificationType {
-    return [self convertToApplicationNotificationTypeSeparated:@"|"];
+- (MobilyApplicationNotificationType)moConvertToApplicationNotificationType {
+    return [self moConvertToApplicationNotificationTypeSeparated:@"|"];
 }
 
-- (MobilyApplicationNotificationType)convertToApplicationNotificationTypeSeparated:(NSString*)separated {
+- (MobilyApplicationNotificationType)moConvertToApplicationNotificationTypeSeparated:(NSString*)separated {
     MobilyApplicationNotificationType result = MobilyApplicationNotificationTypeNone;
     NSString* value = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([value isEqualToString:@"all"] == YES) {
@@ -432,7 +432,7 @@ MOBILY_DEFINE_VALIDATE_BOOL(Destructive)
 }
 
 
-- (UIUserNotificationActivationMode)convertToUserNotificationActivationMode {
+- (UIUserNotificationActivationMode)moConvertToUserNotificationActivationMode {
     NSString* temp = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
     if([temp isEqualToString:@"background"] == YES) {
         return UIUserNotificationActivationModeBackground;

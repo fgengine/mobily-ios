@@ -73,7 +73,7 @@
 
 - (void)addControl:(id< MobilyValidatedObject >)control {
     if(([_controls containsObject:control] == NO) && (control.form == nil)) {
-        _controls = [NSArray arrayWithArray:_controls andAddingObject:control];
+        _controls = [NSArray moArrayWithArray:_controls andAddingObject:control];
         [_validatedControls addObject:control];
         control.form = self;
     }
@@ -81,7 +81,7 @@
 
 - (void)removeControl:(id< MobilyValidatedObject >)control {
     if(([_controls containsObject:control] == YES) && (control.form == self)) {
-        _controls = [NSArray arrayWithArray:_controls andRemovingObject:control];
+        _controls = [NSArray moArrayWithArray:_controls andRemovingObject:control];
         control.form = nil;
     }
 }
@@ -94,7 +94,7 @@
 }
 
 - (NSArray*)invalidControls {
-    return [_controls relativeComplement:[_validatedControls allObjects]];
+    return [_controls moRelativeComplement:[_validatedControls allObjects]];
 }
 
 - (NSString*)output {
@@ -102,9 +102,9 @@
     NSArray* results = @[];
     NSArray* invalidControls = [self invalidControls];
     for(id< MobilyValidatedObject > control in invalidControls) {
-        results = [results unionWithArray:[control messages]];
+        results = [results moUnionWithArray:[control messages]];
     }
-    [results eachWithIndex:^(NSString* r, NSUInteger index) {
+    [results moEachWithIndex:^(NSString* r, NSUInteger index) {
         output = [output stringByAppendingString:r];
         if(index != results.count-1) {
             output = [output stringByAppendingString:@"\n"];
@@ -195,7 +195,7 @@
 - (BOOL)validate:(NSString*)value {
     NSString* trimmed = [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if(trimmed.length > 0) {
-        return [trimmed isEmail];
+        return [trimmed moIsEmail];
     } else if((_required == NO) && (trimmed.length < 1)) {
         return YES;
     }
@@ -434,7 +434,7 @@
 - (NSArray*)messages:(NSString*)value {
     NSArray* results = @[];
     for(id<MobilyFieldValidator> val in _validators) {
-        results = [results unionWithArray:[val messages:value]];
+        results = [results moUnionWithArray:[val messages:value]];
     }
     return results;
 }

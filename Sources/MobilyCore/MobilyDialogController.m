@@ -113,7 +113,7 @@
     self = [super initWithNibName:nil bundle:nil];
     if(self != nil) {
         _contentController = contentController;
-        _contentController.dialogController = self;
+        _contentController.moDialogController = self;
         [self setup];
     }
     return self;
@@ -466,25 +466,21 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintContentViewMaxHeight, constrain
 #import <objc/runtime.h>
 
 /*--------------------------------------------------*/
-
-static char const* const MobilyDialogControllerKey = "MobilyDialogControllerKey";
-
-/*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
 @implementation UIViewController (MobilyDialogController)
 
-- (void)setDialogController:(MobilyDialogController*)dialogController {
-    objc_setAssociatedObject(self, MobilyDialogControllerKey, dialogController, OBJC_ASSOCIATION_ASSIGN);
+- (void)setMoDialogController:(MobilyDialogController*)moDialogController {
+    objc_setAssociatedObject(self, @selector(moDialogController), moDialogController, OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (MobilyDialogController*)dialogController {
-    MobilyDialogController* dialogController = objc_getAssociatedObject(self, MobilyDialogControllerKey);
-    if(dialogController == nil) {
-        dialogController = self.parentViewController.dialogController;
+- (MobilyDialogController*)moDialogController {
+    MobilyDialogController* controller = objc_getAssociatedObject(self, @selector(moDialogController));
+    if(controller == nil) {
+        controller = self.parentViewController.moDialogController;
     }
-    return dialogController;
+    return controller;
 }
 
 @end

@@ -226,21 +226,21 @@
     }
     if(_urlParams.count > 0) {
         NSMutableArray* temp = NSMutableArray.array;
-        [_urlParams each:^(id key, id value) {
+        [_urlParams moEach:^(id key, id value) {
             [temp addObject:[NSString stringWithFormat:@"\"%@\" = \"%@\";", [key description], [value description]]];
         }];
         [result addObject:[NSString stringWithFormat:@"UrlParams [%@]", [temp componentsJoinedByString:@", "]]];
     }
     if(_headers.count > 0) {
         NSMutableArray* temp = NSMutableArray.array;
-        [_headers each:^(id key, id value) {
+        [_headers moEach:^(id key, id value) {
             [temp addObject:[NSString stringWithFormat:@"\t\"%@\" = \"%@\";", [key description], [value description]]];
         }];
         [result addObject:[NSString stringWithFormat:@"Headers [%@];", [temp componentsJoinedByString:@", "]]];
     }
     if(_bodyParams.count > 0) {
         NSMutableArray* temp = NSMutableArray.array;
-        [_bodyParams each:^(id key, id value) {
+        [_bodyParams moEach:^(id key, id value) {
             [temp addObject:[NSString stringWithFormat:@"\t\"%@\" = \"%@\";", [key description], [value description]]];
         }];
         [result addObject:[NSString stringWithFormat:@"BodyParams [%@];", [temp componentsJoinedByString:@", "]]];

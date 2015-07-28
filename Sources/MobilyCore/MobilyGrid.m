@@ -297,14 +297,14 @@
     }
 }
 
-- (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block byColumn:(NSInteger)column {
+- (void)moEach:(void(^)(id object, NSUInteger column, NSUInteger row))block byColumn:(NSInteger)column {
     NSMutableArray* columnObjects = _objects[column];
     for(NSUInteger ir = 0; ir < _numberOfRows; ir++) {
         block(columnObjects[ir], column, ir);
     }
 }
 
-- (void)each:(void(^)(id object, NSUInteger column, NSUInteger row))block byRow:(NSInteger)row {
+- (void)moEach:(void(^)(id object, NSUInteger column, NSUInteger row))block byRow:(NSInteger)row {
     for(NSUInteger ic = 0; ic < _numberOfColumns; ic++) {
         block(_objects[ic][row], ic, row);
     }

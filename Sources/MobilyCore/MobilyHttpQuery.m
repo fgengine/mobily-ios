@@ -83,7 +83,7 @@
     NSURLComponents* urlComponents = [NSURLComponents componentsWithString:[url absoluteString]];
     NSMutableDictionary* queryParams = NSMutableDictionary.dictionary;
     if([urlComponents.query length] > 0) {
-        [queryParams addEntriesFromDictionary:urlComponents.query.dictionaryFromQueryComponents];
+        [queryParams addEntriesFromDictionary:urlComponents.query.moDictionaryFromQueryComponents];
     }
     [queryParams addEntriesFromDictionary:[self _formDataFromDictionary:params]];
     NSMutableString* queryString = NSMutableString.string;
@@ -108,8 +108,8 @@
         if(bodyString.length > 0) {
             [bodyString appendString:@"&"];
         }
-        NSString* tempKey = (encodeParamKey == YES) ? key.stringByEncodingURLFormat : key;
-        NSString* tempValue = (encodeParamValue == YES) ? value.description.stringByEncodingURLFormat : value.description;
+        NSString* tempKey = (encodeParamKey == YES) ? key.moStringByEncodingURLFormat : key;
+        NSString* tempValue = (encodeParamValue == YES) ? value.description.moStringByEncodingURLFormat : value.description;
         [bodyString appendFormat:@"%@=%@", tempKey, tempValue];
     }];
     
@@ -122,16 +122,16 @@
 - (void)setRequestBodyParams:(NSDictionary*)params encodeParamKey:(BOOL)encodeParamKey encodeParamValue:(BOOL)encodeParamValue boundary:(NSString*)boundary attachments:(NSArray*)attachments {
     NSMutableData* body = NSMutableData.data;
     NSDictionary* formData = [self _formDataFromDictionary:params];
-    NSString* boundaryEncoded = boundary.stringByEncodingURLFormat;
+    NSString* boundaryEncoded = boundary.moStringByEncodingURLFormat;
     [formData enumerateKeysAndObjectsUsingBlock:^(NSString* key, id< NSObject > value, BOOL* stop __unused) {
-        NSString* tempKey = (encodeParamKey == YES) ? key.stringByEncodingURLFormat : key;
-        NSString* tempValue = (encodeParamValue == YES) ? value.description.stringByEncodingURLFormat : value.description;
+        NSString* tempKey = (encodeParamKey == YES) ? key.moStringByEncodingURLFormat : key;
+        NSString* tempValue = (encodeParamValue == YES) ? value.description.moStringByEncodingURLFormat : value.description;
         [body appendData:[[NSString stringWithFormat:@"--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@\r\n", boundaryEncoded, tempKey, tempValue] dataUsingEncoding:NSUTF8StringEncoding]];
     }];
     for(MobilyHttpAttachment* attachment in attachments) {
-        NSString* tempName = (attachment.encodeName == YES) ? attachment.name.stringByEncodingURLFormat : attachment.name;
-        NSString* tempFilename = (attachment.encodeFilename == YES) ? attachment.filename.stringByEncodingURLFormat : attachment.filename;
-        NSString* tempMimeType = (attachment.encodeMimeType == YES) ? attachment.mimeType.stringByEncodingURLFormat : attachment.mimeType;
+        NSString* tempName = (attachment.encodeName == YES) ? attachment.name.moStringByEncodingURLFormat : attachment.name;
+        NSString* tempFilename = (attachment.encodeFilename == YES) ? attachment.filename.moStringByEncodingURLFormat : attachment.filename;
+        NSString* tempMimeType = (attachment.encodeMimeType == YES) ? attachment.mimeType.moStringByEncodingURLFormat : attachment.mimeType;
         [body appendData:[[NSString stringWithFormat:@"--%@\r\nContent-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\nContent-Type: %@\r\n\r\n", boundaryEncoded, tempName, tempFilename, tempMimeType] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:attachment.data];
         [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
@@ -266,7 +266,7 @@
 }
 
 - (NSString*)responseString {
-    return [NSString stringWithData:_mutableResponseData encoding:NSASCIIStringEncoding];
+    return [NSString moStringWithData:_mutableResponseData encoding:NSASCIIStringEncoding];
 }
 
 - (NSDictionary*)responseJsonObject {
@@ -374,12 +374,12 @@
                 NSString* serverHash = nil;
                 NSData* serverCertificateData = (__bridge_transfer NSData*)SecCertificateCopyData(serverCertificate);
                 if(serverCertificateData != nil) {
-                    serverHash = [[serverCertificateData toBase64] stringBySHA256];
+                    serverHash = serverCertificateData.moToBase64.moStringBySHA256;
                 }
                 NSString* localHash = nil;
                 NSData* localCertificateData = (__bridge_transfer NSData*)SecCertificateCopyData(localCertificate);
                 if(localCertificateData != nil) {
-                    localHash = [[localCertificateData toBase64] stringBySHA256];
+                    localHash = localCertificateData.moToBase64.moStringBySHA256;
                 }
                 if([serverHash isEqualToString:localHash] == YES) {
                     NSURLCredential* credential = [NSURLCredential credentialForTrust:serverTrust];

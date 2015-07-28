@@ -250,7 +250,7 @@
 }
 
 - (void)deleteItems:(NSArray*)items {
-    if([_items containsObjectsInArray:items] == YES) {
+    if([_items moContainsObjectsInArray:items] == YES) {
         [_items removeObjectsInArray:items];
         [self _deleteEntries:items];
     }
@@ -299,7 +299,7 @@
                     cumulative.height -= _spacing.vertical;
                 }
                 offset.y += cumulative.height;
-                [_entries each:^(MobilyDataItem* entry) {
+                [_entries moEach:^(MobilyDataItem* entry) {
                     CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake(restriction.width, availableHeight)];
                     if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f) && (entry.hidden == NO)) {
                         entry.updateFrame = CGRectMake(offset.x, offset.y - entrySize.height, restriction.width, entrySize.height);
@@ -337,7 +337,7 @@
                     cumulative.width -= _spacing.horizontal;
                 }
                 offset.y += cumulative.width;
-                [_entries each:^(MobilyDataItem* entry) {
+                [_entries moEach:^(MobilyDataItem* entry) {
                     CGSize entrySize = [entry sizeForAvailableSize:CGSizeMake(availableWidth, restriction.height)];
                     if((entrySize.width >= 0.0f) && (entrySize.height >= 0.0f) && (entry.hidden == NO)) {
                         entry.updateFrame = CGRectMake(offset.x - entrySize.width, offset.y, entrySize.width, restriction.height);

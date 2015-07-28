@@ -52,12 +52,12 @@ typedef struct {
 
 @interface NSString (MobilyCG)
 
-- (CGPoint)convertToPoint;
-- (CGPoint)convertToPointSeparated:(NSString*)separated;
-- (CGSize)convertToSize;
-- (CGSize)convertToSizeSeparated:(NSString*)separated;
-- (CGRect)convertToRect;
-- (CGRect)convertToRectSeparated:(NSString*)separated;
+- (CGPoint)moConvertToPoint;
+- (CGPoint)moConvertToPointSeparated:(NSString*)separated;
+- (CGSize)moConvertToSize;
+- (CGSize)moConvertToSizeSeparated:(NSString*)separated;
+- (CGRect)moConvertToRect;
+- (CGRect)moConvertToRectSeparated:(NSString*)separated;
 
 @end
 

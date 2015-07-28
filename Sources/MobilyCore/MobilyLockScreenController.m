@@ -116,7 +116,7 @@ static const NSTimeInterval MobilyLockScreenController_ShakeAnimationDuration = 
 }
 
 - (void)_policyDeviceOwnerAuthentication {
-    if(UIDevice.systemVersion >= 8.0f) {
+    if(UIDevice.moSystemVersion >= 8.0f) {
         NSError* error = nil;
         LAContext* context = [[LAContext alloc] init];
         if([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error] == YES) {

@@ -206,7 +206,7 @@
 
 - (void)_startUpdatingIfNeeded {
 #if (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_8_0)
-    if([UIDevice systemVersion] >= 8.0f) {
+    if(UIDevice.moSystemVersion >= 8.0f) {
         CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
         switch(authorizationStatus) {
             case kCLAuthorizationStatusNotDetermined: {
@@ -312,7 +312,7 @@
 }
 
 - (void)_completeAllRequests {
-    [_requests each:^(MobilyGeoLocationRequest* request) {
+    [_requests moEach:^(MobilyGeoLocationRequest* request) {
         [self _completeRequest:request];
     }];
 }
@@ -328,7 +328,7 @@
 }
 
 - (void)_cancelAllRequests {
-    [_requests each:^(MobilyGeoLocationRequest* request) {
+    [_requests moEach:^(MobilyGeoLocationRequest* request) {
         [self _cancelRequest:request];
     }];
 }

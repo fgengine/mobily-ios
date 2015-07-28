@@ -258,12 +258,12 @@
 }
 
 - (CGPoint)alignPoint {
-    return [self _alignPointWithContentOffset:_view.contentOffset contentSize:_view.contentSize visibleSize:_view.boundsSize];
+    return [self _alignPointWithContentOffset:_view.contentOffset contentSize:_view.contentSize visibleSize:_view.moBoundsSize];
 }
 
 - (void)align {
     if((_view.dragging == NO) && (_view.decelerating == NO)) {
-        [_view setContentOffset:[self _alignWithVelocity:CGPointZero contentOffset:_view.contentOffset contentSize:_view.contentSize visibleSize:_view.boundsSize] animated:YES];
+        [_view setContentOffset:[self _alignWithVelocity:CGPointZero contentOffset:_view.contentOffset contentSize:_view.contentSize visibleSize:_view.moBoundsSize] animated:YES];
     }
 }
 

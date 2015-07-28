@@ -79,11 +79,11 @@
 - (void)setController:(UIViewController*)controller {
     if(_controller != controller) {
         if(_controller != nil) {
-            _controller.popoverController = nil;
+            _controller.moPopoverController = nil;
         }
         _controller = controller;
         if(_controller != nil) {
-            _controller.popoverController = self;
+            _controller.moPopoverController = self;
         }
     }
 }
@@ -135,25 +135,21 @@
 #import <objc/runtime.h>
 
 /*--------------------------------------------------*/
-
-static char const* const MobilyPopoverControllerKey = "popoverControllerKey";
-
-/*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
 @implementation UIViewController (MobilyPopoverController)
 
-- (void)setPopoverController:(MobilyPopoverController*)popoverController {
-    objc_setAssociatedObject(self, MobilyPopoverControllerKey, popoverController, OBJC_ASSOCIATION_RETAIN);
+- (void)setMoPopoverController:(MobilyPopoverController*)moPopoverController {
+    objc_setAssociatedObject(self, @selector(moPopoverController), moPopoverController, OBJC_ASSOCIATION_RETAIN);
 }
 
-- (MobilyPopoverController*)popoverController {
-    MobilyPopoverController* popoverController = objc_getAssociatedObject(self, MobilyPopoverControllerKey);
-    if(popoverController == nil) {
-        popoverController = self.parentViewController.popoverController;
+- (MobilyPopoverController*)moPopoverController {
+    MobilyPopoverController* controller = objc_getAssociatedObject(self, @selector(moPopoverController));
+    if(controller == nil) {
+        controller = self.parentViewController.moPopoverController;
     }
-    return popoverController;
+    return controller;
 }
 
 @end

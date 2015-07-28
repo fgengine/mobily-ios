@@ -113,11 +113,11 @@ static void* MobilyKVOContext = &MobilyKVOContext;
 
 @implementation NSObject (MobilyKVO)
 
-- (MobilyKVO*)observeKeyPath:(NSString*)keyPath withBlock:(MobilyKVOBlock)block {
+- (MobilyKVO*)moObserveKeyPath:(NSString*)keyPath withBlock:(MobilyKVOBlock)block {
 	return [[MobilyKVO alloc] initWithSubject:self keyPath:keyPath block:block];
 }
 
-- (MobilyKVO*)observeSelector:(SEL)selector withBlock:(MobilyKVOBlock)block {
+- (MobilyKVO*)moObserveSelector:(SEL)selector withBlock:(MobilyKVOBlock)block {
 	return [[MobilyKVO alloc] initWithSubject:self keyPath:NSStringFromSelector(selector) block:block];
 }
 

@@ -80,7 +80,7 @@
     [cell setItem:item];
     [cell setNeedsLayout];
     [cell layoutIfNeeded];
-    if([UIDevice systemVersion] >= 8.0f) {
+    if(UIDevice.moSystemVersion >= 8.0f) {
         return [cell systemLayoutSizeFittingSize:CGSizeMake(size.width, size.height) withHorizontalFittingPriority:[self fittingHorizontalPriority] verticalFittingPriority:[self fittingVerticalPriority]];
     }
     return [cell systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
@@ -97,7 +97,7 @@
 #pragma mark Init / Free
 
 - (instancetype)initWithIdentifier:(NSString*)identifier {
-    return [self initWithIdentifier:identifier nib:[UINib nibWithClass:self.class bundle:nil]];
+    return [self initWithIdentifier:identifier nib:[UINib moNibWithClass:self.class bundle:nil]];
 }
 
 - (instancetype)initWithIdentifier:(NSString*)identifier nib:(UINib*)nib {
@@ -228,7 +228,7 @@
         if(_rootView != nil) {
             _rootView.translatesAutoresizingMaskIntoConstraints = NO;
         }
-        [self setSubviews:self.orderedSubviews];
+        [self moSetSubviews:self.orderedSubviews];
         [self setNeedsUpdateConstraints];
     }
 }
