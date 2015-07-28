@@ -67,6 +67,11 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
 @end
 
 /*--------------------------------------------------*/
+
+typedef BOOL (*MobilyBuilderPreset_ValidateImp)(id, SEL, id*);
+typedef void (*MobilyBuilderPreset_SetterImp)(id, SEL, id);
+
+/*--------------------------------------------------*/
 #pragma mark -
 /*--------------------------------------------------*/
 
@@ -196,33 +201,48 @@ static NSMutableDictionary* MOBILY_BUILDER_PRESET = nil;
         characterSet = [NSCharacterSet characterSetWithCharactersInString:@":-"];
     }
     [presetAttributes enumerateKeysAndObjectsUsingBlock:^(NSString* key, id value, BOOL* stop __unused) {
-        NSString* validKey = NSString.string;
+        NSString* property = NSString.string;
         NSArray* components = [key componentsSeparatedByCharactersInSet:characterSet];
         if(components.count > 1) {
             for(NSString* component in components) {
-                validKey = [validKey stringByAppendingString:component.moStringByUppercaseFirstCharacterString];
+                property = [property stringByAppendingString:component.moStringByUppercaseFirstCharacterString];
             }
-            validKey = validKey.moStringByLowercaseFirstCharacterString;
+            property = property.moStringByLowercaseFirstCharacterString;
         } else {
-            validKey = key.moStringByLowercaseFirstCharacterString;
+            property = key.moStringByLowercaseFirstCharacterString;
         }
-        if(validKey.length > 0) {
-            if([object validateValue:&value forKey:validKey error:nil] == YES) {
-                @try {
-                    [object setValue:value forKey:validKey];
-                }
-                @catch(NSException *exception) {
+        if(property.length > 0) {
+            NSString* baseProperty = property.moStringByUppercaseFirstCharacterString;
+            if([self applyPresetProperty:baseProperty value:value object:object] == NO) {
+                NSString* moProperty = [NSString stringWithFormat:@"Mo%@", baseProperty];
+                if([self applyPresetProperty:moProperty value:value object:object] == NO) {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-                    NSLog(@"Failure set value in property: '%@=%@'; object: '%@'", validKey, value, object);
+                    NSLog(@"Failure set value in property: '%@=%@'; object: '%@'", property, value, object);
 #endif
                 }
-            } else {
-#if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-                NSLog(@"Not found property: '%@=%@'; object: '%@'", validKey, value, object);
-#endif
             }
         }
     }];
+}
+
++ (BOOL)applyPresetProperty:(NSString*)property value:(id)value object:(id)object {
+    BOOL result = YES;
+    NSString* baseProperty = property.moStringByUppercaseFirstCharacterString;
+    SEL validateSelector = NSSelectorFromString([NSString stringWithFormat:@"validate%@:", baseProperty]);
+    if([object respondsToSelector:validateSelector] == YES) {
+        MobilyBuilderPreset_ValidateImp validateImp = (MobilyBuilderPreset_ValidateImp)[object methodForSelector:validateSelector];
+        result = validateImp(object, validateSelector, &value);
+    }
+    if(result == YES) {
+        SEL setterSelector = NSSelectorFromString([NSString stringWithFormat:@"set%@:", baseProperty]);
+        if([object respondsToSelector:setterSelector] == YES) {
+            MobilyBuilderPreset_SetterImp setterImp = (MobilyBuilderPreset_SetterImp)[object methodForSelector:setterSelector];
+            setterImp(object, setterSelector, value);
+        } else {
+            result = NO;
+        }
+    }
+    return result;
 }
 
 @end

@@ -106,7 +106,7 @@ typedef NS_ENUM(NSUInteger, MobilyTransitionOperation) {
 /*--------------------------------------------------*/
 
 #define MOBILY_DEFINE_VALIDATE_TRANSITION_CONTROLLER(name) \
-- (BOOL)validate##name:(inout id*)value error:(out NSError** __unused)error { \
+- (BOOL)validate##name:(inout id*)value { \
     if([*value isKindOfClass:NSString.class] == YES) { \
         *value = [*value moConvertToTransitionController]; \
     } \
