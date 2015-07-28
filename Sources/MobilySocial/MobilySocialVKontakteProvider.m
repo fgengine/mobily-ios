@@ -164,7 +164,7 @@
 }
 
 - (void)vkSdkShouldPresentViewController:(UIViewController*)controller {
-    [[UIApplication.sharedApplication.keyWindow currentViewController] presentViewController:controller animated:YES completion:nil];
+    [[UIApplication.sharedApplication.keyWindow moCurrentController] presentViewController:controller animated:YES completion:nil];
 }
 
 - (void)vkSdkReceivedNewToken:(VKAccessToken*)accessToken {

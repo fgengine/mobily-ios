@@ -140,7 +140,7 @@
                 }
             }
         }];
-        [[UIApplication.sharedApplication.keyWindow currentViewController] presentViewController:shareEmailViewController animated:YES completion:nil];
+        [[UIApplication.sharedApplication.keyWindow moCurrentController] presentViewController:shareEmailViewController animated:YES completion:nil];
     } else {
         if(failure != nil) {
             failure(nil);

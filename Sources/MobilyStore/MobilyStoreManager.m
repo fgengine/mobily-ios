@@ -181,7 +181,7 @@
 
 - (void)paymentQueue:(SKPaymentQueue*)queue updatedTransactions:(NSArray*)transactions {
     [transactions moEach:^(SKPaymentTransaction* transaction) {
-        MobilyStorePaymentRequest* paymentRequest = [_requestPayments find:^BOOL(MobilyStorePaymentRequest* paymentRequest) {
+        MobilyStorePaymentRequest* paymentRequest = [_requestPayments moFind:^BOOL(MobilyStorePaymentRequest* paymentRequest) {
             return [transaction.payment.productIdentifier isEqualToString:paymentRequest.product.productIdentifier];
         }];
         if(paymentRequest == nil) {
@@ -196,7 +196,7 @@
 
 - (void)paymentQueue:(SKPaymentQueue*)queue removedTransactions:(NSArray*)transactions {
     [transactions moEach:^(SKPaymentTransaction* transaction) {
-        MobilyStorePaymentRequest* paymentRequest = [_requestPayments find:^BOOL(MobilyStorePaymentRequest* paymentRequest) {
+        MobilyStorePaymentRequest* paymentRequest = [_requestPayments moFind:^BOOL(MobilyStorePaymentRequest* paymentRequest) {
             return [transaction.payment.productIdentifier isEqualToString:paymentRequest.product.productIdentifier];
         }];
         if(paymentRequest == nil) {
@@ -257,7 +257,7 @@
 #pragma mark Public
 
 - (SKProduct*)productByIdentifier:(NSString*)identifier {
-    return [_response.products find:^BOOL(SKProduct* product) {
+    return [_response.products moFind:^BOOL(SKProduct* product) {
         return [product.productIdentifier isEqualToString:identifier];
     }];
 }
@@ -315,7 +315,7 @@
 #pragma mark Property
 
 - (NSData*)transactionReceipt {
-    return _transaction.receipt;
+    return _transaction.moReceipt;
 }
 
 #pragma mark Private
