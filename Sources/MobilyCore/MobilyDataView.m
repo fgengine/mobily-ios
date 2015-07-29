@@ -1523,7 +1523,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     } else {
                         _constraintSearchBarTop.constant = searchBarInset;
                     }
-                    self.searchBarInset = searchBarInset;
                     break;
                 }
                 case MobilyDataViewSearchBarStyleOverlay: {
@@ -1535,7 +1534,6 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     } else {
                         _constraintSearchBarTop.constant = searchBarInset;
                     }
-                    self.searchBarInset = searchBarInset;
                     break;
                 }
             }
@@ -1680,6 +1678,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             _rightRefreshView.constraintOffset.constant = (progress < _rightRefreshView.size) ? (_rightRefreshView.size - progress) : 0.0f;
             _rightRefreshView.constraintSize.constant = (progress < _rightRefreshView.size) ? _rightRefreshView.size : progress;
         }
+        self.searchBarInset = searchBarInset;
         self.refreshViewInsets = refreshViewInsets;
         self.contentOffset = contentOffset;
     }
