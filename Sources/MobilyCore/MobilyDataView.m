@@ -1512,7 +1512,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     break;
             }
         }
-        if((_canDraggingSearchBar == YES) && (dragging == YES)) {
+        if(_canDraggingSearchBar == YES) {
             switch(_searchBarStyle) {
                 case MobilyDataViewSearchBarStyleStatic:
                     break;
@@ -1678,9 +1678,12 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
             _rightRefreshView.constraintOffset.constant = (progress < _rightRefreshView.size) ? (_rightRefreshView.size - progress) : 0.0f;
             _rightRefreshView.constraintSize.constant = (progress < _rightRefreshView.size) ? _rightRefreshView.size : progress;
         }
-        self.searchBarInset = searchBarInset;
-        self.refreshViewInsets = refreshViewInsets;
         self.contentOffset = contentOffset;
+        if((_searchBarInset != searchBarInset) || (UIEdgeInsetsEqualToEdgeInsets(_refreshViewInsets, refreshViewInsets) == NO)) {
+            _searchBarInset = searchBarInset;
+            _refreshViewInsets = refreshViewInsets;
+            [self _updateInsets];
+        }
     }
     if(_container != nil) {
         [_container _didScrollDragging:dragging decelerating:decelerating];
