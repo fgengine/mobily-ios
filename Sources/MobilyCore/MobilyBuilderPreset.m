@@ -223,9 +223,9 @@ typedef void (*MobilyBuilderPreset_SetterImp)(id, SEL, id);
         }
     }];
 }
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-
 + (BOOL)applyPresetProperty:(NSString*)property value:(id)value object:(id)object {
     SEL validateSelector = NSSelectorFromString([NSString stringWithFormat:@"validate%@:", property.moStringByUppercaseFirstCharacterString]);
     if([object respondsToSelector:validateSelector] == YES) {

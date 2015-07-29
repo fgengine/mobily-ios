@@ -370,6 +370,16 @@
 
 #pragma mark Public override
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    if(((self.currentTitle.length > 0) || (self.currentAttributedTitle.length > 0)) && (self.currentImage != nil)) {
+        CGRect contentRect = [self contentRectForBounds:self.bounds];
+        self.titleLabel.frame = [self titleRectForContentRect:contentRect];
+        self.imageView.frame = [self imageRectForContentRect:contentRect];
+    }
+}
+
 - (CGSize)sizeThatFits:(CGSize __unused)size {
     return [self intrinsicContentSize];
 }
@@ -404,8 +414,8 @@
 
 - (CGRect)titleRectForContentRect:(CGRect)contentRect {
     if(((self.currentTitle.length > 0) || (self.currentAttributedTitle.length > 0)) && (self.currentImage != nil)) {
-        CGRect titleRect = [super titleRectForContentRect:contentRect];
-        CGRect imageRect = [super imageRectForContentRect:contentRect];
+        CGRect titleRect = [super titleRectForContentRect:CGRectMake(0.0f, 0.0f, FLT_MAX, FLT_MAX)];
+        CGRect imageRect = [super imageRectForContentRect:CGRectMake(0.0f, 0.0f, FLT_MAX, FLT_MAX)];
         [self _layoutContentRect:contentRect imageRect:&imageRect imageEdgeInsets:self.imageEdgeInsets imageSize:self.currentImage.size titleRect:&titleRect titleEdgeInsets:self.titleEdgeInsets];
         return titleRect;
     }
@@ -414,8 +424,8 @@
 
 - (CGRect)imageRectForContentRect:(CGRect)contentRect {
     if(((self.currentTitle.length > 0) || (self.currentAttributedTitle.length > 0)) && (self.currentImage != nil)) {
-        CGRect titleRect = [super titleRectForContentRect:contentRect];
-        CGRect imageRect = [super imageRectForContentRect:contentRect];
+        CGRect titleRect = [super titleRectForContentRect:CGRectMake(0.0f, 0.0f, FLT_MAX, FLT_MAX)];
+        CGRect imageRect = [super imageRectForContentRect:CGRectMake(0.0f, 0.0f, FLT_MAX, FLT_MAX)];
         [self _layoutContentRect:contentRect imageRect:&imageRect imageEdgeInsets:self.imageEdgeInsets imageSize:self.currentImage.size titleRect:&titleRect titleEdgeInsets:self.titleEdgeInsets];
         return imageRect;
     }
@@ -533,8 +543,8 @@
                     titleRect->origin.y = (imageRect->origin.y + imageRect->size.height + imageEdgeInsets.bottom) + titleEdgeInsets.top;
                     break;
                 case MobilyButtonImageAlignmentBottom:
-                    imageRect->origin.y = ((contentRect.origin.y + (contentRect.size.height * 0.5f)) - (fullSize.height * 0.5f)) + imageEdgeInsets.top;
-                    titleRect->origin.y = (imageRect->origin.y + imageRect->size.height + imageEdgeInsets.bottom) + titleEdgeInsets.top;
+                    titleRect->origin.y = ((contentRect.origin.y + (contentRect.size.height * 0.5f)) - (fullSize.height * 0.5f)) + titleEdgeInsets.top;
+                    imageRect->origin.y = (titleRect->origin.y + titleRect->size.height + titleEdgeInsets.bottom) + imageEdgeInsets.top;
                     break;
                 case MobilyButtonImageAlignmentLeft:
                 case MobilyButtonImageAlignmentRight:
