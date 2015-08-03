@@ -94,5 +94,6 @@
 #import <MobilyCore/MobilyNotificationManager.h>
 #import <MobilyCore/MobilyImageCropController.h>
 #import <MobilyCore/MobilyTouchView.h>
+#import <MobilyCore/MobilyLayoutView.h>
 
 /*--------------------------------------------------*/

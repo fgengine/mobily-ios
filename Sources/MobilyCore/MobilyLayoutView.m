@@ -127,6 +127,7 @@
         [self setNeedsUpdateConstraints];
     }]];
     [super didAddSubview:subview];
+    [self setNeedsUpdateConstraints];
 }
 
 - (void)willRemoveSubview:(UIView*)subview {
@@ -137,6 +138,7 @@
         }
     }];
     [super willRemoveSubview:subview];
+    [self setNeedsUpdateConstraints];
 }
 
 - (void)updateConstraints {
