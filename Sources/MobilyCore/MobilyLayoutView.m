@@ -164,53 +164,53 @@
         switch(_axis) {
             case UILayoutConstraintAxisHorizontal:
                 if(prevSubview == nil) {
-                    [_leftConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeLeft relation:NSLayoutRelationEqual attribute:NSLayoutAttributeLeft constant:_margins.left]];
+                    [_leftConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeLeft relation:NSLayoutRelationEqual attribute:NSLayoutAttributeLeft constant:_margins.left]];
                 } else {
-                    [_spacingConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeLeft relation:NSLayoutRelationEqual view:prevSubview attribute:NSLayoutAttributeRight constant:_spacing]];
+                    [_spacingConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeLeft relation:NSLayoutRelationEqual view:prevSubview attribute:NSLayoutAttributeRight constant:_spacing]];
                 }
                 switch(_alignment) {
                     case MobilyLayoutViewAlignmentFill:
-                        [_topConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeTop relation:NSLayoutRelationEqual attribute:NSLayoutAttributeTop constant:_margins.top]];
-                        [_bottomConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeBottom relation:NSLayoutRelationEqual attribute:NSLayoutAttributeBottom constant:_margins.bottom]];
+                        [_topConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeTop relation:NSLayoutRelationEqual attribute:NSLayoutAttributeTop constant:_margins.top]];
+                        [_bottomConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeBottom relation:NSLayoutRelationEqual attribute:NSLayoutAttributeBottom constant:_margins.bottom]];
                         break;
                     case MobilyLayoutViewAlignmentLeading:
-                        [_topConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeTop relation:NSLayoutRelationEqual attribute:NSLayoutAttributeTop constant:_margins.top]];
-                        [_bottomConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeBottom relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeBottom constant:_margins.bottom]];
+                        [_topConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeTop relation:NSLayoutRelationEqual attribute:NSLayoutAttributeTop constant:_margins.top]];
+                        [_bottomConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeBottom relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeBottom constant:_margins.bottom]];
                         break;
                     case MobilyLayoutViewAlignmentCenter:
-                        [subview addConstraintAttribute:NSLayoutAttributeCenterY relation:NSLayoutRelationEqual attribute:NSLayoutAttributeCenterY constant:0.0f];
-                        [_topConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeTop relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeTop constant:_margins.top]];
-                        [_bottomConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeBottom relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeBottom constant:_margins.bottom]];
+                        [subview moAddConstraintAttribute:NSLayoutAttributeCenterY relation:NSLayoutRelationEqual attribute:NSLayoutAttributeCenterY constant:0.0f];
+                        [_topConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeTop relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeTop constant:_margins.top]];
+                        [_bottomConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeBottom relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeBottom constant:_margins.bottom]];
                         break;
                     case MobilyLayoutViewAlignmentTrailing:
-                        [_topConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeTop relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeTop constant:_margins.top]];
-                        [_bottomConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeBottom relation:NSLayoutRelationEqual attribute:NSLayoutAttributeBottom constant:_margins.bottom]];
+                        [_topConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeTop relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeTop constant:_margins.top]];
+                        [_bottomConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeBottom relation:NSLayoutRelationEqual attribute:NSLayoutAttributeBottom constant:_margins.bottom]];
                         break;
                 }
                 break;
             case UILayoutConstraintAxisVertical:
                 if(prevSubview == nil) {
-                    [_topConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeTop relation:NSLayoutRelationEqual attribute:NSLayoutAttributeTop constant:_margins.top]];
+                    [_topConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeTop relation:NSLayoutRelationEqual attribute:NSLayoutAttributeTop constant:_margins.top]];
                 } else {
-                    [_spacingConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeTop relation:NSLayoutRelationEqual view:prevSubview attribute:NSLayoutAttributeBottom constant:_spacing]];
+                    [_spacingConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeTop relation:NSLayoutRelationEqual view:prevSubview attribute:NSLayoutAttributeBottom constant:_spacing]];
                 }
                 switch(_alignment) {
                     case MobilyLayoutViewAlignmentFill:
-                        [_leftConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeLeft relation:NSLayoutRelationEqual attribute:NSLayoutAttributeLeft constant:_margins.left]];
-                        [_rightConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeRight relation:NSLayoutRelationEqual attribute:NSLayoutAttributeRight constant:_margins.right]];
+                        [_leftConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeLeft relation:NSLayoutRelationEqual attribute:NSLayoutAttributeLeft constant:_margins.left]];
+                        [_rightConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeRight relation:NSLayoutRelationEqual attribute:NSLayoutAttributeRight constant:_margins.right]];
                         break;
                     case MobilyLayoutViewAlignmentLeading:
-                        [_leftConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeLeft relation:NSLayoutRelationEqual attribute:NSLayoutAttributeLeft constant:_margins.left]];
-                        [_rightConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeRight relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeRight constant:_margins.right]];
+                        [_leftConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeLeft relation:NSLayoutRelationEqual attribute:NSLayoutAttributeLeft constant:_margins.left]];
+                        [_rightConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeRight relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeRight constant:_margins.right]];
                         break;
                     case MobilyLayoutViewAlignmentCenter:
-                        [subview addConstraintAttribute:NSLayoutAttributeCenterX relation:NSLayoutRelationEqual attribute:NSLayoutAttributeCenterX constant:0.0f];
-                        [_leftConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeLeft relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeLeft constant:_margins.left]];
-                        [_rightConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeRight relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeRight constant:_margins.right]];
+                        [subview moAddConstraintAttribute:NSLayoutAttributeCenterX relation:NSLayoutRelationEqual attribute:NSLayoutAttributeCenterX constant:0.0f];
+                        [_leftConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeLeft relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeLeft constant:_margins.left]];
+                        [_rightConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeRight relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeRight constant:_margins.right]];
                         break;
                     case MobilyLayoutViewAlignmentTrailing:
-                        [_leftConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeLeft relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeLeft constant:_margins.left]];
-                        [_rightConstraints addObject:[subview addConstraintAttribute:NSLayoutAttributeRight relation:NSLayoutRelationEqual attribute:NSLayoutAttributeRight constant:_margins.right]];
+                        [_leftConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeLeft relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeLeft constant:_margins.left]];
+                        [_rightConstraints addObject:[subview moAddConstraintAttribute:NSLayoutAttributeRight relation:NSLayoutRelationEqual attribute:NSLayoutAttributeRight constant:_margins.right]];
                         break;
                 }
                 break;
@@ -222,10 +222,10 @@
     if(prevSubview != nil) {
         switch(_axis) {
             case UILayoutConstraintAxisHorizontal:
-                [_rightConstraints addObject:[prevSubview addConstraintAttribute:NSLayoutAttributeRight relation:NSLayoutRelationEqual attribute:NSLayoutAttributeRight constant:_margins.right]];
+                [_rightConstraints addObject:[prevSubview moAddConstraintAttribute:NSLayoutAttributeRight relation:NSLayoutRelationEqual attribute:NSLayoutAttributeRight constant:_margins.right]];
                 break;
             case UILayoutConstraintAxisVertical:
-                [_bottomConstraints addObject:[prevSubview addConstraintAttribute:NSLayoutAttributeBottom relation:NSLayoutRelationEqual attribute:NSLayoutAttributeBottom constant:_margins.bottom]];
+                [_bottomConstraints addObject:[prevSubview moAddConstraintAttribute:NSLayoutAttributeBottom relation:NSLayoutRelationEqual attribute:NSLayoutAttributeBottom constant:_margins.bottom]];
                 break;
         }
     }

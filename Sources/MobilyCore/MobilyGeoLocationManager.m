@@ -185,9 +185,26 @@
     return request;
 }
 
-- (void)reverseGeocodeLocation:(CLLocation*)location block:(MobilyGeoLocationReverseGeocodeBlock)block {
-    CLGeocoder* geocoder = [CLGeocoder new];
-    [geocoder reverseGeocodeLocation:location completionHandler:block];
+- (void)geocodeAddressString:(NSString*)address block:(MobilyGeoLocationGeocodeBlock)block {
+    if(block != nil) {
+        CLGeocoder* geocoder = [CLGeocoder new];
+        [geocoder geocodeAddressString:address completionHandler:^(NSArray* placemarks, NSError* error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                block(placemarks, error);
+            });
+        }];
+    }
+}
+
+- (void)reverseGeocodeLocation:(CLLocation*)location block:(MobilyGeoLocationGeocodeBlock)block {
+    if(block != nil) {
+        CLGeocoder* geocoder = [CLGeocoder new];
+        [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray* placemarks, NSError* error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                block(placemarks, error);
+            });
+        }];
+    }
 }
 
 - (void)forceCompleteRequest:(MobilyGeoLocationRequest*)request {

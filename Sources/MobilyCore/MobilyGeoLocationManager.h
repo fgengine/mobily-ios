@@ -64,7 +64,7 @@ typedef NS_ENUM(NSInteger, MobilyGeoLocationStatus) {
 
 typedef void(^MobilyGeoLocationRequestComplete)(CLLocation* location, MobilyGeoLocationRequest* request);
 typedef void(^MobilyGeoLocationRequestFailure)(MobilyGeoLocationRequest* request);
-typedef void(^MobilyGeoLocationReverseGeocodeBlock)(NSArray* placemarks, NSError* error);
+typedef CLGeocodeCompletionHandler MobilyGeoLocationGeocodeBlock;
 
 /*--------------------------------------------------*/
 
@@ -83,7 +83,8 @@ typedef void(^MobilyGeoLocationReverseGeocodeBlock)(NSArray* placemarks, NSError
 - (MobilyGeoLocationRequest*)requestWithDesiredAccuracy:(MobilyGeoLocationAccuracy)desiredAccuracy timeout:(NSTimeInterval)timeout delayUntilAuthorized:(BOOL)delayUntilAuthorized complete:(MobilyGeoLocationRequestComplete)complete failure:(MobilyGeoLocationRequestFailure)failure;
 - (MobilyGeoLocationRequest*)subscribeStaleThreshold:(NSTimeInterval)staleThreshold complete:(MobilyGeoLocationRequestComplete)complete failure:(MobilyGeoLocationRequestFailure)failure;
 
-- (void)reverseGeocodeLocation:(CLLocation*)location block:(MobilyGeoLocationReverseGeocodeBlock)block;
+- (void)geocodeAddressString:(NSString*)address block:(MobilyGeoLocationGeocodeBlock)block;
+- (void)reverseGeocodeLocation:(CLLocation*)location block:(MobilyGeoLocationGeocodeBlock)block;
 
 - (void)forceCompleteRequest:(MobilyGeoLocationRequest*)request;
 - (void)cancelRequest:(MobilyGeoLocationRequest*)request;
