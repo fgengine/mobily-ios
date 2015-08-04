@@ -34,6 +34,7 @@
 /*--------------------------------------------------*/
 
 #import <MobilyCore/MobilyPageController.h>
+#import <MobilyCore/MobilySlideController.h>
 
 /*--------------------------------------------------*/
 
@@ -41,7 +42,7 @@
 
 /*--------------------------------------------------*/
 
-@interface MobilyPageController () < UIGestureRecognizerDelegate > {
+@interface MobilyPageController () < UIGestureRecognizerDelegate, MobilySlideControllerDelegate > {
     struct {
         unsigned int applyFromProgress:1;
     } _canBeforeDecor;
@@ -792,6 +793,221 @@
         }
     }
     return NO;
+}
+
+#pragma mark MobilySlideControllerDelegate
+
+- (BOOL)canShowLeftControllerInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(canShowLeftControllerInSlideController:)] == YES) {
+        return [controller canShowLeftControllerInSlideController:slideController];
+    }
+    return YES;
+}
+
+- (void)willShowLeftControllerInSlideController:(MobilySlideController*)slideController duration:(CGFloat)duration {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(willShowLeftControllerInSlideController:duration:)] == YES) {
+        [controller willShowLeftControllerInSlideController:slideController duration:duration];
+    }
+}
+
+- (void)didShowLeftControllerInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(didShowLeftControllerInSlideController:)] == YES) {
+        [controller didShowLeftControllerInSlideController:slideController];
+    }
+}
+
+- (void)willHideLeftControllerInSlideController:(MobilySlideController*)slideController duration:(CGFloat)duration {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(willHideLeftControllerInSlideController:duration:)] == YES) {
+        [controller willHideLeftControllerInSlideController:slideController duration:duration];
+    }
+}
+
+- (void)didHideLeftControllerInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(didHideLeftControllerInSlideController:)] == YES) {
+        [controller didHideLeftControllerInSlideController:slideController];
+    }
+}
+
+- (BOOL)canShowRightControllerInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(canShowRightControllerInSlideController:)] == YES) {
+        return [controller canShowRightControllerInSlideController:slideController];
+    }
+    return YES;
+}
+
+- (void)willShowRightControllerInSlideController:(MobilySlideController*)slideController duration:(CGFloat)duration {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(willShowRightControllerInSlideController:duration:)] == YES) {
+        [controller willShowRightControllerInSlideController:slideController duration:duration];
+    }
+}
+
+- (void)didShowRightControllerInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(didShowRightControllerInSlideController:)] == YES) {
+        [controller didShowRightControllerInSlideController:slideController];
+    }
+}
+
+- (void)willHideRightControllerInSlideController:(MobilySlideController*)slideController duration:(CGFloat)duration {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(willHideRightControllerInSlideController:duration:)] == YES) {
+        [controller willHideRightControllerInSlideController:slideController duration:duration];
+    }
+}
+
+- (void)didHideRightControllerInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(didHideRightControllerInSlideController:)] == YES) {
+        [controller didHideRightControllerInSlideController:slideController];
+    }
+}
+
+- (BOOL)canShowControllerInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(canShowControllerInSlideController:)] == YES) {
+        return [controller canShowControllerInSlideController:slideController];
+    }
+    return YES;
+}
+
+- (void)willShowControllerInSlideController:(MobilySlideController*)slideController duration:(CGFloat)duration {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(willShowControllerInSlideController:duration:)] == YES) {
+        [controller willShowControllerInSlideController:slideController duration:duration];
+    }
+}
+
+- (void)didShowControllerInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(didShowControllerInSlideController:)] == YES) {
+        [controller didShowControllerInSlideController:slideController];
+    }
+}
+
+- (void)willHideControllerInSlideController:(MobilySlideController*)slideController duration:(CGFloat)duration {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(willHideControllerInSlideController:duration:)] == YES) {
+        [controller willHideControllerInSlideController:slideController duration:duration];
+    }
+}
+
+- (void)didHideControllerInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(didHideControllerInSlideController:)] == YES) {
+        [controller didHideControllerInSlideController:slideController];
+    }
+}
+
+- (void)willBeganLeftSwipeInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(willBeganLeftSwipeInSlideController:)] == YES) {
+        [controller willBeganLeftSwipeInSlideController:slideController];
+    }
+}
+
+- (void)didBeganLeftSwipeInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(didBeganLeftSwipeInSlideController:)] == YES) {
+        [controller didBeganLeftSwipeInSlideController:slideController];
+    }
+}
+
+- (void)movingLeftSwipeInSlideController:(MobilySlideController*)slideController progress:(CGFloat)progress {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(movingLeftSwipeInSlideController:progress:)] == YES) {
+        [controller movingLeftSwipeInSlideController:slideController progress:progress];
+    }
+}
+
+- (void)willEndedLeftSwipeInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(willEndedLeftSwipeInSlideController:)] == YES) {
+        [controller willEndedLeftSwipeInSlideController:slideController];
+    }
+}
+
+- (void)didEndedLeftSwipeInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(didEndedLeftSwipeInSlideController:)] == YES) {
+        [controller didEndedLeftSwipeInSlideController:slideController];
+    }
+}
+
+- (void)willBeganRightSwipeInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(willBeganRightSwipeInSlideController:)] == YES) {
+        [controller willBeganRightSwipeInSlideController:slideController];
+    }
+}
+
+- (void)didBeganRightSwipeInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(didBeganRightSwipeInSlideController:)] == YES) {
+        [controller didBeganRightSwipeInSlideController:slideController];
+    }
+}
+
+- (void)movingRightSwipeInSlideController:(MobilySlideController*)slideController progress:(CGFloat)progress {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(movingRightSwipeInSlideController:progress:)] == YES) {
+        [controller movingRightSwipeInSlideController:slideController progress:progress];
+    }
+}
+
+- (void)willEndedRightSwipeInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(willEndedRightSwipeInSlideController:)] == YES) {
+        [controller willEndedRightSwipeInSlideController:slideController];
+    }
+}
+
+- (void)didEndedRightSwipeInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(didEndedRightSwipeInSlideController:)] == YES) {
+        [controller didEndedRightSwipeInSlideController:slideController];
+    }
+}
+
+- (void)willBeganSwipeInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(willBeganSwipeInSlideController:)] == YES) {
+        [controller willBeganSwipeInSlideController:slideController];
+    }
+}
+
+- (void)didBeganSwipeInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(didBeganSwipeInSlideController:)] == YES) {
+        [controller didBeganSwipeInSlideController:slideController];
+    }
+}
+
+- (void)movingSwipeInSlideController:(MobilySlideController*)slideController progress:(CGFloat)progress {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(movingSwipeInSlideController:progress:)] == YES) {
+        [controller movingSwipeInSlideController:slideController progress:progress];
+    }
+}
+
+- (void)willEndedSwipeInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(willEndedSwipeInSlideController:)] == YES) {
+        [controller willEndedSwipeInSlideController:slideController];
+    }
+}
+
+- (void)didEndedSwipeInSlideController:(MobilySlideController*)slideController {
+    UIViewController< MobilySlideControllerDelegate >* controller = (id)_controller;
+    if([controller respondsToSelector:@selector(didEndedSwipeInSlideController:)] == YES) {
+        [controller didEndedSwipeInSlideController:slideController];
+    }
 }
 
 @end

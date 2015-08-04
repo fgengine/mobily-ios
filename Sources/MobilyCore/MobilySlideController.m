@@ -788,18 +788,71 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
 }
 
 - (void)willBeganSwipe {
+    id< MobilySlideControllerDelegate > centerController = ([_centerController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_centerController : nil;
+    if([centerController respondsToSelector:@selector(willBeganSwipeInSlideController:)] == YES) {
+        [centerController willBeganSwipeInSlideController:self];
+    }
 }
 
 - (void)didBeganSwipe {
     self.swipeDragging = YES;
+    
+    id< MobilySlideControllerDelegate > centerController = ([_centerController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_centerController : nil;
+    if([centerController respondsToSelector:@selector(didBeganSwipeInSlideController:)] == YES) {
+        [centerController didBeganSwipeInSlideController:self];
+    }
+    if(_swipeDirection == MobilySlideControllerSwipeCellDirectionLeft) {
+        id< MobilySlideControllerDelegate > leftController = ([_leftController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_leftController : nil;
+        if([leftController respondsToSelector:@selector(didBeganLeftSwipeInSlideController:)] == YES) {
+            [leftController willBeganLeftSwipeInSlideController:self];
+            [leftController didBeganLeftSwipeInSlideController:self];
+        }
+    } else if(_swipeDirection == MobilySlideControllerSwipeCellDirectionRight) {
+        id< MobilySlideControllerDelegate > rightController = ([_rightController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_rightController : nil;
+        if([rightController respondsToSelector:@selector(didBeganRightSwipeInSlideController:)] == YES) {
+            [rightController willBeganRightSwipeInSlideController:self];
+            [rightController didBeganRightSwipeInSlideController:self];
+        }
+    }
 }
 
-- (void)movingSwipe:(CGFloat __unused)progress {
+- (void)movingSwipe:(CGFloat)progress {
+    id< MobilySlideControllerDelegate > centerController = ([_centerController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_centerController : nil;
+    if([centerController respondsToSelector:@selector(movingSwipeInSlideController:progress:)] == YES) {
+        [centerController movingSwipeInSlideController:self progress:progress];
+    }
+    if(_swipeDirection == MobilySlideControllerSwipeCellDirectionLeft) {
+        id< MobilySlideControllerDelegate > leftController = ([_leftController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_leftController : nil;
+        if([leftController respondsToSelector:@selector(movingLeftSwipeInSlideController:progress:)] == YES) {
+            [leftController movingLeftSwipeInSlideController:self progress:progress];
+        }
+    } else if(_swipeDirection == MobilySlideControllerSwipeCellDirectionRight) {
+        id< MobilySlideControllerDelegate > rightController = ([_rightController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_rightController : nil;
+        if([rightController respondsToSelector:@selector(movingRightSwipeInSlideController:progress:)] == YES) {
+            [rightController movingRightSwipeInSlideController:self progress:progress];
+        }
+    }
 }
 
 - (void)willEndedSwipe {
     self.swipeDragging = NO;
     self.swipeDecelerating = YES;
+    
+    id< MobilySlideControllerDelegate > centerController = ([_centerController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_centerController : nil;
+    if([centerController respondsToSelector:@selector(willEndedSwipeInSlideController:)] == YES) {
+        [centerController willEndedSwipeInSlideController:self];
+    }
+    if(_swipeDirection == MobilySlideControllerSwipeCellDirectionLeft) {
+        id< MobilySlideControllerDelegate > leftController = ([_leftController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_leftController : nil;
+        if([leftController respondsToSelector:@selector(willEndedLeftSwipeInSlideController:)] == YES) {
+            [leftController willEndedLeftSwipeInSlideController:self];
+        }
+    } else if(_swipeDirection == MobilySlideControllerSwipeCellDirectionRight) {
+        id< MobilySlideControllerDelegate > rightController = ([_rightController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_rightController : nil;
+        if([rightController respondsToSelector:@selector(willEndedRightSwipeInSlideController:)] == YES) {
+            [rightController willEndedRightSwipeInSlideController:self];
+        }
+    }
 }
 
 - (void)didEndedSwipe {
@@ -809,6 +862,22 @@ typedef NS_ENUM(NSUInteger, MobilySlideControllerSwipeCellDirection) {
     _centerView.userInteractionEnabled = ((_showedLeftController == YES) || (_showedRightController == YES)) ? NO : YES;
     _rightView.userInteractionEnabled = (_showedRightController == YES) ? YES : NO;
     self.swipeDecelerating = NO;
+    
+    id< MobilySlideControllerDelegate > centerController = ([_centerController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_centerController : nil;
+    if([centerController respondsToSelector:@selector(didEndedSwipeInSlideController:)] == YES) {
+        [centerController didEndedSwipeInSlideController:self];
+    }
+    if(_swipeDirection == MobilySlideControllerSwipeCellDirectionLeft) {
+        id< MobilySlideControllerDelegate > leftController = ([_leftController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_leftController : nil;
+        if([leftController respondsToSelector:@selector(didEndedLeftSwipeInSlideController:)] == YES) {
+            [leftController didEndedLeftSwipeInSlideController:self];
+        }
+    } else if(_swipeDirection == MobilySlideControllerSwipeCellDirectionRight) {
+        id< MobilySlideControllerDelegate > rightController = ([_rightController conformsToProtocol:@protocol(MobilySlideControllerDelegate)] == YES) ? (id< MobilySlideControllerDelegate >)_rightController : nil;
+        if([rightController respondsToSelector:@selector(didEndedRightSwipeInSlideController:)] == YES) {
+            [rightController didEndedRightSwipeInSlideController:self];
+        }
+    }
 }
 
 - (void)tapGestureHandle:(UITapGestureRecognizer* __unused)tapGesture {

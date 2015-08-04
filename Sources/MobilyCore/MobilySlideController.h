@@ -94,6 +94,27 @@ typedef void(^MobilySlideControllerBlock)();
 - (void)willHideControllerInSlideController:(MobilySlideController*)slideController duration:(CGFloat)duration;
 - (void)didHideControllerInSlideController:(MobilySlideController*)slideController;
 
+@optional
+- (void)willBeganLeftSwipeInSlideController:(MobilySlideController*)slideController;
+- (void)didBeganLeftSwipeInSlideController:(MobilySlideController*)slideController;
+- (void)movingLeftSwipeInSlideController:(MobilySlideController*)slideController progress:(CGFloat)progress;
+- (void)willEndedLeftSwipeInSlideController:(MobilySlideController*)slideController;
+- (void)didEndedLeftSwipeInSlideController:(MobilySlideController*)slideController;
+
+@optional
+- (void)willBeganRightSwipeInSlideController:(MobilySlideController*)slideController;
+- (void)didBeganRightSwipeInSlideController:(MobilySlideController*)slideController;
+- (void)movingRightSwipeInSlideController:(MobilySlideController*)slideController progress:(CGFloat)progress;
+- (void)willEndedRightSwipeInSlideController:(MobilySlideController*)slideController;
+- (void)didEndedRightSwipeInSlideController:(MobilySlideController*)slideController;
+
+@optional
+- (void)willBeganSwipeInSlideController:(MobilySlideController*)slideController;
+- (void)didBeganSwipeInSlideController:(MobilySlideController*)slideController;
+- (void)movingSwipeInSlideController:(MobilySlideController*)slideController progress:(CGFloat)progress;
+- (void)willEndedSwipeInSlideController:(MobilySlideController*)slideController;
+- (void)didEndedSwipeInSlideController:(MobilySlideController*)slideController;
+
 @end
 
 /*--------------------------------------------------*/
