@@ -15,6 +15,9 @@
 		4005C08C1B1E13E4009A2185 /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4005C0831B1E13E4009A2185 /* TwitterCore.framework */; };
 		4005C08D1B1E13E4009A2185 /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4005C0841B1E13E4009A2185 /* TwitterKit.framework */; };
 		4005C08E1B1E13E4009A2185 /* VKSdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4005C0851B1E13E4009A2185 /* VKSdk.framework */; };
+		4018900B1B70F08E00440DF7 /* MobilyBadgeView.h in Headers */ = {isa = PBXBuildFile; fileRef = 401890091B70F08E00440DF7 /* MobilyBadgeView.h */; };
+		4018900C1B70F08E00440DF7 /* MobilyBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4018900A1B70F08E00440DF7 /* MobilyBadgeView.m */; };
+		4018900D1B70F08E00440DF7 /* MobilyBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4018900A1B70F08E00440DF7 /* MobilyBadgeView.m */; };
 		4064D18F1B577A6400F2F0FF /* MobilyImageCropController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4064D18D1B577A6400F2F0FF /* MobilyImageCropController.h */; };
 		4064D1901B577A6400F2F0FF /* MobilyImageCropController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4064D18E1B577A6400F2F0FF /* MobilyImageCropController.m */; };
 		4064D1911B577A6400F2F0FF /* MobilyImageCropController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4064D18E1B577A6400F2F0FF /* MobilyImageCropController.m */; };
@@ -354,6 +357,8 @@
 		4005C0831B1E13E4009A2185 /* TwitterCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterCore.framework; sourceTree = "<group>"; };
 		4005C0841B1E13E4009A2185 /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = "<group>"; };
 		4005C0851B1E13E4009A2185 /* VKSdk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = VKSdk.framework; sourceTree = "<group>"; };
+		401890091B70F08E00440DF7 /* MobilyBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyBadgeView.h; sourceTree = "<group>"; };
+		4018900A1B70F08E00440DF7 /* MobilyBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyBadgeView.m; sourceTree = "<group>"; };
 		4064D18D1B577A6400F2F0FF /* MobilyImageCropController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyImageCropController.h; sourceTree = "<group>"; };
 		4064D18E1B577A6400F2F0FF /* MobilyImageCropController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobilyImageCropController.m; sourceTree = "<group>"; };
 		4064D1921B577D0900F2F0FF /* MobilyTouchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobilyTouchView.h; sourceTree = "<group>"; };
@@ -669,6 +674,8 @@
 				4096BC7E1B2024DA0048B07E /* MobilyAudioRecorder.h */,
 				4096BC7F1B2024DA0048B07E /* MobilyAudioRecorder.m */,
 				4096BC801B2024DA0048B07E /* MobilyAV.h */,
+				401890091B70F08E00440DF7 /* MobilyBadgeView.h */,
+				4018900A1B70F08E00440DF7 /* MobilyBadgeView.m */,
 				4096BC811B2024DA0048B07E /* MobilyBlurView.h */,
 				4096BC821B2024DA0048B07E /* MobilyBlurView.m */,
 				4096BC831B2024DA0048B07E /* MobilyBuilder.h */,
@@ -946,6 +953,7 @@
 				4096BDA51B2024DA0048B07E /* MobilyModel.h in Headers */,
 				4096BD4E1B2024DA0048B07E /* MobilyDataCell.h in Headers */,
 				4096BD341B2024DA0048B07E /* MobilyBuilder.h in Headers */,
+				4018900B1B70F08E00440DF7 /* MobilyBadgeView.h in Headers */,
 				4096BD541B2024DA0048B07E /* MobilyDataContainer.h in Headers */,
 				4096BE041B2024DA0048B07E /* MobilyTransitionController.h in Headers */,
 				4096BD8F1B2024DA0048B07E /* MobilyImageView.h in Headers */,
@@ -1241,6 +1249,7 @@
 				4096BDAD1B2024DA0048B07E /* MobilyNavigationController.m in Sources */,
 				4096BDD41B2024DA0048B07E /* MobilySpinnerViewBounce.m in Sources */,
 				4096BD6E1B2024DA0048B07E /* MobilyDataRefreshView.m in Sources */,
+				4018900D1B70F08E00440DF7 /* MobilyBadgeView.m in Sources */,
 				4096BE021B2024DA0048B07E /* MobilyTimer.m in Sources */,
 				4096BD601B2024DA0048B07E /* MobilyDataContainerItemsGrid.m in Sources */,
 				4096BDCC1B2024DA0048B07E /* MobilySpinnerView.m in Sources */,
@@ -1355,6 +1364,7 @@
 				4096BDAC1B2024DA0048B07E /* MobilyNavigationController.m in Sources */,
 				4096BDD31B2024DA0048B07E /* MobilySpinnerViewBounce.m in Sources */,
 				4096BD6D1B2024DA0048B07E /* MobilyDataRefreshView.m in Sources */,
+				4018900C1B70F08E00440DF7 /* MobilyBadgeView.m in Sources */,
 				4096BE011B2024DA0048B07E /* MobilyTimer.m in Sources */,
 				4096BD5F1B2024DA0048B07E /* MobilyDataContainerItemsGrid.m in Sources */,
 				4096BDCB1B2024DA0048B07E /* MobilySpinnerView.m in Sources */,
