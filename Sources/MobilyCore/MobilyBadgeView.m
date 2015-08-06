@@ -46,8 +46,6 @@
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintLabelBottom;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintLabelLeft;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintLabelRight;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintLabelCenterX;
-@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintLabelCenterY;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintMinWidth;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintMinHeight;
 @property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintMaxWidth;
@@ -87,10 +85,15 @@
 
 - (void)setup {
     self.userInteractionEnabled = NO;
+    self.backgroundColor = [UIColor redColor];
+    self.moCornerRadius = 9.0f;
+    self.clipsToBounds = YES;
+    [self setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
     
-    _badgeInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
-    _minimumSize = CGSizeMake(20.0f, 20.0f);
-    _maximumSize = CGSizeMake(80.0f, 20.0f);
+    _badgeInsets = UIEdgeInsetsMake(0.0f, 4.0f, 0.0f, 4.0f);
+    _minimumSize = CGSizeMake(18.0f, 18.0f);
+    _maximumSize = CGSizeMake((_minimumSize.width * 3.0f), _minimumSize.height);
     
     self.badgeLabel = [[UILabel alloc] initWithFrame:UIEdgeInsetsInsetRect(self.bounds, _badgeInsets)];
 }
@@ -137,67 +140,65 @@
 - (void)updateConstraints {
     if(_badgeLabel != nil) {
         if(_constraintLabelTop == nil) {
-            self.constraintLabelTop = [_badgeLabel moAddConstraintAttribute:NSLayoutAttributeTop relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeTop constant:_badgeInsets.top];
+            self.constraintLabelTop = [_badgeLabel moAddConstraintAttribute:NSLayoutAttributeTop relation:NSLayoutRelationEqual attribute:NSLayoutAttributeTop constant:_badgeInsets.top];
         } else {
             _constraintLabelTop.constant = _badgeInsets.top;
         }
         if(_constraintLabelBottom == nil) {
-            self.constraintLabelBottom = [_badgeLabel moAddConstraintAttribute:NSLayoutAttributeBottom relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeBottom constant:_badgeInsets.bottom];
+            self.constraintLabelBottom = [_badgeLabel moAddConstraintAttribute:NSLayoutAttributeBottom relation:NSLayoutRelationEqual attribute:NSLayoutAttributeBottom constant:-_badgeInsets.bottom];
         } else {
-            _constraintLabelBottom.constant = _badgeInsets.bottom;
+            _constraintLabelBottom.constant = -_badgeInsets.bottom;
         }
         if(_constraintLabelLeft == nil) {
-            self.constraintLabelLeft = [_badgeLabel moAddConstraintAttribute:NSLayoutAttributeLeft relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeLeft constant:_badgeInsets.left];
+            self.constraintLabelLeft = [_badgeLabel moAddConstraintAttribute:NSLayoutAttributeLeft relation:NSLayoutRelationEqual attribute:NSLayoutAttributeLeft constant:_badgeInsets.left];
         } else {
             _constraintLabelLeft.constant = _badgeInsets.left;
         }
         if(_constraintLabelRight == nil) {
-            self.constraintLabelRight = [_badgeLabel moAddConstraintAttribute:NSLayoutAttributeRight relation:NSLayoutRelationGreaterThanOrEqual attribute:NSLayoutAttributeRight constant:_badgeInsets.right];
+            self.constraintLabelRight = [_badgeLabel moAddConstraintAttribute:NSLayoutAttributeRight relation:NSLayoutRelationEqual attribute:NSLayoutAttributeRight constant:-_badgeInsets.right];
         } else {
-            _constraintLabelRight.constant = _badgeInsets.right;
-        }
-        if(_constraintLabelCenterX == nil) {
-            self.constraintLabelCenterX = [_badgeLabel moAddConstraintAttribute:NSLayoutAttributeCenterX relation:NSLayoutRelationEqual attribute:NSLayoutAttributeCenterX constant:0.0f];
-        }
-        if(_constraintLabelCenterY == nil) {
-            self.constraintLabelCenterY = [_badgeLabel moAddConstraintAttribute:NSLayoutAttributeCenterY relation:NSLayoutRelationEqual attribute:NSLayoutAttributeCenterY constant:0.0f];
+            _constraintLabelRight.constant = -_badgeInsets.right;
         }
     } else {
         self.constraintLabelTop = nil;
         self.constraintLabelBottom = nil;
         self.constraintLabelLeft = nil;
         self.constraintLabelRight = nil;
-        self.constraintLabelCenterX = nil;
-        self.constraintLabelCenterY = nil;
     }
-    if((_minimumSize.width > 0) || (_minimumSize.height > 0)) {
+    if(_minimumSize.width > 0.0f) {
         if(_constraintMinWidth == nil) {
             self.constraintMinWidth = [self moAddConstraintAttribute:NSLayoutAttributeWidth relation:NSLayoutRelationGreaterThanOrEqual constant:_minimumSize.width];
         } else {
             _constraintMinWidth.constant = _minimumSize.width;
         }
+    } else {
+        self.constraintMinWidth = nil;
+    }
+    if(_maximumSize.width > 0.0f) {
+        if(_constraintMaxWidth == nil) {
+            self.constraintMaxWidth = [self moAddConstraintAttribute:NSLayoutAttributeWidth relation:NSLayoutRelationLessThanOrEqual constant:_maximumSize.width];
+        } else {
+            _constraintMaxWidth.constant = _maximumSize.width;
+        }
+    } else {
+        self.constraintMaxWidth = nil;
+    }
+    if(_minimumSize.height > 0.0f) {
         if(_constraintMinHeight == nil) {
             self.constraintMinHeight = [self moAddConstraintAttribute:NSLayoutAttributeHeight relation:NSLayoutRelationGreaterThanOrEqual constant:_minimumSize.height];
         } else {
             _constraintMinHeight.constant = _minimumSize.height;
         }
     } else {
-        self.constraintMinWidth = nil;
         self.constraintMinHeight = nil;
     }
-    if((_maximumSize.width > 0) || (_maximumSize.height > 0)) {
-        if(_constraintMaxWidth == nil) {
-            self.constraintMaxWidth = [self moAddConstraintAttribute:NSLayoutAttributeWidth relation:NSLayoutRelationLessThanOrEqual constant:_maximumSize.width];
-        } else {
-            _constraintMaxWidth.constant = _maximumSize.width;
-        }
+    if(_maximumSize.height > 0.0f) {
         if(_constraintMaxHeight == nil) {
             self.constraintMaxHeight = [self moAddConstraintAttribute:NSLayoutAttributeHeight relation:NSLayoutRelationLessThanOrEqual constant:_maximumSize.height];
         } else {
             _constraintMaxHeight.constant = _maximumSize.height;
         }
     } else {
-        self.constraintMaxWidth = nil;
         self.constraintMaxHeight = nil;
     }
     [super updateConstraints];
@@ -286,6 +287,8 @@
         if(_badgeLabel != nil) {
             _badgeLabel.translatesAutoresizingMaskIntoConstraints = NO;
             _badgeLabel.textAlignment = NSTextAlignmentCenter;
+            _badgeLabel.font = [UIFont systemFontOfSize:12.0f];
+            _badgeLabel.textColor = [UIColor whiteColor];
             [self addSubview:_badgeLabel];
         }
         [self setNeedsUpdateConstraints];

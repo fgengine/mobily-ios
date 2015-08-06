@@ -294,6 +294,7 @@ typedef NS_ENUM(NSUInteger, MobilyDateWeekday) {
 - (void)moEachValue:(void(^)(id value))block;
 - (void)moEachValueWithIndex:(void(^)(id value, NSUInteger index))block;
 - (NSArray*)moMap:(id(^)(id key, id value))block;
+- (id)moFindObjectByKey:(BOOL(^)(id key))block;
 - (BOOL)moHasKey:(id)key;
 
 @end

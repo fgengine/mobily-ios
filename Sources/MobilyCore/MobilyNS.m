@@ -1300,6 +1300,17 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return array;
 }
 
+- (id)moFindObjectByKey:(BOOL(^)(id key))block {
+    __block id result = nil;
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if(block(key) == YES) {
+            result = obj;
+            *stop = YES;
+        }
+    }];
+    return result;
+}
+
 - (BOOL)moHasKey:(id)key {
     return (self[key] != nil);
 }
