@@ -60,6 +60,7 @@
 static MobilyApplication* MOBILY_APPLICATION = nil;
 static int MOBILY_YARG_COUNT = 0;
 static char** MOBILY_YARG_VALUE = nil;
+static Class MOBILY_APPLICATION_CLASS = NULL;
 static NSString* MOBILY_ACCESS_KEY = nil;
 
 /*--------------------------------------------------*/
@@ -139,8 +140,20 @@ static NSString* MOBILY_ACCESS_KEY = nil;
     MOBILY_YARG_VALUE = argValue;
 }
 
++ (void)setApplicationClass:(Class)applicationClass {
+    MOBILY_APPLICATION_CLASS = applicationClass;
+}
+
++ (Class)applicationClass {
+    return MOBILY_APPLICATION_CLASS;
+}
+
 + (void)setAccessKey:(NSString*)accessKey {
     MOBILY_ACCESS_KEY = accessKey;
+}
+
++ (NSString*)accessKey {
+    return MOBILY_ACCESS_KEY;
 }
 
 + (int)run {
@@ -171,16 +184,23 @@ static NSString* MOBILY_ACCESS_KEY = nil;
 - (BOOL)loadWithOptions:(NSDictionary*)options {
     [MobilyBuilderPreset loadFromFilename:MOBILY_FILE_PRESETS];
     
-    id mobilyApplication = [MobilyBuilderForm objectFromFilename:MOBILY_FILE_APPLICATION owner:self];
-    if([mobilyApplication isKindOfClass:MobilyApplication.class] == YES) {
-        self.application = mobilyApplication;
+    if([MOBILY_APPLICATION_CLASS isSubclassOfClass:MobilyApplication.class] == YES) {
+        self.application = [MOBILY_APPLICATION_CLASS new];
         if(_application != nil) {
             [_application launchingWithOptions:options];
         }
     } else {
+        id mobilyApplication = [MobilyBuilderForm objectFromFilename:MOBILY_FILE_APPLICATION owner:self];
+        if([mobilyApplication isKindOfClass:MobilyApplication.class] == YES) {
+            self.application = mobilyApplication;
+            if(_application != nil) {
+                [_application launchingWithOptions:options];
+            }
+        } else {
 #if defined(MOBILY_DEBUG) && ((MOBILY_DEBUG_LEVEL & MOBILY_DEBUG_LEVEL_ERROR) != 0)
-        NSLog(@"Failure loading '%@'", MOBILY_FILE_APPLICATION);
+            NSLog(@"Failure loading '%@'", MOBILY_FILE_APPLICATION);
 #endif
+        }
     }
     return (_application != nil);
 }

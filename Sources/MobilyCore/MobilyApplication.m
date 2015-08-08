@@ -142,7 +142,6 @@ MOBILY_DEFINE_VALIDATE_STRING_BASED(NotificationType, NSNumber, [NSNumber number
 #pragma mark Public
 
 - (BOOL)launchingWithOptions:(NSDictionary* __unused)options {
-    MobilyWindow* window = nil;
     if(_notificationType != UIRemoteNotificationTypeNone) {
         if(UIDevice.moSystemVersion >= 8.0f) {
             UIUserNotificationType notificationType = UIUserNotificationTypeNone;
@@ -190,18 +189,13 @@ MOBILY_DEFINE_VALIDATE_STRING_BASED(NotificationType, NSNumber, [NSNumber number
             [UIApplication.sharedApplication registerForRemoteNotificationTypes:notificationType];
         }
     }
-    if(_objectChilds.count < 1) {
-        window = [MobilyWindow new];
+    if(_objectChilds.count > 0) {
+        MobilyWindow* window = [_objectChilds moFirstObjectIsClass:UIWindow.class];
         if(window != nil) {
-            window.objectParent = self;
+            [window makeKeyAndVisible];
         }
-    } else {
-        window = [_objectChilds moFirstObjectIsClass:UIWindow.class];
     }
-    if(window != nil) {
-        [window makeKeyAndVisible];
-    }
-    return (window != nil);
+    return YES;
 }
 
 - (void)terminate {

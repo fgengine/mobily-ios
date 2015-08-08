@@ -40,7 +40,10 @@
 @interface MobilyContext : NSObject < MobilyBuilderObject >
 
 + (void)setArgCount:(int)argCount argValue:(char**)argValue;
++ (void)setApplicationClass:(Class)applicationClass;
++ (Class)applicationClass;
 + (void)setAccessKey:(NSString*)accessKey;
++ (NSString*)accessKey;
 
 + (int)run;
 
