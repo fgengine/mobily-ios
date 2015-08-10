@@ -1841,7 +1841,7 @@ MOBILY_DEFINE_VALIDATE_SCROLL_VIEW_KEYBOARD_DISMISS_MODE(KeyboardDismissMode)
 
 - (void)setMoKeyboardShowed:(BOOL)moKeyboardShowed {
     if(self.moKeyboardShowed != moKeyboardShowed) {
-        if(moKeyboardShowed == NO) {
+        if((moKeyboardShowed == NO) && (self.moKeyboardResponder != nil)) {
             if([self isKindOfClass:MobilyDataView.class] == YES) {
                 MobilyDataView* dataView = (MobilyDataView*)self;
                 dataView.containerInsets = self.moKeyboardContentInset;
