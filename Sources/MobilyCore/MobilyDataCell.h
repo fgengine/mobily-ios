@@ -119,14 +119,18 @@ typedef NS_ENUM(NSUInteger, MobilyDataSwipeCellStyle) {
 @property(nonatomic, readwrite, strong) IBOutlet UIView* leftSwipeView;
 @property(nonatomic, readwrite, assign) CGFloat leftSwipeOffset;
 @property(nonatomic, readwrite, assign) CGFloat leftSwipeSize;
-@property(nonatomic, readwrite, assign) CGFloat leftSwipeStretchThreshold;
+@property(nonatomic, readwrite, assign) CGFloat leftSwipeStretchSize;
+@property(nonatomic, readwrite, assign) CGFloat leftSwipeStretchMinThreshold;
+@property(nonatomic, readwrite, assign) CGFloat leftSwipeStretchMaxThreshold;
 
 @property(nonatomic, readwrite, assign, getter=isShowedRightSwipeView) IBInspectable BOOL showedRightSwipeView;
 @property(nonatomic, readwrite, assign, getter=isRightSwipeEnabled) IBInspectable BOOL rightSwipeEnabled;
 @property(nonatomic, readwrite, strong) IBOutlet UIView* rightSwipeView;
 @property(nonatomic, readwrite, assign) CGFloat rightSwipeOffset;
 @property(nonatomic, readwrite, assign) CGFloat rightSwipeSize;
-@property(nonatomic, readwrite, assign) CGFloat rightSwipeStretchThreshold;
+@property(nonatomic, readwrite, assign) CGFloat rightSwipeStretchSize;
+@property(nonatomic, readwrite, assign) CGFloat rightSwipeStretchMinThreshold;
+@property(nonatomic, readwrite, assign) CGFloat rightSwipeStretchMaxThreshold;
 
 - (void)setShowedLeftSwipeView:(BOOL)showedLeftSwipeView animated:(BOOL)animated;
 - (void)setShowedRightSwipeView:(BOOL)showedRightSwipeView animated:(BOOL)animated;

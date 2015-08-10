@@ -56,13 +56,17 @@
 @synthesize leftSwipeView = _leftSwipeView;
 @synthesize leftSwipeOffset = _leftSwipeOffset;
 @synthesize leftSwipeSize = _leftSwipeSize;
-@synthesize leftSwipeStretchThreshold = _leftSwipeStretchThreshold;
+@synthesize leftSwipeStretchSize = _leftSwipeStretchSize;
+@synthesize leftSwipeStretchMinThreshold = _leftSwipeStretchMinThreshold;
+@synthesize leftSwipeStretchMaxThreshold = _leftSwipeStretchMaxThreshold;
 @synthesize showedRightSwipeView = _showedRightSwipeView;
 @synthesize rightSwipeEnabled = _rightSwipeEnabled;
 @synthesize rightSwipeView = _rightSwipeView;
 @synthesize rightSwipeOffset = _rightSwipeOffset;
 @synthesize rightSwipeSize = _rightSwipeSize;
-@synthesize rightSwipeStretchThreshold = _rightSwipeStretchThreshold;
+@synthesize rightSwipeStretchSize = _rightSwipeStretchSize;
+@synthesize rightSwipeStretchMinThreshold = _rightSwipeStretchMinThreshold;
+@synthesize rightSwipeStretchMaxThreshold = _rightSwipeStretchMaxThreshold;
 @synthesize constraintLeftSwipeViewOffsetX = _constraintLeftSwipeViewOffsetX;
 @synthesize constraintLeftSwipeViewCenterY = _constraintLeftSwipeViewCenterY;
 @synthesize constraintLeftSwipeViewWidth = _constraintLeftSwipeViewWidth;
@@ -92,10 +96,14 @@
     _swipeVelocity = 570.0f;
     _leftSwipeEnabled = YES;
     _leftSwipeSize = -1.0f;
-    _leftSwipeStretchThreshold = 0.3f;
+    _leftSwipeStretchSize = 128.0f;
+    _leftSwipeStretchMinThreshold = 0.2f;
+    _leftSwipeStretchMaxThreshold = 0.4f;
     _rightSwipeEnabled = YES;
     _rightSwipeSize = -1.0f;
-    _rightSwipeStretchThreshold = 0.3f;
+    _rightSwipeStretchSize = 128.0f;
+    _rightSwipeStretchMinThreshold = 0.2f;
+    _rightSwipeStretchMaxThreshold = 0.4f;
     _rootOffsetOfCenter = [self _rootViewOffsetOfCenterBySwipeProgress:0.0f];
     _leftSwipeOffset = [self _leftViewOffsetBySwipeProgress:0.0f];
     _rightSwipeOffset = [self _rightViewOffsetBySwipeProgress:0.0f];
@@ -408,14 +416,26 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightSwipeViewHeight, constrain
     CGFloat maxProgress = (_panSwipeDirection == MobilyDataCellSwipeDirectionRight) ? 1.0f : 0.0f;
     if(_swipeStyle == MobilyDataSwipeCellStyleStretch) {
         if(progress < 0.0f) {
-            if((progress < -_leftSwipeStretchThreshold) && (_panSwipeDirection == MobilyDataCellSwipeDirectionLeft)) {
-                progress = -1.0f;
+            if(_panSwipeDirection == MobilyDataCellSwipeDirectionLeft) {
+                if(progress < -_leftSwipeStretchMaxThreshold) {
+                    progress = -1.0f;
+                } else if(progress < -_leftSwipeStretchMinThreshold) {
+                    progress = -(_leftSwipeStretchSize / _rootView.moFrameWidth);
+                } else {
+                    progress = 0.0f;
+                }
             } else {
                 progress = 0.0f;
             }
         } else if(progress > 0.0f) {
-            if((progress > _rightSwipeStretchThreshold) && (_panSwipeDirection == MobilyDataCellSwipeDirectionRight)) {
-                progress = 1.0f;
+            if(_panSwipeDirection == MobilyDataCellSwipeDirectionRight) {
+                if(progress > _rightSwipeStretchMaxThreshold) {
+                    progress = 1.0f;
+                } else if(progress > _rightSwipeStretchMinThreshold) {
+                    progress = (_rightSwipeStretchSize / _rootView.moFrameWidth);
+                } else {
+                    progress = 0.0f;
+                }
             } else {
                 progress = 0.0f;
             }
