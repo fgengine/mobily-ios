@@ -86,3 +86,11 @@ MOBILY_REQUIRES_PROPERTY_DEFINITIONS
 @end
 
 /*--------------------------------------------------*/
+
+@interface UIView (MobilyNotification)
+
+@property(nonatomic, readwrite, weak) MobilyNotificationView* moNotificationView;
+
+@end
+
+/*--------------------------------------------------*/

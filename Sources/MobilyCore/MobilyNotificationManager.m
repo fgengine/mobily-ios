@@ -427,10 +427,12 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintControllerRight, constraintCont
 - (void)setView:(UIView*)view {
     if(_view != view) {
         if(_view != nil) {
+            _view.moNotificationView = nil;
             [_view removeFromSuperview];
         }
         _view = view;
         if(_view != nil) {
+            _view.moNotificationView = self;
             _view.translatesAutoresizingMaskIntoConstraints = NO;
             [self addSubview:_view];
         }
@@ -500,6 +502,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintViewHeight, constraintViewHeigh
 }
 
 - (void)didHide {
+    self.view = nil;
 }
 
 #pragma mark Actions
@@ -643,6 +646,32 @@ static NSTimeInterval MobilyNotificationManager_Dutation = 3.0f;
 
 - (void)_hideAllAnimated:(BOOL)animated {
     [self.controller popAllAnimated:animated];
+}
+
+@end
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+#import <objc/runtime.h>
+
+/*--------------------------------------------------*/
+#pragma mark -
+/*--------------------------------------------------*/
+
+@implementation UIView (MobilyNotification)
+
+- (void)setMoNotificationView:(MobilyNotificationView*)moNotificationView {
+    objc_setAssociatedObject(self, @selector(moNotificationView), moNotificationView, OBJC_ASSOCIATION_ASSIGN);
+}
+
+- (MobilyNotificationView*)moNotificationView {
+    MobilyNotificationView* view = objc_getAssociatedObject(self, @selector(moNotificationView));
+    if(view == nil) {
+        view = self.superview.moNotificationView;
+    }
+    return view;
 }
 
 @end
