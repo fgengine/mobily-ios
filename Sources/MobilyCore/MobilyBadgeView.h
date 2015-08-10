@@ -39,13 +39,13 @@
 
 @interface MobilyBadgeView : UIView< MobilyBuilderObject >
 
-@property(nonatomic, readwrite, copy) IBInspectable NSString* badge;
-@property(nonatomic, readwrite, assign) IBInspectable UIEdgeInsets badgeInsets;
-@property(nonatomic, readwrite, strong) IBInspectable UIColor* badgeColor;
-@property(nonatomic, readwrite, strong) IBInspectable UIFont* badgeFont;
-@property(nonatomic, readwrite, strong) IBInspectable UIColor* badgeShadowColor;
-@property(nonatomic, readwrite, assign) IBInspectable CGFloat badgeShadowRadius;
-@property(nonatomic, readwrite, assign) IBInspectable CGSize badgeShadowOffset;
+@property(nonatomic, readwrite, copy) IBInspectable NSString* text;
+@property(nonatomic, readwrite, assign) IBInspectable UIEdgeInsets textInsets;
+@property(nonatomic, readwrite, strong) IBInspectable UIColor* textColor;
+@property(nonatomic, readwrite, strong) IBInspectable UIFont* textFont;
+@property(nonatomic, readwrite, strong) IBInspectable UIColor* textShadowColor;
+@property(nonatomic, readwrite, assign) IBInspectable CGFloat textShadowRadius;
+@property(nonatomic, readwrite, assign) IBInspectable CGSize textShadowOffset;
 
 @property(nonatomic, readwrite, assign) IBInspectable CGSize minimumSize;
 @property(nonatomic, readwrite, assign) IBInspectable CGSize maximumSize;

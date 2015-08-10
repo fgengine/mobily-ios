@@ -36,11 +36,16 @@
 /*--------------------------------------------------*/
 
 #import <MobilyCore/MobilyButton.h>
+#import <MobilyCore/MobilyBadgeView.h>
 #import <MobilyCore/MobilyCG.h>
 
 /*--------------------------------------------------*/
 
 @interface MobilyButton ()
+
+@property(nonatomic, readwrite, strong) MobilyBadgeView* badgeView;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintBadgeCenterX;
+@property(nonatomic, readwrite, strong) NSLayoutConstraint* constraintBadgeCenterY;
 
 - (void)_updateCurrentState;
 
@@ -55,6 +60,7 @@
 @synthesize objectName = _objectName;
 @synthesize objectParent = _objectParent;
 @synthesize objectChilds = _objectChilds;
+@synthesize badgeView = _badgeView;
 
 #pragma mark NSKeyValueCoding
 
@@ -77,6 +83,9 @@
 }
 
 - (void)setup {
+    _badgeAlias = MobilyButtonBadgeAliasTitle;
+    _badgeHorizontalAlignment = MobilyButtonBadgeHorizontalAlignmentRight;
+    _badgeVerticalAlignment = MobilyButtonBadgeVerticalAlignmentTop;
 }
 
 #pragma mark MobilyBuilderObject
@@ -368,15 +377,78 @@
     return _normalCornerRadius;
 }
 
+- (void)setBadgeView:(MobilyBadgeView*)badgeView {
+    if(_badgeView != badgeView) {
+        if(_badgeView != nil) {
+            [_badgeView removeFromSuperview];
+        }
+        _badgeView = badgeView;
+        if(_badgeView != nil) {
+            _badgeView.translatesAutoresizingMaskIntoConstraints = YES;
+            _badgeView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
+            [self addSubview:_badgeView];
+        }
+        [self setNeedsUpdateConstraints];
+    }
+}
+
+- (MobilyBadgeView*)badgeView {
+    if(_badgeView == nil) {
+        self.badgeView = [MobilyBadgeView new];
+    }
+    return _badgeView;
+}
+
+- (void)setBadgeAlias:(MobilyButtonBadgeAlias)badgeAlias {
+    if(_badgeAlias != badgeAlias) {
+        _badgeAlias = badgeAlias;
+        [self setNeedsUpdateConstraints];
+    }
+}
+
+- (void)setBadgeHorizontalAlignment:(MobilyButtonBadgeHorizontalAlignment)badgeHorizontalAlignment {
+    if(_badgeHorizontalAlignment != badgeHorizontalAlignment) {
+        _badgeHorizontalAlignment = badgeHorizontalAlignment;
+        [self setNeedsUpdateConstraints];
+    }
+}
+
+- (void)setBadgeVerticalAlignment:(MobilyButtonBadgeVerticalAlignment)badgeVerticalAlignment {
+    if(_badgeVerticalAlignment != badgeVerticalAlignment) {
+        _badgeVerticalAlignment = badgeVerticalAlignment;
+        [self setNeedsUpdateConstraints];
+    }
+}
+
 #pragma mark Public override
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
     if(((self.currentTitle.length > 0) || (self.currentAttributedTitle.length > 0)) && (self.currentImage != nil)) {
         CGRect contentRect = [self contentRectForBounds:self.bounds];
         self.titleLabel.frame = [self titleRectForContentRect:contentRect];
         self.imageView.frame = [self imageRectForContentRect:contentRect];
+    }
+    if(_badgeView != nil) {
+        UIView* view = nil;
+        switch(_badgeAlias) {
+            case MobilyButtonBadgeAliasContent: view = self; break;
+            case MobilyButtonBadgeAliasTitle: view = self.titleLabel; break;
+            case MobilyButtonBadgeAliasImage: view = self.imageView; break;
+        }
+        CGPoint anchor = CGPointZero;
+        switch(_badgeHorizontalAlignment) {
+            case MobilyButtonBadgeHorizontalAlignmentLeft: anchor.x = CGRectGetMinX(view.bounds); break;
+            case MobilyButtonBadgeHorizontalAlignmentCenter: anchor.x = CGRectGetMidX(view.bounds); break;
+            case MobilyButtonBadgeHorizontalAlignmentRight: anchor.x = CGRectGetMaxX(view.bounds); break;
+        }
+        switch(_badgeVerticalAlignment) {
+            case MobilyButtonBadgeVerticalAlignmentTop: anchor.y = CGRectGetMinY(view.bounds); break;
+            case MobilyButtonBadgeVerticalAlignmentCenter: anchor.y = CGRectGetMidY(view.bounds); break;
+            case MobilyButtonBadgeVerticalAlignmentBottom: anchor.y = CGRectGetMaxY(view.bounds); break;
+        }
+        [_badgeView sizeToFit];
+        _badgeView.moFrameCenter = [view convertPoint:anchor toView:self];
     }
 }
 

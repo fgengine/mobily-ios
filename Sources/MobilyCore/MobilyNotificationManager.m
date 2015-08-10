@@ -605,6 +605,7 @@ static NSTimeInterval MobilyNotificationManager_Dutation = 3.0f;
 }
 
 + (void)hideNotificationView:(MobilyNotificationView*)notificationView animated:(BOOL)animated {
+    [self.shared _hideNotificationView:notificationView animated:animated];
 }
 
 + (void)hideAllAnimated:(BOOL)animated {

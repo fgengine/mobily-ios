@@ -44,6 +44,28 @@ typedef NS_ENUM(NSInteger, MobilyButtonImageAlignment) {
     MobilyButtonImageAlignmentBottom
 };
 
+typedef NS_ENUM(NSInteger, MobilyButtonBadgeAlias) {
+    MobilyButtonBadgeAliasTitle,
+    MobilyButtonBadgeAliasImage,
+    MobilyButtonBadgeAliasContent
+};
+
+typedef NS_ENUM(NSInteger, MobilyButtonBadgeHorizontalAlignment) {
+    MobilyButtonBadgeHorizontalAlignmentLeft,
+    MobilyButtonBadgeHorizontalAlignmentCenter,
+    MobilyButtonBadgeHorizontalAlignmentRight
+};
+
+typedef NS_ENUM(NSInteger, MobilyButtonBadgeVerticalAlignment) {
+    MobilyButtonBadgeVerticalAlignmentTop,
+    MobilyButtonBadgeVerticalAlignmentCenter,
+    MobilyButtonBadgeVerticalAlignmentBottom
+};
+
+/*--------------------------------------------------*/
+
+@class MobilyBadgeView;
+
 /*--------------------------------------------------*/
 
 @interface MobilyButton : UIButton< MobilyBuilderObject >
@@ -73,6 +95,11 @@ typedef NS_ENUM(NSInteger, MobilyButtonImageAlignment) {
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat highlightedCornerRadius;
 @property(nonatomic, readwrite, assign) IBInspectable CGFloat disabledCornerRadius;
 @property(nonatomic, readonly, assign) CGFloat currentCornerRadius;
+
+@property(nonatomic, readonly, strong) MobilyBadgeView* badgeView;
+@property(nonatomic, readwrite, assign) IBInspectable MobilyButtonBadgeAlias badgeAlias;
+@property(nonatomic, readwrite, assign) IBInspectable MobilyButtonBadgeHorizontalAlignment badgeHorizontalAlignment;
+@property(nonatomic, readwrite, assign) IBInspectable MobilyButtonBadgeVerticalAlignment badgeVerticalAlignment;
 
 - (void)setup NS_REQUIRES_SUPER;
 
