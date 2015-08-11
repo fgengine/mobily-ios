@@ -1,10 +1,10 @@
 /*--------------------------------------------------*/
 
 typedef NS_ENUM(NSUInteger, ChoiceType) {
-    ChoiceDataViewList,
-    ChoiceDataViewFlow,
-    ChoiceDataViewCalendar,
-    ChoiceScrollView,
+    ChoiceTypeDataViewList,
+    ChoiceTypeDataViewFlow,
+    ChoiceTypeDataViewCalendar,
+    ChoiceTypeScrollViewForm,
 };
 
 /*--------------------------------------------------*/

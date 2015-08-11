@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ChoiceController">
             <connections>
+                <outlet property="dataView" destination="NdO-8k-Fmg" id="Gwk-eJ-V7M"/>
                 <outlet property="view" destination="iN0-l3-epB" id="IQ9-Ut-pjG"/>
             </connections>
         </placeholder>
@@ -15,7 +16,7 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NdO-8k-Fmg" customClass="MobilyDataView">
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NdO-8k-Fmg" customClass="MobilyDataView">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                 </scrollView>
             </subviews>

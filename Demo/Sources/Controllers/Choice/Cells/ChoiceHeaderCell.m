@@ -1,10 +1,13 @@
 /*--------------------------------------------------*/
 
 #import "ChoiceHeaderCell.h"
+#import "ChoiceGroupModel.h"
 
 /*--------------------------------------------------*/
 
 @interface ChoiceHeaderCell ()
+
+@property(nonatomic, readwrite, weak) IBOutlet UILabel* titleLabel;
 
 @end
 
@@ -14,23 +17,18 @@
 
 @implementation ChoiceHeaderCell
 
-#pragma mark Static
-
-+ (CGSize)sizeForItem:(MobilyDataItem*)item availableSize:(CGSize)size {
-    return size;
-}
-
 #pragma mark MobilyDataCell
 
 - (void)prepareForUse {
     [super prepareForUse];
+    
+    ChoiceGroupModel* model = self.item.data;
+    _titleLabel.text = model.title;
 }
 
 - (void)prepareForUnuse {
 	[super prepareForUnuse];
 }
-
-#pragma mark Action
 
 @end
 

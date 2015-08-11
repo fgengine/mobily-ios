@@ -4,7 +4,7 @@
 
 /*--------------------------------------------------*/
 
-#import "RootController.h"
+#import "ChoiceController.h"
 
 /*--------------------------------------------------*/
 
@@ -19,14 +19,15 @@
 #pragma mark Public
 
 @synthesize window = _window;
-@synthesize rootController = _rootController;
+@synthesize choiceNavigation = _choiceNavigation;
+@synthesize choiceController = _choiceController;
 
 #pragma mark Public
 
 - (BOOL)launchingWithOptions:(NSDictionary*)options {
     BOOL result = [super launchingWithOptions:options];
     if(result == YES) {
-        self.window.rootViewController = self.rootController;
+        self.window.rootViewController = self.choiceNavigation;
     }
     return result;
 }
@@ -45,11 +46,18 @@
     return _window;
 }
 
-- (RootController*)rootController {
-    if(_rootController == nil) {
-        _rootController = [RootController new];
+- (MobilyNavigationController*)choiceNavigation {
+    if(_choiceNavigation == nil) {
+        _choiceNavigation = [[MobilyNavigationController alloc] initWithRootViewController:self.choiceController];
     }
-    return _rootController;
+    return _choiceNavigation;
+}
+
+- (ChoiceController*)choiceController {
+    if(_choiceController == nil) {
+        _choiceController = [ChoiceController new];
+    }
+    return _choiceController;
 }
 
 @end

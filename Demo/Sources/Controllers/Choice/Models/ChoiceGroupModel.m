@@ -17,7 +17,7 @@
 
 @implementation ChoiceGroupModel
 
-+ (instancetype)choiceWithTitle:(NSString*)title items:(NSArray*)items {
++ (instancetype)choiceGroupWithTitle:(NSString*)title items:(NSArray*)items {
     return [[self alloc] initWithTitle:title items:items];
 }
 
