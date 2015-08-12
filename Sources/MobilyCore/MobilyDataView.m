@@ -327,7 +327,7 @@
                 [self unhighlightAllItemsAnimated:NO];
                 if(_visibleItems.count > 0) {
                     for(MobilyDataItem* item in _visibleItems) {
-                        [self _disappearItem:item];
+                        [self enqueueCellWithItem:item];
                     }
                     [_visibleItems removeAllObjects];
                 }
@@ -1214,7 +1214,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         if([self containsEventForKey:MobilyDataViewAnimateRestore] == YES) {
             [self fireEventForKey:MobilyDataViewAnimateRestore byObject:items];
             for(MobilyDataItem* item in items) {
-                [self _disappearItem:item];
+                [self enqueueCellWithItem:item];
             }
         } else {
             for(MobilyDataItem* item in items) {
@@ -1223,7 +1223,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     cell.moZPosition = 0.0f;
                     cell.alpha = 1.0f;
                 }
-                [self _disappearItem:item];
+                [self enqueueCellWithItem:item];
             }
         }
     }
@@ -1242,7 +1242,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
         if([self containsEventForKey:MobilyDataViewAnimateRestore] == YES) {
             [self fireEventForKey:MobilyDataViewAnimateRestore byObject:items];
             for(MobilyDataItem* item in items) {
-                [self _disappearItem:item];
+                [self enqueueCellWithItem:item];
             }
         } else {
             for(MobilyDataItem* item in originItems) {
@@ -1251,7 +1251,7 @@ MOBILY_DEFINE_SETTER_LAYOUT_CONSTRAINT(ConstraintRightRefreshSize, constraintRig
                     cell.moZPosition = 0.0f;
                     cell.alpha = 1.0f;
                 }
-                [self _disappearItem:item];
+                [self enqueueCellWithItem:item];
             }
         }
     }
