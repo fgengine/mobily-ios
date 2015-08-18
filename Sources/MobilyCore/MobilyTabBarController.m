@@ -105,10 +105,7 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidDisappear)
 #pragma mark MobilyBuilderObject
 
 - (NSArray*)relatedObjects {
-    if(_objectChilds.count > 0) {
-        return [_objectChilds moUnionWithArrays:self.childViewControllers, nil];
-    }
-    return [self.childViewControllers moUnionWithArray:self.viewControllers];
+    return self.viewControllers;
 }
 
 - (void)addObjectChild:(id< MobilyBuilderObject >)objectChild {

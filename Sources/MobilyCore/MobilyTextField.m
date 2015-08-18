@@ -122,9 +122,6 @@ const NSString* kPhoneEmptySymbol = @"_";
 #pragma mark MobilyBuilderObject
 
 - (NSArray*)relatedObjects {
-    if(_objectChilds.count > 0) {
-        return [_objectChilds moUnionWithArrays:self.subviews, nil];
-    }
     return self.subviews;
 }
 

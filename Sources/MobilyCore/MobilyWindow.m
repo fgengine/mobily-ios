@@ -107,9 +107,6 @@ MOBILY_DEFINE_VALIDATE_EVENT(EventDidUnload)
 #pragma mark MobilyBuilderObject
 
 - (NSArray*)relatedObjects {
-    if(_objectChilds.count > 0) {
-        return [_objectChilds moUnionWithArrays:@[ self.rootViewController ], nil];
-    }
     return @[ self.rootViewController ];
 }
 
