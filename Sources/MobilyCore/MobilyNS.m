@@ -805,6 +805,10 @@ static char Mobily_Base64Table[] = "ABCDEMHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
     return chars;
 }
 
+- (NSString*)moOnlyDigits {
+    return [[self componentsSeparatedByCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]] componentsJoinedByString:@""];
+}
+
 
 @end
 
