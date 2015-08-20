@@ -254,11 +254,8 @@
 
 - (NSArray*)messages:(NSString*)value {
     if([self validate:value] == NO) {
-        if(_message != nil) {
-            return @[_message];
-        }
+        return @[(_message == nil) ? @"Заполните все поля" : _message];
     }
-    
     return @[];
 }
 
@@ -305,7 +302,10 @@
     return NO;
 }
 
-- (NSArray*)messages:(NSString* __unused)value {
+- (NSArray*)messages:(NSString*)value {
+    if([self validate:value] == NO) {
+        return @[(_message == nil) ? @"Заполните все поля" : _message];
+    }
     return @[];
 }
 
@@ -350,7 +350,10 @@
     return NO;
 }
 
-- (NSArray*)messages:(NSString* __unused)value {
+- (NSArray*)messages:(NSString*)value {
+    if([self validate:value] == NO) {
+        return @[(_message == nil) ? @"Заполните все поля" : _message];
+    }
     return @[];
 }
 
@@ -393,7 +396,10 @@
     return NO;
 }
 
-- (NSArray*)messages:(NSString* __unused)value {
+- (NSArray*)messages:(NSString*)value {
+    if([self validate:value] == NO) {
+        return @[(_message == nil) ? @"Заполните все поля" : _message];
+    }
     return @[];
 }
 
