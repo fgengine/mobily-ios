@@ -1159,7 +1159,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = Mobily;
-				LastUpgradeCheck = 0640;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Mobily;
 				TargetAttributes = {
 					4096BC201B20230E0048B07E = {
@@ -1527,6 +1527,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Mobily.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "MobilyStore-Framework";
 				SKIP_INSTALL = YES;
 			};
@@ -1543,6 +1544,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Mobily.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "MobilyStore-Framework";
 				SKIP_INSTALL = YES;
 			};
@@ -1563,6 +1565,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Mobily.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = MobilyCore;
 				SKIP_INSTALL = YES;
 			};
@@ -1579,6 +1582,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Mobily.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = MobilyCore;
 				SKIP_INSTALL = YES;
 			};
@@ -1599,6 +1603,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Mobily.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = MobilySocial;
 				SKIP_INSTALL = YES;
 			};
@@ -1615,6 +1620,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Mobily.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = MobilySocial;
 				SKIP_INSTALL = YES;
 			};
@@ -1641,6 +1647,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
