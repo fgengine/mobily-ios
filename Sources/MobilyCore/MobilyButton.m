@@ -455,10 +455,14 @@
 
 - (CGSize)intrinsicContentSize {
     if(((self.currentTitle.length > 0) || (self.currentAttributedTitle.length > 0)) && (self.currentImage != nil)) {
+        CGSize boundsSize = CGSizeMake(FLT_MAX, FLT_MAX);
+        if(self.superview != nil) {
+            boundsSize = self.superview.frame.size;
+        }
         UIEdgeInsets contentEdgeInsets = self.contentEdgeInsets;
         UIEdgeInsets titleEdgeInsets = self.titleEdgeInsets;
         UIEdgeInsets imageEdgeInsets = self.imageEdgeInsets;
-        CGRect contentRect = [super contentRectForBounds:CGRectMake(0.0f, 0.0f, FLT_MAX, FLT_MAX)];
+        CGRect contentRect = [super contentRectForBounds:CGRectMake(0.0f, 0.0f, boundsSize.width, boundsSize.height)];
         CGRect titleRect = [super titleRectForContentRect:contentRect];
         CGRect imageRect = [super imageRectForContentRect:contentRect];
         CGSize fullTitleSize = CGSizeMake(titleEdgeInsets.left + titleRect.size.width + titleEdgeInsets.right, titleEdgeInsets.top + titleRect.size.height + titleEdgeInsets.bottom);
