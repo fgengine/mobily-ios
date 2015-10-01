@@ -79,6 +79,7 @@
         self.pickerView = [UIDatePicker new];
         if(_pickerView != nil) {
             _pickerView.datePickerMode = _datePickerMode;
+            _pickerView.minuteInterval = _minuteInterval;
             [_pickerView addTarget:self action:@selector(changedDate) forControlEvents:UIControlEventValueChanged];
         }
         self.inputView = _pickerView;
@@ -195,6 +196,18 @@
 
 - (void)setDate:(NSDate*)date animated:(BOOL)animated {
     [self setDate:date animated:animated emitted:NO];
+}
+
+- (void)setMinuteInterval:(NSUInteger)minuteInterval {
+    if(_minuteInterval != minuteInterval) {
+        _minuteInterval = minuteInterval;
+        
+        if([self isEditing] == YES) {
+            if(_pickerView != nil) {
+                _pickerView.minuteInterval = _minuteInterval;
+            }
+        }
+    }
 }
 
 #pragma mark Private

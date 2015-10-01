@@ -47,6 +47,7 @@
 @property(nonatomic, readwrite, strong) IBInspectable NSDate* minimumDate;
 @property(nonatomic, readwrite, strong) IBInspectable NSDate* maximumDate;
 @property(nonatomic, readwrite, strong) IBInspectable NSDate* date;
+@property(nonatomic, readwrite, assign) IBInspectable NSUInteger minuteInterval;
 
 - (void)setup NS_REQUIRES_SUPER;
 
