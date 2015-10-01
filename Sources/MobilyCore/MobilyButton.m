@@ -419,6 +419,22 @@
 
 #pragma mark Public override
 
+- (void)didMoveToSuperview {
+    [super didMoveToSuperview];
+    
+    if(self.superview != nil) {
+        [self setNeedsLayout];
+    }
+}
+
+- (void)didMoveToWindow {
+    [super didMoveToWindow];
+    
+    if(self.superview != nil) {
+        [self setNeedsLayout];
+    }
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     if(((self.currentTitle.length > 0) || (self.currentAttributedTitle.length > 0)) && (self.currentImage != nil)) {
