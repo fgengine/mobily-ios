@@ -212,13 +212,13 @@ typedef NS_OPTIONS(NSUInteger, MobilyBezierPathSeparatorEdges) {
 
 @interface UINib (MobilyUI)
 
-+ (id)moViewWithNibName:(NSString*)nibName withClass:(Class)class;
-+ (id)moViewWithNibName:(NSString*)nibName withClass:(Class)class withOwner:(id)owner;
++ (id)moViewWithNibName:(NSString*)nibName withClass:(Class)aClass;
++ (id)moViewWithNibName:(NSString*)nibName withClass:(Class)aClass withOwner:(id)owner;
 
 + (UINib*)moNibWithBaseName:(NSString*)baseName bundle:(NSBundle*)bundle;
-+ (UINib*)moNibWithClass:(Class)class bundle:(NSBundle*)bundle;
++ (UINib*)moNibWithClass:(Class)aClass bundle:(NSBundle*)bundle;
 
-- (id)moInstantiateWithClass:(Class)class owner:(id)owner options:(NSDictionary*)options;
+- (id)moInstantiateWithClass:(Class)aClass owner:(id)owner options:(NSDictionary*)options;
 
 @end
 
