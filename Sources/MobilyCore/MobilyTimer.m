@@ -152,6 +152,7 @@
     if(_started == YES) {
         self.started = NO;
         self.timer = nil;
+        self.paused = NO;
         if([_delegate respondsToSelector:@selector(timerDidStoped:)] == YES) {
             [_delegate timerDidStoped:self];
         } else if(_stopedBlock != nil) {
