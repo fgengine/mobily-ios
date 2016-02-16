@@ -344,7 +344,10 @@
 @implementation SKProduct (MobilyStore)
 
 - (NSString*)moPriceAsString {
-    NSNumberFormatter* formatter = [NSNumberFormatter new];
+    static NSNumberFormatter* formatter = nil;
+    if(formatter == nil) {
+        formatter = [NSNumberFormatter new];
+    }
     formatter.formatterBehavior = NSNumberFormatterBehavior10_4;
     formatter.numberStyle = NSNumberFormatterCurrencyStyle;
     formatter.locale = self.priceLocale;
